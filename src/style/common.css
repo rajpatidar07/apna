@@ -1,0 +1,49 @@
+/* input */
+
+.adminsideinput{
+    /* background-color: rgba(18,18,18/0.2); */
+    color: rgba(213,214,215/1);
+    border: 0 solid #d5d6d7;
+    border-radius: 0.5rem;
+    padding-top:10px !important;
+    background-color: rgba(36,38,45/1);
+}
+/* button */
+.adminmainbutton{
+    height: 40px;
+    font-weight: 500;
+}
+
+/* iconbutton */
+
+
+.iconbtnbox button.adminmainbutton.iconbtn.btn-success.text-light.btn.btn-lg.px-5.py-3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    font-weight: 500;
+}
+
+/* datatable00 */
+
+.WQNxq {
+    border: 0 solid #d5d6d7 !important;
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 5%) !important;
+    /* border-radius: 0.5rem !important; */
+    background-color: black !important;
+}
+.WQNxq .sc-bcXHqe .kVrXuC .rdt_Table{
+    background-color: rgba(26,28,35/1) !important;
+    /* border-radius: 0.5rem !important; */
+
+}
+.sc-hLBbgP.sc-eDvSVe.sc-ipEyDJ.glyQNg.bQdYbR.dlSNBX.rdt_TableCol {
+    padding: 14px;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.oLRPU {
+    font-size: 16px !important;
+}

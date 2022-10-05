@@ -1,4 +1,5 @@
 import { Bell } from 'react-bootstrap-icons';
+import React  from 'react';
 
 function Dashboard() {
     return (

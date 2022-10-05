@@ -1,4 +1,4 @@
-
+import React  from 'react';
 import AdminSidebar from './sidebar'
 import Dashboard from './dashboard';
 import Product from './product';
@@ -9,6 +9,7 @@ import {
     BrowserRouter as Router,
     Route
 } from 'react-router-dom';
+import Productdetail from './products/productdetail';
 function AdminLayout() {
     return (
         <div className="container-fluid p-0">
@@ -24,6 +25,8 @@ function AdminLayout() {
                                 <Route path="/dashboard" element={<Dashboard />} />
                                 <Route path="/product" element={<Product />} />
                                 <Route path="/orders" element={<Orders />} />
+                                <Route path="/productdetail" element={<Productdetail />} />
+
                             </Routes>
                         </div>
                     </div>
