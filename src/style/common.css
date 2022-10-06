@@ -3,15 +3,25 @@
 .adminsideinput{
     /* background-color: rgba(18,18,18/0.2); */
     color: rgba(213,214,215/1);
-    border: 0 solid #d5d6d7;
+    border: 1px solid #d5d6d7;
     border-radius: 0.5rem;
-    padding-top:10px !important;
+    padding: 10px;
     background-color: rgba(36,38,45/1);
+    max-width: 291px;
+    width: 100%;
+}
+/* select */
+.adminselectbox{
+    color: gray;
 }
 /* button */
-.adminmainbutton{
-    height: 40px;
+.btn-success{
+    height: 45px;
     font-weight: 500;
+    width: 100%;
+     width: 200px;
+     color: #fff;
+     background-color: #5cb85c;
 }
 
 /* iconbutton */
@@ -30,20 +40,22 @@
 .WQNxq {
     border: 0 solid #d5d6d7 !important;
     box-shadow: 0 0 0 1px rgb(0 0 0 / 5%) !important;
-    /* border-radius: 0.5rem !important; */
     background-color: black !important;
 }
 .WQNxq .sc-bcXHqe .kVrXuC .rdt_Table{
     background-color: rgba(26,28,35/1) !important;
-    /* border-radius: 0.5rem !important; */
 
 }
 .sc-hLBbgP.sc-eDvSVe.sc-ipEyDJ.glyQNg.bQdYbR.dlSNBX.rdt_TableCol {
     padding: 14px;
     font-size: 18px;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .oLRPU {
     font-size: 16px !important;
+}
+.beUiVL {
+    font-size: 20px !important;
+    font-weight: 600 !important;
 }

@@ -36,14 +36,15 @@ function AdminSidebar() {
         <Accordion.Body>
         <ul class="sidebar_navigation_bar">
         <li>
-          <Link to="/dashboard" className="nav-link">Dashboard</Link>
+          <Link to="/product" className="nav-link">Product</Link>
         </li>
         <li>
-          <Link to="/product" className="nav-link">product</Link>
+          <Link to="/addproduct" className="nav-link">Add Product</Link>
         </li>
         <li>
-          <Link to="/orders" className="nav-link">orders</Link>
+          <Link to="/productdetail" className="nav-link">Product Detail</Link>
         </li>
+       
       </ul>
         </Accordion.Body>
       </Accordion.Item>
