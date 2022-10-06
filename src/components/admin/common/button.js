@@ -10,7 +10,7 @@ const MainButton = (props) => {
 
 export default MainButton;
 MainButton.defaultProps = {
-    btnclass: 'adminmainbutton btn-success text-light btn px-5 py-2',
+    btnclass: 'btn-success btn',
     name: '',
     onClick: {},
     type:'',

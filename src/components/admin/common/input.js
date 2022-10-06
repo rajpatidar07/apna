@@ -10,7 +10,7 @@ const Input = (props) => {
 
 export default Input;
 Input.defaultProps = {
-    inputclass: 'adminsideinput input-lg px-5 py-3',
+    inputclass: 'adminsideinput',
     name: '',
     onChange: {},
     type:'',

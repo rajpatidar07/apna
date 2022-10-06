@@ -6,20 +6,27 @@
     margin-top: 1.5rem;
     background-color: rgba(26,28,35/0.7);
     display: grid;
-    grid-template-columns: 25% 25% 25% 25%;
-    gap: 20px;
+    grid-template-columns: 24% 24% 24% 24%;
+    grid-gap: 20px;
+    gap: 4%;
+    background: #fff;
 }
 .product_page_uploadbox{
-    /* padding: 25px;
-    border: 0 solid #d5d6d7;
-    box-shadow: 0 0 0 1px rgb(0 0 0 / 5%);
-    border-radius: 0.5rem;
-    background-color: rgba(26,28,35/0.7); */
     margin-top: 1.5rem;
     margin-bottom: 1.5rem;
     display: flex;
     gap: 10px;
     float: right;
+}
+.product_page_uploadbox .product_page_uploadbox_one{
+    position: relative;
+}
+.product_page_uploadbox .hiddeninput{
+    position: absolute;
+    width: 100%;
+    left: -2px;
+    top: 10px;
+    opacity: 0;
 }
 .upload_filebox{
     align-items: center;
@@ -40,4 +47,20 @@
 }
 .actioncolimn .editiconn{
     font-size: 20px;
+}
+.productdescbox{
+padding: 10px 0;
+}
+ .productdesc {
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+}
+
+.beUiVL {
+    font-size: 20px !important;
+    font-weight: 600 !important;
 }

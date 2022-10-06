@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import Dashboard from './dashboard';
 import Product from './product';
 import Orders from './orders';
-import Productdetail from "./products/productdetail";
+
 function AdminRoute() {
     return (
         <Router>
@@ -27,8 +27,7 @@ function AdminRoute() {
         <Routes>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/product" element={<Product />} />
-          <Route path="/orders" element={<Orders />} />
-          {/* <Route path="/productdetail" element={<Productdetail />} /> */}
+          
 
         </Routes>
         </Router>
