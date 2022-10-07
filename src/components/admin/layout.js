@@ -8,6 +8,7 @@ import { Routes } from "react-router-dom";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Productdetail from "./products/productdetail";
 import Addproduct from "./products/addproduct";
+import Invoice from "./order/invoice";
 
 function AdminLayout() {
   return (
@@ -26,6 +27,7 @@ function AdminLayout() {
                 <Route path="/orders" element={<Orders />} />
                 <Route path="/addproduct" element={<Addproduct />} />
                 <Route path="/productdetail" element={<Productdetail />} />
+                <Route path="/invoice" element={<Invoice/>} />
               </Routes>
             </div>
           </div>

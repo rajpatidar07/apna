@@ -12,7 +12,7 @@ const Iconbutton = (props) => {
 
 export default Iconbutton;
 Iconbutton.defaultProps = {
-    btnclass: 'adminmainbutton iconbtn btn-success text-light btn px-5 py-2',
+    btnclass: 'adminmainbutton ',
     name: '',
     onClick: {},
     type:'',

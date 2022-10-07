@@ -4,7 +4,6 @@ import {
   Route
 } from 'react-router-dom';
 import React  from 'react';
-
 import { Link } from "react-router-dom";
 import Dashboard from './dashboard';
 import Product from './product';

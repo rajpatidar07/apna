@@ -23,15 +23,20 @@
      color: #fff;
      background-color: #5cb85c;
 }
-
+.btn-outline-success{
+    height: 45px;
+    font-weight: 500;
+    width: 100%;
+     width: 200px;
+}
 /* iconbutton */
 
 
-.iconbtnbox button.adminmainbutton.iconbtn.btn-success.text-light.btn.btn-lg.px-5.py-3 {
-    display: flex;
+.adminmainbutton{
+    /* display: flex; */
     align-items: center;
     gap: 10px;
-    color: white;
+    color: #5cb85c;
     font-weight: 500;
 }
 
