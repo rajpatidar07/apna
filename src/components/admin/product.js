@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import Input from "./common/input";
-import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+import { AiFillDelete, AiFillEdit, AiOutlinePlus,AiOutlineCloudUpload } from "react-icons/ai";
+import { BsThreeDotsVertical } from "react-icons/bs";
 import DataTable from "react-data-table-component";
 import MainButton from "./common/button";
 import { navigate, useNavigate } from "react-router-dom";
 import Form from "react-bootstrap/Form";
-import { AlignCenter } from "react-bootstrap-icons";
-import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Addproduct from "./products/addproduct";
+import Iconbutton from "./common/iconbutton";
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
 const columns = [
   {
     name: "SKU",
@@ -22,7 +25,7 @@ const columns = [
     cell: (row) => (
       <img
         height="100px"
-        width="95px"
+        width="75px"
         alt={row.name}
         src={
           "https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg"
@@ -80,6 +83,20 @@ const columns = [
       <div className={"actioncolimn"}>
         <AiFillEdit className="w-75 p-0 m-0 editiconn" />
         <AiFillDelete className="w-75 p-0 m-0 editiconn" />
+        <div class="dropdown-container w-75 p-0 m-0 editiconn" tabindex="-1">
+    <div class="three-dots"></div>
+    <div class="dropdown">
+      <a href="#"><div>Featured</div></a>
+      <a href="#"><div>Special offer</div></a>
+      <a href="#"><div>Promotional</div></a>
+    </div>
+    </div>
+        {/* <Form.Select aria-label="Search by category" className="adminselectbox" size="sm">
+          <option>Open this select menu</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+        </Form.Select> */}
       </div>
     ),
   },
@@ -131,11 +148,13 @@ const data = [
   },
 ];
 const handleClick = () => {};
-
+const onButtonClick = () =>{
+  
+}
 function Product() {
   const [show, setShow] = useState(false);
-const handleClose = () => setShow(false);
-const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   return (
     <div className="App">
@@ -163,16 +182,20 @@ const handleShow = () => setShow(true);
       {/* upload */}
 
       <div className="product_page_uploadbox">
-      <div className="product_page_uploadbox_one">
-        <Input type={"file"} inputclass={"hiddeninput"} />
-        <MainButton btntext={"Upload"} />
+        <div className="product_page_uploadbox_one">
+          <Input type={"file"} inputclass={"hiddeninput"} />
+          <Iconbutton
+            btntext={"Upload"}
+            btnclass={"btn-outline-success btn adminmainbutton"}
+            Iconname={<AiOutlineCloudUpload />}
+          />
         </div>
-        <MainButton btntext={"Add"} onClick={handleShow}/>
         <MainButton btntext={"Download"} />
+        <Iconbutton btntext={"Add"} onClick={handleShow} Iconname={<AiOutlinePlus />} btnclass={"btn-outline-success btn adminmainbutton"}/>
       </div>
 
       {/* datatable */}
-      <Modal show={show} onHide={handleClose} >
+      <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton className="addproductheader">
           <Modal.Title>Add Product</Modal.Title>
         </Modal.Header>
@@ -180,8 +203,8 @@ const handleShow = () => setShow(true);
           <Addproduct />
         </Modal.Body>
         <Modal.Footer className="addproductfooter">
-        <MainButton btntext={"Add"}  onClick={handleClose}/>
-        <MainButton btntext={"Cancel"} onClick={handleClose}/>
+          <MainButton btntext={"Add"} onClick={handleClose} />
+          <MainButton btntext={"Cancel"} onClick={handleClose} />
         </Modal.Footer>
       </Modal>
       <DataTable
