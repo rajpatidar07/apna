@@ -8,6 +8,13 @@ import { Routes } from "react-router-dom";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Productdetail from "./products/productdetail";
 import Addproduct from "./products/addproduct";
+import Soldproduct from "./products/soldproduct";
+import Featuredproduct from "./products/featuredproduct";
+import Expiredproduct from "./products/expiredproduct";
+import Pendingproduct from "./products/pendingproduct";
+import Promotionproduct from "./products/promotionproduct";
+import Offerproduct from "./products/offerproduct";
+import Deletedproduct from "./products/deletedproduct";
 
 function AdminLayout() {
   return (
@@ -24,8 +31,16 @@ function AdminLayout() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/product" element={<Product />} />
                 <Route path="/orders" element={<Orders />} />
+                {/* products */}
                 <Route path="/addproduct" element={<Addproduct />} />
                 <Route path="/productdetail" element={<Productdetail />} />
+                <Route path="/soldproduct" element={<Soldproduct/>} />
+                <Route path="/featureproduct" element={<Featuredproduct />} />
+                 <Route path="/expiredproduct" element={<Expiredproduct />} />
+                <Route path="/pendingproduct" element={<Pendingproduct />} />
+                 <Route path="/promotionproduct" element={<Promotionproduct />} />
+                <Route path="/offerproduct" element={<Offerproduct />} />
+                 <Route path="/deletedproduct" element={<Deletedproduct />} />
               </Routes>
             </div>
           </div>
