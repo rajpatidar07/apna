@@ -214,6 +214,7 @@ function Product() {
         pagination
         highlightOnHover
         pointerOnHover
+        className={"productlist_table"}
       />
     </div>
   );
