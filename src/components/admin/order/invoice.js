@@ -3,17 +3,17 @@ import "./invoice.css";
 
 const Invoice = () => {
   return (
-    <div class="container">
-      <div class="card">
-        <div class="card-header">
-          Invoice No
-          <strong>154987</strong>
-          <span class="float-right"> </span>
+    <div className="container">
+    <div className="invoice">
+      <div className="card">
+        <div className="card-header heading">
+          INVOICE
+          <span className="float-right"></span>
         </div>
-        <div class="card-body">
-          <div class="row mb-4">
-            <div class="col-sm-6">
-              <h6 class="mb-3">From:</h6>
+        <div className="card-body">
+          <div className="row mb-4">
+            <div className="col-sm-6">
+              <h6 className="mb-3">From:</h6>
               <div>
                 <strong>Gourav Choudhary</strong>
               </div>
@@ -23,8 +23,8 @@ const Invoice = () => {
               <div>Phone: +91 985 686 9865</div>
             </div>
 
-            <div class="col-sm-6">
-              <h6 class="mb-3">To:</h6>
+            <div className="col-sm-6">
+              <h6 className="mb-3">To:</h6>
               <div>
                 <strong>Shivani</strong>
               </div>
@@ -35,61 +35,61 @@ const Invoice = () => {
             </div>
           </div>
 
-          <div class="table-responsive-sm">
-            <table class="table table-striped">
+          <div className="table-responsive-sm">
+            <table className="table table-striped">
               <thead>
                 <tr>
-                  <th class="center">#</th>
+                  <th className="center">#</th>
                   <th>Item</th>
                   <th>Description</th>
 
-                  <th class="right">Price</th>
-                  <th class="center">Qty</th>
-                  <th class="right">Total</th>
+                  <th className="right">Price</th>
+                  <th className="center">Qty</th>
+                  <th className="right">Total</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td class="center">1</td>
-                  <td class="left strong">Hunny</td>
-                  <td class="left">Sweet Hunny</td>
+                  <td className="center">1</td>
+                  <td className="left strong">Hunny</td>
+                  <td className="left">Sweet Hunny</td>
 
-                  <td class="right">$15</td>
-                  <td class="center">1</td>
-                  <td class="right">$15</td>
+                  <td className="right">$15</td>
+                  <td className="center">1</td>
+                  <td className="right">$15</td>
                 </tr>
                 <tr>
-                  <td class="center">2</td>
-                  <td class="left strong">shoes</td>
-                  <td class="left">Runing shoes</td>
+                  <td className="center">2</td>
+                  <td className="left strong">shoes</td>
+                  <td className="left">Runing shoes</td>
 
-                  <td class="right">$20</td>
-                  <td class="center">2</td>
-                  <td class="right">$40</td>
+                  <td className="right">$20</td>
+                  <td className="center">2</td>
+                  <td className="right">$40</td>
                 </tr>
                 <tr>
-                  <td class="center">3</td>
-                  <td class="left strong">T-Shirt</td>
-                  <td class="left">100% cotton</td>
+                  <td className="center">3</td>
+                  <td className="left strong">T-Shirt</td>
+                  <td className="left">100% cotton</td>
 
-                  <td class="right">$10</td>
-                  <td class="center">3</td>
-                  <td class="right">$30</td>
+                  <td className="right">$10</td>
+                  <td className="center">3</td>
+                  <td className="right">$30</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div class="row">
-            <div class="col-lg-4 col-sm-5"></div>
+          <div className="row">
+            <div className="col-lg-4 col-sm-5"></div>
 
-            <div class="col-lg-4 col-sm-5 ml-auto">
-              <table class="table table-clear">
+            <div className="col-lg-4 col-sm-5 ml-auto">
+              <table className="table table-clear">
                 <tbody>
                   <tr>
-                    <td class="left">
+                    <td className="left">
                       <strong>Total Amount</strong>
                     </td>
-                    <td class="right">
+                    <td className="right">
                       <strong>$85</strong>
                     </td>
                   </tr>
@@ -100,6 +100,7 @@ const Invoice = () => {
         </div>
       </div>
     </div>
+  </div>
   );
 };
 export default Invoice;

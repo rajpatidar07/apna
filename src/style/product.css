@@ -28,6 +28,7 @@
   top: 10px;
   opacity: 0;
 }
+
 .upload_filebox {
   align-items: center;
   border-style: dashed;
@@ -48,6 +49,7 @@
 }
 .actioncolimn .editiconn {
   font-size: 20px;
+  z-index: 1 !important;
 }
 .productdescbox {
   padding: 10px 0;
@@ -68,22 +70,28 @@
 
 /* dropdown */
 
-.three-dots:after {
+ /* .three-dots:after {
   cursor: pointer;
   color: black;
   content: "\2807";
   font-size: 20px;
   padding: 0 5px;
+  z-index: 99 !important;
 }
 
 a {
-  text-decoration: none;
-  color: black;
+  text-decoration: none !important;
+  color: #fff;
   font-size: 15px;
+  z-index: 100;
+
 }
 
 a div {
   padding: 5px;
+  z-index: 100;
+  text-decoration: none !important;
+
 }
 
 .dropdown {
@@ -91,10 +99,11 @@ a div {
   right: 10px;
   outline: none;
   opacity: 0;
-  z-index: -1;
+  z-index: 1000 !important;
   max-height: 0;
   border: 1px solid #d5d6d7;
   border-radius: 8px;
+  background-color: black;
 }
 
 .dropdown-container:focus {
@@ -103,6 +112,13 @@ a div {
 
 .dropdown-container:focus .dropdown {
   opacity: 1;
-  z-index: 100;
+  z-index: 2000 !important;
   max-height: 100vh;
 }
+.hiddeninputdrop{
+  position: absolute;
+  width: 100%;
+  left: -2px;
+  top: 10px;
+  opacity: 1;
+}  */

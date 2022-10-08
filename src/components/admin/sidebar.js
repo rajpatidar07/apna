@@ -44,6 +44,27 @@ function AdminSidebar() {
         <li>
           <Link to="/productdetail" className="nav-link">Product Detail</Link>
         </li>
+        <li>
+          <Link to="/soldproduct" className="nav-link">Sold Product</Link>
+        </li>
+        <li>
+          <Link to="/expiredproduct" className="nav-link">Expired Product</Link>
+        </li>
+        <li>
+          <Link to="/featureproduct" className="nav-link">Featured Product</Link>
+        </li>
+        <li>
+          <Link to="/pendingproduct" className="nav-link">Pending Product</Link>
+        </li>
+        <li>
+          <Link to="/promotionproduct" className="nav-link">Promotion Product</Link>
+        </li>
+        <li>
+          <Link to="/offerproduct" className="nav-link"> Offer Product </Link>
+        </li>
+        <li>
+          <Link to="/deletedproduct" className="nav-link"> Deleted Product </Link>
+        </li>
        
       </ul>
         </Accordion.Body>
