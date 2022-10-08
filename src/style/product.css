@@ -57,68 +57,59 @@
 .productdesc {
   -webkit-box-orient: vertical;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
 }
 
-.beUiVL {
-  font-size: 20px !important;
+
+.productlist_table button#productstatus_dropdown {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: -11px;
+    left: -30px;
+    opacity: 0;
+}
+.productlist_table .actioncolimn .productprofile_div .product_list_dropdownstatus{
+z-index: 999;
+background-color: black;
+}
+.productlist_table .actioncolimn .productprofile_div .product_list_dropdownstatus .product_list_dropdownstatus_link{
+color: #fff;
+z-index: 999;
+
+}
+.productlist_table .beUiVL {
+  font-size: 18px !important;
   font-weight: 600 !important;
 }
-
-/* dropdown */
-
- /* .three-dots:after {
-  cursor: pointer;
-  color: black;
-  content: "\2807";
-  font-size: 20px;
-  padding: 0 5px;
-  z-index: 99 !important;
+.productlist_table .actioncolimn .doticon{
+  position: relative;
+}
+.productlist_table  .sc-jSUZER.eVPPvF .actioncolimn,
+  .productlist_table  .sc-jSUZER.eVPPvF>div {
+overflow:unset !important;
+}
+.dtqzBx div.dropdown:first-child{
+overflow:unset !important;
+}
+.statuschhangeselling{
+  background-color: rgba(63, 195, 128, 0.9);
+          color: black;
+          border-radius: 100px;
+          height: 20px;
+          padding: 0 12px;
+}
+.statuschhangesold{
+  background-color: rgba(242, 38, 19, 0.9);
+          color: black;
+          border-radius: 100px;
+          height: 20px;
+          padding: 0 12px;
 }
 
-a {
-  text-decoration: none !important;
-  color: #fff;
-  font-size: 15px;
-  z-index: 100;
-
+.productlist_table .sc-dkrFOg.iSAVrt.rdt_TableHeadRow {
+    background: #5cb85c;
 }
-
-a div {
-  padding: 5px;
-  z-index: 100;
-  text-decoration: none !important;
-
-}
-
-.dropdown {
-  position: absolute;
-  right: 10px;
-  outline: none;
-  opacity: 0;
-  z-index: 1000 !important;
-  max-height: 0;
-  border: 1px solid #d5d6d7;
-  border-radius: 8px;
-  background-color: black;
-}
-
-.dropdown-container:focus {
-  outline: none;
-}
-
-.dropdown-container:focus .dropdown {
-  opacity: 1;
-  z-index: 2000 !important;
-  max-height: 100vh;
-}
-.hiddeninputdrop{
-  position: absolute;
-  width: 100%;
-  left: -2px;
-  top: 10px;
-  opacity: 1;
-}  */

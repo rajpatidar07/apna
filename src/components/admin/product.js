@@ -1,28 +1,35 @@
 import React, { useState } from "react";
 import Input from "./common/input";
-import { AiFillDelete, AiFillEdit, AiOutlinePlus,AiOutlineCloudUpload } from "react-icons/ai";
-import { BsThreeDotsVertical } from "react-icons/bs";
+import {
+  AiFillDelete,
+  AiFillEdit,
+  AiOutlinePlus,
+  AiOutlineCloudUpload,
+} from "react-icons/ai";
+import { BiDotsVertical } from "react-icons/bi";
 import DataTable from "react-data-table-component";
 import MainButton from "./common/button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import Addproduct from "./products/addproduct";
 import Iconbutton from "./common/iconbutton";
-import Dropdown from 'react-bootstrap/Dropdown';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Dropdown from "react-bootstrap/Dropdown";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
 const columns = [
   {
-    name: "SKU",
+    name: "Sku",
     selector: (row) => row.sku,
     sortable: true,
     width: "100px",
+    center: true,
   },
   {
     name: "#",
     width: "100px",
+    center: true,
     cell: (row) => (
       <img
-        height="100px"
+        height="90px"
         width="75px"
         alt={row.name}
         src={
@@ -39,108 +46,91 @@ const columns = [
     ),
   },
   {
-    name: "PRODUCT NAME",
+    name: "Product Name",
     selector: (row) => row.pname,
     sortable: true,
-    width: "230px",
+    width: "250px",
   },
   {
-    name: "CATEGORY",
+    name: "Category",
     selector: (row) => row.category,
     sortable: true,
-    width: "180px",
+    width: "160px",
   },
   {
-    name: "PRICE",
+    name: "Price",
     selector: (row) => row.price,
     sortable: true,
-    width: "130px",
+    width: "90px",
     center: true,
-				style: {
-          paddingRight: '32px',
-          paddingLeft:'0px',
-					},
-				},
+    style: {
+      paddingRight: "32px",
+      paddingLeft: "0px",
+    },
+  },
+  {
+    name: "Gst",
+    selector: (row) => row.gst,
+    sortable: true,
+    width: "90px",
+    center: true,
+    style: {
+      paddingLeft: "0px",
+    },
+  },
 
   {
-    name: "STOCK",
+    name: "Stock",
     selector: (row) => row.stock,
     sortable: true,
-    width: "130px",
+    width: "100px",
     center: true,
-				style: {
-          paddingRight: '32px',
-          paddingLeft:'0px',
-					},
-				},
+    style: {
+      paddingRight: "32px",
+      paddingLeft: "0px",
+    },
+  },
 
   {
-    name: "DISCOUNT",
+    name: "Discount",
     selector: (row) => row.discount,
     sortable: true,
-    width: "155px",
+    width: "130px",
     center: true,
-				style: {
-          paddingRight: '32px',
-          paddingLeft:'0px',
-				},
-
+    style: {
+      paddingRight: "32px",
+      paddingLeft: "0px",
+    },
   },
-//   {
-//     name: "STATUS",
-//     selector: (row) => row.status,
-//     sortable: true,
-//     width: "130px",
-//     center: true,
-// 		conditionalCellStyles: [
-// 			{
-// 				when: row => row.status === 'Selling',
-// 				style: {
-// 					backgroundColor: 'rgba(63, 195, 128, 0.9)',
-//          color: 'white',
-//          borderRadius: '100px',
-//         height: '50px',
-//         marginTop: '36px',
-// 					},
-// 				},
-//         {
-//           when: row => row.status === 'Sold out',
-//           style: {
-//             backgroundColor: 'rgba(242, 38, 19, 0.9)',
-//            color: 'white',
-//            borderRadius: '100px',
-//           height: '50px',
-//           marginTop: '36px',
-//             },
-//           },
-// ]
-//   },
   {
-    name: "ACTION",
-    width: "220px",
+    name: "Status",
+    selector: (row) =>  <div className= {row.status === 'Selling' ? "statuschhangeselling" : row.status === 'Sold out'  ? "statuschhangesold" : null }>row.status</div>,
+    sortable: true,
+    width: "130px",
+    center: true,
+  },
+  {
+    name: "Action",
+    width: "120px",
     selector: (row) => (
       <div className={"actioncolimn"}>
-        <AiFillEdit className="w-75 p-0 m-0 editiconn" />
-        <AiFillDelete className="w-75 p-0 m-0 editiconn" />
-        <Dropdown>
-      <Dropdown.Toggle variant="success" id="dropdown-basic">
-        Dropdown
-      </Dropdown.Toggle>
-      <Dropdown.Menu>
-        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-        <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-        <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-      </Dropdown.Menu>
-    </Dropdown>
-        {/* <div class="dropdown-container" tabindex="0">
-    <div class="three-dots"></div>
-    <div class="dropdown">
-      <a href="#"><div>Feature</div></a>
-      <a href="#"><div>Special offer</div></a>
-      <a href="#"><div>Promotional</div></a>
-      <a href="#"><div>Cancel</div></a>
-    </div>
-  </div> */}
+        <AiFillEdit className=" p-0 m-0 editiconn" />
+        <AiFillDelete className=" p-0 m-0 editiconn" />
+        <BiDotsVertical className=" p-0 m-0 editiconn doticon" />
+
+        <Dropdown className="productprofile_div p-0 m-0 editiconn doticon">
+          <Dropdown.Toggle
+            className=""
+            variant=""
+            id="productstatus_dropdown"
+          >
+          </Dropdown.Toggle>
+          <Dropdown.Menu className="product_list_dropdownstatus">
+            <Dropdown.Item className="product_list_dropdownstatus_link" href="#/action-1">Action</Dropdown.Item>
+            <Dropdown.Item className="product_list_dropdownstatus_link" href="#/action-2">Another action</Dropdown.Item>
+            <Dropdown.Item className="product_list_dropdownstatus_link" href="#/action-3">Something else</Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
       </div>
     ),
   },
@@ -166,6 +156,7 @@ const data = [
       <p className="productdesc">Fruits & Vegetable Fruits & Vegetable</p>
     ),
     price: "$14",
+    gst:"10%",
     stock: "15",
     status: "Selling",
     discount: "50%",
@@ -186,15 +177,14 @@ const data = [
     ),
     category: "Fruits & Vegetable",
     price: "$14",
+    gst:"10%",
     stock: "15",
     status: "Sold out",
     discount: "50%",
   },
 ];
 const handleClick = () => {};
-const onButtonClick = () =>{
-  
-}
+const onButtonClick = () => {};
 function Product() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -235,7 +225,12 @@ function Product() {
           />
         </div>
         <MainButton btntext={"Download"} />
-        <Iconbutton btntext={"Add"} onClick={handleShow} Iconname={<AiOutlinePlus />} btnclass={"btn-outline-success btn adminmainbutton"}/>
+        <Iconbutton
+          btntext={"Add"}
+          onClick={handleShow}
+          Iconname={<AiOutlinePlus />}
+          btnclass={"btn-outline-success btn adminmainbutton"}
+        />
       </div>
 
       {/* datatable */}
@@ -257,6 +252,8 @@ function Product() {
         pagination
         highlightOnHover
         pointerOnHover
+        className={"productlist_table"}
+        
       />
     </div>
   );
