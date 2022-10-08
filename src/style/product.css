@@ -111,5 +111,9 @@ overflow:unset !important;
 }
 
 .productlist_table .sc-dkrFOg.iSAVrt.rdt_TableHeadRow {
-    background: #5cb85c;
+    background: rgb(89 193 88 / 0.7);
+}
+.productlist_maindiv{
+  height: 100vh;
+  overflow: hidden auto;
 }

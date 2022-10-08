@@ -104,7 +104,19 @@ const columns = [
   },
   {
     name: "Status",
-    selector: (row) =>  <div className= {row.status === 'Selling' ? "statuschhangeselling" : row.status === 'Sold out'  ? "statuschhangesold" : null }>row.status</div>,
+    selector: (row) => (
+      <div
+        className={
+          row.status === "Selling"
+            ? "statuschhangeselling"
+            : row.status === "Sold out"
+            ? "statuschhangesold"
+            : null
+        }
+      >
+        row.status
+      </div>
+    ),
     sortable: true,
     width: "130px",
     center: true,
@@ -123,12 +135,26 @@ const columns = [
             className=""
             variant=""
             id="productstatus_dropdown"
-          >
-          </Dropdown.Toggle>
+          ></Dropdown.Toggle>
           <Dropdown.Menu className="product_list_dropdownstatus">
-            <Dropdown.Item className="product_list_dropdownstatus_link" href="#/action-1">Action</Dropdown.Item>
-            <Dropdown.Item className="product_list_dropdownstatus_link" href="#/action-2">Another action</Dropdown.Item>
-            <Dropdown.Item className="product_list_dropdownstatus_link" href="#/action-3">Something else</Dropdown.Item>
+            <Dropdown.Item
+              className="product_list_dropdownstatus_link"
+              href="#/action-1"
+            >
+              Action
+            </Dropdown.Item>
+            <Dropdown.Item
+              className="product_list_dropdownstatus_link"
+              href="#/action-2"
+            >
+              Another action
+            </Dropdown.Item>
+            <Dropdown.Item
+              className="product_list_dropdownstatus_link"
+              href="#/action-3"
+            >
+              Something else
+            </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
       </div>
@@ -156,7 +182,7 @@ const data = [
       <p className="productdesc">Fruits & Vegetable Fruits & Vegetable</p>
     ),
     price: "$14",
-    gst:"10%",
+    gst: "10%",
     stock: "15",
     status: "Selling",
     discount: "50%",
@@ -177,7 +203,7 @@ const data = [
     ),
     category: "Fruits & Vegetable",
     price: "$14",
-    gst:"10%",
+    gst: "10%",
     stock: "15",
     status: "Sold out",
     discount: "50%",
@@ -191,7 +217,7 @@ function Product() {
   const handleShow = () => setShow(true);
 
   return (
-    <div className="App">
+    <div className="App productlist_maindiv">
       <h2>Products</h2>
 
       {/* search bar */}
@@ -253,7 +279,6 @@ function Product() {
         highlightOnHover
         pointerOnHover
         className={"productlist_table"}
-        
       />
     </div>
   );
