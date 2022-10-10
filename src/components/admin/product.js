@@ -171,7 +171,7 @@ const data = [
     pname: (
       <div className="productdescbox">
         <b>
-          <h6>Green Leaf Lettuce</h6>
+          <p className="mb-0">Green Leaf Lettuce</p>
         </b>
 
         <p className="productdesc">
@@ -196,12 +196,12 @@ const data = [
     pname: (
       <div className="productdescbox">
         <b>
-          <h6>Green Leaf Lettuce</h6>
+          <p className="mb-0">Green Leaf Lettuce</p>
         </b>
-        <h6 className="productdesc">
+        <p className="productdesc">
           {" "}
           The root vegetables include beets, and turnips
-        </h6>
+        </p>
       </div>
     ),
     category: "Fruits & Vegetable",
@@ -258,7 +258,7 @@ function Product() {
           btntext={"Add"}
           onClick={handleShow}
           Iconname={<AiOutlinePlus />}
-          btnclass={"btn-outline-success btn adminmainbutton"}
+          btnclass={"btn-success btn "}
         />
       </div>
 
@@ -280,10 +280,10 @@ function Product() {
         </Modal.Body>
         <Modal.Footer className="addproductfooter">
         <Iconbutton
-            btntext={"Cancel"}
+            btntext={"X Cancel"}
             onClick={handleClose}
             btnclass={"btn-outline-success btn adminmainbutton px-2"}
-            Iconname={<GiCancel /> }
+            // Iconname={<GiCancel /> }
           />
           <MainButton btntext={"Save as Draft"} onClick={handleClose} />
           <Iconbutton
