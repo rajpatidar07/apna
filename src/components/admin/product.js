@@ -114,7 +114,7 @@ const columns = [
             : null
         }
       >
-        row.status
+        {row.status}
       </div>
     ),
     sortable: true,
@@ -124,6 +124,7 @@ const columns = [
   {
     name: "Action",
     width: "120px",
+    center: true,
     selector: (row) => (
       <div className={"actioncolimn"}>
         <AiFillEdit className=" p-0 m-0 editiconn" />
@@ -171,11 +172,13 @@ const data = [
         <b>
           <h6>Green Leaf Lettuce</h6>
         </b>
+   
         <p className="productdesc">
           {" "}
-          The root vegetables include beets, carrots, radishes, sweet potatoes,
-          and turnips
+          {`The root vegetables include beets, carrots, radishes, sweet potatoes,
+          and turnips`}
         </p>
+       
       </div>
     ),
     category: (
@@ -260,15 +263,16 @@ function Product() {
       </div>
 
       {/* datatable */}
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={handleClose} dialogClassName="addproductmainmodal"   aria-labelledby="example-custom-modal-styling-title" centered >
         <Modal.Header closeButton className="addproductheader">
-          <Modal.Title>Add Product</Modal.Title>
+          <Modal.Title id="example-custom-modal-styling-title">Add Product</Modal.Title>
         </Modal.Header>
-        <Modal.Body className="addproductbody">
+        <Modal.Body className="addproductbody p-2">
           <Addproduct />
         </Modal.Body>
         <Modal.Footer className="addproductfooter">
           <MainButton btntext={"Add"} onClick={handleClose} />
+          <MainButton btntext={"Save as Draft"} onClick={handleClose} />
           <MainButton btntext={"Cancel"} onClick={handleClose} />
         </Modal.Footer>
       </Modal>

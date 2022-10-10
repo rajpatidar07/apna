@@ -1,6 +1,8 @@
 import React from "react";
 import MainButton from "../common/button";
 import Carousel from 'react-bootstrap/Carousel';
+import ShowMoreText from "react-show-more-text";
+
 const Productdetail = () => {
   return (
     <div>
@@ -89,7 +91,15 @@ const Productdetail = () => {
               <h6 className="statustext">In Stock</h6>
               <h5 className="statuslabeltext">Quantity: 14</h5>
             </div>
-
+            <ShowMoreText
+        /* Default options */
+        lines={5}
+        more="Show more"
+        less="...Show less"
+        anchorClass="oooeeer"
+        expanded={false}
+        width={100}
+      >
             <div className="detailproduct">
               dfsiefhidgrjkdrlejdsjm dfsiefhidgrjkdrlejdsjm
               dfsiefhidgrjkdrlejdsjm dfsiefhidgrjkdrlejdsjm
@@ -113,6 +123,7 @@ const Productdetail = () => {
               dfsiefhidgrjkdrlejdsjm dfsiefhidgrjkdrlejdsjm
               dfsiefhidgrjkdrlejdsjm dfsiefhidgrjkdrlejdsjm
             </div>
+            </ShowMoreText>
           </div>
           {/*  */}
           <div className="product_lower_section product_upper_section">

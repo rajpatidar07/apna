@@ -46,6 +46,7 @@
   display: flex;
   gap: 15px;
   align-items: center;
+  padding-left: 18px;
 }
 .actioncolimn .editiconn {
   font-size: 20px;
@@ -54,6 +55,7 @@
 .productdescbox {
   padding: 10px 0;
 }
+
 .productdesc {
   -webkit-box-orient: vertical;
   display: -webkit-box;
@@ -63,57 +65,71 @@
   white-space: normal;
 }
 
-
 .productlist_table button#productstatus_dropdown {
-    margin: 0;
-    padding: 0;
-    position: absolute;
-    top: -11px;
-    left: -30px;
-    opacity: 0;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: -11px;
+  left: -30px;
+  opacity: 0;
 }
-.productlist_table .actioncolimn .productprofile_div .product_list_dropdownstatus{
-z-index: 999;
-background-color: black;
+.productlist_table
+  .actioncolimn
+  .productprofile_div
+  .product_list_dropdownstatus {
+  z-index: 999;
+  background-color: black;
 }
-.productlist_table .actioncolimn .productprofile_div .product_list_dropdownstatus .product_list_dropdownstatus_link{
-color: #fff;
-z-index: 999;
-
+.productlist_table
+  .actioncolimn
+  .productprofile_div
+  .product_list_dropdownstatus
+  .product_list_dropdownstatus_link {
+  color: #fff;
+  z-index: 999;
+}
+.productlist_table
+  .actioncolimn
+  .productprofile_div
+  .product_list_dropdownstatus
+  .product_list_dropdownstatus_link:hover {
+  color: black;
+  z-index: 999;
 }
 .productlist_table .beUiVL {
   font-size: 18px !important;
   font-weight: 600 !important;
 }
-.productlist_table .actioncolimn .doticon{
+.productlist_table .actioncolimn .doticon {
   position: relative;
 }
-.productlist_table  .sc-jSUZER.eVPPvF .actioncolimn,
-  .productlist_table  .sc-jSUZER.eVPPvF>div {
-overflow:unset !important;
+.productlist_table .sc-jSUZER.eVPPvF .actioncolimn,
+.productlist_table .sc-jSUZER.eVPPvF > div {
+  overflow: unset !important;
 }
-.dtqzBx div.dropdown:first-child{
-overflow:unset !important;
+.dtqzBx div.dropdown:first-child {
+  overflow: unset !important;
 }
-.statuschhangeselling{
+.statuschhangeselling {
   background-color: rgba(63, 195, 128, 0.9);
-          color: black;
-          border-radius: 100px;
-          height: 20px;
-          padding: 0 12px;
+  color: black;
+  border-radius: 100px;
+  height: 23px;
+  padding: 0 12px;
 }
-.statuschhangesold{
+.statuschhangesold {
   background-color: rgba(242, 38, 19, 0.9);
-          color: black;
-          border-radius: 100px;
-          height: 20px;
-          padding: 0 12px;
+  color: black;
+  border-radius: 100px;
+  height: 23px;
+  padding: 0 12px;
 }
 
 .productlist_table .sc-dkrFOg.iSAVrt.rdt_TableHeadRow {
-    background: rgb(89 193 88 / 0.7);
+  background: rgb(89 193 88 / 0.7);
 }
-.productlist_maindiv{
+.productlist_maindiv {
   height: 100vh;
   overflow: hidden auto;
+  padding-bottom: 10px;
 }
