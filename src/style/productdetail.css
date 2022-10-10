@@ -91,33 +91,7 @@ gap: 35px;
   width: 65%;
   max-width: 100%;
 }
-/* .fade.modal.show {
-  overflow: hidden;
-}
-.modal-content{
-  width: 1036px;
-  height: 100%;
-  overflow: hidden;
-}
-.addproductheader{
-  position: fixed;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    width: 64%;
-}
-.addproductfooter{
-  position: fixed;
-  bottom: 0px;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.addproductbody{
-  margin-top: 90px;
-  height: 100vh;
 
-} */
 
 /* ADD PRODUCT */
 .productvariety_boxx{
@@ -153,7 +127,7 @@ gap: 35px;
 .addproduct_form_boxx .addproduct_form {
   height: calc(100vh - 250px);
   overflow: hidden auto;
-  border: 1px solid #d5d6d7;
+  /* border: 1px solid #d5d6d7; */
   background-color: #fff;
   border-radius: 8px;
   max-width: 950px;
@@ -162,4 +136,31 @@ gap: 35px;
 .productvariety .addcategoryicon{
 font-size: 30px;
 color: #5cb85c;
+}
+.productvariety .tagselectbox{
+display: flex;
+align-items: center;
+gap: 10px;
+}
+.productvariety .tagselectbox .tagselecttitle{
+ border-radius: 20px;
+ background-color: aquamarine;
+ padding: 5px 10px;
+  }
+  .custombuttonbox{
+    position: relative;
+  }
+  .custombuttonbox .addcustominput {
+    position: absolute;
+    top: -30px;
+    left: 15px;
+}
+.custominputtD{
+  display: flex;
+  align-items: center;
+}
+.inputsection_box{
+  border: 1px solid #d5d6d7;
+border-radius: 10px;
+padding: 10px;
 }

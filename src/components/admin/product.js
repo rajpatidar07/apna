@@ -6,6 +6,7 @@ import {
   AiOutlinePlus,
   AiOutlineCloudUpload,
 } from "react-icons/ai";
+import {GiCancel} from "react-icons/gi";
 import { BiDotsVertical } from "react-icons/bi";
 import DataTable from "react-data-table-component";
 import MainButton from "./common/button";
@@ -172,13 +173,12 @@ const data = [
         <b>
           <h6>Green Leaf Lettuce</h6>
         </b>
-   
+
         <p className="productdesc">
           {" "}
           {`The root vegetables include beets, carrots, radishes, sweet potatoes,
           and turnips`}
         </p>
-       
       </div>
     ),
     category: (
@@ -263,17 +263,35 @@ function Product() {
       </div>
 
       {/* datatable */}
-      <Modal show={show} onHide={handleClose} dialogClassName="addproductmainmodal"   aria-labelledby="example-custom-modal-styling-title" centered >
+      <Modal
+        show={show}
+        onHide={handleClose}
+        dialogClassName="addproductmainmodal"
+        aria-labelledby="example-custom-modal-styling-title"
+        centered
+      >
         <Modal.Header closeButton className="addproductheader">
-          <Modal.Title id="example-custom-modal-styling-title">Add Product</Modal.Title>
+          <Modal.Title id="example-custom-modal-styling-title">
+            Add Product
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body className="addproductbody p-2">
           <Addproduct />
         </Modal.Body>
         <Modal.Footer className="addproductfooter">
-          <MainButton btntext={"Add"} onClick={handleClose} />
+        <Iconbutton
+            btntext={"Cancel"}
+            onClick={handleClose}
+            btnclass={"btn-outline-success btn adminmainbutton px-2"}
+            Iconname={<GiCancel /> }
+          />
           <MainButton btntext={"Save as Draft"} onClick={handleClose} />
-          <MainButton btntext={"Cancel"} onClick={handleClose} />
+          <Iconbutton
+          btntext={"Add Product"}
+          onClick={handleClose}
+          Iconname={<AiOutlinePlus />}
+          btnclass={"btn-success btn "}
+        />
         </Modal.Footer>
       </Modal>
       <DataTable
