@@ -112,8 +112,10 @@ gap: 35px;
   display: grid;
   grid-template-columns: 25% 25% 25% 25%;
   flex-wrap: wrap;
+  margin-top: 15px;
 }
 .productvariety{
+  margin-top: 15px;
   align-items: center;
   display: grid;
   grid-template-columns: 33.3% 33.3% 33.3%;
@@ -130,7 +132,7 @@ gap: 35px;
   /* border: 1px solid #d5d6d7; */
   background-color: #fff;
   border-radius: 8px;
-  max-width: 950px;
+  max-width: 1035px;
   width: 100%;
 }
 .productvariety .addcategoryicon{
@@ -150,10 +152,14 @@ gap: 10px;
   .custombuttonbox{
     position: relative;
   }
+.productvariety  svg.mx-2.addcategoryicon.addcustominput {
+    /* margin-bottom: -40px; */
+    margin-top: 37px;
+}
   .custombuttonbox .addcustominput {
-    position: absolute;
+    /* position: absolute;
     top: -30px;
-    left: 15px;
+    left: 15px; */
 }
 .custominputtD{
   display: flex;
@@ -163,4 +169,7 @@ gap: 10px;
   border: 1px solid #d5d6d7;
 border-radius: 10px;
 padding: 10px;
+}
+.inputlabelheading{
+  font-weight: 500;
 }

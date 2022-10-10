@@ -11,12 +11,19 @@ const Addproduct = (props) => {
   const [addtag, setaddtag] = useState("");
   const [clickaddtag, setclickaddtag] = useState("");
   const [inputfield, setinputfield] = useState(false);
-  const [inpuadd, setinpuadd] = useState([]);
-  const [desadd, setdesadd] = useState([]);
+  const [inpuadd, setinpuadd] = useState('');
+  const [desadd, setdesadd] = useState('');
+  var favorites = [];
+  var myObj = {
+    "Head" : inpuadd,  
+    "Desc" : desadd   
+};
+//push the object to your array
+favorites.push( myObj );
+console.log("favorites-----"+JSON.stringify(favorites))
 
 
   // const seotag = [];
-
   const ontagaddclick = () => {
     setclickaddtag(addtag);
     // seotag.push(clickaddtag);
@@ -52,7 +59,7 @@ const Addproduct = (props) => {
           <h5 className="m-0">Basic Info</h5>
           <div className="productvariety_one">
             <Form.Group className="mx-3" controlId="formPlaintextEmail">
-              <Form.Label column sm="12">
+              <Form.Label className="inputlabelheading" column sm="12">
                 SKU
               </Form.Label>
               <Col sm="12">
@@ -60,7 +67,7 @@ const Addproduct = (props) => {
               </Col>
             </Form.Group>
             <Form.Group className="mx-3" controlId="formPlaintextPassword">
-              <Form.Label column sm="12">
+              <Form.Label className="inputlabelheading" column sm="12">
                 Product Title/Name
               </Form.Label>
               <Col sm="12">
@@ -68,7 +75,7 @@ const Addproduct = (props) => {
               </Col>
             </Form.Group>
             <Form.Group className="mx-3" controlId="formPlaintextPassword">
-              <Form.Label column sm="12">
+              <Form.Label className="inputlabelheading" column sm="12">
                 Product Slug
               </Form.Label>
               <Col sm="12">
@@ -76,7 +83,7 @@ const Addproduct = (props) => {
               </Col>
             </Form.Group>
             <Form.Group className="mx-3" controlId="formPlaintextPassword">
-              <Form.Label column sm="12">
+              <Form.Label className="inputlabelheading" column sm="12">
                 Store Name
               </Form.Label>
               <Col sm="12">
@@ -85,7 +92,7 @@ const Addproduct = (props) => {
             </Form.Group>
           </div>
           <Form.Group className="mx-3" controlId="formPlaintextPassword">
-            <Form.Label column sm="12">
+            <Form.Label className="inputlabelheading" column sm="12">
               Product Description
             </Form.Label>
             <Col sm="12">
@@ -97,7 +104,6 @@ const Addproduct = (props) => {
                 }}
                 onEditorChange={undefined}
               />
-              {/* <Form.Control as="textarea" rows={3} placeholder="Product Description" /> */}
             </Col>
           </Form.Group>
           </div>
@@ -106,7 +112,7 @@ const Addproduct = (props) => {
           <h5 className="m-0">Category Info</h5>
           <div className="productvariety">
             <Form.Group className="mx-3" controlId="formPlaintextEmail">
-              <Form.Label column sm="12">
+              <Form.Label className="inputlabelheading" column sm="12">
                 Product Type
               </Form.Label>
               <Col sm="12">
@@ -124,7 +130,7 @@ const Addproduct = (props) => {
               </Col>
             </Form.Group>
             <Form.Group className="mx-3" controlId="formPlaintextEmail">
-              <Form.Label column sm="12">
+              <Form.Label className="inputlabelheading" column sm="12">
                 Category
               </Form.Label>
               <Col sm="12">
@@ -137,7 +143,7 @@ const Addproduct = (props) => {
               </Col>
             </Form.Group>
             <Form.Group className="mx-3" controlId="formPlaintextEmail">
-              <Form.Label column sm="12">
+              <Form.Label className="inputlabelheading" column sm="12">
                 Parent Category
               </Form.Label>
               <Col sm="12">
@@ -157,9 +163,9 @@ const Addproduct = (props) => {
           {/*Price and Quantity  */}
           <div className="my-3 inputsection_box">
           <h5 className="m-0">Stock Info</h5>
-          <div className="productvariety">
+          <div className="productvariety mt-0">
             <Form.Group className="mx-3" controlId="formPlaintextPassword">
-              <Form.Label column sm="12">
+              <Form.Label className="inputlabelheading" column sm="12">
                 Product Quantity
               </Form.Label>
               <Col sm="12">
@@ -167,7 +173,7 @@ const Addproduct = (props) => {
               </Col>
             </Form.Group>
             <Form.Group className="mx-3" controlId="formPlaintextPassword">
-              <Form.Label column sm="12">
+              <Form.Label className="inputlabelheading" column sm="12">
                 Mrp
               </Form.Label>
               <Col sm="12">
@@ -175,7 +181,7 @@ const Addproduct = (props) => {
               </Col>
             </Form.Group>
             <Form.Group className="m-3" controlId="formPlaintextPassword">
-              <Form.Label column sm="12">
+              <Form.Label className="inputlabelheading" column sm="12">
                 Product Price
               </Form.Label>
               <Col sm="12">
@@ -183,7 +189,7 @@ const Addproduct = (props) => {
               </Col>
             </Form.Group>
             <Form.Group className="mx-3" controlId="formPlaintextPassword">
-              <Form.Label column sm="12">
+              <Form.Label className="inputlabelheading" column sm="12">
                 Sale Price
               </Form.Label>
               <Col sm="12">
@@ -191,11 +197,57 @@ const Addproduct = (props) => {
               </Col>
             </Form.Group>
             <Form.Group className="mx-3" controlId="formPlaintextPassword">
-              <Form.Label column sm="12">
+              <Form.Label className="inputlabelheading" column sm="12">
                 Discount
               </Form.Label>
               <Col sm="12">
                 <Form.Control type="number" placeholder="Discount" />
+              </Col>
+            </Form.Group>
+          </div>
+          </div>
+          {/* Taxes */}
+          <div className="my-3 inputsection_box">
+          <h5 className="m-0">Taxes</h5>
+          <div className="productvariety mt-0">
+            <Form.Group className="mx-3" controlId="formPlaintextPassword">
+              <Form.Label className="inputlabelheading" column sm="12">
+              Wholesale Sales Tax
+              </Form.Label>
+              <Col sm="12">
+                <Form.Control type="number" placeholder="Wholesale Sales Tax" />
+              </Col>
+            </Form.Group>
+            <Form.Group className="mx-3" controlId="formPlaintextPassword">
+              <Form.Label className="inputlabelheading" column sm="12">
+                Manufacturers’ Sales Tax 
+              </Form.Label>
+              <Col sm="12">
+                <Form.Control type="number" placeholder="Manufacturers’ Sales Tax " />
+              </Col>
+            </Form.Group>
+            <Form.Group className="m-3" controlId="formPlaintextPassword">
+              <Form.Label className="inputlabelheading" column sm="12">
+              Retail Sales Tax
+              </Form.Label>
+              <Col sm="12">
+                <Form.Control type="number" placeholder="Retail Sales Tax" />
+              </Col>
+            </Form.Group>
+            <Form.Group className="mx-3" controlId="formPlaintextPassword">
+              <Form.Label className="inputlabelheading" column sm="12">
+                Gst
+              </Form.Label>
+              <Col sm="12">
+                <Form.Control type="number" placeholder="Gst" />
+              </Col>
+            </Form.Group>
+            <Form.Group className="mx-3" controlId="formPlaintextPassword">
+              <Form.Label className="inputlabelheading" column sm="12">
+                Value Added Tax
+              </Form.Label>
+              <Col sm="12">
+                <Form.Control type="number" placeholder="Value Added Tax" />
               </Col>
             </Form.Group>
           </div>
@@ -205,7 +257,7 @@ const Addproduct = (props) => {
           <h5 className="m-0">Date</h5>
           <div className="productvariety">
             <Form.Group className="mx-3" controlId="formPlaintextPassword">
-              <Form.Label column sm="12">
+              <Form.Label className="inputlabelheading" column sm="12">
                 Manufacturing Date
               </Form.Label>
               <Col sm="12">
@@ -213,7 +265,7 @@ const Addproduct = (props) => {
               </Col>
             </Form.Group>
             <Form.Group className="mx-3">
-              <Form.Label column sm="12 d-flex align-itmes-center">
+              <Form.Label className="inputlabelheading" column sm="12 d-flex align-itmes-center">
                 Expire Date
               </Form.Label>
               <Col sm="12">
@@ -230,7 +282,7 @@ const Addproduct = (props) => {
               <h5 className="m-0">Variety</h5>
               <div className="productvariety_color">
                 <Form.Group className="mx-3" controlId="formPlaintextPassword">
-                  <Form.Label column sm="2 colorpickerproduct">
+                  <Form.Label className="inputlabelheading" column sm="2 colorpickerproduct">
                     Color
                   </Form.Label>
                   <Col sm="5">
@@ -238,7 +290,7 @@ const Addproduct = (props) => {
                   </Col>
                 </Form.Group>
                 <Form.Group className="mx-3" controlId="formPlaintextPassword">
-                  <Form.Label column sm="12">
+                  <Form.Label className="inputlabelheading" column sm="12">
                     Size
                   </Form.Label>
                   <Col sm="12">
@@ -246,7 +298,7 @@ const Addproduct = (props) => {
                   </Col>
                 </Form.Group>
                 <Form.Group className="mx-3" controlId="formPlaintextPassword">
-                  <Form.Label column sm="12">
+                  <Form.Label className="inputlabelheading" column sm="12">
                     Quantity
                   </Form.Label>
                   <Col sm="12">
@@ -265,13 +317,13 @@ const Addproduct = (props) => {
               <h5 className="m-0">Offer</h5>
               <div className="productvariety">
                 <Form.Group className="mx-3" controlId="formPlaintextPassword">
-                  <Form.Label column sm="12 d-flex align-itmes-center">
+                  <Form.Label className="inputlabelheading" column sm="12 d-flex align-itmes-center">
                     Special Offer
                     <Form.Check className="mx-2" />
                   </Form.Label>
                 </Form.Group>
                 <Form.Group className="mx-3" controlId="formPlaintextPassword">
-                  <Form.Label column sm="9 d-flex align-items-end">
+                  <Form.Label className="inputlabelheading" column sm="9 d-flex align-items-end">
                     Featured Product
                     <Form.Check className="mx-2" />
                   </Form.Label>
@@ -285,7 +337,7 @@ const Addproduct = (props) => {
                    <div className="my-3 inputsection_box">
 
           <h5 className="m-0">Seo Tag</h5>
-          <div className="productvariety my-3">
+          <div className="productvariety">
             <Form.Group className="mx-3" controlId="formPlaintextPassword">
               <div className=" d-flex align-items-center my-2">
                 <Form.Control
@@ -299,15 +351,18 @@ const Addproduct = (props) => {
                   onClick={ontagaddclick}
                 />
               </div>
-              <div className="d-flex align-items-center tagselectbox my-2">
-                <h6 className="tagselecttitle">{"#" + clickaddtag}</h6>
-                <h6 className="tagselecttitle">{"#" + clickaddtag}</h6>
+              <div className="d-flex align-items-center tagselectbox mt-2">
+                <h6 className="tagselecttitle mb-0">{"#" + clickaddtag}</h6>
+                <h6 className="tagselecttitle mb-0">{"#" + clickaddtag}</h6>
               </div>
             </Form.Group>
           </div>
           </div>
+
+
           {/* input */}
                    <div className="my-3 inputsection_box">
+                   <h5 className="m-0">Add Custom Input</h5>
 
           {/* <div className="custombuttonbox">
             <Iconbutton
@@ -324,7 +379,7 @@ const Addproduct = (props) => {
                 {" "}
                 <div className="productvariety mt-3">
                 <Form.Group className="mx-3" controlId="formPlaintextPassword">
-                <Form.Label column sm="12 d-flex align-itmes-center">
+                <Form.Label className="inputlabelheading" column sm="12 d-flex align-itmes-center">
                    Header
                   </Form.Label>
                 <Form.Control
@@ -334,7 +389,7 @@ const Addproduct = (props) => {
                   />
                 </Form.Group>
                 <Form.Group className="mx-3" controlId="formPlaintextPassword">
-                <Form.Label column sm="12 d-flex align-itmes-center">
+                <Form.Label className="inputlabelheading" column sm="12 d-flex align-itmes-center">
                    Description
                   </Form.Label>
                 <Form.Control
@@ -344,27 +399,27 @@ const Addproduct = (props) => {
                   />
 
                 </Form.Group>
-                <Iconbutton
-              btntext={"Add Custom Input"}
+                {/* <Iconbutton
+              btntext={"Add"}
               onClick={oncustomlabelclick}
               Iconname={<AiOutlinePlus />}
-              btnclass={"btn-success btn  addcustominput "}
-            />
-                {/* <BsFillPlusSquareFill
+              btnclass={"btn-success btn addcustominput "}
+            /> */}
+                <BsFillPlusSquareFill
                   className=" mx-2 addcategoryicon addcustominput"
                   onClick={oncustomlabelclick}
-                />{" "} */}
+                />{" "}
               </div>
               </div>
               {/* </>
             ) : null} */}
             <div className="my-3 inputsection_box">
-            <div className="productvariety">
+            <div className="productvariety mt-0">
             <Form.Group className="mx-3" controlId="formPlaintextPassword">
-              <Form.Label column sm="12">
+              <Form.Label className="inputlabelheading" column sm="12 p-0">
                 {inpuadd}
               </Form.Label>
-              <Form.Label column sm="12">
+              <Form.Label className="" column sm="12 p-0">
                 {desadd}
               </Form.Label>
             </Form.Group>
