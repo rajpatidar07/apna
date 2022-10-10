@@ -17,6 +17,8 @@ import Promotionproduct from "./products/promotionproduct";
 import Offerproduct from "./products/offerproduct";
 import Deletedproduct from "./products/deletedproduct";
 import Order_detail from "./order/order_detail";
+import '../../style/common.css';
+
 
 function AdminLayout() {
   return (
@@ -28,7 +30,7 @@ function AdminLayout() {
           </div>
           <div className="col-lg-10 col-md-9 col-sm-8">
             <AdminHeader />
-            <div className="main_content_div">
+            <div className="main_content_div" >
               <Routes>
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/product" element={<Product />} />
