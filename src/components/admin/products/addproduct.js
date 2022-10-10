@@ -6,25 +6,14 @@ import MainButton from "../common/button";
 import { Editor } from "@tinymce/tinymce-react";
 import { BsFillPlusSquareFill } from 'react-icons/bs';
 const Addproduct = (props) => {
-  const [spcloffercheck, setspcloffercheck] = useState('0')
-  const [expiredatecheck, setexpiredatecheck] = useState('0')
+  const [addtag, setaddtag] = useState('')
 
-  const onSpecialOfferclick = (e) =>{
-    if (e.target.checked) {
-      setspcloffercheck('1')
-    } else {
-      setspcloffercheck('0')
-    }
+ 
+  const ontagaddclick = ()=>{
   }
-  const onExpireDateclick = (e) =>{
-    if (e.target.checked) {
-      setexpiredatecheck('1')
-    } else {
-      setexpiredatecheck('0')
-    }
-  }
-  const ontagaddclick = (e)=>{
-console.log("-------"+e.target.value)
+  const ontagchangeclick = (e)=>{
+setaddtag(e.target.value)
+
   }
   return (
     <div>
@@ -175,16 +164,7 @@ console.log("-------"+e.target.value)
           <Form.Control type="number" placeholder="Discount" />
         </Col>
       </Form.Group>
-      <Form.Group  className="mx-3" controlId="formPlaintextPassword">
-        <Form.Label column sm="12 d-flex align-itmes-center">
-        Special Offer
-        <Form.Check className="mx-2" value={spcloffercheck} onChange={onSpecialOfferclick}/>
-        </Form.Label>
-        {spcloffercheck==='1' ?
-        <Col sm="12">
-          <Form.Control type="number" placeholder="Offer"/>
-        </Col> : null }
-      </Form.Group>
+     
       </div>
 {/*Date  */}
 <hr className="m-2" />
@@ -201,12 +181,10 @@ console.log("-------"+e.target.value)
       <Form.Group  className="mx-3" >
         <Form.Label column sm="12 d-flex align-itmes-center">
         Expire Date
-        <Form.Check className="mx-2" onChange={onExpireDateclick} value={expiredatecheck}/>
         </Form.Label>
-        {expiredatecheck === '1' ?
           <Col sm="12">
           <Form.Control type="date" placeholder="Price" />
-        </Col> :null}
+        </Col> 
       </Form.Group>
       </div>
 {/* Variation */}
@@ -242,20 +220,34 @@ console.log("-------"+e.target.value)
       </Form.Group>
 </div>
 </div>
-  {/* offer */}
-  <div>
+ 
+</div>
+{/* Offer */}
+
+<hr className="m-2" />
+<div>
+<div className="productvariety_box">
       <h5 className="m-0">Offer</h5>
       <div className="productvariety">
+      <Form.Group  className="mx-3" controlId="formPlaintextPassword">
+        <Form.Label column sm="12 d-flex align-itmes-center">
+        Special Offer
+        <Form.Check className="mx-2" />
+        </Form.Label>
+      </Form.Group>
        <Form.Group  className="mx-3" controlId="formPlaintextPassword">
         <Form.Label column sm="9 d-flex align-items-end">
         Featured Product
-        <Form.Check />
+        <Form.Check className="mx-2"/>
         </Form.Label>
       </Form.Group>
       </div>
       </div>
 </div>
 
+     
+
+ 
     {/* seo tag */}
       <hr className="m-2" />
       <div className="productvariety">
@@ -264,7 +256,7 @@ console.log("-------"+e.target.value)
         Tag
         </Form.Label>
         <div className=" d-flex align-items-center">
-        <Form.Control column sm="9" onChange={undefined}/>
+        <Form.Control column sm="9" onChange={ontagchangeclick} value={addtag}/>
         <BsFillPlusSquareFill className=" mx-2 addcategoryicon" onClick={ontagaddclick}/>
         </div>
       </Form.Group>
