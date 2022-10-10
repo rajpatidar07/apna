@@ -68,3 +68,12 @@
     overflow: hidden auto;
     height: calc(100vh - 65px);
 }
+/* .Pending{
+    background-color: "rgb(204 207 0 / 90%)";
+    color: "black";
+    border-radius: "100px";
+    height: "40px";
+    margin: "8px auto";
+    display: "flex";
+    justify-content: "center";
+} */

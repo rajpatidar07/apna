@@ -18,6 +18,7 @@ import Offerproduct from "./products/offerproduct";
 import Deletedproduct from "./products/deletedproduct";
 import Order_detail from "./order/order_detail";
 import '../../style/common.css';
+import Login from "./login/login";
 
 
 function AdminLayout() {
@@ -46,6 +47,7 @@ function AdminLayout() {
                 <Route path="/offerproduct" element={<Offerproduct />} />
                  <Route path="/deletedproduct" element={<Deletedproduct />} />
                  <Route path="/order_detail" element={<Order_detail/>}/>
+                 <Route path="/login" element={<Login/>}/>
               </Routes>
             </div>
           </div>
