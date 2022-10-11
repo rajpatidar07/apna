@@ -303,7 +303,6 @@ function Product() {
         highlightOnHover
         pointerOnHover
         className={"productlist_table"}
-        onRowClicked={navigate("/AddEmployee")}
       />
     </div>
   );

@@ -135,9 +135,13 @@ gap: 35px;
   max-width: 1035px;
   width: 100%;
 }
-.productvariety .addcategoryicon{
+.productvariety  .addcategoryicon{
 font-size: 30px;
 color: #5cb85c;
+}
+.productvariety .cudtombtn-box{
+  display: flex;
+  align-items: center;
 }
 .productvariety .tagselectbox{
 display: flex;
@@ -149,17 +153,10 @@ gap: 10px;
  background-color: aquamarine;
  padding: 5px 10px;
   }
-  .custombuttonbox{
-    position: relative;
-  }
-.productvariety  svg.mx-2.addcategoryicon.addcustominput {
-    /* margin-bottom: -40px; */
-    margin-top: 37px;
-}
-  .custombuttonbox .addcustominput {
-    /* position: absolute;
-    top: -30px;
-    left: 15px; */
+ 
+
+.productvariety .cudtombtn-box .btncancel {
+font-size: 32px;
 }
 .custominputtD{
   display: flex;
@@ -172,4 +169,11 @@ padding: 10px;
 }
 .inputlabelheading{
   font-weight: 500;
+}
+.productvariety-heading{
+  margin: 15px 20px 0;
+  align-items: center;
+  display: grid;
+  grid-template-columns: 33.3% 33.3% 33.3%;
+  flex-wrap: wrap;
 }
