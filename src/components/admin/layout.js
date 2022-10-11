@@ -25,6 +25,7 @@ function AdminLayout() {
   return (
     <div className="container-fluid p-0">
       <Router>
+      
         <div className="row m-0 page_main_row">
           <div className="col-lg-2 col-md-3 col-sm-4 sidebar_main_div p-0">
             <AdminSidebar />
@@ -33,7 +34,7 @@ function AdminLayout() {
             <AdminHeader />
             <div className="main_content_div" >
               <Routes>
-                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/dashboard" element={<Dashboard />} /> 
                 <Route path="/product" element={<Product />} />
                 <Route path="/orders" element={<Orders />} />
                 <Route path="/addproduct" element={<Addproduct />} />

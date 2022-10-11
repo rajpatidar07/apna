@@ -1,7 +1,7 @@
 .productdetail_page_box {
   margin-top: 1.5rem;
   display: grid;
-  grid-template-columns: 55% 48%;
+  grid-template-columns: 54% 42%;
 gap: 35px;
 }
 .productdetail_page_box .productimg_box {
@@ -15,7 +15,7 @@ gap: 35px;
 .productdetail_page_box .product_detail_box {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 10px;
 }
 .productdetail_page_box .product_detail_box .product_upper_section {
   display: flex;
@@ -29,15 +29,14 @@ gap: 35px;
 .productdetail_page_box .product_detail_box .product_mid_section {
     display: flex;
     flex-direction: column;
-    gap: 5px;
 }
 .productdetail_page_box .product_detail_box .product_mid_section .detailproduct{
-    -webkit-box-orient: vertical;
+    /* -webkit-box-orient: vertical;
   display: -webkit-box;
   -webkit-line-clamp: 7;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: normal;
+  white-space: normal; */
 
 }
 .productdetail_page_box
@@ -51,7 +50,7 @@ gap: 35px;
   .productstatus {
   display: flex;
   gap: 10px;
-  align-items: end;
+  align-items: center;
 }
 .productdetail_page_box
   .product_detail_box
@@ -60,10 +59,12 @@ gap: 35px;
   .statuslabeltext {
 }
 .productdetail_page_box .product_detail_box .product_upper_section .statustext {
-  background: rgb(0 128 0 / 0.5);
-  border-radius: 50px;
-  padding-left: 10px;
-  padding-right: 10px;
+  color: rgb(0 128 0 / 0.5);
+
+}
+.productdetail_page_box .product_detail_box .product_upper_section .statustextred {
+  color: red;
+
 }
 .productdetail_page_box
   .product_detail_box
@@ -71,7 +72,7 @@ gap: 35px;
   .productstatus {
   display: flex;
   gap: 10px;
-  align-items: end;
+  align-items: center;
 }
 .productdetail_page_box
   .product_detail_box
@@ -83,6 +84,23 @@ gap: 35px;
     padding-left: 10px;
     padding-right: 10px;  
 }
+.product_mid_section .priceboxx {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 0;
+}
+.product_mid_section .priceboxx .mrprate{
+text-decoration: line-through;
+margin-bottom: 0;
+
+}
+
+
+
+
+
+
 /* add product modal */
 
 .addproductmainmodal{

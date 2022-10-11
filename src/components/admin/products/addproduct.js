@@ -13,9 +13,7 @@ const Addproduct = (props) => {
  
 
 
-let adtag;
   const ontagchangeclick = (e) => {
-    // adtag= e.target.value;
     setaddtag(e.target.value);
   };
   const tagRemoveClick = () =>{
@@ -23,9 +21,8 @@ let adtag;
   }
   const seotag = [];
   const ontagaddclick = () => {
-    let cliktagg = adtag;
-    // setclickaddtag(addtag);
-    seotag.push(cliktagg);
+    setclickaddtag(addtag);
+    seotag.push(clickaddtag);
     setaddtag('')
   console.log(seotag)
 

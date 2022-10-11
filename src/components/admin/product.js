@@ -7,7 +7,7 @@ import {
   AiOutlineCloudUpload,
 } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import {GiCancel} from "react-icons/gi";
+import { GiCancel } from "react-icons/gi";
 import { BiDotsVertical } from "react-icons/bi";
 import DataTable from "react-data-table-component";
 import MainButton from "./common/button";
@@ -17,210 +17,219 @@ import Addproduct from "./products/addproduct";
 import Iconbutton from "./common/iconbutton";
 import Dropdown from "react-bootstrap/Dropdown";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
-const columns = [
-  {
-    name: "Sku",
-    selector: (row) => row.sku,
-    sortable: true,
-    width: "100px",
-    center: true,
-  },
-  {
-    name: "#",
-    width: "100px",
-    center: true,
-    cell: (row) => (
-      <img
-        height="90px"
-        width="75px"
-        alt={row.name}
-        src={
-          "https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg"
-        }
-        style={{
-          borderRadius: 15,
-          paddingTop: 10,
-          paddingBottom: 10,
-          textAlign: "right",
-        }}
-        onClick={handleClick}
-      />
-    ),
-  },
-  {
-    name: "Product Name",
-    selector: (row) => row.pname,
-    sortable: true,
-    width: "250px",
-  },
-  {
-    name: "Category",
-    selector: (row) => row.category,
-    sortable: true,
-    width: "160px",
-  },
-  {
-    name: "Price",
-    selector: (row) => row.price,
-    sortable: true,
-    width: "90px",
-    center: true,
-    style: {
-      paddingRight: "32px",
-      paddingLeft: "0px",
-    },
-  },
-  {
-    name: "Gst",
-    selector: (row) => row.gst,
-    sortable: true,
-    width: "90px",
-    center: true,
-    style: {
-      paddingLeft: "0px",
-    },
-  },
 
-  {
-    name: "Stock",
-    selector: (row) => row.stock,
-    sortable: true,
-    width: "100px",
-    center: true,
-    style: {
-      paddingRight: "32px",
-      paddingLeft: "0px",
-    },
-  },
-
-  {
-    name: "Discount",
-    selector: (row) => row.discount,
-    sortable: true,
-    width: "130px",
-    center: true,
-    style: {
-      paddingRight: "32px",
-      paddingLeft: "0px",
-    },
-  },
-  {
-    name: "Status",
-    selector: (row) => (
-      <div
-        className={
-          row.status === "Selling"
-            ? "statuschhangeselling"
-            : row.status === "Sold out"
-            ? "statuschhangesold"
-            : null
-        }
-      >
-        {row.status}
-      </div>
-    ),
-    sortable: true,
-    width: "130px",
-    center: true,
-  },
-  {
-    name: "Action",
-    width: "120px",
-    center: true,
-    selector: (row) => (
-      <div className={"actioncolimn"}>
-        <AiFillEdit className=" p-0 m-0 editiconn" />
-        <AiFillDelete className=" p-0 m-0 editiconn" />
-        <BiDotsVertical className=" p-0 m-0 editiconn doticon" />
-
-        <Dropdown className="productprofile_div p-0 m-0 editiconn doticon">
-          <Dropdown.Toggle
-            className=""
-            variant=""
-            id="productstatus_dropdown"
-          ></Dropdown.Toggle>
-          <Dropdown.Menu className="product_list_dropdownstatus">
-            <Dropdown.Item
-              className="product_list_dropdownstatus_link"
-              href="#/action-1"
-            >
-              Action
-            </Dropdown.Item>
-            <Dropdown.Item
-              className="product_list_dropdownstatus_link"
-              href="#/action-2"
-            >
-              Another action
-            </Dropdown.Item>
-            <Dropdown.Item
-              className="product_list_dropdownstatus_link"
-              href="#/action-3"
-            >
-              Something else
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-      </div>
-    ),
-  },
-];
-
-const data = [
-  {
-    id: 1,
-    sku: "9AF4FE",
-    pname: (
-      <div className="productdescbox">
-        <b>
-          <p className="mb-0">Green Leaf Lettuce</p>
-        </b>
-
-        <p className="productdesc">
-          {" "}
-          {`The root vegetables include beets, carrots, radishes, sweet potatoes,
-          and turnips`}
-        </p>
-      </div>
-    ),
-    category: (
-      <p className="productdesc">Fruits & Vegetable Fruits & Vegetable</p>
-    ),
-    price: "$14",
-    gst: "10%",
-    stock: "15",
-    status: "Selling",
-    discount: "50%",
-  },
-  {
-    id: 2,
-    sku: "9AF4FE",
-    pname: (
-      <div className="productdescbox">
-        <b>
-          <p className="mb-0">Green Leaf Lettuce</p>
-        </b>
-        <p className="productdesc">
-          {" "}
-          The root vegetables include beets, and turnips
-        </p>
-      </div>
-    ),
-    category: "Fruits & Vegetable",
-    price: "$14",
-    gst: "10%",
-    stock: "15",
-    status: "Sold out",
-    discount: "50%",
-  },
-];
-const handleClick = () => {};
-const onButtonClick = () => {};
 function Product() {
-  let navigate = useNavigate();  
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
+  const columns = [
+    {
+      name: "Sku",
+      selector: (row) => (
+        <p
+          onClick={() => {
+            navigate("/productdetail");
+          }}
+        >
+          {row.sku}
+        </p>
+      ),
+      sortable: true,
+      width: "100px",
+      center: true,
+    },
+    {
+      name: "#",
+      width: "100px",
+      center: true,
+      cell: (row) => (
+        <img
+          height="90px"
+          width="75px"
+          alt={row.name}
+          src={
+            "https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg"
+          }
+          style={{
+            borderRadius: 15,
+            paddingTop: 10,
+            paddingBottom: 10,
+            textAlign: "right",
+          }}
+          onClick={handleClick}
+        />
+      ),
+    },
+    {
+      name: "Product Name",
+      selector: (row) => row.pname,
+      sortable: true,
+      width: "250px",
+    },
+    {
+      name: "Category",
+      selector: (row) => row.category,
+      sortable: true,
+      width: "160px",
+    },
+    {
+      name: "Price",
+      selector: (row) => row.price,
+      sortable: true,
+      width: "90px",
+      center: true,
+      style: {
+        paddingRight: "32px",
+        paddingLeft: "0px",
+      },
+    },
+    {
+      name: "Gst",
+      selector: (row) => row.gst,
+      sortable: true,
+      width: "90px",
+      center: true,
+      style: {
+        paddingLeft: "0px",
+      },
+    },
+  
+    {
+      name: "Stock",
+      selector: (row) => row.stock,
+      sortable: true,
+      width: "100px",
+      center: true,
+      style: {
+        paddingRight: "32px",
+        paddingLeft: "0px",
+      },
+    },
+  
+    {
+      name: "Discount",
+      selector: (row) => row.discount,
+      sortable: true,
+      width: "130px",
+      center: true,
+      style: {
+        paddingRight: "32px",
+        paddingLeft: "0px",
+      },
+    },
+    {
+      name: "Status",
+      selector: (row) => (
+        <div
+          className={
+            row.status === "Selling"
+              ? "statuschhangeselling"
+              : row.status === "Sold out"
+              ? "statuschhangesold"
+              : null
+          }
+        >
+          {row.status}
+        </div>
+      ),
+      sortable: true,
+      width: "130px",
+      center: true,
+    },
+    {
+      name: "Action",
+      width: "120px",
+      center: true,
+      selector: (row) => (
+        <div className={"actioncolimn"}>
+          <AiFillEdit className=" p-0 m-0 editiconn" />
+          <AiFillDelete className=" p-0 m-0 editiconn" />
+          <BiDotsVertical className=" p-0 m-0 editiconn doticon" />
+  
+          <Dropdown className="productprofile_div p-0 m-0 editiconn doticon">
+            <Dropdown.Toggle
+              className=""
+              variant=""
+              id="productstatus_dropdown"
+            ></Dropdown.Toggle>
+            <Dropdown.Menu className="product_list_dropdownstatus">
+              <Dropdown.Item
+                className="product_list_dropdownstatus_link"
+                href="#/action-1"
+              >
+                Action
+              </Dropdown.Item>
+              <Dropdown.Item
+                className="product_list_dropdownstatus_link"
+                href="#/action-2"
+              >
+                Another action
+              </Dropdown.Item>
+              <Dropdown.Item
+                className="product_list_dropdownstatus_link"
+                href="#/action-3"
+              >
+                Something else
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
+      ),
+    },
+  ];
+  
+  const data = [
+    {
+      id: 1,
+      sku: "9AF4FE",
+      pname: (
+        <div className="productdescbox">
+          <b>
+            <p className="mb-0">Green Leaf Lettuce</p>
+          </b>
+  
+          <p className="productdesc">
+            {" "}
+            {`The root vegetables include beets, carrots, radishes, sweet potatoes,
+            and turnips`}
+          </p>
+        </div>
+      ),
+      category: (
+        <p className="productdesc">Fruits & Vegetable Fruits & Vegetable</p>
+      ),
+      price: "$14",
+      gst: "10%",
+      stock: "15",
+      status: "Selling",
+      discount: "50%",
+    },
+    {
+      id: 2,
+      sku: "9AF4FE",
+      pname: (
+        <div className="productdescbox">
+          <b>
+            <p className="mb-0">Green Leaf Lettuce</p>
+          </b>
+          <p className="productdesc">
+            {" "}
+            The root vegetables include beets, and turnips
+          </p>
+        </div>
+      ),
+      category: "Fruits & Vegetable",
+      price: "$14",
+      gst: "10%",
+      stock: "15",
+      status: "Sold out",
+      discount: "50%",
+    },
+  ];
+  const handleClick = () => {};
+  const onButtonClick = () => {};
+  const navigate = useNavigate();
+  
   return (
     <div className="App productlist_maindiv">
       <h2>Products</h2>
@@ -281,7 +290,7 @@ function Product() {
           <Addproduct />
         </Modal.Body>
         <Modal.Footer className="addproductfooter">
-        <Iconbutton
+          <Iconbutton
             btntext={"X Cancel"}
             onClick={handleClose}
             btnclass={"btn-outline-success btn adminmainbutton px-2"}
@@ -289,11 +298,11 @@ function Product() {
           />
           <MainButton btntext={"Save as Draft"} onClick={handleClose} />
           <Iconbutton
-          btntext={"Add Product"}
-          onClick={handleClose}
-          Iconname={<AiOutlinePlus />}
-          btnclass={"btn-success btn "}
-        />
+            btntext={"Add Product"}
+            onClick={handleClose}
+            Iconname={<AiOutlinePlus />}
+            btnclass={"btn-success btn "}
+          />
         </Modal.Footer>
       </Modal>
       <DataTable
