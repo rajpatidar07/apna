@@ -19,6 +19,8 @@ import Deletedproduct from "./products/deletedproduct";
 import Order_detail from "./order/order_detail";
 import '../../style/common.css';
 import Login from "./login/login";
+import Footer from "./login/footer";
+import Signup from "./login/signup";
 
 
 function AdminLayout() {
@@ -27,10 +29,13 @@ function AdminLayout() {
   return (
     <div className="container-fluid p-0">
     <Router>
-  {window.location.pathname === "/" ? 
+  {window.location.pathname === "/" ? (
     <Routes>
       <Route path="/" element={<Login/>}/>
+      <Route path="/signup" element={<Signup/>}/>
+
       </Routes>
+  )
       :
             
         <div className="row m-0 page_main_row">
@@ -55,6 +60,8 @@ function AdminLayout() {
                 <Route path="/offerproduct" element={<Offerproduct />} />
                  <Route path="/deletedproduct" element={<Deletedproduct />} />
                  <Route path="/order_detail" element={<Order_detail/>}/>
+                 <Route path="/footer" element={<Footer/>}/>
+
                 </Routes>
             </div>
           </div>

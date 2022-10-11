@@ -7,7 +7,15 @@
   background-color: rgba(26, 28, 35/0.7);
   background: #fff;
 }
-
+.heading_logo .logo img {
+  max-width: 100%;
+  max-height: 64px;
+}
+.heading_logo .heading_line h3 {
+  font-size: 25px;
+  margin: 16px 0px;
+  color: #4a5568;
+}
 .admin_login_form .log-in-box .log-in-title h3 {
   margin-bottom: calc(1px + (6 - 1) * ((100vw - 320px) / (1920 - 320)));
   font-size: calc(18px + (21 - 18) * ((100vw - 320px) / (1920 - 320)));
@@ -20,6 +28,7 @@
 .admin_login_form .log-in-box .log-in-title h4 {
   color: #4a5568;
   margin-top: 8px;
+  padding-bottom: 16px;
 }
 .admin_login_form .log-in-button ul li {
   list-style: none;
@@ -74,4 +83,11 @@
 .admin_login_form .log-in-box .sign-up-box {
   margin-top: 20px;
   text-align: center;
+}
+.for_scrol{
+      overflow: hidden auto;
+      height: 100vh;
+}
+.form-check-label{
+ 
 }
