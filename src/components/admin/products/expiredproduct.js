@@ -1,14 +1,19 @@
 import React, { useState } from "react";
 import Input from "../common/input";
-import { AiFillDelete, AiFillEdit, AiOutlinePlus,AiOutlineCloudUpload } from "react-icons/ai";
+import {
+  AiFillDelete,
+  AiFillEdit,
+  AiOutlinePlus,
+  AiOutlineCloudUpload,
+} from "react-icons/ai";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import Iconbutton from "../common/iconbutton";
-import Dropdown from 'react-bootstrap/Dropdown';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Dropdown from "react-bootstrap/Dropdown";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
 const columns = [
   {
     name: "SKU",
@@ -55,11 +60,11 @@ const columns = [
     sortable: true,
     width: "130px",
     center: true,
-				style: {
-          paddingRight: '32px',
-          paddingLeft:'0px',
-					},
-				},
+    style: {
+      paddingRight: "32px",
+      paddingLeft: "0px",
+    },
+  },
 
   {
     name: "STOCK",
@@ -67,11 +72,11 @@ const columns = [
     sortable: true,
     width: "130px",
     center: true,
-				style: {
-          paddingRight: '32px',
-          paddingLeft:'0px',
-					},
-				},
+    style: {
+      paddingRight: "32px",
+      paddingLeft: "0px",
+    },
+  },
 
   {
     name: "DISCOUNT",
@@ -79,41 +84,40 @@ const columns = [
     sortable: true,
     width: "155px",
     center: true,
-				style: {
-          paddingRight: '32px',
-          paddingLeft:'0px',
-				},
-
+    style: {
+      paddingRight: "32px",
+      paddingLeft: "0px",
+    },
   },
-//   {
-//     name: "STATUS",
-//     selector: (row) => row.status,
-//     sortable: true,
-//     width: "130px",
-//     center: true,
-// 		conditionalCellStyles: [
-// 			{
-// 				when: row => row.status === 'Selling',
-// 				style: {
-// 					backgroundColor: 'rgba(63, 195, 128, 0.9)',
-//          color: 'white',
-//          borderRadius: '100px',
-//         height: '50px',
-//         marginTop: '36px',
-// 					},
-// 				},
-//         {
-//           when: row => row.status === 'Sold out',
-//           style: {
-//             backgroundColor: 'rgba(242, 38, 19, 0.9)',
-//            color: 'white',
-//            borderRadius: '100px',
-//           height: '50px',
-//           marginTop: '36px',
-//             },
-//           },
-// ]
-//   },
+  //   {
+  //     name: "STATUS",
+  //     selector: (row) => row.status,
+  //     sortable: true,
+  //     width: "130px",
+  //     center: true,
+  // 		conditionalCellStyles: [
+  // 			{
+  // 				when: row => row.status === 'Selling',
+  // 				style: {
+  // 					backgroundColor: 'rgba(63, 195, 128, 0.9)',
+  //          color: 'white',
+  //          borderRadius: '100px',
+  //         height: '50px',
+  //         marginTop: '36px',
+  // 					},
+  // 				},
+  //         {
+  //           when: row => row.status === 'Sold out',
+  //           style: {
+  //             backgroundColor: 'rgba(242, 38, 19, 0.9)',
+  //            color: 'white',
+  //            borderRadius: '100px',
+  //           height: '50px',
+  //           marginTop: '36px',
+  //             },
+  //           },
+  // ]
+  //   },
   {
     name: "ACTION",
     width: "220px",
@@ -122,15 +126,15 @@ const columns = [
         <AiFillEdit className="w-75 p-0 m-0 editiconn" />
         <AiFillDelete className="w-75 p-0 m-0 editiconn" />
         <Dropdown>
-      <Dropdown.Toggle variant="success" id="dropdown-basic">
-        Dropdown
-      </Dropdown.Toggle>
-      <Dropdown.Menu>
-        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-        <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-        <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-      </Dropdown.Menu>
-    </Dropdown>
+          <Dropdown.Toggle variant="success" id="dropdown-basic">
+            Dropdown
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+            <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+            <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
         {/* <div class="dropdown-container" tabindex="0">
     <div class="three-dots"></div>
     <div class="dropdown">
@@ -191,51 +195,49 @@ const data = [
   },
 ];
 const handleClick = () => {};
-const onButtonClick = () =>{
-  
-}
+const onButtonClick = () => {};
 
 const Expiredproduct = () => {
-    return (
-        <div>
-              <h2>Expired Products</h2>
+  return (
+    <div>
+      <h2>Expired Products</h2>
 
-{/* search bar */}
-<div className="product_page_searchbox bg-gray">
-  <Input type={"text"} plchldr={"Search by product name"} />
-  <Form.Select aria-label="Search by category" className="adminselectbox">
-    <option>Open this select menu</option>
-    <option value="1">One</option>
-    <option value="2">Two</option>
-    <option value="3">Three</option>
-  </Form.Select>
-  <Form.Select aria-label="Search by status" className="adminselectbox">
-    <option>Open this select menu</option>
-    <option value="1">One</option>
-    <option value="2">Two</option>
-    <option value="3">Three</option>
-  </Form.Select>
+      {/* search bar */}
+      <div className="product_page_searchbox bg-gray">
+        <Input type={"text"} plchldr={"Search by product name"} />
+        <Form.Select aria-label="Search by category" className="adminselectbox">
+          <option>Open this select menu</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+        </Form.Select>
+        <Form.Select aria-label="Search by status" className="adminselectbox">
+          <option>Open this select menu</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+        </Form.Select>
 
-  <MainButton btntext={"Search"} />
-</div>
+        <MainButton btntext={"Search"} />
+      </div>
 
-{/* upload */}
+      {/* upload */}
 
-<div className="product_page_uploadbox">
-  <div className="product_page_uploadbox_one">
-    <Input type={"file"} inputclass={"hiddeninput"} />
-    <Iconbutton
-      btntext={"Upload"}
-      btnclass={"btn-outline-success btn adminmainbutton"}
-      Iconname={<AiOutlineCloudUpload />}
-    />
-  </div>
-  <MainButton btntext={"Download"} />
-  {/* <Iconbutton btntext={"Add"} onClick={handleShow} Iconname={<AiOutlinePlus />} btnclass={"btn-outline-success btn adminmainbutton"}/> */}
-</div>
+      <div className="product_page_uploadbox">
+        <div className="product_page_uploadbox_one">
+          <Input type={"file"} inputclass={"hiddeninput"} />
+          <Iconbutton
+            btntext={"Upload"}
+            btnclass={"btn-outline-success btn adminmainbutton"}
+            Iconname={<AiOutlineCloudUpload />}
+          />
+        </div>
+        <MainButton btntext={"Download"} />
+        {/* <Iconbutton btntext={"Add"} onClick={handleShow} Iconname={<AiOutlinePlus />} btnclass={"btn-outline-success btn adminmainbutton"}/> */}
+      </div>
 
-{/* datatable */}
-{/* <Modal show={show} onHide={handleClose}>
+      {/* datatable */}
+      {/* <Modal show={show} onHide={handleClose}>
   <Modal.Header closeButton className="addproductheader">
     <Modal.Title>Add Product</Modal.Title>
   </Modal.Header>
@@ -247,15 +249,15 @@ const Expiredproduct = () => {
     <MainButton btntext={"Cancel"} onClick={handleClose} />
   </Modal.Footer>
 </Modal> */}
-<DataTable
-  columns={columns}
-  data={data}
-  pagination
-  highlightOnHover
-  pointerOnHover
-/>
-        </div>
-    );
-}
+      <DataTable
+        columns={columns}
+        data={data}
+        pagination
+        highlightOnHover
+        pointerOnHover
+      />
+    </div>
+  );
+};
 
 export default Expiredproduct;

@@ -4,7 +4,7 @@ import Dashboard from "./dashboard";
 import Product from "./product";
 import Orders from "./orders";
 import AdminHeader from "./header";
-import { Routes } from "react-router-dom";
+import { Routes, useLocation } from "react-router-dom";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Productdetail from "./products/productdetail";
 import Addproduct from "./products/addproduct";
@@ -22,9 +22,17 @@ import Login from "./login/login";
 
 
 function AdminLayout() {
+  // const location = useLocation();
+  console.log("-------"+window.location.pathname)
   return (
     <div className="container-fluid p-0">
-      <Router>
+    <Router>
+  {window.location.pathname === "/" ? 
+    <Routes>
+      <Route path="/" element={<Login/>}/>
+      </Routes>
+      :
+            
         <div className="row m-0 page_main_row">
           <div className="col-lg-2 col-md-3 col-sm-4 sidebar_main_div p-0">
             <AdminSidebar />
@@ -47,11 +55,11 @@ function AdminLayout() {
                 <Route path="/offerproduct" element={<Offerproduct />} />
                  <Route path="/deletedproduct" element={<Deletedproduct />} />
                  <Route path="/order_detail" element={<Order_detail/>}/>
-                 <Route path="/login" element={<Login/>}/>
-              </Routes>
+                </Routes>
             </div>
           </div>
         </div>
+  }
       </Router>
     </div>
   );
