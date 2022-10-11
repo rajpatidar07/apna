@@ -6,6 +6,7 @@ import {
   AiOutlinePlus,
   AiOutlineCloudUpload,
 } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 import {GiCancel} from "react-icons/gi";
 import { BiDotsVertical } from "react-icons/bi";
 import DataTable from "react-data-table-component";
@@ -215,6 +216,7 @@ const data = [
 const handleClick = () => {};
 const onButtonClick = () => {};
 function Product() {
+  let navigate = useNavigate();  
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -301,6 +303,7 @@ function Product() {
         highlightOnHover
         pointerOnHover
         className={"productlist_table"}
+        onRowClicked={navigate("/AddEmployee")}
       />
     </div>
   );
