@@ -15,11 +15,12 @@ gap: 35px;
 .productdetail_page_box .product_detail_box {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 17px;
 }
 .productdetail_page_box .product_detail_box .product_upper_section {
   display: flex;
   flex-direction: column;
+  gap: 10px;
 }
 .productdetail_page_box .product_detail_box .product_lower_section {
     display: flex;
@@ -71,8 +72,8 @@ gap: 35px;
   .product_upper_section
   .productstatus {
   display: flex;
-  gap: 10px;
-  align-items: center;
+  gap: 15px;
+  align-items: baseline;
 }
 .productdetail_page_box
   .product_detail_box
@@ -93,12 +94,31 @@ gap: 35px;
 .product_mid_section .priceboxx .mrprate{
 text-decoration: line-through;
 margin-bottom: 0;
+}
+.productdetail_page_box .product_detail_box .product_variety_section .statustextoutsize {
+  color: grey;
+  border: 1px dotted grey;
+  padding: 5px;
+  background-color: #fff;
 
 }
+.productdetail_page_box .product_detail_box .product_variety_section .statustextsize {
+  color: black;
+  border: 1px dotted grey;
+  padding: 5px;
+  background-color: #fff;
 
-
-
-
+}
+.productdetail_page_box .product_detail_box .product_variety_section{
+display: flex;
+}
+/* .productdetail_page_box .product_detail_box .product_variety_section .productstatus .coloricon{
+font-size: 20px;
+} */
+.productdetail_page_box .product_detail_box .product_variety_section .coolorselect{
+  color: black;
+  border: 1px dotted grey;
+}
 
 
 /* add product modal */
