@@ -19,6 +19,11 @@
   background-color: rgba(26, 28, 35/0.7);
   background: #fff;
 }
+.order_info_heading{
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
 .order_detail .right_side .customer_info .customer_name_img img,
 .order_detail .right_side .customer_info .customer_orders svg {
   width: 38px;
@@ -33,6 +38,7 @@
   padding: 1px 8px;
   color: rgb(0 0 0);
   border-radius: 18%;
+  text-align: center;
   border: solid 1px rgba(204, 207, 0, 0.9);
 }
 .left_side .top_bar .order_payment {
