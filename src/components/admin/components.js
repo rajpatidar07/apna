@@ -63,14 +63,14 @@ function AdminComponents() {
                     <div className='code_box mt-3 p-3 bg-dark'>
                         <pre className='notranslate htmlHigh'>                            
                             &lt;Form.Group className="mb-3 aos_input" controlId="formBasicEmail"&gt;<br/>
-                            &nbsp;&nbsp;&nbsp;&lt;Form.Label&gt;Email address&lt;/Form.Label&gt;<br/>
-                            &nbsp;&nbsp;&nbsp;&lt;Form.Control type="email" placeholder="Enter email" /&gt;<br/>
-                            &lt;/Form.Group&gt;
-                            <br/><br/>
-                            &lt;Form.Group className="mb-3 aos_input" controlId="exampleForm.ControlTextarea1"&gt;<br/>
-                            &nbsp;&nbsp;&nbsp;&lt;Form.Label&gt;Example textarea&lt;/Form.Label&gt;<br/>
-                            &nbsp;&nbsp;&nbsp;&lt;Form.Control as="textarea" rows={3} placeholder='Placeholder text' /&gt;<br/>
-                            &lt;/Form.Group&gt;
+                            &nbsp;&nbsp;&nbsp;&lt;Form.Label&gt;Input label&lt;/Form.Label&gt;<br/>
+                            &nbsp;&nbsp;&nbsp;&lt;Form.Select aria-label="Default select example"&gt;<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;option&gt;Open this select menu&lt;/option&gt;<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;option value="1"&gt;One&lt;/option&gt;<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;option value="2"&gt;Two&lt;/option&gt;<br/>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;option value="3"&gt;Three&lt;/option&gt;<br/>
+                            &nbsp;&nbsp;&nbsp;&lt;/Form.Select&gt;<br/>
+                            &lt;/Form.Group&gt;<br/>
                         </pre>
                     </div>
                 </div>
