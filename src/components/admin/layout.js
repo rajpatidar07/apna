@@ -23,6 +23,7 @@ import '../../style/common.css';
 import Login from "./login/login";
 import Footer from "./login/footer";
 import Signup from "./login/signup";
+import Forgot from "./login/forgot";
 
 
 function AdminLayout() {
@@ -30,11 +31,13 @@ function AdminLayout() {
   console.log("-------" + window.location.pathname)
   return (
     <div className="container-fluid p-0">
-      <Router>
-        {window.location.pathname === "/" ? (
-          <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
+    <Router>
+  {window.location.pathname === "/" ? (
+    <Routes>
+      <Route path="/" element={<Login/>}/>
+      <Route path="/signup" element={<Signup/>}/>
+      <Route path="/forgot" element={<Forgot/>}/>
+
 
           </Routes>
         )

@@ -260,16 +260,16 @@ function Product() {
           <Input type={"file"} inputclass={"hiddeninput"} />
           <Iconbutton
             btntext={"Upload"}
-            btnclass={"btn-outline-success btn adminmainbutton"}
+            btnclass={"button main_outline_button adminmainbutton"}
             Iconname={<AiOutlineCloudUpload />}
           />
         </div>
         <MainButton btntext={"Download"} />
         <Iconbutton
-          btntext={"Add"}
+          btntext={"Add Product"}
           onClick={handleShow}
           Iconname={<AiOutlinePlus />}
-          btnclass={"btn-success btn "}
+          btnclass={"button main_button adminmainbutton"}
         />
       </div>
 
@@ -293,7 +293,7 @@ function Product() {
           <Iconbutton
             btntext={"X Cancel"}
             onClick={handleClose}
-            btnclass={"btn-outline-success btn adminmainbutton px-2"}
+            btnclass={"button main_outline_button adminmainbutton px-2"}
             // Iconname={<GiCancel /> }
           />
           <MainButton btntext={"Save as Draft"} onClick={handleClose} />
@@ -301,7 +301,7 @@ function Product() {
             btntext={"Add Product"}
             onClick={handleClose}
             Iconname={<AiOutlinePlus />}
-            btnclass={"btn-success btn "}
+            btnclass={"button main_button adminmainbutton"}
           />
         </Modal.Footer>
       </Modal>

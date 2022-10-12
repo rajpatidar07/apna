@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import "./login.css";
 import MainButton from "../common/button";
 import Logo from "../../../images/logo.png";
-import Footer from "./footer";
+
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -64,7 +64,7 @@ const Signup = () => {
                         </div>
                       </div>
 
-                      <div className="col-12">
+                      <div className="col-12 py-2">
                         <div className="forgot-box">
                           <div className="form-check ps-0 m-0 remember-box">
                             <input
@@ -94,7 +94,7 @@ const Signup = () => {
                     </form>
                   </div>
 
-                  <div className="other-log-in">
+                  <div className="other-log-in py-4">
                     <h6>OR</h6>
                   </div>
 
@@ -105,7 +105,7 @@ const Signup = () => {
                           href="https://www.google.com/"
                           className="btn google-button w-100"
                         >
-                          Sign Up In with Google
+                        <button className='button main_outline_button w-100'>Log In with Google</button>
                         </a>
                       </li>
                       <li>
@@ -113,7 +113,7 @@ const Signup = () => {
                           href="https://www.facebook.com/"
                           className="btn google-button w-100"
                         >
-                          Sign Up In with Facebook
+                        <button className='button main_outline_button w-100'>Log In with Facebook</button>
                         </a>
                       </li>
                     </ul>
@@ -129,7 +129,7 @@ const Signup = () => {
               </div>
             </div>
           </div>
-          <Footer />
+       
         </div>
       </div>
     </Fragment>

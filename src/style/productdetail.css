@@ -15,12 +15,12 @@ gap: 35px;
 .productdetail_page_box .product_detail_box {
   display: flex;
   flex-direction: column;
-  gap: 17px;
+  gap: 18px;
 }
 .productdetail_page_box .product_detail_box .product_upper_section {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 18px;
 }
 .productdetail_page_box .product_detail_box .product_lower_section {
     display: flex;
@@ -58,14 +58,13 @@ gap: 35px;
   .product_upper_section
   .productstatus
   .statuslabeltext {
+    font-size: 18PX;
 }
 .productdetail_page_box .product_detail_box .product_upper_section .statustext {
   color: rgb(0 128 0 / 0.5);
-
 }
 .productdetail_page_box .product_detail_box .product_upper_section .statustextred {
   color: red;
-
 }
 .productdetail_page_box
   .product_detail_box
@@ -121,6 +120,10 @@ font-size: 20px;
 }
 
 
+/* carousel */
+
+/*  */
+
 /* add product modal */
 
 .addproductmainmodal{
@@ -138,9 +141,11 @@ font-size: 20px;
   grid-template-columns: 50% 50%;
   flex-wrap: wrap;
   gap: 3%;
+ 
 }
 .productvariety_color{
   align-items: center;
+  margin-top: 15px;
   display: grid;
   grid-template-columns: 33.3% 33.3% 33.3%;
   flex-wrap: wrap;
