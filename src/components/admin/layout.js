@@ -17,6 +17,8 @@ import Promotionproduct from "./products/promotionproduct";
 import Offerproduct from "./products/offerproduct";
 import Deletedproduct from "./products/deletedproduct";
 import Order_detail from "./order/order_detail";
+import VendorsList from "./vendor/vendors";
+import AdminComponents from "./components";
 import '../../style/common.css';
 import Login from "./login/login";
 import Footer from "./login/footer";
@@ -38,6 +40,7 @@ function AdminLayout() {
   )
       :
             
+      
         <div className="row m-0 page_main_row">
           <div className="col-lg-2 col-md-3 col-sm-4 sidebar_main_div p-0">
             <AdminSidebar />
@@ -46,23 +49,26 @@ function AdminLayout() {
             <AdminHeader />
             <div className="main_content_div" >
               <Routes>
-                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/dashboard" element={<Dashboard />} /> 
                 <Route path="/product" element={<Product />} />
                 <Route path="/orders" element={<Orders />} />
                 <Route path="/addproduct" element={<Addproduct />} />
                 <Route path="/productdetail" element={<Productdetail />} />
-                <Route path="/invoice" element={<Invoice/>} />
-                <Route path="/soldproduct" element={<Soldproduct/>} />
+                <Route path="/invoice" element={<Invoice />} />
+                <Route path="/soldproduct" element={<Soldproduct />} />
                 <Route path="/featureproduct" element={<Featuredproduct />} />
-                 <Route path="/expiredproduct" element={<Expiredproduct />} />
+                <Route path="/expiredproduct" element={<Expiredproduct />} />
                 <Route path="/pendingproduct" element={<Pendingproduct />} />
-                 <Route path="/promotionproduct" element={<Promotionproduct />} />
+                <Route path="/promotionproduct" element={<Promotionproduct />} />
                 <Route path="/offerproduct" element={<Offerproduct />} />
                  <Route path="/deletedproduct" element={<Deletedproduct />} />
                  <Route path="/order_detail" element={<Order_detail/>}/>
                  <Route path="/footer" element={<Footer/>}/>
 
-                </Routes>
+                 <Route path="/login" element={<Login/>}/>
+                 <Route path="/vendors" element={<VendorsList />} />
+                <Route path="/components" element={<AdminComponents />} />
+              </Routes>
             </div>
           </div>
         </div>
