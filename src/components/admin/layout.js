@@ -24,7 +24,7 @@ import Login from "./login/login";
 import Footer from "./login/footer";
 import ChangePassword from "./login/change_password";
 import Forgot from "./login/forgot";
-import Add_Admin from "./add_update_admin/add_update_admin";
+import Admin from "./add_update_admin/add_update_admin";
 
 
 function AdminLayout() {
@@ -68,11 +68,10 @@ function AdminLayout() {
                  <Route path="/deletedproduct" element={<Deletedproduct />} />
                  <Route path="/order_detail" element={<Order_detail/>}/>
                  <Route path="/footer" element={<Footer/>}/>
-
                  <Route path="/login" element={<Login/>}/>
                  <Route path="/vendors" element={<VendorsList />} />
                 <Route path="/components" element={<AdminComponents />} />
-                <Route path="/add_admin" element={<Add_Admin/>} />
+                <Route path="/add_admin" element={<Admin/>} />
               </Routes>
             </div>
           </div>

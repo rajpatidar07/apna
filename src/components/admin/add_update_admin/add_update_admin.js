@@ -8,8 +8,9 @@ import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
 import Modal from "react-bootstrap/Modal";
-import Addproduct from "../products/addproduct";
+// import Addproduct from "../products/addproduct";
 import Iconbutton from "../common/iconbutton";
+import AddAdmin from "../add_update_admin/add_admin";
 
 
 function Admin() {
@@ -105,11 +106,11 @@ function Admin() {
       >
         <Modal.Header closeButton className="addproductheader">
           <Modal.Title id="example-custom-modal-styling-title">
-            Add Product
+            Add Admin
           </Modal.Title>
         </Modal.Header>
         <Modal.Body className="addproductbody p-2">
-          <Addproduct />
+          <AddAdmin />
         </Modal.Body>
         <Modal.Footer className="addproductfooter">
           <Iconbutton
