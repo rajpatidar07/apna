@@ -58,7 +58,8 @@
   display: inline;
 }
 .admin_login_form .log-in-box .log-in-button ul li a {
-  display: flex;
+  padding: 12px 0px;
+  /* display: flex;
   align-items: center;
   justify-content: center;
   font-size: calc(14px + (16 - 14) * ((100vw - 320px) / (1920 - 320)));
@@ -67,15 +68,15 @@
   padding: calc(10px + (16 - 10) * ((100vw - 320px) / (1920 - 320)))
     calc(18px + (30 - 18) * ((100vw - 320px) / (1920 - 320)));
   flex-wrap: wrap;
-  gap: calc(8px + (10 - 8) * ((100vw - 320px) / (1920 - 320)));
-  background-color: #f5f5f5;
+  gap: calc(8px + (10 - 8) * ((100vw - 320px) / (1920 - 320))); */
+  /* background-color: #f5f5f5; */
 }
-.admin_login_form .log-in-box .log-in-button ul {
+/* .admin_login_form .log-in-box .log-in-button ul {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
   align-items: center;
-}
+} */
 .admin_login_form .log-in-box .log-in-button ul li {
   width: 80%;
   margin: 0 auto;
@@ -90,4 +91,13 @@
 }
 .form-check-label{
  
+}
+.remember-box {
+  display: flex;
+  align-items: center;
+}
+.remember-box input{
+  width: 18px;
+  height: 18px;
+  margin-right: 6px;
 }
