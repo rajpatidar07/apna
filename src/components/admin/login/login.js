@@ -77,7 +77,7 @@ const Login = () => {
                         <MainButton
                           btntext={"Login"}
                           btnclass={"w-100 btn-success btn"}
-                          onClick={navigate("/home")}
+                          onClick={navigate("home")}
                         />
                       </div>
                     </form>
@@ -93,8 +93,11 @@ const Login = () => {
                         <a
                           href="https://www.google.com/"
                           className="btn google-button w-100"
-                        >      <button className='button main_outline_button w-100'>Log In with Google</button>
-                          
+                        >
+                          {" "}
+                          <button className="button main_outline_button w-100">
+                            Log In with Google
+                          </button>
                         </a>
                       </li>
                       <li>
@@ -102,9 +105,10 @@ const Login = () => {
                           href="https://www.facebook.com/"
                           className="btn google-button w-100"
                         >
-                        <button className='button main_outline_button w-100'>Log In with Facebook</button>
+                          <button className="button main_outline_button w-100">
+                            Log In with Facebook
+                          </button>
                         </a>
-                       
                       </li>
                     </ul>
                   </div>
@@ -112,8 +116,7 @@ const Login = () => {
                   <div className="other-log-in"></div>
 
                   <div className="sign-up-box">
-                    <h4>Don't have an account?</h4>
-                    <NavLink to="/signup">Sign Up</NavLink>
+                    <NavLink to="/change_password">Reset Password</NavLink>
                   </div>
                 </div>
               </div>

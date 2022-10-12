@@ -22,7 +22,7 @@ import AdminComponents from "./components";
 import '../../style/common.css';
 import Login from "./login/login";
 import Footer from "./login/footer";
-import Signup from "./login/signup";
+import ChangePassword from "./login/change_password";
 import Forgot from "./login/forgot";
 
 
@@ -35,7 +35,7 @@ function AdminLayout() {
   {window.location.pathname === "/" ? (
     <Routes>
       <Route path="/" element={<Login/>}/>
-      <Route path="/signup" element={<Signup/>}/>
+      <Route path="/change_password" element={<ChangePassword/>}/>
       <Route path="/forgot" element={<Forgot/>}/>
 
 
