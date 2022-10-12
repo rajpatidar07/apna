@@ -334,3 +334,12 @@ fieldset:disabled .button {
   width: 100%;
 }
 /* COMPONENTS */
+
+/* VENDOR */
+.vendor_address {
+  height: 125px;
+}
+.badge{
+  font-weight: 400;
+}
+/* VENDOR */
