@@ -17,6 +17,8 @@ import Promotionproduct from "./products/promotionproduct";
 import Offerproduct from "./products/offerproduct";
 import Deletedproduct from "./products/deletedproduct";
 import Order_detail from "./order/order_detail";
+import VendorsList from "./vendor/vendors";
+import AdminComponents from "./components";
 import '../../style/common.css';
 
 
@@ -37,15 +39,17 @@ function AdminLayout() {
                 <Route path="/orders" element={<Orders />} />
                 <Route path="/addproduct" element={<Addproduct />} />
                 <Route path="/productdetail" element={<Productdetail />} />
-                <Route path="/invoice" element={<Invoice/>} />
-                <Route path="/soldproduct" element={<Soldproduct/>} />
+                <Route path="/invoice" element={<Invoice />} />
+                <Route path="/soldproduct" element={<Soldproduct />} />
                 <Route path="/featureproduct" element={<Featuredproduct />} />
-                 <Route path="/expiredproduct" element={<Expiredproduct />} />
+                <Route path="/expiredproduct" element={<Expiredproduct />} />
                 <Route path="/pendingproduct" element={<Pendingproduct />} />
-                 <Route path="/promotionproduct" element={<Promotionproduct />} />
+                <Route path="/promotionproduct" element={<Promotionproduct />} />
                 <Route path="/offerproduct" element={<Offerproduct />} />
-                 <Route path="/deletedproduct" element={<Deletedproduct />} />
-                 <Route path="/order_detail" element={<Order_detail/>}/>
+                <Route path="/deletedproduct" element={<Deletedproduct />} />
+                <Route path="/order_detail" element={<Order_detail />} />
+                <Route path="/vendors" element={<VendorsList />} />
+                <Route path="/components" element={<AdminComponents />} />
               </Routes>
             </div>
           </div>
