@@ -186,3 +186,11 @@ code {
 }
 
 
+/* VENDOR */
+.vendor_address {
+  height: 125px;
+}
+.badge{
+  font-weight: 400;
+}
+/* VENDOR */

@@ -7,6 +7,7 @@
 }
 .product_page_uploadbox {
   display: flex;
+  justify-content: end;
   gap: 10px;
   align-items: center;
   justify-content: end;
