@@ -232,12 +232,7 @@ const Offerproduct = () => {
           />
         </div>
         <MainButton btntext={"Download"} />
-        <Iconbutton
-          btntext={"Add Product"}
-          onClick={handleShow}
-          Iconname={<AiOutlinePlus />}
-          btnclass={"button main_button adminmainbutton"}
-        />
+       
       </div>
 
       {/* datatable */}
