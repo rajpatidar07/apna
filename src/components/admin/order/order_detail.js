@@ -1,7 +1,7 @@
 import React from "react";
 import "./order_detail.css";
 import Profile from "../../../images/user.jpg";
-import { AiOutlineFileText} from "react-icons/ai";
+import { AiOutlineFileText } from "react-icons/ai";
 import { BsTelephoneFill, BsFillEnvelopeFill } from "react-icons/bs";
 const Order_detail = () => {
   return (
@@ -11,14 +11,28 @@ const Order_detail = () => {
         <div className="row">
           <div className="col-lg-8">
             <div className="left_side">
-              <div className="top_bar d-flex justify-content-between">
-                <div className="order_id">
-                  Order <span>AS1568</span>
+              <div className="top_bar d-flex justify-content-between text-center">
+                <div className="order_id d-flex flex-column">
+                  <div className="order_info_heading">
+                    <span>#</span>Order Id
+                  </div>
+                  <div>
+                    <span>AS1568</span>
+                  </div>
                 </div>
-                <div className="order_payment">Paid</div>
-                <div className="order_status">Pending</div>
-                <div className="date_time">
-                  06.10.22 <span className="">at 10:40 am</span>
+                <div className="d-flex flex-column text-center">
+                  <div className="order_info_heading">Payment</div>
+                  <div className="order_payment">Paid</div>
+                </div>
+                <div className="d-flex flex-column text-center">
+                  <div className="order_info_heading">Order Status</div>
+                  <div className="order_status">Pending</div>
+                </div>
+                <div className="d-flex flex-column text-center">
+                  <div className="order_info_heading">Order Date & Time</div>
+                  <div className="date_time">
+                    06.10.22 <span className="">at 10:40 am</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -71,7 +85,9 @@ const Order_detail = () => {
               <h5 className="pb-3">Payment Summary</h5>
               <div className="payment_summary_total d-flex justify-content-between align-items-center">
                 <div className="Subtotal">
-                  <p>Subtotal<span>(2 items)</span></p>
+                  <p>
+                    Subtotal<span>(2 items)</span>
+                  </p>
                 </div>
                 <div className="">$400.00</div>
               </div>
@@ -93,7 +109,9 @@ const Order_detail = () => {
                     <strong>Total paid by customer</strong>
                   </p>
                 </div>
-                <div className=""><strong>$420.00</strong></div>
+                <div className="">
+                  <strong>$420.00</strong>
+                </div>
               </div>
             </div>
           </div>

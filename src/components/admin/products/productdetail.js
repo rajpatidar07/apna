@@ -70,26 +70,37 @@ const Productdetail = () => {
         <div className="product_detail_box">
           {/*  */}
           <div className="product_upper_section">
-            <div className="productstatus">
+            {/* <div className="productstatus">
               <h5 className="statuslabeltext">Status:</h5>
               <h6 className="statustext">Status</h6>
-            </div>
+            </div> */}
 
-            <h2 className="productname">PRODUCT NAME</h2>
-
+            <h3 className="productname">PRODUCT NAME</h3>
             <div className="productstatus">
               <h5 className="statuslabeltext">SKU:</h5>
-              <h6 className="statustext">#1213</h6>
+             <b><h6 className="text-secondary">#1213</h6></b> 
             </div>
           </div>
 
           {/*  */}
 
           <div className="product_upper_section product_mid_section">
-            <h3>$14</h3>
-            <div className="productquantity productstatus">
-              <h6 className="statustext">In Stock</h6>
-              <h5 className="statuslabeltext">Quantity: 14</h5>
+            <h3 className="mb-0">$14</h3>
+            <div className="priceboxx">
+          <b><p className="text-success mb-0">50% off </p></b>  
+            <p className="mrprate">($25)</p>
+</div>
+ <div className="priceboxx">
+           <b> <p className="text-secondary">Tax: </p></b>
+            <p className="">$2</p>
+</div>
+            <div className="product_upper_section product_mid_section">
+            <h6 className="statuslabeltext">Color: </h6>
+            <h6 className="statuslabeltext">Pink</h6>
+            <div className="product_upper_section product_mid_section">
+              <h6 className="statuslabeltext">Quantity: 14</h6>
+              <h6 className="statustextred">(Out of Stock)</h6>
+              </div>
             </div>
             <ShowMoreText
         /* Default options */
@@ -98,38 +109,18 @@ const Productdetail = () => {
         less="...Show less"
         anchorClass="oooeeer"
         expanded={false}
-        width={100}
+        width={500}
       >
-            <div className="detailproduct">
-              dfsiefhidgrjkdrlejdsjm dfsiefhidgrjkdrlejdsjm
-              dfsiefhidgrjkdrlejdsjm dfsiefhidgrjkdrlejdsjm
-              dfsiefhidgrjkdrlejdsjm dfsiefhidgrjkdrlejdsjm
-              dfsiefhidgrjkdrlejdsjm dfsiefhidgrjkdrlejdsjm
-              dfsiefhidgrjkdrlejdsjm dfsiefhidgrjkdrlejdsjm
-              dfsiefhidgrjkdrlejdsjm dfsiefhidgrjkdrlejdsjm
-              dfsiefhidgrjkdrlejdsjm dfsiefhidgrjkdrlejdsjm
-              dfsiefhidgrjkdrlejdsjm dfsiefhidgrjkdrlejdsjm
-              dfsiefhidgrjkdrlejdsjm dfsiefhidgrjkdrlejdsjm
-              dfsiefhidgrjkdrlejdsjm dfsiefhidgrjkdrlejdsjm
-              dfsiefhidgrjkdrlejdsjm dfsiefhidgrjkdrlejdsjm
-              dfsiefhidgrjkdrlejdsjm dfsiefhidgrjkdrlejdsjm
-              dfsiefhidgrjkdrlejdsjm dfsiefhidgrjkdrlejdsjm
-              dfsiefhidgrjkdrlejdsjm dfsiefhidgrjkdrlejdsjm
-              dfsiefhidgrjkdrlejdsjm dfsiefhidgrjkdrlejdsjm
-              dfsiefhidgrjkdrlejdsjm dfsiefhidgrjkdrlejdsjm
-              dfsiefhidgrjkdrlejdsjm dfsiefhidgrjkdrlejdsjm
-              dfsiefhidgrjkdrlejdsjm dfsiefhidgrjkdrlejdsjm
-              dfsiefhidgrjkdrlejdsjm dfsiefhidgrjkdrlejdsjm
-              dfsiefhidgrjkdrlejdsjm dfsiefhidgrjkdrlejdsjm
-              dfsiefhidgrjkdrlejdsjm dfsiefhidgrjkdrlejdsjm
-            </div>
+            <p className="detailproduct">
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
+            </p>
             </ShowMoreText>
           </div>
           {/*  */}
           <div className="product_lower_section product_upper_section">
             <div className="productquantity productstatus">
               <h5 className="statuslabeltext">Category:</h5>
-              <h5 className="categorytext">Quantity</h5>
+              <p className="categorytext mb-1">Fruits & Vegetable</p>
             </div>
             <div className="productquantity productstatus">
               <h6 className="categorytext1">lettuce</h6>

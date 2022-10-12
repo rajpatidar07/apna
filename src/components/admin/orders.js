@@ -1,122 +1,112 @@
 import React, { useState } from "react";
 import Input from "./common/input";
-import {
-  AiFillDelete,
-  AiFillEdit,
-  AiOutlinePlus,
-  AiOutlineCloudUpload,
-} from "react-icons/ai";
 import { FaFileInvoiceDollar } from "react-icons/fa";
-import { BsThreeDotsVertical } from "react-icons/bs";
 import DataTable from "react-data-table-component";
 import MainButton from "./common/button";
-import { navigate, useNavigate } from "react-router-dom";
 import Form from "react-bootstrap/Form";
-import Modal from "react-bootstrap/Modal";
-import Addproduct from "./products/addproduct";
-import Iconbutton from "./common/iconbutton";
-import NavDropdown from "react-bootstrap/NavDropdown";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
 import { Link } from "react-router-dom";
+import "../../style/order.css";
 const columns = [
   {
-    name: "ORDER ID",
+    name: "Order Id",
     selector: (row) => <Link to="/order_detail">{row.order_id}</Link>,
     sortable: true,
-    width: "152px",
   },
+
   {
-    name: "PRODUCT",
-    selector: (row) => row.product,
-    sortable: true,
-    width: "156px",
-  },
-  {
-    name: "ITEMS",
+    name: "Items",
     selector: (row) => row.no_of_item,
     sortable: true,
-    width: "118px",
   },
   {
-    name: "PRICE",
+    name: "price",
     selector: (row) => row.price,
     sortable: true,
-    width: "118px",
   },
   {
-    name: "TAX",
+    name: "Tax",
     selector: (row) => row.tex,
     sortable: true,
-    width: "118px",
   },
 
   {
-    name: "ORDER DATE",
+    name: "Order Date",
     selector: (row) => row.order_date,
     sortable: true,
-    width: "182px",
   },
   {
-    name: "DELIVERY DATE",
+    name: "Delivery Date",
     selector: (row) => row.delivery_date,
     sortable: true,
-    width: "210px",
   },
 
   {
-    name: "PYAMENT MODE",
+    name: "Pyament Mode",
     selector: (row) => row.pay_mode,
     sortable: true,
-    width: "218px",
   },
   {
-    name: "STATUS",
-    selector: (row) => row.status,
+    name: "Status",
+    selector: (row) => (
+      <div
+        className={
+          row.status === "Pending"
+            ? "pending"
+            : row.status === "Cancel"
+            ? "cancel"
+            : row.status === "Delivered"
+            ? "delivered"
+            : row.status === "Processing"
+            ? "processing"
+            : null
+        }
+      >
+        {" "}
+        {row.status}{" "}
+      </div>
+    ),
     sortable: true,
-    width: "134px",
-    
-    conditionalCellStyles: [
-      {
-        when: (row) => row.status === "Pending",
-        style: {
-          backgroundColor: "rgb(204 207 0 / 90%)",
-          color: "black",
-          borderRadius: "100px",
-          height: "40px",
-          margin: "8px auto",
-          display: "flex",
-          justifyContent: "center",
-        },
-      },
-      {
-        when: (row) => row.status === "Delivered",
-        style: {
-          backgroundColor: "rgba(63, 195, 128, 0.9)",
-          borderRadius: "100px",
-          height: "40px",
-          margin: "8px auto",
-          display: "flex",
-          justifyContent: "center",
-        },
-      },
-      {
-        when: (row) => row.status === "Cancel",
-        style: {
-          backgroundColor: "rgb(242, 38, 19, 0.9)",
-          borderRadius: "100px",
-          height: "40px",
-          margin: "8px auto",
-          display: "flex",
-          justifyContent: "center",
-        },
-      },
-    ],
+
+    //   {
+    //     when: (row) => row.status === "Delivered",
+    //     style: {
+    //       backgroundColor: "rgba(63, 195, 128, 0.9)",
+    //       borderRadius: "100px",
+    //       height: "40px",
+    //       margin: "8px auto",
+    //       display: "flex",
+    //       justifyContent: "center",
+    //     },
+    //   },
+    //   {
+    //     when: (row) => row.status === "Cancel",
+    //     style: {
+    //       backgroundColor: "rgb(242, 38, 19, 0.9)",
+    //       borderRadius: "100px",
+    //       height: "40px",
+    //       margin: "8px auto",
+    //       display: "flex",
+    //       justifyContent: "center",
+    //     },
+    //   },
+    //   {
+    //     when: (row) => row.status === "Processing",
+    //     style: {
+    //       backgroundColor: "rgb(39 0 255 / 53%)",
+    //       borderRadius: "100px",
+    //       height: "40px",
+    //       margin: "8px auto",
+    //       display: "flex",
+    //       justifyContent: "center",
+    //     },
+    //   },
+    // ],
   },
   {
-    name: "ACTION",
+    name: "Change Status",
     selector: (row) => (
       <Form.Select aria-label="Search by delivery" className="adminselectbox">
+        <option value="1">Change status</option>
         <option value="1">Delivered</option>
         <option value="2">Pending</option>
         <option value="3">Processing</option>
@@ -124,12 +114,11 @@ const columns = [
       </Form.Select>
     ),
     sortable: true,
-    width: "134px",
   },
 
   {
-    name: "INVOICE",
-    width: "120px",
+    name: "Invoice",
+
     selector: (row) => (
       <Link to="/invoice">
         <FaFileInvoiceDollar />
@@ -142,38 +131,46 @@ const data = [
   {
     id: 1,
     order_id: "AS1568",
-    product: "Hunny",
     no_of_item: "2",
     price: "$15",
     tex: "CGST 18%",
-    order_date: "10.10.22",
-    delivery_date: "12.10.22",
+    order_date: "10/10/22",
+    delivery_date: "12/10/22",
     pay_mode: "UPI",
     status: "Pending",
   },
   {
     id: 2,
     order_id: "AS1568",
-    product: "Hunny",
     no_of_item: "2",
     price: "$15",
     tex: "CGST 18%",
-    order_date: "10.10.22",
-    delivery_date: "12.10.22",
+    order_date: "10/10/22",
+    delivery_date: "12/10/22",
     pay_mode: "UPI",
     status: "Delivered",
   },
   {
     id: 3,
     order_id: "AS1568",
-    product: "Hunny",
     no_of_item: "2",
     price: "$15",
     tex: "CGST 18%",
-    order_date: "10.10.22",
-    delivery_date: "12.10.22",
+    order_date: "10/10/22",
+    delivery_date: "12/10/22",
     pay_mode: "UPI",
     status: "Cancel",
+  },
+  {
+    id: 4,
+    order_id: "AS1568",
+    no_of_item: "2",
+    price: "$15",
+    tex: "CGST 18%",
+    order_date: "10/10/22",
+    delivery_date: "12/10/22",
+    pay_mode: "UPI",
+    status: "Processing",
   },
 ];
 
