@@ -17,6 +17,7 @@ import Addproduct from "./products/addproduct";
 import Iconbutton from "./common/iconbutton";
 import Dropdown from "react-bootstrap/Dropdown";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
+import { Badge } from "react-bootstrap";
 
 function Product() {
   const [show, setShow] = useState(false);
@@ -120,25 +121,23 @@ function Product() {
     {
       name: "Status",
       selector: (row) => (
-        <div
-          className={
-            row.status === "Selling"
-              ? "statuschhangeselling"
-              : row.status === "Sold out"
-              ? "statuschhangesold"
-              : null
-          }
-        >
-          {row.status}
-        </div>
+        <h5 className="p-0">
+        <Badge  bg= {row.status === "Selling"
+        ?"success"  : row.status === "Sold out"
+              ? "danger" : null}>{row.status}</Badge>
+       </h5>
       ),
       sortable: true,
-      width: "130px",
-      center: true,
+      width: "115px",
+      // center: true,
     },
     {
       name: "Action",
-      width: "120px",
+      width: "110px",
+      style: {
+        paddingRight: "12px",
+        paddingLeft: "0px",
+      },
       center: true,
       selector: (row) => (
         <div className={"actioncolimn"}>
@@ -235,7 +234,8 @@ function Product() {
       <h2>Products</h2>
 
       {/* search bar */}
-      <div className="product_page_searchbox bg-gray">
+      <div className="card mt-3 px-3 ">
+      <div className="product_page_searchbox">
         <Input type={"text"} plchldr={"Search by product name"} />
         <Form.Select aria-label="Search by category" className="adminselectbox">
           <option>Open this select menu</option>
@@ -255,7 +255,7 @@ function Product() {
 
       {/* upload */}
 
-      <div className="product_page_uploadbox">
+      <div className="product_page_uploadbox my-4">
         <div className="product_page_uploadbox_one">
           <Input type={"file"} inputclass={"hiddeninput"} />
           <Iconbutton
@@ -313,6 +313,7 @@ function Product() {
         pointerOnHover
         className={"productlist_table"}
       />
+    </div>
     </div>
   );
 }

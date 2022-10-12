@@ -203,7 +203,8 @@ const Expiredproduct = () => {
       <h2>Expired Products</h2>
 
       {/* search bar */}
-      <div className="product_page_searchbox bg-gray">
+      <div className="card mt-3 px-3 ">
+      <div className="product_page_searchbox">
         <Input type={"text"} plchldr={"Search by product name"} />
         <Form.Select aria-label="Search by category" className="adminselectbox">
           <option>Open this select menu</option>
@@ -223,28 +224,35 @@ const Expiredproduct = () => {
 
       {/* upload */}
 
-      <div className="product_page_uploadbox">
+      <div className="product_page_uploadbox my-4">
         <div className="product_page_uploadbox_one">
           <Input type={"file"} inputclass={"hiddeninput"} />
           <Iconbutton
             btntext={"Upload"}
-            btnclass={"btn-outline-success btn adminmainbutton"}
+            btnclass={"button main_outline_button adminmainbutton"}
             Iconname={<AiOutlineCloudUpload />}
           />
         </div>
         <MainButton btntext={"Download"} />
-        {/* <Iconbutton btntext={"Add"} onClick={handleShow} Iconname={<AiOutlinePlus />} btnclass={"btn-outline-success btn adminmainbutton"}/> */}
+        <Iconbutton
+          btntext={"Add Product"}
+          onClick={handleShow}
+          Iconname={<AiOutlinePlus />}
+          btnclass={"button main_button adminmainbutton"}
+        />
       </div>
 
       {/* datatable */}
-
+   
       <DataTable
         columns={columns}
         data={data}
         pagination
         highlightOnHover
         pointerOnHover
+        className={"productlist_table"}
       />
+    </div>
     </div>
   );
 };
