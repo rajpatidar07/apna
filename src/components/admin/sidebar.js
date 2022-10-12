@@ -87,7 +87,7 @@ function AdminSidebar() {
       </Accordion>
       <ul class="sidebar_navigation_bar">
           <li>
-            <Link to="/" className="nav-link">Add/Update Admin</Link>
+            <Link to="/add_admin" className="nav-link">Add/Update Admin</Link>
           </li>
         </ul>
     </div>
