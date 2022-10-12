@@ -3,348 +3,45 @@ import MainButton from "../common/button";
 import Carousel from "react-bootstrap/Carousel";
 import ShowMoreText from "react-show-more-text";
 import { AiOutlineBgColors } from "react-icons/ai";
-import $ from "jquery";
-
+import {
+  MDBCarousel,
+  MDBCarouselInner,
+  MDBCarouselItem,
+  MDBCarouselElement,
+  MDBContainer,
+} from "mdb-react-ui-kit";
 const Productdetail = () => {
+ 
+
+
   return (
-    <div>
-      <h2>Product Detail</h2>
+    <div className="card ">
+      <h2 className="productname mb-0">Green Leaf Lettuce</h2>
 
       {/* deatil */}
 
       <div className="productdetail_page_box">
         <div className="productimg_box">
-          <div class="container mt-5">
-            <div class="carousel-container position-relative row">
-              <div id="myCarousel" class="carousel slide" data-ride="carousel">
-                <div class="carousel-inner">
-                  <div class="carousel-item active" data-slide-number="0">
-                    <img
-                      src="https://source.unsplash.com/Pn6iimgM-wo/1600x900/"
-                      class="d-block w-100"
-                      alt="..."
-                      data-remote="https://source.unsplash.com/Pn6iimgM-wo/"
-                      data-type="image"
-                      data-toggle="lightbox"
-                      data-gallery="example-gallery"
-                    />
-                  </div>
-                  <div class="carousel-item" data-slide-number="1">
-                    <img
-                      src="https://source.unsplash.com/tXqVe7oO-go/1600x900/"
-                      class="d-block w-100"
-                      alt="..."
-                      data-remote="https://source.unsplash.com/tXqVe7oO-go/"
-                      data-type="image"
-                      data-toggle="lightbox"
-                      data-gallery="example-gallery"
-                    />
-                  </div>
-                  <div class="carousel-item" data-slide-number="2">
-                    <img
-                      src="https://source.unsplash.com/qlYQb7B9vog/1600x900/"
-                      class="d-block w-100"
-                      alt="..."
-                      data-remote="https://source.unsplash.com/qlYQb7B9vog/"
-                      data-type="image"
-                      data-toggle="lightbox"
-                      data-gallery="example-gallery"
-                    />
-                  </div>
-                  <div class="carousel-item" data-slide-number="3">
-                    <img
-                      src="https://source.unsplash.com/QfEfkWk1Uhk/1600x900/"
-                      class="d-block w-100"
-                      alt="..."
-                      data-remote="https://source.unsplash.com/QfEfkWk1Uhk/"
-                      data-type="image"
-                      data-toggle="lightbox"
-                      data-gallery="example-gallery"
-                    />
-                  </div>
-                  <div class="carousel-item" data-slide-number="4">
-                    <img
-                      src="https://source.unsplash.com/CSIcgaLiFO0/1600x900/"
-                      class="d-block w-100"
-                      alt="..."
-                      data-remote="https://source.unsplash.com/CSIcgaLiFO0/"
-                      data-type="image"
-                      data-toggle="lightbox"
-                      data-gallery="example-gallery"
-                    />
-                  </div>
-                  <div class="carousel-item" data-slide-number="5">
-                    <img
-                      src="https://source.unsplash.com/a_xa7RUKzdc/1600x900/"
-                      class="d-block w-100"
-                      alt="..."
-                      data-remote="https://source.unsplash.com/a_xa7RUKzdc/"
-                      data-type="image"
-                      data-toggle="lightbox"
-                      data-gallery="example-gallery"
-                    />
-                  </div>
-                  <div class="carousel-item" data-slide-number="6">
-                    <img
-                      src="https://source.unsplash.com/uanoYn1AmPs/1600x900/"
-                      class="d-block w-100"
-                      alt="..."
-                      data-remote="https://source.unsplash.com/uanoYn1AmPs/"
-                      data-type="image"
-                      data-toggle="lightbox"
-                      data-gallery="example-gallery"
-                    />
-                  </div>
-                  <div class="carousel-item" data-slide-number="7">
-                    <img
-                      src="https://source.unsplash.com/_snqARKTgoc/1600x900/"
-                      class="d-block w-100"
-                      alt="..."
-                      data-remote="https://source.unsplash.com/_snqARKTgoc/"
-                      data-type="image"
-                      data-toggle="lightbox"
-                      data-gallery="example-gallery"
-                    />
-                  </div>
-                  <div class="carousel-item" data-slide-number="8">
-                    <img
-                      src="https://source.unsplash.com/M9F8VR0jEPM/1600x900/"
-                      class="d-block w-100"
-                      alt="..."
-                      data-remote="https://source.unsplash.com/M9F8VR0jEPM/"
-                      data-type="image"
-                      data-toggle="lightbox"
-                      data-gallery="example-gallery"
-                    />
-                  </div>
-                  <div class="carousel-item" data-slide-number="9">
-                    <img
-                      src="https://source.unsplash.com/Q1p7bh3SHj8/1600x900/"
-                      class="d-block w-100"
-                      alt="..."
-                      data-remote="https://source.unsplash.com/Q1p7bh3SHj8/"
-                      data-type="image"
-                      data-toggle="lightbox"
-                      data-gallery="example-gallery"
-                    />
-                  </div>
-                </div>
-              </div>
+          {/* caerousel */}
+        
 
-              <div
-                id="carousel-thumbs"
-                class="carousel slide"
-                data-ride="carousel"
-              >
-                <div class="carousel-inner">
-                  <div class="carousel-item active">
-                    <div class="row mx-0">
-                      <div
-                        id="carousel-selector-0"
-                        class="thumb col-4 col-sm-2 px-1 py-2 selected"
-                        data-target="#myCarousel"
-                        data-slide-to="0"
-                      >
-                        <img
-                          src="https://source.unsplash.com/Pn6iimgM-wo/600x400/"
-                          class="img-fluid"
-                          alt="..."
-                        />
-                      </div>
-                      <div
-                        id="carousel-selector-1"
-                        class="thumb col-4 col-sm-2 px-1 py-2"
-                        data-target="#myCarousel"
-                        data-slide-to="1"
-                      >
-                        <img
-                          src="https://source.unsplash.com/tXqVe7oO-go/600x400/"
-                          class="img-fluid"
-                          alt="..."
-                        />
-                      </div>
-                      <div
-                        id="carousel-selector-2"
-                        class="thumb col-4 col-sm-2 px-1 py-2"
-                        data-target="#myCarousel"
-                        data-slide-to="2"
-                      >
-                        <img
-                          src="https://source.unsplash.com/qlYQb7B9vog/600x400/"
-                          class="img-fluid"
-                          alt="..."
-                        />
-                      </div>
-                      <div
-                        id="carousel-selector-3"
-                        class="thumb col-4 col-sm-2 px-1 py-2"
-                        data-target="#myCarousel"
-                        data-slide-to="3"
-                      >
-                        <img
-                          src="https://source.unsplash.com/QfEfkWk1Uhk/600x400/"
-                          class="img-fluid"
-                          alt="..."
-                        />
-                      </div>
-                      <div
-                        id="carousel-selector-4"
-                        class="thumb col-4 col-sm-2 px-1 py-2"
-                        data-target="#myCarousel"
-                        data-slide-to="4"
-                      >
-                        <img
-                          src="https://source.unsplash.com/CSIcgaLiFO0/600x400/"
-                          class="img-fluid"
-                          alt="..."
-                        />
-                      </div>
-                      <div
-                        id="carousel-selector-5"
-                        class="thumb col-4 col-sm-2 px-1 py-2"
-                        data-target="#myCarousel"
-                        data-slide-to="5"
-                      >
-                        <img
-                          src="https://source.unsplash.com/a_xa7RUKzdc/600x400/"
-                          class="img-fluid"
-                          alt="..."
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div class="carousel-item">
-                    <div class="row mx-0">
-                      <div
-                        id="carousel-selector-6"
-                        class="thumb col-4 col-sm-2 px-1 py-2"
-                        data-target="#myCarousel"
-                        data-slide-to="6"
-                      >
-                        <img
-                          src="https://source.unsplash.com/uanoYn1AmPs/600x400/"
-                          class="img-fluid"
-                          alt="..."
-                        />
-                      </div>
-                      <div
-                        id="carousel-selector-7"
-                        class="thumb col-4 col-sm-2 px-1 py-2"
-                        data-target="#myCarousel"
-                        data-slide-to="7"
-                      >
-                        <img
-                          src="https://source.unsplash.com/_snqARKTgoc/600x400/"
-                          class="img-fluid"
-                          alt="..."
-                        />
-                      </div>
-                      <div
-                        id="carousel-selector-8"
-                        class="thumb col-4 col-sm-2 px-1 py-2"
-                        data-target="#myCarousel"
-                        data-slide-to="8"
-                      >
-                        <img
-                          src="https://source.unsplash.com/M9F8VR0jEPM/600x400/"
-                          class="img-fluid"
-                          alt="..."
-                        />
-                      </div>
-                      <div
-                        id="carousel-selector-9"
-                        class="thumb col-4 col-sm-2 px-1 py-2"
-                        data-target="#myCarousel"
-                        data-slide-to="9"
-                      >
-                        <img
-                          src="https://source.unsplash.com/Q1p7bh3SHj8/600x400/"
-                          class="img-fluid"
-                          alt="..."
-                        />
-                      </div>
-                      <div class="col-2 px-1 py-2"></div>
-                      <div class="col-2 px-1 py-2"></div>
-                    </div>
-                  </div>
-                </div>
-                <a
-                  class="carousel-control-prev"
-                  href="#carousel-thumbs"
-                  role="button"
-                  data-slide="prev"
-                >
-                  <span
-                    class="carousel-control-prev-icon"
-                    aria-hidden="true"
-                  ></span>
-                  <span class="sr-only">Previous</span>
-                </a>
-                <a
-                  class="carousel-control-next"
-                  href="#carousel-thumbs"
-                  role="button"
-                  data-slide="next"
-                >
-                  <span
-                    class="carousel-control-next-icon"
-                    aria-hidden="true"
-                  ></span>
-                  <span class="sr-only">Next</span>
-                </a>
-              </div>
-            </div>
-          </div>
-          {/* <Carousel>
-            <Carousel.Item>
-              <img
-                className="productpicture w-100"
-                src="https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg"
-                alt="First slide"
-              />
-            </Carousel.Item>
-            <Carousel.Item>
-              <img
-                className="productpicture  w-100"
-                src="https://images.pexels.com/photos/3123792/pexels-photo-3123792.jpeg?cs=srgb&dl=pexels-wallace-chuck-3123792.jpg&fm=jpg"
-                alt="Second slide"
-              />
-            </Carousel.Item>
-            <Carousel.Item>
-              <img
-                className="productpicture w-100"
-                src="https://images.pexels.com/photos/4449068/pexels-photo-4449068.jpeg?cs=srgb&dl=pexels-satyam-verma-4449068.jpg&fm=jpg"
-                alt="Third slide"
-              />
-            </Carousel.Item>
-          </Carousel> */}
-          {/* <Carousel showArrows={true} onChange={onChange} onClickItem={onClickItem} onClickThumb={onClickThumb}>
-                <div>
-                    <img src="assets/1.jpeg" />
-                    <p className="legend">Legend 1</p>
-                </div>
-                <div>
-                    <img src="assets/2.jpeg" />
-                    <p className="legend">Legend 2</p>
-                </div>
-                <div>
-                    <img src="assets/3.jpeg" />
-                    <p className="legend">Legend 3</p>
-                </div>
-                <div>
-                    <img src="assets/4.jpeg" />
-                    <p className="legend">Legend 4</p>
-                </div>
-                <div>
-                    <img src="assets/5.jpeg" />
-                    <p className="legend">Legend 5</p>
-                </div>
-                <div>
-                    <img src="assets/6.jpeg" />
-                    <p className="legend">Legend 6</p>
-                </div>
-            </Carousel> */}
+          {/* <div id="myCarousel" class="carousel slide" data-bs-ride="carousel" align="center">
+                                <div class="carousel-inner">
+                                    <div class="carousel-item active"> <img src="https://i.imgur.com/bV1xmG5.jpg" class="rounded" /> </div>
+                                    <div class="carousel-item"> <img src="https://i.imgur.com/vgMi4nw.jpg" class="rounded" /> </div>
+                                    <div class="carousel-item"> <img src="https://i.imgur.com/hRlGe10.jpg" class="rounded" /> </div>
+                                </div>
+                                <ol class="carousel-indicators list-inline">
+                                    <li class="list-inline-item active"> <a id="carousel-selector-0" class="selected" data-bs-slide-to="0" data-bs-target="#myCarousel"> <img src="https://i.imgur.com/bV1xmG5.jpg" class="img-fluid rounded" /> </a> </li>
+                                    <li class="list-inline-item"> <a id="carousel-selector-1" data-bs-slide-to="1" data-bs-target="#myCarousel"> <img src="https://i.imgur.com/vgMi4nw.jpg" class="img-fluid rounded" /> </a> </li>
+                                    <li class="list-inline-item"> <a id="carousel-selector-2" data-bs-slide-to="2" data-bs-target="#myCarousel"> <img src="https://i.imgur.com/hRlGe10.jpg" class="img-fluid rounded" /> </a> </li>
+                                </ol>
+                            </div> */}
         </div>
+
+
+
+        {/*  */}
         <div className="product_detail_box">
           {/*  */}
           <div className="product_upper_section">
@@ -353,7 +50,7 @@ const Productdetail = () => {
               <h6 className="statustext">Status</h6>
             </div> */}
             <div>
-              <h3 className="productname mb-0">PRODUCT NAME</h3>
+            <h5 className="statuslabeltext">Green Leaf Lettuce</h5>
               <div className="productstatus">
                 <h5 className="statuslabeltext">SKU:</h5>
                 <b>
@@ -372,7 +69,7 @@ const Productdetail = () => {
                 <b>
                   <p className="text-success mb-0">50% off </p>
                 </b>
-                <p className="mrprate">($25)</p>
+                <p className="mrprate text-danger">($25)</p>
               </div>
               <div className="priceboxx">
                 <b>
@@ -411,11 +108,25 @@ const Productdetail = () => {
               </div>
             </div>
 
-            {/*  */}
+            {/* store */}
             <div className="product_lower_section product_upper_section">
               <div className="productquantity productstatus">
                 <h5 className="statuslabeltext mb-0">Store:</h5>
                 <p className="categorytext mb-0">Gyansheet</p>
+              </div>
+            </div>
+            {/*  */}
+
+            {/* date */}
+            <div className="product_lower_section product_upper_section">
+            <h5 className="mb-1">Date:</h5>
+              <div className="productquantity productstatus">
+                <h5 className="statuslabeltext mb-0">Manufactured Date:</h5>
+                <p className="categorytext mb-0">2022-oct-22</p>
+              </div>
+              <div className="productquantity productstatus">
+                <h5 className="statuslabeltext mb-0">Expire Date:</h5>
+                <p className="categorytext mb-0">2022-oct-22</p>
               </div>
             </div>
             {/*  */}
