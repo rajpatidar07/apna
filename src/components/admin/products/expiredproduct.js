@@ -237,18 +237,7 @@ const Expiredproduct = () => {
       </div>
 
       {/* datatable */}
-      {/* <Modal show={show} onHide={handleClose}>
-  <Modal.Header closeButton className="addproductheader">
-    <Modal.Title>Add Product</Modal.Title>
-  </Modal.Header>
-  <Modal.Body className="addproductbody">
-    <Addproduct />
-  </Modal.Body>
-  <Modal.Footer className="addproductfooter">
-    <MainButton btntext={"Add"} onClick={handleClose} />
-    <MainButton btntext={"Cancel"} onClick={handleClose} />
-  </Modal.Footer>
-</Modal> */}
+
       <DataTable
         columns={columns}
         data={data}

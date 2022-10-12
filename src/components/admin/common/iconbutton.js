@@ -12,7 +12,7 @@ const Iconbutton = (props) => {
 
 export default Iconbutton;
 Iconbutton.defaultProps = {
-    btnclass: 'adminmainbutton ',
+    btnclass: 'button main_outline_button',
     name: '',
     onClick: {},
     type:'',

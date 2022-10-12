@@ -18,7 +18,7 @@ const MainButton = (props) => {
 
 export default MainButton;
 MainButton.defaultProps = {
-  btnclass: "btn-success btn",
+  btnclass: "button main_button",
   name: "",
   onClick: {},
   type: "",
