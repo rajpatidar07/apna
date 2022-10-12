@@ -1,112 +1,126 @@
 import React, { Fragment } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./login.css";
-// import Banner from '../../Photos/login.png'
-// import Footer from '../part/footer'
-// import Header from '../part/header'
-// import Breadcumb from '../UI/beadcumb'
+import MainButton from "../common/button";
+import Logo from "../../../images/logo.png";
+import Footer from "./footer";
 
 const Login = () => {
+  const navigate = useNavigate();
   return (
     <Fragment>
-      <div class="row">
-        <div class="col-xxl-4 col-xl-5 col-lg-6 m-auto login_form">
-          <div class="log-in-box">
-            <div class="log-in-title">
-              <h3>Welcome To Apna Organic</h3>
-              <h4>Log In Your Account</h4>
+    <div className="for_scrol">
+    <div className="container">
+      <div className="row mt-5">
+        <div className="col-xl-4 col-lg-6 m-auto">
+          <div className="heading_logo text-center">
+            <div className="logo">
+              <img src={Logo}></img>
             </div>
+            <div className="heading_line">
+              <h3>Sell On Apna Organic</h3>
+            </div>
+          </div>
+          <div className="admin_login_form">
+            <div className="log-in-box">
+              <div className="log-in-title">
+                <h4>Log In Your Account</h4>
+              </div>
 
-            <div class="input-box">
-              <form class="row g-4">
-                <div class="col-12">
-                  <div class="form-floating theme-form-floating log-in-form">
-                    <input
-                      type="email"
-                      class="form-control"
-                      id="email"
-                      placeholder="Email Address"
-                    />
-                    <label for="email">Email Address</label>
-                  </div>
-                </div>
-
-                <div class="col-12">
-                  <div class="form-floating theme-form-floating log-in-form">
-                    <input
-                      type="password"
-                      class="form-control"
-                      id="password"
-                      placeholder="Password"
-                    />
-                    <label for="password">Password</label>
-                  </div>
-                </div>
-
-                <div class="col-12">
-                  <div class="forgot-box d-flex ">
-                    <div class="form-check ps-0 m-0 remember-box">
+              <div className="input-box">
+                <form className="row g-4">
+                  <div className="col-12">
+                    <div className="form-floating theme-form-floating log-in-form">
                       <input
-                        class="checkbox_animated check-box"
-                        type="checkbox"
-                        id="flexCheckDefault"
+                        type="email"
+                        className="form-control"
+                        id="email"
+                        placeholder="Email Address"
                       />
-                      <label class="form-check-label" for="flexCheckDefault">
-                        Remember me
-                      </label>
+                      <label for="email">Email Address</label>
                     </div>
-                    <NavLink to="/forgot" class="forgot">
-                      Forgot Password?
-                    </NavLink>
                   </div>
-                </div>
 
-                <div class="col-12">
-                  <button
-                    class="btn btn-animation w-100 justify-content-center"
-                    type="submit"
-                  >
-                    Log In
-                  </button>
-                </div>
-              </form>
-            </div>
+                  <div className="col-12">
+                    <div className="form-floating theme-form-floating log-in-form">
+                      <input
+                        type="password"
+                        className="form-control"
+                        id="password"
+                        placeholder="Password"
+                      />
+                      <label for="password">Password</label>
+                    </div>
+                  </div>
 
-            <div class="other-log-in">
-              <h6>or</h6>
-            </div>
+                  <div className="col-12">
+                    <div className="forgot-box d-flex justify-content-between">
+                      <div className="form-check ps-0 m-0 remember-box">
+                        <input
+                          className="checkbox_animated check-box"
+                          type="checkbox"
+                          id="flexCheckDefault"
+                        />
+                        <label
+                          className="form-check-label"
+                          for="flexCheckDefault"
+                        >
+                          Remember me
+                        </label>
+                      </div>
+                      <NavLink to="/forgot" className="forgot">
+                        Forgot Password?
+                      </NavLink>
+                    </div>
+                  </div>
 
-            <div class="log-in-button">
-              <ul>
-                <li>
-                  <a
-                    href="https://www.google.com/"
-                    class="btn google-button w-100"
-                  >
-                    Log In with Google
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://www.facebook.com/"
-                    class="btn google-button w-100"
-                  >
-                    Log In with Facebook
-                  </a>
-                </li>
-              </ul>
-            </div>
+                  <div className="col-12">
+                    <MainButton
+                      btntext={"Login"}
+                      btnclass={"w-100 btn-success btn"}
+                      onClick={navigate('/push')}
+                    />
+                  </div>
+                </form>
+              </div>
 
-            <div class="other-log-in">
-              <h6></h6>
-            </div>
+              <div className="other-log-in">
+                <h6>OR</h6>
+              </div>
 
-            <div class="sign-up-box">
-              <h4>Don't have an account?</h4>
-              <NavLink to="/signup">Sign Up</NavLink>
+              <div className="log-in-button">
+                <ul classNameName="p-0">
+                  <li>
+                    <a
+                      href="https://www.google.com/"
+                      className="btn google-button w-100"
+                    >
+                      Log In with Google
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="https://www.facebook.com/"
+                      className="btn google-button w-100"
+                    >
+                      Log In with Facebook
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="other-log-in"></div>
+
+              <div className="sign-up-box">
+                <h4>Don't have an account?</h4>
+                <NavLink to="/signup">Sign Up</NavLink>
+              </div>
             </div>
           </div>
         </div>
+      </div>
+      <Footer/>
+      </div>
       </div>
     </Fragment>
   );

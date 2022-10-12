@@ -2,6 +2,7 @@ import { Bell } from 'react-bootstrap-icons';
 import React  from 'react';
 
 function Dashboard() {
+  console.log("i am a dashboard")
     return (
       <div className="row main_dashboard_row">
         <div className="dashboard_card p-0">
