@@ -1,60 +1,68 @@
 import React, { useEffect } from "react";
 import MainButton from "../common/button";
-import Carousel from "react-bootstrap/Carousel";
 import ShowMoreText from "react-show-more-text";
-import { AiOutlineBgColors } from "react-icons/ai";
-import {
-  MDBCarousel,
-  MDBCarouselInner,
-  MDBCarouselItem,
-  MDBCarouselElement,
-  MDBContainer,
-} from "mdb-react-ui-kit";
+import { AiFillPushpin, AiOutlineCheck } from "react-icons/ai";
+import { ImCross } from "react-icons/im";
+import { BsCheckLg } from "react-icons/bs";
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import { Carousel } from "react-responsive-carousel";
 const Productdetail = () => {
- 
-
-
   return (
-    <div className="card ">
+    <div>
       <h2 className="productname mb-0">Green Leaf Lettuce</h2>
 
       {/* deatil */}
 
-      <div className="productdetail_page_box">
+      <div className="productdetail_page_box card mt-3">
         <div className="productimg_box">
           {/* caerousel */}
-        
-
-          {/* <div id="myCarousel" class="carousel slide" data-bs-ride="carousel" align="center">
-                                <div class="carousel-inner">
-                                    <div class="carousel-item active"> <img src="https://i.imgur.com/bV1xmG5.jpg" class="rounded" /> </div>
-                                    <div class="carousel-item"> <img src="https://i.imgur.com/vgMi4nw.jpg" class="rounded" /> </div>
-                                    <div class="carousel-item"> <img src="https://i.imgur.com/hRlGe10.jpg" class="rounded" /> </div>
-                                </div>
-                                <ol class="carousel-indicators list-inline">
-                                    <li class="list-inline-item active"> <a id="carousel-selector-0" class="selected" data-bs-slide-to="0" data-bs-target="#myCarousel"> <img src="https://i.imgur.com/bV1xmG5.jpg" class="img-fluid rounded" /> </a> </li>
-                                    <li class="list-inline-item"> <a id="carousel-selector-1" data-bs-slide-to="1" data-bs-target="#myCarousel"> <img src="https://i.imgur.com/vgMi4nw.jpg" class="img-fluid rounded" /> </a> </li>
-                                    <li class="list-inline-item"> <a id="carousel-selector-2" data-bs-slide-to="2" data-bs-target="#myCarousel"> <img src="https://i.imgur.com/hRlGe10.jpg" class="img-fluid rounded" /> </a> </li>
-                                </ol>
-                            </div> */}
+          <Carousel autoPlay interval="3000" transitionTime="3000" infiniteLoop showIndicators={false} className={'productimg_carousel'} showStatus={false}>
+            <div className="w-100 h-50">
+              <img
+                src="https://images.unsplash.com/photo-1656268164012-119304af0c69?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1112&q=80"
+                alt=""
+                
+              />
+            </div>
+            <div className="w-100 h-50">
+              <img
+                src="https://images.unsplash.com/photo-1656268164012-119304af0c69?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1112&q=80"
+                alt=""
+                
+              />
+            </div>
+            <div className="w-100 h-50">
+              <img
+                src="https://images.unsplash.com/photo-1655745653127-4d6837baf958?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+                alt=""
+                
+              />
+            </div>
+            <div>
+              <img
+                src="https://images.unsplash.com/photo-1516527653392-602455dd9cf7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1167&q=80"
+                alt=""
+              />
+            </div>
+            <div>
+              <img
+                src="https://images.unsplash.com/photo-1655365225165-8d727fe3a091?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw4fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=80"
+                alt=""
+              />
+            </div>
+          </Carousel>
         </div>
 
-
-
         {/*  */}
-        <div className="product_detail_box">
+        <div className="product_detail_box mt-4">
           {/*  */}
           <div className="product_upper_section">
-            {/* <div className="productstatus">
-              <h5 className="statuslabeltext">Status:</h5>
-              <h6 className="statustext">Status</h6>
-            </div> */}
             <div>
-            <h5 className="statuslabeltext">Green Leaf Lettuce</h5>
+              <b><h5 className="statuslabeltext text-success">Green Leaf Lettuce</h5></b>
               <div className="productstatus">
                 <h5 className="statuslabeltext">SKU:</h5>
                 <b>
-                  <h6 className="text-secondary">#1213</h6>
+                  <h6 className="text-secondary statuslabeltext">#1213</h6>
                 </b>
               </div>
             </div>
@@ -62,7 +70,7 @@ const Productdetail = () => {
 
           {/*  */}
 
-          <div className="product_upper_section product_mid_section">
+          <div className="product_upper_section ">
             <div className="product_mid_section product_variety_section">
               <h3 className="mb-0">$14</h3>
               <div className="priceboxx">
@@ -80,10 +88,11 @@ const Productdetail = () => {
               </div>
             </div>
 
-            <div className="product_mid_section product_variety_section">
+            <div className="product_lower_section product_upper_section">
               <h5 className="mb-1">Product Variety:</h5>
-              <div className="productstatus">
-                <div className="productstatus">
+              <div className="product_mid_section">
+                <div className="productstatus align-items-start">
+                  <AiFillPushpin className="text-success h5" />
                   <h6 className="statuslabeltext">Color: </h6>
                   <select className="coolorselect">
                     <option>Pink</option>
@@ -91,19 +100,21 @@ const Productdetail = () => {
                     <option>Yellow</option>
                   </select>
                 </div>
-                <div className="productstatus">
+                <div className="productstatus align-items-start">
+                  <AiFillPushpin className="text-success h5" />
                   <h6 className="statuslabeltext">Quantity:</h6>
                   <h6 className="statustextsize"> 14</h6>
                   {/* <h6 className="statustextred">(Out of Stock)</h6> */}
                 </div>
-              </div>
-              <div className="productstatus">
-                <h6 className="statuslabeltext">Size:</h6>
-                <div className="productstatus">
-                  <h6 className="statustextoutsize">XS</h6>
-                  <h6 className="statustextsize">X</h6>
-                  <h6 className="statustextsize">M</h6>
-                  <h6 className="statustextsize">L</h6>
+                <div className="productstatus align-items-start">
+                  <AiFillPushpin className="text-success h5" />
+                  <h6 className="statuslabeltext">Size:</h6>
+                  <div className="productstatus">
+                    <h6 className="statustextoutsize">XS</h6>
+                    <h6 className="statustextsize">X</h6>
+                    <h6 className="statustextsize">M</h6>
+                    <h6 className="statustextsize">L</h6>
+                  </div>
                 </div>
               </div>
             </div>
@@ -111,22 +122,24 @@ const Productdetail = () => {
             {/* store */}
             <div className="product_lower_section product_upper_section">
               <div className="productquantity productstatus">
-                <h5 className="statuslabeltext mb-0">Store:</h5>
-                <p className="categorytext mb-0">Gyansheet</p>
+                <h5 className=" mb-0">Store:</h5>
+                <p className="statuslabeltext mb-0 text-primary">Gyansheet</p>
               </div>
             </div>
             {/*  */}
 
             {/* date */}
             <div className="product_lower_section product_upper_section">
-            <h5 className="mb-1">Date:</h5>
-              <div className="productquantity productstatus">
-                <h5 className="statuslabeltext mb-0">Manufactured Date:</h5>
-                <p className="categorytext mb-0">2022-oct-22</p>
-              </div>
-              <div className="productquantity productstatus">
-                <h5 className="statuslabeltext mb-0">Expire Date:</h5>
-                <p className="categorytext mb-0">2022-oct-22</p>
+              <h5 className="mb-0">Date:</h5>
+              <div className="product_mid_section">
+                <div className="productquantity productstatus">
+                  <h5 className="statuslabeltext mb-0">Manufactured Date:</h5>
+                  <p className="categorytext mb-0 text-primary">2022-oct-22</p>
+                </div>
+                <div className="productquantity productstatus">
+                  <h5 className="statuslabeltext mb-0">Expire Date:</h5>
+                  <p className="categorytext mb-0 text-danger">2022-oct-22</p>
+                </div>
               </div>
             </div>
             {/*  */}
@@ -143,7 +156,7 @@ const Productdetail = () => {
                 expanded={false}
                 width={500}
               >
-                <p className="detailproduct">
+                <p className="detailproduct statuslabeltext">
                   Lorem Ipsum is simply dummy text of the printing and
                   typesetting industry. Lorem Ipsum has been the industry's
                   standard dummy text ever since the 1500s, when an unknown
@@ -157,28 +170,51 @@ const Productdetail = () => {
                 </p>
               </ShowMoreText>
             </div>
-          </div>
-          {/*  */}
+            {/*  */}
 
-          {/*  */}
-          <div className="product_lower_section product_upper_section">
-            <div className="productquantity productstatus">
-              <h5 className="statuslabeltext mb-0">Category:</h5>
-              <p className="categorytext mb-0">Fruits & Vegetable</p>
-            </div>
-            <div className="productquantity productstatus">
-              <h6 className="categorytext1">lettuce</h6>
-              <h6 className="categorytext1">green veg</h6>
+            {/*  */}
+            <div className="product_lower_section product_upper_section">
+              <div className="productquantity productstatus">
+                <h5 className="mb-0">Category:</h5>
+                <p className="categorytext statuslabeltext mb-0">
+                  Fruits & Vegetable
+                </p>
+              </div>
+              <div className="productquantity productstatus">
+                <h6 className="categorytext1">lettuce</h6>
+                <h6 className="categorytext1">green veg</h6>
+              </div>
             </div>
             {/*  */}
 
-            <MainButton
-              btntext={"Edit product"}
-              btnclass={"btn btn-success my-4"}
-            />
+            {/* offers */}
+            <div className="product_lower_section product_upper_section">
+              <h5 className="mb-0">Offers:</h5>
+              <div className="product_mid_section ">
+                <div className="productquantity productstatus align-items-start">
+                  <BsCheckLg className="text-success h5" />
+                  <h5 className="statuslabeltext mb-0">Featured Product</h5>
+                </div>
+                <div className="productquantity productstatus align-items-start">
+                  <ImCross className="text-danger h5" />
+                  {/* <BsCheckLg className='text-success h5'/> */}
+                  <h5 className="statuslabeltext mb-0">Special Offer</h5>
+                </div>
+                <div className="productquantity productstatus align-items-start">
+                  <BsCheckLg className="text-success h5" />
+                  <h5 className="statuslabeltext mb-0">Promotional Product</h5>
+                </div>
+              </div>
+            </div>
           </div>
+
           {/*  */}
+          <MainButton
+            btntext={"Edit product"}
+            btnclass={"btn btn-success my-4"}
+          />
         </div>
+        {/*  */}
       </div>
     </div>
   );

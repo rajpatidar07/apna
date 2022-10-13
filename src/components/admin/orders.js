@@ -48,59 +48,23 @@ const columns = [
   {
     name: "Status",
     selector: (row) => (
-      <div
+      <span
         className={
           row.status === "Pending"
-            ? "pending"
-            : row.status === "Cancel"
-            ? "cancel"
+            ? "badge bg-warning"
             : row.status === "Delivered"
-            ? "delivered"
+            ? "badge bg-success"
             : row.status === "Processing"
-            ? "processing"
-            : null
+            ? "badge bg-primary"
+            : row.status === "Cancel"
+            ? "badge bg-danger"
+            : "badge bg-primary"
         }
       >
-        {" "}
-        {row.status}{" "}
-      </div>
+        {row.status}
+      </span>
     ),
     sortable: true,
-
-    //   {
-    //     when: (row) => row.status === "Delivered",
-    //     style: {
-    //       backgroundColor: "rgba(63, 195, 128, 0.9)",
-    //       borderRadius: "100px",
-    //       height: "40px",
-    //       margin: "8px auto",
-    //       display: "flex",
-    //       justifyContent: "center",
-    //     },
-    //   },
-    //   {
-    //     when: (row) => row.status === "Cancel",
-    //     style: {
-    //       backgroundColor: "rgb(242, 38, 19, 0.9)",
-    //       borderRadius: "100px",
-    //       height: "40px",
-    //       margin: "8px auto",
-    //       display: "flex",
-    //       justifyContent: "center",
-    //     },
-    //   },
-    //   {
-    //     when: (row) => row.status === "Processing",
-    //     style: {
-    //       backgroundColor: "rgb(39 0 255 / 53%)",
-    //       borderRadius: "100px",
-    //       height: "40px",
-    //       margin: "8px auto",
-    //       display: "flex",
-    //       justifyContent: "center",
-    //     },
-    //   },
-    // ],
   },
   {
     name: "Change Status",
@@ -183,36 +147,41 @@ function Product() {
   return (
     <div className="App">
       <h2>Orders</h2>
-      <div className="product_page_searchbox bg-gray">
-        <Input type={"text"} plchldr={"Search by order id"} />
-        <Form.Select aria-label="Search by delivery" className="adminselectbox">
-          <option>delivery status</option>
-          <option value="1">Delivered</option>
-          <option value="2">Pending</option>
-          <option value="3">Processing</option>
-          <option value="4">Cancel</option>
-        </Form.Select>
-        <Form.Select
-          aria-label="Search by delivery_status"
-          className="adminselectbox"
-        >
-          <option>Order limits</option>
-          <option value="1">Last 5 days orders</option>
-          <option value="2">Last 7 days orders</option>
-          <option value="3">Last 15 days orders</option>
-        </Form.Select>
+      <div className="card mt-3 px-3 ">
+        <div className="product_page_searchbox bg-gray my-4">
+          <Input type={"text"} plchldr={"Search by order id"} />
+          <Form.Select
+            aria-label="Search by delivery"
+            className="adminselectbox"
+          >
+            <option>delivery status</option>
+            <option value="1">Delivered</option>
+            <option value="2">Pending</option>
+            <option value="3">Processing</option>
+            <option value="4">Cancel</option>
+          </Form.Select>
+          <Form.Select
+            aria-label="Search by delivery_status"
+            className="adminselectbox"
+          >
+            <option>Order limits</option>
+            <option value="1">Last 5 days orders</option>
+            <option value="2">Last 7 days orders</option>
+            <option value="3">Last 15 days orders</option>
+          </Form.Select>
 
-        <MainButton btntext={"Search"} />
+          <MainButton btntext={"Search"} />
+        </div>
+
+        <DataTable
+          columns={columns}
+          data={data}
+          pagination
+          highlightOnHover
+          pointerOnHover
+          className={"productlist_table"}
+        />
       </div>
-
-      <DataTable
-        columns={columns}
-        data={data}
-        pagination
-        highlightOnHover
-        pointerOnHover
-        className={"productlist_table"}
-      />
     </div>
   );
 }

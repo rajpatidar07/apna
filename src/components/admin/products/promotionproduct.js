@@ -201,60 +201,57 @@ const Promotionproduct = () => {
               <h2>Promotional Products</h2>
 
 {/* search bar */}
-<div className="product_page_searchbox bg-gray">
-  <Input type={"text"} plchldr={"Search by product name"} />
-  <Form.Select aria-label="Search by category" className="adminselectbox">
-    <option>Open this select menu</option>
-    <option value="1">One</option>
-    <option value="2">Two</option>
-    <option value="3">Three</option>
-  </Form.Select>
-  <Form.Select aria-label="Search by status" className="adminselectbox">
-    <option>Open this select menu</option>
-    <option value="1">One</option>
-    <option value="2">Two</option>
-    <option value="3">Three</option>
-  </Form.Select>
+<div className="card mt-3 px-3 ">
+      <div className="product_page_searchbox">
+        <Input type={"text"} plchldr={"Search by product name"} />
+        <Form.Select aria-label="Search by category" className="adminselectbox">
+          <option>Open this select menu</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+        </Form.Select>
+        <Form.Select aria-label="Search by status" className="adminselectbox">
+          <option>Open this select menu</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+        </Form.Select>
 
-  <MainButton btntext={"Search"} />
-</div>
+        <MainButton btntext={"Search"} />
+      </div>
 
-{/* upload */}
+      {/* upload */}
 
-<div className="product_page_uploadbox">
-  <div className="product_page_uploadbox_one">
-    <Input type={"file"} inputclass={"hiddeninput"} />
-    <Iconbutton
-      btntext={"Upload"}
-      btnclass={"btn-outline-success btn adminmainbutton"}
-      Iconname={<AiOutlineCloudUpload />}
-    />
-  </div>
-  <MainButton btntext={"Download"} />
-  {/* <Iconbutton btntext={"Add"} onClick={handleShow} Iconname={<AiOutlinePlus />} btnclass={"btn-outline-success btn adminmainbutton"}/> */}
-</div>
-
-{/* datatable */}
-{/* <Modal show={show} onHide={handleClose}>
-  <Modal.Header closeButton className="addproductheader">
-    <Modal.Title>Add Product</Modal.Title>
-  </Modal.Header>
-  <Modal.Body className="addproductbody">
-    <Addproduct />
-  </Modal.Body>
-  <Modal.Footer className="addproductfooter">
-    <MainButton btntext={"Add"} onClick={handleClose} />
-    <MainButton btntext={"Cancel"} onClick={handleClose} />
-  </Modal.Footer>
-</Modal> */}
-<DataTable
-  columns={columns}
-  data={data}
-  pagination
-  highlightOnHover
-  pointerOnHover
-/>
+      <div className="product_page_uploadbox my-4">
+        <div className="product_page_uploadbox_one">
+          <Input type={"file"} inputclass={"hiddeninput"} />
+          <Iconbutton
+            btntext={"Upload"}
+            btnclass={"button main_outline_button adminmainbutton"}
+            Iconname={<AiOutlineCloudUpload />}
+          />
         </div>
+        <MainButton btntext={"Download"} />
+        <Iconbutton
+          btntext={"Add Product"}
+          onClick={handleShow}
+          Iconname={<AiOutlinePlus />}
+          btnclass={"button main_button adminmainbutton"}
+        />
+      </div>
+
+      {/* datatable */}
+   
+      <DataTable
+        columns={columns}
+        data={data}
+        pagination
+        highlightOnHover
+        pointerOnHover
+        className={"productlist_table"}
+      />
+    </div>
+    </div>
     );
 }
 

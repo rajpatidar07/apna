@@ -1,23 +1,16 @@
 .product_page_searchbox {
-  padding: 25px;
-  border: 0 solid #d5d6d7;
-  box-shadow: 0 0 0 1px rgb(0 0 0 / 5%);
-  border-radius: 0.5rem;
   margin-top: 1.5rem;
-  background-color: rgba(26, 28, 35/0.7);
   display: grid;
   grid-template-columns: 24% 24% 24% 24%;
   grid-gap: 20px;
   gap: 4%;
-  background: #fff;
 }
 .product_page_uploadbox {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
   display: flex;
   justify-content: end;
   gap: 10px;
-  float: right;
+  align-items: center;
+  justify-content: end;
 }
 .product_page_uploadbox .product_page_uploadbox_one {
   position: relative;
@@ -98,7 +91,7 @@
   z-index: 999;
 }
 .productlist_table .beUiVL {
-  font-size: 18px !important;
+  font-size: 16px !important;
   font-weight: 600 !important;
 }
 .productlist_table .actioncolimn .doticon {
@@ -127,6 +120,6 @@
 }
 
 .productlist_table .sc-dkrFOg.iSAVrt.rdt_TableHeadRow {
-  background: rgb(89 193 88 / 0.7);
+  background: rgb(89 193 88 / 20%);
 }
 
