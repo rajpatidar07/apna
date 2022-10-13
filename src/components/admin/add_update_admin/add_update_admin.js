@@ -95,32 +95,21 @@ function Admin() {
         <Modal
           show={show}
           onHide={handleClose}
-          dialogClassName="addproductmainmodal"
+          dialogClassName="w-80"
           aria-labelledby="example-custom-modal-styling-title"
           centered
         >
-          <Modal.Header closeButton className="addproductheader">
+          <Modal.Header closeButton className="">
             <Modal.Title id="example-custom-modal-styling-title">
               Add Admin
             </Modal.Title>
           </Modal.Header>
-          <Modal.Body className="addproductbody p-2">
+          <Modal.Body className="p-3">
             <AddAdmin />
           </Modal.Body>
-          <Modal.Footer className="addproductfooter">
-            <Iconbutton
-              btntext={"X Cancel"}
-              onClick={handleClose}
-              btnclass={"button main_outline_button adminmainbutton px-2"}
-              // Iconname={<GiCancel /> }
-            />
-            <MainButton btntext={"Save as Draft"} onClick={handleClose} />
-            <Iconbutton
-              btntext={"Add Admin"}
-              onClick={handleClose}
-              Iconname={<AiOutlinePlus/>}
-              btnclass={"button main_button adminmainbutton"}
-            />
+          <Modal.Footer className="">
+          <button className='button main_outline_button' onClick={handleClose}>Cancel</button>
+          <button className='button main_button' onClick={handleClose}>Save</button>
           </Modal.Footer>
         </Modal>
         <DataTable
