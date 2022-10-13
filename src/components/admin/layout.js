@@ -26,6 +26,7 @@ import ChangePassword from "./login/change_password";
 import Forgot from "./login/forgot";
 import CategoryList from "./category/category";
 import Admin from "./add_update_admin/add_update_admin";
+import Transactions from "./Transactions/transactions";
 
 
 function AdminLayout() {
@@ -74,6 +75,7 @@ function AdminLayout() {
                 <Route path="/components" element={<AdminComponents />} />
                 <Route path="/add_admin" element={<Admin/>} />
                 <Route path="/category" element={<CategoryList />} />
+                <Route path="/transactions" element={<Transactions/>}/>
               </Routes>
             </div>
           </div>
