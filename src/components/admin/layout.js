@@ -8,7 +8,7 @@ import { Routes, useLocation } from "react-router-dom";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Productdetail from "./products/productdetail";
 import Addproduct from "./products/addproduct";
-import Invoice from "./order/invoice";
+import Invoice from "./invoice/detail";
 import Soldproduct from "./products/soldproduct";
 import Featuredproduct from "./products/featuredproduct";
 import Expiredproduct from "./products/expiredproduct";
@@ -60,6 +60,7 @@ function AdminLayout() {
                 <Route path="/addproduct" element={<Addproduct />} />
                 <Route path="/productdetail" element={<Productdetail />} />
                 <Route path="/invoice" element={<Invoice />} />
+                <Route path="/invoice_detail" element={<Invoice />} />
                 <Route path="/soldproduct" element={<Soldproduct />} />
                 <Route path="/featureproduct" element={<Featuredproduct />} />
                 <Route path="/expiredproduct" element={<Expiredproduct />} />
