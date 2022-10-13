@@ -1,10 +1,4 @@
-.product_page_searchbox {
-  margin-top: 1.5rem;
-  display: grid;
-  grid-template-columns: 24% 24% 24% 24%;
-  grid-gap: 20px;
-  gap: 4%;
-}
+
 .product_page_uploadbox {
   display: flex;
   justify-content: end;
