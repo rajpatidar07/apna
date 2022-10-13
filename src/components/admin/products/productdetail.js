@@ -6,6 +6,7 @@ import { ImCross } from "react-icons/im";
 import { BsCheckLg } from "react-icons/bs";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
+import ListGroup from 'react-bootstrap/ListGroup';
 const Productdetail = () => {
   return (
     <div>
@@ -51,6 +52,7 @@ const Productdetail = () => {
               />
             </div>
           </Carousel>
+          
         </div>
 
         {/*  */}
@@ -144,7 +146,7 @@ const Productdetail = () => {
             </div>
             {/*  */}
 
-            {/*  */}
+            {/*description  */}
             <div>
               <h5 className="mb-1">Product Description:</h5>
               <ShowMoreText
@@ -155,6 +157,7 @@ const Productdetail = () => {
                 anchorClass="oooeeer"
                 expanded={false}
                 width={500}
+                className={'detailproduct'}
               >
                 <p className="detailproduct statuslabeltext">
                   Lorem Ipsum is simply dummy text of the printing and
@@ -172,7 +175,7 @@ const Productdetail = () => {
             </div>
             {/*  */}
 
-            {/*  */}
+            {/* category */}
             <div className="product_lower_section product_upper_section">
               <div className="productquantity productstatus">
                 <h5 className="mb-0">Category:</h5>
@@ -205,6 +208,37 @@ const Productdetail = () => {
                   <h5 className="statuslabeltext mb-0">Promotional Product</h5>
                 </div>
               </div>
+            </div>
+{/* other instarusction */}
+            <div>
+              <h5 className="mb-1">Other Instruction:</h5>
+              <ShowMoreText
+                /* Default options */
+                lines={5}
+                more="Show more"
+                less="...Show less"
+                anchorClass="oooeeer"
+                expanded={false}
+                width={500}
+              >
+                <p className="detailproduct statuslabeltext">
+                  Lorem Ipsum is simply dummy text of the printing and
+                  typesetting industry. Lorem Ipsum has been the industry's
+                  standard dummy text ever since the 1500s, when an unknown
+                  printer took a galley of type and scrambled it to make a type
+                  specimen book.
+                </p>
+                <ListGroup variant="flush">
+      <ListGroup.Item>No style</ListGroup.Item>
+      <ListGroup.Item variant="secondary">Secondary</ListGroup.Item>
+      <ListGroup.Item variant="secondary">Success</ListGroup.Item>
+      <ListGroup.Item variant="secondary">Danger</ListGroup.Item>
+      <ListGroup.Item variant="secondary">Warning</ListGroup.Item>
+      <ListGroup.Item variant="secondary">Info</ListGroup.Item>
+      <ListGroup.Item variant="secondary">Light</ListGroup.Item>
+      <ListGroup.Item variant="secondary">Dark</ListGroup.Item>
+    </ListGroup>
+              </ShowMoreText>
             </div>
           </div>
 

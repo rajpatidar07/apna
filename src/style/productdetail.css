@@ -60,6 +60,9 @@ gap: 35px;
   .statuslabeltext {
     font-size: 16px;
 }
+.productdetail_page_box .productimg_box .detailproduct{
+font-size: 14px;
+}
 .productdetail_page_box .product_detail_box .product_upper_section .statustext {
   color: rgb(0 128 0 / 0.5);
 }

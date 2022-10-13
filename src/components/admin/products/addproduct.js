@@ -57,15 +57,7 @@ const Addproduct = (props) => {
         <Form className="p-2 addproduct_form">
           <div className="my-3 inputsection_box">
             <h5 className="m-0">Basic Info</h5>
-            <div className="productvariety_one">
-              <Form.Group className="mx-3" controlId="formPlaintextEmail">
-                <Form.Label className="inputlabelheading" column sm="12">
-                  SKU
-                </Form.Label>
-                <Col sm="12">
-                  <Form.Control type="text" placeholder=" SKU" />
-                </Col>
-              </Form.Group>
+            <div className="productvariety">
               <Form.Group className="mx-3" controlId="formPlaintextPassword">
                 <Form.Label className="inputlabelheading" column sm="12">
                   Product Title/Name
