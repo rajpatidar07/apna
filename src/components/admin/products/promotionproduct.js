@@ -1,17 +1,13 @@
 import React, { useState } from "react";
 import Input from "../common/input";
-import { AiFillDelete, AiFillEdit,AiOutlineCloudUpload } from "react-icons/ai";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
-import Iconbutton from "../common/iconbutton";
 import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
-import {
-  MdRemoveCircleOutline
-} from "react-icons/md";
+
 const Promotionproduct = () => {
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
