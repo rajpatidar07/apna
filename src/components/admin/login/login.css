@@ -7,6 +7,9 @@
   background-color: rgba(26, 28, 35/0.7);
   background: #fff;
 }
+.admin_login_form a{
+  text-decoration: none;
+}
 .heading_logo .logo img {
   max-width: 100%;
   max-height: 64px;

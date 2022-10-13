@@ -4,8 +4,7 @@ import "./login.css";
 import MainButton from "../common/button";
 import Logo from "../../../images/logo.png";
 
-
-const Signup = () => {
+const ChangePassword = () => {
   const navigate = useNavigate();
   return (
     <Fragment>
@@ -24,7 +23,7 @@ const Signup = () => {
               <div className="admin_login_form">
                 <div className="log-in-box">
                   <div className="log-in-title">
-                    <h4>Create New Account</h4>
+                    <h4>Change Password</h4>
                   </div>
 
                   <div className="input-box">
@@ -37,7 +36,7 @@ const Signup = () => {
                             id="email"
                             placeholder="Email Address"
                           />
-                          <label for="email">Full Name</label>
+                          <label for="email">Current Password</label>
                         </div>
                       </div>
                       <div className="col-12">
@@ -48,7 +47,7 @@ const Signup = () => {
                             id="email"
                             placeholder="Email Address"
                           />
-                          <label for="email">Email Address</label>
+                          <label for="email">New Password</label>
                         </div>
                       </div>
 
@@ -60,31 +59,13 @@ const Signup = () => {
                             id="password"
                             placeholder="Password"
                           />
-                          <label for="password">Password</label>
+                          <label for="password">Confirm Password</label>
                         </div>
-                      </div>
-
-                      <div className="col-12 py-2">
-                        <div className="forgot-box">
-                          <div className="form-check ps-0 m-0 remember-box">
-                            <input
-                              className="checkbox_animated check-box"
-                              type="checkbox"
-                              id="flexCheckDefault"
-                            />
-                            <label
-                              className="form-check-label"
-                              for="flexCheckDefault"
-                            >
-                            I agree with <span>Terms </span> and <span>Privacy</span>
-                            </label>
-                          </div>
-                                                  </div>
                       </div>
 
                       <div className="col-12">
                         <MainButton
-                          btntext={"Sign Up"}
+                          btntext={"Change Password"}
                           btnclass={"w-100 btn-success btn"}
                           onClick={() => {
                             navigate("/dashboard");
@@ -93,46 +74,13 @@ const Signup = () => {
                       </div>
                     </form>
                   </div>
-
-                  <div className="other-log-in py-4">
-                    <h6>OR</h6>
-                  </div>
-
-                  <div className="log-in-button">
-                    <ul classNameName="p-0">
-                      <li>
-                        <a
-                          href="https://www.google.com/"
-                          className="btn google-button w-100"
-                        >
-                        <button className='button main_outline_button w-100'>Log In with Google</button>
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          href="https://www.facebook.com/"
-                          className="btn google-button w-100"
-                        >
-                        <button className='button main_outline_button w-100'>Log In with Facebook</button>
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div className="other-log-in"></div>
-
-                  <div className="sign-up-box">
-                    <h4>Already have an account?</h4>
-                    <NavLink to="/signup">Sign Up</NavLink>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-       
         </div>
       </div>
     </Fragment>
   );
 };
-export default Signup;
+export default ChangePassword;

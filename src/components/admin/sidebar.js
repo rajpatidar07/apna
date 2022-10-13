@@ -95,6 +95,11 @@ function AdminSidebar() {
           </li>
         </ul>
       </Accordion>
+      <ul class="sidebar_navigation_bar">
+          <li>
+            <Link to="/add_admin" className="nav-link">Add/Update Admin</Link>
+          </li>
+        </ul>
     </div>
   );
 }
