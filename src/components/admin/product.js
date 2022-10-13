@@ -8,7 +8,7 @@ import {
 } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { BsTrash } from "react-icons/bs";
-import { BiDotsVertical,BiEdit } from "react-icons/bi";
+import { BiEdit,BiDotsVertical } from "react-icons/bi";
 import DataTable from "react-data-table-component";
 import MainButton from "./common/button";
 import Form from "react-bootstrap/Form";
@@ -16,10 +16,13 @@ import Modal from "react-bootstrap/Modal";
 import Addproduct from "./products/addproduct";
 import Iconbutton from "./common/iconbutton";
 import Dropdown from "react-bootstrap/Dropdown";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
 import { Badge } from "react-bootstrap";
-
+import SweetAlert from 'sweetalert-react';
+import 'sweetalert/dist/sweetalert.css';
 function Product() {
+  const handleAlert = () => setAlert(true);
+  const hideAlert = () => setAlert(false);
+  const [Alert, setAlert] = useState(false);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -142,7 +145,7 @@ function Product() {
       selector: (row) => (
         <div className={"actioncolimn"}>
          <BiEdit className=" p-0 m-0  editiconn text-secondary" />
-          <BsTrash className=" p-0 m-0 editiconn text-danger" />
+          <BsTrash className=" p-0 m-0 editiconn text-danger"  onClick={handleAlert} />
           <BiDotsVertical className=" p-0 m-0 editiconn doticon text-primary " />
   
           <Dropdown className="productprofile_div p-0 m-0 editiconn doticon">
@@ -234,24 +237,31 @@ function Product() {
       <h2>Products</h2>
 
       {/* search bar */}
-      <div className="card mt-3 px-3 ">
-      <div className="product_page_searchbox">
+      <div className="card mt-3 p-3 ">
+      <div className="row">
+      <div className="col-md-3 col-sm-6 aos_input">
         <Input type={"text"} plchldr={"Search by product name"} />
+        </div>
+        <div className="col-md-3 col-sm-6 aos_input">
         <Form.Select aria-label="Search by category" className="adminselectbox" placeholder="Search by category">
         <option>Search by category</option>
           <option value="1">Food</option>
           <option value="2">Fish & Meat</option>
           <option value="3">Baby Care</option>
         </Form.Select>
+        </div>
+        <div className="col-md-3 col-sm-6 aos_input">
         <Form.Select aria-label="Search by status" className="adminselectbox" placeholder="Search by status">
-
         <option >Search by status</option>
           <option value="1">Pending</option>
           <option value="2">Selling</option>
           <option value="3">Sold Out</option>
         </Form.Select>
+        </div>
 
-        <MainButton btntext={"Search"} />
+        <div className="col-md-3 col-sm-6 aos_input">
+        <MainButton btntext={"Search"} btnclass={'button main_button w-100'} />
+        </div>
       </div>
 
       {/* upload */}
@@ -261,16 +271,16 @@ function Product() {
           <Input type={"file"} inputclass={"hiddeninput"} />
           <Iconbutton
             btntext={"Upload"}
-            btnclass={"btn-outline-success btn adminmainbutton"}
+            btnclass={"button main_outline_button"}
             Iconname={<AiOutlineCloudUpload />}
           />
         </div>
         <MainButton btntext={"Download"} />
         <Iconbutton
-          btntext={"Add"}
+          btntext={"Add Product"}
           onClick={handleShow}
           Iconname={<AiOutlinePlus />}
-          btnclass={"btn-success btn "}
+          btnclass={"button main_button "}
         />
       </div>
 
@@ -294,7 +304,7 @@ function Product() {
           <Iconbutton
             btntext={"X Cancel"}
             onClick={handleClose}
-            btnclass={"btn-outline-success btn adminmainbutton px-2"}
+            btnclass={"button main_outline_button px-2"}
             // Iconname={<GiCancel /> }
           />
           <MainButton btntext={"Save as Draft"} onClick={handleClose} />
@@ -302,7 +312,7 @@ function Product() {
             btntext={"Add Product"}
             onClick={handleClose}
             Iconname={<AiOutlinePlus />}
-            btnclass={"btn-success btn "}
+            btnclass={"button main_button "}
           />
         </Modal.Footer>
       </Modal>
@@ -314,6 +324,14 @@ function Product() {
         pointerOnHover
         className={"productlist_table"}
       />
+       <SweetAlert
+          show={Alert}
+          title="Product Name"
+          text="Are you Sure you want to delete"
+          onConfirm={hideAlert}
+          showCancelButton={true}
+          onCancel={hideAlert}
+        />
     </div>
     </div>
   );

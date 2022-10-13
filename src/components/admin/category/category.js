@@ -187,23 +187,31 @@ const CategoryList = () => {
         <h2>Category</h2>
   
         {/* search bar */}
-        <div className="card mt-3 px-3 ">
-        <div className="product_page_searchbox">
+        <div className="card mt-3 p-3 ">
+        <div className=" row">
+        <div className="col-md-3 col-sm-6 aos_input">
           <Input type={"text"} plchldr={"Search by category name"} />
+          </div>
+        <div className="col-md-3 col-sm-6 aos_input">
           <Form.Select aria-label="Search by category type" className="adminselectbox">
             <option>Search by category type</option>
             <option value="1">Grocery</option>
             <option value="2">Health</option>
             <option value="3">Sports & Accessor</option>
           </Form.Select>
+          </div>
+        <div className="col-md-3 col-sm-6 aos_input">
           <Form.Select aria-label="Search by status" className="adminselectbox">
             <option>Search by category</option>
             <option value="1">Food</option>
           <option value="2">Fish & Meat</option>
           <option value="3">Baby Care</option>
           </Form.Select>
-  
-          <MainButton btntext={"Search"} btnclass={'button main_button w-50'} />
+  </div>
+  <div className="col-md-3 col-sm-6 aos_input">
+          <MainButton btntext={"Search"} btnclass={'button main_button w-100'} />
+        </div>
+
         </div>
   
         {/* upload */}
