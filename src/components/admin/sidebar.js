@@ -83,11 +83,21 @@ function AdminSidebar() {
           </Accordion.Body>
         </Accordion.Item>
         <Accordion.Item eventKey="3">
-          <Accordion.Header>Category</Accordion.Header>
+          <Accordion.Header>Vendor</Accordion.Header>
           <Accordion.Body>
             <ul class="sidebar_navigation_bar">
               <li>
-                <Link to="/category" className="nav-link">Category List</Link>
+                <Link to="/vendors" className="nav-link">Vendor List</Link>
+              </li>
+            </ul>
+          </Accordion.Body>
+        </Accordion.Item>
+        <Accordion.Item eventKey="4">
+          <Accordion.Header>Invoice</Accordion.Header>
+          <Accordion.Body>
+            <ul class="sidebar_navigation_bar">
+              <li>
+                <Link to="/invoices" className="nav-link">Invoices</Link>
               </li>
             </ul>
           </Accordion.Body>
