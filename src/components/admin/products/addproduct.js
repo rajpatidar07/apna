@@ -25,7 +25,6 @@ const Addproduct = (props) => {
     setclickaddtag(addtag);
     seotag.push(clickaddtag);
     setaddtag('')
-  console.log(seotag)
 
   };
   // --------------------------------------------------------------------------
@@ -410,6 +409,31 @@ const Addproduct = (props) => {
             </div>
           </div>
 
+ {/* other info */}
+ <div className="my-3 inputsection_box">
+            <h5 className="m-0">Other Instruction</h5>
+            <Col sm="12" className="mt-3">
+              <CKEditor
+                    editor={ ClassicEditor }
+                    data="<p>Hello from CKEditor 5!</p>"
+                    onReady={ editor => {
+                        // You can store the "editor" and use when it is needed.
+                        console.log( 'Editor is ready to use!', editor );
+                    } }
+                    onChange={ ( event, editor ) => {
+                        const data = editor.getData();
+                        console.log( { event, editor, data } );
+                    } }
+                    onBlur={ ( event, editor ) => {
+                        console.log( 'Blur.', editor );
+                    } }
+                    onFocus={ ( event, editor ) => {
+                        console.log( 'Focus.', editor );
+                    } }
+                />
+                
+              </Col>
+          </div>
           {/* input */}
           <div className="my-3 inputsection_box">
             <h5 className="m-0">Add Custom Input</h5>

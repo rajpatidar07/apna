@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import Input from "./common/input";
 import {
   AiFillDelete,
-  AiFillEdit,
+  AiOutlineEdit,
   AiOutlinePlus,
   AiOutlineCloudUpload,
 } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import { GiCancel } from "react-icons/gi";
-import { BiDotsVertical } from "react-icons/bi";
+import { BsTrash } from "react-icons/bs";
+import { BiDotsVertical,BiEdit } from "react-icons/bi";
 import DataTable from "react-data-table-component";
 import MainButton from "./common/button";
 import Form from "react-bootstrap/Form";
@@ -77,7 +77,7 @@ function Product() {
       name: "Price",
       selector: (row) => row.price,
       sortable: true,
-      width: "90px",
+      width: "100px",
       center: true,
       style: {
         paddingRight: "32px",
@@ -121,11 +121,11 @@ function Product() {
     {
       name: "Status",
       selector: (row) => (
-        <h5 className="p-0">
+       
         <Badge  bg= {row.status === "Selling"
         ?"success"  : row.status === "Sold out"
               ? "danger" : null}>{row.status}</Badge>
-       </h5>
+      
       ),
       sortable: true,
       width: "115px",
@@ -141,9 +141,9 @@ function Product() {
       center: true,
       selector: (row) => (
         <div className={"actioncolimn"}>
-          <AiFillEdit className=" p-0 m-0 editiconn" />
-          <AiFillDelete className=" p-0 m-0 editiconn" />
-          <BiDotsVertical className=" p-0 m-0 editiconn doticon" />
+         <BiEdit className=" p-0 m-0  editiconn text-secondary" />
+          <BsTrash className=" p-0 m-0 editiconn text-danger" />
+          <BiDotsVertical className=" p-0 m-0 editiconn doticon text-primary " />
   
           <Dropdown className="productprofile_div p-0 m-0 editiconn doticon">
             <Dropdown.Toggle
