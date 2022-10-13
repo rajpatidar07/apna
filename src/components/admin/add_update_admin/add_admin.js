@@ -97,7 +97,6 @@ const AddAdmin = (props) => {
                       <option>Super Admin</option>
                       <option value="1">Admin</option>
                       <option value="2">Editor</option>
-                  
                     </Form.Select>
                   </Form.Group>
                 </div>
