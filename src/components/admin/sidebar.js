@@ -28,6 +28,9 @@ function AdminSidebar() {
               <li>
                 <Link to="/orders" className="nav-link">orders</Link>
               </li>
+              <li>
+              <Link to="/transactions" className="nav-link">Transactions</Link>
+            </li>
             </ul>
           </Accordion.Body>
         </Accordion.Item>

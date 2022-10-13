@@ -3,12 +3,17 @@ import { AiFillDelete, AiFillEdit, AiOutlinePlus } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
+import { BsTrash } from "react-icons/bs";
 import Modal from "react-bootstrap/Modal";
 // import Addproduct from "../products/addproduct";
 import Iconbutton from "../common/iconbutton";
 import AddAdmin from "../add_update_admin/add_admin";
+import SweetAlert from 'sweetalert-react';
 
 function Admin() {
+  const handleAlert = () => setAlert(true);
+  const hideAlert = () => setAlert(false);
+  const [Alert, setAlert] = useState(false);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -48,7 +53,7 @@ function Admin() {
       selector: (row) => (
         <div className={"actioncolimn"}>
           <AiFillEdit className=" p-0 m-0 editiconn" />
-          <AiFillDelete className=" p-0 m-0 editiconn" />
+          <BsTrash className=" p-0 m-0 editiconn text-danger"  onClick={handleAlert} />
         </div>
       ),
     },
@@ -120,6 +125,14 @@ function Admin() {
           pointerOnHover
           className={"productlist_table"}
         />
+        <SweetAlert
+        show={Alert}
+        title="Admin Name"
+        text="Are you Sure you want to delete"
+        onConfirm={hideAlert}
+        showCancelButton={true}
+        onCancel={hideAlert}
+      />
       </div>
     </div>
   );

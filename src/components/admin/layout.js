@@ -29,6 +29,7 @@ import Admin from "./add_update_admin/add_update_admin";
 import Invoices from "./invoice/invoices";
 import InvoiceList from "./invoice/invoices";
 import Complaint from "./complaint/complaint";
+import Transactions from "./Transactions/transactions";
 
 
 function AdminLayout() {
@@ -80,6 +81,7 @@ function AdminLayout() {
                 <Route path="/category" element={<CategoryList />} />
                 <Route path="/complaint" element={<Complaint />} />
 
+                <Route path="/transactions" element={<Transactions/>}/>
               </Routes>
             </div>
           </div>

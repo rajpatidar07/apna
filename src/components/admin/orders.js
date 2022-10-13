@@ -58,7 +58,9 @@ const columns = [
             ? "badge bg-primary"
             : row.status === "Cancel"
             ? "badge bg-danger"
-            : "badge bg-primary"
+            : row.status === "Approvad"
+            ? "badge bg-info"
+            : "badge bg-dark"
         }
       >
         {row.status}
@@ -69,12 +71,12 @@ const columns = [
   {
     name: "Change Status",
     selector: (row) => (
-      <Form.Select aria-label="Search by delivery" className="adminselectbox">
-        <option value="1">Change status</option>
+      <Form.Select aria-label="Search by delivery" size="sm">
         <option value="1">Delivered</option>
         <option value="2">Pending</option>
         <option value="3">Processing</option>
         <option value="4">Cancel</option>
+        <option value="5">Approval</option>
       </Form.Select>
     ),
     sortable: true,
@@ -85,7 +87,7 @@ const columns = [
 
     selector: (row) => (
       <Link to="/invoice">
-        <FaFileInvoiceDollar />
+        <FaFileInvoiceDollar className="text-dark" />
       </Link>
     ),
   },
@@ -122,7 +124,7 @@ const data = [
     tex: "CGST 18%",
     order_date: "10/10/22",
     delivery_date: "12/10/22",
-    pay_mode: "UPI",
+    pay_mode: "COD",
     status: "Cancel",
   },
   {
@@ -135,6 +137,17 @@ const data = [
     delivery_date: "12/10/22",
     pay_mode: "UPI",
     status: "Processing",
+  },
+  {
+    id: 5,
+    order_id: "AS1568",
+    no_of_item: "2",
+    price: "$15",
+    tex: "CGST 18%",
+    order_date: "10/10/22",
+    delivery_date: "12/10/22",
+    pay_mode: "COD",
+    status: "Approvad",
   },
 ];
 
@@ -149,28 +162,37 @@ function Product() {
       <h2>Orders</h2>
       <div className="card mt-3 px-3 ">
         <div className="product_page_searchbox bg-gray my-4">
-          <Input type={"text"} plchldr={"Search by order id"} />
-          <Form.Select
-            aria-label="Search by delivery"
-            className="adminselectbox"
-          >
-            <option>delivery status</option>
-            <option value="1">Delivered</option>
-            <option value="2">Pending</option>
-            <option value="3">Processing</option>
-            <option value="4">Cancel</option>
-          </Form.Select>
-          <Form.Select
-            aria-label="Search by delivery_status"
-            className="adminselectbox"
-          >
-            <option>Order limits</option>
-            <option value="1">Last 5 days orders</option>
-            <option value="2">Last 7 days orders</option>
-            <option value="3">Last 15 days orders</option>
-          </Form.Select>
-
-          <MainButton btntext={"Search"} />
+          <div className="row">
+            <div className="col-md-3 col-sm-6">
+              <Input type={"text"} plchldr={"Search by order id"} />
+            </div>
+            <div className="col-md-3 col-sm-6">
+              <Form.Select
+                aria-label="Search by delivery"
+                className="adminselectbox"
+              >
+                <option>Delivery status</option>
+                <option value="1">Delivered</option>
+                <option value="2">Pending</option>
+                <option value="3">Processing</option>
+                <option value="4">Cancel</option>
+              </Form.Select>
+            </div>
+            <div className="col-md-3 col-sm-6">
+              <Form.Select
+                aria-label="Search by delivery_status"
+                className="adminselectbox"
+              >
+                <option>Order limits</option>
+                <option value="1">Last 5 days orders</option>
+                <option value="2">Last 7 days orders</option>
+                <option value="3">Last 15 days orders</option>
+              </Form.Select>
+            </div>
+            <div className="col-md-3 col-sm-6">
+              <MainButton btntext={"Search"} />
+            </div>
+          </div>
         </div>
 
         <DataTable
