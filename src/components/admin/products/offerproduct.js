@@ -9,193 +9,183 @@ import Modal from "react-bootstrap/Modal";
 import Iconbutton from "../common/iconbutton";
 import Dropdown from 'react-bootstrap/Dropdown';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
-const columns = [
-  {
-    name: "SKU",
-    selector: (row) => row.sku,
-    sortable: true,
-    width: "100px",
-  },
-  {
-    name: "#",
-    width: "100px",
-    cell: (row) => (
-      <img
-        height="100px"
-        width="75px"
-        alt={row.name}
-        src={
-          "https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg"
-        }
-        style={{
-          borderRadius: 15,
-          paddingTop: 10,
-          paddingBottom: 10,
-          textAlign: "right",
-        }}
-        onClick={handleClick}
-      />
-    ),
-  },
-  {
-    name: "PRODUCT NAME",
-    selector: (row) => row.pname,
-    sortable: true,
-    width: "230px",
-  },
-  {
-    name: "CATEGORY",
-    selector: (row) => row.category,
-    sortable: true,
-    width: "180px",
-  },
-  {
-    name: "PRICE",
-    selector: (row) => row.price,
-    sortable: true,
-    width: "130px",
-    center: true,
-				style: {
-          paddingRight: '32px',
-          paddingLeft:'0px',
-					},
-				},
+import { Badge } from "react-bootstrap";
 
-  {
-    name: "STOCK",
-    selector: (row) => row.stock,
-    sortable: true,
-    width: "130px",
-    center: true,
-				style: {
-          paddingRight: '32px',
-          paddingLeft:'0px',
-					},
-				},
-
-  {
-    name: "DISCOUNT",
-    selector: (row) => row.discount,
-    sortable: true,
-    width: "155px",
-    center: true,
-				style: {
-          paddingRight: '32px',
-          paddingLeft:'0px',
-				},
-
-  },
-//   {
-//     name: "STATUS",
-//     selector: (row) => row.status,
-//     sortable: true,
-//     width: "130px",
-//     center: true,
-// 		conditionalCellStyles: [
-// 			{
-// 				when: row => row.status === 'Selling',
-// 				style: {
-// 					backgroundColor: 'rgba(63, 195, 128, 0.9)',
-//          color: 'white',
-//          borderRadius: '100px',
-//         height: '50px',
-//         marginTop: '36px',
-// 					},
-// 				},
-//         {
-//           when: row => row.status === 'Sold out',
-//           style: {
-//             backgroundColor: 'rgba(242, 38, 19, 0.9)',
-//            color: 'white',
-//            borderRadius: '100px',
-//           height: '50px',
-//           marginTop: '36px',
-//             },
-//           },
-// ]
-//   },
-  {
-    name: "ACTION",
-    width: "220px",
-    selector: (row) => (
-      <div className={"actioncolimn"}>
-        <AiFillEdit className="w-75 p-0 m-0 editiconn" />
-        <AiFillDelete className="w-75 p-0 m-0 editiconn" />
-        <Dropdown>
-      <Dropdown.Toggle variant="success" id="dropdown-basic">
-        Dropdown
-      </Dropdown.Toggle>
-      <Dropdown.Menu>
-        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-        <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-        <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-      </Dropdown.Menu>
-    </Dropdown>
-        {/* <div class="dropdown-container" tabindex="0">
-    <div class="three-dots"></div>
-    <div class="dropdown">
-      <a href="#"><div>Feature</div></a>
-      <a href="#"><div>Special offer</div></a>
-      <a href="#"><div>Promotional</div></a>
-      <a href="#"><div>Cancel</div></a>
-    </div>
-  </div> */}
-      </div>
-    ),
-  },
-];
-
-const data = [
-  {
-    id: 1,
-    sku: "9AF4FE",
-    pname: (
-      <div className="productdescbox">
-        <b>
-          <h6>Green Leaf Lettuce</h6>
-        </b>
-        <p className="productdesc">
-          {" "}
-          The root vegetables include beets, carrots, radishes, sweet potatoes,
-          and turnips
-        </p>
-      </div>
-    ),
-    category: (
-      <p className="productdesc">Fruits & Vegetable Fruits & Vegetable</p>
-    ),
-    price: "$14",
-    stock: "15",
-    status: "Selling",
-    discount: "50%",
-  },
-  {
-    id: 2,
-    sku: "9AF4FE",
-    pname: (
-      <div className="productdescbox">
-        <b>
-          <h6>Green Leaf Lettuce</h6>
-        </b>
-        <h6 className="productdesc">
-          {" "}
-          The root vegetables include beets, and turnips
-        </h6>
-      </div>
-    ),
-    category: "Fruits & Vegetable",
-    price: "$14",
-    stock: "15",
-    status: "Sold out",
-    discount: "50%",
-  },
-];
 const handleClick = () => {};
 const onButtonClick = () =>{
   
 }
 
 const Offerproduct = () => {
+  const columns = [
+    {
+      name: "Sku",
+      selector: (row) => (
+        <p>
+          {row.sku}
+        </p>
+      ),
+      sortable: true,
+      width: "100px",
+      center: true,
+    },
+    {
+      name: "#",
+      width: "120px",
+      center: true,
+      cell: (row) => (
+        <img
+          height="90px"
+          width="75px"
+          alt={row.name}
+          src={
+            "https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg"
+          }
+          style={{
+            borderRadius: 15,
+            paddingTop: 10,
+            paddingBottom: 10,
+            textAlign: "right",
+          }}
+          onClick={handleClick}
+        />
+      ),
+    },
+    {
+      name: "Product Name",
+      selector: (row) => row.pname,
+      sortable: true,
+      width: "250px",
+    },
+    {
+      name: "Category",
+      selector: (row) => row.category,
+      sortable: true,
+      width: "170px",
+    },
+    {
+      name: "Price",
+      selector: (row) => row.price,
+      sortable: true,
+      width: "120px",
+      center: true,
+      style: {
+        paddingRight: "32px",
+        paddingLeft: "0px",
+      },
+    },
+    // {
+    //   name: "Gst",
+    //   selector: (row) => row.gst,
+    //   sortable: true,
+    //   width: "90px",
+    //   center: true,
+    //   style: {
+    //     paddingLeft: "0px",
+    //   },
+    // },
+  
+    {
+      name: "Stock",
+      selector: (row) => row.stock,
+      sortable: true,
+      width: "120px",
+      center: true,
+      style: {
+        paddingRight: "32px",
+        paddingLeft: "0px",
+      },
+    },
+  
+    {
+      name: "Discount",
+      selector: (row) => row.discount,
+      sortable: true,
+      width: "150px",
+      center: true,
+      style: {
+        paddingRight: "32px",
+        paddingLeft: "0px",
+      },
+    },
+    {
+      name: "Status",
+      selector: (row) => (
+        <h5 className="p-0">
+        <Badge  bg= {row.status === "Selling"
+        ?"success"  : row.status === "Sold out"
+              ? "danger" : null}>{row.status}</Badge>
+       </h5>
+      ),
+      sortable: true,
+      width: "115px",
+      // center: true,
+    },
+    {
+      name: "Action",
+      width: "110px",
+      style: {
+        paddingRight: "12px",
+        paddingLeft: "0px",
+      },
+      center: true,
+      selector: (row) => (
+        <div className={"actioncolimn"}>
+          <AiFillEdit className=" p-0 m-0 editiconn" />
+          <AiFillDelete className=" p-0 m-0 editiconn" />
+        </div>
+      ),
+    },
+  ];
+  
+  const data = [
+    {
+      id: 1,
+      sku: "9AF4FE",
+      pname: (
+        <div className="productdescbox">
+          <b>
+            <p className="mb-0">Green Leaf Lettuce</p>
+          </b>
+  
+          <p className="productdesc">
+            {" "}
+            {`The root vegetables include beets, carrots, radishes, sweet potatoes,
+            and turnips`}
+          </p>
+        </div>
+      ),
+      category: (
+        <p className="productdesc">Fruits & Vegetable Fruits & Vegetable</p>
+      ),
+      price: "$14",
+      gst: "10%",
+      stock: "15",
+      status: "Selling",
+      discount: "50%",
+    },
+    {
+      id: 2,
+      sku: "9AF4FE",
+      pname: (
+        <div className="productdescbox">
+          <b>
+            <p className="mb-0">Green Leaf Lettuce</p>
+          </b>
+          <p className="productdesc">
+            {" "}
+            The root vegetables include beets, and turnips
+          </p>
+        </div>
+      ),
+      category: "Fruits & Vegetable",
+      price: "$14",
+      gst: "10%",
+      stock: "15",
+      status: "Sold out",
+      discount: "50%",
+    },
+  ];
     return (
         <div>
              <h2>Offer Products</h2>
@@ -232,12 +222,7 @@ const Offerproduct = () => {
           />
         </div>
         <MainButton btntext={"Download"} />
-        <Iconbutton
-          btntext={"Add Product"}
-          onClick={handleShow}
-          Iconname={<AiOutlinePlus />}
-          btnclass={"button main_button adminmainbutton"}
-        />
+       
       </div>
 
       {/* datatable */}
