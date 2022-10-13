@@ -79,6 +79,16 @@ function AdminSidebar() {
             </ul>
           </Accordion.Body>
         </Accordion.Item>
+        <Accordion.Item eventKey="3">
+          <Accordion.Header>Category</Accordion.Header>
+          <Accordion.Body>
+            <ul class="sidebar_navigation_bar">
+              <li>
+                <Link to="/category" className="nav-link">Category List</Link>
+              </li>
+            </ul>
+          </Accordion.Body>
+        </Accordion.Item>
         <ul class="sidebar_navigation_bar">
           <li>
             <Link to="/components" className="nav-link">Components</Link>

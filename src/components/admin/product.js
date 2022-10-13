@@ -237,17 +237,18 @@ function Product() {
       <div className="card mt-3 px-3 ">
       <div className="product_page_searchbox">
         <Input type={"text"} plchldr={"Search by product name"} />
-        <Form.Select aria-label="Search by category" className="adminselectbox">
-          <option>Open this select menu</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
+        <Form.Select aria-label="Search by category" className="adminselectbox" placeholder="Search by category">
+        <option>Search by category</option>
+          <option value="1">Food</option>
+          <option value="2">Fish & Meat</option>
+          <option value="3">Baby Care</option>
         </Form.Select>
-        <Form.Select aria-label="Search by status" className="adminselectbox">
-          <option>Open this select menu</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
+        <Form.Select aria-label="Search by status" className="adminselectbox" placeholder="Search by status">
+
+        <option >Search by status</option>
+          <option value="1">Pending</option>
+          <option value="2">Selling</option>
+          <option value="3">Sold Out</option>
         </Form.Select>
 
         <MainButton btntext={"Search"} />

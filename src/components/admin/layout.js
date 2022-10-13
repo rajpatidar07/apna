@@ -24,6 +24,7 @@ import Login from "./login/login";
 import Footer from "./login/footer";
 import ChangePassword from "./login/change_password";
 import Forgot from "./login/forgot";
+import CategoryList from "./category/category";
 import Admin from "./add_update_admin/add_update_admin";
 
 
@@ -72,6 +73,7 @@ function AdminLayout() {
                  <Route path="/vendors" element={<VendorsList />} />
                 <Route path="/components" element={<AdminComponents />} />
                 <Route path="/add_admin" element={<Admin/>} />
+                <Route path="/category" element={<CategoryList />} />
               </Routes>
             </div>
           </div>
