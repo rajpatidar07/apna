@@ -124,11 +124,15 @@ function Product() {
     {
       name: "Status",
       selector: (row) => (
-       
-        <Badge  bg= {row.status === "Selling"
-        ?"success"  : row.status === "Sold out"
-              ? "danger" : null}>{row.status}</Badge>
-      
+        <span
+        className={
+          row.status === "Selling"
+            ? "badge bg-success"
+            : row.status === "Sold out"
+              ? "badge bg-danger"
+              : null
+        }
+      >{row.status}</span>
       ),
       sortable: true,
       width: "115px",
@@ -323,6 +327,7 @@ function Product() {
         highlightOnHover
         pointerOnHover
         className={"productlist_table"}
+        
       />
        <SweetAlert
           show={Alert}
