@@ -52,65 +52,84 @@ const Invoice = () => {
                                     </tr>
                                 </table>
                             </div>
-                            <table className="table table-striped">
+                            <table className="table table-striped border">
                                 <thead>
                                     <tr>
-                                        <th className="center">#</th>
-                                        <th>Item</th>
-                                        <th>Description</th>
+                                        <th className="center">Product</th>
+                                        <th>Qty</th>
+                                        <th>Gross Amount ₹</th>
 
-                                        <th className="right">Price</th>
-                                        <th className="center">Qty</th>
-                                        <th className="right">Total</th>
+                                        <th className="right">Discounts/Coupons ₹</th>
+                                        <th className="center">Taxable Value ₹</th>
+                                        <th className="center">CGST ₹</th>
+                                        <th className="center">SGST/UTGST ₹</th>
+                                        <th className="right">Total ₹</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td className="center">1</td>
-                                        <td className="left strong">Hunny</td>
-                                        <td className="left">Sweet Hunny</td>
-
-                                        <td className="right">$15</td>
-                                        <td className="center">1</td>
-                                        <td className="right">$15</td>
+                                        <td className="center"><b>OPPO K10 5G (Ocean Blue, 128 GB)</b><br/>
+                                        <small>CGST: 9.0 %</small><br/>
+                                        <small>SGST/UTGST: 9.0 %</small>
+                                        </td>
+                                        <td className="">1</td>
+                                        <td className="left">15999.00</td>
+                                        <td className="left">-1283.00</td>
+                                        <td className="left">12471.18</td>
+                                        <td className="left">1122.40</td>
+                                        <td className="left">1122.40</td>
+                                        <td className="left">14716.00</td>
                                     </tr>
                                     <tr>
-                                        <td className="center">2</td>
-                                        <td className="left strong">shoes</td>
-                                        <td className="left">Runing shoes</td>
-
-                                        <td className="right">$20</td>
-                                        <td className="center">2</td>
-                                        <td className="right">$40</td>
+                                        <td className="center"><b>OPPO K10 5G (Ocean Blue, 128 GB)</b><br/>
+                                        <small>CGST: 9.0 %</small><br/>
+                                        <small>SGST/UTGST: 9.0 %</small>
+                                        </td>
+                                        <td className="">1</td>
+                                        <td className="left">15999.00</td>
+                                        <td className="left">-1283.00</td>
+                                        <td className="left">12471.18</td>
+                                        <td className="left">1122.40</td>
+                                        <td className="left">1122.40</td>
+                                        <td className="left">14716.00</td>
                                     </tr>
                                     <tr>
-                                        <td className="center">3</td>
-                                        <td className="left strong">T-Shirt</td>
-                                        <td className="left">100% cotton</td>
-
-                                        <td className="right">$10</td>
-                                        <td className="center">3</td>
-                                        <td className="right">$30</td>
+                                        <td className="center"><b>Shipping And Packaging Charges</b>
+                                        </td>
+                                        <td className="">2</td>
+                                        <td className="left">99.00</td>
+                                        <td className="left">-70.00</td>
+                                        <td className="left">24.58</td>
+                                        <td className="left">2.21</td>
+                                        <td className="left">2.21</td>
+                                        <td className="left">29.00</td>
+                                    </tr>
+                                    <tr>
+                                        <th className="font-weight-bold"><b>Total</b></th>
+                                        <th className=""><b>2</b></th>
+                                        <th className=""><b>16098.00</b></th>
+                                        <th className=""><b>-1353.00</b></th>
+                                        <th className=""><b>12495.76</b></th>
+                                        <th className=""><b>1124.61</b></th>
+                                        <th className=""><b>1124.61</b></th>
+                                        <th className=""><b>14745.00</b></th>
+                                    </tr>
+                                    <tr>
+                                        <th colSpan={'7'} className="font-weight-bold text-end p-4"><h5><b>Grand Total</b></h5></th>
+                                        <th className="pt-4 pb-4"><h5><b>14745.00</b></h5></th>
                                     </tr>
                                 </tbody>
                             </table>
-                        </div>
-                        <div className="row">
-                            <div className="col-lg-4 col-sm-5"></div>
-
-                            <div className="col-lg-4 col-sm-5 ml-auto">
-                                <table className="table table-clear">
-                                    <tbody>
-                                        <tr>
-                                            <td className="left">
-                                                <strong>Total Amount</strong>
-                                            </td>
-                                            <td className="right">
-                                                <strong>$85</strong>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div className="col-md-12 text-end">
+                                <h5>Apna Organic Store</h5>
+                                <img src={logo}  className='w-25 p-4 pt-1 pb-1 px-1' />
+                                <h5>Authorised Signatury</h5>
+                            </div>
+                            <div className="col-md-12 border-top p-2">
+                                <p><b>Returns Policy:</b> At Apna Organic we try to deliver perfectly each and every time. But in the off-chance that you need to return the item, please do so with the <b>original Brand box/price
+                                    tag, original packing and invoice</b> without which it will be really difficult for us to act on your request. Please help us in helping you. Terms and conditions apply.</p>
+                                    <p>The goods sold as are intended for end user consumption and not for re-sale.</p>
+                                
                             </div>
                         </div>
                     </div>
