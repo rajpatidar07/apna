@@ -28,6 +28,9 @@ function AdminSidebar() {
               <li>
                 <Link to="/orders" className="nav-link">orders</Link>
               </li>
+              <li>
+              <Link to="/transactions" className="nav-link">Transactions</Link>
+            </li>
             </ul>
           </Accordion.Body>
         </Accordion.Item>
@@ -80,11 +83,11 @@ function AdminSidebar() {
           </Accordion.Body>
         </Accordion.Item>
         <Accordion.Item eventKey="3">
-          <Accordion.Header>Vendor</Accordion.Header>
+          <Accordion.Header>Category</Accordion.Header>
           <Accordion.Body>
             <ul class="sidebar_navigation_bar">
               <li>
-                <Link to="/vendors" className="nav-link">Vendor List</Link>
+                <Link to="/category" className="nav-link">Category List</Link>
               </li>
             </ul>
           </Accordion.Body>
@@ -94,7 +97,17 @@ function AdminSidebar() {
           <Accordion.Body>
             <ul class="sidebar_navigation_bar">
               <li>
-                <Link to="/invoices" className="nav-link">Invoices</Link>
+                <Link to="/invoice" className="nav-link">Invoices</Link>
+              </li>
+            </ul>
+          </Accordion.Body>
+        </Accordion.Item>
+        <Accordion.Item eventKey="5">
+          <Accordion.Header>Complaints</Accordion.Header>
+          <Accordion.Body>
+            <ul class="sidebar_navigation_bar">
+              <li>
+                <Link to="/complaint" className="nav-link">Complaint</Link>
               </li>
             </ul>
           </Accordion.Body>

@@ -26,6 +26,10 @@ import ChangePassword from "./login/change_password";
 import Forgot from "./login/forgot";
 import CategoryList from "./category/category";
 import Admin from "./add_update_admin/add_update_admin";
+import Invoices from "./invoice/invoices";
+import InvoiceList from "./invoice/invoices";
+import Complaint from "./complaint/complaint";
+import Transactions from "./Transactions/transactions";
 
 
 function AdminLayout() {
@@ -59,7 +63,7 @@ function AdminLayout() {
                 <Route path="/orders" element={<Orders />} />
                 <Route path="/addproduct" element={<Addproduct />} />
                 <Route path="/productdetail" element={<Productdetail />} />
-                <Route path="/invoice" element={<Invoice />} />
+                <Route path="/invoice" element={<InvoiceList />} />
                 <Route path="/invoice_detail" element={<Invoice />} />
                 <Route path="/soldproduct" element={<Soldproduct />} />
                 <Route path="/featureproduct" element={<Featuredproduct />} />
@@ -75,6 +79,9 @@ function AdminLayout() {
                 <Route path="/components" element={<AdminComponents />} />
                 <Route path="/add_admin" element={<Admin/>} />
                 <Route path="/category" element={<CategoryList />} />
+                <Route path="/complaint" element={<Complaint />} />
+
+                <Route path="/transactions" element={<Transactions/>}/>
               </Routes>
             </div>
           </div>

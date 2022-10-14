@@ -72,7 +72,7 @@ const AddAdmin = (props) => {
                     <Form.Control type="text" placeholder="Email" />
                   </Form.Group>
                 </div>
-                <div className="col-md-6">
+                <div className="col-12">
                   <Form.Group
                     className="mb-3"
                     controlId="formPlaintextPassword"
@@ -82,23 +82,6 @@ const AddAdmin = (props) => {
                     </Form.Label>
 
                     <Form.Control type="text" placeholder="Mobile Number" />
-                  </Form.Group>
-                </div>
-                <div className="col-md-6">
-                  <Form.Group
-                    className="mb-3"
-                    controlId="formPlaintextPassword"
-                  >
-                    <Form.Label className="" column sm="12">
-                      Admin Type
-                    </Form.Label>
-
-                    <Form.Select aria-label="Default select example">
-                      <option>Super Admin</option>
-                      <option value="1">Admin</option>
-                      <option value="2">Editor</option>
-                  
-                    </Form.Select>
                   </Form.Group>
                 </div>
                 <div className="col-12">
@@ -111,6 +94,22 @@ const AddAdmin = (props) => {
                     </Form.Label>
 
                     <Form.Control type="text" placeholder="Password" />
+                  </Form.Group>
+                </div>
+                <div className="col-12">
+                  <Form.Group
+                    className="mb-3"
+                    controlId="formPlaintextPassword"
+                  >
+                    <Form.Label className="" column sm="12">
+                      Admin Type
+                    </Form.Label>
+
+                    <Form.Select aria-label="Default select example">
+                      <option>Super Admin</option>
+                      <option value="1">Admin</option>
+                      <option value="2">Editor</option>
+                    </Form.Select>
                   </Form.Group>
                 </div>
               </div>

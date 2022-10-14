@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import Input from "../common/input";
-import { AiFillDelete, AiFillEdit,AiOutlineCloudUpload } from "react-icons/ai";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
-import Iconbutton from "../common/iconbutton";
-import Dropdown from 'react-bootstrap/Dropdown';
-import { Badge } from "react-bootstrap";
-
+import SweetAlert from 'sweetalert-react';
+import 'sweetalert/dist/sweetalert.css';
+import { BsTrash } from "react-icons/bs";
+import { BiEdit } from "react-icons/bi";
 
 const Promotionproduct = () => {
- 
+  const handleAlert = () => setAlert(true);
+  const hideAlert = () => setAlert(false);
+  const [Alert, setAlert] = useState(false);
   const handleClick = () => {};
   const onButtonClick = () =>{ 
   }
@@ -28,7 +29,7 @@ const Promotionproduct = () => {
     },
     {
       name: "#",
-      width: "120px",
+      width: "150px",
       center: true,
       cell: (row) => (
         <img
@@ -58,35 +59,13 @@ const Promotionproduct = () => {
       name: "Category",
       selector: (row) => row.category,
       sortable: true,
-      width: "170px",
+      width: "200px",
     },
     {
       name: "Price",
       selector: (row) => row.price,
       sortable: true,
-      width: "120px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
-    },
-    // {
-    //   name: "Gst",
-    //   selector: (row) => row.gst,
-    //   sortable: true,
-    //   width: "90px",
-    //   center: true,
-    //   style: {
-    //     paddingLeft: "0px",
-    //   },
-    // },
-  
-    {
-      name: "Stock",
-      selector: (row) => row.stock,
-      sortable: true,
-      width: "120px",
+      width: "100px",
       center: true,
       style: {
         paddingRight: "32px",
@@ -95,8 +74,8 @@ const Promotionproduct = () => {
     },
   
     {
-      name: "Discount",
-      selector: (row) => row.discount,
+      name: "From Date",
+      selector: (row) => row.mdate,
       sortable: true,
       width: "150px",
       center: true,
@@ -106,21 +85,19 @@ const Promotionproduct = () => {
       },
     },
     {
-      name: "Status",
-      selector: (row) => (
-        <h5 className="p-0">
-        <Badge  bg= {row.status === "Selling"
-        ?"success"  : row.status === "Sold out"
-              ? "danger" : null}>{row.status}</Badge>
-       </h5>
-      ),
+      name: "To Date",
+      selector: (row) => row.edate,
       sortable: true,
-      width: "115px",
-      // center: true,
+      width: "120px",
+      center: true,
+      style: {
+        paddingRight: "32px",
+        paddingLeft: "0px",
+      },
     },
     {
       name: "Action",
-      width: "110px",
+      width: "90px",
       style: {
         paddingRight: "12px",
         paddingLeft: "0px",
@@ -128,11 +105,12 @@ const Promotionproduct = () => {
       center: true,
       selector: (row) => (
         <div className={"actioncolimn"}>
-          <AiFillEdit className=" p-0 m-0 editiconn" />
-          <AiFillDelete className=" p-0 m-0 editiconn" />
+         <BiEdit className=" p-0 m-0  editiconn text-secondary" />
+          <BsTrash className=" p-0 m-0 editiconn text-danger"  onClick={handleAlert} />
         </div>
       ),
     },
+   
   ];
   
   const data = [
@@ -156,10 +134,8 @@ const Promotionproduct = () => {
         <p className="productdesc">Fruits & Vegetable Fruits & Vegetable</p>
       ),
       price: "$14",
-      gst: "10%",
-      stock: "15",
-      status: "Selling",
-      discount: "50%",
+      mdate: "2022-01-05",
+      edate: "2022-01-05",
     },
     {
       id: 2,
@@ -177,10 +153,8 @@ const Promotionproduct = () => {
       ),
       category: "Fruits & Vegetable",
       price: "$14",
-      gst: "10%",
-      stock: "15",
-      status: "Sold out",
-      discount: "50%",
+      mdate: "2022-01-05",
+      edate: "2022-01-05",
     },
   ];
     return (
@@ -188,39 +162,28 @@ const Promotionproduct = () => {
               <h2>Promotional Products</h2>
 
 {/* search bar */}
-<div className="card mt-3 px-3 ">
-      <div className="product_page_searchbox">
+<div className="card mt-3 p-3 ">
+<div className="row pb-3">
+      <div className="col-md-3 col-sm-6 aos_input">
         <Input type={"text"} plchldr={"Search by product name"} />
-        <Form.Select aria-label="Search by category" className="adminselectbox">
-          <option>Open this select menu</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
+        </div>
+        <div className="col-md-3 col-sm-6 aos_input">
+        <Form.Select aria-label="Search by category" className="adminselectbox" placeholder="Search by category">
+        <option>Search by category</option>
+          <option value="1">Food</option>
+          <option value="2">Fish & Meat</option>
+          <option value="3">Baby Care</option>
         </Form.Select>
-        <Form.Select aria-label="Search by status" className="adminselectbox">
-          <option>Open this select menu</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
-        </Form.Select>
-
-        <MainButton btntext={"Search"} />
+        </div>
+        <div className="col-md-3 col-sm-6 aos_input">
+        <Input type={"date"} plchldr={"Search by product name"} />
+        </div>
+        <div className="col-md-3 col-sm-6 aos_input">
+        <MainButton btntext={"Search"} btnclass={'button main_button w-100'} />
+        </div>
       </div>
 
       {/* upload */}
-
-      <div className="product_page_uploadbox my-4">
-        <div className="product_page_uploadbox_one">
-          <Input type={"file"} inputclass={"hiddeninput"} />
-          <Iconbutton
-            btntext={"Upload"}
-            btnclass={"button main_outline_button adminmainbutton"}
-            Iconname={<AiOutlineCloudUpload />}
-          />
-        </div>
-        <MainButton btntext={"Download"} />
-       
-      </div>
 
       {/* datatable */}
    
@@ -232,6 +195,14 @@ const Promotionproduct = () => {
         pointerOnHover
         className={"productlist_table"}
       />
+      <SweetAlert
+          show={Alert}
+          title="Product Name"
+          text="Are you Sure you want to remove"
+          onConfirm={hideAlert}
+          showCancelButton={true}
+          onCancel={hideAlert}
+        />
     </div>
     </div>
     );
