@@ -117,3 +117,17 @@
   background: rgb(89 193 88 / 20%);
 }
 
+/* Complaint */
+.complaintdescbox {
+  padding: 10px 0;
+
+}
+
+.complaintdesc {
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+}

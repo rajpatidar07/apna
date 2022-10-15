@@ -51,7 +51,7 @@ function AdminLayout() {
             </div>
             <div className="col-lg-10 col-md-9 col-sm-8">
               <AdminHeader />
-              <div className="main_content_div">
+              <div className="main_content_div" >
                 <Routes>
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/product" element={<Product />} />
