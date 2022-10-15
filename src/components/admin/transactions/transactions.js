@@ -24,7 +24,7 @@ const columns = [
 
   {
     name: "Transactions id",
-    selector: (row) => row.transactions_id,
+    selector: (row) => <Link to="/transactions_detail">{row.transactions_id}</Link>,
     sortable: true,
   },
   {
