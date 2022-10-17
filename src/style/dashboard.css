@@ -1,0 +1,11 @@
+.productlist_maindiv .recentorder_boxx .recentorder{
+padding-left: 0;
+}
+
+.row .carddicon{
+    position: absolute;
+    font-size: 100px;
+    top: 10px;
+    right: 10px;
+    opacity: .25;
+}

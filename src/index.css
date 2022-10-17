@@ -180,7 +180,7 @@ code {
 
 .page_main_row .main_content_div .row.main_dashboard_row {
   justify-content: space-between;
-  gap: 15px;
+  gap: 20px;
   display: grid;
   grid-template-columns: 32% 32% 32%;
 }
