@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { AiFillDelete, AiFillEdit, AiOutlinePlus } from "react-icons/ai";
+import {AiFillEdit, AiOutlinePlus } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
-import MainButton from "../common/button";
 import { BsTrash } from "react-icons/bs";
 import Modal from "react-bootstrap/Modal";
-// import Addproduct from "../products/addproduct";
+
 import Iconbutton from "../common/iconbutton";
 import AddAdmin from "../add_update_admin/add_admin";
 import SweetAlert from 'sweetalert-react';

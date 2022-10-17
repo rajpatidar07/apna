@@ -1,12 +1,3 @@
-// import React from 'react'
-
-// function Transactions() {
-//   return (
-//     <div>transactions</div>
-//   )     
-// }
-
-// export default Transactions
 import React, { useState } from "react";
 import Input from "../common/input";
 import { FaFileInvoiceDollar } from "react-icons/fa";
@@ -19,6 +10,11 @@ const columns = [
   {
     name: "Order Id",
     selector: (row) =>row.order_id,
+    sortable: true,
+  },
+  {
+    name: "Invoice No.",
+    selector: (row) =>row.Invoice,
     sortable: true,
   },
 
@@ -70,6 +66,7 @@ const data = [
   {
     id: 1,
     order_id: "AS1568",
+    Invoice:"#95584668",
     transactions_id: "15635486465287",
     transactions_date: "11:45 AM 11/01/22",
     amount: "1000",
@@ -81,6 +78,7 @@ const data = [
   {
     id: 2,
     order_id: "AS1568",
+    Invoice:"#95584668",
     transactions_id: "54578765465876",
     transactions_date: "10:45 AM 10/01/22",
     amount: "1000",
