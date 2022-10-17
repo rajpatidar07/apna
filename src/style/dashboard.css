@@ -9,3 +9,6 @@ padding-left: 0;
     right: 10px;
     opacity: .25;
 }
+.ordersummary .orderprogressbar.progress{
+    --bs-progress-height: 8px;
+}
