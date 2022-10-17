@@ -31,7 +31,7 @@ import InvoiceList from "./invoice/invoices";
 import Complaint from "./complaint/complaint";
 import Transactions from "./transactions/transactions";
 import Tran_Detail from "./transactions/transactions_detail";
-
+import Banner from "./setting/banner";
 function AdminLayout() {
   // const location = useLocation();
   console.log("-------" + window.location.pathname);
@@ -81,8 +81,9 @@ function AdminLayout() {
                   <Route path="/transactions" element={<Transactions />} />
                   <Route
                     path="/transactions_detail"
-                    element={<Tran_Detail />}
-                  />
+                    element={<Tran_Detail />} />
+                  <Route path="/banner" element={<Banner/>} />
+                 
                 </Routes>
               </div>
             </div>

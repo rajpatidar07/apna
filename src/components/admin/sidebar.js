@@ -168,7 +168,7 @@ function AdminSidebar() {
                 </Link>
               </li>
               <li>
-                <Link to="/" className="nav-link ">
+                <Link to="/banner" className="nav-link ">
                   Banner Manager
                 </Link>
               </li>
