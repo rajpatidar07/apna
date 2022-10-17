@@ -183,7 +183,7 @@ const Complaint = () => {
       <h2>Complaint/Support</h2>
 
       {/* search bar */}
-      <div className="card mt-3 p-3 ">
+      <div className="card mt-3 p-3">
         <div className="row pb-3">
           <div className="col-md-3 col-sm-6 aos_input">
             <Input type={"text"} plchldr={"Search by Id"} />
@@ -231,20 +231,40 @@ const Complaint = () => {
             <div className="row p-3 m-0">
               <div className="col-md-6">
                 <Form.Group
-                  className="mb-3 aos_input"
+                  className="mb-3 aos_input flex-column d-flex"
                   controlId="formBasicEmail"
                 >
-                  <Form.Label>Ticket Id</Form.Label>
-                  <Form.Control type="text" placeholder="Ticket Id" />
+                  <Form.Label className="mb-0">Ticket Id</Form.Label>
+                  <Form.Text className="mt-0">100333</Form.Text>
                 </Form.Group>
               </div>
               <div className="col-md-6">
                 <Form.Group
+                  className="mb-3 aos_input flex-column d-flex"
+                  controlId="formBasicEmail"
+                >
+                  <Form.Label className="mb-0">Order Id</Form.Label>
+                  <Form.Text className="mt-0">124532</Form.Text>
+                </Form.Group>
+              </div>
+              <div className="col-md-12">
+                <Form.Group
+                  className="mb-3 aos_input flex-column d-flex"
+                  controlId="formBasicEmail"
+                >
+                  <Form.Label className="mb-0">Description</Form.Label>
+                  <Form.Text className="mt-0"> My phone is locked due to overdue payment But i have allreday paid
+            the remaining amount of 5400 on 29.07.2022 time 15.40.54 Transaction
+            no - EXTLINK[protected]_1</Form.Text>
+                </Form.Group>
+              </div>
+              <div className="col-md-12">
+                <Form.Group
                   className="mb-3 aos_input"
                   controlId="formBasicEmail"
                 >
-                  <Form.Label>Order Id</Form.Label>
-                  <Form.Control type="text" placeholder="Order Id" />
+                  <Form.Label>Resolved Description</Form.Label>
+                  <Form.Control as="textarea" rows={3} placeholder="Assigned To" />
                 </Form.Group>
               </div>
               <div className="col-md-6">
@@ -268,8 +288,9 @@ const Complaint = () => {
                     placeholder="Status"
                   >
                     <option>Status</option>
-                    <option value="1">Approved</option>
+                    <option value="1">Solved</option>
                     <option value="2">Pending</option>
+                    <option value="3">Processing</option>
                   </Form.Select>
                 </Form.Group>
               </div>
