@@ -74,7 +74,6 @@ code {
   line-height: 1.5;
   padding: 5px 10px;
   border-radius: 0;
-  font-size: 16px;
 }
 
 .main_sidebar .accordion button.accordion-button:focus {
@@ -197,3 +196,27 @@ code {
 /* VENDOR */
 
 /* DATATABLE */
+
+.nav_heading{
+  padding: 10px 4px;
+  font-size: 18px;
+}
+.nav_heading:hover{
+  color: #72b702;
+}
+.accordion-button{
+  font-size: inherit;
+}
+.nav_heading svg{
+  margin-right: 8px;
+  font-size: 24px;
+}
+.main_sidebar .accordion-button:not(.collapsed) {
+  color: #72b702;
+}
+.accordion-button:not(.collapsed)::after{
+  background-image: #72b702;
+}
+.sidebar_navigation_bar li a:hover{
+  color: #72b702;
+}

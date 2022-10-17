@@ -2,6 +2,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 import logo from "../../images/logo.png";
 import Accordion from "react-bootstrap/Accordion";
+import { FaBeer } from 'react-icons/fa';
+import { MdOutlineDashboard} from 'react-icons/md';
+import {BiShoppingBag,BiTransfer,BiCategory} from 'react-icons/bi';
+import {BsBox,BsShopWindow} from 'react-icons/bs';
+import {TbFileInvoice} from 'react-icons/tb';
+import {RiCustomerService2Line,RiAdminLine} from 'react-icons/ri';
+// import {GrUserAdmin} from 'react-icons/gr';
+
 
 // import Dashboard from './dashboard';
 // import Product from './product';
@@ -15,17 +23,17 @@ function AdminSidebar() {
         </Link>
       </div>
       <hr />
-      <Accordion defaultActiveKey="0">
+      <Accordion defaultActiveKey="0" variant="pills">
         <Accordion.Item eventKey="0">
           <Accordion>
-            <Link to="/dashboard" className="nav-link">
-              Dashboard
+            <Link to="/dashboard" className="nav-link nav_heading active">
+            <MdOutlineDashboard /> Dashboard
             </Link>
           </Accordion>
         </Accordion.Item>
 
         <Accordion.Item eventKey="1">
-          <Accordion.Header>Product</Accordion.Header>
+          <Accordion.Header><Link className="nav-link nav_heading"><BiShoppingBag/>Product</Link></Accordion.Header>
           <Accordion.Body>
             <ul class="sidebar_navigation_bar">
               <li>
@@ -34,38 +42,38 @@ function AdminSidebar() {
                 </Link>
               </li>
               <li>
-                <Link to="/soldproduct" className="nav-link">
+                <Link to="/soldproduct" className="nav-link ">
                   Sold Product
                 </Link>
               </li>
               <li>
-                <Link to="/expiredproduct" className="nav-link">
+                <Link to="/expiredproduct" className="nav-link ">
                   Expired Product
                 </Link>
               </li>
               <li>
-                <Link to="/featureproduct" className="nav-link">
+                <Link to="/featureproduct" className="nav-link ">
                   Featured Product
                 </Link>
               </li>
               <li>
-                <Link to="/pendingproduct" className="nav-link">
+                <Link to="/pendingproduct" className="nav-link ">
                   Pending Product
                 </Link>
               </li>
               <li>
-                <Link to="/promotionproduct" className="nav-link">
+                <Link to="/promotionproduct" className="nav-link ">
                   Promotion Product
                 </Link>
               </li>
               <li>
-                <Link to="/offerproduct" className="nav-link">
+                <Link to="/offerproduct" className="nav-link ">
                   {" "}
                   Offer Product{" "}
                 </Link>
               </li>
               <li>
-                <Link to="/deletedproduct" className="nav-link">
+                <Link to="/deletedproduct" className="nav-link ">
                   {" "}
                   Deleted Product{" "}
                 </Link>
@@ -76,60 +84,60 @@ function AdminSidebar() {
         <Accordion.Item eventKey="3" active>
           <Accordion>
             {" "}
-            <Link to="/orders" className="nav-link">
-              orders
+            <Link to="/orders" className="nav-link nav_heading">
+            <BsBox /> orders
             </Link>
           </Accordion>
         </Accordion.Item>
         <Accordion.Item eventKey="4">
           <Accordion>
-            <Link to="/transactions" className="nav-link">
-              Transactions
+            <Link to="/transactions" className="nav-link nav_heading">
+            <BiTransfer/>   Transactions
             </Link>
           </Accordion>
         </Accordion.Item>
         <Accordion.Item eventKey="5">
           <Accordion>
-            <Link to="/vendors" className="nav-link">
-              Vendor List
+            <Link to="/vendors" className="nav-link nav_heading">
+            <BsShopWindow/>  Vendor List
             </Link>
           </Accordion>
         </Accordion.Item>
         <Accordion.Item eventKey="6">
           <Accordion>
             {" "}
-            <Link to="/category" className="nav-link">
-              Category List
+            <Link to="/category" className="nav-link nav_heading">
+            <BiCategory />   Category List
             </Link>
           </Accordion>
         </Accordion.Item>
         <Accordion.Item eventKey="7">
           <Accordion>
-            <Link to="/invoice" className="nav-link">
-              Invoices
+            <Link to="/invoice" className="nav-link nav_heading">
+            <TbFileInvoice /> Invoices
             </Link>
           </Accordion>
         </Accordion.Item>
         <Accordion.Item eventKey="8">
           <Accordion>
             {" "}
-            <Link to="/complaint" className="nav-link">
-              Complaints
+            <Link to="/complaint" className="nav-link nav_heading">
+            <RiCustomerService2Line/>   Complaints
             </Link>
           </Accordion>
         </Accordion.Item>
         <Accordion.Item eventKey="9">
           <Accordion>
             {" "}
-            <Link to="/components" className="nav-link">
-              Components
+            <Link to="/components" className="nav-link nav_heading">
+            <FaBeer />   Components
             </Link>
           </Accordion>
         </Accordion.Item>
         <Accordion.Item eventKey="10">
           <Accordion>
-            <Link to="/add_admin" className="nav-link">
-              Add/Update Admin
+            <Link to="/add_admin" className="nav-link nav_heading">
+            <RiAdminLine/> Add/Update Admin
             </Link>
           </Accordion>
         </Accordion.Item>
