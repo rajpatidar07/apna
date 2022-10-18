@@ -9,7 +9,7 @@ import {
   BsCashCoin,BsAlarm
 } from "react-icons/bs";
 import { HiOutlineReceiptRefund } from "react-icons/hi";
-import { MdOutlineMapsHomeWork } from "react-icons/md";
+import { MdOutlineLocationOn,MdOutlineRecentActors } from "react-icons/md";
 import Table from "react-bootstrap/Table";
 import demo from "../../images/demo.jpg";
 import { useNavigate } from "react-router-dom";
@@ -94,6 +94,67 @@ function Dashboard() {
       }
     ]
   };
+  
+
+  // const categoryy = {
+  //   chart: {
+  //     type: 'item'
+  //   },
+  
+  //   title: {
+  //     text: 'Distribution of seats'
+  //   },
+  
+  //   subtitle: {
+  //     text: 'Bundestag election 2021. Source: ' +
+  //       '<a href="https://www.bundeswahlleiter.de/en/bundeswahlleiter.html"' +
+  //       'target="_blank">Bundeswahlleiter</a> '
+  //   },
+  
+  //   legend: {
+  //     labelFormat: '{name} <span style="opacity: 0.4">{y}</span>'
+  //   },
+  
+  //   series: [{
+  //     name: 'Representatives',
+  //     keys: ['name', 'y', 'color', 'label'],
+  //     data: [
+  //       ['The Left', 39, '#CC0099', 'DIE LINKE'],
+  //       ['Social Democratic Party', 206, '#EE0011', 'SPD'],
+  //       ['Alliance 90/The Greens', 118, '#448833', 'GRÜNE'],
+  //       ['Free Democratic Party', 92, '#FFCC00', 'FDP'],
+  //       ['Christian Democratic Union', 152, '#000000', 'CDU'],
+  //       ['Christian Social Union in Bavaria', 45, '#3366CC', 'CSU'],
+  //       ['Alternative for Germany', 83, '#3399FF', 'AfD'],
+  //       ['South Schleswig Voters\' Association', 1, '#000099', 'SSW']
+  //     ],
+  //     dataLabels: {
+  //       enabled: true,
+  //       format: '{point.label}'
+  //     },
+  
+  //     // Circular options
+  //     center: ['50%', '88%'],
+  //     size: '170%',
+  //     startAngle: -100,
+  //     endAngle: 100
+  //   }],
+  
+  //   responsive: {
+  //     rules: [{
+  //       condition: {
+  //         maxWidth: 600
+  //       },
+  //       chartOptions: {
+  //         series: [{
+  //           dataLabels: {
+  //             distance: -30
+  //           }
+  //         }]
+  //       }
+  //     }]
+  //   }
+  // }
   return (
     <div className="App productlist_maindiv">
       <h2>Dashboard</h2>
@@ -101,7 +162,7 @@ function Dashboard() {
         <div className="dashboard_card p-0 col-12">
           <div className="card p-3 col-12 ">
           <div className="row d-flex align-items-baseline ordersummary">
-            <h5 className="col-2">Orders Overview</h5>
+            <h5 className="col-2 text-primary">Orders Overview</h5>
             <ProgressBar className="col-3 orderprogressbar">
       <ProgressBar striped variant="success" now={40} key={1} />
       <ProgressBar variant="warning" now={20} key={2} />
@@ -420,8 +481,8 @@ function Dashboard() {
     </Dropdown>
     </div>
               <hr/>
-              <Table responsive striped  hover>
-                <tbody>
+              <Table responsive striped  hover className='sellertabler'>
+                <tbody className="sellertbody">
                   <tr>
                     <td className="w-0">
                       <img src={demo} className="w-75" />
@@ -494,7 +555,7 @@ function Dashboard() {
           {/*table 1  end  */}
           {/*table 2  */}
           <div className="col-6 px-0">
-            <div className=" card p-3 shadow-none">
+            <div className=" card px-3 shadow-none py-4">
             <div className="d-flex align-items-end justify-content-between">
             <div className="d-flex align-items-center">
              <h5 className="text-warning">Top Seller</h5>
@@ -515,8 +576,8 @@ function Dashboard() {
     </Dropdown>
     </div>
               <hr/>
-              <Table responsive striped hover>
-                <tbody>
+              <Table responsive striped hover className='sellertabler'>
+                <tbody className='sellertbody'>
                   <tr>
                     <td className="w-0">
                       <img src={demo} className="w-75" />
@@ -589,14 +650,29 @@ function Dashboard() {
         </div>
         {/* table section end */}
 
+{/* heatmap category */}
+<div className="row mt-4 px-0">
+  <div className="col-4">
+
+  </div>
+  <div className="col-8">
+  {/* <HighchartsReact highcharts={Highcharts} options={categoryy}  /> */}
+
+  </div>
+</div>
+
+
 
 {/* Sales */}
-<div className="row mt-4 mb-5 px-0">
+<div className="row mt-2 mb-5 px-0">
 {/* part1 */}
 <div className="col-8">
-   <div className="card p-3">
+   <div className="card p-4">
           <div className="d-flex justify-content-between align-items-end">
-            <h5>Recent Orders</h5>
+          <div className="d-flex align-items-center">
+            <h5 className="text-primary">Recent Orders</h5>
+            <MdOutlineRecentActors className="text-primary h3 mx-2"/>
+            </div>
             <Dropdown>
       <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic" size="sm" >
         Sort By
@@ -611,10 +687,10 @@ function Dashboard() {
       </Dropdown.Menu>
     </Dropdown>
     </div>
-            <hr/>
+            <hr className="mb-3"/>
             <Table responsive striped  hover>
               <thead>
-                <tr>
+                <tr className="p-2">
                   <th>Order ID</th>
                   <th> Customer</th>
                   <th>Product</th>
@@ -665,33 +741,33 @@ function Dashboard() {
 </div>
 {/* part2 */}
 <div className="col-4 px-0">
-  <div className="card shadow-none p-4">
+  <div className="card shadow-none p-3">
   <div className="d-flex align-items-center justifu-content-between">
-     <h5 className="text-primary">Top Sales Locations</h5>
-     <MdOutlineMapsHomeWork className="carddicon text-primary"/>
+     <h5 className="text-primary mt-1">Top Sales Locations</h5>
+     <MdOutlineLocationOn className="carddicon text-primary"/>
      </div>
-     <div className="p-3">
+     <div className="p-2">
      <h4 className="text-success">200k</h4>
      <h6 className="text-secondary">Our Most Customers in US</h6>
      </div>
      <ListGroup variant="flush">
       <ListGroup.Item className="d-flex justify-content-between p-3">Madhya Pradesh
-      <Badge bg="primary" pill>
+      <Badge bg="primary" className="mt-1" pill>
           14
         </Badge>
         </ListGroup.Item>
         <ListGroup.Item className="d-flex justify-content-between p-3">Madhya Pradesh
-      <Badge bg="primary" pill>
+      <Badge bg="primary" className="mt-1" pill>
           14
         </Badge>
         </ListGroup.Item>
          <ListGroup.Item className="d-flex justify-content-between p-3">Madhya Pradesh
-      <Badge bg="primary" pill>
+      <Badge bg="primary" className="mt-1" pill>
           14
         </Badge>
         </ListGroup.Item>
         <ListGroup.Item className="d-flex justify-content-between p-3">Madhya Pradesh
-      <Badge bg="primary" pill>
+      <Badge bg="primary" className="mt-1" pill>
           14
         </Badge>
         </ListGroup.Item>
