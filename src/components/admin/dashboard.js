@@ -30,7 +30,9 @@ function Dashboard() {
       borderColor:'#335cad'
     },
     title: {
-      text: '7 Day Traffic'
+      text: '7 Day Traffic',
+      style:{ "color": "blue", "fontSize": "22px" },
+      align:"left",
     },
     series: [
       {
@@ -40,16 +42,24 @@ function Dashboard() {
   };
   const visit = {
     chart: {
-      type: 'bar',
+      type: 'column',
       borderRadius:'5',
       borderColor:'#335cad'
     },
     title: {
-      text: 'Traffic vs Sales'
+      text: 'Traffic vs Sales',
+      style:{ "color": "blue", "fontSize": "22px" },
+      align:"left"
     },
     series: [
       {
-        data: [2,9]
+        data: [2,9,15]
+      },
+      {
+        data: [9,1,11]
+      },
+      {
+        data: [5,9,10]
       }
     ]
   };
@@ -57,7 +67,8 @@ function Dashboard() {
     chart: {
       type: 'line',
       borderRadius:'5',
-      borderColor:'#335cad'
+      borderColor:'#335cad',
+     
     },
     xAxis: {
       categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug',
@@ -67,11 +78,19 @@ function Dashboard() {
     categories: ['0', '200', '400', '600', '800', '1000']
 },
     title: {
-      text: 'Sales Figures'
+      text: 'Sales Figures',
+      style:{ "color": "blue", "fontSize": "22px" },
+      align:"left"
     },
     series: [
       {
         data: [1,9,2,5,3,4,8,7,0,1,1,9]
+      },
+      {
+        data: [1,4,2,1,0,4,8,7,0,1,1,9]
+      },
+      {
+        data: [0,1,2,3,4,5,6,7,8,9]
       }
     ]
   };
@@ -84,9 +103,9 @@ function Dashboard() {
           <div className="row d-flex align-items-baseline ordersummary">
             <h5 className="col-2">Orders Overview</h5>
             <ProgressBar className="col-3 orderprogressbar">
-      <ProgressBar striped variant="success" now={15} key={1} />
+      <ProgressBar striped variant="success" now={40} key={1} />
       <ProgressBar variant="warning" now={20} key={2} />
-      <ProgressBar striped variant="danger" now={10} key={3} />
+      <ProgressBar striped variant="danger" now={40} key={3} />
     </ProgressBar>
     </div>
             <div className="row p-3 pt-0 pb-0">
@@ -155,77 +174,11 @@ function Dashboard() {
       {/* order */}
 
       {/* ------------- */}
-      <div className="row mt-5 recentorder_boxx">
+      <div className="row mt-4 recentorder_boxx">
         <div className="col-8 recentorder">
-          <div className="card p-3">
-          <div className="d-flex justify-content-between align-items-end">
-            <h5>Recent Orders</h5>
-            <Dropdown>
-      <Dropdown.Toggle variant="outline-dark" id="dropdown-basic" size="md" >
-        Sort By
-      </Dropdown.Toggle>
-      <Dropdown.Menu>
-        <Dropdown.Item href="#/action-1">Day</Dropdown.Item>
-        <Dropdown.Item href="#/action-2">Week</Dropdown.Item>
-        <Dropdown.Item href="#/action-3">3 Month</Dropdown.Item>
-        <Dropdown.Item href="#/action-3">6 Month</Dropdown.Item>
-        <Dropdown.Item href="#/action-3">1 Month</Dropdown.Item>
+<HighchartsReact highcharts={Highcharts} options={sales}  />
 
-      </Dropdown.Menu>
-    </Dropdown>
-    </div>
-            <hr/>
-            <Table responsive striped  hover>
-              <thead>
-                <tr>
-                  <th>Order ID</th>
-                  <th> Customer</th>
-                  <th>Product</th>
-                  <th>Amount</th>
-                  <th>Vendor</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="text-primary" onClick={()=>{navigate('/order_detail')}}>#VZ2112</td>
-                  <td>Alex Smith</td>
-                  <td>Kitchen Storage</td>
-                  <td className="text-success">$109.00</td>
-                  <td>Zoetic Fashion</td>
-                </tr>
-
-                <tr>
-                  <td className="text-primary" onClick={()=>{navigate('/order_detail')}}>#VZ2112</td>
-                  <td>Alex Smith</td>
-                  <td>Kitchen Storage</td>
-                  <td className="text-success">$109.00</td>
-                  <td>Zoetic Fashion</td>
-                </tr>
-                <tr>
-                  <td className="text-primary" onClick={()=>{navigate('/order_detail')}}>#VZ2112</td>
-                  <td>Alex Smith</td>
-                  <td>Kitchen Storage</td>
-                  <td className="text-success">$109.00</td>
-                  <td>Zoetic Fashion</td>
-                </tr>
-                <tr>
-                  <td className="text-primary" onClick={()=>{navigate('/order_detail')}}>#VZ2112</td>
-                  <td>Alex Smith</td>
-                  <td>Kitchen Storage</td>
-                  <td className="text-success">$109.00</td>
-                  <td>Zoetic Fashion</td>
-                </tr>
-                <tr>
-                  <td className="text-primary" onClick={()=>{navigate('/order_detail')}}>#VZ2112</td>
-                  <td>Alex Smith</td>
-                  <td>Kitchen Storage</td>
-                  <td className="text-success">$109.00</td>
-                  <td>Zoetic Fashion</td>
-                </tr>
-              </tbody>
-            </Table>
-          </div>
-          <div className="row mt-5">
+          <div className="row mt-4">
           <div className="col-6">
  {/* revenue */}
 
@@ -366,7 +319,7 @@ function Dashboard() {
              <BsAlarm  className="text-danger h4 mx-2"/>
              </div>
              <Dropdown>
-      <Dropdown.Toggle variant="outline-dark" id="dropdown-basic" size="md" >
+      <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic" size="sm" >
         Sort By
       </Dropdown.Toggle>
       <Dropdown.Menu>
@@ -400,7 +353,17 @@ function Dashboard() {
                       <h6>10000</h6>
                     </td>
                   </tr>
-
+                  <tr>
+                    <td>
+                      <h6>Andhra Pradesh</h6>
+                    </td>
+                    <td>
+                      <h6>14100</h6>
+                    </td>
+                    <td>
+                      <h6>10000</h6>
+                    </td>
+                  </tr>
                   <tr>
                     <td>
                       <h6>Andhra Pradesh</h6>
@@ -433,7 +396,7 @@ function Dashboard() {
 
 {/* table sectiob */}
         {/*table 1  */}
-        <div className="row mt-5 px-0">
+        <div className="row mt-4 px-0">
           <div className="col-6 ">
             <div className=" card p-3 shadow-none">
             <div className="d-flex align-items-end justify-content-between">
@@ -443,7 +406,7 @@ function Dashboard() {
              </div>
               
               <Dropdown>
-      <Dropdown.Toggle variant="outline-dark" id="dropdown-basic" size="md" >
+      <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic" size="sm" >
         Sort By
       </Dropdown.Toggle>
       <Dropdown.Menu>
@@ -538,7 +501,7 @@ function Dashboard() {
              <BsAlarm  className="text-warning h4 mx-2"/>
              </div>
               <Dropdown>
-      <Dropdown.Toggle variant="outline-dark" id="dropdown-basic" size="md" >
+      <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic" size="sm" >
         Sort By
       </Dropdown.Toggle>
       <Dropdown.Menu>
@@ -628,10 +591,77 @@ function Dashboard() {
 
 
 {/* Sales */}
-<div className="row mt-5 mb-5 px-0">
+<div className="row mt-4 mb-5 px-0">
 {/* part1 */}
 <div className="col-8">
-<HighchartsReact highcharts={Highcharts} options={sales}  />
+   <div className="card p-3">
+          <div className="d-flex justify-content-between align-items-end">
+            <h5>Recent Orders</h5>
+            <Dropdown>
+      <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic" size="sm" >
+        Sort By
+      </Dropdown.Toggle>
+      <Dropdown.Menu>
+        <Dropdown.Item href="#/action-1">Day</Dropdown.Item>
+        <Dropdown.Item href="#/action-2">Week</Dropdown.Item>
+        <Dropdown.Item href="#/action-3">3 Month</Dropdown.Item>
+        <Dropdown.Item href="#/action-3">6 Month</Dropdown.Item>
+        <Dropdown.Item href="#/action-3">1 Month</Dropdown.Item>
+
+      </Dropdown.Menu>
+    </Dropdown>
+    </div>
+            <hr/>
+            <Table responsive striped  hover>
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th> Customer</th>
+                  <th>Product</th>
+                  <th>Amount</th>
+                  <th>Vendor</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="text-primary" onClick={()=>{navigate('/order_detail')}}>#VZ2112</td>
+                  <td>Alex Smith</td>
+                  <td>Kitchen Storage</td>
+                  <td className="text-success">$109.00</td>
+                  <td>Zoetic Fashion</td>
+                </tr>
+
+                <tr>
+                  <td className="text-primary" onClick={()=>{navigate('/order_detail')}}>#VZ2112</td>
+                  <td>Alex Smith</td>
+                  <td>Kitchen Storage</td>
+                  <td className="text-success">$109.00</td>
+                  <td>Zoetic Fashion</td>
+                </tr>
+                <tr>
+                  <td className="text-primary" onClick={()=>{navigate('/order_detail')}}>#VZ2112</td>
+                  <td>Alex Smith</td>
+                  <td>Kitchen Storage</td>
+                  <td className="text-success">$109.00</td>
+                  <td>Zoetic Fashion</td>
+                </tr>
+                <tr>
+                  <td className="text-primary" onClick={()=>{navigate('/order_detail')}}>#VZ2112</td>
+                  <td>Alex Smith</td>
+                  <td>Kitchen Storage</td>
+                  <td className="text-success">$109.00</td>
+                  <td>Zoetic Fashion</td>
+                </tr>
+                <tr>
+                  <td className="text-primary" onClick={()=>{navigate('/order_detail')}}>#VZ2112</td>
+                  <td>Alex Smith</td>
+                  <td>Kitchen Storage</td>
+                  <td className="text-success">$109.00</td>
+                  <td>Zoetic Fashion</td>
+                </tr>
+              </tbody>
+            </Table>
+          </div>
 </div>
 {/* part2 */}
 <div className="col-4 px-0">
