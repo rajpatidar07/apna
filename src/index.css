@@ -25,6 +25,10 @@ code {
   margin: 10px 10px;
   border-radius: 15px;
 }
+.sidebar_links{
+  height: 100vh;
+  overflow: auto;
+}
 
 .logo_div img.logo {
   max-width: 100%;
@@ -197,26 +201,26 @@ code {
 
 /* DATATABLE */
 
-.nav_heading{
+.main_sidebar .nav_heading{
   padding: 10px 4px;
-  font-size: 18px;
+  font-size: 16px;
 }
-.nav_heading:hover{
+.main_sidebar .nav_heading:hover{
   color: #72b702;
 }
-.accordion-button{
+.main_sidebar .accordion-button{
   font-size: inherit;
 }
-.nav_heading svg{
+.main_sidebar .nav_heading svg{
   margin-right: 8px;
-  font-size: 24px;
+  font-size: 21px;
 }
 .main_sidebar .accordion-button:not(.collapsed) {
   color: #72b702;
 }
-.accordion-button:not(.collapsed)::after{
+.main_sidebar .accordion-button:not(.collapsed)::after{
   background-image: #72b702;
 }
-.sidebar_navigation_bar li a:hover{
+.main_sidebar .sidebar_navigation_bar li a:hover{
   color: #72b702;
 }
