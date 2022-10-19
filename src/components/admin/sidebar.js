@@ -125,6 +125,80 @@ function AdminSidebar() {
           </Accordion>
         </Accordion.Item>
         <Accordion.Item eventKey="8">
+          <Accordion.Header>
+            <Link className="nav-link nav_heading">
+              <BiShoppingBag />
+              Report
+            </Link>
+          </Accordion.Header>
+          <Accordion.Body>
+            <ul class="sidebar_navigation_bar">
+              <li>
+                <Link to="/revenuereport" className="nav-link">
+                  Revenue
+                </Link>
+              </li>
+              <li>
+                <Link to="/orderreport" className="nav-link ">
+                  Orders
+                </Link>
+              </li>
+              <li>
+                <Link to="/productreport" className="nav-link ">
+                  Products
+                </Link>
+              </li>
+              <li>
+                <Link to="/categoryreport" className="nav-link ">
+                  Category
+                </Link>
+              </li>
+              <li>
+                <Link to="/couponreport" className="nav-link ">
+                  Coupons
+                </Link>
+              </li>
+              <li>
+                <Link to="/taxreport" className="nav-link ">
+                  Taxes
+                </Link>
+              </li>
+              <li>
+                <Link to="/stockreport" className="nav-link ">
+                  {" "}
+               Stock
+                </Link>
+              </li>
+              {/* <li>
+                <Link to="/deletedproduct" className="nav-link ">
+                  {" "}
+                  Deleted Product{" "}
+                </Link>
+              </li> */}
+            </ul>
+          </Accordion.Body>
+        </Accordion.Item>
+        <Accordion.Item eventKey="9">
+          <Accordion>
+            <Link to="/coupon" className="nav-link nav_heading">
+              <TbFileInvoice /> Coupons
+            </Link>
+          </Accordion>
+        </Accordion.Item>
+        <Accordion.Item eventKey="10">
+          <Accordion>
+            <Link to="/review" className="nav-link nav_heading">
+              <TbFileInvoice /> Review
+            </Link>
+          </Accordion>
+        </Accordion.Item><Accordion.Item eventKey="11">
+          <Accordion>
+            <Link to="/delivery" className="nav-link nav_heading">
+              <TbFileInvoice /> Delivery
+            </Link>
+          </Accordion>
+        </Accordion.Item>
+        <Accordion.Item eventKey="12">
           <Accordion>
             {" "}
             <Link to="/complaint" className="nav-link nav_heading">
@@ -132,7 +206,7 @@ function AdminSidebar() {
             </Link>
           </Accordion>
         </Accordion.Item>
-        <Accordion.Item eventKey="9">
+        <Accordion.Item eventKey="13">
           <Accordion>
             {" "}
             <Link to="/components" className="nav-link nav_heading">
@@ -140,7 +214,7 @@ function AdminSidebar() {
             </Link>
           </Accordion>
         </Accordion.Item>
-        <Accordion.Item eventKey="10">
+        <Accordion.Item eventKey="14">
           <Accordion>
             <Link to="/add_admin" className="nav-link nav_heading">
               <RiAdminLine /> Add/Update Admin
@@ -148,7 +222,7 @@ function AdminSidebar() {
           </Accordion>
         </Accordion.Item>
 
-        <Accordion.Item eventKey="11">
+        <Accordion.Item eventKey="15">
           <Accordion.Header>
             {" "}
             <Link to="/add_admin" className="nav-link nav_heading">

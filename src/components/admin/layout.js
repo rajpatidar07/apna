@@ -32,8 +32,17 @@ import Complaint from "./complaint/complaint";
 import Transactions from "./transactions/transactions";
 import Tran_Detail from "./transactions/transactions_detail";
 import Banner from "./setting/banner";
+import Coupon from "./coupon/coupon";
 import Home from "./setting/home";
-
+import Review from "./review/review";
+import Delivery from "./delivery/delivery";
+import RevenueReport from "./report/revenue";
+import ProductReport from "./report/product";
+import OrderReport from "./report/order";
+import CouponReport from "./report/coupon";
+import CategoryReport from "./report/category";
+import StockReport from "./report/stock";
+import TaxesReport from "./report/taxes";
 function AdminLayout() {
   // const location = useLocation();
   console.log("-------" + window.location.pathname);
@@ -83,10 +92,20 @@ function AdminLayout() {
                   <Route path="/transactions" element={<Transactions />} />
                   <Route
                     path="/transactions_detail"
-                    element={<Tran_Detail />}
-                  />
-                  <Route path="/banner" element={<Banner />} />
-                  <Route path="/home_manager" element={<Home />} />
+                    element={<Tran_Detail />} />
+                    <Route path="/home_manager" element={<Home />} />
+                  <Route path="/banner" element={<Banner/>} />
+                  <Route path="/coupon" element={<Coupon/>} />
+                  <Route path="/review" element={<Review/>} />
+                  <Route path="/delivery" element={<Delivery/>} />
+                  {/* report */}
+                  <Route path="/revenuereport" element={<RevenueReport/>} />
+                  <Route path="/productreport" element={<ProductReport/>} />
+                  <Route path="/orderreport" element={<OrderReport/>} />
+                  <Route path="/couponreport" element={<CouponReport/>} />
+                  <Route path="/stockreport" element={<StockReport/>} />
+                  <Route path="/taxreport" element={<TaxesReport/>} />
+                  <Route path="/categoryreport" element={<CategoryReport/>} />
                 </Routes>
               </div>
             </div>

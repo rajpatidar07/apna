@@ -6,11 +6,9 @@ import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
 import Iconbutton from "../common/iconbutton";
-import SweetAlert from 'sweetalert-react';
-import 'sweetalert/dist/sweetalert.css';
+import SweetAlert from "sweetalert-react";
+import "sweetalert/dist/sweetalert.css";
 import { Badge } from "react-bootstrap";
-
-
 
 const Pendingproduct = () => {
   const handleAlert = () => setAlert(true);
@@ -19,11 +17,7 @@ const Pendingproduct = () => {
   const columns = [
     {
       name: "Sku",
-      selector: (row) => (
-        <p>
-          {row.sku}
-        </p>
-      ),
+      selector: (row) => <p>{row.sku}</p>,
       sortable: true,
       width: "100px",
       center: true,
@@ -73,7 +67,7 @@ const Pendingproduct = () => {
         paddingLeft: "0px",
       },
     },
-  
+
     {
       name: "Date",
       selector: (row) => row.date,
@@ -94,13 +88,23 @@ const Pendingproduct = () => {
       },
       selector: (row) => (
         <div>
-        <Iconbutton onClick={handleAlert} btntext={'Approve'}  btnclass={'button mb-1 bg-success w-100'} Iconname={<BsCheckLg className="mx-1"/>}/>
-        <Iconbutton onClick={handleAlert} btntext={'Reject'} btnclass={'button bg-danger w-100'} Iconname={<ImCross className="mx-1"/>}/>
+          <Iconbutton
+            onClick={handleAlert}
+            btntext={"Approve"}
+            btnclass={"btn-sm text-light btn mb-1 bg-success w-100"}
+            Iconname={<BsCheckLg className="mx-1" />}
+          />
+          <Iconbutton
+            onClick={handleAlert}
+            btntext={"Reject"}
+            btnclass={"btn-sm text-light btn bg-danger w-100"}
+            Iconname={<ImCross className="mx-1" />}
+          />
         </div>
       ),
     },
   ];
-  
+
   const data = [
     {
       id: 1,
@@ -110,7 +114,7 @@ const Pendingproduct = () => {
           <b>
             <p className="mb-0">Green Leaf Lettuce</p>
           </b>
-  
+
           <p className="productdesc">
             {" "}
             {`The root vegetables include beets, carrots, radishes, sweet potatoes,
@@ -144,48 +148,53 @@ const Pendingproduct = () => {
     },
   ];
   const handleClick = () => {};
-  const onButtonClick = () =>{
-    
-  }
-    return (
-        <div>
-             <h2>Pending Products</h2>
+  const onButtonClick = () => {};
+  return (
+    <div>
+      <h2>Pending Products</h2>
 
-  {/* search bar */}
-  <div className="card mt-3 p-3 ">
-  <div className="row pb-3">
-      <div className="col-md-3 col-sm-6 aos_input">
-        <Input type={"text"} plchldr={"Search by product name"} />
+      {/* search bar */}
+      <div className="card mt-3 p-3 ">
+        <div className="row pb-3">
+          <div className="col-md-3 col-sm-6 aos_input">
+            <Input type={"text"} plchldr={"Search by product name"} />
+          </div>
+          <div className="col-md-3 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by category"
+              className="adminselectbox"
+              placeholder="Search by category"
+            >
+              <option>Search by category</option>
+              <option value="1">Food</option>
+              <option value="2">Fish & Meat</option>
+              <option value="3">Baby Care</option>
+            </Form.Select>
+          </div>
+          <div className="col-md-3 col-sm-6 aos_input">
+            <Input type={"date"} plchldr={"Search by product name"} />
+          </div>
+          <div className="col-md-3 col-sm-6 aos_input">
+            <MainButton
+              btntext={"Search"}
+              btnclass={"button main_button w-100"}
+            />
+          </div>
         </div>
-        <div className="col-md-3 col-sm-6 aos_input">
-        <Form.Select aria-label="Search by category" className="adminselectbox" placeholder="Search by category">
-        <option>Search by category</option>
-          <option value="1">Food</option>
-          <option value="2">Fish & Meat</option>
-          <option value="3">Baby Care</option>
-        </Form.Select>
-        </div>
-        <div className="col-md-3 col-sm-6 aos_input">
-        <Input type={"date"} plchldr={"Search by product name"} />
-        </div>
-        <div className="col-md-3 col-sm-6 aos_input">
-        <MainButton btntext={"Search"} btnclass={'button main_button w-100'} />
-        </div>
-      </div>
 
-      {/* upload */}
+        {/* upload */}
 
-      {/* datatable */}
-   
-      <DataTable
-        columns={columns}
-        data={data}
-        pagination
-        highlightOnHover
-        pointerOnHover
-        className={"productlist_table"}
-      />
-       <SweetAlert
+        {/* datatable */}
+
+        <DataTable
+          columns={columns}
+          data={data}
+          pagination
+          highlightOnHover
+          pointerOnHover
+          className={"productlist_table"}
+        />
+        <SweetAlert
           show={Alert}
           title="Product Name"
           text="Are you Sure you want to restore"
@@ -193,9 +202,9 @@ const Pendingproduct = () => {
           showCancelButton={true}
           onCancel={hideAlert}
         />
+      </div>
     </div>
-    </div>
-    );
-}
+  );
+};
 
 export default Pendingproduct;
