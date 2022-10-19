@@ -31,7 +31,7 @@ function Dashboard() {
     },
     title: {
       text: '7 Day Traffic',
-      style:{ "color": "blue", "fontSize": "22px" },
+      style:{ "color": "green", "fontSize": "22px" },
       align:"left",
     },
     series: [
@@ -48,7 +48,7 @@ function Dashboard() {
     },
     title: {
       text: 'Traffic vs Sales',
-      style:{ "color": "blue", "fontSize": "22px" },
+      style:{ "color": "green", "fontSize": "22px" },
       align:"left"
     },
     series: [
@@ -79,7 +79,7 @@ function Dashboard() {
 },
     title: {
       text: 'Sales Figures',
-      style:{ "color": "blue", "fontSize": "22px" },
+      style:{ "color": "green", "fontSize": "22px" },
       align:"left"
     },
     series: [
@@ -162,7 +162,7 @@ function Dashboard() {
         <div className="dashboard_card p-0 col-12">
           <div className="card p-3 col-12 ">
           <div className="row d-flex align-items-baseline ordersummary">
-            <h5 className="col-2 text-primary">Orders Overview</h5>
+            <h5 className="col-2 text-success">Orders Overview</h5>
             <ProgressBar className="col-3 orderprogressbar">
       <ProgressBar striped variant="success" now={40} key={1} />
       <ProgressBar variant="warning" now={20} key={2} />
@@ -179,7 +179,7 @@ function Dashboard() {
                       <BsBagPlus className="text-primary h1 opacity-75 mx-2" />
                     </div>
                     <div>
-                    <h5 className="m-0">8,458</h5>
+                    <h3 className="m-0">8,458</h3>
                     <p className="m-0 text-primary">Total Order</p>
                     </div>
                   </div>
@@ -193,7 +193,7 @@ function Dashboard() {
                       <BsBagCheck className="text-success h1 opacity-75 mx-2" />
                     </div>
                     <div>
-                    <h5 className="m-0">8,458</h5>
+                    <h3 className="m-0">8,458</h3>
                     <p className="m-0 text-success">Completed Order</p>
                     </div>
                   </div>
@@ -207,7 +207,7 @@ function Dashboard() {
                       <BsBag className="text-warning h1 opacity-75 mx-2" />
                     </div>
                     <div>
-                    <h5 className="m-0">8,458</h5>
+                    <h3 className="m-0">8,458</h3>
                     <p className="m-0 text-warning">Pending Order</p>
                   </div>
                   </div>
@@ -221,7 +221,7 @@ function Dashboard() {
                       <BsBagX className="text-danger h1 opacity-75 mx-2" />
                     </div>
                     <div>
-                    <h5 className="m-0">8,458</h5>
+                    <h3 className="m-0">8,458</h3>
                     <p className="m-0 text-danger">Cancelled Order</p>
                   </div>
                   </div>
@@ -261,7 +261,7 @@ function Dashboard() {
           {/* card */}
           <div className=" row main_dashboard_row d-flex flex-column">
             {/* revenue */}
-            <div className="card p-4 col-auto shadow-none">
+            <div className="card p-3 col-auto shadow-none">
               <div className=" d-flex mt-0 flex-column">
                 <BsCashCoin className="text-success h5 mb-0 mx-2 carddicon" />
                 <h5 className="text-success">Revenue </h5>
@@ -271,7 +271,7 @@ function Dashboard() {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="col-auto text_div text-center mt-0">
                       <h6 className="m-0">Total revenue</h6>
-                      <h5 className="m-0 text-success">8,458</h5>
+                      <h3 className="m-0 text-success">8,458</h3>
                     </div>
                   </div>
                 </div>
@@ -280,7 +280,7 @@ function Dashboard() {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="col-auto text_div text-center mt-0">
                       <h6 className="m-0">Current month </h6>
-                      <h5 className="m-0 text-success">8,458</h5>
+                      <h3 className="m-0 text-success">8,458</h3>
                     </div>
                   </div>
                 </div>
@@ -289,7 +289,7 @@ function Dashboard() {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="col-auto text_div text-center mt-0">
                       <h6 className="m-0">Previous month </h6>
-                      <h5 className="m-0 text-success">8,458</h5>
+                      <h3 className="m-0 text-success">8,458</h3>
                     </div>
                   </div>
                 </div>
@@ -297,7 +297,7 @@ function Dashboard() {
             </div>
             {/* end */}
             {/* order */}
-            <div className="card p-4 col-auto shadow-none">
+            <div className="card p-3 col-auto shadow-none">
               <div className="d-flex mt-0 flex-column">
                 <BsBagPlus className="text-primary h5 mx-2 carddicon" />
                 <h5 className="text-primary">Order </h5>
@@ -307,7 +307,7 @@ function Dashboard() {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="col-auto text_div text-center mt-0">
                       <h6 className="m-0 ">Total Orders</h6>
-                      <h5 className="m-0 text-primary">8,458</h5>
+                      <h3 className="m-0 text-primary">8,458</h3>
                     </div>
                   </div>
                 </div>
@@ -316,7 +316,7 @@ function Dashboard() {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="col-auto text_div text-center mt-0">
                       <h6 className="m-0 ">Current month </h6>
-                      <h5 className="m-0 text-primary">8,458</h5>
+                      <h3 className="m-0 text-primary">8,458</h3>
                     </div>
                   </div>
                 </div>
@@ -325,7 +325,7 @@ function Dashboard() {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="col-auto text_div text-center mt-0">
                       <h6 className="m-0 ">Previous month </h6>
-                      <h5 className="m-0 text-primary">8,458</h5>
+                      <h3 className="m-0 text-primary">8,458</h3>
                     </div>
                   </div>
                 </div>
@@ -335,7 +335,7 @@ function Dashboard() {
             {/* order end */}
 
             {/* Refund */}
-            <div className="card p-4 col-auto shadow-none ">
+            <div className="card p-3 col-auto shadow-none ">
               <div className="d-flex mt-0 flex-column ">
                 <HiOutlineReceiptRefund className="text-warning h5 mx-2 carddicon" />
                 <h5 className="text-warning">Refund </h5>
@@ -345,7 +345,7 @@ function Dashboard() {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="col-auto text_div text-center mt-0">
                       <h6 className="m-0 ">Total Refund</h6>
-                      <h5 className="m-0 text-warning">8,458</h5>
+                      <h3 className="m-0 text-warning">8,458</h3>
                     </div>
                   </div>
                 </div>
@@ -354,7 +354,7 @@ function Dashboard() {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="col-auto text_div text-center mt-0">
                       <h6 className="m-0 ">Current month </h6>
-                      <h5 className="m-0 text-warning">8,458</h5>
+                      <h3 className="m-0 text-warning">8,458</h3>
                     </div>
                   </div>
                 </div>
@@ -363,7 +363,7 @@ function Dashboard() {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="col-auto text_div text-center mt-0">
                       <h6 className="m-0 ">Previous month </h6>
-                      <h5 className="m-0 text-warning">8,458</h5>
+                      <h3 className="m-0 text-warning">8,458</h3>
                     </div>
                   </div>
                 </div>
@@ -373,14 +373,14 @@ function Dashboard() {
             {/* refund end */}
 
             {/* last box */}
-             <div className="card p-3 col-auto bg-teal shadow-none">
+             <div className="card p-4 col-auto bg-teal shadow-none">
              <div className="d-flex align-items-end  justify-content-between">
              <div className="d-flex align-items-center">
-             <h5 className="text-danger">Visit</h5>
-             <BsAlarm  className="text-danger h4 mx-2"/>
+             <h5 className="text-success">Visit</h5>
+             <BsAlarm  className="text-success h4 mx-2"/>
              </div>
              <Dropdown>
-      <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic" size="sm" >
+      <Dropdown.Toggle variant="outline-success" id="dropdown-basic" size="sm" >
         Sort By
       </Dropdown.Toggle>
       <Dropdown.Menu>
@@ -462,12 +462,12 @@ function Dashboard() {
             <div className=" card p-3 shadow-none">
             <div className="d-flex align-items-end justify-content-between">
             <div className="d-flex align-items-center">
-             <h5 className="text-warning">Best Selling Products</h5>
-             <BsAlarm  className="text-warning h4 mx-2"/>
+             <h5 className="text-success">Best Selling Products</h5>
+             <BsAlarm  className="text-success h4 mx-2"/>
              </div>
               
               <Dropdown>
-      <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic" size="sm" >
+      <Dropdown.Toggle variant="outline-success" id="dropdown-basic" size="sm" >
         Sort By
       </Dropdown.Toggle>
       <Dropdown.Menu>
@@ -558,11 +558,11 @@ function Dashboard() {
             <div className=" card px-3 shadow-none py-4">
             <div className="d-flex align-items-end justify-content-between">
             <div className="d-flex align-items-center">
-             <h5 className="text-warning">Top Seller</h5>
-             <BsAlarm  className="text-warning h4 mx-2"/>
+             <h5 className="text-success">Top Seller</h5>
+             <BsAlarm  className="text-success h4 mx-2"/>
              </div>
               <Dropdown>
-      <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic" size="sm" >
+      <Dropdown.Toggle variant="outline-success" id="dropdown-basic" size="sm" >
         Sort By
       </Dropdown.Toggle>
       <Dropdown.Menu>
@@ -670,11 +670,11 @@ function Dashboard() {
    <div className="card p-4">
           <div className="d-flex justify-content-between align-items-end">
           <div className="d-flex align-items-center">
-            <h5 className="text-primary">Recent Orders</h5>
-            <MdOutlineRecentActors className="text-primary h3 mx-2"/>
+            <h5 className="text-success">Recent Orders</h5>
+            <MdOutlineRecentActors className="text-success h3 mx-2"/>
             </div>
             <Dropdown>
-      <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic" size="sm" >
+      <Dropdown.Toggle variant="outline-success" id="dropdown-basic" size="sm" >
         Sort By
       </Dropdown.Toggle>
       <Dropdown.Menu>
@@ -743,8 +743,8 @@ function Dashboard() {
 <div className="col-4 px-0">
   <div className="card shadow-none p-3">
   <div className="d-flex align-items-center justifu-content-between">
-     <h5 className="text-primary mt-1">Top Sales Locations</h5>
-     <MdOutlineLocationOn className="carddicon text-primary"/>
+     <h5 className="text-success mt-1">Top Sales Locations</h5>
+     <MdOutlineLocationOn className="carddicon text-success"/>
      </div>
      <div className="p-2">
      <h4 className="text-success">200k</h4>
