@@ -78,3 +78,11 @@ vertical-align: middle;
     right: -8px;
     opacity: .25;
 }
+.main_dashboard_row1{
+  justify-content: space-between;
+  grid-gap: 10px;
+  gap: 10px;
+  display: grid;
+  grid-template-columns: 32% 32% 32%;
+  margin-top: 10px;
+}

@@ -227,38 +227,23 @@ const RevenueReport = () => {
         <div className="col-md-3 col-sm-6 aos_input">
         <MainButton btntext={"Search"} btnclass={'button main_button w-100'} />
         </div>
+        <div className="col-md-3 col-sm-6 aos_input">
+        <MainButton btntext={"Download"} btnclass={'button main_outline_button w-100'}/>
+        </div>
       </div>
 
+         {/* upload */}
+         {/* <div className="product_page_uploadbox my-4">
+          <MainButton btntext={"Download"} />
+
+         </div> */}
+{/*  */}
 {/* box */}
 <div className="col-12 px-3">
           {/* card */}
-          <div className=" row main_dashboard_row d-flex ">
+          <div className=" row main_dashboard_row1 d-flex mb-3 ">
             {/* revenue */}
-            <div className="card p-3  col-auto shadow-none">
-              <div className=" d-flex mt-0 flex-column">
-                <BsCashCoin className="text-success h5 mb-0 mx-2 reporticon" />
-                <h5 className="text-success">Gross Revenue </h5>
-              </div>
-              <div className="row mt-2">
-                <div className="col-12">
-                  <div className="row  d-flex flex-column align-items-center">
-                  <div className="d-flex align-items-baseline justify-content-between">
-                    <h4>2,356</h4>
-                    <div className="d-flex align-items-center justify-content-center">
-                     <AiOutlineArrowRight/>
-                     <p className="mb-0">0%</p>
-                    </div>
-                    </div>
-                    <div>
-                        <h5>Previous Year:</h5>
-                        <p>$0.00</p>
-                    </div>
-                  </div>
-                </div>
-
-                
-              </div>
-            </div>
+         
             {/* end */}
             {/* order */}
             <div className="card p-3  col-auto shadow-none">
@@ -291,7 +276,7 @@ const RevenueReport = () => {
             <div className="card p-3  col-auto shadow-none">
               <div className=" d-flex mt-0 flex-column">
                 <BsCashCoin className="text-success h5 mb-0 mx-2 reporticon" />
-                <h5 className="text-success">Gross Revenue </h5>
+                <h5 className="text-success">Refund </h5>
               </div>
               <div className="row mt-2">
                 <div className="col-12">
@@ -318,7 +303,7 @@ const RevenueReport = () => {
 <div className="card p-3  col-auto shadow-none">
               <div className=" d-flex mt-0 flex-column">
                 <BsCashCoin className="text-success h5 mb-0 mx-2 reporticon" />
-                <h5 className="text-success">Gross Revenue </h5>
+                <h5 className="text-success">Coupons </h5>
               </div>
               <div className="row mt-2">
                 <div className="col-12">
@@ -339,10 +324,11 @@ const RevenueReport = () => {
 
                 
               </div>
-            </div><div className="card p-3  col-auto shadow-none">
+            </div>
+            <div className="card p-3  col-auto shadow-none">
               <div className=" d-flex mt-0 flex-column">
                 <BsCashCoin className="text-success h5 mb-0 mx-2 reporticon" />
-                <h5 className="text-success">Gross Revenue </h5>
+                <h5 className="text-success">Taxes </h5>
               </div>
               <div className="row mt-2">
                 <div className="col-12">
@@ -363,10 +349,36 @@ const RevenueReport = () => {
 
                 
               </div>
-            </div><div className="card p-3  col-auto shadow-none">
+            </div>
+            <div className="card p-3  col-auto shadow-none">
               <div className=" d-flex mt-0 flex-column">
                 <BsCashCoin className="text-success h5 mb-0 mx-2 reporticon" />
-                <h5 className="text-success">Gross Revenue </h5>
+                <h5 className="text-success">Shipping </h5>
+              </div>
+              <div className="row mt-2">
+                <div className="col-12">
+                  <div className="row  d-flex flex-column align-items-center">
+                  <div className="d-flex align-items-baseline justify-content-between">
+                    <h4>2,356</h4>
+                    <div className="d-flex align-items-center justify-content-center">
+                     <AiOutlineArrowRight/>
+                     <p className="mb-0">0%</p>
+                    </div>
+                    </div>
+                    <div>
+                        <h5>Previous Year:</h5>
+                        <p>$0.00</p>
+                    </div>
+                  </div>
+                </div>
+
+                
+              </div>
+            </div>
+            <div className="card p-3  col-auto shadow-none">
+              <div className=" d-flex mt-0 flex-column">
+                <BsCashCoin className="text-success h5 mb-0 mx-2 reporticon" />
+                <h5 className="text-success">Net Revenue </h5>
               </div>
               <div className="row mt-2">
                 <div className="col-12">
@@ -516,12 +528,6 @@ const RevenueReport = () => {
 {/*  */}
 
 
-         {/* upload */}
-         <div className="product_page_uploadbox my-4">
-          <MainButton btntext={"Download"} />
-
-         </div>
-{/*  */}
       {/* datatable */}
    
       <DataTable
