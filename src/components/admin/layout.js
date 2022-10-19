@@ -32,6 +32,8 @@ import Complaint from "./complaint/complaint";
 import Transactions from "./transactions/transactions";
 import Tran_Detail from "./transactions/transactions_detail";
 import Banner from "./setting/banner";
+import Home from "./setting/home";
+
 function AdminLayout() {
   // const location = useLocation();
   console.log("-------" + window.location.pathname);
@@ -51,7 +53,7 @@ function AdminLayout() {
             </div>
             <div className="col-lg-10 col-md-9 col-sm-8">
               <AdminHeader />
-              <div className="main_content_div" >
+              <div className="main_content_div">
                 <Routes>
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/product" element={<Product />} />
@@ -81,9 +83,10 @@ function AdminLayout() {
                   <Route path="/transactions" element={<Transactions />} />
                   <Route
                     path="/transactions_detail"
-                    element={<Tran_Detail />} />
-                  <Route path="/banner" element={<Banner/>} />
-                 
+                    element={<Tran_Detail />}
+                  />
+                  <Route path="/banner" element={<Banner />} />
+                  <Route path="/home_manager" element={<Home />} />
                 </Routes>
               </div>
             </div>
