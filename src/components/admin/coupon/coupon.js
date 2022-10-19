@@ -32,7 +32,7 @@ const Coupon = () => {
           row.id
         ),
         sortable: true,
-        width: "70px",
+        width: "80px",
         center: true,
         style:{
             paddingLeft:0,
@@ -123,7 +123,7 @@ const Coupon = () => {
         center: true,
         selector: (row) => (
           <div className={"actioncolimn"}>
-           <BiEdit className=" p-0 m-0  editiconn text-secondary" />
+           <BiEdit className=" p-0 m-0  editiconn text-secondary"  onClick={handleShow}/>
             <BsTrash className=" p-0 m-0 editiconn text-danger"  onClick={handleAlert} />
           </div>
         ),
@@ -182,7 +182,7 @@ const Coupon = () => {
 
   <div className="product_page_uploadbox my-4">
     <Iconbutton
-      btntext={"Add Category"}
+      btntext={"Add Coupons"}
       onClick={handleShow}
       Iconname={<AiOutlinePlus />}
       btnclass={"button main_button adminmainbutton"}
@@ -267,7 +267,7 @@ const Coupon = () => {
         // Iconname={<GiCancel /> }
       />
       <Iconbutton
-        btntext={"Add Category"}
+        btntext={"Add Coupons"}
         onClick={handleClose}
         Iconname={<AiOutlinePlus />}
         btnclass={"button main_button adminmainbutton"}

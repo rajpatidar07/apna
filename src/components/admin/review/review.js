@@ -32,7 +32,7 @@ const Review = () => {
             row.id
         ),
         sortable: true,
-        width: "70px",
+        width: "100px",
         center: true,
         style:{
             paddingLeft:0,
@@ -43,14 +43,14 @@ const Review = () => {
         name: "Product Name",
         selector: (row) => row.cname,
         sortable: true,
-        width: "140px",
+        width: "150px",
+
       },
       {
         name: "Category Type",
         selector: (row) => row.ctype,
         sortable: true,
         width: "160px",
-        center:true
       },
       {
         name: "Review Date",
@@ -72,12 +72,14 @@ const Review = () => {
           paddingRight: "12px",
           paddingLeft: "0px",
         },
+        center:true
+
       },
       {
         name: "Note",
         selector: (row) => row.note,
         sortable: true,
-        width: "200px",
+        width: "210px",
         center: true,
         style: {
           paddingRight: "12px",
@@ -116,7 +118,7 @@ const Review = () => {
     const data = [
       {
         id: 102571,
-        ctype:"Grocery",
+        ctype:"Health & Care",
         cname: "Green Leaf Lettucer",
         sdate: "Sep 26, 2022",
         cmnt:<p className="reviewdesc">Nice products Bad product badBad product bad</p>,
@@ -125,7 +127,7 @@ const Review = () => {
       },
       {
         id: 210257,
-        ctype:"Health & Care",
+        ctype:"Health ",
         cname: "Green Leaf Lettuce",
         sdate: "Sep 26, 2022",
         cmnt:<p className="reviewdesc">Bad product bad qualityyuzuihcdisdj nrgknknk</p>,
