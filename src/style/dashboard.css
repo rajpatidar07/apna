@@ -65,3 +65,16 @@ input[type="number"] {
 .sellertabler .sellertbody tr td{
 vertical-align: middle;
 }
+
+
+
+
+
+/* report */
+.reporticon{
+  position: absolute;
+    font-size: 100px;
+    top: 0px;
+    right: -8px;
+    opacity: .25;
+}

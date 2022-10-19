@@ -35,6 +35,13 @@ import Banner from "./setting/banner";
 import Coupon from "./coupon/coupon";
 import Review from "./review/review";
 import Delivery from "./delivery/delivery";
+import RevenueReport from "./report/revenue";
+import ProductReport from "./report/product";
+import OrderReport from "./report/order";
+import CouponReport from "./report/coupon";
+import CategoryReport from "./report/category";
+import StockReport from "./report/stock";
+import TaxesReport from "./report/taxes";
 function AdminLayout() {
   // const location = useLocation();
   console.log("-------" + window.location.pathname);
@@ -89,9 +96,14 @@ function AdminLayout() {
                   <Route path="/coupon" element={<Coupon/>} />
                   <Route path="/review" element={<Review/>} />
                   <Route path="/delivery" element={<Delivery/>} />
-                  <Route path="/report" element={<Coupon/>} />
-
-                 
+                  {/* report */}
+                  <Route path="/revenuereport" element={<RevenueReport/>} />
+                  <Route path="/productreport" element={<ProductReport/>} />
+                  <Route path="/orderreport" element={<OrderReport/>} />
+                  <Route path="/couponreport" element={<CouponReport/>} />
+                  <Route path="/stockreport" element={<StockReport/>} />
+                  <Route path="/taxreport" element={<TaxesReport/>} />
+                  <Route path="/categoryreport" element={<CategoryReport/>} />
                 </Routes>
               </div>
             </div>

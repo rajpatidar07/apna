@@ -29,9 +29,7 @@ const Review = () => {
       {
         name: "ID",
         selector: (row) => (
-          <p>
-            {row.id}
-          </p>
+            row.id
         ),
         sortable: true,
         width: "70px",
@@ -45,20 +43,20 @@ const Review = () => {
         name: "Product Name",
         selector: (row) => row.cname,
         sortable: true,
-        width: "180px",
+        width: "140px",
       },
       {
         name: "Category Type",
         selector: (row) => row.ctype,
         sortable: true,
-        width: "170px",
+        width: "160px",
         center:true
       },
       {
         name: "Review Date",
         selector: (row) => row.sdate,
         sortable: true,
-        width: "140px",
+        width: "150px",
         style: {
           paddingRight: "12px",
           paddingLeft: "0px",
@@ -71,7 +69,7 @@ const Review = () => {
         sortable: true,
         width: "200px",
         style: {
-          paddingRight: "32px",
+          paddingRight: "12px",
           paddingLeft: "0px",
         },
       },
@@ -79,7 +77,7 @@ const Review = () => {
         name: "Note",
         selector: (row) => row.note,
         sortable: true,
-        width: "180px",
+        width: "200px",
         center: true,
         style: {
           paddingRight: "12px",
@@ -117,16 +115,16 @@ const Review = () => {
     
     const data = [
       {
-        id: 1,
+        id: 102571,
         ctype:"Grocery",
         cname: "Green Leaf Lettucer",
         sdate: "Sep 26, 2022",
         cmnt:<p className="reviewdesc">Nice products Bad product badBad product bad</p>,
         status: "Approve",
-        note:<p className="reviewdesc">Bad product bad qualityyuzuihcdisdj nrgknknk</p>
+        note:<p className="reviewdesc">Bad review and bad language</p>
       },
       {
-        id: 2,
+        id: 210257,
         ctype:"Health & Care",
         cname: "Green Leaf Lettuce",
         sdate: "Sep 26, 2022",
@@ -135,7 +133,7 @@ const Review = () => {
         status: "Reject",
       },
       {
-        id: 3,
+        id: 310257,
         ctype:"Health & Care",
         cname: "Green Leaf Lettuce",
         sdate: "Sep 26, 2022",
@@ -155,10 +153,16 @@ const Review = () => {
   <div className="card mt-3 p-3 ">
   <div className=" row">
   <div className="col-md-3 col-sm-6 aos_input">
-    <Input type={"text"} plchldr={"Search by campaign name"} />
+    <Input type={"text"} plchldr={"Search by product name"} />
     </div>
   <div className="col-md-3 col-sm-6 aos_input">
-  <Input type={"text"} plchldr={"Search by code name"} />
+  <Form.Select aria-label="Search by status" className="adminselectbox">
+            <option>Search by status</option>
+            <option value="1">Approve</option>
+            <option value="2">Reject</option>
+            <option value="3">Pending</option>
+
+          </Form.Select>
     
     </div>
  

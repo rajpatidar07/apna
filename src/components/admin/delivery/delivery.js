@@ -30,13 +30,7 @@ const Delivery = () => {
       {
         name: "ID",
         selector: (row) => (
-          <p
-            onClick={() => {
-              navigate("/productdetail");
-            }}
-          >
-            {row.id}
-          </p>
+         row.id
         ),
         sortable: true,
         width: "70px",
@@ -50,15 +44,18 @@ const Delivery = () => {
         name: "Product Name",
         selector: (row) => row.cname,
         sortable: true,
-        width: "120px",
+        width: "140px",
+        center:true
+
       },
      
-      {
-        name: "Product Type",
-        selector: (row) => row.ctype,
-        sortable: true,
-        width: "120px",
-      },
+      // {
+      //   name: "Product Type",
+      //   selector: (row) => row.ctype,
+      //   sortable: true,
+      //   width: "120px",
+      //   center:true
+      // },
       {
         name: "Order Date",
         selector: (row) => row.odate,
@@ -74,7 +71,7 @@ const Delivery = () => {
         name: "Shipping Date",
         selector: (row) => row.sdate,
         sortable: true,
-        width: "120px",
+        width: "130px",
         center: true,
         style: {
           paddingRight: "32px",
@@ -85,7 +82,7 @@ const Delivery = () => {
         name: "Delivery Date",
         selector: (row) => row.edate,
         sortable: true,
-        width: "120px",
+        width: "130px",
         center: true,
         style: {
           paddingRight: "32px",
@@ -97,17 +94,17 @@ const Delivery = () => {
         name: "Instruction",
         selector: (row) => row.instruction,
         sortable: true,
-        width: "100px",
+        width: "170px",
         style: {
-          paddingRight: "12px",
+          paddingRight: "22px",
           paddingLeft: "0px",
         },
       },
       {
-        name: "Info",
+        name: "Note",
         selector: (row) => row.info,
         sortable: true,
-        width: "120px",
+        width: "150px",
         style: {
           paddingRight: "12px",
           paddingLeft: "0px",
@@ -151,8 +148,8 @@ const Delivery = () => {
         odate: "Sep 26, 2022",
         sdate: "Sep 26, 2022",
         edate: "Jan 2, 2022",
-        instruction:<p className="reviewdesc">delivery between 9:00 to 5:00</p>,
-        info:<p className="reviewdesc">jhdsj sadjab asdbjasbd sdjasb</p>,
+        instruction:<p className="reviewdesc">delivery between 9:00 to 5:00 or delivery between 9:00 to 5:0</p>,
+        info:<p className="reviewdesc">delivery between 9:00 to 5:00 or delivery between 9:00 to 5:0</p>,
         status: "Delivered",
       },
       {
@@ -252,6 +249,24 @@ const Delivery = () => {
                   <Form.Text className="mt-0">Green Leaf</Form.Text>
                 </Form.Group>
               </div>
+              <div className="col-md-6">
+                <Form.Group
+                  className="mb-3 aos_input flex-column d-flex"
+                  controlId="formBasicEmail"
+                >
+                  <Form.Label className="mb-0">Order Date</Form.Label>
+                  <Form.Text className="mt-0">12 Sep,2022</Form.Text>
+                </Form.Group>
+              </div>
+              <div className="col-md-6">
+                <Form.Group
+                  className="mb-3 aos_input flex-column d-flex"
+                  controlId="formBasicEmail"
+                >
+                  <Form.Label className="mb-0">Delivery Date</Form.Label>
+                  <Form.Text className="mt-0">15 Sep,2023</Form.Text>
+                </Form.Group>
+              </div>
               <div className="col-md-12">
                 <Form.Group
                   className="mb-3 aos_input flex-column d-flex"
@@ -269,7 +284,8 @@ const Delivery = () => {
                   controlId="formBasicEmail"
                 >
                   <Form.Label className="mb-0">Status</Form.Label>
-                  <Form.Text className="mt-0">Late</Form.Text>
+                  
+                  <Form.Text className="mt-0"><Badge bg="danger">Late</Badge></Form.Text>
                 </Form.Group>
               </div>
               <div className="col-md-12">

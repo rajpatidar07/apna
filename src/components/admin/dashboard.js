@@ -67,7 +67,7 @@ function Dashboard() {
     chart: {
       type: 'line',
       borderRadius:'5',
-      borderColor:'#335cad',
+      borderColor:'green',
      
     },
     xAxis: {
@@ -163,10 +163,10 @@ function Dashboard() {
           <div className="card p-3 col-12 ">
           <div className="row d-flex align-items-baseline ordersummary">
             <h5 className="col-2 text-success">Orders Overview</h5>
-            <ProgressBar className="col-3 orderprogressbar">
-      <ProgressBar striped variant="success" now={40} key={1} />
-      <ProgressBar variant="warning" now={20} key={2} />
-      <ProgressBar striped variant="danger" now={40} key={3} />
+            <ProgressBar className="col-2 orderprogressbar">
+      <ProgressBar striped variant="success" now={40} key={1} label={`40%`} />
+      <ProgressBar variant="warning" now={20} key={2} label={`10%`} />
+      <ProgressBar striped variant="danger" now={50} key={3} label={`40%`} />
     </ProgressBar>
     </div>
             <div className="row p-3 pt-0 pb-0">

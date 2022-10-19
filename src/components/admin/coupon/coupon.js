@@ -29,13 +29,7 @@ const Coupon = () => {
       {
         name: "ID",
         selector: (row) => (
-          <p
-            onClick={() => {
-              navigate("/productdetail");
-            }}
-          >
-            {row.id}
-          </p>
+          row.id
         ),
         sortable: true,
         width: "70px",
@@ -138,7 +132,7 @@ const Coupon = () => {
     
     const data = [
       {
-        id: 1,
+        id: 545581,
         ctype:"Grocery",
         cname: "October Gift Voucher",
         code:"OCTOBER21",
@@ -149,7 +143,7 @@ const Coupon = () => {
         status: "Active",
       },
       {
-        id: 2,
+        id: 257856,
         ctype:"Health & Care",
         cname: "Winter Gift Voucher",
         code: "WINTER21",
