@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Input from "../common/input";
 import {
-  AiFillDelete,
+  AiOutlineEye,
   AiOutlineEdit,
   AiOutlinePlus,
   AiOutlineCloudUpload,
@@ -13,7 +13,6 @@ import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
-import Iconbutton from "../common/iconbutton";
 import { Badge } from "react-bootstrap";
 import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
@@ -23,9 +22,19 @@ const Delivery = () => {
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
     const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-    const ExpandedComponent = ({ data }) => <pre className="mx-4 mt-2"><p className="mb-0">Username : shivani</p><p className="mb-0">Mobile : 98956584545</p><p className="mb-0">Email : shivani@gmail.com</p></pre>;
+    const [showtrack, setShowtrack] = useState(false);
+    const handleClose = () => {
+      setShow(false);
+      setShowtrack(false);
+    }
+    const handleTrackShow = () =>{
+     setShowtrack(true);
+     }
+  
+    const handleShow = () =>{
+       setShow(true);
+      }
+   
     const columns = [
       {
         name: "ID",
@@ -82,7 +91,7 @@ const Delivery = () => {
         name: "Delivery Date",
         selector: (row) => row.edate,
         sortable: true,
-        width: "130px",
+        width: "140px",
         center: true,
         style: {
           paddingRight: "32px",
@@ -94,7 +103,7 @@ const Delivery = () => {
         name: "Instruction",
         selector: (row) => row.instruction,
         sortable: true,
-        width: "170px",
+        width: "190px",
         style: {
           paddingRight: "22px",
           paddingLeft: "0px",
@@ -104,10 +113,11 @@ const Delivery = () => {
         name: "Note",
         selector: (row) => row.info,
         sortable: true,
-        width: "150px",
+        width: "160px",
         style: {
           paddingRight: "12px",
           paddingLeft: "0px",
+
         },
       },
       {
@@ -121,12 +131,12 @@ const Delivery = () => {
                 ? "warning":null}>{row.status}</Badge>
         ),
         sortable: true,
-        width: "105px",
+        width: "100px",
         // center: true,
       },
       {
         name: "Action",
-        width: "100px",
+        width: "120px",
         style: {
           paddingRight: "12px",
           paddingLeft: "0px",
@@ -135,6 +145,7 @@ const Delivery = () => {
         selector: (row) => (
           <div className={"actioncolimn"}>
            <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow} />
+           <AiOutlineEye className=" p-0 m-0  editiconn text-primary" onClick={handleTrackShow}/>
           </div>
         ),
       },
@@ -148,7 +159,7 @@ const Delivery = () => {
         odate: "Sep 26, 2022",
         sdate: "Sep 26, 2022",
         edate: "Jan 2, 2022",
-        instruction:<p className="reviewdesc">delivery between 9:00 to 5:00 or delivery between 9:00 to 5:0</p>,
+        instruction:<p className="reviewdesc">delivery between 9:00 to 5:00 or delivery between 9:00 to 5:0,delivery between 9:00 to 5:00 or delivery between 9:00 to 5:0</p>,
         info:<p className="reviewdesc">delivery between 9:00 to 5:00 or delivery between 9:00 to 5:0</p>,
         status: "Delivered",
       },
@@ -231,7 +242,7 @@ const Delivery = () => {
           </Modal.Header>
           <Modal.Body>
             <div className="row p-3 m-0">
-              <div className="col-md-6">
+              <div className="col-md-3">
                 <Form.Group
                   className="mb-3 aos_input flex-column d-flex"
                   controlId="formBasicEmail"
@@ -312,6 +323,35 @@ const Delivery = () => {
             </button>
           </Modal.Footer>
         </Modal>
+        <Modal size="lg" show={showtrack} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Product Tracking Info</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div class="row d-flex justify-content-between px-3 top">
+            <div class="d-flex">
+                <h5>ORDER <span class="text-primary font-weight-bold">#6152</span></h5>
+            </div>
+            <div class="d-flex flex-column text-sm-right">
+                <p class="mb-0">Expected Arrival <span>01/06/20</span></p>
+                <p>Grasshoppers <span class="font-weight-bold"><a href="https://www.grasshoppers.lk/customers/action/track/V534HB">V534HB</a></span></p>
+            </div>
+        </div> 
+              {/*progress  */}
+              <div class="row d-flex justify-content-center">
+            <div class="col-12">
+                <ul id="progressbar" class="text-center">
+                    <li class="active step0"></li>
+                    <li class="active step0"></li>
+                    <li class="active step0"></li>
+                    <li class="step0"></li>
+                    <li class="step0"></li>
+                </ul>
+            </div>
+        </div>
+        {/* end */}
+          </Modal.Body>
+        </Modal>
   <DataTable
     columns={columns}
     data={data}
@@ -319,8 +359,6 @@ const Delivery = () => {
     highlightOnHover
     pointerOnHover
     className={"productlist_table"}
-    expandableRows
-			expandableRowsComponent={ExpandedComponent}
   />
    <SweetAlert
     show={Alert}

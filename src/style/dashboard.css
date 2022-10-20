@@ -1,88 +1,145 @@
-.productlist_maindiv .recentorder_boxx .recentorder{
-padding-left: 0;
+.productlist_maindiv .recentorder_boxx .recentorder {
+  padding-left: 0;
 }
 
-.row .carddicon{
-    position: absolute;
-    font-size: 100px;
-    top: 10px;
-    right: 10px;
-    opacity: .25;
+.row .carddicon {
+  position: absolute;
+  font-size: 100px;
+  top: 10px;
+  right: 10px;
+  opacity: 0.25;
 }
-.ordersummary .orderprogressbar.progress{
-    --bs-progress-height: 8px;
-}
-
-/* parliament chart */
-.highcharts-figure,
-.highcharts-data-table table {
-  min-width: 320px;
-  max-width: 800px;
-  margin: 1em auto;
+.ordersummary .orderprogressbar.progress {
+  --bs-progress-height: 13px;
 }
 
-.highcharts-data-table table {
-  font-family: Verdana, sans-serif;
-  border-collapse: collapse;
-  border: 1px solid #ebebeb;
-  margin: 10px auto;
-  text-align: center;
-  width: 100%;
-  max-width: 500px;
+.ordericonsection .ordericon {
+  font-size: 60px;
 }
-
-.highcharts-data-table caption {
-  padding: 1em 0;
-  font-size: 1.2em;
-  color: #555;
+.sellertabler .sellertbody tr td {
+  vertical-align: middle;
 }
-
-.highcharts-data-table th {
-  font-weight: 600;
-  padding: 0.5em;
-}
-
-.highcharts-data-table td,
-.highcharts-data-table th,
-.highcharts-data-table caption {
-  padding: 0.5em;
-}
-
-.highcharts-data-table thead tr,
-.highcharts-data-table tr:nth-child(even) {
-  background: #f8f8f8;
-}
-
-.highcharts-data-table tr:hover {
-  background: #f1f7ff;
-}
-
-input[type="number"] {
-  min-width: 50px;
-}
-/* end */
-
-.sellertabler .sellertbody tr td{
-vertical-align: middle;
-}
-
-
-
-
 
 /* report */
-.reporticon{
+.reporticon {
   position: absolute;
-    font-size: 100px;
-    top: 0px;
-    right: -8px;
-    opacity: .25;
+  font-size: 100px;
+  top: 0px;
+  right: -8px;
+  opacity: 0.25;
 }
-.main_dashboard_row1{
-  justify-content: space-between;
-  grid-gap: 10px;
-  gap: 10px;
+.main_dashboard_row1 {
   display: grid;
-  grid-template-columns: 32% 32% 32%;
+  grid-template-columns: 12% 12% 12% 12% 12% 12%;
   margin-top: 10px;
 }
+
+enddelivery report
+body {
+  color: #000;
+  overflow-x: hidden;
+  height: 100%;
+  background-color: #2ecc71;
+  background-repeat: no-repeat;
+}
+.card {
+  z-index: 0;
+  background-color: #eceff1;
+  padding-bottom: 20px;
+  margin-top: 90px;
+  margin-bottom: 90px;
+  border-radius: 10px;
+}
+.top {
+  padding-top: 40px;
+  padding-left: 13% !important;
+  padding-right: 13% !important;
+}
+#progressbar {
+  margin-bottom: 30px;
+  overflow: hidden;
+  color: #455a64;
+  padding-left: 0px;
+  margin-top: 30px;
+}
+#progressbar li {
+  list-style-type: none;
+  font-size: 13px;
+  width: 20%;
+  float: left;
+  position: relative;
+  font-weight: 400;
+}
+#progressbar .step0:before {
+  font-family: FontAwesome;
+  content: "\f10c";
+  color: #fff;
+}
+#progressbar li:before {
+  width: 40px;
+  height: 40px;
+  line-height: 45px;
+  display: block;
+  font-size: 20px;
+  background: #c5cae9;
+  border-radius: 50%;
+  margin: auto;
+  padding: 0px;
+}
+#progressbar li:after {
+  content: "";
+  width: 100%;
+  height: 12px;
+  background: #c5cae9;
+  position: absolute;
+  left: 0;
+  top: 16px;
+  z-index: -1;
+}
+#progressbar li:last-child:after {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  position: absolute;
+  left: -50%;
+}
+#progressbar li:nth-child(2):after,
+#progressbar li:nth-child(3):after,
+#progressbar li:nth-child(4):after {
+  left: -50%;
+}
+#progressbar li:first-child:after {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  position: absolute;
+  left: 50%;
+}
+#progressbar li:last-child:after {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+#progressbar li:first-child:after {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+#progressbar li.active:before,
+#progressbar li.active:after {
+  background: #651fff;
+}
+#progressbar li.active:before {
+  font-family: FontAwesome;
+  content: "\f00c";
+}
+.icon {
+  width: 60px;
+  height: 60px;
+  margin-right: 15px;
+}
+.icon-content {
+  padding-bottom: 20px;
+}
+@media screen and (max-width: 992px) {
+  .icon-content {
+    width: 50%;
+  }
+}
+/* end */
