@@ -44,7 +44,7 @@ function AdminSidebar() {
             <ul class="sidebar_navigation_bar">
               <li>
                 <Link to="/product" className="nav-link">
-                  Product Detail
+                  Product List
                 </Link>
               </li>
               <li>
@@ -233,7 +233,7 @@ function AdminSidebar() {
           <Accordion.Body>
             <ul class="sidebar_navigation_bar">
               <li>
-                <Link to="/" className="nav-link">
+                <Link to="/home_manager" className="nav-link">
                   Home Page
                 </Link>
               </li>

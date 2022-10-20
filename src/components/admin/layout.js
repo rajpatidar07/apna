@@ -33,6 +33,7 @@ import Transactions from "./transactions/transactions";
 import Tran_Detail from "./transactions/transactions_detail";
 import Banner from "./setting/banner";
 import Coupon from "./coupon/coupon";
+import Home from "./setting/home";
 import Review from "./review/review";
 import Delivery from "./delivery/delivery";
 import RevenueReport from "./report/revenue";
@@ -61,7 +62,7 @@ function AdminLayout() {
             </div>
             <div className="col-lg-10 col-md-9 col-sm-8">
               <AdminHeader />
-              <div className="main_content_div" >
+              <div className="main_content_div">
                 <Routes>
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/product" element={<Product />} />
@@ -92,6 +93,7 @@ function AdminLayout() {
                   <Route
                     path="/transactions_detail"
                     element={<Tran_Detail />} />
+                    <Route path="/home_manager" element={<Home />} />
                   <Route path="/banner" element={<Banner/>} />
                   <Route path="/coupon" element={<Coupon/>} />
                   <Route path="/review" element={<Review/>} />
