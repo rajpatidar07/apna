@@ -29,13 +29,13 @@ const Pendingproduct = () => {
       cell: (row) => (
         <img
           height="90px"
-          width="75px"
+          width="70px"
           alt={row.name}
           src={
             "https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg"
           }
           style={{
-            borderRadius: 15,
+            borderRadius: 10,
             paddingTop: 10,
             paddingBottom: 10,
             textAlign: "right",

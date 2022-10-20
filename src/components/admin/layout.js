@@ -44,6 +44,8 @@ import CategoryReport from "./report/category";
 import StockReport from "./report/stock";
 import TaxesReport from "./report/taxes";
 import ContentManager from "./setting/content_manager";
+import CustomerReport from "./report/customer";
+import StoreReport from "./report/store";
 function AdminLayout() {
   // const location = useLocation();
   console.log("-------" + window.location.pathname);
@@ -108,6 +110,9 @@ function AdminLayout() {
                   <Route path="/taxreport" element={<TaxesReport/>} />
                   <Route path="/categoryreport" element={<CategoryReport/>} />
                   <Route path="/content_manager" element={<ContentManager/>} />
+                  <Route path="/customerreport" element={<CustomerReport/>} />
+                  <Route path="/storereport" element={<StoreReport/>} />
+
                 </Routes>
               </div>
             </div>

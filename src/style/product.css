@@ -133,9 +133,9 @@
 .reviewdesc {
   -webkit-box-orient: vertical;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
-  padding: 10px 0;
+  padding-top: 15px;
 }

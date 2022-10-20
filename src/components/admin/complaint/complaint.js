@@ -188,11 +188,17 @@ const Complaint = () => {
           <div className="col-md-3 col-sm-6 aos_input">
             <Input type={"text"} plchldr={"Search by Id"} />
           </div>
-          <div className="col-md-3 col-sm-6 aos_input">
-            <Input type={"date"} plchldr={"Search by Invoice Date"} />
-          </div>
+          
           <div className="col-md-3 col-sm-6 aos_input">
             <Input type={"date"} plchldr={"Search by Order Date"} />
+          </div>
+          <div className="col-md-3 col-sm-6 aos_input">
+            <Form.Select aria-label="Search by category" className="adminselectbox">
+              <option>Status</option>
+              <option value="1">Pending</option>
+              <option value="2">Solved</option>
+              <option value="3">Failed</option>
+            </Form.Select>
           </div>
 
           <div className="col-md-3 col-sm-6 aos_input">

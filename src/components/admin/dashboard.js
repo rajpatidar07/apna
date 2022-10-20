@@ -49,7 +49,7 @@ function Dashboard() {
     title: {
       text: 'Traffic vs Sales',
       style:{ "color": "green", "fontSize": "22px" },
-      align:"left"
+      align:"left",
     },
     series: [
       {
@@ -67,7 +67,7 @@ function Dashboard() {
     chart: {
       type: 'line',
       borderRadius:'5',
-      borderColor:'green',
+      borderColor:'2px black border',
      
     },
     xAxis: {
@@ -164,9 +164,9 @@ function Dashboard() {
           <div className="row d-flex align-items-baseline ordersummary">
             <h5 className="col-2 text-success">Orders Overview</h5>
             <ProgressBar className="col-2 orderprogressbar">
-      <ProgressBar striped variant="success" now={40} key={1} label={`40%`} />
-      <ProgressBar variant="warning" now={20} key={2} label={`10%`} />
-      <ProgressBar striped variant="danger" now={50} key={3} label={`40%`} />
+      <ProgressBar striped variant="success" now={40} key={1} label={`40%`} className={'text-dark'}/>
+      <ProgressBar variant="warning" now={20} key={2} label={`10%`} className={'text-dark'}/>
+      <ProgressBar striped variant="danger" now={50} key={3} label={`40%`} className={'text-dark'}/>
     </ProgressBar>
     </div>
             <div className="row p-3 pt-0 pb-0">
@@ -174,9 +174,9 @@ function Dashboard() {
               <div className="col-3">
                 <div className="row  d-flex flex-column align-items-center">
                   <div className="col-auto text_div text-center mt-2 d-flex align-items-center">
-                    <div className="col-auto icon_div">
+                    <div className="col-auto icon_div ordericonsection">
                       {" "}
-                      <BsBagPlus className="text-primary h1 opacity-75 mx-2" />
+                      <BsBagPlus className="text-primary h1 opacity-75 mx-2 ordericon" />
                     </div>
                     <div>
                     <h3 className="m-0">8,458</h3>
@@ -188,9 +188,9 @@ function Dashboard() {
               <div className="col-3">
                 <div className="row  d-flex flex-column align-items-center">
                   <div className="col-auto text_div text-center mt-2 d-flex align-items-center">
-                    <div className="col-auto icon_div">
+                    <div className="col-auto icon_div ordericonsection">
                       {" "}
-                      <BsBagCheck className="text-success h1 opacity-75 mx-2" />
+                      <BsBagCheck className="text-success h1 opacity-75 mx-2 ordericon" />
                     </div>
                     <div>
                     <h3 className="m-0">8,458</h3>
@@ -202,9 +202,9 @@ function Dashboard() {
               <div className="col-3">
                 <div className="row d-flex flex-column align-items-center">
                   <div className="col-auto text_div text-center mt-2 d-flex align-items-center">
-                    <div className="col-auto icon_div">
+                    <div className="col-auto icon_div ordericonsection">
                       {" "}
-                      <BsBag className="text-warning h1 opacity-75 mx-2" />
+                      <BsBag className="text-warning h1 opacity-75 mx-2 ordericon" />
                     </div>
                     <div>
                     <h3 className="m-0">8,458</h3>
@@ -216,9 +216,9 @@ function Dashboard() {
               <div className="col-3">
                 <div className="row  d-flex flex-column align-items-center">
                   <div className="col-auto text_div text-center mt-2 d-flex align-items-center">
-                    <div className="col-auto icon_div">
+                    <div className="col-auto icon_div ordericonsection">
                       {" "}
-                      <BsBagX className="text-danger h1 opacity-75 mx-2" />
+                      <BsBagX className="text-danger h1 opacity-75 mx-2 ordericon" />
                     </div>
                     <div>
                     <h3 className="m-0">8,458</h3>
@@ -482,7 +482,7 @@ function Dashboard() {
     </div>
               <hr/>
               <Table responsive striped  hover className='sellertabler'>
-                <tbody className="sellertbody">
+                <tbody className="sellertbody text-center">
                   <tr>
                     <td className="w-0">
                       <img src={demo} className="w-75" />
@@ -536,15 +536,15 @@ function Dashboard() {
                     </td>
                     <td>
                       <h6 className="text-success">$29.00</h6>
-                      <p className="text-secondary mb-0">Price</p>
+                      <p className="text-secondary mb-0 text-center">Price</p>
                     </td>
                     <td>
                       <h6>@62</h6>
-                      <p className="text-secondary mb-0">Orders</p>
+                      <p className="text-secondary mb-0 text-center">Orders</p>
                     </td>
                     <td>
-                      <h6 className="text-danger bg-danger bg-opacity-50 px-1 rounded">out of stock</h6>
-                      <p className="text-secondary mb-0">Stock</p>
+                      <h6 className="text-danger bg-danger bg-opacity-50 px-1 rounded text-center">out of stock</h6>
+                      <p className="text-secondary mb-0 ">Stock</p>
                     </td>
                   </tr>
                 </tbody>
@@ -577,7 +577,7 @@ function Dashboard() {
     </div>
               <hr/>
               <Table responsive striped hover className='sellertabler'>
-                <tbody className='sellertbody'>
+                <tbody className='sellertbody text-center'>
                   <tr>
                     <td className="w-0">
                       <img src={demo} className="w-75" />

@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import Input from "./common/input";
 import {
-  AiFillDelete,
-  AiOutlineEdit,
   AiOutlinePlus,
   AiOutlineCloudUpload,
 } from "react-icons/ai";
@@ -16,10 +14,12 @@ import Modal from "react-bootstrap/Modal";
 import Addproduct from "./products/addproduct";
 import Iconbutton from "./common/iconbutton";
 import Dropdown from "react-bootstrap/Dropdown";
-import { Badge } from "react-bootstrap";
 import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
+import ProductJson from "./json/products"
 function Product() {
+  var products = ProductJson.products;
+  console.log(products);
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
@@ -27,38 +27,38 @@ function Product() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const columns = [
-    {
-      name: "Sku",
-      selector: (row) => (
-        <p
-          onClick={() => {
-            navigate("/productdetail");
-          }}
-        >
-          {row.sku}
-        </p>
-      ),
-      sortable: true,
-      width: "100px",
-      center: true,
-    },
+    // {
+    //   name: "Sku",
+    //   selector: (row) => (
+    //     <p
+    //       onClick={() => {
+    //         navigate("/productdetail");
+    //       }}
+    //     >
+    //       {row.sku}
+    //     </p>
+    //   ),
+    //   sortable: true,
+    //   width: "100px",
+    //   center: true,
+    // },
     {
       name: "#",
       width: "100px",
       center: true,
       cell: (row) => (
         <img
-          height="90px"
-          width="75px"
-          alt={row.name}
+          // height="90px"
+          // width="75px"
+          alt={row.title}
           src={
-            "https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg"
+            row.images[0]
           }
           style={{
-            borderRadius: 10,
-            paddingTop: 10,
-            paddingBottom: 10,
+            padding: 10,
             textAlign: "right",
+            maxHeight:"100px",
+            maxWidth:"100px"
           }}
           onClick={handleClick}
         />
@@ -66,7 +66,14 @@ function Product() {
     },
     {
       name: "Product Name",
-      selector: (row) => row.pname,
+      selector: (row) => (
+        <div>
+          <p className="mb-1" onClick={() => {
+            navigate("/productdetail");
+          }}><b>{row.title}<br/>SKU:</b>
+          {row.sku}
+        </p>
+        </div>),
       sortable: true,
       width: "250px",
     },
@@ -112,7 +119,7 @@ function Product() {
 
     {
       name: "Discount",
-      selector: (row) => row.discount,
+      selector: (row) => row.discountPercentage,
       sortable: true,
       width: "130px",
       center: true,
@@ -126,14 +133,18 @@ function Product() {
       selector: (row) => (
         <span
           className={
-            row.status === "Selling"
+            row.status === 1
               ? "badge bg-success"
-              : row.status === "Sold out"
-              ? "badge bg-danger"
-              : null
+              : row.status === 2
+                ? "badge bg-danger"
+                : "badge bg-secondary"
           }
         >
-          {row.status}
+          {row.status === 1
+              ? "Active"
+              : row.status === 2
+                ? "Inactive"
+                : "Draft"}
         </span>
       ),
       sortable: true,
@@ -189,56 +200,15 @@ function Product() {
     },
   ];
 
-  const data = [
-    {
-      id: 1,
-      sku: "9AF4FE",
-      pname: (
-        <div className="productdescbox">
-          <b>
-            <p className="mb-0">Green Leaf Lettuce</p>
-          </b>
-
-          <p className="productdesc">
-            {" "}
-            {`The root vegetables include beets, carrots, radishes, sweet potatoes,
-            and turnips`}
-          </p>
-        </div>
-      ),
-      category: (
-        <p className="productdesc">Fruits & Vegetable Fruits & Vegetable</p>
-      ),
-      price: "$14",
-      gst: "10%",
-      stock: "15",
-      status: "Selling",
-      discount: "50%",
-    },
-    {
-      id: 2,
-      sku: "9AF4FE",
-      pname: (
-        <div className="productdescbox">
-          <b>
-            <p className="mb-0">Green Leaf Lettuce</p>
-          </b>
-          <p className="productdesc">
-            {" "}
-            The root vegetables include beets, and turnips
-          </p>
-        </div>
-      ),
-      category: "Fruits & Vegetable",
-      price: "$14",
-      gst: "10%",
-      stock: "15",
-      status: "Sold out",
-      discount: "50%",
-    },
-  ];
-  const handleClick = () => {};
-  const onButtonClick = () => {};
+  // const data = [
+  //   // (products.map|| [])((products)=>{
+  //     {
+  //       sku:"qqq",
+  //     }
+  //   // }),
+  // ];
+  const handleClick = () => { };
+  const onButtonClick = () => { };
   const navigate = useNavigate();
 
   return (
@@ -325,7 +295,7 @@ function Product() {
               btntext={"X Cancel"}
               onClick={handleClose}
               btnclass={"button main_outline_button px-2"}
-              // Iconname={<GiCancel /> }
+            // Iconname={<GiCancel /> }
             />
             <MainButton btntext={"Save as Draft"} onClick={handleClose} />
             <Iconbutton
@@ -338,7 +308,7 @@ function Product() {
         </Modal>
         <DataTable
           columns={columns}
-          data={data}
+          data={products}
           pagination
           highlightOnHover
           pointerOnHover

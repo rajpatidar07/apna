@@ -224,3 +224,29 @@ code {
 .main_sidebar .sidebar_navigation_bar li a:hover{
   color: #72b702;
 }
+
+/* SCROLLBAR */
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #aaa; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+/* DATATABLE */
+.dgGdqu{
+  justify-content: flex-start!important;
+}

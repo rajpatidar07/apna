@@ -32,7 +32,7 @@ const Coupon = () => {
           row.id
         ),
         sortable: true,
-        width: "70px",
+        width: "80px",
         center: true,
         style:{
             paddingLeft:0,
@@ -107,7 +107,8 @@ const Coupon = () => {
          
           <Badge  bg= {row.status === "Active"
           ?"success"  : row.status === "Expired"
-                ? "danger" : null}>{row.status}</Badge>
+                ? "danger" : row.status === "Pending"
+                ? "warning":null}>{row.status}</Badge>
         ),
         sortable: true,
         width: "105px",
@@ -123,7 +124,7 @@ const Coupon = () => {
         center: true,
         selector: (row) => (
           <div className={"actioncolimn"}>
-           <BiEdit className=" p-0 m-0  editiconn text-secondary" />
+           <BiEdit className=" p-0 m-0  editiconn text-secondary"  onClick={handleShow}/>
             <BsTrash className=" p-0 m-0 editiconn text-danger"  onClick={handleAlert} />
           </div>
         ),
@@ -153,6 +154,17 @@ const Coupon = () => {
         percent:"10%",
         status: "Expired",
       },
+      {
+        id: 257856,
+        ctype:"Health & Care",
+        cname: "Winter Gift Voucher",
+        code: "WINTER21",
+        sdate: "Sep 26, 2022",
+        edate: "Jan 2, 2022",
+        amt:"$2000",
+        percent:"10%",
+        status: "Pending",
+      },
     ];
     const handleClick = () => {};
     const onButtonClick = () => {};
@@ -168,9 +180,16 @@ const Coupon = () => {
     <Input type={"text"} plchldr={"Search by campaign name"} />
     </div>
   <div className="col-md-3 col-sm-6 aos_input">
-  <Input type={"text"} plchldr={"Search by code name"} />
-    
+  <Input type={"text"} plchldr={"Search by code name"} /> 
     </div>
+    <div className="col-md-3 col-sm-6 aos_input">
+            <Form.Select aria-label="Search by category" className="adminselectbox">
+              <option>Status</option>
+              <option value="1">Active</option>
+              <option value="2">Expired</option>
+              <option value="3">Pending</option>
+            </Form.Select>
+          </div>
  
 <div className="col-md-3 col-sm-6 aos_input">
     <MainButton btntext={"Search"} btnclass={'button main_button w-100'} />
@@ -182,7 +201,7 @@ const Coupon = () => {
 
   <div className="product_page_uploadbox my-4">
     <Iconbutton
-      btntext={"Add Category"}
+      btntext={"Add Coupons"}
       onClick={handleShow}
       Iconname={<AiOutlinePlus />}
       btnclass={"button main_button adminmainbutton"}
@@ -267,7 +286,7 @@ const Coupon = () => {
         // Iconname={<GiCancel /> }
       />
       <Iconbutton
-        btntext={"Add Category"}
+        btntext={"Add Coupons"}
         onClick={handleClose}
         Iconname={<AiOutlinePlus />}
         btnclass={"button main_button adminmainbutton"}
