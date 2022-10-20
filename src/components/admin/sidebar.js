@@ -23,7 +23,7 @@ function AdminSidebar() {
         </Link>
       </div>
       <hr />
-    <div className="sidebar_links">
+    <div className="sidebar_links pb-3">
       <Accordion defaultActiveKey="0" variant="pills">
         <Accordion.Item eventKey="0">
           <Accordion>
@@ -238,7 +238,7 @@ function AdminSidebar() {
                 </Link>
               </li>
               <li>
-                <Link to="/" className="nav-link ">
+                <Link to="/content_manager" className="nav-link ">
                   Content Manager
                 </Link>
               </li>

@@ -2,43 +2,43 @@ import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 
 const AddAdmin = (props) => {
-  const [inputList, setInputList] = useState([{ Header: "", Description: "" }]);
-  const [addtag, setaddtag] = useState("");
-  const [clickaddtag, setclickaddtag] = useState("");
+  // const [inputList, setInputList] = useState([{ Header: "", Description: "" }]);
+  // const [addtag, setaddtag] = useState("");
+  // const [clickaddtag, setclickaddtag] = useState("");
 
-  const ontagchangeclick = (e) => {
-    setaddtag(e.target.value);
-  };
-  const tagRemoveClick = () => {
-    seotag.unshift(clickaddtag);
-  };
-  const seotag = [];
-  const ontagaddclick = () => {
-    setclickaddtag(addtag);
-    seotag.push(clickaddtag);
-    setaddtag("");
-    console.log(seotag);
-  };
-  // --------------------------------------------------------------------------
-  // handle input change
-  const handleInputChange = (e, index) => {
-    const { name, value } = e.target;
-    const list = [...inputList];
-    list[index][name] = value;
-    setInputList(list);
-  };
+  // const ontagchangeclick = (e) => {
+  //   setaddtag(e.target.value);
+  // };
+  // const tagRemoveClick = () => {
+  //   seotag.unshift(clickaddtag);
+  // };
+  // const seotag = [];
+  // const ontagaddclick = () => {
+  //   setclickaddtag(addtag);
+  //   seotag.push(clickaddtag);
+  //   setaddtag("");
+  //   console.log(seotag);
+  // };
+  // // --------------------------------------------------------------------------
+  // // handle input change
+  // const handleInputChange = (e, index) => {
+  //   const { name, value } = e.target;
+  //   const list = [...inputList];
+  //   list[index][name] = value;
+  //   setInputList(list);
+  // };
 
-  // handle click event of the Remove button
-  const handleRemoveClick = (index) => {
-    const list = [...inputList];
-    list.splice(index, 1);
-    setInputList(list);
-  };
+  // // handle click event of the Remove button
+  // const handleRemoveClick = (index) => {
+  //   const list = [...inputList];
+  //   list.splice(index, 1);
+  //   setInputList(list);
+  // };
 
-  // handle click event of the Add button
-  const handleAddClick = () => {
-    setInputList([...inputList, { Header: "", Description: "" }]);
-  };
+  // // handle click event of the Add button
+  // const handleAddClick = () => {
+  //   setInputList([...inputList, { Header: "", Description: "" }]);
+  // };
 
   // ----------------------------------------
   return (

@@ -66,7 +66,7 @@
 }
 .main_content_div{
     overflow: hidden auto;
-    height: calc(100vh - 65px);
+    height: calc(100vh - 105px);
 }
 /* .Pending{
     background-color: "rgb(204 207 0 / 90%)";

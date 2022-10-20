@@ -1,10 +1,8 @@
-
 .product_page_uploadbox {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   gap: 10px;
   align-items: center;
-  justify-content: end;
 }
 .product_page_uploadbox .product_page_uploadbox_one {
   position: relative;
@@ -120,7 +118,6 @@
 /* Complaint */
 .complaintdescbox {
   padding: 10px 0;
-
 }
 
 .complaintdesc {
@@ -131,7 +128,6 @@
   text-overflow: ellipsis;
   white-space: normal;
 }
-
 
 /* review */
 .reviewdesc {

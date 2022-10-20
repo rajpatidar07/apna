@@ -26,7 +26,7 @@ code {
   border-radius: 15px;
 }
 .sidebar_links{
-  height: 100vh;
+  height: calc(100vh - 124px);
   overflow: auto;
 }
 
@@ -115,7 +115,7 @@ code {
 
 .container.content_top_container .row.content_top_row .search_bar.right_side.col-md-6 {
   display: inline-flex;
-  justify-content: end;
+  justify-content: flex-end;
   gap: 20px;
 }
 
