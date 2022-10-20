@@ -169,6 +169,18 @@ function AdminSidebar() {
                Stock
                 </Link>
               </li>
+              <li>
+                <Link to="/customerreport" className="nav-link ">
+                  {" "}
+               Customer
+                </Link>
+              </li>
+              <li>
+                <Link to="/storereport" className="nav-link ">
+                  {" "}
+               Store
+                </Link>
+              </li>
               {/* <li>
                 <Link to="/deletedproduct" className="nav-link ">
                   {" "}

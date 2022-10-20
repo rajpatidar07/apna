@@ -5,14 +5,14 @@ import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
 import {
     BsBagPlus,
-    BsBagX,
+    BsFileBarGraph,
     BsBagCheck,
     BsBag,
     BsCashCoin,BsAlarm
   } from "react-icons/bs";
 import { HiOutlineReceiptRefund,HiOutlineGift } from "react-icons/hi";
 import {AiOutlineArrowRight}  from "react-icons/ai";
-import {GiTakeMyMoney,GiPayMoney}  from "react-icons/gi";
+import {GiTakeMyMoney,GiStorkDelivery}  from "react-icons/gi";
 import {MdOutlineLocalShipping}  from "react-icons/md";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -34,18 +34,21 @@ const OrderReport
           },
         series: [
           {
+
+            name:"Orders",
             data: [1, 2, 1, 4, 3, 6,9,4,1,8,3,5]
           },
           {
+            name:"Net Revenue",
             data: [1, 3, 1, 3, 2, 5,1,4,1,8,3,5]
           },
           {
+            name:"Average Order Value",
             data: [2, 1, 6, 7, 4, 6,2,4,1,8,3,5]
           },
           {
+            name:"Average Items Per Order",
             data: [1, 9, 1, 8, 1, 5,7,4,1,8,3,5]
-          },{
-            data: [1, 0, 5, 4, 3, 4,8,4,1,8,3,5]
           }
         ],
         xAxis: {
@@ -68,20 +71,20 @@ const OrderReport
         },
         
         {
-          name: "Gross Revenue",
-          selector: (row) => row.pname,
+          name: "Order",
+          selector: (row) => row.Order,
           sortable: true,
           width: "170px",
         },
         {
-          name: "Refunds",
-          selector: (row) => row.category,
+          name: "Status",
+          selector: (row) => row.Status,
           sortable: true,
           width: "170px",
         },
         {
-          name: "Coupons",
-          selector: (row) => row.price,
+          name: "Customer",
+          selector: (row) => row.Customer,
           sortable: true,
           width: "150px",
           center: true,
@@ -92,8 +95,8 @@ const OrderReport
         },
       
         {
-          name: "Taxes",
-          selector: (row) => row.mdate,
+          name: "Product(s)",
+          selector: (row) => row.Product,
           sortable: true,
           width: "150px",
           center: true,
@@ -103,8 +106,8 @@ const OrderReport
           },
         },
         {
-          name: "Shipping",
-          selector: (row) => row.edate,
+          name: "Item Sold",
+          selector: (row) => row.isold,
           sortable: true,
           width: "160px",
           center: true,
@@ -115,7 +118,7 @@ const OrderReport
         },
         {
             name: "Net Revenue",
-            selector: (row) => row.edate,
+            selector: (row) => row.net,
             sortable: true,
             width: "150px",
             center: true,
@@ -132,89 +135,99 @@ const OrderReport
         {
           id: 1,
           sku: "23 Sep,2022",
-          pname: "$1,485.73",
-          category:"$0.00",
-          price: "$14",
-          mdate: "$1,009.00",
-          edate: "$476.73",
+          Order: "$1,485.73",
+          Status:"$0.00",
+          Customer: "$14",
+          Product: "$1,009.00",
+          isold: "$476.73",
+        net: "$476.73",
         },
         {
           id: 2,
           sku: "23 Sep,2022",
-          pname:"$361.00",
-          category: "$0.00",
-          price: "$14",
-          mdate: "$1,009.00",
-          edate: "$476.73",
+          Order:"$361.00",
+          Status: "$0.00",
+          Customer: "$14",
+          Product: "$1,009.00",
+          isold: "$476.73",
+        net: "$476.73",
         },
         {
             id: 1,
             sku: "23 Sep,2022",
-            pname: "$1,485.73",
-            category:"$0.00",
-            price: "$14",
-            mdate: "$1,009.00",
-            edate: "$476.73",
+            Order: "$1,485.73",
+            Status:"$0.00",
+            Customer: "$14",
+            Product: "$1,009.00",
+            isold: "$476.73",
+            net: "$476.73",
           },
           {
             id: 2,
             sku: "23 Sep,2022",
-            pname:"$361.00",
-            category: "$0.00",
-            price: "$14",
-            mdate: "$1,009.00",
-            edate: "$476.73",
+            Order:"$361.00",
+            Status: "$0.00",
+            Customer: "$14",
+            Product: "$1,009.00",
+            isold: "$476.73",
+            net: "$476.73",
           },{
             id: 1,
             sku: "23 Sep,2022",
-            pname: "$1,485.73",
-            category:"$0.00",
-            price: "$14",
-            mdate: "$1,009.00",
-            edate: "$476.73",
+            Order: "$1,485.73",
+            Status:"$0.00",
+            Customer: "$14",
+            Product: "$1,009.00",
+            isold: "$476.73",
+            net: "$476.73",
           },
           {
             id: 2,
             sku: "23 Sep,2022",
-            pname:"$361.00",
-            category: "$0.00",
-            price: "$14",
-            mdate: "$1,009.00",
-            edate: "$476.73",
+            Order:"$361.00",
+            Status: "$0.00",
+            Customer: "$14",
+            Product: "$1,009.00",
+            isold: "$476.73",
+            net: "$476.73",
           },{
             id: 1,
             sku: "23 Sep,2022",
-            pname: "$1,485.73",
-            category:"$0.00",
-            price: "$14",
-            mdate: "$1,009.00",
-            edate: "$476.73",
+            Order: "$1,485.73",
+            Status:"$0.00",
+            Customer: "$14",
+            Product: "$1,009.00",
+            isold: "$476.73",
+            net: "$476.73",
           },
           {
             id: 2,
             sku: "23 Sep,2022",
-            pname:"$361.00",
-            category: "$0.00",
-            price: "$14",
-            mdate: "$1,009.00",
-            edate: "$476.73",
+            Order:"$361.00",
+            Status: "$0.00",
+            Customer: "$14",
+            Product: "$1,009.00",
+            isold: "$476.73",
+            net: "$476.73",
           },{
             id: 1,
             sku: "23 Sep,2022",
-            pname: "$1,485.73",
-            category:"$0.00",
-            price: "$14",
-            mdate: "$1,009.00",
-            edate: "$476.73",
+            Order: "$1,485.73",
+            Status:"$0.00",
+            Customer: "$14",
+            Product: "$1,009.00",
+            isold: "$476.73",
+            net: "$476.73",
           },
           {
             id: 2,
             sku: "23 Sep,2022",
-            pname:"$361.00",
-            category: "$0.00",
-            price: "$14",
-            mdate: "$1,009.00",
-            edate: "$476.73",
+            Order:"$361.00",
+            Status: "$0.00",
+            Customer: "$14",
+            Product: "$1,009.00",
+            isold: "$476.73",
+            net: "$476.73",
           },
       ];
     return (
@@ -249,11 +262,11 @@ const OrderReport
 <div className="col-12 px-3">
           {/* card */}
           <div className=" row main_dashboard_row1 d-flex mb-3 ">
-            {/* revenue */}
-            <div className="card p-2 col-2 rounded-left shadow-none">
-              <div className=" d-flex mt-0 align-items-center">
-                <BsCashCoin className="text-success h1 mb-0 mx-2" />
-                <h5 className="text-success">Gross Revenue </h5>
+            {/* order */}
+            <div className="card p-2 col-3 rounded-left shadow-none">
+              <div className=" d-flex mt-0 align-items-end">
+                <BsBagPlus className="text-success h1 mb-0 mx-2" />
+                <h5 className="text-success">Orders </h5>
               </div>
               <div className="row mt-3">
                 <div className="col-12">
@@ -276,11 +289,11 @@ const OrderReport
               </div>
             </div>
             {/* end */}
-            {/* Refund */}
-            <div className="card p-2 col-2 rounded-0 shadow-none">
+            {/* avg order */}
+            <div className="card p-2 col-3 rounded-0 shadow-none">
               <div className=" d-flex mt-0 align-items-center">
-                <HiOutlineReceiptRefund className="text-success h1 mx-2" />
-                <h5 className="text-success">Refund </h5>
+                <GiStorkDelivery className="text-success h1 mx-2" />
+                <h5 className="text-success">Average Order Value </h5>
               </div>
               <div className="row mt-3">
                 <div className="col-12">
@@ -303,11 +316,11 @@ const OrderReport
               </div>
             </div>
 {/* refund end */}
-{/* coupon */}
-<div className="card p-2 col-2 rounded-0 shadow-none">
+{/* avg item */}
+<div className="card p-2 col-3 rounded-0 shadow-none">
               <div className=" d-flex mt-0 align-items-end">
-                <HiOutlineGift className="text-success h1 mb-0 mx-2" />
-                <h5 className="text-success">Coupons </h5>
+                <BsFileBarGraph className="text-success h1 mb-0 mx-2" />
+                <h5 className="text-success">Average Item Per Order </h5>
               </div>
               <div className="row mt-3">
                 <div className="col-12">
@@ -330,62 +343,10 @@ const OrderReport
               </div>
             </div>
             {/*  */}
-            {/* tax */}
-            <div className="card p-2 col-2 rounded-0 shadow-none">
-              <div className=" d-flex mt-0 align-items-end">
-                <GiPayMoney className="text-success h1 mb-0 mx-2" />
-                <h5 className="text-success">Taxes </h5>
-              </div>
-              <div className="row mt-3">
-                <div className="col-12">
-                  <div className="row  d-flex flex-column align-items-center">
-                  <div className="d-flex align-items-baseline justify-content-between">
-                    <h3>2,356</h3>
-                    <div className="d-flex align-items-center justify-content-center">
-                     <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
-                     <p className="mb-0 h5">0%</p>
-                    </div>
-                    </div>
-                    <div>
-                        <h5>Previous Year:</h5>
-                        <p className="h5">$0.00</p>
-                    </div>
-                  </div>
-                </div>
-
-                
-              </div>
-            </div>
-            {/*  */}
-            {/* shipping */}
-            <div className="card p-2 col-2 rounded-0 shadow-none">
-              <div className=" d-flex mt-0 align-items-end">
-                <MdOutlineLocalShipping className="text-success h1 mb-0 mx-2" />
-                <h5 className="text-success">Shipping </h5>
-              </div>
-              <div className="row mt-3">
-                <div className="col-12">
-                  <div className="row  d-flex flex-column align-items-center">
-                  <div className="d-flex align-items-baseline justify-content-between">
-                    <h3>2,356</h3>
-                    <div className="d-flex align-items-center justify-content-center">
-                     <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
-                     <p className="mb-0 h5">0%</p>
-                    </div>
-                    </div>
-                    <div>
-                        <h5>Previous Year:</h5>
-                        <p className="h5">$0.00</p>
-                    </div>
-                  </div>
-                </div>
-
-                
-              </div>
-            </div>
+           
             {/*  */}
             {/* net */}
-            <div className="card p-2 col-2 rounded-right shadow-none">
+            <div className="card p-2 col-3 rounded-right shadow-none">
               <div className=" d-flex mt-0 align-items-center">
                 <GiTakeMyMoney className="text-success h1 mb-0 mx-2" />
                 <h5 className="text-success">Net Revenue </h5>
