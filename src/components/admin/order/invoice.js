@@ -1,6 +1,5 @@
 import React from "react";
 import "./invoice.css";
-
 const Invoice = () => {
   return (
     <div className="container">
