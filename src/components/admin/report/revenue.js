@@ -19,6 +19,7 @@ import HighchartsReact from 'highcharts-react-official';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 const RevenueReport = () => {
+  const [filterchange,setFilterchange] = useState('')
     const options = {
         chart: {
           type: 'line',
@@ -32,17 +33,27 @@ const RevenueReport = () => {
           },
         series: [
           {
+            name:"Gross Revenue",
             data: [1, 2, 1, 4, 3, 6,9,4,1,8,3,5]
           },
           {
+            name:"Refund",
             data: [1, 3, 1, 3, 2, 5,1,4,1,8,3,5]
           },
           {
+            name:"Coupon",
             data: [2, 1, 6, 7, 4, 6,2,4,1,8,3,5]
           },
           {
+            name:"Taxes",
             data: [1, 9, 1, 8, 1, 5,7,4,1,8,3,5]
-          },{
+          },
+          {
+            name:"Net Revenue",
+            data: [0, 1, 2, 3, 3, 4,5,6,7,8,9,10]
+          },
+          {
+            name:"shipping",
             data: [1, 0, 5, 4, 3, 4,8,4,1,8,3,5]
           }
         ],
@@ -215,6 +226,9 @@ const RevenueReport = () => {
             edate: "$476.73",
           },
       ];
+      const TimeChange = (e)=>{
+setFilterchange(e.target.value)
+      }
     return (
         <div>
               <h2>Revenue Report</h2>
@@ -222,17 +236,41 @@ const RevenueReport = () => {
       <div className="card mt-3 p-3 ">
       <div className="row pb-3">
       <div className="col-md-3 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by category"
+              className="adminselectbox"
+              placeholder="Search by category"
+              onChange={TimeChange}
+            >
+              <option>Search by category</option>
+              <option value="1">1 day</option>
+              <option value="2">1 week</option>
+              <option value="3">current month</option>
+              <option value="4">last month</option>
+              <option value="5">last 6  month</option>
+              <option value="6">custom month</option>
+              <option value="7">custom date</option>
+
+            </Form.Select>
+          </div>
+          {filterchange==='7'?
+          <>
+      <div className="col-md-3 col-sm-6 aos_input">
         <Input type={"date"} plchldr={"Search by date"} />
         </div>
         
         <div className="col-md-3 col-sm-6 aos_input">
         <Input type={"date"} plchldr={"Search by date"} />
         </div>
-        <div className="col-md-3 col-sm-6 aos_input">
-        <MainButton btntext={"Search"} btnclass={'button main_button w-100'} />
+        </>
+        :filterchange==='6'? <div className="col-md-3 col-sm-6 aos_input">
+        <Input type={"month"} plchldr={"Search by month"} />
+        </div> : null}
+        <div className="col-md-auto col-sm-6 aos_input">
+        <MainButton btntext={"Search"} btnclass={'button main_button'} />
         </div>
-        <div className="col-md-3 col-sm-6 aos_input">
-        <DropdownButton id="dropdown-variant-success" title="Download" variant="button main_button w-100">
+        <div className="col-md-auto col-sm-6 aos_input">
+        <DropdownButton id="dropdown-variant-success" title="Download" variant="button main_button">
       <Dropdown.Item href="#/action-1">Excel</Dropdown.Item>
       <Dropdown.Item href="#/action-2">Pdf</Dropdown.Item>
       <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>

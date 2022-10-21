@@ -162,6 +162,10 @@ const CouponReport = () => {
   order: "120",
     },
   ];
+  const [filterchange,setFilterchange] = useState('')
+  const TimeChange = (e)=>{
+    setFilterchange(e.target.value)
+          }
     return (
         <div>
             <h2>Coupon Report</h2>
@@ -169,24 +173,47 @@ const CouponReport = () => {
       <div className="card mt-3 p-3 ">
       <div className="row pb-3">
       <div className="col-md-3 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by category"
+              className="adminselectbox"
+              placeholder="Search by category"
+              onChange={TimeChange}
+            >
+              <option>Search by category</option>
+              <option value="1">1 day</option>
+              <option value="2">1 week</option>
+              <option value="3">current month</option>
+              <option value="4">last month</option>
+              <option value="5">last 6  month</option>
+              <option value="6">custom month</option>
+              <option value="7">custom date</option>
+
+            </Form.Select>
+          </div>
+          {filterchange==='7'?
+          <>
+      <div className="col-md-3 col-sm-6 aos_input">
         <Input type={"date"} plchldr={"Search by date"} />
         </div>
         
         <div className="col-md-3 col-sm-6 aos_input">
         <Input type={"date"} plchldr={"Search by date"} />
         </div>
-        <div className="col-md-3 col-sm-6 aos_input">
-        <MainButton btntext={"Search"} btnclass={'button main_button w-100'} />
+        </>
+        :filterchange==='6'? <div className="col-md-3 col-sm-6 aos_input">
+        <Input type={"month"} plchldr={"Search by month"} />
+        </div> : null}
+        <div className="col-md-auto col-sm-6 aos_input">
+        <MainButton btntext={"Search"} btnclass={'button main_button'} />
         </div>
-        <div className="col-md-3 col-sm-6 aos_input">
-        <DropdownButton id="dropdown-variant-success" title="Download" variant="button main_button w-100">
+        <div className="col-md-auto col-sm-6 aos_input">
+        <DropdownButton id="dropdown-variant-success" title="Download" variant="button main_button">
       <Dropdown.Item href="#/action-1">Excel</Dropdown.Item>
       <Dropdown.Item href="#/action-2">Pdf</Dropdown.Item>
       <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
     </DropdownButton>
         </div>
       </div>
-
          {/* upload */}
        
 {/*  */}
