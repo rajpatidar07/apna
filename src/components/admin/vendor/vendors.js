@@ -10,7 +10,8 @@ import Modal from 'react-bootstrap/Modal';
 import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
 import logo from '../../../images/logo.png';
-
+import { BsTrash } from "react-icons/bs";
+import { BiEdit, BiDotsVertical } from "react-icons/bi";
 const handleClick = () => { };
 
 const VendorsList = () => {
@@ -32,6 +33,7 @@ const VendorsList = () => {
     },
     {
       name: "Logo",
+      center:true,
       cell: (row) => (
         <img
           width={'100%'}
@@ -112,10 +114,14 @@ const VendorsList = () => {
 
     {
       name: "ACTION",
+      center:true,
       selector: (row) => (
         <div className={"actioncolimn"}>
-          <AiFillEdit className="p-0 m-0 editiconn" onClick={handleShow} />
-          <AiFillDelete className="p-0 m-0 editiconn" onClick={handleAlert} />
+         <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow}/>
+          <BsTrash
+            className=" p-0 m-0 editiconn text-danger"
+            onClick={handleAlert}
+          />
         </div>
       ),
     },
@@ -216,7 +222,7 @@ const VendorsList = () => {
 
 
 
-        <div className="product_page_uploadbox ">
+        <div className="product_page_uploadbox my-4">
           <button className='button main_button ml-auto' onClick={handleShow}>Add New Shop</button>
         </div>
         <DataTable

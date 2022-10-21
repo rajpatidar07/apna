@@ -23,7 +23,7 @@ function AdminSidebar() {
         </Link>
       </div>
       <hr />
-    <div className="sidebar_links">
+    <div className="sidebar_links pb-3">
       <Accordion defaultActiveKey="0" variant="pills">
         <Accordion.Item eventKey="0">
           <Accordion>
@@ -169,6 +169,18 @@ function AdminSidebar() {
                Stock
                 </Link>
               </li>
+              <li>
+                <Link to="/customerreport" className="nav-link ">
+                  {" "}
+               Customer
+                </Link>
+              </li>
+              <li>
+                <Link to="/storereport" className="nav-link ">
+                  {" "}
+               Store
+                </Link>
+              </li>
               {/* <li>
                 <Link to="/deletedproduct" className="nav-link ">
                   {" "}
@@ -238,7 +250,7 @@ function AdminSidebar() {
                 </Link>
               </li>
               <li>
-                <Link to="/" className="nav-link ">
+                <Link to="/content_manager" className="nav-link ">
                   Content Manager
                 </Link>
               </li>

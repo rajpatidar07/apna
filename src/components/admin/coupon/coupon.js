@@ -107,7 +107,8 @@ const Coupon = () => {
          
           <Badge  bg= {row.status === "Active"
           ?"success"  : row.status === "Expired"
-                ? "danger" : null}>{row.status}</Badge>
+                ? "danger" : row.status === "Pending"
+                ? "warning":null}>{row.status}</Badge>
         ),
         sortable: true,
         width: "105px",
@@ -153,6 +154,17 @@ const Coupon = () => {
         percent:"10%",
         status: "Expired",
       },
+      {
+        id: 257856,
+        ctype:"Health & Care",
+        cname: "Winter Gift Voucher",
+        code: "WINTER21",
+        sdate: "Sep 26, 2022",
+        edate: "Jan 2, 2022",
+        amt:"$2000",
+        percent:"10%",
+        status: "Pending",
+      },
     ];
     const handleClick = () => {};
     const onButtonClick = () => {};
@@ -168,9 +180,16 @@ const Coupon = () => {
     <Input type={"text"} plchldr={"Search by campaign name"} />
     </div>
   <div className="col-md-3 col-sm-6 aos_input">
-  <Input type={"text"} plchldr={"Search by code name"} />
-    
+  <Input type={"text"} plchldr={"Search by code name"} /> 
     </div>
+    <div className="col-md-3 col-sm-6 aos_input">
+            <Form.Select aria-label="Search by category" className="adminselectbox">
+              <option>Status</option>
+              <option value="1">Active</option>
+              <option value="2">Expired</option>
+              <option value="3">Pending</option>
+            </Form.Select>
+          </div>
  
 <div className="col-md-3 col-sm-6 aos_input">
     <MainButton btntext={"Search"} btnclass={'button main_button w-100'} />

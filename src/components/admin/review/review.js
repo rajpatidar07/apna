@@ -32,7 +32,7 @@ const Review = () => {
             row.id
         ),
         sortable: true,
-        width: "100px",
+        width: "150px",
         center: true,
         style:{
             paddingLeft:0,
@@ -43,14 +43,14 @@ const Review = () => {
         name: "Product Name",
         selector: (row) => row.cname,
         sortable: true,
-        width: "150px",
+        width: "180px",
 
       },
       {
         name: "Category Type",
         selector: (row) => row.ctype,
         sortable: true,
-        width: "160px",
+        width: "150px",
       },
       {
         name: "Review Date",
@@ -67,24 +67,13 @@ const Review = () => {
         name: "Comment",
         selector: (row) => row.cmnt,
         sortable: true,
-        width: "200px",
+        width: "250px",
         style: {
           paddingRight: "12px",
-          paddingLeft: "0px",
+          paddingLeft: "12px",
         },
         center:true
 
-      },
-      {
-        name: "Note",
-        selector: (row) => row.note,
-        sortable: true,
-        width: "210px",
-        center: true,
-        style: {
-          paddingRight: "12px",
-          paddingLeft: "0px",
-        },
       },
       {
         name: "Status",
@@ -95,12 +84,12 @@ const Review = () => {
                 ? "danger" :row.status === "Pending" ? "warning": null}>{row.status}</Badge>
         ),
         sortable: true,
-        width: "105px",
+        width: "120px",
         // center: true,
       },
       {
         name: "Action",
-        width: "100px",
+        width: "150px",
         style: {
           paddingRight: "12px",
           paddingLeft: "0px",
@@ -123,7 +112,6 @@ const Review = () => {
         sdate: "Sep 26, 2022",
         cmnt:<p className="reviewdesc">Nice products Bad product badBad product bad</p>,
         status: "Approve",
-        note:<p className="reviewdesc">Bad review and bad language</p>
       },
       {
         id: 210257,
@@ -131,7 +119,6 @@ const Review = () => {
         cname: "Green Leaf Lettuce",
         sdate: "Sep 26, 2022",
         cmnt:<p className="reviewdesc">Bad product bad qualityyuzuihcdisdj nrgknknk</p>,
-        note:<p className="reviewdesc">Bad review and bad language</p>,
         status: "Reject",
       },
       {
@@ -140,7 +127,6 @@ const Review = () => {
         cname: "Green Leaf Lettuce",
         sdate: "Sep 26, 2022",
         cmnt:<p className="reviewdesc">Bad product bad qualityyuzuihcdisdj nrgknknk</p>,
-        note:<p className="reviewdesc">Bad review and bad language</p>,
         status: "Pending",
       },
     ];
@@ -157,13 +143,24 @@ const Review = () => {
   <div className="col-md-3 col-sm-6 aos_input">
     <Input type={"text"} plchldr={"Search by product name"} />
     </div>
+    <div className="col-md-3 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by category"
+              className="adminselectbox"
+              placeholder="Search by category"
+            >
+              <option>Search by category</option>
+              <option value="1">Food</option>
+              <option value="2">Fish & Meat</option>
+              <option value="3">Baby Care</option>
+            </Form.Select>
+          </div>
   <div className="col-md-3 col-sm-6 aos_input">
   <Form.Select aria-label="Search by status" className="adminselectbox">
             <option>Search by status</option>
             <option value="1">Approve</option>
             <option value="2">Reject</option>
             <option value="3">Pending</option>
-
           </Form.Select>
     
     </div>

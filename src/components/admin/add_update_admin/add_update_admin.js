@@ -76,9 +76,9 @@ function Admin() {
       Password: "@123546",
     },
   ];
-  const handleClick = () => {};
-  const onButtonClick = () => {};
-  const navigate = useNavigate();
+  // const handleClick = () => {};
+  // const onButtonClick = () => {};
+  // const navigate = useNavigate();
 
   return (
     <div className="App productlist_maindiv">

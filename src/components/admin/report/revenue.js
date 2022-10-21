@@ -10,10 +10,14 @@ import {
     BsBag,
     BsCashCoin,BsAlarm
   } from "react-icons/bs";
-import { HiOutlineReceiptRefund } from "react-icons/hi";
+import { HiOutlineReceiptRefund,HiOutlineGift } from "react-icons/hi";
 import {AiOutlineArrowRight}  from "react-icons/ai";
+import {GiTakeMyMoney,GiPayMoney}  from "react-icons/gi";
+import {MdOutlineLocalShipping}  from "react-icons/md";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 const RevenueReport = () => {
     const options = {
         chart: {
@@ -228,42 +232,40 @@ const RevenueReport = () => {
         <MainButton btntext={"Search"} btnclass={'button main_button w-100'} />
         </div>
         <div className="col-md-3 col-sm-6 aos_input">
-        <MainButton btntext={"Download"} btnclass={'button main_outline_button w-100'}/>
+        <DropdownButton id="dropdown-variant-success" title="Download" variant="button main_button w-100">
+      <Dropdown.Item href="#/action-1">Excel</Dropdown.Item>
+      <Dropdown.Item href="#/action-2">Pdf</Dropdown.Item>
+      <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+    </DropdownButton>
         </div>
       </div>
 
          {/* upload */}
-         {/* <div className="product_page_uploadbox my-4">
-          <MainButton btntext={"Download"} />
-
-         </div> */}
+       
 {/*  */}
 {/* box */}
 <div className="col-12 px-3">
           {/* card */}
           <div className=" row main_dashboard_row1 d-flex mb-3 ">
             {/* revenue */}
-         
-            {/* end */}
-            {/* order */}
-            <div className="card p-3  col-auto shadow-none">
-              <div className=" d-flex mt-0 flex-column">
-                <BsCashCoin className="text-success h5 mb-0 mx-2 reporticon" />
+            <div className="card p-2 col-2 rounded-left shadow-none">
+              <div className=" d-flex mt-0 align-items-center">
+                <BsCashCoin className="text-success h1 mb-0 mx-2" />
                 <h5 className="text-success">Gross Revenue </h5>
               </div>
-              <div className="row mt-2">
+              <div className="row mt-3">
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                    <h4>2,356</h4>
+                    <h3>2,356</h3>
                     <div className="d-flex align-items-center justify-content-center">
-                     <AiOutlineArrowRight/>
-                     <p className="mb-0">0%</p>
+                     <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
+                     <p className="mb-0 h5">0%</p>
                     </div>
                     </div>
                     <div>
                         <h5>Previous Year:</h5>
-                        <p>$0.00</p>
+                        <p className="h5">$0.00</p>
                     </div>
                   </div>
                 </div>
@@ -271,26 +273,26 @@ const RevenueReport = () => {
                 
               </div>
             </div>
-            {/* order end */}
+            {/* end */}
             {/* Refund */}
-            <div className="card p-3  col-auto shadow-none">
-              <div className=" d-flex mt-0 flex-column">
-                <BsCashCoin className="text-success h5 mb-0 mx-2 reporticon" />
+            <div className="card p-2 col-2 rounded-0 shadow-none">
+              <div className=" d-flex mt-0 align-items-center">
+                <HiOutlineReceiptRefund className="text-success h1 mx-2" />
                 <h5 className="text-success">Refund </h5>
               </div>
-              <div className="row mt-2">
+              <div className="row mt-3">
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                    <h4>2,356</h4>
+                    <h3>2,356</h3>
                     <div className="d-flex align-items-center justify-content-center">
-                     <AiOutlineArrowRight/>
-                     <p className="mb-0">0%</p>
+                     <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
+                     <p className="mb-0 h5">0%</p>
                     </div>
                     </div>
                     <div>
                         <h5>Previous Year:</h5>
-                        <p>$0.00</p>
+                        <p className="h5">$0.00</p>
                     </div>
                   </div>
                 </div>
@@ -299,25 +301,25 @@ const RevenueReport = () => {
               </div>
             </div>
 {/* refund end */}
-{/* extra */}
-<div className="card p-3  col-auto shadow-none">
-              <div className=" d-flex mt-0 flex-column">
-                <BsCashCoin className="text-success h5 mb-0 mx-2 reporticon" />
+{/* coupon */}
+<div className="card p-2 col-2 rounded-0 shadow-none">
+              <div className=" d-flex mt-0 align-items-end">
+                <HiOutlineGift className="text-success h1 mb-0 mx-2" />
                 <h5 className="text-success">Coupons </h5>
               </div>
-              <div className="row mt-2">
+              <div className="row mt-3">
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                    <h4>2,356</h4>
+                    <h3>2,356</h3>
                     <div className="d-flex align-items-center justify-content-center">
-                     <AiOutlineArrowRight/>
-                     <p className="mb-0">0%</p>
+                     <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
+                     <p className="mb-0 h5">0%</p>
                     </div>
                     </div>
                     <div>
                         <h5>Previous Year:</h5>
-                        <p>$0.00</p>
+                        <p className="h5">$0.00</p>
                     </div>
                   </div>
                 </div>
@@ -325,24 +327,26 @@ const RevenueReport = () => {
                 
               </div>
             </div>
-            <div className="card p-3  col-auto shadow-none">
-              <div className=" d-flex mt-0 flex-column">
-                <BsCashCoin className="text-success h5 mb-0 mx-2 reporticon" />
+            {/*  */}
+            {/* tax */}
+            <div className="card p-2 col-2 rounded-0 shadow-none">
+              <div className=" d-flex mt-0 align-items-end">
+                <GiPayMoney className="text-success h1 mb-0 mx-2" />
                 <h5 className="text-success">Taxes </h5>
               </div>
-              <div className="row mt-2">
+              <div className="row mt-3">
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                    <h4>2,356</h4>
+                    <h3>2,356</h3>
                     <div className="d-flex align-items-center justify-content-center">
-                     <AiOutlineArrowRight/>
-                     <p className="mb-0">0%</p>
+                     <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
+                     <p className="mb-0 h5">0%</p>
                     </div>
                     </div>
                     <div>
                         <h5>Previous Year:</h5>
-                        <p>$0.00</p>
+                        <p className="h5">$0.00</p>
                     </div>
                   </div>
                 </div>
@@ -350,24 +354,26 @@ const RevenueReport = () => {
                 
               </div>
             </div>
-            <div className="card p-3  col-auto shadow-none">
-              <div className=" d-flex mt-0 flex-column">
-                <BsCashCoin className="text-success h5 mb-0 mx-2 reporticon" />
+            {/*  */}
+            {/* shipping */}
+            <div className="card p-2 col-2 rounded-0 shadow-none">
+              <div className=" d-flex mt-0 align-items-end">
+                <MdOutlineLocalShipping className="text-success h1 mb-0 mx-2" />
                 <h5 className="text-success">Shipping </h5>
               </div>
-              <div className="row mt-2">
+              <div className="row mt-3">
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                    <h4>2,356</h4>
+                    <h3>2,356</h3>
                     <div className="d-flex align-items-center justify-content-center">
-                     <AiOutlineArrowRight/>
-                     <p className="mb-0">0%</p>
+                     <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
+                     <p className="mb-0 h5">0%</p>
                     </div>
                     </div>
                     <div>
                         <h5>Previous Year:</h5>
-                        <p>$0.00</p>
+                        <p className="h5">$0.00</p>
                     </div>
                   </div>
                 </div>
@@ -375,24 +381,26 @@ const RevenueReport = () => {
                 
               </div>
             </div>
-            <div className="card p-3  col-auto shadow-none">
-              <div className=" d-flex mt-0 flex-column">
-                <BsCashCoin className="text-success h5 mb-0 mx-2 reporticon" />
+            {/*  */}
+            {/* net */}
+            <div className="card p-2 col-2 rounded-right shadow-none">
+              <div className=" d-flex mt-0 align-items-center">
+                <GiTakeMyMoney className="text-success h1 mb-0 mx-2" />
                 <h5 className="text-success">Net Revenue </h5>
               </div>
-              <div className="row mt-2">
+              <div className="row mt-3">
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                    <h4>2,356</h4>
+                    <h3>2,356</h3>
                     <div className="d-flex align-items-center justify-content-center">
-                     <AiOutlineArrowRight/>
-                     <p className="mb-0">0%</p>
+                     <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
+                     <p className="mb-0 h5">0%</p>
                     </div>
                     </div>
                     <div>
                         <h5>Previous Year:</h5>
-                        <p>$0.00</p>
+                        <p className="h5">$0.00</p>
                     </div>
                   </div>
                 </div>
@@ -401,123 +409,6 @@ const RevenueReport = () => {
               </div>
             </div>
 {/*  */}
-
-
-
-
-
-
-
-
-
-{/* <div className="card p-3 col-auto shadow-none">
-              <div className=" d-flex mt-0 flex-column">
-                <BsCashCoin className="text-success h5 mb-0 mx-2 reporticon" />
-                <h5 className="text-success">Revenue </h5>
-              </div>
-              <div className="row mt-2">
-                <div className="col-4">
-                  <div className="row  d-flex flex-column align-items-center">
-                    <div className="col-auto text_div text-center mt-0">
-                      <h6 className="m-0">Total revenue</h6>
-                      <h3 className="m-0 text-success">8,458</h3>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="col-4">
-                  <div className="row  d-flex flex-column align-items-center">
-                    <div className="col-auto text_div text-center mt-0">
-                      <h6 className="m-0">Current month </h6>
-                      <h3 className="m-0 text-success">8,458</h3>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="col-4">
-                  <div className="row  d-flex flex-column align-items-center">
-                    <div className="col-auto text_div text-center mt-0">
-                      <h6 className="m-0">Previous month </h6>
-                      <h3 className="m-0 text-success">8,458</h3>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> */}
-            {/* end */}
-            {/* order */}
-            {/* <div className="card p-3 col-auto shadow-none">
-              <div className="d-flex mt-0 flex-column">
-                <BsBagPlus className="text-primary h5 mx-2 reporticon" />
-                <h5 className="text-primary">Order </h5>
-              </div>
-              <div className="row">
-                <div className="col-4">
-                  <div className="row  d-flex flex-column align-items-center">
-                    <div className="col-auto text_div text-center mt-0">
-                      <h6 className="m-0 ">Total Orders</h6>
-                      <h3 className="m-0 text-primary">8,458</h3>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="col-4">
-                  <div className="row  d-flex flex-column align-items-center">
-                    <div className="col-auto text_div text-center mt-0">
-                      <h6 className="m-0 ">Current month </h6>
-                      <h3 className="m-0 text-primary">8,458</h3>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="col-4">
-                  <div className="row  d-flex flex-column align-items-center">
-                    <div className="col-auto text_div text-center mt-0">
-                      <h6 className="m-0 ">Previous month </h6>
-                      <h3 className="m-0 text-primary">8,458</h3>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> */}
-            {/* order end */}
-            {/* Refund */}
-            {/* <div className="card p-3 col-auto shadow-none ">
-              <div className="d-flex mt-0 flex-column ">
-                <HiOutlineReceiptRefund className="text-warning h5 mx-2 reporticon" />
-                <h5 className="text-warning">Refund </h5>
-              </div>
-              <div className="row">
-                <div className="col-4">
-                  <div className="row  d-flex flex-column align-items-center">
-                    <div className="col-auto text_div text-center mt-0">
-                      <h6 className="m-0 ">Total Refund</h6>
-                      <h3 className="m-0 text-warning">8,458</h3>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="col-4">
-                  <div className="row  d-flex flex-column align-items-center">
-                    <div className="col-auto text_div text-center mt-0">
-                      <h6 className="m-0 ">Current month </h6>
-                      <h3 className="m-0 text-warning">8,458</h3>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="col-4">
-                  <div className="row  d-flex flex-column align-items-center">
-                    <div className="col-auto text_div text-center mt-0">
-                      <h6 className="m-0 ">Previous month </h6>
-                      <h3 className="m-0 text-warning">8,458</h3>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> */}
-              {/* Refund end */}
-
 </div>
 </div>
 {/*  */}

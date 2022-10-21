@@ -1,10 +1,8 @@
-
 .product_page_uploadbox {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   gap: 10px;
   align-items: center;
-  justify-content: end;
 }
 .product_page_uploadbox .product_page_uploadbox_one {
   position: relative;
@@ -120,7 +118,6 @@
 /* Complaint */
 .complaintdescbox {
   padding: 10px 0;
-
 }
 
 .complaintdesc {
@@ -132,14 +129,13 @@
   white-space: normal;
 }
 
-
 /* review */
 .reviewdesc {
   -webkit-box-orient: vertical;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
-  padding: 10px 0;
+  padding-top: 15px;
 }

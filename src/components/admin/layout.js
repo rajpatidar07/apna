@@ -31,9 +31,9 @@ import InvoiceList from "./invoice/invoices";
 import Complaint from "./complaint/complaint";
 import Transactions from "./transactions/transactions";
 import Tran_Detail from "./transactions/transactions_detail";
-import Banner from "./setting/banner";
+import Banner from "./setting/banner_manager";
 import Coupon from "./coupon/coupon";
-import Home from "./setting/home";
+import Home from "./setting/home_manager";
 import Review from "./review/review";
 import Delivery from "./delivery/delivery";
 import RevenueReport from "./report/revenue";
@@ -43,6 +43,9 @@ import CouponReport from "./report/coupon";
 import CategoryReport from "./report/category";
 import StockReport from "./report/stock";
 import TaxesReport from "./report/taxes";
+import ContentManager from "./setting/content_manager";
+import CustomerReport from "./report/customer";
+import StoreReport from "./report/store";
 function AdminLayout() {
   // const location = useLocation();
   console.log("-------" + window.location.pathname);
@@ -106,6 +109,10 @@ function AdminLayout() {
                   <Route path="/stockreport" element={<StockReport/>} />
                   <Route path="/taxreport" element={<TaxesReport/>} />
                   <Route path="/categoryreport" element={<CategoryReport/>} />
+                  <Route path="/content_manager" element={<ContentManager/>} />
+                  <Route path="/customerreport" element={<CustomerReport/>} />
+                  <Route path="/storereport" element={<StoreReport/>} />
+
                 </Routes>
               </div>
             </div>
