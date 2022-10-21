@@ -15,7 +15,7 @@ function Home() {
   const handleShow = () => setShow(true);
 
   return (
-    <div className="main_body ">
+    <div className="main_body">
       <h2>Home Manager</h2>
       <div className="w-100 d-flex justify-content-between flex-row card my-2">
         <div className="banner_switch p-3">

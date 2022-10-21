@@ -10,7 +10,7 @@ import Input from "../common/input";
 
 function ContentManager() {
   return (
-    <div className="main_body ">
+    <div className="main_body">
       <h2>Content Manager</h2>
       <div className="row">
         <div className="col-md-6 col-6">
