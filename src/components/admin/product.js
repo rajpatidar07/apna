@@ -19,7 +19,6 @@ import "sweetalert/dist/sweetalert.css";
 import ProductJson from "./json/products"
 function Product() {
   var products = ProductJson.products;
-  console.log(products);
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
@@ -27,21 +26,6 @@ function Product() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const columns = [
-    // {
-    //   name: "Sku",
-    //   selector: (row) => (
-    //     <p
-    //       onClick={() => {
-    //         navigate("/productdetail");
-    //       }}
-    //     >
-    //       {row.sku}
-    //     </p>
-    //   ),
-    //   sortable: true,
-    //   width: "100px",
-    //   center: true,
-    // },
     {
       name: "#",
       width: "100px",

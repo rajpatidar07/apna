@@ -82,7 +82,7 @@
 }
 
 /* contont  */
-.main_body .content_image {
+.main_body .content_image{
   width: 220px;
   height: 220px;
   position: relative;
@@ -94,7 +94,7 @@
   min-width: 200px;
   min-height: 200px;
 }
-.main_body .content_image :hover {
+.main_body .content_image img:hover {
   -ms-transform: scale(1.5); /* IE 9 */
   -webkit-transform: scale(1.5); /* Safari 3-8 */
   transform: scale(2.2);

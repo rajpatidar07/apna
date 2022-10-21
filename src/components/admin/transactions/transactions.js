@@ -6,92 +6,116 @@ import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
 import { Link } from "react-router-dom";
 import "../../../style/order.css";
-const columns = [
-  {
-    name: "Order Id",
-    selector: (row) =>row.order_id,
-    sortable: true,
-  },
-  {
-    name: "Invoice No.",
-    selector: (row) =>row.Invoice,
-    sortable: true,
-  },
+import TransactionJson from "../json/transaction"
 
-  {
-    name: "Transactions id",
-    selector: (row) => <Link to="/transactions_detail">{row.transactions_id}</Link>,
-    sortable: true,
-  },
-  {
-    name: "Transactions Date",
-    selector: (row) => row.transactions_date,
-    sortable: true,
-  },
-  {
-    name: "Amount",
-    selector: (row) => row.amount,
-    sortable: true,
-  },
 
-  {
-    name: "Method",
-    selector: (row) => row.pay_mode,
-    sortable: true,
-  },
-  {
-    name: "Status",
-    selector: (row) => (
-      <span
-        className={
-          row.status === "Received"
-            ? "badge bg-primary"
-            : row.status === ""
-            ? "badge bg-success"           
-            : row.status === "Failed"
-            ? "badge bg-danger"
-            : "badge bg-dark"
-        }
-      >
-        {row.status}
-      </span>
-    ),
-    sortable: true,
-  },
-  
- 
-];
-
-const data = [
-  {
-    id: 1,
-    order_id: "AS1568",
-    Invoice:"#95584668",
-    transactions_id: "15635486465287",
-    transactions_date: "11:45 AM 11/01/22",
-    amount: "1000",
-    order_date: "10/10/22",
-    delivery_date: "12/10/22",
-    pay_mode: "UPI",
-    status: "Received",
-  },
-  {
-    id: 2,
-    order_id: "AS1568",
-    Invoice:"#95584668",
-    transactions_id: "54578765465876",
-    transactions_date: "10:45 AM 10/01/22",
-    amount: "1000",
-    order_date: "10/10/22",
-    delivery_date: "12/10/22",
-    pay_mode: "Card",
-    status: "Failed",
-  },
- 
-];
-
-const onButtonClick = () => {};
+const onButtonClick = () => { };
 function Transactions() {
+  var transactions = TransactionJson.transactions;
+
+  const columns = [
+
+    {
+      name: "Transactions id",
+      selector: (row) => <Link to="/transactions_detail">{row.id}</Link>,
+      sortable: true,
+    },
+    {
+      name: "Order Id",
+      selector: (row) => row.orderId,
+      sortable: true,
+    },
+    {
+      name: "Invoice No.",
+      selector: (row) => row.invoiceId,
+      sortable: true,
+    },
+
+    {
+      name: "Transactions Date",
+      selector: (row) => row.transactionDate,
+      sortable: true,
+    },
+    {
+      name: "Amount",
+      selector: (row) => row.total,
+      sortable: true,
+    },
+
+    {
+      name: "Method",
+      selector: (row) => (
+        row.paymentMethod === 1
+          ? "UPI"
+          : row.paymentMethod === 2
+            ? "Card"
+            : row.paymentMethod === 3
+              ? "COD"
+              : row.paymentMethod === 4
+                ? "Netbanking"
+                : row.paymentMethod === 5
+                  ? "Wallet"
+                  : "Other"
+      ),
+      sortable: true,
+    },
+    {
+      name: "Status",
+      selector: (row) => (
+        <span
+          className={
+            row.status === 1
+              ? "badge bg-primary"
+              : row.status === 2
+                ? "badge bg-success"
+                : row.status === 3
+                  ? "badge bg-danger"
+                  : "badge bg-dark"
+          }
+        >
+          {row.status === 1
+              ? "Processing"
+              : row.status === 2
+                ? "Success"
+                : row.status === 3
+                  ? "Failed"
+                  : "Refund"}
+        </span>
+      ),
+      sortable: true,
+    },
+
+
+  ];
+
+  // const data = [
+  //   {
+  //     id: 1,
+  //     order_id: "AS1568",
+  //     Invoice:"#95584668",
+  //     transactions_id: "15635486465287",
+  //     transactions_date: "11:45 AM 11/01/22",
+  //     amount: "1000",
+  //     order_date: "10/10/22",
+  //     delivery_date: "12/10/22",
+  //     pay_mode: "UPI",
+  //     status: "Received",
+  //   },
+  //   {
+  //     id: 2,
+  //     order_id: "AS1568",
+  //     Invoice:"#95584668",
+  //     transactions_id: "54578765465876",
+  //     transactions_date: "10:45 AM 10/01/22",
+  //     amount: "1000",
+  //     order_date: "10/10/22",
+  //     delivery_date: "12/10/22",
+  //     pay_mode: "Card",
+  //     status: "Failed",
+  //   },
+
+  // ];
+
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -127,7 +151,7 @@ function Transactions() {
 
         <DataTable
           columns={columns}
-          data={data}
+          data={transactions}
           pagination
           highlightOnHover
           pointerOnHover
