@@ -84,6 +84,9 @@
   margin-top: -18px;
   text-align: center;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
  .orderstatus_box .step.active:before {
   background: #5cb85c;
@@ -101,7 +104,10 @@
   color: #fff;
 }
  .orderstatus_box .icon {
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* display: inline-block; */
   width: 40px;
   height: 40px;
   line-height: 40px;
@@ -121,7 +127,6 @@
  
  .orderstatus_box .orderstatus_icon {
   color: #ffffff;
-  background-color: #5cb85c;
   border-color: #5cb85c;
   margin-top: 6px;
   border-radius: 1px;
@@ -144,8 +149,7 @@
 }
 .trackrecord_box{
   overflow: hidden auto;
-  max-height: 290px;
-  padding-bottom: 10px;
+  max-height: 400px;
 }
 .trackrecord .trackinghistory .dropdown-menu.show {
   padding: 0;
@@ -156,3 +160,9 @@
 .dropdownnbtn_track{
   text-align: left;
 }
+.dashboard_row .card{
+height: 100%;
+}
+.dashboard_row .summary_box .card{
+  height: auto;
+  }

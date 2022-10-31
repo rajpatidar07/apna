@@ -8,7 +8,6 @@ import Form from "react-bootstrap/Form";
 import Iconbutton from "../common/iconbutton";
 import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
-import { Badge } from "react-bootstrap";
 
 const Pendingproduct = () => {
   const handleAlert = () => setAlert(true);
@@ -147,8 +146,7 @@ const Pendingproduct = () => {
       date: "2022-01-05",
     },
   ];
-  const handleClick = () => {};
-  const onButtonClick = () => {};
+  const handleClick = () => { };
   return (
     <div>
       <h2>Pending Products</h2>

@@ -6,14 +6,9 @@ import Form from "react-bootstrap/Form";
 import {
     BsBagPlus,
     BsFileBarGraph,
-    BsBagCheck,
-    BsBag,
-    BsCashCoin,BsAlarm
   } from "react-icons/bs";
-import { HiOutlineReceiptRefund,HiOutlineGift } from "react-icons/hi";
 import {AiOutlineArrowRight}  from "react-icons/ai";
 import {GiTakeMyMoney,GiStorkDelivery}  from "react-icons/gi";
-import {MdOutlineLocalShipping}  from "react-icons/md";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import Dropdown from 'react-bootstrap/Dropdown';

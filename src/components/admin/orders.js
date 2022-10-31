@@ -9,7 +9,6 @@ import "../../style/order.css";
 import OrderJson from "./json/orders"
 
 
-const onButtonClick = () => { };
 function Product() {
   var orders = OrderJson.orders;
 

@@ -15,21 +15,16 @@ import { useNavigate } from "react-router-dom";
 import { MdOutlineDeliveryDining } from "react-icons/md";
 import { BiEdit } from "react-icons/bi";
 import { GoPrimitiveDot } from "react-icons/go";
-
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import { Badge } from "react-bootstrap";
-import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
 import { TbShip } from "react-icons/tb";
 import { CgTrack } from "react-icons/cg";
 
 const Delivery = () => {
-  const handleAlert = () => setAlert(true);
-  const hideAlert = () => setAlert(false);
-  const [Alert, setAlert] = useState(false);
   const [show, setShow] = useState(false);
   const [showtrack, setShowtrack] = useState(false);
   const handleClose = () => {
@@ -133,14 +128,14 @@ const Delivery = () => {
             row.status === "Delivered"
               ? "success"
               : row.status === "Late"
-              ? "danger"
-              : row.status === "Ontime"
-              ? "primary"
-              : row.status === "Return"
-              ? "info"
-              : row.status === "Cancelled"
-              ? "warning"
-              : null
+                ? "danger"
+                : row.status === "Ontime"
+                  ? "primary"
+                  : row.status === "Return"
+                    ? "info"
+                    : row.status === "Cancelled"
+                      ? "warning"
+                      : null
           }
         >
           {row.status}
@@ -239,8 +234,8 @@ const Delivery = () => {
       status: "Cancelled",
     },
   ];
-  const handleClick = () => {};
-  const onButtonClick = () => {};
+  const handleClick = () => { };
+  const onButtonClick = () => { };
   const navigate = useNavigate();
   return (
     <div className="deliveryreport_pagee">
@@ -413,7 +408,7 @@ const Delivery = () => {
                   <div class="step active">
                     {" "}
                     <span class="icon">
-                      <AiOutlineCheck className={" orderstatus_icon h4 mb-0"} />{" "}
+                      <AiOutlineCheck className={" orderstatus_icon h4 "} />{" "}
                     </span>{" "}
                     <span class="text">Shipped</span>{" "}
                   </div>
@@ -422,7 +417,7 @@ const Delivery = () => {
                     <span class="icon">
                       {" "}
                       <AiOutlineUser
-                        className={" orderstatus_icon h4 mb-0"}
+                        className={" orderstatus_icon h4 "}
                       />{" "}
                     </span>{" "}
                     <span class="text"> Picked by courier</span>{" "}
@@ -432,7 +427,7 @@ const Delivery = () => {
                     <span class="icon">
                       {" "}
                       <MdOutlineDeliveryDining
-                        className={" orderstatus_icon h4 mb-0"}
+                        className={" orderstatus_icon h4 "}
                       />{" "}
                     </span>{" "}
                     <span class="text"> On the way </span>{" "}
@@ -441,7 +436,7 @@ const Delivery = () => {
                     {" "}
                     <span class="icon">
                       {" "}
-                      <AiOutlineGift className={" orderstatus_icon h4 mb-0"} />
+                      <AiOutlineGift className={" orderstatus_icon h4 "} />
                     </span>{" "}
                     <span class="text">Delivered</span>{" "}
                   </div>
@@ -463,6 +458,24 @@ const Delivery = () => {
                     <ListGroup className="border-0">
                       <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
                         <strong className={"col-md-6"}>
+                          Order Date:
+                        </strong>
+
+                        <div bg="primary" pill className={"col-md-6"}>
+                          29 nov 2019
+                        </div>
+                      </ListGroup.Item>
+                      <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
+                        <strong className={"col-md-6"}>
+                          Delivery Date:
+                        </strong>
+
+                        <div bg="primary" pill className={"col-md-6"}>
+                          29 nov 2019
+                        </div>
+                      </ListGroup.Item>
+                      <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
+                        <strong className={"col-md-6"}>
                           Estimated Delivery time:
                         </strong>
 
@@ -478,7 +491,7 @@ const Delivery = () => {
                       </ListGroup.Item>
 
                       <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
-                        <strong className={"col-md-6"}>Status:</strong>
+                        <strong className={"col-md-6"}>Status: <Badge bg="danger">Late</Badge></strong>
                         <div bg="primary" pill className={"col-md-6"}>
                           Picked by the courier
                         </div>
@@ -506,142 +519,130 @@ const Delivery = () => {
                       <CgTrack className={"mb-0 text-dark h5 mx-2"} />
                     </div>
                     <div className="trackrecord">
-                    <ListGroup className="border-0 trackinghistory">
-                      <DropdownButton
-                        id="dropdown"
-                        variant="light w-100 dropdownnbtn_track rounded-0 "
-                        title="Thur, 23 Sep, 2022"
-                        className="dropdownnbtn_track"
-                      >
-                        <Dropdown.Item className="py-1" href="#/action-1">
-                          <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row py-0">
-                            <strong className={"col-md-3"}>11:00 AM</strong>
-                            <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
-                              CITY OF MYSORE departurej defs
-                            </div>
-                          </ListGroup.Item>
-                        </Dropdown.Item>
-                        <Dropdown.Item className="py-1" href="#/action-2">
-                          <ListGroup.Item className="py-0 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
-                            <strong className={"col-md-3"}>1:00 PM</strong>
-                            <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
-                              BLUEDART, | <i class="fa fa-phone"></i>{" "}
-                              +1598675986
-                            </div>
-                          </ListGroup.Item>
-                        </Dropdown.Item>
-                        <Dropdown.Item className="py-1" href="#/action-3">
-                          <ListGroup.Item className="py-0 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
-                            <strong className={"col-md-3"}>5:00 PM</strong>
-                            <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
-                              Picked by the courier
-                            </div>
-                          </ListGroup.Item>
-                        </Dropdown.Item>
-                        <Dropdown.Item className="py-0" href="#/action-3">
-                          {" "}
-                          <ListGroup.Item className="py-0 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
-                            <strong className={"col-md-3"}>9:00 PM</strong>
-                            <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
-                              11:30pm, Today <p>New Delhi</p>
-                            </div>
-                          </ListGroup.Item>
-                        </Dropdown.Item>
-                      </DropdownButton>
-                    </ListGroup>
-                    <ListGroup className="border-0 trackinghistory">
-                      <DropdownButton
-                        id="dropdown"
-                        variant="light w-100 dropdownnbtn_track  rounded-0 "
-                        title="Thur, 23 Sep, 2022"
-                      >
-                        <Dropdown.Item className="py-1" href="#/action-1">
-                          <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row py-0">
-                            <strong className={"col-md-3"}>11:00 AM</strong>
-                            <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
-                              CITY OF MYSORE departurej defs
-                            </div>
-                          </ListGroup.Item>
-                        </Dropdown.Item>
-                        <Dropdown.Item className="py-1" href="#/action-2">
-                          <ListGroup.Item className="py-0 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
-                            <strong className={"col-md-3"}>1:00 PM</strong>
-                            <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
-                              BLUEDART, | <i class="fa fa-phone"></i>{" "}
-                              +1598675986
-                            </div>
-                          </ListGroup.Item>
-                        </Dropdown.Item>
-                        <Dropdown.Item className="py-1" href="#/action-3">
-                          <ListGroup.Item className="py-0 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
-                            <strong className={"col-md-3"}>5:00 PM</strong>
-                            <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
-                              Picked by the courier
-                            </div>
-                          </ListGroup.Item>
-                        </Dropdown.Item>
-                        <Dropdown.Item className="py-0" href="#/action-3">
-                          {" "}
-                          <ListGroup.Item className="py-0 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
-                            <strong className={"col-md-3"}>9:00 PM</strong>
-                            <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
-                              11:30pm, Today <p>New Delhi</p>
-                            </div>
-                          </ListGroup.Item>
-                        </Dropdown.Item>
-                      </DropdownButton>
-                    </ListGroup>
-                   
-                   <div className="d-flex align-items-center ">
-                    <GoPrimitiveDot className='text-success mx-2 h5'/>
-                    <h6 className="dropdownnbtn_track  text-success rounded-0">Thur, 23 Sep, 2022</h6>
-                    </div>
-                      {/* <DropdownButton
-                        id="dropdown"
-                        variant="light w-100 dropdownnbtn_track  text-success rounded-0 "
-                        title="Thur, 23 Sep, 2022"
-                        show
-                      > */}
-                        {/* <Dropdown.Item className="py-1" href="#/action-1"> */}
-                        <ListGroup className="border-0 trackinghistory">
-                          <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row py-1">
-                            <strong className={"col-md-3"}>11:00 AM</strong>
-                            <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
-                              CITY OF MYSORE departurej defs
-                            </div>
-                          </ListGroup.Item>
-                        {/* </Dropdown.Item> */}
-                        {/* <Dropdown.Item className="py-1" href="#/action-2"> */}
-                          <ListGroup.Item className="py-1 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
-                            <strong className={"col-md-3"}>1:00 PM</strong>
-                            <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
-                              BLUEDART, | <i class="fa fa-phone"></i>{" "}
-                              +1598675986
-                            </div>
-                          </ListGroup.Item>
-                        {/* </Dropdown.Item>
-                        <Dropdown.Item className="py-1" href="#/action-3"> */}
-                          <ListGroup.Item className="py-1 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
-                            <strong className={"col-md-3"}>5:00 PM</strong>
-                            <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
-                              Picked by the courier
-                            </div>
-                          </ListGroup.Item>
-                        {/* </Dropdown.Item>
-                        <Dropdown.Item className="py-0" href="#/action-3"> */}
-                          {" "}
-                          <ListGroup.Item className="py-1  d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
-                            <strong className={"col-md-3 text-success"}>9:00 PM</strong>
-                            <div bg="primary" pill className={"col-md-6 shippimgaddress text-success"}>
-                              11:30pm, Today <p>New Delhi</p>
-                            </div>
-                          </ListGroup.Item>
-                        {/* </Dropdown.Item>
-                      </DropdownButton> */}
-                    </ListGroup>
-                   
-                    
-                   
+                      <ListGroup className="border-0 trackinghistory">
+                        <DropdownButton
+                          id="dropdown"
+                          variant="light w-100 dropdownnbtn_track rounded-0 "
+                          title="Thur, 23 Sep, 2022"
+                          className="dropdownnbtn_track"
+                        >
+                          <Dropdown.Item className="py-1" href="#/action-1">
+                            <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row py-0">
+                              <strong className={"col-md-3"}>11:00 AM</strong>
+                              <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
+                                CITY OF MYSORE departurej defs
+                              </div>
+                            </ListGroup.Item>
+                          </Dropdown.Item>
+                          <Dropdown.Item className="py-1" href="#/action-2">
+                            <ListGroup.Item className="py-0 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
+                              <strong className={"col-md-3"}>1:00 PM</strong>
+                              <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
+                                BLUEDART, | <i class="fa fa-phone"></i>{" "}
+                                +1598675986
+                              </div>
+                            </ListGroup.Item>
+                          </Dropdown.Item>
+                          <Dropdown.Item className="py-1" href="#/action-3">
+                            <ListGroup.Item className="py-0 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
+                              <strong className={"col-md-3"}>5:00 PM</strong>
+                              <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
+                                Picked by the courier
+                              </div>
+                            </ListGroup.Item>
+                          </Dropdown.Item>
+                          <Dropdown.Item className="py-0" href="#/action-3">
+                            {" "}
+                            <ListGroup.Item className="py-0 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
+                              <strong className={"col-md-3"}>9:00 PM</strong>
+                              <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
+                                11:30pm, Today <p>New Delhi</p>
+                              </div>
+                            </ListGroup.Item>
+                          </Dropdown.Item>
+                        </DropdownButton>
+                      </ListGroup>
+                      <ListGroup className="border-0 trackinghistory">
+                        <DropdownButton
+                          id="dropdown"
+                          variant="light w-100 dropdownnbtn_track  rounded-0 "
+                          title="Thur, 23 Sep, 2022"
+                        >
+                          <Dropdown.Item className="py-1" href="#/action-1">
+                            <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row py-0">
+                              <strong className={"col-md-3"}>11:00 AM</strong>
+                              <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
+                                CITY OF MYSORE departurej defs
+                              </div>
+                            </ListGroup.Item>
+                          </Dropdown.Item>
+                          <Dropdown.Item className="py-1" href="#/action-2">
+                            <ListGroup.Item className="py-0 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
+                              <strong className={"col-md-3"}>1:00 PM</strong>
+                              <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
+                                BLUEDART, | <i class="fa fa-phone"></i>{" "}
+                                +1598675986
+                              </div>
+                            </ListGroup.Item>
+                          </Dropdown.Item>
+                          <Dropdown.Item className="py-1" href="#/action-3">
+                            <ListGroup.Item className="py-0 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
+                              <strong className={"col-md-3"}>5:00 PM</strong>
+                              <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
+                                Picked by the courier
+                              </div>
+                            </ListGroup.Item>
+                          </Dropdown.Item>
+                          <Dropdown.Item className="py-0" href="#/action-3">
+                            {" "}
+                            <ListGroup.Item className="py-0 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
+                              <strong className={"col-md-3"}>9:00 PM</strong>
+                              <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
+                                11:30pm, Today <p>New Delhi</p>
+                              </div>
+                            </ListGroup.Item>
+                          </Dropdown.Item>
+                        </DropdownButton>
+                      </ListGroup>
+
+                      <div className="d-flex align-items-center ">
+                        <GoPrimitiveDot className='text-success mx-2 h5' />
+                        <h6 className="dropdownnbtn_track  text-success rounded-0">Thur, 23 Sep, 2022</h6>
+                      </div>
+
+                      <ListGroup className="border-0 trackinghistory">
+                        <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row py-1">
+                          <strong className={"col-md-3"}>11:00 AM</strong>
+                          <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
+                            CITY OF MYSORE departurej defs
+                          </div>
+                        </ListGroup.Item>
+
+                        <ListGroup.Item className="py-1 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
+                          <strong className={"col-md-3"}>1:00 PM</strong>
+                          <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
+                            BLUEDART, | <i class="fa fa-phone"></i>{" "}
+                            +1598675986
+                          </div>
+                        </ListGroup.Item>
+
+                        <ListGroup.Item className="py-1 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
+                          <strong className={"col-md-3"}>5:00 PM</strong>
+                          <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
+                            Picked by the courier
+                          </div>
+                        </ListGroup.Item>
+                        {" "}
+                        <ListGroup.Item className="py-1  d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
+                          <strong className={"col-md-3 text-success"}>9:00 PM</strong>
+                          <div bg="primary" pill className={"col-md-6 shippimgaddress text-success"}>
+                            11:30pm, Today <p>New Delhi</p>
+                          </div>
+                        </ListGroup.Item>
+                      </ListGroup>
+
+
+
                     </div>
                   </article>
                 </div>

@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import MainButton from "../common/button";
 import ShowMoreText from "react-show-more-text";
-import { AiFillPushpin, AiOutlineCheck } from "react-icons/ai";
+import { AiFillPushpin } from "react-icons/ai";
 import { ImCross } from "react-icons/im";
 import { BsCheckLg } from "react-icons/bs";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
@@ -22,21 +22,21 @@ const Productdetail = () => {
               <img
                 src="https://images.unsplash.com/photo-1656268164012-119304af0c69?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1112&q=80"
                 alt=""
-                
+
               />
             </div>
             <div className="w-100 h-50">
               <img
                 src="https://images.unsplash.com/photo-1656268164012-119304af0c69?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1112&q=80"
                 alt=""
-                
+
               />
             </div>
             <div className="w-100 h-50">
               <img
                 src="https://images.unsplash.com/photo-1655745653127-4d6837baf958?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
                 alt=""
-                
+
               />
             </div>
             <div>
@@ -52,7 +52,7 @@ const Productdetail = () => {
               />
             </div>
           </Carousel>
-          
+
         </div>
 
         {/*  */}
@@ -209,7 +209,7 @@ const Productdetail = () => {
                 </div>
               </div>
             </div>
-{/* other instarusction */}
+            {/* other instarusction */}
             <div>
               <h5 className="mb-1">Other Instruction:</h5>
               <ShowMoreText
@@ -229,15 +229,15 @@ const Productdetail = () => {
                   specimen book.
                 </p>
                 <ListGroup variant="flush">
-      <ListGroup.Item>No style</ListGroup.Item>
-      <ListGroup.Item variant="secondary">Secondary</ListGroup.Item>
-      <ListGroup.Item variant="secondary">Success</ListGroup.Item>
-      <ListGroup.Item variant="secondary">Danger</ListGroup.Item>
-      <ListGroup.Item variant="secondary">Warning</ListGroup.Item>
-      <ListGroup.Item variant="secondary">Info</ListGroup.Item>
-      <ListGroup.Item variant="secondary">Light</ListGroup.Item>
-      <ListGroup.Item variant="secondary">Dark</ListGroup.Item>
-    </ListGroup>
+                  <ListGroup.Item>No style</ListGroup.Item>
+                  <ListGroup.Item variant="secondary">Secondary</ListGroup.Item>
+                  <ListGroup.Item variant="secondary">Success</ListGroup.Item>
+                  <ListGroup.Item variant="secondary">Danger</ListGroup.Item>
+                  <ListGroup.Item variant="secondary">Warning</ListGroup.Item>
+                  <ListGroup.Item variant="secondary">Info</ListGroup.Item>
+                  <ListGroup.Item variant="secondary">Light</ListGroup.Item>
+                  <ListGroup.Item variant="secondary">Dark</ListGroup.Item>
+                </ListGroup>
               </ShowMoreText>
             </div>
           </div>

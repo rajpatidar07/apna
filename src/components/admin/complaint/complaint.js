@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import Input from "../common/input";
 import { useNavigate } from "react-router-dom";
 import { BsTrash } from "react-icons/bs";
@@ -171,9 +171,7 @@ const Complaint = () => {
       status: "Pending",
     },
   ];
-  const handleClick = () => {};
-  const onButtonClick = () => {};
-  const navigate = useNavigate();
+
 
   // filter
 

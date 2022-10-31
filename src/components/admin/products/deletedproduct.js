@@ -139,7 +139,6 @@ const Deletedproduct = () => {
     },
   ];
   const handleClick = () => {};
-  const onButtonClick = () => {};
   return (
     <div>
       <h2>Deleted Products</h2>

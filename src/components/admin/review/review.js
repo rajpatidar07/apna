@@ -1,11 +1,5 @@
 import React, { useState } from "react";
 import Input from "../common/input";
-import {
-  AiFillDelete,
-  AiOutlineEdit,
-  AiOutlinePlus,
-  AiOutlineCloudUpload,
-} from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
@@ -13,7 +7,6 @@ import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
-import Iconbutton from "../common/iconbutton";
 import { Badge } from "react-bootstrap";
 import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';

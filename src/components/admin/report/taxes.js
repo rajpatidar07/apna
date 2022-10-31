@@ -5,15 +5,11 @@ import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
 import {
     BsBagPlus,
-    BsBagX,
-    BsBagCheck,
-    BsBag,
-    BsCashCoin,BsAlarm,BsBagDash
+  BsBagDash
   } from "react-icons/bs";
 import {RiShip2Line } from "react-icons/ri";
 import {AiOutlineArrowRight}  from "react-icons/ai";
-import {GiTakeMyMoney,GiPayMoney}  from "react-icons/gi";
-import {GrMoney}  from "react-icons/gr";
+import {GiPayMoney}  from "react-icons/gi";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import Dropdown from 'react-bootstrap/Dropdown';

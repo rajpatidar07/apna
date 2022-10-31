@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import Input from "../common/input";
 import {
-  AiFillDelete,
-  AiOutlineEdit,
   AiOutlinePlus,
-  AiOutlineCloudUpload,
 } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { BsTrash } from "react-icons/bs";
@@ -57,7 +54,7 @@ const CategoryList = () => {
               "https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg"
             }
             style={{
-              borderRadius: 15,
+              borderRadius: 10,
               paddingTop: 10,
               paddingBottom: 10,
               textAlign: "right",

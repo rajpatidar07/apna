@@ -4,11 +4,7 @@ import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
 import {
-    BsBagPlus,
-    BsBagX,
-    BsBagCheck,
-    BsBag,
-    BsCashCoin,BsAlarm
+    BsCashCoin
   } from "react-icons/bs";
 import { HiOutlineReceiptRefund,HiOutlineGift } from "react-icons/hi";
 import {AiOutlineArrowRight}  from "react-icons/ai";

@@ -13,8 +13,7 @@ const Promotionproduct = () => {
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
   const handleClick = () => {};
-  const onButtonClick = () =>{ 
-  }
+
   const columns = [
     {
       name: "Sku",

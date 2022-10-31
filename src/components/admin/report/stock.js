@@ -3,19 +3,6 @@ import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
-import {
-    BsBagPlus,
-    BsBagX,
-    BsBagCheck,
-    BsBag,
-    BsCashCoin,BsAlarm,BsBagDash
-  } from "react-icons/bs";
-import {RiShip2Line } from "react-icons/ri";
-import {AiOutlineArrowRight}  from "react-icons/ai";
-import {GiTakeMyMoney}  from "react-icons/gi";
-import {MdOutlineMoney}  from "react-icons/md";
-import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 

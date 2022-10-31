@@ -192,7 +192,6 @@ function Product() {
   //   // }),
   // ];
   const handleClick = () => { };
-  const onButtonClick = () => { };
   const navigate = useNavigate();
 
   return (
