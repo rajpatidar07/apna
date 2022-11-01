@@ -17,7 +17,7 @@ import ProgressBar from 'react-bootstrap/ProgressBar';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import ListGroup from 'react-bootstrap/ListGroup';
-import { Badge,Form } from "react-bootstrap";
+import { Badge, Form } from "react-bootstrap";
 import Chart from "react-apexcharts";
 function Dashboard() {
   const navigate = useNavigate();
@@ -102,12 +102,12 @@ function Dashboard() {
   const line = {
     chart: {
       id: "simple-bar",
-      toolbar:false,
-    
+      toolbar: false,
+
     },
-   
+
   };
- 
+
   return (
     <div className="App productlist_maindiv">
       <h2>Dashboard</h2>
@@ -123,15 +123,15 @@ function Dashboard() {
               </ProgressBar> */}
             </div>
             <div className="row p-3 pt-0 pb-0">
-            <div className="col-2">
-            <Chart
-            series={series}
-              options={line}
-              type="bar"
-              width="200"
-              
-            />
-            </div>
+              <div className="col-2">
+                <Chart
+                  series={series}
+                  options={line}
+                  type="bar"
+                  width="200"
+
+                />
+              </div>
               <div className="col-2">
                 <div className="row  d-flex flex-column align-items-center">
                   <div className="col-auto text_div text-center mt-2 d-flex align-items-center">
@@ -192,32 +192,32 @@ function Dashboard() {
           </div>
         </div>
 
-      {/* order */}
+        {/* order */}
 
-      {/* ------------- */}
+        {/* ------------- */}
         <div className="col-8 recentorder p-2 ">
           <div className="card p-3">
-          <div className="d-flex align-items-center justify-content-between ">
-                <h5 className="text-success mb-0">Sales Figures</h5>
+            <div className="d-flex align-items-center justify-content-between ">
+              <h5 className="text-success mb-0">Sales Figures</h5>
               <div className="col-md-2 col-sm-6">
-            <Form.Select
-              aria-label="Search by category"
-              className="adminselectbox border border-success text-success"
-              placeholder="Search by category"
-              size="sm"
-            >
-              <option > Sort By</option>
-              <option value="1">Day</option>
-              <option value="2">Week</option>
-              <option value="3">1 Month</option>
-              <option value="3">3 Month</option>
-              <option value="3">6 Month</option>
+                <Form.Select
+                  aria-label="Search by category"
+                  className="adminselectbox border border-success text-success"
+                  placeholder="Search by category"
+                  size="sm"
+                >
+                  <option > Sort By</option>
+                  <option value="1">Day</option>
+                  <option value="2">Week</option>
+                  <option value="3">1 Month</option>
+                  <option value="3">3 Month</option>
+                  <option value="3">6 Month</option>
 
-            </Form.Select>
+                </Form.Select>
+              </div>
+            </div>
+            <HighchartsReact highcharts={Highcharts} options={sales} />
           </div>
-          </div>
-          <HighchartsReact highcharts={Highcharts} options={sales} />
-        </div>
         </div>
         <div className="col-4 p-2 summary_box">
           {/* card */}
@@ -342,188 +342,188 @@ function Dashboard() {
         <div className="col-4 p-2">
           {/* revenue */}
           <div className="card p-3">
-          <div className="d-flex align-items-center justify-content-between ">
-                <h5 className="text-success mb-0">7 Day Traffic</h5>
+            <div className="d-flex align-items-center justify-content-between ">
+              <h5 className="text-success mb-0">7 Day Traffic</h5>
               <div className="col-md-3 col-sm-6">
-            <Form.Select
-              aria-label="Search by category"
-              className="adminselectbox border border-success text-success"
-              placeholder="Search by category"
-              size="sm"
-            >
-              <option > Sort By</option>
-              <option value="1">Day</option>
-              <option value="2">Week</option>
-              <option value="3">1 Month</option>
-              <option value="3">3 Month</option>
-              <option value="3">6 Month</option>
+                <Form.Select
+                  aria-label="Search by category"
+                  className="adminselectbox border border-success text-success"
+                  placeholder="Search by category"
+                  size="sm"
+                >
+                  <option > Sort By</option>
+                  <option value="1">Day</option>
+                  <option value="2">Week</option>
+                  <option value="3">1 Month</option>
+                  <option value="3">3 Month</option>
+                  <option value="3">6 Month</option>
 
-            </Form.Select>
-          </div>
-          </div>
-          <hr />
+                </Form.Select>
+              </div>
+            </div>
+            <hr />
 
-          <HighchartsReact highcharts={Highcharts} options={options} />
-</div>
+            <HighchartsReact highcharts={Highcharts} options={options} />
+          </div>
           {/* end */}
         </div>
         <div className="col-4 p-2">
           {/* revenue */}
           <div className="card p-3">
-          <div className="d-flex align-items-center justify-content-between ">
-                <h5 className="text-success mb-0">Traffic vs Sales</h5>
+            <div className="d-flex align-items-center justify-content-between ">
+              <h5 className="text-success mb-0">Traffic vs Sales</h5>
               <div className="col-md-3 col-sm-6">
-            <Form.Select
-              aria-label="Search by category"
-              className="adminselectbox border border-success text-success"
-              placeholder="Search by category"
-              size="sm"
-            >
-              <option > Sort By</option>
-              <option value="1">Day</option>
-              <option value="2">Week</option>
-              <option value="3">1 Month</option>
-              <option value="3">3 Month</option>
-              <option value="3">6 Month</option>
+                <Form.Select
+                  aria-label="Search by category"
+                  className="adminselectbox border border-success text-success"
+                  placeholder="Search by category"
+                  size="sm"
+                >
+                  <option > Sort By</option>
+                  <option value="1">Day</option>
+                  <option value="2">Week</option>
+                  <option value="3">1 Month</option>
+                  <option value="3">3 Month</option>
+                  <option value="3">6 Month</option>
 
-            </Form.Select>
-          </div>
-          </div>
-          <hr />
+                </Form.Select>
+              </div>
+            </div>
+            <hr />
 
-          <HighchartsReact highcharts={Highcharts} options={visit} />
-          {/* end */}
+            <HighchartsReact highcharts={Highcharts} options={visit} />
+            {/* end */}
           </div>
         </div>
         {/* last box */}
         <div className="col-4 p-2">
-        <div className="card p-2  bg-teal shadow-none">
-          <div className="d-flex align-items-end  justify-content-between p-2">
-            <div className="d-flex align-items-center">
-              <h5 className="text-success">Visit</h5>
-              <BsAlarm className="text-success h4 mx-2" />
-            </div>
-            <div className="col-md-3 col-sm-6">
-            <Form.Select
-              aria-label="Search by category"
-              className="adminselectbox border border-success text-success"
-              placeholder="Search by category"
-              size="sm"
-            >
-              <option > Sort By</option>
-              <option value="1">Day</option>
-              <option value="2">Week</option>
-              <option value="3">1 Month</option>
-              <option value="3">3 Month</option>
-              <option value="3">6 Month</option>
+          <div className="card p-2  bg-teal shadow-none">
+            <div className="d-flex align-items-end  justify-content-between p-2">
+              <div className="d-flex align-items-center">
+                <h5 className="text-success">Visit</h5>
+                <BsAlarm className="text-success h4 mx-2" />
+              </div>
+              <div className="col-md-3 col-sm-6">
+                <Form.Select
+                  aria-label="Search by category"
+                  className="adminselectbox border border-success text-success"
+                  placeholder="Search by category"
+                  size="sm"
+                >
+                  <option > Sort By</option>
+                  <option value="1">Day</option>
+                  <option value="2">Week</option>
+                  <option value="3">1 Month</option>
+                  <option value="3">3 Month</option>
+                  <option value="3">6 Month</option>
 
-            </Form.Select>
+                </Form.Select>
+              </div>
+            </div>
+            <hr className="my-2" />
+            <Table responsive striped hover>
+              <thead className="text-center">
+                <tr>
+                  <td>City</td>
+                  <td>Visitor</td>
+                  <td>Page View</td>
+                </tr>
+              </thead>
+              <tbody className="text-center">
+                <tr>
+                  <td>
+                    <h6>Andhra Pradesh</h6>
+                  </td>
+                  <td>
+                    <h6>14100</h6>
+                  </td>
+                  <td>
+                    <h6>10000</h6>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <h6>Andhra Pradesh</h6>
+                  </td>
+                  <td>
+                    <h6>14100</h6>
+                  </td>
+                  <td>
+                    <h6>10000</h6>
+                  </td>
+                </tr> <tr>
+                  <td>
+                    <h6>Andhra Pradesh</h6>
+                  </td>
+                  <td>
+                    <h6>14100</h6>
+                  </td>
+                  <td>
+                    <h6>10000</h6>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <h6>Andhra Pradesh</h6>
+                  </td>
+                  <td>
+                    <h6>14100</h6>
+                  </td>
+                  <td>
+                    <h6>10000</h6>
+                  </td>
+                </tr> <tr>
+                  <td>
+                    <h6>Andhra Pradesh</h6>
+                  </td>
+                  <td>
+                    <h6>14100</h6>
+                  </td>
+                  <td>
+                    <h6>10000</h6>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <h6>Andhra Pradesh</h6>
+                  </td>
+                  <td>
+                    <h6>14100</h6>
+                  </td>
+                  <td>
+                    <h6>10000</h6>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <h6>Andhra Pradesh</h6>
+                  </td>
+                  <td>
+                    <h6>14100</h6>
+                  </td>
+                  <td>
+                    <h6>10000</h6>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <h6>Goa</h6>
+                  </td>
+                  <td>
+                    <h6>12000</h6>
+                  </td>
+                  <td>
+                    <h6>12645</h6>
+                  </td>
+                </tr>
+              </tbody>
+            </Table>
           </div>
-          </div>
-          <hr className="my-2"/>
-          <Table responsive striped hover>
-            <thead className="text-center">
-              <tr>
-                <td>City</td>
-                <td>Visitor</td>
-                <td>Page View</td>
-              </tr>
-            </thead>
-            <tbody className="text-center">
-              <tr>
-                <td>
-                  <h6>Andhra Pradesh</h6>
-                </td>
-                <td>
-                  <h6>14100</h6>
-                </td>
-                <td>
-                  <h6>10000</h6>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <h6>Andhra Pradesh</h6>
-                </td>
-                <td>
-                  <h6>14100</h6>
-                </td>
-                <td>
-                  <h6>10000</h6>
-                </td>
-              </tr> <tr>
-                <td>
-                  <h6>Andhra Pradesh</h6>
-                </td>
-                <td>
-                  <h6>14100</h6>
-                </td>
-                <td>
-                  <h6>10000</h6>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <h6>Andhra Pradesh</h6>
-                </td>
-                <td>
-                  <h6>14100</h6>
-                </td>
-                <td>
-                  <h6>10000</h6>
-                </td>
-              </tr> <tr>
-                <td>
-                  <h6>Andhra Pradesh</h6>
-                </td>
-                <td>
-                  <h6>14100</h6>
-                </td>
-                <td>
-                  <h6>10000</h6>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <h6>Andhra Pradesh</h6>
-                </td>
-                <td>
-                  <h6>14100</h6>
-                </td>
-                <td>
-                  <h6>10000</h6>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <h6>Andhra Pradesh</h6>
-                </td>
-                <td>
-                  <h6>14100</h6>
-                </td>
-                <td>
-                  <h6>10000</h6>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <h6>Goa</h6>
-                </td>
-                <td>
-                  <h6>12000</h6>
-                </td>
-                <td>
-                  <h6>12645</h6>
-                </td>
-              </tr>
-            </tbody>
-          </Table>
-        </div>
         </div>
         {/* last */}
         {/* section end */}
 
-  {/* Sales */}
+        {/* Sales */}
         {/* part1 */}
         <div className="col-8 p-2">
           <div className="card p-4">
@@ -532,22 +532,22 @@ function Dashboard() {
                 <h5 className="text-success mb-0">Recent Orders</h5>
                 <MdOutlineRecentActors className="text-success h3 mx-2 mb-0" />
               </div>
-            <div className="col-md-2 col-sm-6">
-            <Form.Select
-              aria-label="Search by category"
-              className="adminselectbox border border-success text-success"
-              placeholder="Search by category"
-              size="sm"
-            >
-              <option > Sort By</option>
-              <option value="1">Day</option>
-              <option value="2">Week</option>
-              <option value="3">1 Month</option>
-              <option value="3">3 Month</option>
-              <option value="3">6 Month</option>
+              <div className="col-md-2 col-sm-6">
+                <Form.Select
+                  aria-label="Search by category"
+                  className="adminselectbox border border-success text-success"
+                  placeholder="Search by category"
+                  size="sm"
+                >
+                  <option > Sort By</option>
+                  <option value="1">Day</option>
+                  <option value="2">Week</option>
+                  <option value="3">1 Month</option>
+                  <option value="3">3 Month</option>
+                  <option value="3">6 Month</option>
 
-            </Form.Select>
-          </div>
+                </Form.Select>
+              </div>
             </div>
             <hr className="mb-3" />
             <Table responsive striped hover>
@@ -593,7 +593,7 @@ function Dashboard() {
                   <td className="text-success py-3">$109.00</td>
                   <td className="py-3">Zoetic Fashion</td>
                 </tr>
-                
+
               </tbody>
             </Table>
           </div>
@@ -653,22 +653,22 @@ function Dashboard() {
                 <BsAlarm className="text-success h4 mx-2" />
               </div>
 
-            <div className="col-md-2 col-sm-6">
-            <Form.Select
-              aria-label="Search by category"
-              className="adminselectbox border border-success text-success"
-              placeholder="Search by category"
-              size="sm"
-            >
-              <option > Sort By</option>
-              <option value="1">Day</option>
-              <option value="2">Week</option>
-              <option value="3">1 Month</option>
-              <option value="3">3 Month</option>
-              <option value="3">6 Month</option>
+              <div className="col-md-2 col-sm-6">
+                <Form.Select
+                  aria-label="Search by category"
+                  className="adminselectbox border border-success text-success"
+                  placeholder="Search by category"
+                  size="sm"
+                >
+                  <option > Sort By</option>
+                  <option value="1">Day</option>
+                  <option value="2">Week</option>
+                  <option value="3">1 Month</option>
+                  <option value="3">3 Month</option>
+                  <option value="3">6 Month</option>
 
-            </Form.Select>
-          </div>
+                </Form.Select>
+              </div>
             </div>
             <hr />
             <Table responsive striped hover className='sellertabler'>
@@ -733,7 +733,7 @@ function Dashboard() {
                     <p className="text-secondary mb-0 text-center">Orders</p>
                   </td>
                   <td>
-                   <Badge bg="danger">out of stock</Badge>
+                    <Badge bg="danger">out of stock</Badge>
                     <p className="text-secondary mb-0 ">Stock</p>
                   </td>
                 </tr>
@@ -751,22 +751,22 @@ function Dashboard() {
                 <h5 className="text-success">Top Seller</h5>
                 <BsAlarm className="text-success h4 mx-2" />
               </div>
-            <div className="col-md-2 col-sm-6">
-            <Form.Select
-              aria-label="Search by category"
-              className="adminselectbox border border-success text-success"
-              placeholder="Search by category"
-              size="sm"
-            >
-              <option > Sort By</option>
-              <option value="1">Day</option>
-              <option value="2">Week</option>
-              <option value="3">1 Month</option>
-              <option value="3">3 Month</option>
-              <option value="3">6 Month</option>
+              <div className="col-md-2 col-sm-6">
+                <Form.Select
+                  aria-label="Search by category"
+                  className="adminselectbox border border-success text-success"
+                  placeholder="Search by category"
+                  size="sm"
+                >
+                  <option > Sort By</option>
+                  <option value="1">Day</option>
+                  <option value="2">Week</option>
+                  <option value="3">1 Month</option>
+                  <option value="3">3 Month</option>
+                  <option value="3">6 Month</option>
 
-            </Form.Select>
-          </div>
+                </Form.Select>
+              </div>
             </div>
             <hr />
             <Table responsive striped hover className='sellertabler'>
@@ -810,7 +810,7 @@ function Dashboard() {
                     <p className="text-secondary mb-0">Orders</p>
                   </td>
                   <td>
-                  <Badge bg="danger">out of stock</Badge>
+                    <Badge bg="danger">out of stock</Badge>
                     <p className="text-secondary mb-0">Stock</p>
                   </td>
                 </tr>
@@ -842,11 +842,11 @@ function Dashboard() {
         {/*table 2 end  */}
         {/* table section end */}
 
-       
 
 
 
-      
+
+
       </div>
     </div>
   );
