@@ -12,14 +12,47 @@
 .ordersummary .orderprogressbar.progress {
   --bs-progress-height: 13px;
 }
-
+.ordericonsection{
+  position: absolute;
+  right: -20px;
+  top: 0;
+  opacity: 0.3;
+}
 .ordericonsection .ordericon {
-  font-size: 60px;
+  font-size: 100px;
 }
 .sellertabler .sellertbody tr td {
   vertical-align: middle;
 }
 
+
+/* dashboard upper section */
+.ordersum_body{
+  display: flex;
+  gap: 15px;
+}
+
+.ordersummary_box{
+border-radius: 10px;
+overflow: hidden;
+position: relative;
+}
+.totalorder_box{
+  background-color: aliceblue;
+}
+.completeorder_box{
+  background-color: rgb(144 215 144 / 12%);
+}
+.pendingorder_box{
+  background-color: #d790461f;
+}
+.cancelorder_box{
+  background-color: #ff000014;
+}
+.sidebarreport_section{
+  display: flex;
+  gap: 10px;
+}
 /* report */
 .reporticon {
   position: absolute;
@@ -40,6 +73,9 @@
  .container {
   margin-top: 50px;
   margin-bottom: 50px;
+}
+.shipping_infoo{
+  font-size: 14px
 }
  .card {
   position: relative;
@@ -159,6 +195,7 @@
 }
 .dropdownnbtn_track{
   text-align: left;
+  font-size: 14px;
 }
 .dashboard_row .card{
 height: 100%;

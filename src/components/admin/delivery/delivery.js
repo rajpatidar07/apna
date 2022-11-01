@@ -456,7 +456,7 @@ const Delivery = () => {
                       <TbShip className="text-dark mx-2 h5 mb-0" />
                     </div>
                     <ListGroup className="border-0">
-                      <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
+                      <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row shipping_infoo py-2">
                         <strong className={"col-md-6"}>
                           Order Date:
                         </strong>
@@ -465,7 +465,7 @@ const Delivery = () => {
                           29 nov 2019
                         </div>
                       </ListGroup.Item>
-                      <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
+                      <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row shipping_infoo py-2">
                         <strong className={"col-md-6"}>
                           Delivery Date:
                         </strong>
@@ -474,7 +474,7 @@ const Delivery = () => {
                           29 nov 2019
                         </div>
                       </ListGroup.Item>
-                      <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
+                      <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row shipping_infoo py-2">
                         <strong className={"col-md-6"}>
                           Estimated Delivery time:
                         </strong>
@@ -483,20 +483,28 @@ const Delivery = () => {
                           29 nov 2019
                         </div>
                       </ListGroup.Item>
-                      <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
+                      <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row shipping_infoo py-2">
                         <strong className={"col-md-6"}>Shipping BY:</strong>
                         <div bg="primary" pill className={"col-md-6"}>
                           BLUEDART, | <i class="fa fa-phone"></i> +1598675986
                         </div>
                       </ListGroup.Item>
+                      <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row shipping_infoo py-2">
+                        <strong className={"col-md-6"}>
+                          Status:
+                        </strong>
 
-                      <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
-                        <strong className={"col-md-6"}>Status: <Badge bg="danger">Late</Badge></strong>
+                        <div bg="primary" pill className={"col-md-6"}>
+                        <Badge bg="danger">Late</Badge>
+                        </div>
+                      </ListGroup.Item>
+                      <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row shipping_infoo py-2">
+                        <strong className={"col-md-6"}>Status: </strong>
                         <div bg="primary" pill className={"col-md-6"}>
                           Picked by the courier
                         </div>
                       </ListGroup.Item>
-                      <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
+                      <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row shipping_infoo py-2">
                         <strong className={"col-md-6"}>
                           Tracking Last Status On:
                         </strong>
@@ -527,7 +535,7 @@ const Delivery = () => {
                           className="dropdownnbtn_track"
                         >
                           <Dropdown.Item className="py-1" href="#/action-1">
-                            <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row py-0">
+                            <ListGroup.Item className="shipping_infoo d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row  py-0">
                               <strong className={"col-md-3"}>11:00 AM</strong>
                               <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
                                 CITY OF MYSORE departurej defs
@@ -535,7 +543,7 @@ const Delivery = () => {
                             </ListGroup.Item>
                           </Dropdown.Item>
                           <Dropdown.Item className="py-1" href="#/action-2">
-                            <ListGroup.Item className="py-0 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
+                            <ListGroup.Item className="shipping_infoo py-0 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
                               <strong className={"col-md-3"}>1:00 PM</strong>
                               <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
                                 BLUEDART, | <i class="fa fa-phone"></i>{" "}
@@ -544,7 +552,7 @@ const Delivery = () => {
                             </ListGroup.Item>
                           </Dropdown.Item>
                           <Dropdown.Item className="py-1" href="#/action-3">
-                            <ListGroup.Item className="py-0 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
+                            <ListGroup.Item className="shipping_infoo py-0 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
                               <strong className={"col-md-3"}>5:00 PM</strong>
                               <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
                                 Picked by the courier
@@ -553,7 +561,7 @@ const Delivery = () => {
                           </Dropdown.Item>
                           <Dropdown.Item className="py-0" href="#/action-3">
                             {" "}
-                            <ListGroup.Item className="py-0 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
+                            <ListGroup.Item className="shipping_infoo py-0 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
                               <strong className={"col-md-3"}>9:00 PM</strong>
                               <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
                                 11:30pm, Today <p>New Delhi</p>
@@ -569,7 +577,7 @@ const Delivery = () => {
                           title="Thur, 23 Sep, 2022"
                         >
                           <Dropdown.Item className="py-1" href="#/action-1">
-                            <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row py-0">
+                            <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row py-0 shipping_infoo">
                               <strong className={"col-md-3"}>11:00 AM</strong>
                               <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
                                 CITY OF MYSORE departurej defs
@@ -577,7 +585,7 @@ const Delivery = () => {
                             </ListGroup.Item>
                           </Dropdown.Item>
                           <Dropdown.Item className="py-1" href="#/action-2">
-                            <ListGroup.Item className="py-0 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
+                            <ListGroup.Item className="py-0 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row shipping_infoo">
                               <strong className={"col-md-3"}>1:00 PM</strong>
                               <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
                                 BLUEDART, | <i class="fa fa-phone"></i>{" "}
@@ -586,7 +594,7 @@ const Delivery = () => {
                             </ListGroup.Item>
                           </Dropdown.Item>
                           <Dropdown.Item className="py-1" href="#/action-3">
-                            <ListGroup.Item className="py-0 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
+                            <ListGroup.Item className="py-0 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row shipping_infoo">
                               <strong className={"col-md-3"}>5:00 PM</strong>
                               <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
                                 Picked by the courier
@@ -595,7 +603,7 @@ const Delivery = () => {
                           </Dropdown.Item>
                           <Dropdown.Item className="py-0" href="#/action-3">
                             {" "}
-                            <ListGroup.Item className="py-0 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
+                            <ListGroup.Item className="py-0 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row shipping_infoo">
                               <strong className={"col-md-3"}>9:00 PM</strong>
                               <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
                                 11:30pm, Today <p>New Delhi</p>
@@ -611,14 +619,14 @@ const Delivery = () => {
                       </div>
 
                       <ListGroup className="border-0 trackinghistory">
-                        <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row py-1">
+                        <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row py-2 shipping_infoo">
                           <strong className={"col-md-3"}>11:00 AM</strong>
                           <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
                             CITY OF MYSORE departurej defs
                           </div>
                         </ListGroup.Item>
 
-                        <ListGroup.Item className="py-1 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
+                        <ListGroup.Item className="py-2 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row shipping_infoo">
                           <strong className={"col-md-3"}>1:00 PM</strong>
                           <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
                             BLUEDART, | <i class="fa fa-phone"></i>{" "}
@@ -626,14 +634,14 @@ const Delivery = () => {
                           </div>
                         </ListGroup.Item>
 
-                        <ListGroup.Item className="py-1 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
+                        <ListGroup.Item className="shipping_infoo py-2 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
                           <strong className={"col-md-3"}>5:00 PM</strong>
                           <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
                             Picked by the courier
                           </div>
                         </ListGroup.Item>
                         {" "}
-                        <ListGroup.Item className="py-1  d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
+                        <ListGroup.Item className="py-2  d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row shipping_infoo">
                           <strong className={"col-md-3 text-success"}>9:00 PM</strong>
                           <div bg="primary" pill className={"col-md-6 shippimgaddress text-success"}>
                             11:30pm, Today <p>New Delhi</p>
@@ -649,7 +657,7 @@ const Delivery = () => {
                 <hr />
                 <Iconbutton
                   btntext={"Back"}
-                  onClick={handleShow}
+                  onClick={handleClose}
                   Iconname={<BsArrowLeftCircle className="mx-2" />}
                   btnclass={"button main_button "}
                 />

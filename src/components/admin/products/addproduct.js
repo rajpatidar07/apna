@@ -8,9 +8,22 @@ import { GiCancel } from "react-icons/gi";
 const Addproduct = (props) => {
   const [inputList, setInputList] = useState([{ Header: "", Description: "" }]);
   const [addtag, setaddtag] = useState('');
+  const [colortag, setcolortag] = useState('');
+  const [clickcolortag, setclickcolortag] = useState('');
   const [clickaddtag, setclickaddtag] = useState('');
  
-
+const onSizeClick = (e) =>{
+  console.log(e.target.value)
+}
+const onColoradd = (e) =>{
+  setcolortag(e.target.value);
+}
+const colorrtag = [];
+const onColoraddClick = (e)=>{
+  setclickcolortag(colortag);
+  colorrtag.push(clickcolortag);
+  setcolortag('')
+}
 
   const ontagchangeclick = (e) => {
     setaddtag(e.target.value);
@@ -293,31 +306,78 @@ const Addproduct = (props) => {
                 <h5 className="m-0">Variety</h5>
                 <div className="productvariety_color">
                   <Form.Group
-                    className="mx-3"
+                    className="mx-3 "
                     controlId="formPlaintextPassword"
                   >
                     <Form.Label
-                      className="inputlabelheading"
+                      className="inputlabelheading varietysection"
                       column
                       sm="2 colorpickerproduct"
                     >
-                      Color
+                       <Form.Check className="mx-2" />
+                      Weight
+                   
                     </Form.Label>
                     <Col sm="5">
                       <Form.Control type="color" placeholder="Color" />
                     </Col>
                   </Form.Group>
+
+                  <Form.Group
+                    className="mx-3 "
+                    controlId="formPlaintextPassword"
+                  >
+                    <Form.Label
+                      className="inputlabelheading varietysection"
+                      column
+                      sm="2 colorpickerproduct"
+                    >
+                       <Form.Check className="mx-2" />
+                      Volume
+                    </Form.Label>
+                    <Col sm="5">
+                      <Form.Control type="color" placeholder="Color" />
+                    </Col>
+                  </Form.Group>
+                  
                   <Form.Group
                     className="mx-3"
                     controlId="formPlaintextPassword"
                   >
-                    <Form.Label className="inputlabelheading" column sm="12">
+                    <Form.Label className="inputlabelheading varietysection" column sm="12">
+
+                    <Form.Select onChange={onSizeClick}>
+            <option value={'Clothes'}>Clothes</option>
+            <option value={'Shoes'}>Shoes</option>
+          </Form.Select>
                       Size
                     </Form.Label>
                     <Col sm="12">
                       <Form.Control type="number" placeholder="Size" />
                     </Col>
                   </Form.Group>
+
+                  <Form.Group
+                    className="mx-3"
+                    controlId="formPlaintextPassword"
+                  >
+                    <Form.Label className="inputlabelheading varietysection" column sm="12">
+
+                    <Form.Control type="text" placeholder="Color" value={colortag} onChange={onColoradd}/>
+                      Color
+                      <BsFillPlusSquareFill
+                    className=" mx-2 addcategoryicon"
+                    onClick={onColoraddClick}
+                  />
+                    </Form.Label>
+                    <Col sm="12">
+                    <div className="d-flex align-items-center tagselectbox mt-2">
+                  <h6 className="tagselecttitle mb-0">{clickcolortag} </h6>
+                  <h6 className="tagselecttitle mb-0">{clickcolortag}</h6>
+                </div>
+                    </Col>
+                  </Form.Group>
+                  
                   <Form.Group
                     className="mx-3"
                     controlId="formPlaintextPassword"
