@@ -24,6 +24,9 @@ function Product() {
   const handleShow = (e) => {
     setShow(e);
   }
+  const ChangeStatus =()=>{
+
+  }
   useEffect(() => {
     axios.get("https://apnaorganicstore.in/backend/products").then((response) => {
       setpdata(response.data)
@@ -144,7 +147,7 @@ function Product() {
     {
       name: "Change Status",
       selector: (row) => (
-        <Form.Select aria-label="Search by delivery" size="sm" value={row.status} className="w-100">
+        <Form.Select aria-label="Search by delivery" size="sm" value={row.status} className="w-100" onChange={ChangeStatus}>
           <option value="1">Pending</option>
           <option value="2">Delivered</option>
           <option value="3">Processing</option>

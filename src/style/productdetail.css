@@ -286,3 +286,6 @@ padding: 10px;
 .addproductmainmodal .addproductbody .addproduct_form .inputlabelheading{
 display: flex;
 }
+ .manufacture_date{
+  width: 90px;
+}
