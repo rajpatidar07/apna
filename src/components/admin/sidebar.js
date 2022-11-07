@@ -41,7 +41,7 @@ function AdminSidebar() {
             </Link>
           </Accordion.Header>
           <Accordion.Body>
-            <ul class="sidebar_navigation_bar">
+            <ul className="sidebar_navigation_bar">
               <li>
                 <Link to="/product" className="nav-link">
                   Product List
@@ -132,7 +132,7 @@ function AdminSidebar() {
             </Link>
           </Accordion.Header>
           <Accordion.Body>
-            <ul class="sidebar_navigation_bar">
+            <ul className="sidebar_navigation_bar">
               <li>
                 <Link to="/revenuereport" className="nav-link">
                   Revenue
@@ -243,7 +243,7 @@ function AdminSidebar() {
             </Link>
           </Accordion.Header>
           <Accordion.Body>
-            <ul class="sidebar_navigation_bar">
+            <ul className="sidebar_navigation_bar">
               <li>
                 <Link to="/home_manager" className="nav-link">
                   Home Page

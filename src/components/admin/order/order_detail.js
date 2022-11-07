@@ -3,7 +3,7 @@ import "./order_detail.css";
 import Profile from "../../../images/user.jpg";
 import { AiOutlineFileText } from "react-icons/ai";
 import { BsTelephoneFill, BsFillEnvelopeFill } from "react-icons/bs";
-const Order_detail = () => {
+const OrderDetail = () => {
   return (
     <div className="order_detail_page">
       <div className="order_detail">
@@ -41,7 +41,7 @@ const Order_detail = () => {
               <div className="product_image_price"></div>
               <div className="d-flex justify-content-between mb-3 align-items-center">
                 <div className="product_img d-flex">
-                  <img src="https://lp2.hm.com/hmgoepprod?set=source[/40/71/4071b4a39844344e1de770b4a494ba7e3078219d.jpg],origin[dam],category[men_tshirtstanks_shortsleeve],type[DESCRIPTIVESTILLLIFE],res[w],hmver[2]&call=url[file:/product/main]"></img>
+                  <img src="https://lp2.hm.com/hmgoepprod?set=source[/40/71/4071b4a39844344e1de770b4a494ba7e3078219d.jpg],origin[dam],category[men_tshirtstanks_shortsleeve],type[DESCRIPTIVESTILLLIFE],res[w],hmver[2]&call=url[file:/product/main]" alt="apnaorganic"/>
                   <div className="product_name_detial ps-3">
                     <h6>T-Shirt Blue</h6>
                     <p>color:blue</p>
@@ -55,7 +55,7 @@ const Order_detail = () => {
               </div>
               <div className="d-flex justify-content-between align-items-center">
                 <div className="product_img d-flex">
-                  <img src="https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/5a60fd99-2c3a-44d3-91bb-62a47224e322/sportswear-heritage-86-adjustable-cap-7g0hKX.png"></img>
+                  <img src="https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/5a60fd99-2c3a-44d3-91bb-62a47224e322/sportswear-heritage-86-adjustable-cap-7g0hKX.png" alt="apnaorganic"/>
                   <div className="product_name_detial ps-3">
                     <h6>Cap Blue</h6>
                     <p>color:blue</p>
@@ -72,7 +72,7 @@ const Order_detail = () => {
               <h5 className="pb-3">Delivery</h5>
               <div className="d-flex justify-content-between align-items-center">
                 <div className="delivery_img d-flex ">
-                  <img src="https://media.istockphoto.com/vectors/express-delivery-symbol-vector-id1175078000?b=1&k=20&m=1175078000&s=612x612&w=0&h=2Y5FLXleVSLyaEfZztp2Mhf2pVV6BbqNYkXYs1KHpik="></img>
+                  <img src="https://media.istockphoto.com/vectors/express-delivery-symbol-vector-id1175078000?b=1&k=20&m=1175078000&s=612x612&w=0&h=2Y5FLXleVSLyaEfZztp2Mhf2pVV6BbqNYkXYs1KHpik=" alt="apnaorganic"/>
                   <div className="delivery_componay ps-3">
                     <h6>E-Kart</h6>
                     <p>Speed post package</p>
@@ -121,7 +121,7 @@ const Order_detail = () => {
                 <div className="customer_info">
                   <div className="customer">Customer</div>
                   <div className="customer_name_img d-flex py-3">
-                    <img src={Profile} />
+                    <img src={Profile} alt={'apnaorganic'}/>
                     <div className="customer_name ps-4 my-auto">
                       Gourav Choudhary
                     </div>
@@ -176,4 +176,4 @@ const Order_detail = () => {
     </div>
   );
 };
-export default Order_detail;
+export default OrderDetail;

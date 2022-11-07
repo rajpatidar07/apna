@@ -177,7 +177,6 @@ const CategoryList = () => {
       },
     ];
     const handleClick = () => {};
-    const onButtonClick = () => {};
     const navigate = useNavigate();
     return (
         <div className="App productlist_maindiv">

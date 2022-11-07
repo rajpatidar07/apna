@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "./common/input";
 import {
   AiOutlinePlus,
@@ -6,25 +6,31 @@ import {
 } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { BsTrash } from "react-icons/bs";
-import { BiEdit, BiDotsVertical } from "react-icons/bi";
+import { BiEdit } from "react-icons/bi";
 import DataTable from "react-data-table-component";
 import MainButton from "./common/button";
 import Form from "react-bootstrap/Form";
-import Modal from "react-bootstrap/Modal";
 import Addproduct from "./products/addproduct";
 import Iconbutton from "./common/iconbutton";
-import Dropdown from "react-bootstrap/Dropdown";
 import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
-import ProductJson from "./json/products"
+import axios from "axios";
 function Product() {
-  var products = ProductJson.products;
+  const [pdata, setpdata] = useState();
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [show, setShow] = useState(null);
+  const handleShow = (e) => {
+    setShow(e);
+  }
+  useEffect(() => {
+    axios.get("https://apnaorganicstore.in/backend/products").then((response) => {
+      setpdata(response.data)
+    }).catch(function (error){
+      console.log(error);});
+  }, []);
+ 
   const columns = [
     {
       name: "#",
@@ -34,9 +40,9 @@ function Product() {
         <img
           // height="90px"
           // width="75px"
-          alt={row.title}
+          alt={row.product_title_name}
           src={
-            row.images[0]
+            row.id
           }
           style={{
             padding: 10,
@@ -54,12 +60,12 @@ function Product() {
         <div>
           <p className="mb-1" onClick={() => {
             navigate("/productdetail");
-          }}><b>{row.title}<br/>SKU:</b>
+          }}><b>{row.product_title_name}<br/>SKU:</b>
           {row.sku}
         </p>
         </div>),
       sortable: true,
-      width: "250px",
+      width: "200px",
     },
     {
       name: "Category",
@@ -69,7 +75,7 @@ function Product() {
     },
     {
       name: "Price",
-      selector: (row) => row.price,
+      selector: (row) => row.product_price,
       sortable: true,
       width: "100px",
       center: true,
@@ -91,7 +97,7 @@ function Product() {
 
     {
       name: "Stock",
-      selector: (row) => row.stock,
+      selector: (row) => row.quantity,
       sortable: true,
       width: "100px",
       center: true,
@@ -103,7 +109,7 @@ function Product() {
 
     {
       name: "Discount",
-      selector: (row) => row.discountPercentage,
+      selector: (row) => row.discount,
       sortable: true,
       width: "130px",
       center: true,
@@ -136,6 +142,21 @@ function Product() {
       // center: true,
     },
     {
+      name: "Change Status",
+      selector: (row) => (
+        <Form.Select aria-label="Search by delivery" size="sm" value={row.status} className="w-100">
+          <option value="1">Pending</option>
+          <option value="2">Delivered</option>
+          <option value="3">Processing</option>
+          <option value="4">Cancel</option>
+          <option value="5">Approved  </option>
+          <option value="6">Return  </option>
+        </Form.Select>
+      ),      
+      sortable: true,
+      
+    },
+    {
       name: "Action",
       width: "110px",
       style: {
@@ -145,52 +166,18 @@ function Product() {
       center: true,
       selector: (row) => (
         <div className={"actioncolimn"}>
-          <BiEdit className=" p-0 m-0  editiconn text-secondary" />
+          <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={()=>{handleShow(2)}}/>
           <BsTrash
             className=" p-0 m-0 editiconn text-danger"
             onClick={handleAlert}
           />
-          <BiDotsVertical className=" p-0 m-0 editiconn doticon text-primary " />
-
-          <Dropdown className="productprofile_div p-0 m-0 editiconn doticon">
-            <Dropdown.Toggle
-              className=""
-              variant=""
-              id="productstatus_dropdown"
-            ></Dropdown.Toggle>
-            <Dropdown.Menu className="product_list_dropdownstatus">
-              <Dropdown.Item
-                className="product_list_dropdownstatus_link"
-                href="#/action-1"
-              >
-                Action
-              </Dropdown.Item>
-              <Dropdown.Item
-                className="product_list_dropdownstatus_link"
-                href="#/action-2"
-              >
-                Another action
-              </Dropdown.Item>
-              <Dropdown.Item
-                className="product_list_dropdownstatus_link"
-                href="#/action-3"
-              >
-                Something else
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+         
         </div>
       ),
     },
   ];
 
-  // const data = [
-  //   // (products.map|| [])((products)=>{
-  //     {
-  //       sku:"qqq",
-  //     }
-  //   // }),
-  // ];
+
   const handleClick = () => { };
   const navigate = useNavigate();
 
@@ -251,47 +238,19 @@ function Product() {
           <MainButton btntext={"Download"} />
           <Iconbutton
             btntext={"Add Product"}
-            onClick={handleShow}
+            onClick={()=>{handleShow(1)}}
             Iconname={<AiOutlinePlus />}
             btnclass={"button main_button "}
           />
         </div>
 
         {/* datatable */}
-        <Modal
-          show={show}
-          onHide={handleClose}
-          dialogClassName="addproductmainmodal"
-          aria-labelledby="example-custom-modal-styling-title"
-          centered
-        >
-          <Modal.Header closeButton className="addproductheader">
-            <Modal.Title id="example-custom-modal-styling-title">
-              Add Product
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body className="addproductbody p-2">
-            <Addproduct />
-          </Modal.Body>
-          <Modal.Footer className="addproductfooter">
-            <Iconbutton
-              btntext={"X Cancel"}
-              onClick={handleClose}
-              btnclass={"button main_outline_button px-2"}
-            // Iconname={<GiCancel /> }
-            />
-            <MainButton btntext={"Save as Draft"} onClick={handleClose} />
-            <Iconbutton
-              btntext={"Add Product"}
-              onClick={handleClose}
-              Iconname={<AiOutlinePlus />}
-              btnclass={"button main_button "}
-            />
-          </Modal.Footer>
-        </Modal>
+      
+            <Addproduct show={show} />
+        
         <DataTable
           columns={columns}
-          data={products}
+          data={pdata}
           pagination
           highlightOnHover
           pointerOnHover

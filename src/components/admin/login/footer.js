@@ -48,13 +48,13 @@ const Footer=()=> {
                 <div className="social-app mt-sm-4 mt-3 mb-4">
                   <ul>
                     <li>
-                      <a href="https://play.google.com/store/apps" target="_blank">
-                        <img src="https://themes.pixelstrap.com/Apna Organic/assets/images/playstore.svg" className="lazyload" alt="" />
+                      <a href="https://play.google.com/store/apps" target="_blank" rel='apnaorganic' >
+                        <img src="https://themes.pixelstrap.com/ApnaOrganic/assets/images/playstore.svg" className="lazyload" alt="" />
                       </a>
                     </li>
                     <li>
-                      <a href="https://www.apple.com/in/app-store/" target="_blank">
-                        <img src="https://themes.pixelstrap.com/Apna Organic/assets/images/appstore.svg" className="lazyload" alt="" />
+                      <a href="https://www.apple.com/in/app-store/" target="_blank" rel='apnaorganic'>
+                        <img src="https://themes.pixelstrap.com/ApnaOrganic/assets/images/appstore.svg" className="lazyload" alt="" />
                       </a>
                     </li>
                   </ul>
@@ -68,23 +68,23 @@ const Footer=()=> {
                 <ul className="footer-list footer-contact mb-sm-0 mb-3">
                   <li>
                     <a href="about-us.html" className="footer-contain-2">
-                      <i class="fa-solid fa-chevron-right"></i>About Us</a>
+                      <i className="fa-solid fa-chevron-right"></i>About Us</a>
                   </li>
                   <li>
                     <a href="contact-us.html" className="footer-contain-2">
-                      <i class="fa-solid fa-chevron-right"></i>Contact Us</a>
+                      <i className="fa-solid fa-chevron-right"></i>Contact Us</a>
                   </li>
                   <li>
                     <a href="term_condition.html" className="footer-contain-2">
-                      <i class="fa-solid fa-chevron-right"></i>Terms & Coditions</a>
+                      <i className="fa-solid fa-chevron-right"></i>Terms & Coditions</a>
                   </li>
                   <li>
                     <a href="careers.html" className="footer-contain-2">
-                      <i class="fa-solid fa-chevron-right"></i>Careers</a>
+                      <i className="fa-solid fa-chevron-right"></i>Careers</a>
                   </li>
                   <li>
                     <a href="blog-list.html" className="footer-contain-2">
-                      <i class="fa-solid fa-chevron-right"></i>Latest Blog</a>
+                      <i className="fa-solid fa-chevron-right"></i>Latest Blog</a>
                   </li>
                 </ul>
               </div>
@@ -96,23 +96,23 @@ const Footer=()=> {
                 <ul className="footer-list footer-contact mb-sm-0 mb-3">
                   <li>
                     <a href="order-success.html" className="footer-contain-2">
-                      <i class="fa-solid fa-chevron-right"></i>Your Order</a>
+                      <i className="fa-solid fa-chevron-right"></i>Your Order</a>
                   </li>
                   <li>
                     <a href="user-dashboard.html" className="footer-contain-2">
-                      <i class="fa-solid fa-chevron-right"></i>Your Account</a>
+                      <i className="fa-solid fa-chevron-right"></i>Your Account</a>
                   </li>
                   <li>
                     <a href="order-tracking.html" className="footer-contain-2">
-                      <i class="fa-solid fa-chevron-right"></i>Track Orders</a>
+                      <i className="fa-solid fa-chevron-right"></i>Track Orders</a>
                   </li>
                   <li>
                     <a href="wishlist.html" className="footer-contain-2">
-                      <i class="fa-solid fa-chevron-right"></i>Your Wishlist</a>
+                      <i className="fa-solid fa-chevron-right"></i>Your Wishlist</a>
                   </li>
                   <li>
                     <a href="faq.html" className="footer-contain-2">
-                      <i class="fa-solid fa-chevron-right"></i>FAQs</a>
+                      <i className="fa-solid fa-chevron-right"></i>FAQs</a>
                   </li>
                 </ul>
               </div>
@@ -124,23 +124,23 @@ const Footer=()=> {
                 <ul className="footer-list footer-contact mb-sm-0 mb-3">
                   <li>
                     <a href="vegetables-demo.html" className="footer-contain-2">
-                      <i class="fa-solid fa-chevron-right"></i>Fresh Vegetables</a>
+                      <i className="fa-solid fa-chevron-right"></i>Fresh Vegetables</a>
                   </li>
                   <li>
                     <a href="spice-demo.html" className="footer-contain-2">
-                      <i class="fa-solid fa-chevron-right"></i>Hot Spice</a>
+                      <i className="fa-solid fa-chevron-right"></i>Hot Spice</a>
                   </li>
                   <li>
                     <a href="bags-demo.html" className="footer-contain-2">
-                      <i class="fa-solid fa-chevron-right"></i>Brand New Bags</a>
+                      <i className="fa-solid fa-chevron-right"></i>Brand New Bags</a>
                   </li>
                   <li>
                     <a href="bakery-demo.html" className="footer-contain-2">
-                      <i class="fa-solid fa-chevron-right"></i>New Bakery</a>
+                      <i className="fa-solid fa-chevron-right"></i>New Bakery</a>
                   </li>
                   <li>
                     <a href="grocery-demo.html" className="footer-contain-2">
-                      <i class="fa-solid fa-chevron-right"></i>New Grocery</a>
+                      <i className="fa-solid fa-chevron-right"></i>New Grocery</a>
                   </li>
                 </ul>
               </div>

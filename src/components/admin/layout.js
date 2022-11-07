@@ -4,7 +4,7 @@ import Dashboard from "./dashboard";
 import Product from "./product";
 import Orders from "./orders";
 import AdminHeader from "./header";
-import { Routes, useLocation } from "react-router-dom";
+import { Routes } from "react-router-dom";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Productdetail from "./products/productdetail";
 import Addproduct from "./products/addproduct";
@@ -16,7 +16,7 @@ import Pendingproduct from "./products/pendingproduct";
 import Promotionproduct from "./products/promotionproduct";
 import Offerproduct from "./products/offerproduct";
 import Deletedproduct from "./products/deletedproduct";
-import Order_detail from "./order/order_detail";
+import OrderDetail from "./order/order_detail";
 import VendorsList from "./vendor/vendors";
 import AdminComponents from "./components";
 import "../../style/common.css";
@@ -26,11 +26,10 @@ import ChangePassword from "./login/change_password";
 import Forgot from "./login/forgot";
 import CategoryList from "./category/category";
 import Admin from "./add_update_admin/add_update_admin";
-import Invoices from "./invoice/invoices";
 import InvoiceList from "./invoice/invoices";
 import Complaint from "./complaint/complaint";
 import Transactions from "./transactions/transactions";
-import Tran_Detail from "./transactions/transactions_detail";
+import TranDetail from "./transactions/transactions_detail";
 import Banner from "./setting/banner_manager";
 import Coupon from "./coupon/coupon";
 import Home from "./setting/home_manager";
@@ -84,7 +83,7 @@ function AdminLayout() {
                   />
                   <Route path="/offerproduct" element={<Offerproduct />} />
                   <Route path="/deletedproduct" element={<Deletedproduct />} />
-                  <Route path="/order_detail" element={<Order_detail />} />
+                  <Route path="/order_detail" element={<OrderDetail />} />
                   <Route path="/footer" element={<Footer />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/vendors" element={<VendorsList />} />
@@ -95,7 +94,7 @@ function AdminLayout() {
                   <Route path="/transactions" element={<Transactions />} />
                   <Route
                     path="/transactions_detail"
-                    element={<Tran_Detail />} />
+                    element={<TranDetail />} />
                     <Route path="/home_manager" element={<Home />} />
                   <Route path="/banner" element={<Banner/>} />
                   <Route path="/coupon" element={<Coupon/>} />

@@ -1,9 +1,5 @@
 import React, { useState } from "react";
 import Input from "../common/input";
-import {
-  AiFillDelete,
-  AiFillEdit,
-} from "react-icons/ai";
 import DataTable from "react-data-table-component";
 import Form from "react-bootstrap/Form";
 import Modal from 'react-bootstrap/Modal';
@@ -11,7 +7,7 @@ import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
 import logo from '../../../images/logo.png';
 import { BsTrash } from "react-icons/bs";
-import { BiEdit, BiDotsVertical } from "react-icons/bi";
+import { BiEdit } from "react-icons/bi";
 const handleClick = () => { };
 
 const VendorsList = () => {
@@ -19,7 +15,6 @@ const VendorsList = () => {
   const [Alert, setAlert] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const handleDelete = () => setShow(true);
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const handleStatusChnage = (e) =>{

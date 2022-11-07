@@ -1,4 +1,3 @@
-import { Bell } from "react-bootstrap-icons";
 import React from "react";
 import "../../style/dashboard.css";
 import {
@@ -13,8 +12,7 @@ import { MdOutlineLocationOn, MdOutlineRecentActors } from "react-icons/md";
 import Table from "react-bootstrap/Table";
 import demo from "../../images/demo.jpg";
 import { useNavigate } from "react-router-dom";
-import ProgressBar from 'react-bootstrap/ProgressBar';
-import Highcharts, { Chart } from 'highcharts';
+import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { Badge, Form } from "react-bootstrap";
@@ -98,40 +96,7 @@ function Dashboard() {
     
     };
 
-  const radialchart = {
-
-    series: [ 55, 67, 83],
-    options: {
-      chart: {
-        height: 200,
-        type: 'radialBar',
-      },
-      plotOptions: {
-        radialBar: {
-          dataLabels: {
-            name: {
-              fontSize: '22px',
-            },
-            value: {
-              fontSize: '16px',
-            },
-            total: {
-              show: true,
-              label: 'Order',
-              formatter: 
-              function (w) {
-                // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
-                return 249
-              }
-            }
-          }
-        }
-      },
-      labels: ['Apples', 'Oranges', 'Bananas'],
-    },
-
-
-  };
+  
   const revenue = {
           
     series: [{
@@ -778,7 +743,7 @@ function Dashboard() {
             </div>
             <hr />
 
-            <HighchartsReact highcharts={Highcharts} options={visit} />
+            <HighchartsReact  highcharts={Highcharts} options={visit} />
             {/* end */}
           </div>
         </div>
@@ -813,7 +778,7 @@ function Dashboard() {
             </div>
             <hr />
 
-            <HighchartsReact highcharts={Highcharts} options={options} />
+            <HighchartsReact  highcharts={Highcharts} options={options} />
           </div>
           {/* end */}
         </div>
@@ -841,7 +806,7 @@ function Dashboard() {
             </div>
             <hr />
 
-            <HighchartsReact highcharts={Highcharts} options={visit} />
+            <HighchartsReact  highcharts={Highcharts} options={visit} />
             {/* end */}
           </div>
         </div>
@@ -1125,7 +1090,7 @@ function Dashboard() {
               <tbody className="sellertbody text-center">
                 <tr>
                   <td className="w-0">
-                    <img src={demo} className="mainn_img" />
+                    <img alt="apnaorganic" src={demo} className="mainn_img" />
                   </td>
                   <td>
                     <h6>Branded T-Shirts</h6>
@@ -1147,7 +1112,7 @@ function Dashboard() {
 
                 <tr>
                   <td>
-                    <img src={demo} className="mainn_img" />
+                    <img alt="apnaorganic" src={demo} className="mainn_img" />
                   </td>
                   <td>
                     <h6>Branded T-Shirts</h6>
@@ -1168,7 +1133,7 @@ function Dashboard() {
                 </tr>
                 <tr>
                   <td>
-                    <img src={demo} className="mainn_img" />
+                    <img alt="apnaorganic" src={demo} className="mainn_img" />
                   </td>
                   <td>
                     <h6>Branded T-Shirts</h6>
@@ -1223,7 +1188,7 @@ function Dashboard() {
               <tbody className='sellertbody text-center'>
                 <tr>
                   <td className="w-0">
-                    <img src={demo} className="mainn_img" />
+                    <img alt="apnaorganic" src={demo} className="mainn_img" />
                   </td>
                   <td>
                     <h6>iTest Factory</h6>
@@ -1245,7 +1210,7 @@ function Dashboard() {
 
                 <tr>
                   <td className="w-0">
-                    <img src={demo} className="mainn_img" />
+                    <img alt="apnaorganic" src={demo} className="mainn_img" />
                   </td>
                   <td>
                     <h6>iTest Factory</h6>
@@ -1266,7 +1231,7 @@ function Dashboard() {
                 </tr>
                 <tr>
                   <td className="w-0">
-                    <img src={demo} className="mainn_img" />
+                    <img alt="apnaorganic" src={demo} className="mainn_img" />
                   </td>
                   <td>
                     <h6>iTest Factory</h6>

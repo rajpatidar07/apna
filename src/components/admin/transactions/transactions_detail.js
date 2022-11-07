@@ -1,9 +1,9 @@
 import React from 'react'
 
- const Tran_Detail=()=> {
+ const TranDetail=()=> {
   return (
     <div>Transactions Detail.....</div>
   )
 }
 
-export default Tran_Detail
+export default TranDetail

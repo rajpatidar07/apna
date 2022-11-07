@@ -1,18 +1,8 @@
-import React, { useState } from "react";
-// import Input from "../common/input";
-// import { FaFileInvoiceDollar } from "react-icons/fa";
-import DataTable from "react-data-table-component";
-// import MainButton from "../common/button";
+import React from "react";
 import Form from "react-bootstrap/Form";
-// import { Link } from "react-router-dom";
-
 import "./setting.css";
 
-const onButtonClick = () => {};
 function Home() {
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   return (
     <div className="main_body">

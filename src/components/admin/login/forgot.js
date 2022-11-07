@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import "./login.css";
 import MainButton from "../common/button";
 import Logo from "../../../images/logo.png";
@@ -14,7 +14,7 @@ const Forgot = () => {
             <div className="col-xl-4 col-lg-6 m-auto">
               <div className="heading_logo text-center">
                 <div className="logo">
-                  <img src={Logo}></img>
+                  <img src={Logo} alt={'apnaorganic'}/>
                 </div>
                 <div className="heading_line">
                   <h3>Sell On Apna Organic</h3>

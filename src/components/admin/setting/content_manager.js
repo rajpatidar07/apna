@@ -6,7 +6,6 @@ import Info from "./product_info.png";
 import Description from "./description.png";
 import Iconbutton from "../common/iconbutton";
 import { AiOutlineCloudUpload } from "react-icons/ai";
-import Input from "../common/input";
 
 function ContentManager() {
   return (
@@ -17,7 +16,7 @@ function ContentManager() {
           <div className=" d-flex justify-content-between flex-row card my-2">
             <div className="content_image_text_text d-flex px-3 pt-2">
               <div className="content_image">
-                <img src={review} />
+                <img alt="apnaorganic" src={review} />
               </div>
               <div>
                 <h5>Product Review</h5>
@@ -41,7 +40,7 @@ function ContentManager() {
           <div className="d-flex justify-content-between flex-row card my-2">
             <div className="content_image_text_text d-flex px-3 pt-2">
               <div className="content_image">
-                <img src={Info} />
+                <img alt="apnaorganic" src={Info} />
               </div>
               <div>
                 <h5>Additional info</h5>
@@ -65,7 +64,7 @@ function ContentManager() {
           <div className="d-flex justify-content-between flex-row card my-2">
             <div className="content_image_text_text d-flex px-3 pt-2">
               <div className="content_image">
-                <img src={Description} />
+                <img alt="apnaorganic" src={Description} />
               </div>
               <div>
                 <h5>Product Description</h5>
@@ -84,7 +83,7 @@ function ContentManager() {
           <div className=" d-flex justify-content-between flex-row card my-2">
             <div className="content_image_text_text d-flex px-3 pt-2">
               <div className="content_image">
-                <img src={review} />
+                <img alt="apnaorganic" src={review} />
               </div>
               <div>
                 <h5>Product Review</h5>

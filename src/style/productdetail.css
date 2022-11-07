@@ -168,11 +168,40 @@ font-size: 20px;
 /* ADD PRODUCT */
 .productvariety_boxx{
   align-items: center;
-  display: grid;
-  grid-template-columns: 50% 50%;
+  display: flex;
   flex-wrap: wrap;
   gap: 3%;
- 
+}
+.productvariety_boxx .productvariety_color .weight_checkbox_box{
+position: relative;
+}
+.productvariety_boxx .productvariety_color  .weightcheckbox{
+display: flex;
+align-items: center;
+gap: 5px;
+flex-wrap: wrap;
+}
+.universal_checkbox>input{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  /* width: 100%;
+  opacity: 0; */
+  margin: 0;
+  }
+.productvariety_boxx .productvariety_color .weight_checkbox_box .weight_checkbox_text{
+  background-color: #8080808c;
+  cursor: pointer;
+  border-radius: 13px;
+  font-size: 13px;
+  padding: 0 5px;
+}
+.form-check-input:checked ~ .weight_checkbox_text{
+  background-color: red;
+}
+.productvariety_boxx .productvariety_color .weight_checkbox_box  .form-check-input[type=checkbox]:checked+.productvariety_boxx .productvariety_color .weight_checkbox_box .weight_checkbox_text{
+  background-color: black;
 }
 .varietysection{
   display: flex;
@@ -180,7 +209,7 @@ font-size: 20px;
 .productvariety_color{
   align-items: center;
   margin-top: 15px;
-  display: grid;
+  display: flex;
   grid-template-columns: 33.3% 33.3% 33.3%;
   flex-wrap: wrap;
 }
@@ -213,7 +242,7 @@ font-size: 20px;
   width: 100%;
 }
 .productvariety  .addcategoryicon{
-font-size: 30px;
+/* font-size: 10px; */
 color: #5cb85c;
 }
 .productvariety .cudtombtn-box{
@@ -253,4 +282,7 @@ padding: 10px;
   display: grid;
   grid-template-columns: 33.3% 33.3% 33.3%;
   flex-wrap: wrap;
+}
+.addproductmainmodal .addproductbody .addproduct_form .inputlabelheading{
+display: flex;
 }

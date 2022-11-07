@@ -1,15 +1,9 @@
 import React, { useState,useMemo } from "react";
 import Input from "../common/input";
-import { AiOutlinePlus, AiOutlineCloudUpload } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
 import { BsTrash } from "react-icons/bs";
-import { BiEdit, BiDotsVertical } from "react-icons/bi";
+import { BiEdit } from "react-icons/bi";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
-import Form from "react-bootstrap/Form";
-import Modal from "react-bootstrap/Modal";
-import Iconbutton from "../common/iconbutton";
-import Dropdown from "react-bootstrap/Dropdown";
 import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
 import FilterComponent from "../common/FilterComponent";
@@ -18,9 +12,8 @@ const InvoiceList = () => {
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+
+
   const columns = [
     {
       name: "Id",
@@ -184,9 +177,7 @@ const InvoiceList = () => {
       discount: "50%",
     },
   ];
-  const handleClick = () => {};
-  const onButtonClick = () => {};
-  const navigate = useNavigate();
+
 
 
   // filter

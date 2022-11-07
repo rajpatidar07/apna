@@ -1,14 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import "./setting.css";
-// import Iconbutton from "./common/iconbutton";
 import Iconbutton from "../common/iconbutton";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import Input from "../common/input";
 
 function Banner() {
-  const [show, setShow] = useState(false);
 
   return (
     <div>

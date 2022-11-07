@@ -12,7 +12,7 @@ import Orders from './orders';
 function AdminRoute() {
     return (
         <Router>
-        <ul class="nav-news-feed">
+        <ul className="nav-news-feed">
           <li>
             <Link to="/dashboard" className="nav-link">Dashboard</Link>
           </li>

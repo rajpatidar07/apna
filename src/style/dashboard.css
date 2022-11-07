@@ -124,7 +124,7 @@ position: relative;
   flex-direction: column;
   align-items: center;
 }
- .orderstatus_box .step.active:before {
+ .orderstatus_box .step.active::before {
   background: #5cb85c;
 }
  .orderstatus_box .step::before {

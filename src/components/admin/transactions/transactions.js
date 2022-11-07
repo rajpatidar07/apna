@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import Input from "../common/input";
-import { FaFileInvoiceDollar } from "react-icons/fa";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
@@ -9,7 +8,6 @@ import "../../../style/order.css";
 import TransactionJson from "../json/transaction"
 
 
-const onButtonClick = () => { };
 function Transactions() {
   var transactions = TransactionJson.transactions;
 
@@ -115,10 +113,6 @@ function Transactions() {
   //   },
 
   // ];
-
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   return (
     <div className="App">

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Input from "./common/input";
 import { FaFileInvoiceDollar } from "react-icons/fa";
 import DataTable from "react-data-table-component";
@@ -12,9 +12,6 @@ import OrderJson from "./json/orders"
 function Product() {
   var orders = OrderJson.orders;
 
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
   const columns = [
     {
       name: "Order Id",
@@ -137,63 +134,7 @@ function Product() {
     },
   ];
   
-  const data = [
-    {
-      id: 1,
-      order_id: "AS1568",
-      no_of_item: "2",
-      price: "$15",
-      tex: "CGST 18%",
-      order_date: "10/10/22",
-      delivery_date: "12/10/22",
-      pay_mode: "UPI",
-      status: "Pending",
-    },
-    {
-      id: 2,
-      order_id: "AS1568",
-      no_of_item: "2",
-      price: "$15",
-      tex: "CGST 18%",
-      order_date: "10/10/22",
-      delivery_date: "12/10/22",
-      pay_mode: "UPI",
-      status: "Delivered",
-    },
-    {
-      id: 3,
-      order_id: "AS1568",
-      no_of_item: "2",
-      price: "$15",
-      tex: "CGST 18%",
-      order_date: "10/10/22",
-      delivery_date: "12/10/22",
-      pay_mode: "COD",
-      status: "Cancel",
-    },
-    {
-      id: 4,
-      order_id: "AS1568",
-      no_of_item: "2",
-      price: "$15",
-      tex: "CGST 18%",
-      order_date: "10/10/22",
-      delivery_date: "12/10/22",
-      pay_mode: "UPI",
-      status: "Processing",
-    },
-    {
-      id: 5,
-      order_id: "AS1568",
-      no_of_item: "2",
-      price: "$15",
-      tex: "CGST 18%",
-      order_date: "10/10/22",
-      delivery_date: "12/10/22",
-      pay_mode: "COD",
-      status: "Approvad",
-    },
-  ];
+ 
   
   return (
     <div className="App">

@@ -1,6 +1,5 @@
 import React from "react";
 // import {  pdf,Page, Text, View, Document, StyleSheet, usePDF, PDFDownloadLink } from '@react-pdf/renderer';
-import logo from '../../../images/logo.png';
 // import DownloadInvoice from './download.js';
 
 

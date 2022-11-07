@@ -11,7 +11,6 @@ import {
   AiOutlineCheck,
 } from "react-icons/ai";
 import { BsArrowLeftCircle } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
 import { MdOutlineDeliveryDining } from "react-icons/md";
 import { BiEdit } from "react-icons/bi";
 import { GoPrimitiveDot } from "react-icons/go";
@@ -234,9 +233,7 @@ const Delivery = () => {
       status: "Cancelled",
     },
   ];
-  const handleClick = () => { };
-  const onButtonClick = () => { };
-  const navigate = useNavigate();
+
   return (
     <div className="deliveryreport_pagee">
       <h2>Delivery</h2>
@@ -372,30 +369,30 @@ const Delivery = () => {
             <Modal.Title>Product Tracking Info</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <div class="row d-flex justify-content-between px-3 top">
-              <div class="card-body orderdetail_box">
+            <div className="row d-flex justify-content-between px-3 top">
+              <div className="card-body orderdetail_box">
                 <div className="d-flex justify-content-between align-items-center">
                   <h6 className="text-primary">Order ID: OD45345345435</h6>
                   <h6 className="text-primary">Tracking ID: BD045903594059</h6>
                 </div>
                 {/* user */}
-                <article class="card orderdetail">
-                  <div class="card-body row">
-                    <div class="col">
+                <article className="card orderdetail">
+                  <div className="card-body row">
+                    <div className="col">
                       {" "}
                       <strong>UserName:</strong> <br />
                       Nicolas Johnson{" "}
                     </div>
-                    <div class="col">
+                    <div className="col">
                       {" "}
                       <strong>Phone No:</strong> <br /> 025145, |{" "}
-                      <i class="fa fa-phone"></i> +15986759860{" "}
+                      <i className="fa fa-phone"></i> +15986759860{" "}
                     </div>
-                    <div class="col">
+                    <div className="col">
                       {" "}
                       <strong>Email:</strong> <br /> Nicholaskjn23@gmail.com{" "}
                     </div>
-                    <div class="col">
+                    <div className="col">
                       {" "}
                       <strong>Address:</strong> <br />
                       4059 bhind uhtkn dg near tilsk nagar indore mp{" "}
@@ -404,48 +401,48 @@ const Delivery = () => {
                 </article>
                 {/* end */}
                 {/* track */}
-                <div class="track orderstatus_box">
-                  <div class="step active">
+                <div className="track orderstatus_box">
+                  <div className="step active">
                     {" "}
-                    <span class="icon">
+                    <span className="icon">
                       <AiOutlineCheck className={" orderstatus_icon h4 "} />{" "}
                     </span>{" "}
-                    <span class="text">Shipped</span>{" "}
+                    <span className="text">Shipped</span>{" "}
                   </div>
-                  <div class="step active">
+                  <div className="step active">
                     {" "}
-                    <span class="icon">
+                    <span className="icon">
                       {" "}
                       <AiOutlineUser
                         className={" orderstatus_icon h4 "}
                       />{" "}
                     </span>{" "}
-                    <span class="text"> Picked by courier</span>{" "}
+                    <span className="text"> Picked by courier</span>{" "}
                   </div>
-                  <div class="step ">
+                  <div className="step ">
                     {" "}
-                    <span class="icon">
+                    <span className="icon">
                       {" "}
                       <MdOutlineDeliveryDining
                         className={" orderstatus_icon h4 "}
                       />{" "}
                     </span>{" "}
-                    <span class="text"> On the way </span>{" "}
+                    <span className="text"> On the way </span>{" "}
                   </div>
-                  <div class="step ">
+                  <div className="step ">
                     {" "}
-                    <span class="icon">
+                    <span className="icon">
                       {" "}
                       <AiOutlineGift className={" orderstatus_icon h4 "} />
                     </span>{" "}
-                    <span class="text">Delivered</span>{" "}
+                    <span className="text">Delivered</span>{" "}
                   </div>
                 </div>
                 <hr />
                 {/* end */}
                 <div className="row">
                   {/* left */}
-                  <article class="card orderdetail col-md-6 col-sm-12">
+                  <article className="card orderdetail col-md-6 col-sm-12">
                     <div className="d-flex align-items-center">
                       <b>
                         {" "}
@@ -486,7 +483,7 @@ const Delivery = () => {
                       <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row shipping_infoo py-2">
                         <strong className={"col-md-6"}>Shipping BY:</strong>
                         <div bg="primary" pill className={"col-md-6"}>
-                          BLUEDART, | <i class="fa fa-phone"></i> +1598675986
+                          BLUEDART, | <i className="fa fa-phone"></i> +1598675986
                         </div>
                       </ListGroup.Item>
                       <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row shipping_infoo py-2">
@@ -516,7 +513,7 @@ const Delivery = () => {
                   </article>
                   {/* end */}
                   {/* right */}
-                  <article class="card orderdetail trackrecord_box col-md-6 col-sm-12">
+                  <article className="card orderdetail trackrecord_box col-md-6 col-sm-12">
                     <div className="d-flex align-items-center">
                       <b>
                         {" "}
@@ -546,7 +543,7 @@ const Delivery = () => {
                             <ListGroup.Item className="shipping_infoo py-0 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row">
                               <strong className={"col-md-3"}>1:00 PM</strong>
                               <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
-                                BLUEDART, | <i class="fa fa-phone"></i>{" "}
+                                BLUEDART, | <i className="fa fa-phone"></i>{" "}
                                 +1598675986
                               </div>
                             </ListGroup.Item>
@@ -588,7 +585,7 @@ const Delivery = () => {
                             <ListGroup.Item className="py-0 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row shipping_infoo">
                               <strong className={"col-md-3"}>1:00 PM</strong>
                               <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
-                                BLUEDART, | <i class="fa fa-phone"></i>{" "}
+                                BLUEDART, | <i className="fa fa-phone"></i>{" "}
                                 +1598675986
                               </div>
                             </ListGroup.Item>
@@ -629,7 +626,7 @@ const Delivery = () => {
                         <ListGroup.Item className="py-2 d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row shipping_infoo">
                           <strong className={"col-md-3"}>1:00 PM</strong>
                           <div bg="primary" pill className={"col-md-6 shippimgaddress"}>
-                            BLUEDART, | <i class="fa fa-phone"></i>{" "}
+                            BLUEDART, | <i className="fa fa-phone"></i>{" "}
                             +1598675986
                           </div>
                         </ListGroup.Item>

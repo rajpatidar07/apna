@@ -154,7 +154,7 @@ const Productdetail = () => {
                 lines={5}
                 more="Show more"
                 less="...Show less"
-                anchorClass="oooeeer"
+                anchorclassName="oooeeer"
                 expanded={false}
                 width={500}
                 className={'detailproduct'}
@@ -217,7 +217,7 @@ const Productdetail = () => {
                 lines={5}
                 more="Show more"
                 less="...Show less"
-                anchorClass="oooeeer"
+                anchorclassName="oooeeer"
                 expanded={false}
                 width={500}
               >
