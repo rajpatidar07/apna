@@ -175,7 +175,7 @@ const Deletedproduct = () => {
         pagination
         highlightOnHover
         pointerOnHover
-        className={"productlist_table"}
+        className={"table_body deletedproduct_tabel"}
       />
         <SweetAlert
           show={Alert}

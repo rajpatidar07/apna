@@ -192,7 +192,7 @@ const Promotionproduct = () => {
         pagination
         highlightOnHover
         pointerOnHover
-        className={"productlist_table"}
+        className={"table_body promotionproduct_table"}
       />
       <SweetAlert
           show={Alert}

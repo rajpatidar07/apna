@@ -248,7 +248,7 @@ const InvoiceList = () => {
           pagination
           highlightOnHover
           pointerOnHover
-          className={"productlist_table"}
+          className={"table_body invoic_table"}
           subHeader
               subHeaderComponent={subHeaderComponent}
         />

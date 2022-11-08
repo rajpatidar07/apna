@@ -22,11 +22,11 @@ const OrderDetail = () => {
                 </div>
                 <div className="d-flex flex-column text-center">
                   <div className="order_info_heading">Payment</div>
-                  <div className="order_payment">Paid</div>
+                  <div className="badge bg-success">Paid</div>
                 </div>
                 <div className="d-flex flex-column text-center">
                   <div className="order_info_heading">Order Status</div>
-                  <div className="order_status">Pending</div>
+                  <div className="badge bg-warning">Pending</div>
                 </div>
                 <div className="d-flex flex-column text-center">
                   <div className="order_info_heading">Order Date & Time</div>

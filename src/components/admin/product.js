@@ -257,7 +257,7 @@ function Product() {
           pagination
           highlightOnHover
           pointerOnHover
-          className={"productlist_table"}
+          className={"table_body product_table"}
         />
         <SweetAlert
           show={Alert}

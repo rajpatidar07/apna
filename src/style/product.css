@@ -51,7 +51,7 @@
   white-space: normal;
 }
 
-.productlist_table button#productstatus_dropdown {
+.table_body button#productstatus_dropdown {
   margin: 0;
   padding: 0;
   position: absolute;
@@ -59,14 +59,14 @@
   left: -30px;
   opacity: 0;
 }
-.productlist_table
+.table_body
   .actioncolimn
   .productprofile_div
   .product_list_dropdownstatus {
   z-index: 999;
   background-color: black;
 }
-.productlist_table
+.table_body
   .actioncolimn
   .productprofile_div
   .product_list_dropdownstatus
@@ -74,7 +74,7 @@
   color: #fff;
   z-index: 999;
 }
-.productlist_table
+.table_body
   .actioncolimn
   .productprofile_div
   .product_list_dropdownstatus
@@ -82,15 +82,19 @@
   color: black;
   z-index: 999;
 }
-.productlist_table .beUiVL {
+.table_body .beUiVL {
   font-size: 16px !important;
   font-weight: 600 !important;
 }
-.productlist_table .actioncolimn .doticon {
+.table_body .actioncolimn .doticon {
   position: relative;
 }
-.productlist_table .sc-jSUZER.eVPPvF .actioncolimn,
-.productlist_table .sc-jSUZER.eVPPvF > div {
+.table_body .bQdYbR{
+  font-size: unset;
+}
+
+.table_body .sc-jSUZER.eVPPvF .actioncolimn,
+.table_body .sc-jSUZER.eVPPvF > div {
   overflow: unset !important;
 }
 .dtqzBx div.dropdown:first-child {
@@ -111,7 +115,7 @@
   padding: 0 12px;
 }
 
-.productlist_table .sc-dkrFOg.iSAVrt.rdt_TableHeadRow {
+.table_body .sc-dkrFOg.iSAVrt.rdt_TableHeadRow {
   background: rgb(89 193 88 / 20%);
 }
 

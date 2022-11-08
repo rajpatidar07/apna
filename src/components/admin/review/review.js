@@ -251,7 +251,7 @@ const Review = () => {
     pagination
     highlightOnHover
     pointerOnHover
-    className={"productlist_table"}
+    className={"table_body review_table"}
   />
    <SweetAlert
     show={Alert}

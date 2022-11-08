@@ -180,7 +180,7 @@ function Product() {
           pagination
           highlightOnHover
           pointerOnHover
-          className={"productlist_table"}
+          className={"table_body order_table"}
         />
       </div>
     </div>

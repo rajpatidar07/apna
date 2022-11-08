@@ -363,7 +363,7 @@ const TaxesReport = () => {
         pagination
         highlightOnHover
         pointerOnHover
-        className={"productlist_table"}
+        className={"table_body taxes_table"}
       />
 
 </div>
