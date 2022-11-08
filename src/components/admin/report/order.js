@@ -413,7 +413,7 @@ const OrderReport
         pagination
         highlightOnHover
         pointerOnHover
-        className={"productlist_table"}
+        className={"table_body orderreport_table"}
       />
 
 </div>

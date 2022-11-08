@@ -415,7 +415,7 @@ setFilterchange(e.target.value)
                 
               </div>
             </div>
-            {/*  */}
+            // {/*  */}
             {/* net */}
             <div className="card p-2 col-2 rounded-right shadow-none">
               <div className=" d-flex mt-0 align-items-center">
@@ -461,7 +461,7 @@ setFilterchange(e.target.value)
         pagination
         highlightOnHover
         pointerOnHover
-        className={"productlist_table"}
+        className={"table_body revenue_table"}
       />
 
 </div>

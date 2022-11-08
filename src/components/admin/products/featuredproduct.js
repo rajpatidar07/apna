@@ -338,7 +338,7 @@ const Featuredproduct = () => {
         pagination
         highlightOnHover
         pointerOnHover
-        className={"productlist_table"}
+        className={"table_body featuredproduct_table"}
       />
       <SweetAlert
           show={Alert}

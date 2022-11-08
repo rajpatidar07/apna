@@ -192,7 +192,7 @@ const handleClick = () => {};
         pagination
         highlightOnHover
         pointerOnHover
-        className={"productlist_table"}
+        className={"table_body offerproduct_table"}
       />
           <SweetAlert
           show={Alert}

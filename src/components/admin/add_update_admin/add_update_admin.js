@@ -120,7 +120,7 @@ function Admin() {
           pagination
           highlightOnHover
           pointerOnHover
-          className={"productlist_table"}
+          className={"table_body add_update_admin_table"}
         />
         <SweetAlert
         show={Alert}

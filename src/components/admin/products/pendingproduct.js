@@ -190,7 +190,7 @@ const Pendingproduct = () => {
           pagination
           highlightOnHover
           pointerOnHover
-          className={"productlist_table"}
+          className={"table_body pendingproduct_table"}
         />
         <SweetAlert
           show={Alert}

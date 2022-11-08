@@ -669,7 +669,7 @@ const Delivery = () => {
           pagination
           highlightOnHover
           pointerOnHover
-          className={"productlist_table"}
+          className={"table_body delivery_table"}
         />
       </div>
     </div>
