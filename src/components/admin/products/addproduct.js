@@ -27,7 +27,7 @@ const Addproduct = (props) => {
   const [descval, setdescval] = useState('');
   const [variantmainarray, setvariantmainarray] = useState([]);
   const [customarray, setcustomarray] = useState([]);
-  const [data1, setdata1] = useState();
+  const [data1, setdata1] = useState([]);
   const formRef = useRef();
   const mainformRef = useRef();
 
@@ -187,7 +187,6 @@ const Addproduct = (props) => {
       setpdata(productjson)
     }
   }, [props.show]);
-  console.log("pdata---" + JSON.stringify(pdata))
 
   // seotag
   let tagname;
@@ -224,6 +223,10 @@ const Addproduct = (props) => {
       ...variantarray,
       [e.target.name]: e.target.value
     });
+    setdata1({
+      ...data1,
+      [e.target.name]: e.target.value
+    });
   };
   const onVariantaddclick = (e) => {
     if (variantarray !== '') {
@@ -244,9 +247,9 @@ const Addproduct = (props) => {
 const VariantEditClick =(e)=>{
   console.log(JSON.stringify(e)+"   eeeee")
   setdata1(e)
+  setvariantmainarray(variantmainarray.filter(item => item !== e));
 }
   // varint end
-
 
 
   // handle click event of the Remove button
@@ -328,7 +331,7 @@ const VariantEditClick =(e)=>{
   }, [variantmainarray]);
 
 
-console.log("-------"+JSON.stringify(pdata.va))
+console.log("----00000000000000000000---"+JSON.stringify(data1.variations));
 
   return (
     <div>
@@ -674,7 +677,7 @@ console.log("-------"+JSON.stringify(pdata.va))
                                   <td className="p-0 text-center">
                                     <div className=" d-flex align-items-center">
                                       <InputGroup className="" size="sm">
-                                        <Form.Select aria-label="Default select example" name='variations' onChange={(e) => {
+                                        <Form.Select aria-label="Default select example" name='variations' value ={data1.variations} onChange={(e) => {
                                           // setvariantmainarray('');
                                           setcustomValidated(false)
                                           setvarietyval(e.target.value);
@@ -705,6 +708,7 @@ console.log("-------"+JSON.stringify(pdata.va))
                                           className={(customvalidated === true) ? 'border-danger' : null}
                                           onChange={onVariantChange}
                                           name={'colorname'}
+                                          value={data1.colorname}
                                         />
                                       </InputGroup>
                                     </div>
@@ -714,6 +718,7 @@ console.log("-------"+JSON.stringify(pdata.va))
                                     <div className=" d-flex align-items-center">
                                       <InputGroup className="" size="sm">
                                         <Form.Control
+                                        value={(data1.variations === 'weight' ? data1.weight : data1.variations === 'volume' ? data1.volume  : data1.variations === 'piece' ?  data1.piece : data1.variations === 'color' ? data1.size : null)}
                                           type="text"
                                           sm="9"
                                           className={(customvalidated === true) ? 'border-danger' : null}
@@ -734,6 +739,7 @@ console.log("-------"+JSON.stringify(pdata.va))
                                           className={(customvalidated === true) ? 'border-danger' : null}
                                           onChange={onVariantChange}
                                           name={'price'}
+                                          value={data1.price}
                                         />
                                       </InputGroup>
 
@@ -749,6 +755,7 @@ console.log("-------"+JSON.stringify(pdata.va))
                                           className={(customvalidated === true) ? 'border-danger' : null}
                                           onChange={onVariantChange}
                                           name={'mrp'}
+                                          value={data1.mrp}
 
                                         />
                                       </InputGroup>
@@ -765,7 +772,7 @@ console.log("-------"+JSON.stringify(pdata.va))
                                           className={(customvalidated === true) ? 'border-danger' : null}
                                           onChange={onVariantChange}
                                           name={'sale_price'}
-
+                                          value={data1.sale_price}
                                         />
                                       </InputGroup>
 
@@ -780,7 +787,7 @@ console.log("-------"+JSON.stringify(pdata.va))
                                           min={1}
                                           onChange={onVariantChange}
                                           name={'discount'}
-
+                                          value={data1.discount}
                                         />
                                       </InputGroup>
 
@@ -791,7 +798,7 @@ console.log("-------"+JSON.stringify(pdata.va))
                                       <Form.Check
                                         onChange={onVariantChange}
                                         name={'special_offer'}
-
+                                        value={data1.special_offer}
                                       />
                                     </div>
                                   </td>
@@ -800,7 +807,7 @@ console.log("-------"+JSON.stringify(pdata.va))
                                       <Form.Check
                                         onChange={onVariantChange}
                                         name={'featured_product'}
-
+                                        value={data1.featured_product}
                                       />
                                     </div>
                                   </td>
@@ -813,7 +820,7 @@ console.log("-------"+JSON.stringify(pdata.va))
                                           className={(customvalidated === true) ? 'border-danger' : null}
                                           onChange={onVariantChange}
                                           name={'manufacturing_date'}
-
+                                          value={data1.manufacturing_date}
                                         />
                                       </InputGroup>
 
@@ -828,7 +835,7 @@ console.log("-------"+JSON.stringify(pdata.va))
                                           className={(customvalidated === true) ? 'border-danger' : null}
                                           onChange={onVariantChange}
                                           name={'expire_date'}
-
+                                          value={data1.expire_date}
                                         />
                                       </InputGroup>
 
@@ -844,6 +851,7 @@ console.log("-------"+JSON.stringify(pdata.va))
                                           className={(customvalidated === true) ? 'border-danger' : null}
                                           onChange={imguploadchange}
                                           name={'product_img'}
+                                         
                                         />
                                       </InputGroup>
 
@@ -855,7 +863,7 @@ console.log("-------"+JSON.stringify(pdata.va))
                                         <Form.Control
                                           name={'quantity'}
                                           type="number"
-
+                                          value={data1.quantity}
                                           sm="9"
                                           min={'1'}
                                           className={(customvalidated === true) ? 'border-danger' : null}
@@ -881,6 +889,7 @@ console.log("-------"+JSON.stringify(pdata.va))
                                     </div>
                                   </td>
                                 </tr>
+                              
                                 {
                                   (pdata.quantity || []).map((variantdata, i) => {
                                     return (
