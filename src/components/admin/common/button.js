@@ -1,7 +1,7 @@
 import React from "react";
 
 const MainButton = (props) => {
-  return (
+ return (
     <div>
       <button
         type={props.type}
@@ -20,7 +20,7 @@ export default MainButton;
 MainButton.defaultProps = {
   btnclass: "button main_button",
   name: "",
-  onClick: {},
+  // onClick: "",
   type: "",
   value: "",
   plchldr: "",

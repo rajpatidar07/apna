@@ -51,9 +51,9 @@ function AdminLayout() {
   return (
     <div className="container-fluid p-0">
       <Router>
-        {window.location.pathname === "/" ? (
+        {window.location.pathname === "/login" ? (
           <Routes>
-            <Route path="/" element={<Login />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/change_password" element={<ChangePassword />} />
             <Route path="/forgot" element={<Forgot />} />
           </Routes>
@@ -66,7 +66,7 @@ function AdminLayout() {
               <AdminHeader />
               <div className="main_content_div">
                 <Routes>
-                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/" element={<Dashboard />} />
                   <Route path="/product" element={<Product />} />
                   <Route path="/orders" element={<Orders />} />
                   <Route path="/addproduct" element={<Addproduct />} />
@@ -77,10 +77,7 @@ function AdminLayout() {
                   <Route path="/featureproduct" element={<Featuredproduct />} />
                   <Route path="/expiredproduct" element={<Expiredproduct />} />
                   <Route path="/pendingproduct" element={<Pendingproduct />} />
-                  <Route
-                    path="/promotionproduct"
-                    element={<Promotionproduct />}
-                  />
+                  <Route path="/promotionproduct" element={<Promotionproduct />}/>
                   <Route path="/offerproduct" element={<Offerproduct />} />
                   <Route path="/deletedproduct" element={<Deletedproduct />} />
                   <Route path="/order_detail" element={<OrderDetail />} />
@@ -92,26 +89,23 @@ function AdminLayout() {
                   <Route path="/category" element={<CategoryList />} />
                   <Route path="/complaint" element={<Complaint />} />
                   <Route path="/transactions" element={<Transactions />} />
-                  <Route
-                    path="/transactions_detail"
-                    element={<TranDetail />} />
-                    <Route path="/home_manager" element={<Home />} />
-                  <Route path="/banner" element={<Banner/>} />
-                  <Route path="/coupon" element={<Coupon/>} />
-                  <Route path="/review" element={<Review/>} />
-                  <Route path="/delivery" element={<Delivery/>} />
+                  <Route path="/transactions_detail" element={<TranDetail />} />
+                  <Route path="/home_manager" element={<Home />} />
+                  <Route path="/banner" element={<Banner />} />
+                  <Route path="/coupon" element={<Coupon />} />
+                  <Route path="/review" element={<Review />} />
+                  <Route path="/delivery" element={<Delivery />} />
                   {/* report */}
-                  <Route path="/revenuereport" element={<RevenueReport/>} />
-                  <Route path="/productreport" element={<ProductReport/>} />
-                  <Route path="/orderreport" element={<OrderReport/>} />
-                  <Route path="/couponreport" element={<CouponReport/>} />
-                  <Route path="/stockreport" element={<StockReport/>} />
-                  <Route path="/taxreport" element={<TaxesReport/>} />
-                  <Route path="/categoryreport" element={<CategoryReport/>} />
-                  <Route path="/content_manager" element={<ContentManager/>} />
-                  <Route path="/customerreport" element={<CustomerReport/>} />
-                  <Route path="/storereport" element={<StoreReport/>} />
-
+                  <Route path="/revenuereport" element={<RevenueReport />} />
+                  <Route path="/productreport" element={<ProductReport />} />
+                  <Route path="/orderreport" element={<OrderReport />} />
+                  <Route path="/couponreport" element={<CouponReport />} />
+                  <Route path="/stockreport" element={<StockReport />} />
+                  <Route path="/taxreport" element={<TaxesReport />} />
+                  <Route path="/categoryreport" element={<CategoryReport />} />
+                  <Route path="/content_manager" element={<ContentManager />} />
+                  <Route path="/customerreport" element={<CustomerReport />} />
+                  <Route path="/storereport" element={<StoreReport />} />
                 </Routes>
               </div>
             </div>
