@@ -1,11 +1,11 @@
 import React, { Fragment } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import "./login.css";
 import MainButton from "../common/button";
 import Logo from "../../../images/logo.png";
 
 const Login = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   return (
     <Fragment>
       <div className="for_scrol">
@@ -36,7 +36,7 @@ const Login = () => {
                             id="email"
                             placeholder="Email Address"
                           />
-                          <label for="email">Email Address</label>
+                          <label htmlFor="email">Email Address</label>
                         </div>
                       </div>
 
@@ -48,7 +48,7 @@ const Login = () => {
                             id="password"
                             placeholder="Password"
                           />
-                          <label for="password">Password</label>
+                          <label htmlFor="password">Password</label>
                         </div>
                       </div>
 
@@ -62,7 +62,7 @@ const Login = () => {
                             />
                             <label
                               className="form-check-label"
-                              for="flexCheckDefault"
+                              htmlFor="flexCheckDefault"
                             >
                               Remember me
                             </label>
@@ -77,7 +77,7 @@ const Login = () => {
                         <MainButton
                           btntext={"Login"}
                           btnclass={"w-100 btn-success btn"}
-                          onClick={navigate("home")}
+                          // onClick={navigate("home")}
                         />
                       </div>
                     </form>
@@ -88,7 +88,7 @@ const Login = () => {
                   </div>
 
                   <div className="log-in-button">
-                    <ul classNameName="p-0">
+                    <ul className="p-0">
                       <li>
                         <a
                           href="https://www.google.com/"

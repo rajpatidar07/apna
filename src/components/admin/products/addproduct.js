@@ -528,7 +528,7 @@ const Addproduct = (props) => {
                                 <th >Variety</th>
                                 {varietyval === 'color' ?
                                   <th >Color</th> : null}
-                                {varietyval != '' ?
+                                {varietyval !== '' ?
                                   <th >{varietyval === 'weight' ? 'Weight' : varietyval === 'volume' ? 'Volume' : varietyval === 'piece' ? 'Piece' : varietyval === 'color' ? 'Size' : null}</th> : null}
                                 <th >Price</th>
                                 <th >Mrp</th>
