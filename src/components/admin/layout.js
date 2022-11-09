@@ -51,19 +51,19 @@ function AdminLayout() {
   return (
     <div className="container-fluid p-0">
       <Router>
-        {window.location.pathname === "/login" ? (
+     
           <Routes>
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Login/>} />
             <Route path="/change_password" element={<ChangePassword />} />
-            <Route path="/forgot" element={<Forgot />} />
+            <Route path="/forgot" element={<Forgot/>} />
           </Routes>
-        ) : (
+    
           <div className="row m-0 page_main_row">
             <div className="col-lg-2 col-md-3 col-sm-4 sidebar_main_div p-0">
               <AdminSidebar />
             </div>
             <div className="col-lg-10 col-md-9 col-sm-8">
-              <AdminHeader />
+              <AdminHeader/>
               <div className="main_content_div">
                 <Routes>
                   <Route path="/" element={<Dashboard />} />
@@ -82,7 +82,6 @@ function AdminLayout() {
                   <Route path="/deletedproduct" element={<Deletedproduct />} />
                   <Route path="/order_detail" element={<OrderDetail />} />
                   <Route path="/footer" element={<Footer />} />
-                  <Route path="/login" element={<Login />} />
                   <Route path="/vendors" element={<VendorsList />} />
                   <Route path="/components" element={<AdminComponents />} />
                   <Route path="/add_admin" element={<Admin />} />
@@ -110,7 +109,7 @@ function AdminLayout() {
               </div>
             </div>
           </div>
-        )}
+       
       </Router>
     </div>
   );

@@ -132,7 +132,14 @@ code {
 .container.content_top_container
   .row.content_top_row
   .search_bar.right_side.col-md-6
-  button {
+  .notification_div
+  button,
+.container.content_top_container
+  .row.content_top_row
+  .search_bar.right_side.col-md-6
+  .profile_div
+  button
+  img {
   width: 35px;
   height: 35px;
   border-radius: 50%;
@@ -141,7 +148,25 @@ code {
   overflow: hidden;
   border-width: 2px;
 }
-
+/* .container.content_top_container
+  .row.content_top_row
+  .search_bar.right_side.col-md-6
+ .profile_div button img {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  padding: 0px;
+  line-height: 1;
+  overflow: hidden;
+  border-width: 2px;
+} */
+.container.content_top_container
+  .row.content_top_row
+  .search_bar.right_side.col-md-6
+  .profile_div
+  .btn:first-child:active {
+  border-color: transparent;
+}
 .container.content_top_container
   .row.content_top_row
   .search_bar.right_side.col-md-6
@@ -280,6 +305,66 @@ code {
 .sc-jSUZER {
   padding: 10px !important;
 }
+.accordion {
+  --bs-accordion-btn-active-icon: url("./images/collapase.svg");
+}
+.content_top_container .notification_div {
+  position: relative;
+}
+.content_top_container .notification_div .notification_alart span {
+  color: #fff;
+  position: absolute;
+  border-radius: 50%;
+  font-size: 15px;
+  padding: 1px 4px;
+  top: -8px;
+}
+
+/* notification */
+.notification_div .notification_heading span {
+  border-radius: 5px;
+  padding: 3px;
+  font-size: 15px;
+  color: #fff;
+}
+.notification_div .notification_box {
+  border-bottom: solid 1px #aaa;
+  padding: 12px 14px;
+}
+.notification_div .notification_box svg {
+  font-size: 28px !important;
+  margin-right: 8px !important;
+}
+.content_top_container .dropdown-item:hover {
+  background-color: #def3de;
+}
+/* .notification_div .notification_box .notification_name {
+  margin-left: 8px;
+} */
+.notification_div .notification_box .notification_text {
+  margin: 0;
+  color: #000000a1;
+}
+
+.notification_div .notification_box .notification_time {
+  font-size: 13px;
+}
+.content_top_container .dropdown-item.active,
+.dropdown-item:active {
+  color: var(--bs-dropdown-link-active-color);
+  text-decoration: none;
+  color: #000;
+  background-color: #72b702;
+}
+
+.content_top_container .right_side .profile_div .profile_list svg {
+  margin-right: 8px;
+  font-size: 22px;
+}
+.dropdown-menu.show {
+  inset: 12px 0px auto auto !important;
+}
+
 @media only screen and (max-width: 1124px) {
   .main_sidebar .accordion {
     padding: 5px 4px 5px 5px;
@@ -287,8 +372,11 @@ code {
   .main_sidebar .accordion button.accordion-button {
     padding-left: 5px;
   }
-  .order_detail .right_side, .order_detail .left_side, .product_img_price,
-    .delivery_charges, .payment_summary{
-      padding: 14px !important;
-    }
+  .order_detail .right_side,
+  .order_detail .left_side,
+  .product_img_price,
+  .delivery_charges,
+  .payment_summary {
+    padding: 14px !important;
+  }
 }
