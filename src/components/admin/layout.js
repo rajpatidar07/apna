@@ -51,9 +51,9 @@ function AdminLayout() {
   return (
     <div className="container-fluid p-0">
       <Router>
-        {window.location.pathname === "/" ? (
+        {window.location.pathname === "/login" ? (
           <Routes>
-            <Route path="/" element={<Login />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/change_password" element={<ChangePassword />} />
             <Route path="/forgot" element={<Forgot />} />
           </Routes>
@@ -66,7 +66,7 @@ function AdminLayout() {
               <AdminHeader />
               <div className="main_content_div">
                 <Routes>
-                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/" element={<Dashboard />} />
                   <Route path="/product" element={<Product />} />
                   <Route path="/orders" element={<Orders />} />
                   <Route path="/addproduct" element={<Addproduct />} />
