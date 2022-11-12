@@ -20,11 +20,12 @@ const CategoryList = () => {
   const [validated, setValidated] = useState(false);
   const [categorydata, setcategorydata] = useState([]);
   const [addcategorydata, setaddcategorydata] = useState([]);
+  const [editcategorydata, seteditcategorydata] = useState([]);
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
-  const [show, setShow] = useState(false);
-  const handleClose = () =>{ 
+  const [show, setShow] = useState('');
+  const handleClose = () => {
     formRef.current.reset();
     setValidated(false)
     setShow(false);
@@ -32,6 +33,7 @@ const CategoryList = () => {
   const handleShow = (e) => {
     if (e === 'add') {
       setShow(e)
+      setaddcategorydata('')
     }
     console.log(JSON.stringify(e))
     if (e !== 'add') {
@@ -47,22 +49,22 @@ const CategoryList = () => {
         id: 1,
         category_type: "Grocery",
         category_name: "Green Leaf Lettuce",
-        product_desc:"The root vegetables include beets, and turnips",
+        product_desc: "The root vegetables include beets, and turnips",
         parent_category: "Fruits & Vegetable",
         price: "$14",
         stock: "15",
-        category_icon:"https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg",
+        category_icon: "https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg",
         status: "Selling",
       },
       {
         id: 2,
         category_type: "Health & Care",
         category_name: "Green Leaf Lettuce",
-        product_desc:"The root vegetables include beets, and turnips",
+        product_desc: "The root vegetables include beets, and turnips",
         parent_category: "Fruits & Vegetable",
         price: "$14",
         stock: "15",
-        category_icon:"https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg",
+        category_icon: "https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg",
         status: "Sold out",
       },
     ]
@@ -110,15 +112,15 @@ const CategoryList = () => {
     },
     {
       name: "Category Name",
-      selector: (row) =>  <div className="productdescbox">
-      <b>
-        <p className="mb-0">{row.category_name}</p>
-      </b>
-      <p className="productdesc">
-        {" "}
-        {row.product_desc}
-      </p>
-    </div>,
+      selector: (row) => <div className="productdescbox">
+        <b>
+          <p className="mb-0">{row.category_name}</p>
+        </b>
+        <p className="productdesc">
+          {" "}
+          {row.product_desc}
+        </p>
+      </div>,
       sortable: true,
       width: "250px",
     },
@@ -192,31 +194,35 @@ const CategoryList = () => {
       ...addcategorydata,
       [e.target.name]: e.target.value
     });
+    // seteditcategorydata({
+    //   ...editcategorydata,
+    //   [e.target.name]: e.target.value
+    // });
+    
   };
   const ImgFormChange = (e) => {
     let iconpath = URL.createObjectURL(e.target.files[0])
-    setaddcategorydata((addcategorydata) => { return { ...addcategorydata, category_icon: iconpath } });
+    setcategorydata((categorydata) => { return { ...categorydata, category_icon: iconpath } });
   }
   const AddCategoryClick = (e) => {
-    e.preventDefault();
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
-      // e.stopPropagation();
+      e.stopPropagation();
       e.preventDefault()
+      setValidated(true)
     }
     if (form.checkValidity() === true) {
+      e.preventDefault()
       console.log("form----------   " + JSON.stringify(addcategorydata));
       formRef.current.reset();
       setValidated(false)
       setaddcategorydata('')
     }
-    setValidated(true)
   };
   const UpdateCategoryClick = (show) => {
     // setadmindata(adminjson.admin[show])
+    show.preventDefault()
     console.log("form----------   " + JSON.stringify(addcategorydata));
-    formRef.current.reset();
-    setaddcategorydata('')
   };
 
   const handleClick = () => { };
@@ -272,41 +278,42 @@ const CategoryList = () => {
           aria-labelledby="example-custom-modal-styling-title"
           centered
         >
-          <Modal.Header closeButton className="addproductheader">
-            <Modal.Title id="example-custom-modal-styling-title">
-              {show === 'add' ? 'Add Category' : ' Update Category'}
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body className="addproductbody p-2">
-            <Form className="" validated={validated} ref={formRef} onSubmit={AddCategoryClick}>
+          <Form className="" validated={validated} ref={formRef} onSubmit={(show === 'add' ? (e) => AddCategoryClick(e) : (show) => UpdateCategoryClick(show))}>
+            <Modal.Header closeButton className="addproductheader">
+              <Modal.Title id="example-custom-modal-styling-title">
+                {show === 'add' ? 'Add Category' : ' Update Category'}
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="addproductbody p-2">
+
               <div className="row p-3 m-0">
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicName">
                     <Form.Label>Category Name</Form.Label>
-                    <Form.Control type="text" placeholder="Category Name" required onChange={handleFormChange} value={categorydata.category_name} name={'category_name'} />
+                    <Form.Control type="text" placeholder="Category Name" required onChange={() => handleFormChange()} value={categorydata.category_name} name={'category_name'} />
                     <Form.Control.Feedback type="invalid" className="h6">
-                            Please fill  name
-                          </Form.Control.Feedback>
+                      Please fill  name
+                    </Form.Control.Feedback>
                   </Form.Group>
                 </div>
                 {/* <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicEmail">
                     <Form.Label>Product Description</Form.Label>
-                    <Form.Control type="text" placeholder="Product Description" required onChange={handleFormChange} value={categorydata.product_desc} name={'product_desc'} />
+                    <Form.Control type="text" placeholder="Product Description" required onChange={()=>handleFormChange()} value={categorydata.product_desc} name={'product_desc'} />
                   </Form.Group>
                 </div> */}
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicCategory">
                     <Form.Label>Category Type</Form.Label>
-                    <Form.Select aria-label="Search by category type" className="adminselectbox" required onChange={handleFormChange} value={categorydata.category_type} name={'category_type'}>
+                    <Form.Select aria-label="Search by category type" className="adminselectbox" required onChange={() => handleFormChange()} value={categorydata.category_type} name={'category_type'}>
                       <option value=''>Search by category type</option>
                       <option value="Grocery">Grocery</option>
                       <option value="Health">Health</option>
                       <option value="Sports & Accessor">Sports & Accessor</option>
                     </Form.Select>
                     <Form.Control.Feedback type="invalid" className="h6">
-                            Please fill category type
-                          </Form.Control.Feedback>
+                      Please fill category type
+                    </Form.Control.Feedback>
                   </Form.Group>
                 </div>
                 <div className="col-md-6">
@@ -319,8 +326,8 @@ const CategoryList = () => {
                       <option value="Baby Care">Baby Care</option>
                     </Form.Select>
                     <Form.Control.Feedback type="invalid" className="h6">
-                            Please fill category
-                          </Form.Control.Feedback>
+                      Please fill category
+                    </Form.Control.Feedback>
                   </Form.Group>
                 </div>
 
@@ -328,33 +335,31 @@ const CategoryList = () => {
                   <Form.Group className="mb-3 aos_input" controlId="formBasicImg">
                     <Form.Label>Category Icon</Form.Label>
                     <div className="category_icon_box">
-                    <Form.Control type="file" placeholder="Category Icon" onChange={ImgFormChange} name={'category_icon'} required />
-                    <Form.Text >
-                    {addcategorydata.category_icon ?
-                    <img src={addcategorydata.category_icon} alt={'apna_organic'} className={'category_icon'} /> : null}
-                    </Form.Text>
-                   
+                      <Form.Control type="file" placeholder="Category Icon" onChange={ImgFormChange} name={'category_icon'} required />
+                      {addcategorydata.category_icon ?
+                        <img src={addcategorydata.category_icon} alt={'apna_organic'} className={'category_icon'} /> : null}
                     </div>
-                   
+
                   </Form.Group>
                 </div>
               </div>
-            </Form>
-          </Modal.Body>
-          <Modal.Footer className="addproductfooter">
-            <Iconbutton
-              btntext={"X Cancel"}
-              onClick={handleClose}
-              btnclass={"button main_outline_button adminmainbutton px-2"}
-            // Iconname={<GiCancel /> }
-            />
-            <Iconbutton
-              type={'submit'}
-              btntext={(show === 'add' ? "Add Category" : "Update Category")}
-              onClick={(show === 'add' ? AddCategoryClick : () => UpdateCategoryClick(show))}
-              btnclass={"button main_button "}
-            />
-          </Modal.Footer>
+
+            </Modal.Body>
+            <Modal.Footer className="addproductfooter">
+              <Iconbutton
+                btntext={"X Cancel"}
+                onClick={handleClose}
+                btnclass={"button main_outline_button adminmainbutton px-2"}
+              // Iconname={<GiCancel /> }
+              />
+              <Iconbutton
+                type={'submit'}
+                btntext={(show === 'add' ? "Add Category" : "Update Category")}
+                // onClick={(show === 'add' ? AddCategoryClick : () => UpdateCategoryClick(show))}
+                btnclass={"button main_button "}
+              />
+            </Modal.Footer>
+          </Form>
         </Modal>
         <DataTable
           columns={columns}

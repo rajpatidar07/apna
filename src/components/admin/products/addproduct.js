@@ -214,7 +214,6 @@ const Addproduct = (props) => {
   // json end
   const handleClose = () => {
     setmodalshow(false)
-    setvarietyShow(false)
   }
 
   useEffect(() => {
@@ -228,9 +227,10 @@ const Addproduct = (props) => {
       setseoArray(productjson.seo_tag)
     }
   }, [props.show]);
+ 
   useEffect(() => {
     setvdata(varietyjson)
-  }, [vdata]);
+  }, []);
 
   // seotag
   let tagname;
@@ -1268,13 +1268,15 @@ const Addproduct = (props) => {
           />
         </Modal.Footer>
       </Modal>
-      <Modal size="lg" show={props.show1} onHide={handleClose} dialogClassName="addproductmainmodal">
+      {/* variety */}
+      <Modal size="lg" show={props.show1} onHide={props.hide} dialogClassName="addproductmainmodal">
+      <Form ref={formRef} validated={validated} onSubmit={onVariantaddclick}>
         <Modal.Header closeButton>
           <Modal.Title>Add Variety</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="row">
-            <Form ref={formRef} validated={validated} onSubmit={onVariantaddclick}>
+          
               <Form.Group
                 className="mx-3"
               // controlId="validationCustom13"
@@ -1590,13 +1592,14 @@ const Addproduct = (props) => {
                   </div>
                 </div>
               </Form.Group>
-            </Form>
+          
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <button className='button main_outline_button' onClick={() => handleClose()}>Cancel</button>
+          <button className='button main_outline_button' onClick={props.hide}>Cancel</button>
           <button className='button main_button' onClick={() => handleClose()}>Save</button>
         </Modal.Footer>
+        </Form>
       </Modal>
 
     </div>

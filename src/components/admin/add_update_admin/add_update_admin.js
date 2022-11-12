@@ -12,7 +12,7 @@ function Admin() {
   const hideAlert = () => setAlert(false);
   const [validated, setValidated] = useState(false);
   const [Alert, setAlert] = useState(false);
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState('');
   const [admindata, setadmindata] = useState([]);
   const [addadmindata, setaddadmindata] = useState([]);
   const handleClose = () => setShow(false);
@@ -122,23 +122,23 @@ function Admin() {
     });
   };
   const AddAdminClick = (e) => {
-    e.preventDefault();
-    console.log("form----------   " + JSON.stringify(addadmindata));
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
+      e.preventDefault();
       e.stopPropagation();
-      e.preventDefault()
+      console.log("falsecheckValidity----------");
+      setValidated(true);
     }
-    formRef.current.reset();
-    setValidated(true);
-    if (addadmindata === []) {
-      setShow(false)
+    else{
+      e.preventDefault();
+      console.log("form----------   " + JSON.stringify(addadmindata));
+      formRef.current.reset();
+      setValidated(false);
     }
-
   };
 
   const UpdateAdminClick = (show) => {
-    // setadmindata(adminjson.admin[show])
+    show.preventDefault()
     console.log("form----------   " + JSON.stringify(addadmindata));
   };
 
@@ -165,6 +165,7 @@ function Admin() {
           aria-labelledby="example-custom-modal-styling-title"
           centered
         >
+           <Form className="" novalidate validated={validated} ref={formRef} onSubmit={(show === 'add' ? (e)=>AddAdminClick(e) : (show)=>UpdateAdminClick(show))}>
           <Modal.Header closeButton className="">
             <Modal.Title id="example-custom-modal-styling-title">
               {show === 'add' ? 'Add Admin ' : ' Update Admin '}
@@ -172,7 +173,7 @@ function Admin() {
           </Modal.Header>
           <Modal.Body className="p-3">
             <div className="d-flex justify-content-center align-items-center p-0 m-0">
-              <Form className="" validated={validated} ref={formRef} onSubmit={AddAdminClick}>
+             
                 <div className="">
                   <div className="">
                     <div className="row px-3">
@@ -182,7 +183,7 @@ function Admin() {
                             Name
                           </Form.Label>
 
-                          <Form.Control type="text" placeholder="Name" onChange={handleFormChange} value={admindata.name} name={'name'} required />
+                          <Form.Control type="text" placeholder="Name" onChange={(e)=>handleFormChange(e)} value={admindata.name} name={'name'} required />
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill name
                           </Form.Control.Feedback>
@@ -197,7 +198,7 @@ function Admin() {
                             Email
                           </Form.Label>
 
-                          <Form.Control type="email" placeholder="Email" onChange={handleFormChange} value={admindata.email} name={'email'} required />
+                          <Form.Control type="email" placeholder="Email" onChange={(e)=>handleFormChange(e)} value={admindata.email} name={'email'} required />
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill email
                           </Form.Control.Feedback>
@@ -212,7 +213,7 @@ function Admin() {
                             Mobile
                           </Form.Label>
 
-                          <Form.Control type="number" placeholder="Mobile Number"  min={1} onChange={handleFormChange} value={admindata.mobile} name={'mobile'} required />
+                          <Form.Control type="number" placeholder="Mobile Number"  min={1} onChange={(e)=>handleFormChange(e)} value={admindata.mobile} name={'mobile'} required />
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill mobile number
                           </Form.Control.Feedback>
@@ -227,7 +228,7 @@ function Admin() {
                             Password
                           </Form.Label>
 
-                          <Form.Control type="password" placeholder="Password" onChange={handleFormChange} value={admindata.password} name={'password'} required />
+                          <Form.Control type="password" placeholder="Password" onChange={(e)=>handleFormChange(e)} value={admindata.password} name={'password'} required />
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill password
                           </Form.Control.Feedback>
@@ -242,7 +243,7 @@ function Admin() {
                             Admin Type
                           </Form.Label>
 
-                          <Form.Select aria-label="Default select example" onChange={handleFormChange} value={admindata.admin_type} name={'admin_type'} required>
+                          <Form.Select aria-label="Default select example" onChange={(e)=>handleFormChange(e)} value={admindata.admin_type} name={'admin_type'} required>
                             <option value=''>Select</option>
                             <option value="1">Super Admin</option>
                             <option value="2">Admin</option>
@@ -256,7 +257,7 @@ function Admin() {
                     </div>
                   </div>
                 </div>
-              </Form>
+              
             </div>
           </Modal.Body>
           <Modal.Footer className="">
@@ -264,10 +265,11 @@ function Admin() {
             <Iconbutton
               type={'submit'}
               btntext={(show === 'add' ? "Add Admin" : "Update Admin")}
-              onClick={(show === 'add' ? AddAdminClick : UpdateAdminClick(show))}
+              // onClick={(show === 'add' ? AddAdminClick : UpdateAdminClick(show))}
               btnclass={"button main_button "}
             />
           </Modal.Footer>
+          </Form>
         </Modal>
         <DataTable
           columns={columns}

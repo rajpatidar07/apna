@@ -1,4 +1,4 @@
-import React, { useState, useRef,useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Input from "../common/input";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
@@ -8,7 +8,6 @@ import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-import { Search } from "react-bootstrap-icons";
 
 const Complaint = () => {
   const formRef = useRef();
@@ -17,39 +16,48 @@ const Complaint = () => {
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
-  const [show, setShow] = useState(false);
-  const [search, setNewSearch] = useState("");
+  const [show, setShow] = useState('');
+  const handleClose = () => {
+    formRef.current.reset();
+    setValidated(false)
+    setShow(false);
+  }
+  const handleShow = (e) => {
+    setcomplaintdata(complaintjson.complaint[e - 1])
+    setShow(e);
+  }
   const complaintjson = {
-    "complaint": [{
-      id: 1,
-      order_id: 124532,
-      subject: "American tourister trolley return",
-      description:"I have purchased Realme GT master edition with flipkart smart upgrade plan (order id - OD[protected]. From October 1st I suppose to be eligible to pay the remaining 30% balance that is 8400/-.",
-      ticket_date: "2022-01-22",
-      assign: "raj",
-      resolved_date: "2022-05-02",
-      status: "1",
-    },
-    {
-      id: 2,
-      order_id: 100333,
-      subject: "American tourister trolley return",
-      description: "I have purchased Realme GT master edition with flipkart smart upgrade plan (order id - OD[protected]. From October 1st I suppose to be eligible to pay the remaining 30% balance that is 8400/-. But I am unable to pay that as my pay later account is disabled.My due date for the payment is approaching.My phone will be locked if I am unable to pay the payment on time.I have tried to reach...",
-      ticket_date: "2022-01-22",
-      assign: "raj",
-      resolved_date: "2022-05-02",
-      status: "2",
-    },
-    {
-      id: 3,
-      order_id: 100333,
-      subject: "American tourister trolley return",
-      description: "I have purchased Realme GT master edition with flipkart smart upgrade plan (order id - OD[protected]. From October 1st I suppose to be eligible to pay the remaining 30% balance that is 8400/-. But I am unable to pay that as my pay later account is disabled.My due date for the payment is approaching.My phone will be locked if I am unable to pay the payment on time.I have tried to reach...",
-      ticket_date: "2022-01-22",
-      assign: "raj",
-      resolved_date: "2022-05-02",
-      status: "3",
-    },
+    "complaint": [
+      {
+        id: 1,
+        order_id: 124532,
+        subject: "American tourister trolley return",
+        description: "I have purchased Realme GT master edition with flipkart smart upgrade plan (order id - OD[protected]. From October 1st I suppose to be eligible to pay the remaining 30% balance that is 8400/-.",
+        ticket_date: "2022-01-22",
+        assign: "raj",
+        resolved_date: "2022-05-02",
+        status: "1",
+      },
+      {
+        id: 2,
+        order_id: 100333,
+        subject: "American tourister trolley return",
+        description: "I have purchased Realme GT master edition with flipkart smart upgrade plan (order id - OD[protected]. From October 1st I suppose to be eligible to pay the remaining 30% balance that is 8400/-. But I am unable to pay that as my pay later account is disabled.My due date for the payment is approaching.My phone will be locked if I am unable to pay the payment on time.I have tried to reach...",
+        ticket_date: "2022-01-22",
+        assign: "raj",
+        resolved_date: "2022-05-02",
+        status: "2",
+      },
+      {
+        id: 3,
+        order_id: 100333,
+        subject: "American tourister trolley return",
+        description: "I have purchased Realme GT master edition with flipkart smart upgrade plan (order id - OD[protected]. From October 1st I suppose to be eligible to pay the remaining 30% balance that is 8400/-. But I am unable to pay that as my pay later account is disabled.My due date for the payment is approaching.My phone will be locked if I am unable to pay the payment on time.I have tried to reach...",
+        ticket_date: "2022-01-22",
+        assign: "raj",
+        resolved_date: "2022-05-02",
+        status: "3",
+      },
 
     ]
   }
@@ -137,14 +145,14 @@ const Complaint = () => {
               : row.status === "2"
                 ? "badge bg-danger"
                 : row.status === "3"
-                ? "badge bg-warning" : null
+                  ? "badge bg-warning" : null
           }
         >
-          { row.status === "1"
-              ? "Solved"
-              : row.status === "2"
-                ? "Pending"
-                : row.status === "3"
+          {row.status === "1"
+            ? "Solved"
+            : row.status === "2"
+              ? "Pending"
+              : row.status === "3"
                 ? "Processing" : null}
         </span>
       ),
@@ -163,7 +171,7 @@ const Complaint = () => {
         <div className={"actioncolimn"}>
           <BiEdit
             className=" p-0 m-0  editiconn text-secondary"
-            onClick={handleShow.bind(this,row.id)}
+            onClick={handleShow.bind(this, row.id)}
           />
           <BsTrash
             className=" p-0 m-0 editiconn text-danger"
@@ -173,19 +181,11 @@ const Complaint = () => {
       ),
     },
   ];
-  const handleClose = () =>{ 
-    formRef.current.reset();
-    setValidated(false)
-    setShow(false);
-  }
-  const handleShow = (e) => {
-      setcomplaintdata(complaintjson.complaint[e - 1])
-      setShow(true);
-  }
+
   useEffect(() => {
-    setcomplaintdata(complaintjson.complaint)
-  }, [])
- 
+    setcomplaintdata(complaintjson)
+  }, [show])
+
   const handleFormChange = (e) => {
     setcomplaintdata({
       ...complaintdata,
@@ -196,35 +196,19 @@ const Complaint = () => {
   const UpdateCategoryClick = (e) => {
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
-      // e.stopPropagation();
-      e.preventDefault()
+      e.preventDefault();
+      e.stopPropagation();
+      console.log("falsevalidatn----------   ");
+      setValidated(true)
+    }
+    else{
+      e.preventDefault();
       console.log("form----------   " + JSON.stringify(complaintdata));
       formRef.current.reset();
-    setValidated(false)
-
+      setValidated(false)
     }
-    setValidated(true)
   };
-  const SearchOnChange = (e) =>{
-//     let value = e.target.value.toLowerCase();
-//     console.log(value);
-// let result = [];
-// result = complaintdata.filter((data) => {
-//   return Object.values(data).join('').toLowerCase().includes(value.toLowerCase())
-// });
-// setcomplaintdata(result);
-//     console.log("result"+JSON.stringify(result))
-setNewSearch(e.target.value);
-  }
-  // filter
-  // const filtered = !search
-  //   ? complaintdata
-  //   : complaintdata.filter((data) =>
-  //       data.id.toLowerCase().includes(search.toLowerCase())
-  //     );
-  // console.log("complaintdata"+JSON.stringify(complaintdata))
-
-  //
+ 
   return (
     <div className="App productlist_maindiv">
       <h2>Complaint/Support</h2>
@@ -233,7 +217,7 @@ setNewSearch(e.target.value);
       <div className="card mt-3 p-3">
         <div className="row pb-3">
           <div className="col-md-3 col-sm-6 aos_input">
-          <Form.Control type={"text"} placeholder={"Search by Id"} onChange={SearchOnChange} name={'idsearch'}/>
+            <Form.Control type={"text"} placeholder={"Search by Id"} name={'idsearch'} />
             {/* <Input type={"text"} plchldr={"Search by Id"} onChange={SearchOnChange} name={'idsearch'}/> */}
           </div>
 
@@ -263,7 +247,7 @@ setNewSearch(e.target.value);
 
         <DataTable
           columns={columns}
-          data={complaintdata}
+          data={complaintdata.complaint}
           pagination
           highlightOnHover
           pointerOnHover
@@ -281,79 +265,80 @@ setNewSearch(e.target.value);
           <Modal.Header closeButton>
             <Modal.Title>Update Complaint Info</Modal.Title>
           </Modal.Header>
+          {show? 
           <Modal.Body>
-          <Form className="" validated={validated} ref={formRef} onSubmit={UpdateCategoryClick}>
-            <div className="row p-3 m-0">
-              <div className="col-md-6">
-                <Form.Group
-                  className="mb-3 aos_input flex-column d-flex"
-                  controlId="formBasicEmail"
-                >
-                  <Form.Label className="mb-0">Ticket Id</Form.Label>
-                  <Form.Text className="mt-0" value={complaintdata.id} name={'id'}>100333</Form.Text>
-                </Form.Group>
-              </div>
-              <div className="col-md-6">
-                <Form.Group
-                  className="mb-3 aos_input flex-column d-flex"
-                  controlId="formBasicEmail"
-                >
-                  <Form.Label className="mb-0">Order Id</Form.Label>
-                  <Form.Text className="mt-0">124532</Form.Text>
-                </Form.Group>
-              </div>
-              <div className="col-md-12">
-                <Form.Group
-                  className="mb-3 aos_input flex-column d-flex"
-                  controlId="formBasicEmail"
-                >
-                  <Form.Label className="mb-0">Description</Form.Label>
-                  <Form.Text className="mt-0"> My phone is locked due to overdue payment But i have allreday paid
-                    the remaining amount of 5400 on 29.07.2022 time 15.40.54 Transaction
-                    no - EXTLINK[protected]_1</Form.Text>
-                </Form.Group>
-              </div>
-              <div className="col-md-12">
-                <Form.Group
-                  className="mb-3 aos_input"
-                  controlId="formBasicEmail"
-                >
-                  <Form.Label>Resolved Description</Form.Label>
-                  <Form.Control as="textarea" rows={3} placeholder="Assigned To" onChange={handleFormChange} name={'resolved_desc'}/>
-                </Form.Group>
-              </div>
-              <div className="col-md-6">
-                <Form.Group
-                  className="mb-3 aos_input"
-                  controlId="formBasicEmail"
-                >
-                  <Form.Label>Assigned To</Form.Label>
-                  <Form.Control type="text" placeholder="Assigned To" onChange={handleFormChange} name={'assign'} required value={complaintdata.assign}/>
-                </Form.Group>
-              </div>
-              <div className="col-md-6">
-                <Form.Group
-                  className="mb-3 aos_input"
-                  controlId="formBasicEmail"
-                >
-                  <Form.Label>Status</Form.Label>
-                  <Form.Select
-                    aria-label="Status"
-                    className="adminselectbox"
-                    placeholder="Status"
-                    onChange={handleFormChange} name={'status'}
-                    value={complaintdata.status}
+            <Form className="" validated={validated} ref={formRef} onSubmit={(e)=>UpdateCategoryClick(e)}>
+              <div className="row p-3 m-0">
+                <div className="col-md-6">
+                  <Form.Group
+                    className="mb-3 aos_input flex-column d-flex"
+                    controlId="formBasicEmail"
                   >
-                    <option value={''}>Status</option>
-                    <option value="1">Solved</option>
-                    <option value="2">Pending</option>
-                    <option value="3">Processing</option>
-                  </Form.Select>
-                </Form.Group>
+                    <Form.Label className="mb-0">Ticket Id</Form.Label>
+                    <Form.Text className="mt-0" value={complaintdata.id} name={'id'}>100333</Form.Text>
+                  </Form.Group>
+                </div>
+                <div className="col-md-6">
+                  <Form.Group
+                    className="mb-3 aos_input flex-column d-flex"
+                    controlId="formBasicEmail"
+                  >
+                    <Form.Label className="mb-0">Order Id</Form.Label>
+                    <Form.Text className="mt-0">124532</Form.Text>
+                  </Form.Group>
+                </div>
+                <div className="col-md-12">
+                  <Form.Group
+                    className="mb-3 aos_input flex-column d-flex"
+                    controlId="formBasicEmail"
+                  >
+                    <Form.Label className="mb-0">Description</Form.Label>
+                    <Form.Text className="mt-0"> My phone is locked due to overdue payment But i have allreday paid
+                      the remaining amount of 5400 on 29.07.2022 time 15.40.54 Transaction
+                      no - EXTLINK[protected]_1</Form.Text>
+                  </Form.Group>
+                </div>
+                <div className="col-md-12">
+                  <Form.Group
+                    className="mb-3 aos_input"
+                    controlId="formBasicEmail"
+                  >
+                    <Form.Label>Resolved Description</Form.Label>
+                    <Form.Control as="textarea" rows={3} placeholder="Assigned To" onChange={(e)=>handleFormChange(e)} name={'resolved_desc'} />
+                  </Form.Group>
+                </div>
+                <div className="col-md-6">
+                  <Form.Group
+                    className="mb-3 aos_input"
+                    controlId="formBasicEmail"
+                  >
+                    <Form.Label>Assigned To</Form.Label>
+                    <Form.Control type="text" placeholder="Assigned To" onChange={(e)=>handleFormChange(e)} name={'assign'} required value={complaintdata.assign} />
+                  </Form.Group>
+                </div>
+                <div className="col-md-6">
+                  <Form.Group
+                    className="mb-3 aos_input"
+                    controlId="formBasicEmail"
+                  >
+                    <Form.Label>Status</Form.Label>
+                    <Form.Select
+                      aria-label="Status"
+                      className="adminselectbox"
+                      placeholder="Status"
+                      onChange={(e)=>handleFormChange(e)} name={'status'}
+                      value={complaintdata.status}
+                    >
+                      <option value={''}>Status</option>
+                      <option value="1">Solved</option>
+                      <option value="2">Pending</option>
+                      <option value="3">Processing</option>
+                    </Form.Select>
+                  </Form.Group>
+                </div>
               </div>
-            </div>
             </Form>
-          </Modal.Body>
+          </Modal.Body> : null}
           <Modal.Footer>
             <button
               className="button main_outline_button"
