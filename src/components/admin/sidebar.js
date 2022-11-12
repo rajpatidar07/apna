@@ -9,11 +9,7 @@ import { BsBox, BsShopWindow } from "react-icons/bs";
 import { TbFileInvoice } from "react-icons/tb";
 import { RiCustomerService2Line, RiAdminLine } from "react-icons/ri";
 import { AiOutlineSetting } from "react-icons/ai";
-// import {GrUserAdmin} from 'react-icons/gr';
 
-// import Dashboard from './dashboard';
-// import Product from './product';
-// import Orders from './orders';
 function AdminSidebar() {
   return (
     <div className="main_sidebar">
