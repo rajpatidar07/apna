@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef,useEffect } from "react";
 import Input from "../common/input";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
@@ -8,24 +8,61 @@ import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
+import { Search } from "react-bootstrap-icons";
 
 const Complaint = () => {
+  const formRef = useRef();
+  const [validated, setValidated] = useState(false);
+  const [complaintdata, setcomplaintdata] = useState([]);
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
   const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [search, setNewSearch] = useState("");
+  const complaintjson = {
+    "complaint": [{
+      id: 1,
+      order_id: 124532,
+      subject: "American tourister trolley return",
+      description:"I have purchased Realme GT master edition with flipkart smart upgrade plan (order id - OD[protected]. From October 1st I suppose to be eligible to pay the remaining 30% balance that is 8400/-.",
+      ticket_date: "2022-01-22",
+      assign: "raj",
+      resolved_date: "2022-05-02",
+      status: "1",
+    },
+    {
+      id: 2,
+      order_id: 100333,
+      subject: "American tourister trolley return",
+      description: "I have purchased Realme GT master edition with flipkart smart upgrade plan (order id - OD[protected]. From October 1st I suppose to be eligible to pay the remaining 30% balance that is 8400/-. But I am unable to pay that as my pay later account is disabled.My due date for the payment is approaching.My phone will be locked if I am unable to pay the payment on time.I have tried to reach...",
+      ticket_date: "2022-01-22",
+      assign: "raj",
+      resolved_date: "2022-05-02",
+      status: "2",
+    },
+    {
+      id: 3,
+      order_id: 100333,
+      subject: "American tourister trolley return",
+      description: "I have purchased Realme GT master edition with flipkart smart upgrade plan (order id - OD[protected]. From October 1st I suppose to be eligible to pay the remaining 30% balance that is 8400/-. But I am unable to pay that as my pay later account is disabled.My due date for the payment is approaching.My phone will be locked if I am unable to pay the payment on time.I have tried to reach...",
+      ticket_date: "2022-01-22",
+      assign: "raj",
+      resolved_date: "2022-05-02",
+      status: "3",
+    },
+
+    ]
+  }
   const columns = [
     {
       name: "Id",
-      selector: (row) => row.sku,
+      selector: (row) => row.id,
       sortable: true,
       width: "75px",
     },
     {
       name: "Order Id",
-      selector: (row) => row.oid,
+      selector: (row) => row.order_id,
       sortable: true,
       width: "150px",
       center: true,
@@ -48,14 +85,18 @@ const Complaint = () => {
     },
     {
       name: "Description",
-      selector: (row) => row.des,
+      selector: (row) => <div className="complaintdescbox">
+        <p className="complaintdesc">
+          {row.description}
+        </p>
+      </div>,
       sortable: true,
       width: "200px",
     },
 
     {
       name: "Ticket Date",
-      selector: (row) => row.tdate,
+      selector: (row) => row.ticket_date,
       sortable: true,
       width: "140px",
       center: true,
@@ -77,7 +118,7 @@ const Complaint = () => {
     },
     {
       name: "Resolved at",
-      selector: (row) => row.res,
+      selector: (row) => row.resolved_date,
       sortable: true,
       width: "140px",
       center: true,
@@ -91,14 +132,20 @@ const Complaint = () => {
       selector: (row) => (
         <span
           className={
-            row.status === "Solved"
+            row.status === "1"
               ? "badge bg-success"
-              : row.status === "Pending"
-              ? "badge bg-danger"
-              : null
+              : row.status === "2"
+                ? "badge bg-danger"
+                : row.status === "3"
+                ? "badge bg-warning" : null
           }
         >
-          {row.status}
+          { row.status === "1"
+              ? "Solved"
+              : row.status === "2"
+                ? "Pending"
+                : row.status === "3"
+                ? "Processing" : null}
         </span>
       ),
       sortable: true,
@@ -116,7 +163,7 @@ const Complaint = () => {
         <div className={"actioncolimn"}>
           <BiEdit
             className=" p-0 m-0  editiconn text-secondary"
-            onClick={handleShow}
+            onClick={handleShow.bind(this,row.id)}
           />
           <BsTrash
             className=" p-0 m-0 editiconn text-danger"
@@ -126,53 +173,56 @@ const Complaint = () => {
       ),
     },
   ];
+  const handleClose = () =>{ 
+    formRef.current.reset();
+    setValidated(false)
+    setShow(false);
+  }
+  const handleShow = (e) => {
+      setcomplaintdata(complaintjson.complaint[e - 1])
+      setShow(true);
+  }
+  useEffect(() => {
+    setcomplaintdata(complaintjson.complaint)
+  }, [])
+ 
+  const handleFormChange = (e) => {
+    setcomplaintdata({
+      ...complaintdata,
+      [e.target.name]: e.target.value
+    });
+  };
 
-  const data = [
-    {
-      sku: 1,
-      oid: 124532,
-      subject: "American tourister trolley return",
-      des: (
-        <div className="complaintdescbox">
-          <p className="complaintdesc">
-            {" "}
-            My phone is locked due to overdue payment But i have allreday paid
-            the remaining amount of 5400 on 29.07.2022 time 15.40.54 Transaction
-            no - EXTLINK[protected]_1
-          </p>
-        </div>
-      ),
-      tdate: "2022-01-22",
-      assign: "raj",
-      res: "2022-05-02",
-      status: "Solved",
-    },
-    {
-      sku: 2,
-      oid: 100333,
-      subject: "American tourister trolley return",
-      des: (
-        <div className="complaintdescbox">
-          <p className="complaintdesc">
-            {" "}
-            I have purchased Realme GT master edition with flipkart smart
-            upgrade plan (order id - OD[protected]. From October 1st I suppose
-            to be eligible to pay the remaining 30% balance that is 8400/-. But
-            I am unable to pay that as my pay later account is disabled. My due
-            date for the payment is approaching. My phone will be locked if I am
-            unable to pay the payment on time. I have tried to reach...
-          </p>
-        </div>
-      ),
-      tdate: "2022-01-22",
-      assign: "raj",
-      res: "2022-05-02",
-      status: "Pending",
-    },
-  ];
+  const UpdateCategoryClick = (e) => {
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      // e.stopPropagation();
+      e.preventDefault()
+      console.log("form----------   " + JSON.stringify(complaintdata));
+      formRef.current.reset();
+    setValidated(false)
 
-
+    }
+    setValidated(true)
+  };
+  const SearchOnChange = (e) =>{
+//     let value = e.target.value.toLowerCase();
+//     console.log(value);
+// let result = [];
+// result = complaintdata.filter((data) => {
+//   return Object.values(data).join('').toLowerCase().includes(value.toLowerCase())
+// });
+// setcomplaintdata(result);
+//     console.log("result"+JSON.stringify(result))
+setNewSearch(e.target.value);
+  }
   // filter
+  // const filtered = !search
+  //   ? complaintdata
+  //   : complaintdata.filter((data) =>
+  //       data.id.toLowerCase().includes(search.toLowerCase())
+  //     );
+  // console.log("complaintdata"+JSON.stringify(complaintdata))
 
   //
   return (
@@ -183,9 +233,10 @@ const Complaint = () => {
       <div className="card mt-3 p-3">
         <div className="row pb-3">
           <div className="col-md-3 col-sm-6 aos_input">
-            <Input type={"text"} plchldr={"Search by Id"} />
+          <Form.Control type={"text"} placeholder={"Search by Id"} onChange={SearchOnChange} name={'idsearch'}/>
+            {/* <Input type={"text"} plchldr={"Search by Id"} onChange={SearchOnChange} name={'idsearch'}/> */}
           </div>
-          
+
           <div className="col-md-3 col-sm-6 aos_input">
             <Input type={"date"} plchldr={"Search by Order Date"} />
           </div>
@@ -212,7 +263,7 @@ const Complaint = () => {
 
         <DataTable
           columns={columns}
-          data={data}
+          data={complaintdata}
           pagination
           highlightOnHover
           pointerOnHover
@@ -231,6 +282,7 @@ const Complaint = () => {
             <Modal.Title>Update Complaint Info</Modal.Title>
           </Modal.Header>
           <Modal.Body>
+          <Form className="" validated={validated} ref={formRef} onSubmit={UpdateCategoryClick}>
             <div className="row p-3 m-0">
               <div className="col-md-6">
                 <Form.Group
@@ -238,7 +290,7 @@ const Complaint = () => {
                   controlId="formBasicEmail"
                 >
                   <Form.Label className="mb-0">Ticket Id</Form.Label>
-                  <Form.Text className="mt-0">100333</Form.Text>
+                  <Form.Text className="mt-0" value={complaintdata.id} name={'id'}>100333</Form.Text>
                 </Form.Group>
               </div>
               <div className="col-md-6">
@@ -257,8 +309,8 @@ const Complaint = () => {
                 >
                   <Form.Label className="mb-0">Description</Form.Label>
                   <Form.Text className="mt-0"> My phone is locked due to overdue payment But i have allreday paid
-            the remaining amount of 5400 on 29.07.2022 time 15.40.54 Transaction
-            no - EXTLINK[protected]_1</Form.Text>
+                    the remaining amount of 5400 on 29.07.2022 time 15.40.54 Transaction
+                    no - EXTLINK[protected]_1</Form.Text>
                 </Form.Group>
               </div>
               <div className="col-md-12">
@@ -267,7 +319,7 @@ const Complaint = () => {
                   controlId="formBasicEmail"
                 >
                   <Form.Label>Resolved Description</Form.Label>
-                  <Form.Control as="textarea" rows={3} placeholder="Assigned To" />
+                  <Form.Control as="textarea" rows={3} placeholder="Assigned To" onChange={handleFormChange} name={'resolved_desc'}/>
                 </Form.Group>
               </div>
               <div className="col-md-6">
@@ -276,7 +328,7 @@ const Complaint = () => {
                   controlId="formBasicEmail"
                 >
                   <Form.Label>Assigned To</Form.Label>
-                  <Form.Control type="text" placeholder="Assigned To" />
+                  <Form.Control type="text" placeholder="Assigned To" onChange={handleFormChange} name={'assign'} required value={complaintdata.assign}/>
                 </Form.Group>
               </div>
               <div className="col-md-6">
@@ -289,8 +341,10 @@ const Complaint = () => {
                     aria-label="Status"
                     className="adminselectbox"
                     placeholder="Status"
+                    onChange={handleFormChange} name={'status'}
+                    value={complaintdata.status}
                   >
-                    <option>Status</option>
+                    <option value={''}>Status</option>
                     <option value="1">Solved</option>
                     <option value="2">Pending</option>
                     <option value="3">Processing</option>
@@ -298,6 +352,7 @@ const Complaint = () => {
                 </Form.Group>
               </div>
             </div>
+            </Form>
           </Modal.Body>
           <Modal.Footer>
             <button
@@ -306,7 +361,7 @@ const Complaint = () => {
             >
               Cancel
             </button>
-            <button className="button main_button" onClick={handleClose}>
+            <button className="button main_button" onClick={UpdateCategoryClick} type='submit'>
               Update
             </button>
           </Modal.Footer>

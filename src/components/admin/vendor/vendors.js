@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useRef } from "react";
 import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import Form from "react-bootstrap/Form";
@@ -8,17 +8,107 @@ import 'sweetalert/dist/sweetalert.css';
 import logo from '../../../images/logo.png';
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
-const handleClick = () => { };
-
+import { useEffect } from "react";
+import Iconbutton from "../common/iconbutton";
 const VendorsList = () => {
+  const formRef = useRef();
+  const [validated, setValidated] = useState(false);
   const [show, setShow] = useState(false);
   const [Alert, setAlert] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleClose = () =>{ 
+    setValidated(false)
+    setShow(false);}
+  const handleShow = (e) => {
+    if(e === 'add'){
+      setShow(e)
+    }
+    console.log(JSON.stringify(e))
+    if(e !== 'add'){
+      setvendordata(vendorjson.vendor[e-1])
+      setShow(e);
+    }
+  }
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
+  const [vendordata, setvendordata] = useState([]);
+  const [addvendordata, setaddvendordata] = useState([]);
   const handleStatusChnage = (e) =>{
-    // alert  (e)
+  }
+  const vendorjson = {
+    "vendor": [
+      {
+        id: 1,
+        email:"shivani@we2cdodjj.com",
+        gstn:"6656",
+        p_id: "HHAHA",
+        shopname: "Bhati Sweets",
+        owner: "Kuldeep Bhati",
+        address: "Vijay Nagar Indore",
+        mobile: "1234567890",
+        status: "Active",
+        change: "Active",
+      },
+      {
+        id: 2,
+        email:"shivani@we2cdodjj.com",
+        gstn:"6656",
+        p_id: "HHAHA",
+        shopname: "Sharma Veg",
+        owner: "Anil Sharma",
+        address: "Palasia, Indore",
+        mobile: "1234567890",
+        status: "In Progress",
+        change: "In Progress",
+      },
+      {
+        id: 3,
+        email:"shivani@we2cdodjj.com",
+        gstn:"6656",
+        p_id: "HHAHA",
+        shopname: "Mohan Kirana",
+        owner: "Mohan Verma",
+        address: "PU4, Indore",
+        mobile: "1234567890",
+        status: "Pending",
+        change: "Blocked",
+      },
+      {
+        id: 4,
+        email:"shivani@we2cdodjj.com",
+        gstn:"6656",
+        p_id: "HHAHA",
+        shopname: "Bhati Sweets",
+        owner: "Kuldeep Bhati",
+        address: "Vijay Nagar Indore",
+        mobile: "1234567890",
+        status: "Active",
+        change: "Active",
+      },
+      {
+        id: 5,
+        email:"shivani@we2cdodjj.com",
+        gstn:"6656",
+        p_id: "HHAHA",
+        shopname: "Sharma Veg",
+        owner: "Anil Sharma",
+        address: "Palasia, Indore",
+        mobile: "1234567890",
+        status: "Pending",
+        change: "Pending",
+      },
+      {
+        id: 6,
+        email:"shivani@we2cdodjj.com",
+        gstn:"6656",
+        p_id: "HHAHA",
+        shopname: "Mohan Kirana",
+        owner: "Mohan Verma",
+        address: "PU4, Indore",
+        mobile: "1234567890",
+        status: "Blocked",
+        change: "Blocked",
+      },
+    ]
   }
   const columns = [
     {
@@ -42,18 +132,17 @@ const VendorsList = () => {
             paddingBottom: 10,
             textAlign: "right",
           }}
-          onClick={handleClick}
         />
       ),
     },
     {
       name: "Shop Name",
-      selector: (row) => row.shopName,
+      selector: (row) => row.shopname,
       sortable: true,
     },
     {
       name: "Owner Name",
-      selector: (row) => row.Owner,
+      selector: (row) => row.owner,
       sortable: true,
     },
     {
@@ -64,7 +153,7 @@ const VendorsList = () => {
     },
     {
       name: "Contact",
-      selector: (row) => row.contact,
+      selector: (row) => row.mobile,
       sortable: true,
       center: true,
     },
@@ -90,7 +179,7 @@ const VendorsList = () => {
       name: "Change",
       selector: (row) => (
         <Form.Group className="" controlId="formBasicEmail">
-          <Form.Select size="sm" aria-label="Default select example" onChange={()=>{handleStatusChnage(row.id)}}
+          <Form.Select size="sm" aria-label="Default select example" onChange={handleStatusChnage}
             value={row.status === "Pending" ? "0" :
               row.status === "Active" ? "1" :
                 row.status === "Blocked" ? "2" :
@@ -112,7 +201,7 @@ const VendorsList = () => {
       center:true,
       selector: (row) => (
         <div className={"actioncolimn"}>
-         <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow}/>
+         <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this,row.id)}/>
           <BsTrash
             className=" p-0 m-0 editiconn text-danger"
             onClick={handleAlert}
@@ -121,69 +210,63 @@ const VendorsList = () => {
       ),
     },
   ];
+useEffect(()=>{
+  setvendordata(vendorjson)
+},[show])
+const handleFormChange = (e) => {
+  setaddvendordata({
+    ...addvendordata,
+    [e.target.name]: e.target.value
+  });
+};
+const docsImageUrls = [];
+const newImageUrls = [];
 
-  const data = [
-    {
-      id: 1,
-      p_id: "HHAHA",
-      shopName: "Bhati Sweets",
-      Owner: "Kuldeep Bhati",
-      address: "Vijay Nagar Indore",
-      contact: "1234567890",
-      status: "Active",
-      change: "Active",
-    },
-    {
-      id: 2,
-      p_id: "HHAHA",
-      shopName: "Sharma Veg",
-      Owner: "Anil Sharma",
-      address: "Palasia, Indore",
-      contact: "1234567890",
-      status: "In Progress",
-      change: "In Progress",
-    },
-    {
-      id: 3,
-      p_id: "HHAHA",
-      shopName: "Mohan Kirana",
-      Owner: "Mohan Verma",
-      address: "PU4, Indore",
-      contact: "1234567890",
-      status: "Pending",
-      change: "Blocked",
-    },
-    {
-      id: 4,
-      p_id: "HHAHA",
-      shopName: "Bhati Sweets",
-      Owner: "Kuldeep Bhati",
-      address: "Vijay Nagar Indore",
-      contact: "1234567890",
-      status: "Active",
-      change: "Active",
-    },
-    {
-      id: 5,
-      p_id: "HHAHA",
-      shopName: "Sharma Veg",
-      Owner: "Anil Sharma",
-      address: "Palasia, Indore",
-      contact: "1234567890",
-      status: "Pending",
-      change: "Pending",
-    },
-    {
-      id: 6,
-      p_id: "HHAHA",
-      shopName: "Mohan Kirana",
-      Owner: "Mohan Verma",
-      address: "PU4, Indore",
-      contact: "1234567890",
-      status: "Blocked",
-      change: "Blocked",
-    },
-  ];
+const ImgFormChange = (e) => {
+    ([...e.target.files]).forEach((image) => docsImageUrls.push(URL.createObjectURL(image)));
+    setaddvendordata((addvendordata) => { return { ...addvendordata, other_document: docsImageUrls } });
+  }
+const DocsFormChange = (e) => {
+    ([...e.target.files]).forEach((image) => newImageUrls.push(URL.createObjectURL(image)));
+    setaddvendordata((addvendordata) => { return { ...addvendordata, gumasta: newImageUrls } });
+  }
+const AddVendorClick = (e) => {
+  // console.log("validated----------   " +validated);
+  // e.preventDefault();
+  // const form = e.currentTarget;
+  // console.log("form.checkValidity----------   " +form.checkValidity());
+  // console.log("e.currentTarget----------   " +(e));
+
+
+  // if(addvendordata === '' || addvendordata === [] ) {
+  //   e.stopPropagation();
+  //   e.preventDefault()
+  // console.log("falsecheckValidity----------" );
+  // setValidated(true)
+  // }
+    // console.log("form----------   " + JSON.stringify(addvendordata));
+    //  formRef.current.reset();
+    //  setValidated(true)
+    //  e.preventDefault();
+  
+  if (addvendordata !== ''){
+  console.log("form----------   " + JSON.stringify(addvendordata));
+     formRef.current.reset();
+     setValidated(false)
+  } else{
+    e.stopPropagation();
+    e.preventDefault()
+  console.log("falsecheckValidity----------" );
+  setValidated(true)
+  }
+  // setValidated(true)
+  
+};
+
+const UpdateVendorClick = (show) => {
+  // setadmindata(adminjson.admin[show])
+console.log("form----------   " + JSON.stringify(addvendordata));
+};
   return (
     <div>
       <h2>Vendors List</h2>
@@ -218,12 +301,12 @@ const VendorsList = () => {
 
 
         <div className="product_page_uploadbox my-4">
-          <button className='button main_button ml-auto' onClick={handleShow}>Add New Shop</button>
+          <button className='button main_button ml-auto' onClick={()=>handleShow('add')}>Add New Shop</button>
         </div>
         <DataTable
           columns={columns}
           className="main_data_table"
-          data={data}
+          data={vendordata.vendor}
           pagination
           highlightOnHover
           pointerOnHover
@@ -237,69 +320,104 @@ const VendorsList = () => {
           onCancel={hideAlert}
         />
       </div>
-      <Modal size="lg" show={show} onHide={handleClose}>
+      <Modal size="lg" show={show} onHide={handleClose} >
         <Modal.Header closeButton>
-          <Modal.Title>Add New Vendor</Modal.Title>
+          <Modal.Title>
+          {show === 'add' ? 'Add New Vendor ' : ' Update Vendor '}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+        <Form className="" noValidate  validated={validated} ref={formRef} onSubmit={AddVendorClick}>
           <div className="row p-3 m-0">
             <div className="col-md-6">
-              <Form.Group className="mb-3 aos_input" controlId="formBasicEmail">
+              <Form.Group className="mb-3 aos_input" controlId="validationCustom01">
                 <Form.Label>Owner Name</Form.Label>
-                <Form.Control type="text" placeholder="Owner Name" />
+                <Form.Control onChange={handleFormChange} value={vendordata.owner} required type="text" placeholder="Owner Name" name={'owner'}  />
+                <Form.Control.Feedback type="invalid" className="h6">
+                            Please fill owner name
+                          </Form.Control.Feedback>
               </Form.Group>
             </div>
             <div className="col-md-6">
-              <Form.Group className="mb-3 aos_input" controlId="formBasicEmail">
+              <Form.Group className="mb-3 aos_input" controlId="validationCustom02">
                 <Form.Label>Shop Name</Form.Label>
-                <Form.Control type="text" placeholder="Shop Name" />
+                <Form.Control onChange={handleFormChange} value={vendordata.shopname} required type="text" placeholder="Shop Name" name={'shopname'}/>
+                <Form.Control.Feedback type="invalid" className="h6">
+                            Please fill shop name
+                          </Form.Control.Feedback>
               </Form.Group>
             </div>
             <div className="col-md-6">
-              <Form.Group className="mb-3 aos_input" controlId="formBasicEmail">
+              <Form.Group className="mb-3 aos_input" controlId="validationCustom03">
                 <Form.Label>Mobile</Form.Label>
-                <Form.Control type="text" placeholder="Mobile" />
+                <Form.Control onChange={handleFormChange} value={vendordata.mobile} required type="number"  min={1} placeholder="Mobile" name={'mobile'}/>
+                <Form.Control.Feedback type="invalid" className="h6">
+                            Please fill mobile
+                          </Form.Control.Feedback>
               </Form.Group>
-              <Form.Group className="mb-3 aos_input" controlId="formBasicEmail">
+              <Form.Group className="mb-3 aos_input" controlId="validationCustom04">
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="text" placeholder="Email" />
+                <Form.Control onChange={handleFormChange} value={vendordata.email} required type="email" placeholder="Email" name={'email'}/>
+                <Form.Control.Feedback type="invalid" className="h6">
+                            Please fill email
+                          </Form.Control.Feedback>
               </Form.Group>
             </div>
             <div className="col-md-6">
-              <Form.Group className="mb-3 aos_input" controlId="formBasicEmail">
+              <Form.Group className="mb-3 aos_input" controlId="validationCustom05">
                 <Form.Label>Shop Address</Form.Label>
-                <Form.Control className="vendor_address" as="textarea" rows={3} placeholder='Address' />
+                <Form.Control className="vendor_address" as="textarea" rows={3} placeholder='Address' name={'address'} onChange={handleFormChange} value={vendordata.address} required/>
+                <Form.Control.Feedback type="invalid" className="h6">
+                            Please fill address
+                          </Form.Control.Feedback>
               </Form.Group>
             </div>
             <div className="col-md-6">
-              <Form.Group className="mb-3 aos_input" controlId="formBasicEmail">
+              <Form.Group className="mb-3 aos_input" controlId="validationCustom06">
                 <Form.Label>GSTN</Form.Label>
-                <Form.Control type="text" placeholder="GSTN" />
+                <Form.Control onChange={handleFormChange} value={vendordata.gstn} required type="text" placeholder="GSTN" name={'gstn'}/>
+                <Form.Control.Feedback type="invalid" className="h6">
+                            Please fill gstn
+                          </Form.Control.Feedback>
               </Form.Group>
             </div>
             <div className="col-md-6">
-              <Form.Group className="mb-3 aos_input" controlId="formBasicEmail">
+              <Form.Group className="mb-3 aos_input" controlId="validationCustom07">
                 <Form.Label>Geolocation</Form.Label>
-                <Form.Control type="location" placeholder="Geolocation" />
+                <Form.Control onChange={handleFormChange}  required type="location" placeholder="Geolocation" name={'location'}/>
+                <Form.Control.Feedback type="invalid" className="h6">
+                            Please fill name
+                          </Form.Control.Feedback>
               </Form.Group>
             </div>
             <div className="col-md-6">
-              <Form.Group className="mb-3 aos_input" controlId="formBasicEmail">
+              <Form.Group className="mb-3 aos_input" controlId="validationCustom08">
                 <Form.Label>Gumasta</Form.Label>
-                <Form.Control type="file" placeholder="Gumasta" />
+                <Form.Control onChange={DocsFormChange}  multiple type="file" placeholder="Gumasta" required name={'gumasta'} />
+                <Form.Control.Feedback type="invalid" className="h6">
+                            Please upload Img
+                          </Form.Control.Feedback>
               </Form.Group>
             </div>
-            <div className="col-md-6">
-              <Form.Group className="mb-3 aos_input" controlId="formBasicEmail">
+            <div classImg="col-md-6">
+              <Form.Group className="mb-3 aos_input" controlId="validationCustom09">
                 <Form.Label>Other Documents</Form.Label>
-                <Form.Control type="file" placeholder="Other Documents" />
+                <Form.Control onChange={ImgFormChange}  multiple type="file" placeholder="Other Documents" required name={'other_document'} />
+                <Form.Control.Feedback type="invalid" className="h6">
+                            Please upload document
+                          </Form.Control.Feedback>
               </Form.Group>
             </div>
           </div>
+          </Form>
         </Modal.Body>
         <Modal.Footer>
           <button className='button main_outline_button' onClick={handleClose}>Cancel</button>
-          <button className='button main_button' onClick={handleClose}>Save</button>
+          <Iconbutton
+              type={'submit'}
+              btntext={(show === 'add' ? "Add Vendor" : "Update Vendor")}
+              onClick={(show === 'add' ? AddVendorClick : UpdateVendorClick(show))}
+              btnclass={"button main_button "}
+            />
         </Modal.Footer>
       </Modal>
     </div>

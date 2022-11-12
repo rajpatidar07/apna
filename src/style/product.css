@@ -143,3 +143,14 @@
   white-space: normal;
   padding-top: 15px;
 }
+
+
+/* category */
+.category_icon_box {
+  display: flex;
+  gap: 10px;
+}
+.category_icon_box .category_icon{
+max-width: 50px;
+width: 100%;
+}
