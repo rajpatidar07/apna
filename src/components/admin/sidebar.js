@@ -27,7 +27,7 @@ function AdminSidebar() {
       <Accordion defaultActiveKey="0" variant="pills">
         <Accordion.Item eventKey="0">
           <Accordion>
-            <Link to="/dashboard" className="nav-link nav_heading active">
+            <Link to="/" className="nav-link nav_heading active">
               <MdOutlineDashboard /> Dashboard
             </Link>
           </Accordion>
@@ -87,7 +87,7 @@ function AdminSidebar() {
             </ul>
           </Accordion.Body>
         </Accordion.Item>
-        <Accordion.Item eventKey="3" active>
+        <Accordion.Item eventKey="3" active="true">
           <Accordion>
             {" "}
             <Link to="/orders" className="nav-link nav_heading">
@@ -256,7 +256,7 @@ function AdminSidebar() {
               </li>
               <li>
                 <Link to="/banner" className="nav-link ">
-                  Banner Manager
+                  Banner Manager 
                 </Link>
               </li>
             </ul>
