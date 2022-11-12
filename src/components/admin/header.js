@@ -109,7 +109,7 @@ function AdminHeader() {
               <span className="px-2">Gourav</span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item  className="profile_list py-2">
+              <Dropdown.Item href="#/action-1" className="profile_list py-2">
                 <CgProfile />
                 profile
               </Dropdown.Item>
