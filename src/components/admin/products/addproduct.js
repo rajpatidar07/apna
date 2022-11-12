@@ -28,6 +28,8 @@ const Addproduct = (props) => {
   const [variantmainarray, setvariantmainarray] = useState([]);
   const [customarray, setcustomarray] = useState([]);
   const [data1, setdata1] = useState([]);
+  const [vdata, setvdata] = useState([]);
+  const [varietyshow, setvarietyShow] = useState(false);
   const formRef = useRef();
   const mainformRef = useRef();
 
@@ -161,6 +163,7 @@ const Addproduct = (props) => {
       // }
     ],
     "special_offer": true,
+    "variety": true,
     "seo_tag": [
       "shampoo",
       "herbs",
@@ -171,10 +174,47 @@ const Addproduct = (props) => {
       "storage,500gb"
     ]
   }
-
+  const varietyjson = {
+    "quantity": [
+      {
+        "variations": "volume",
+        "volume": "300",
+        "price": "250",
+        "mrp": "300",
+        "sale_price": "200",
+        "discount": "10",
+        "special_offer": "on",
+        "featured_product": "on",
+        "manufacturing_date": "2022-11-08",
+        "expire_date": "2022-11-27",
+        "quantity": "50",
+        "product_img": [
+          "blob:http://localhost:3000/4737c736-dcc9-4901-a5c9-41efb95667ce",
+          "blob:http://localhost:3000/e2394413-1533-42f0-858f-babcafefac1e"
+        ]
+      },
+      {
+        "variations": "color",
+        "colorname": "pink",
+        "size": "xl",
+        "price": "250",
+        "mrp": "1400",
+        "sale_price": "200",
+        "discount": "500",
+        "featured_product": "on",
+        "manufacturing_date": "2022-11-25",
+        "quantity": "40",
+        "product_img": [
+          "blob:http://localhost:3000/c9b8c6e6-c0b6-49e2-8940-c49e3382eea6",
+          "blob:http://localhost:3000/e2394413-1533-42f0-858f-babcafefac1e"
+        ]
+      },
+    ]
+  }
   // json end
   const handleClose = () => {
     setmodalshow(false)
+    setvarietyShow(false)
   }
 
   useEffect(() => {
@@ -185,8 +225,12 @@ const Addproduct = (props) => {
     if (props.show === 2) {
       setmodalshow(true)
       setpdata(productjson)
+      setseoArray(productjson.seo_tag)
     }
   }, [props.show]);
+  useEffect(() => {
+    setvdata(varietyjson)
+  }, [vdata]);
 
   // seotag
   let tagname;
@@ -209,7 +253,9 @@ const Addproduct = (props) => {
       seo_tag: seoarray
     });
   }, [seoarray]);
-
+  useEffect(() => {
+    setvariantmainarray(varietyjson.quantity)
+  }, [variantarray]);
   // end seotag
 
   // variant
@@ -223,10 +269,10 @@ const Addproduct = (props) => {
       ...variantarray,
       [e.target.name]: e.target.value
     });
-    setdata1({
-      ...data1,
-      [e.target.name]: e.target.value
-    });
+    // setdata1({
+    //   ...data1,
+    //   [e.target.name]: e.target.value
+    // });
   };
   const onVariantaddclick = (e) => {
     if (variantarray !== '') {
@@ -244,11 +290,11 @@ const Addproduct = (props) => {
   const VariantRemoveClick = (e) => {
     setvariantmainarray(variantmainarray.filter(item => item !== e));
   }
-const VariantEditClick =(e)=>{
-  console.log(JSON.stringify(e)+"   eeeee")
-  setdata1(e)
-  setvariantmainarray(variantmainarray.filter(item => item !== e));
-}
+  const VariantEditClick = (e) => {
+    console.log(JSON.stringify(e) + "   eeeee")
+    setdata1(e)
+    setvariantmainarray(variantmainarray.filter(item => item !== e));
+  }
   // varint end
 
 
@@ -320,18 +366,17 @@ const VariantEditClick =(e)=>{
     // handleClose();
   }
   const handleUpdateProduct = (e) => {
-    console.log("updateform----------   " + JSON.stringify(pdata));
     mainformRef.current.reset();
   }
   useEffect(() => {
-    setpdata({
-      ...pdata,
+    setvdata({
+      ...vdata,
       quantity: variantmainarray
     });
   }, [variantmainarray]);
 
 
-console.log("----00000000000000000000---"+JSON.stringify(data1.variations));
+
 
   return (
     <div>
@@ -363,7 +408,7 @@ console.log("----00000000000000000000---"+JSON.stringify(data1.variations));
                         </Form.Control.Feedback></span>
                     </Form.Label>
                     <Col sm="12">
-                      <Form.Control type="text" placeholder="Product Title/Name" required onChange={handleInputFieldChange} name={'product_title_name'} value={pdata.product_title_name} />
+                      <Form.Control type="text" placeholder="Product Title/Name" required onChange={() => handleInputFieldChange()} name={'product_title_name'} value={pdata.product_title_name} />
                       <Form.Control.Feedback type="invalid" className="h6">
                         Please fill productname
                       </Form.Control.Feedback>
@@ -641,7 +686,7 @@ console.log("----00000000000000000000---"+JSON.stringify(data1.variations));
                 </div>
               </div>
               {/* Variation */}
-
+              {/* 
               <div className="my-3 inputsection_box">
                 <h5 className="m-0">Variety</h5>
                 <div className="row">
@@ -928,15 +973,6 @@ console.log("----00000000000000000000---"+JSON.stringify(data1.variations));
                                           {variantdata.expire_date}
                                         </td>
                                         <td className="p-0 text-center">
-                                        {/* <InputGroup className="" size="sm">
-                                        <Form.Control
-                                          multiple
-                                          type="file"
-                                          sm="9"
-                                          onChange={imguploadchange}
-                                          name={'product_img'}
-                                        />
-                                      </InputGroup> */}
                                           <Carousel indicators={false} controls={false}>
                                             {(variantdata.product_img || []).map((data) => {
                                               return (
@@ -946,11 +982,6 @@ console.log("----00000000000000000000---"+JSON.stringify(data1.variations));
                                               )
                                             })}
                                           </Carousel>
-                                          {/* {(variantdata.product_img || []).map((data) => {
-                                            return (
-                                              <img src={data} alt='apnaorganic' width={50} />
-                                            )
-                                          })} */}
                                         </td>
                                         <td className="p-0 text-center">
                                           {variantdata.quantity}
@@ -976,6 +1007,27 @@ console.log("----00000000000000000000---"+JSON.stringify(data1.variations));
                       </div>
                     </Form.Group>
                   </Form>
+                </div>
+              </div> */}
+              <div className="my-3 inputsection_box">
+                <div className="productvariety_box">
+                  <h5 className="m-0">Offer</h5>
+                  <div className="productvariety">
+                    <Form.Group
+                      className="mx-3"
+                      controlId="validationCustom11"
+                    >
+                      <Form.Label
+                        className="inputlabelheading"
+                        sm="12 d-flex align-itmes-center"
+                      >
+                        {pdata.variety === true ?
+                          <Form.Check className="mx-2" onChange={handleInputcheckboxChange} name='variety' value={pdata.variety === true ? true : false} checked /> :
+                          <Form.Check className="mx-2" onChange={handleInputcheckboxChange} name='variety' value={pdata.variety === true ? true : false} />}
+                        Variety
+                      </Form.Label>
+                    </Form.Group>
+                  </div>
                 </div>
               </div>
               {/* Offer */}
@@ -1045,7 +1097,7 @@ console.log("----00000000000000000000---"+JSON.stringify(data1.variations));
                     </div>
 
                     <div className="d-flex align-items-center tagselectbox mt-2" >
-                      {(pdata.seo_tag || []).map((seotags, i) => {
+                      {(seoarray || []).map((seotags, i) => {
                         return (
                           <Badge className="tagselecttitle mb-0" bg="success" key={i}>{seotags}
 
@@ -1216,7 +1268,336 @@ console.log("----00000000000000000000---"+JSON.stringify(data1.variations));
           />
         </Modal.Footer>
       </Modal>
+      <Modal size="lg" show={props.show1} onHide={handleClose} dialogClassName="addproductmainmodal">
+        <Modal.Header closeButton>
+          <Modal.Title>Add Variety</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="row">
+            <Form ref={formRef} validated={validated} onSubmit={onVariantaddclick}>
+              <Form.Group
+                className="mx-3"
+              // controlId="validationCustom13"
+              >
+                <div className="variation_box my-2">
+                  <div className="row">
+                    <div className="col-auto">
+                      <Table bordered className="align-middle my-2">
+                        <thead className="align-middle">
+                          <tr>
+                            <th >Variety</th>
+                            <th >Color</th>
+                            <th >Weight/Size</th>
+                            <th >Price</th>
+                            <th >Mrp</th>
+                            <th >Sale Price</th>
+                            <th >Discount</th>
+                            <th >Special Offer</th>
+                            <th >Featured Product</th>
+                            <th className="manufacture_date">Mdate</th>
+                            <th className="manufacture_date">Edate</th>
+                            <th className="manufacture_date">Image</th>
+                            <th className="manufacture_date">Quantity</th>
+                            <th ></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td className="p-0 text-center">
+                              <div className=" d-flex align-items-center">
+                                <InputGroup className="" size="sm">
+                                  <Form.Select aria-label="Default select example" name='variations' value={data1.variations} onChange={(e) => {
+                                    // setvariantmainarray('');
+                                    setcustomValidated(false)
+                                    setvarietyval(e.target.value);
+                                    setvariantarray({
+                                      ...variantarray,
+                                      variations: e.target.value
+                                    });
+                                  }}
+                                    className={(customvalidated === true) ? 'border-danger' : null}
+                                  >
+                                    <option value={''} >Select</option>
+                                    {(varietyy.variety || []).map((vari, i) => {
+                                      return (
+                                        <option value={vari} key={i}>{vari}</option>
+                                      );
+                                    })}
+                                  </Form.Select>
+                                </InputGroup>
+                              </div>
+                            </td>
 
+                            <td className="p-0 text-center">
+                              <div className=" d-flex align-items-center">
+                                <InputGroup className="" size="sm">
+                                  <Form.Control
+                                    type="text"
+                                    sm="9"
+                                    className={(customvalidated === true) ? 'border-danger' : null}
+                                    onChange={onVariantChange}
+                                    name={'colorname'}
+                                    value={data1.colorname}
+                                  />
+                                </InputGroup>
+                              </div>
+                            </td>
+
+                            <td className="p-0 text-center">
+                              <div className=" d-flex align-items-center">
+                                <InputGroup className="" size="sm">
+                                  <Form.Control
+                                    value={(data1.variations === 'weight' ? data1.weight : data1.variations === 'volume' ? data1.volume : data1.variations === 'piece' ? data1.piece : data1.variations === 'color' ? data1.size : null)}
+                                    type="text"
+                                    sm="9"
+                                    className={(customvalidated === true) ? 'border-danger' : null}
+                                    onChange={onVariantChange}
+                                    name={(varietyval === 'weight' ? 'weight' : varietyval === 'volume' ? 'volume' : varietyval === 'piece' ? 'piece' : varietyval === 'color' ? 'size' : null)}
+                                  />
+                                </InputGroup>
+
+                              </div>
+                            </td>
+                            <td className="p-0 text-center">
+                              <div className=" d-flex align-items-center">
+                                <InputGroup className="" size="sm">
+                                  <Form.Control
+                                    min={1}
+                                    type="number"
+                                    sm="9"
+                                    className={(customvalidated === true) ? 'border-danger' : null}
+                                    onChange={onVariantChange}
+                                    name={'price'}
+                                    value={data1.price}
+                                  />
+                                </InputGroup>
+
+                              </div>
+                            </td>
+                            <td className="p-0 text-center">
+                              <div className=" d-flex align-items-center">
+                                <InputGroup className="" size="sm">
+                                  <Form.Control
+                                    type="number"
+                                    min={1}
+                                    sm="9"
+                                    className={(customvalidated === true) ? 'border-danger' : null}
+                                    onChange={onVariantChange}
+                                    name={'mrp'}
+                                    value={data1.mrp}
+
+                                  />
+                                </InputGroup>
+
+                              </div>
+                            </td>
+                            <td className="p-0 text-center">
+                              <div className=" d-flex align-items-center">
+                                <InputGroup className="" size="sm">
+                                  <Form.Control
+                                    type="number"
+                                    sm="9"
+                                    min={1}
+                                    className={(customvalidated === true) ? 'border-danger' : null}
+                                    onChange={onVariantChange}
+                                    name={'sale_price'}
+                                    value={data1.sale_price}
+                                  />
+                                </InputGroup>
+
+                              </div>
+                            </td>
+                            <td className="p-0 text-center">
+                              <div className=" d-flex align-items-center">
+                                <InputGroup className="" size="sm">
+                                  <Form.Control
+                                    type="number"
+                                    sm="9"
+                                    min={1}
+                                    onChange={onVariantChange}
+                                    name={'discount'}
+                                    value={data1.discount}
+                                  />
+                                </InputGroup>
+
+                              </div>
+                            </td>
+                            <td className="p-0 text-center">
+                              <div className="">
+                                <Form.Check
+                                  onChange={onVariantChange}
+                                  name={'special_offer'}
+                                  value={data1.special_offer}
+                                />
+                              </div>
+                            </td>
+                            <td className="p-0 text-center">
+                              <div className="">
+                                <Form.Check
+                                  onChange={onVariantChange}
+                                  name={'featured_product'}
+                                  value={data1.featured_product}
+                                />
+                              </div>
+                            </td>
+                            <td className="p-0 text-center">
+                              <div className="manufacture_date" >
+                                <InputGroup className="" size="sm">
+                                  <Form.Control
+                                    type="date"
+                                    sm="9"
+                                    className={(customvalidated === true) ? 'border-danger' : null}
+                                    onChange={onVariantChange}
+                                    name={'manufacturing_date'}
+                                    value={data1.manufacturing_date}
+                                  />
+                                </InputGroup>
+
+                              </div>
+                            </td>
+                            <td className="p-0 text-center">
+                              <div className="manufacture_date" >
+                                <InputGroup className="" size="sm">
+                                  <Form.Control
+                                    type="date"
+                                    sm="9"
+                                    className={(customvalidated === true) ? 'border-danger' : null}
+                                    onChange={onVariantChange}
+                                    name={'expire_date'}
+                                    value={data1.expire_date}
+                                  />
+                                </InputGroup>
+
+                              </div>
+                            </td>
+                            <td className="p-0 text-center">
+                              <div className="manufacture_date">
+                                <InputGroup className="" size="sm">
+                                  <Form.Control
+                                    multiple
+                                    type="file"
+                                    sm="9"
+                                    className={(customvalidated === true) ? 'border-danger' : null}
+                                    onChange={imguploadchange}
+                                    name={'product_img'}
+
+                                  />
+                                </InputGroup>
+
+                              </div>
+                            </td>
+                            <td className="p-0">
+                              <div className="manufacture_date">
+                                <InputGroup className="" size="sm">
+                                  <Form.Control
+                                    name={'quantity'}
+                                    type="number"
+                                    value={data1.quantity}
+                                    sm="9"
+                                    min={'1'}
+                                    className={(customvalidated === true) ? 'border-danger' : null}
+                                    onChange={onVariantChange}
+                                    onKeyPress={event => {
+                                      if (event.key === "Enter") {
+                                        onVariantaddclick();
+                                      }
+                                    }
+                                    }
+                                  />
+                                </InputGroup>
+                              </div>
+                            </td>
+                            <td className="p-0">
+                              <div className=" d-flex align-items-center">
+                                <Button variant="outline-success" className="addcategoryicon"
+                                  type="submit"
+                                  onClick={onVariantaddclick}
+                                  size="sm">
+                                  +
+                                </Button>
+                              </div>
+                            </td>
+                          </tr>
+
+                          {
+                            (variantmainarray || []).map((variantdata, i) => {
+                              return (
+                                <tr >
+                                  <td className="p-0 text-center ">
+                                    {variantdata.variations}
+                                  </td>
+                                  <td className="p-0 text-center ">
+                                    {variantdata.colorname}
+                                  </td>
+                                  <td className="p-0 text-center ">
+                                    {(variantdata.variations === 'color' ? variantdata.size : variantdata.variations === 'weight' ? variantdata.weight : variantdata.variations === 'volume' ? variantdata.volume : variantdata.variations === 'piece' ? variantdata.piece : null)}
+                                  </td>
+                                  <td className="p-0 text-center ">
+                                    {variantdata.price}
+                                  </td>
+                                  <td className="p-0 text-center ">
+                                    {variantdata.mrp}
+                                  </td>
+                                  <td className="p-0 text-center ">
+                                    {variantdata.sale_price}
+                                  </td>
+                                  <td className="p-0 text-center ">
+                                    {variantdata.discount}
+                                  </td>
+                                  <td className="p-0 text-center ">
+                                    {variantdata.special_offer}
+                                  </td>
+                                  <td className="p-0 text-center ">
+                                    {variantdata.featured_product}
+                                  </td>
+                                  <td className="p-0 text-center ">
+                                    {variantdata.manufacturing_date}
+                                  </td>
+                                  <td className="p-0 text-center ">
+                                    {variantdata.expire_date}
+                                  </td>
+                                  <td className="p-0 text-center">
+                                    <Carousel indicators={false} controls={false}>
+                                      {(variantdata.product_img || []).map((data) => {
+                                        return (
+                                          <Carousel.Item interval={1000}>
+                                            <img src={data} alt='apnaorganic' width={50} />
+                                          </Carousel.Item>
+                                        )
+                                      })}
+                                    </Carousel>
+                                  </td>
+                                  <td className="p-0 text-center">
+                                    {variantdata.quantity}
+                                  </td>
+                                  <td className="p-0 text-center">
+                                    <Button variant="text-danger" className="addcategoryicon text-danger"
+                                      onClick={() => VariantRemoveClick(variantdata)} size="sm">
+                                      &times;
+                                    </Button>
+                                    <Button variant="text-danger" className="addcategoryicon text-danger"
+                                      onClick={() => VariantEditClick(variantdata)} size="sm">
+                                      <MdOutlineEdit />
+                                    </Button>
+                                  </td>
+                                </tr>
+                              )
+                            })
+                          }
+                        </tbody>
+                      </Table>
+                    </div>
+                  </div>
+                </div>
+              </Form.Group>
+            </Form>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <button className='button main_outline_button' onClick={() => handleClose()}>Cancel</button>
+          <button className='button main_button' onClick={() => handleClose()}>Save</button>
+        </Modal.Footer>
+      </Modal>
 
     </div>
   );
