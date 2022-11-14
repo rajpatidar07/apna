@@ -64,7 +64,7 @@ function Product() {
   const productjson = {
     "product": [
       {
-        "id": "1",
+        "id": 1,
         "stock":"250",
         "product_title_name": "just herbs shampoo" ,
         "product_slug": "just_herbs_123" ,
@@ -97,7 +97,7 @@ function Product() {
         ]
       },
       {
-        "id": "2",
+        "id": 2,
         "stock":"250",
         "product_title_name": "just herbs shampoo" ,
         "product_slug": "just_herbs_123" ,
@@ -130,7 +130,7 @@ function Product() {
         ]
       },
       {
-        "id": "3",
+        "id": 3,
         "stock":"250",
         "product_title_name": "just herbs shampoo" ,
         "product_slug": "just_herbs_123" ,
@@ -350,7 +350,7 @@ function Product() {
       center: true,
       selector: (row) => (
         <div className={"actioncolimn"}>
-          <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={() => { handleShow.bind(this, row.id) }} />
+          <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.id) } />
           <BsTrash
             className=" p-0 m-0 editiconn text-danger"
             onClick={handleAlert}
@@ -360,7 +360,6 @@ function Product() {
       ),
     },
   ];
-console.log("-pdata       "+JSON.stringify(pdata))
 
   // modal
 
@@ -383,7 +382,7 @@ console.log("-pdata       "+JSON.stringify(pdata))
       setpdata('')
       setmodalshow(e);
     }
-    // console.log(JSON.stringify(e))
+    console.log(JSON.stringify(e))
     if (e !== 'add') {
       setpdata(productjson)
       setseoArray(productjson.seo_tag)

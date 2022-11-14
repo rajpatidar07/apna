@@ -22,47 +22,46 @@ function Admin() {
     }
     // console.log(JSON.stringify(e))
     if (e !== 'add') {
-      setadmindata(adminjson.admin[e - 1])
+      setadmindata(adminjson[e - 1])
       setShow(e);
     }
   }
   const formRef = useRef();
-  const adminjson = {
-    "admin": [
-      {
-        "id": "1",
-        "name": "Gourav",
-        "email": "we2code@gmail.com",
-        "mobile": "9876543210",
-        "admin_type": "1",
-        "password": "@123456",
-      },
-      {
-        "id": "2",
-        "name": "Vikram Soni",
-        "email": "we2code@gmail.com",
-        "mobile": "9876543210",
-        "admin_type": "2",
-        "password": "@123546"
-      },
-      {
-        "id": "3",
-        "name": "Shivani",
-        "email": "we2code@gmail.com",
-        "mobile": "9876543210",
-        "admin_type": "1",
-        "password": "@123456",
-      },
-      {
-        "id": "4",
-        "name": "Bhavna",
-        "email": "we2code@gmail.com",
-        "mobile": "9876543210",
-        "admin_type": "1",
-        "password": "@123456",
-      },
-    ]
-  }
+  const adminjson = [
+    {
+      "id": "1",
+      "name": "Gourav",
+      "email": "we2code@gmail.com",
+      "mobile": "9876543210",
+      "admin_type": "1",
+      "password": "@123456",
+    },
+    {
+      "id": "2",
+      "name": "Vikram Soni",
+      "email": "we2code@gmail.com",
+      "mobile": "9876543210",
+      "admin_type": "2",
+      "password": "@123546"
+    },
+    {
+      "id": "3",
+      "name": "Shivani",
+      "email": "we2code@gmail.com",
+      "mobile": "9876543210",
+      "admin_type": "1",
+      "password": "@123456",
+    },
+    {
+      "id": "4",
+      "name": "Bhavna",
+      "email": "we2code@gmail.com",
+      "mobile": "9876543210",
+      "admin_type": "1",
+      "password": "@123456",
+    },
+  ]
+
   const columns = [
     {
       name: "Id",
@@ -88,7 +87,7 @@ function Admin() {
     },
     {
       name: "Admin Type",
-      selector: (row) => (row.admin_type === '1' ? 'Super Admin' : row.admin_type === '2' ? 'Admin' :row.admin_type === '3' ? 'Editor' :null) ,
+      selector: (row) => (row.admin_type === '1' ? 'Super Admin' : row.admin_type === '2' ? 'Admin' : row.admin_type === '3' ? 'Editor' : null),
       sortable: true,
       center: true,
     },
@@ -129,7 +128,7 @@ function Admin() {
       console.log("falsecheckValidity----------");
       setValidated(true);
     }
-    else{
+    else {
       e.preventDefault();
       console.log("form----------   " + JSON.stringify(addadmindata));
       formRef.current.reset();
@@ -141,7 +140,9 @@ function Admin() {
     show.preventDefault()
     console.log("form----------   " + JSON.stringify(addadmindata));
   };
+console.log("------admin"+JSON.stringify(addadmindata))
 
+console.log("------admin"+JSON.stringify(addadmindata))
   return (
     <div className="App productlist_maindiv">
       <h2>Admin</h2>
@@ -165,15 +166,15 @@ function Admin() {
           aria-labelledby="example-custom-modal-styling-title"
           centered
         >
-           <Form className="" novalidate validated={validated} ref={formRef} onSubmit={(show === 'add' ? (e)=>AddAdminClick(e) : (show)=>UpdateAdminClick(show))}>
-          <Modal.Header closeButton className="">
-            <Modal.Title id="example-custom-modal-styling-title">
-              {show === 'add' ? 'Add Admin ' : ' Update Admin '}
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body className="p-3">
-            <div className="d-flex justify-content-center align-items-center p-0 m-0">
-             
+          <Form className="" novalidate validated={validated} ref={formRef} onSubmit={(show === 'add' ? (e) => AddAdminClick(e) : (show) => UpdateAdminClick(show))}>
+            <Modal.Header closeButton className="">
+              <Modal.Title id="example-custom-modal-styling-title">
+                {show === 'add' ? 'Add Admin ' : ' Update Admin '}
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="p-3">
+              <div className="d-flex justify-content-center align-items-center p-0 m-0">
+
                 <div className="">
                   <div className="">
                     <div className="row px-3">
@@ -183,7 +184,7 @@ function Admin() {
                             Name
                           </Form.Label>
 
-                          <Form.Control type="text" placeholder="Name" onChange={(e)=>handleFormChange(e)} value={admindata.name} name={'name'} required />
+                          <Form.Control type="text" placeholder="Name" onChange={(e) => handleFormChange(e)} value={admindata.name} name={'name'} required />
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill name
                           </Form.Control.Feedback>
@@ -198,7 +199,7 @@ function Admin() {
                             Email
                           </Form.Label>
 
-                          <Form.Control type="email" placeholder="Email" onChange={(e)=>handleFormChange(e)} value={admindata.email} name={'email'} required />
+                          <Form.Control type="email" placeholder="Email" onChange={(e) => handleFormChange(e)} value={admindata.email} name={'email'} required />
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill email
                           </Form.Control.Feedback>
@@ -213,7 +214,7 @@ function Admin() {
                             Mobile
                           </Form.Label>
 
-                          <Form.Control type="number" placeholder="Mobile Number"  min={1} onChange={(e)=>handleFormChange(e)} value={admindata.mobile} name={'mobile'} required />
+                          <Form.Control type="number" placeholder="Mobile Number" min={1} onChange={(e) => handleFormChange(e)} value={admindata.mobile} name={'mobile'} required />
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill mobile number
                           </Form.Control.Feedback>
@@ -228,7 +229,7 @@ function Admin() {
                             Password
                           </Form.Label>
 
-                          <Form.Control type="password" placeholder="Password" onChange={(e)=>handleFormChange(e)} value={admindata.password} name={'password'} required />
+                          <Form.Control type="password" placeholder="Password" onChange={(e) => handleFormChange(e)} value={admindata.password} name={'password'} required />
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill password
                           </Form.Control.Feedback>
@@ -243,7 +244,7 @@ function Admin() {
                             Admin Type
                           </Form.Label>
 
-                          <Form.Select aria-label="Default select example" onChange={(e)=>handleFormChange(e)} value={admindata.admin_type} name={'admin_type'} required>
+                          <Form.Select aria-label="Default select example" onChange={(e) => handleFormChange(e)} value={admindata.admin_type} name={'admin_type'} required>
                             <option value=''>Select</option>
                             <option value="1">Super Admin</option>
                             <option value="2">Admin</option>
@@ -257,23 +258,23 @@ function Admin() {
                     </div>
                   </div>
                 </div>
-              
-            </div>
-          </Modal.Body>
-          <Modal.Footer className="">
-            <button className='button main_outline_button' onClick={() => handleClose()}>Cancel</button>
-            <Iconbutton
-              type={'submit'}
-              btntext={(show === 'add' ? "Add Admin" : "Update Admin")}
-              // onClick={(show === 'add' ? AddAdminClick : UpdateAdminClick(show))}
-              btnclass={"button main_button "}
-            />
-          </Modal.Footer>
+
+              </div>
+            </Modal.Body>
+            <Modal.Footer className="">
+              <button className='button main_outline_button' onClick={() => handleClose()}>Cancel</button>
+              <Iconbutton
+                type={'submit'}
+                btntext={(show === 'add' ? "Add Admin" : "Update Admin")}
+                // onClick={(show === 'add' ? AddAdminClick : UpdateAdminClick(show))}
+                btnclass={"button main_button "}
+              />
+            </Modal.Footer>
           </Form>
         </Modal>
         <DataTable
           columns={columns}
-          data={admindata.admin}
+          data={adminjson}
           pagination
           highlightOnHover
           pointerOnHover
