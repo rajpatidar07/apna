@@ -21,7 +21,6 @@ import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import DataTable from "react-data-table-component";
 import Form from "react-bootstrap/Form";
-import Addproduct from "./products/addproduct";
 import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
 import axios from "axios";
@@ -33,7 +32,6 @@ function Product() {
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
-  const [show, setShow] = useState(null);
   const [varietyshow, setvarietyShow] = useState(false);
   const [addtag, setaddtag] = useState();
   const [validated, setValidated] = useState(false);
@@ -42,11 +40,10 @@ function Product() {
   const [seoarray, setseoArray] = useState([]);
   const [varietyval, setvarietyval] = useState('');
   const [variantarray, setvariantarray] = useState([]);
+  const [data1, setdata1] = useState('');
   const [headerval, setheaderval] = useState('');
   const [descval, setdescval] = useState('');
-  const [variantmainarray, setvariantmainarray] = useState([]);
   const [customarray, setcustomarray] = useState([]);
-  const [data1, setdata1] = useState([]);
   const [vdata, setvdata] = useState([]);
   const mainformRef = useRef();
   const formRef = useRef();
@@ -61,151 +58,154 @@ function Product() {
   // }, []);
   //  json
   var varietyy = VariationJson;
-  const productjson = {
-    "product": [
-      {
-        "id": 1,
-        "stock":"250",
-        "product_title_name": "just herbs shampoo" ,
-        "product_slug": "just_herbs_123" ,
-        "store_name": "w2c_store_lapssi" ,
-        "product_type": "organic_shampoo" ,
-        "category": "18" ,
-        "parent_category": "5,18" ,
-        "product_quantity": "250" ,
-        "mrp": "600" ,
-        "product_price": "500" ,
-        "sale_price": "450" ,
-        "discount": "10" ,
-        "wholesale_sales_tax": "10" ,
-        "manufacturers_sales_tax": "10" ,
-        "retails_sales_tax": "5" ,
-        "gst": "25" ,
-        "value_added_tax": "5" ,
-        "manufacturing_date": "2022-11-01" ,
-        "expire_date": "2022-01-16" ,
-        "special_offer": true,
-        "variety": true,
-        "seo_tag": [
-          "shampoo",
-          "herbs",
-          "organic"
-        ],
-        "add_custom_input": [
-          "packaging,good quality",
-          "storage,500gb"
-        ]
-      },
-      {
-        "id": 2,
-        "stock":"250",
-        "product_title_name": "just herbs shampoo" ,
-        "product_slug": "just_herbs_123" ,
-        "store_name": "w2c_store_lapssi" ,
-        "product_type": "organic_shampoo" ,
-        "category": "18" ,
-        "parent_category": "5,18" ,
-        "product_quantity": "250" ,
-        "mrp": "600" ,
-        "product_price": "500" ,
-        "sale_price": "450" ,
-        "discount": "10" ,
-        "wholesale_sales_tax": "10" ,
-        "manufacturers_sales_tax": "10" ,
-        "retails_sales_tax": "5" ,
-        "gst": "25" ,
-        "value_added_tax": "5" ,
-        "manufacturing_date": "2022-11-01" ,
-        "expire_date": "2022-01-16" ,
-        "special_offer": true,
-        "variety": true,
-        "seo_tag": [
-          "shampoo",
-          "herbs",
-          "organic"
-        ],
-        "add_custom_input": [
-          "packaging,good quality",
-          "storage,500gb"
-        ]
-      },
-      {
-        "id": 3,
-        "stock":"250",
-        "product_title_name": "just herbs shampoo" ,
-        "product_slug": "just_herbs_123" ,
-        "store_name": "w2c_store_lapssi" ,
-        "product_type": "organic_shampoo" ,
-        "category": "18" ,
-        "parent_category": "5,18" ,
-        "product_quantity": "250" ,
-        "mrp": "600" ,
-        "product_price": "500" ,
-        "sale_price": "450" ,
-        "discount": "10" ,
-        "wholesale_sales_tax": "10" ,
-        "manufacturers_sales_tax": "10" ,
-        "retails_sales_tax": "5" ,
-        "gst": "25" ,
-        "value_added_tax": "5" ,
-        "manufacturing_date": "2022-11-01" ,
-        "expire_date": "2022-01-16" ,
-        "special_offer": true,
-        "variety": true,
-        "seo_tag": [
-          "shampoo",
-          "herbs",
-          "organic"
-        ],
-        "add_custom_input": [
-          "packaging,good quality",
-          "storage,500gb"
-        ]
-      },
-    ]
-  }
+  const productjson = [
+    {
+    id: 1,
+    stock: "250",
+    product_title_name: "just herbs shampoo",
+    product_slug: "just_herbs_123",
+    store_name: "w2c_store_lapssi",
+    product_type: "organic_shampoo",
+    category: "18",
+    product_description:"this product is amazing yeh woh ",
+    parent_category: "5,18",
+    product_quantity: "250",
+    mrp: "600",
+    product_price: "500",
+    sale_price: "450",
+    discount: "10",
+    wholesale_sales_tax: "10",
+    manufacturers_sales_tax: "10",
+    retails_sales_tax: "5",
+    gst: "25",
+    value_added_tax: "5",
+    manufacturing_date: "2022-11-01",
+    expire_date: "2022-01-16",
+    special_offer: true,
+    variety: true,
+    seo_tag: [
+      "shampoo",
+        "herbs",
+        "organic"
+      ],
+      add_custom_input: [
+        "packaging,good quality",
+        "storage,500gb"
+      ]
+    },
+    {
+    id: 2,
+    stock: "250",
+    product_title_name: "just herbs shampoo",
+    product_slug: "just_herbs_123",
+    store_name: "w2c_store_lapssi",
+    product_type: "organic_shampoo",
+    product_description:"helo hey editorjkfcjksd",
+    category: "18",
+    parent_category: "5,18",
+    product_quantity: "250",
+    mrp: "600",
+    product_price: "500",
+    sale_price: "450",
+    discount: "10",
+    wholesale_sales_tax: "10",
+    manufacturers_sales_tax: "10",
+    retails_sales_tax: "5",
+    gst: "25",
+    value_added_tax: "5",
+    manufacturing_date: "2022-11-01",
+    expire_date: "2022-01-16",
+    special_offer: true,
+    variety: true,
+    seo_tag: [
+        "shampoo",
+        "herbs",
+        "organic"
+      ],
+      add_custom_input: [
+        "packaging,good quality",
+        "storage,500gb"
+      ]
+    },
+    {
+    id: 3,
+    stock: "250",
+    product_title_name: "just herbs shampoo",
+    product_slug: "just_herbs_123",
+    store_name: "w2c_store_lapssi",
+    product_type: "organic_shampoo",
+    product_description:"helo hey editorjkfcjksd",
+    category: "18",
+    parent_category: "5,18",
+    product_quantity: "250",
+    mrp: "600",
+    product_price: "500",
+    sale_price: "450",
+    discount: "10",
+    wholesale_sales_tax: "10",
+    manufacturers_sales_tax: "10",
+    retails_sales_tax: "5",
+    gst: "25",
+    value_added_tax: "5",
+    manufacturing_date: "2022-11-01",
+    expire_date: "2022-01-16",
+    special_offer: true,
+    variety: true,
+    seo_tag: [
+        "shampoo",
+        "herbs",
+        "organic"
+      ],
+      add_custom_input: [
+        "packaging,good quality",
+        "storage,500gb"
+      ]
+    },
+  ]
 
-  const varietyjson = {
-    "quantity": [
+
+  const varietyjson = [
       {
-        "variations": "volume",
-        "volume": "300",
-        "price": "250",
-        "mrp": "300",
-        "sale_price": "200",
-        "discount": "10",
-        "special_offer": "on",
-        "featured_product": "on",
-        "manufacturing_date": "2022-11-08",
-        "expire_date": "2022-11-27",
-        "quantity": "50",
-        "product_img": [
+        id:1,
+        variations: "volume",
+      volume: "300",
+      price: "250",
+      mrp: "300",
+      sale_price: "200",
+      discount: "10",
+      special_offer: "on",
+      featured_product: "on",
+      manufacturing_date: "2022-11-08",
+      expire_date: "2022-11-27",
+      quantity: "50",
+      product_img: [
           "blob:http://localhost:3000/4737c736-dcc9-4901-a5c9-41efb95667ce",
           "blob:http://localhost:3000/e2394413-1533-42f0-858f-babcafefac1e"
         ]
       },
       {
-        "variations": "color",
-        "colorname": "pink",
-        "size": "xl",
-        "price": "250",
-        "mrp": "1400",
-        "sale_price": "200",
-        "discount": "500",
-        "featured_product": "on",
-        "manufacturing_date": "2022-11-25",
-        "quantity": "40",
-        "product_img": [
+        id:2,
+      variations: "color",
+      colorname: "pink",
+      size: "xl",
+      price: "250",
+      mrp: "1400",
+      sale_price: "200",
+      discount: "500",
+      featured_product: "on",
+      manufacturing_date: "2022-11-25",
+      quantity: "40",
+      product_img: [
           "blob:http://localhost:3000/c9b8c6e6-c0b6-49e2-8940-c49e3382eea6",
           "blob:http://localhost:3000/e2394413-1533-42f0-858f-babcafefac1e"
         ]
       },
     ]
-  }
+  
   // json end
   useEffect(() => {
     setpdata(productjson)
-  }, [modalshow]);
+  }, []);
   const columns = [
     {
       name: "#",
@@ -350,7 +350,7 @@ function Product() {
       center: true,
       selector: (row) => (
         <div className={"actioncolimn"}>
-          <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.id) } />
+          <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.id)} />
           <BsTrash
             className=" p-0 m-0 editiconn text-danger"
             onClick={handleAlert}
@@ -379,23 +379,24 @@ function Product() {
 
   const handleShow = (e) => {
     if (e === 'add') {
-      setpdata('')
       setmodalshow(e);
     }
     console.log(JSON.stringify(e))
     if (e !== 'add') {
-      setpdata(productjson)
-      setseoArray(productjson.seo_tag)
+      setpdata(productjson[e - 1])
+      setseoArray(productjson[e - 1].seo_tag)
       setmodalshow(e);
     }
   }
+
   const handlevarietyShow = () => setvarietyShow(true);
   const handlevarietyClose = () => { setvarietyShow(false) }
   const handleClose = () => {
+    mainformRef.current.reset();
+    setpdata('')
+    setValidated(false)
     setmodalshow(false)
   }
-
-
   useEffect(() => {
     setvdata(varietyjson)
   }, []);
@@ -421,9 +422,9 @@ function Product() {
       seo_tag: seoarray
     });
   }, [seoarray]);
-  useEffect(() => {
-    setvariantmainarray(varietyjson.quantity)
-  }, [variantarray]);
+  // useEffect(() => {
+  //   setvariantarray(varietyjson)
+  // }, []);
   // end seotag
 
   // variant
@@ -437,34 +438,29 @@ function Product() {
       ...variantarray,
       [e.target.name]: e.target.value
     });
-    // setdata1({
-    //   ...data1,
-    //   [e.target.name]: e.target.value
-    // });
   };
   const onVariantaddclick = (e) => {
-    if (variantarray !== '') {
+    if (vdata !== '') {
       e.preventDefault();
-      setvariantmainarray(variantmainarray => [...variantmainarray, variantarray]);
+      setvdata(vdata => [...vdata, variantarray]);
+      console.log("------addvriety"+JSON.stringify(variantarray))
       setcustomValidated(false);
-    formRef.current.reset();
+      formRef.current.reset();
     }
     else {
       setcustomValidated(true);
     }
   }
 
-  const VariantRemoveClick = (e) => {
-    setvariantmainarray(variantmainarray.filter(item => item !== e));
+  const VariantRemoveClick = (id) => {
+    setvdata(vdata.filter(item => item !== id));
   }
-  const VariantEditClick = (e) => {
-    console.log(JSON.stringify(e) + "   eeeee")
-    setdata1(e)
-    setvariantmainarray(variantmainarray.filter(item => item !== e));
+  const VariantEditClick = (id) => {
+    setvariantarray(vdata[id-1]);
+    // setdata1(e)
+    // setvariantmainarray(variantmainarray.filter(item => item !== e));
   }
   // varint end
-
-
   // handle click event of the Remove button
   let customvalue;
   const oncustomheadChange = (e) => {
@@ -512,6 +508,19 @@ function Product() {
       [e.target.name]: [e.target.value]
     });
   };
+  const handledescription = (event, editor) => {
+    setdata1(editor.getData());
+      console.log({ event, editor, data1 });
+      console.log(data1);
+      setpdata({
+        ...pdata,
+        product_description: data1
+      });
+    }
+   const createMarkup = () => {
+      return { __html: pdata.product_description };
+    }
+
   const handleSaveDraft = (e) => {
     // const form = e.currentTarget;
   };
@@ -533,14 +542,15 @@ function Product() {
     // handleClose();
   }
   const handleUpdateProduct = (e) => {
-    mainformRef.current.reset();
+    e.preventDefault();
+    console.log("---edit"+ JSON.stringify(pdata))
   }
-  useEffect(() => {
-    setvdata({
-      ...vdata,
-      quantity: variantmainarray
-    });
-  }, [variantmainarray]);
+  // useEffect(() => {
+  //   setvdata({
+  //     ...vdata,
+  //     quantity: variantmainarray
+  //   });
+  // }, [variantmainarray]);
 
 
 
@@ -612,12 +622,12 @@ function Product() {
         {/* datatable */}
         <Modal
           show={modalshow}
-          onHide={handleClose}
+          onHide={()=>handleClose()}
           dialogClassName="addproductmainmodal"
           aria-labelledby="example-custom-modal-styling-title"
           centered
         >
-          <Form className="p-2 addproduct_form" validated={validated} ref={mainformRef} onSubmit={(modalshow === 'add' ? handleAddProduct : handleUpdateProduct)}>
+          <Form className="p-2 addproduct_form" validated={validated} ref={mainformRef} onSubmit={(modalshow === 'add' ? (e)=>handleAddProduct(e) : (modalshow)=>handleUpdateProduct(modalshow))}>
             <Modal.Header closeButton className="addproductheader">
               <Modal.Title id="example-custom-modal-styling-title">
                 Add Product
@@ -637,7 +647,7 @@ function Product() {
                           </Form.Control.Feedback></span>
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Control type="text" placeholder="Product Title/Name" required onChange={() => handleInputFieldChange()} name={'product_title_name'} value={pdata.product_title_name} />
+                        <Form.Control type="text" placeholder="Product Title/Name" required onChange={(e)=>handleInputFieldChange(e)} name={'product_title_name'} value={pdata.product_title_name} />
                         <Form.Control.Feedback type="invalid" className="h6">
                           Please fill productname
                         </Form.Control.Feedback>
@@ -648,7 +658,7 @@ function Product() {
                         Product Slug<span className="text-danger">* </span>
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Control type="text" placeholder="Product Slug" onChange={handleInputFieldChange} name={'product_slug'} value={pdata.product_slug} />
+                        <Form.Control type="text" placeholder="Product Slug" onChange={(e)=>handleInputFieldChange(e)} name={'product_slug'} value={pdata.product_slug} />
                       </Col>
                     </Form.Group>
 
@@ -660,7 +670,7 @@ function Product() {
                         </Form.Control.Feedback></span>
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Control type="text" placeholder=" Store Name" required onChange={handleInputFieldChange} name={'store_name'} value={pdata.store_name} />
+                        <Form.Control type="text" placeholder=" Store Name" required onChange={(e)=>handleInputFieldChange(e)} name={'store_name'} value={pdata.store_name} />
                         <Form.Control.Feedback type="invalid" className="h6">
                           Please fill storename
                         </Form.Control.Feedback>
@@ -674,15 +684,14 @@ function Product() {
                     <Col sm="12">
                       <CKEditor
                         editor={ClassicEditor}
-                        data="<p>Hello from CKEditor 5!</p>"
+                        data= {pdata.product_description}  
                         onReady={editor => {
                           // You can store the "editor" and use when it is needed.
                           // console.log('Editor is ready to use!', editor);
                         }}
-                        onChange={(event, editor) => {
-                          const data = editor.getData();
-                          // console.log({ event, editor, data });
-                        }}
+                        onChange={handledescription}
+                       
+                        
                         onBlur={(event, editor) => {
                           // console.log('Blur.', editor);
                         }}
@@ -692,8 +701,8 @@ function Product() {
                         name={'product_description'}
                         value={pdata.product_description}
                       />
-
                     </Col>
+                    <div dangerouslySetInnerHTML={createMarkup()} className='editor'></div>
                   </Form.Group>
                 </div>
                 {/* category */}
@@ -711,7 +720,7 @@ function Product() {
                           className="adminselectbox"
                           required
                           name="product_type"
-                          onChange={handleInputFieldChange}
+                          onChange={(e)=>handleInputFieldChange(e)}
                           value={pdata.product_type}
                         >
                           <option value={''}>Select Product Type</option>
@@ -731,7 +740,7 @@ function Product() {
                         Category<span className="text-danger">* </span>
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Select aria-label="Category" className="adminselectbox" required onChange={handleInputFieldChange} name={'category'} value={pdata.category}>
+                        <Form.Select aria-label="Category" className="adminselectbox" required onChange={(e)=>handleInputFieldChange(e)} name={'category'} value={pdata.category}>
                           <option value={''}> Select Category</option>
                           <option value="18">18</option>
                           <option value="Drinks">Two</option>
@@ -748,7 +757,7 @@ function Product() {
                       </Form.Label>
                       <Col sm="12">
                         <Form.Select
-                          onChange={handleInputFieldChange} name={'parent_category'}
+                          onChange={(e)=>handleInputFieldChange(e)} name={'parent_category'}
                           aria-label="Parent Category"
                           className="adminselectbox"
                           required
@@ -775,7 +784,7 @@ function Product() {
                         Product Quantity<span className="text-danger">* </span>
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Control type="number" placeholder="Product Quantity" required onChange={handleInputFieldChange} name={'product_quantity'} value={pdata.product_quantity} />
+                        <Form.Control type="number" placeholder="Product Quantity" required onChange={(e)=>handleInputFieldChange(e)} name={'product_quantity'} value={pdata.product_quantity} />
                         <Form.Control.Feedback type="invalid" className="h6">
                           Please fill quantity
                         </Form.Control.Feedback>
@@ -786,7 +795,7 @@ function Product() {
                         Mrp<span className="text-danger">*</span>
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Control type="number" placeholder="mrp" required onChange={handleInputFieldChange} name={'mrp'} value={pdata.mrp} />
+                        <Form.Control type="number" placeholder="mrp" required onChange={(e)=>handleInputFieldChange(e)} name={'mrp'} value={pdata.mrp} />
                         <Form.Control.Feedback type="invalid" className="h6">
                           Please fill mrp
                         </Form.Control.Feedback>
@@ -797,7 +806,7 @@ function Product() {
                         Product Price<span className="text-danger">* </span>
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Control type="number" placeholder="Price" required onChange={handleInputFieldChange} name={'product_price'} value={pdata.product_price} />
+                        <Form.Control type="number" placeholder="Price" required onChange={(e)=>handleInputFieldChange(e)} name={'product_price'} value={pdata.product_price} />
                         <Form.Control.Feedback type="invalid" className="h6">
                           Please fill price
                         </Form.Control.Feedback>
@@ -808,7 +817,7 @@ function Product() {
                         Sale Price
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Control type="number" placeholder="Sale Price" onChange={handleInputFieldChange} name={'sale_price'} value={pdata.sale_price} />
+                        <Form.Control type="number" placeholder="Sale Price" onChange={(e)=>handleInputFieldChange(e)} name={'sale_price'} value={pdata.sale_price} />
                       </Col>
                     </Form.Group>
                     <Form.Group className="mx-3" controlId="validationCustom11">
@@ -816,7 +825,7 @@ function Product() {
                         Discount
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Control type="number" placeholder="Discount" onChange={handleInputFieldChange} name={'discount'} value={pdata.discount} />
+                        <Form.Control type="number" placeholder="Discount" onChange={(e)=>handleInputFieldChange(e)} name={'discount'} value={pdata.discount} />
                       </Col>
                     </Form.Group>
                   </div>
@@ -835,7 +844,7 @@ function Product() {
                           placeholder="Wholesale Sales Tax"
                           name="wholesale_sales_tax"
                           value={pdata.wholesale_sales_tax}
-                          onChange={handleInputFieldChange}
+                          onChange={(e)=>handleInputFieldChange(e)}
                         />
                       </Col>
                     </Form.Group>
@@ -849,7 +858,7 @@ function Product() {
                           placeholder="Manufacturers’ Sales Tax "
                           name="manufacturers_sales_tax"
                           value={pdata.manufacturers_sales_tax}
-                          onChange={handleInputFieldChange}
+                          onChange={(e)=>handleInputFieldChange(e)}
                         />
                       </Col>
                     </Form.Group>
@@ -859,7 +868,7 @@ function Product() {
                       </Form.Label>
                       <Col sm="12">
                         <Form.Control type="number" placeholder="Retail Sales Tax" name="retails_sales_tax" value={pdata.retails_sales_tax}
-                          onChange={handleInputFieldChange} />
+                          onChange={(e)=>handleInputFieldChange(e)} />
                       </Col>
                     </Form.Group>
                     <Form.Group className="mx-3" controlId="validationCustom11">
@@ -867,7 +876,7 @@ function Product() {
                         Gst
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Control type="number" placeholder="Gst" required name="gst" value={pdata.gst} onChange={handleInputFieldChange} />
+                        <Form.Control type="number" placeholder="Gst" required name="gst" value={pdata.gst} onChange={(e)=>handleInputFieldChange(e)} />
                         <Form.Control.Feedback type="invalid">
                           Please choose a gst
                         </Form.Control.Feedback>
@@ -878,7 +887,7 @@ function Product() {
                         Value Added Tax
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Control type="number" placeholder="Value Added Tax" name="value_added_tax" value={pdata.value_added_tax} onChange={handleInputFieldChange} />
+                        <Form.Control type="number" placeholder="Value Added Tax" name="value_added_tax" value={pdata.value_added_tax} onChange={(e)=>handleInputFieldChange(e)} />
                       </Col>
                     </Form.Group>
                   </div>
@@ -892,7 +901,7 @@ function Product() {
                         Manufacturing Date
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Control type="date" placeholder="manufacturing_date" name="manufacturing_date" required onChange={handleInputFieldChange} value={pdata.manufacturing_date} />
+                        <Form.Control type="date" placeholder="manufacturing_date" name="manufacturing_date" required onChange={(e)=>handleInputFieldChange(e)} value={pdata.manufacturing_date} />
                         <Form.Control.Feedback type="invalid">
                           Please choose a date
                         </Form.Control.Feedback>
@@ -906,7 +915,7 @@ function Product() {
                         Expire Date
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Control type="date" placeholder="expire_date" required name="expire_date" value={pdata.expire_date} onChange={handleInputFieldChange} />
+                        <Form.Control type="date" placeholder="expire_date" required name="expire_date" value={pdata.expire_date} onChange={(e)=>handleInputFieldChange(e)} />
                         <Form.Control.Feedback type="invalid">
                           Please choose a expire date
                         </Form.Control.Feedback>
@@ -1177,8 +1186,8 @@ function Product() {
           </Form>
         </Modal>
         {/* variety */}
-        <Modal size="lg" show={varietyshow} onHide={handlevarietyClose} dialogClassName="addproductmainmodal">
-          <Form ref={formRef} validated={validated} onSubmit={onVariantaddclick}>
+        <Modal size="lg" show={varietyshow} onHide={()=>handlevarietyClose()} dialogClassName="addproductmainmodal">
+          <Form ref={formRef} validated={validated} onSubmit={(e)=>onVariantaddclick(e)}>
             <Modal.Header closeButton>
               <Modal.Title>Add Variety</Modal.Title>
             </Modal.Header>
@@ -1216,15 +1225,8 @@ function Product() {
                               <td className="p-0 text-center">
                                 <div className=" d-flex align-items-center">
                                   <InputGroup className="" size="sm">
-                                    <Form.Select aria-label="Default select example" name='variations' value={data1.variations} onChange={(e) => {
-                                      // setvariantmainarray('');
-                                      setcustomValidated(false)
-                                      setvarietyval(e.target.value);
-                                      setvariantarray({
-                                        ...variantarray,
-                                        variations: e.target.value
-                                      });
-                                    }}
+                                    <Form.Select aria-label="Default select example" name='variations' value={vdata.variations} 
+                                   onChange={(e)=>onVariantChange(e)}
                                       className={(customvalidated === true) ? 'border-danger' : null}
                                     >
                                       <option value={''} >Select</option>
@@ -1245,9 +1247,9 @@ function Product() {
                                       type="text"
                                       sm="9"
                                       className={(customvalidated === true) ? 'border-danger' : null}
-                                      onChange={onVariantChange}
+                                      onChange={(e)=>onVariantChange(e)}
                                       name={'colorname'}
-                                      value={data1.colorname}
+                                      value={variantarray.colorname}
                                     />
                                   </InputGroup>
                                 </div>
@@ -1257,11 +1259,11 @@ function Product() {
                                 <div className=" d-flex align-items-center">
                                   <InputGroup className="" size="sm">
                                     <Form.Control
-                                      value={(data1.variations === 'weight' ? data1.weight : data1.variations === 'volume' ? data1.volume : data1.variations === 'piece' ? data1.piece : data1.variations === 'color' ? data1.size : null)}
+                                      value={(variantarray.variations === 'weight' ? variantarray.weight : variantarray.variations === 'volume' ? variantarray.volume : variantarray.variations === 'piece' ? variantarray.piece : variantarray.variations === 'color' ? variantarray.size : null)}
                                       type="text"
                                       sm="9"
                                       className={(customvalidated === true) ? 'border-danger' : null}
-                                      onChange={onVariantChange}
+                                      onChange={(e)=>onVariantChange(e)}
                                       name={(varietyval === 'weight' ? 'weight' : varietyval === 'volume' ? 'volume' : varietyval === 'piece' ? 'piece' : varietyval === 'color' ? 'size' : null)}
                                     />
                                   </InputGroup>
@@ -1276,9 +1278,9 @@ function Product() {
                                       type="number"
                                       sm="9"
                                       className={(customvalidated === true) ? 'border-danger' : null}
-                                      onChange={onVariantChange}
+                                      onChange={(e)=>onVariantChange(e)}
                                       name={'price'}
-                                      value={data1.price}
+                                      value={variantarray.price}
                                     />
                                   </InputGroup>
 
@@ -1292,9 +1294,9 @@ function Product() {
                                       min={1}
                                       sm="9"
                                       className={(customvalidated === true) ? 'border-danger' : null}
-                                      onChange={onVariantChange}
+                                      onChange={(e)=>onVariantChange(e)}
                                       name={'mrp'}
-                                      value={data1.mrp}
+                                      value={variantarray.mrp}
 
                                     />
                                   </InputGroup>
@@ -1309,9 +1311,9 @@ function Product() {
                                       sm="9"
                                       min={1}
                                       className={(customvalidated === true) ? 'border-danger' : null}
-                                      onChange={onVariantChange}
+                                      onChange={(e)=>onVariantChange(e)}
                                       name={'sale_price'}
-                                      value={data1.sale_price}
+                                      value={variantarray.sale_price}
                                     />
                                   </InputGroup>
 
@@ -1324,9 +1326,9 @@ function Product() {
                                       type="number"
                                       sm="9"
                                       min={1}
-                                      onChange={onVariantChange}
+                                      onChange={(e)=>onVariantChange(e)}
                                       name={'discount'}
-                                      value={data1.discount}
+                                      value={variantarray.discount}
                                     />
                                   </InputGroup>
 
@@ -1335,18 +1337,18 @@ function Product() {
                               <td className="p-0 text-center">
                                 <div className="">
                                   <Form.Check
-                                    onChange={onVariantChange}
+                                    onChange={(e)=>onVariantChange(e)}
                                     name={'special_offer'}
-                                    value={data1.special_offer}
+                                    value={variantarray.special_offer}
                                   />
                                 </div>
                               </td>
                               <td className="p-0 text-center">
                                 <div className="">
                                   <Form.Check
-                                    onChange={onVariantChange}
+                                    onChange={(e)=>onVariantChange(e)}
                                     name={'featured_product'}
-                                    value={data1.featured_product}
+                                    value={variantarray.featured_product}
                                   />
                                 </div>
                               </td>
@@ -1357,9 +1359,9 @@ function Product() {
                                       type="date"
                                       sm="9"
                                       className={(customvalidated === true) ? 'border-danger' : null}
-                                      onChange={onVariantChange}
+                                      onChange={(e)=>onVariantChange(e)}
                                       name={'manufacturing_date'}
-                                      value={data1.manufacturing_date}
+                                      value={variantarray.manufacturing_date}
                                     />
                                   </InputGroup>
 
@@ -1372,9 +1374,9 @@ function Product() {
                                       type="date"
                                       sm="9"
                                       className={(customvalidated === true) ? 'border-danger' : null}
-                                      onChange={onVariantChange}
+                                      onChange={(e)=>onVariantChange(e)}
                                       name={'expire_date'}
-                                      value={data1.expire_date}
+                                      value={variantarray.expire_date}
                                     />
                                   </InputGroup>
 
@@ -1402,11 +1404,11 @@ function Product() {
                                     <Form.Control
                                       name={'quantity'}
                                       type="number"
-                                      value={data1.quantity}
+                                      value={variantarray.quantity}
                                       sm="9"
                                       min={'1'}
                                       className={(customvalidated === true) ? 'border-danger' : null}
-                                      onChange={onVariantChange}
+                                      onChange={(e)=>onVariantChange(e)}
                                       onKeyPress={event => {
                                         if (event.key === "Enter") {
                                           onVariantaddclick();
@@ -1421,7 +1423,7 @@ function Product() {
                                 <div className=" d-flex align-items-center">
                                   <Button variant="outline-success" className="addcategoryicon"
                                     type="submit"
-                                    onClick={onVariantaddclick}
+                                    // onClick={()=>onVariantaddclick()}
                                     size="sm">
                                     +
                                   </Button>
@@ -1430,7 +1432,7 @@ function Product() {
                             </tr>
 
                             {
-                              (variantmainarray || []).map((variantdata, i) => {
+                              (vdata || []).map((variantdata, i) => {
                                 return (
                                   <tr >
                                     <td className="p-0 text-center ">
@@ -1482,11 +1484,11 @@ function Product() {
                                     </td>
                                     <td className="p-0 text-center">
                                       <Button variant="text-danger" className="addcategoryicon text-danger"
-                                        onClick={() => VariantRemoveClick(variantdata)} size="sm">
+                                        onClick={(id) => VariantRemoveClick(variantdata.id)} size="sm">
                                         &times;
                                       </Button>
                                       <Button variant="text-danger" className="addcategoryicon text-danger"
-                                        onClick={() => VariantEditClick(variantdata)} size="sm">
+                                        onClick={(id) => VariantEditClick(variantdata.id)} size="sm">
                                         <MdOutlineEdit />
                                       </Button>
                                     </td>
@@ -1504,15 +1506,15 @@ function Product() {
               </div>
             </Modal.Body>
             <Modal.Footer>
-              <button className='button main_outline_button' onClick={handlevarietyClose}>Cancel</button>
-              <button className='button main_button' onClick={() => onVariantaddclick()}>Save</button>
+              <button className='button main_outline_button' onClick={()=>handlevarietyClose()}>Cancel</button>
+              <button className='button main_button' onClick={(e) => handlevarietyClose(e)}>Save</button>
             </Modal.Footer>
           </Form>
         </Modal>
 
         <DataTable
           columns={columns}
-          data={productjson.product}
+          data={productjson}
           pagination
           highlightOnHover
           pointerOnHover

@@ -23,19 +23,22 @@ const Coupon = () => {
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
   const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    formRef.current.reset();
+    setcoupondata('')
+    setValidated(false)
+    setShow(false);}
   const handleShow = (e) => {
     if (e === 'add') {
       setShow(e)
     }
     console.log(JSON.stringify(e))
     if (e !== 'add') {
-      setcoupondata(couponjson.coupon[e - 1])
+      setcoupondata(couponjson[e - 1])
       setShow(e);
     }
   }
-  const couponjson = {
-    "coupon": [
+  const couponjson = [
       {
         id: 1,
         category_type: "Grocery",
@@ -70,7 +73,7 @@ const Coupon = () => {
         status: "Pending",
       },
     ]
-  }
+  
   const columns = [
     {
       name: "ID",
@@ -178,11 +181,11 @@ const Coupon = () => {
   ];
 
   useEffect(() => {
-    setcoupondata(couponjson.coupon)
-  }, [show])
+    setcoupondata(couponjson)
+  }, [])
   const handleFormChange = (e) => {
-    setaddcoupondata({
-      ...addcoupondata,
+    setcoupondata({
+      ...coupondata,
       [e.target.name]: e.target.value
     });
   };
@@ -190,7 +193,7 @@ const Coupon = () => {
   const ImgFormChange = (e) => {
     let imgapth = URL.createObjectURL([...e.target.files[0]])
     // ([...e.target.files]).forEach((image) => docsImageUrls.push(URL.createObjectURL(image)));
-    setaddcoupondata((addcoupondata) => { return { ...addcoupondata, logo: imgapth } });
+    setcoupondata((coupondata) => { return { ...coupondata, logo: imgapth } });
   }
   const AddCouponClick = (e) => {
     const form = e.currentTarget;
@@ -200,8 +203,8 @@ const Coupon = () => {
       setValidated(true)
     }
     if (form.checkValidity() === true) {
-    e.preventDefault();
-      console.log("form----------   " + JSON.stringify(addcoupondata));
+      e.preventDefault();
+      console.log("form----------   " + JSON.stringify(coupondata));
       formRef.current.reset();
       setValidated(false)
     }
@@ -209,9 +212,7 @@ const Coupon = () => {
   const UpdateCouponClick = (show) => {
     // setadmindata(adminjson.admin[show])
     show.preventDefault();
-    console.log("form----------   " + JSON.stringify(addcoupondata));
-    formRef.current.reset();
-  
+    console.log("form----------   " + JSON.stringify(coupondata));
   };
   return (
     <div>
@@ -255,24 +256,24 @@ const Coupon = () => {
         {/* datatable */}
         <Modal
           show={show}
-          onHide={()=>handleClose()}
+          onHide={() => handleClose()}
           dialogClassName="addproductmainmodal"
           aria-labelledby="example-custom-modal-styling-title"
           centered
         >
-          <Form className="" validated={validated} ref={formRef} onSubmit={(show === 'add' ? (e)=>AddCouponClick(e) : (show) => UpdateCouponClick(show))}>
-          <Modal.Header closeButton className="addproductheader">
-            <Modal.Title id="example-custom-modal-styling-title">
-              {show === 'add' ? 'Add Coupons' : ' Update Coupons'}
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body className="addproductbody p-2">
-            
+          <Form className="" validated={validated} ref={formRef} onSubmit={(show === 'add' ? (e) => AddCouponClick(e) : (show) => UpdateCouponClick(show))}>
+            <Modal.Header closeButton className="addproductheader">
+              <Modal.Title id="example-custom-modal-styling-title">
+                {show === 'add' ? 'Add Coupons' : ' Update Coupons'}
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="addproductbody p-2">
+
               <div className="row p-3 m-0">
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicNamel">
                     <Form.Label>Campaign Name</Form.Label>
-                    <Form.Control onChange={handleFormChange} name='coupon_name' value={coupondata.coupon_name} required type="text" placeholder="Campaign Name" />
+                    <Form.Control onChange={(e)=>handleFormChange(e)} name='coupon_name' value={coupondata.coupon_name} required type="text" placeholder="Campaign Name" />
                     <Form.Control.Feedback type="invalid" className="h6">
                       Please fill  name
                     </Form.Control.Feedback>
@@ -281,7 +282,7 @@ const Coupon = () => {
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicCategoryType">
                     <Form.Label>Category Type</Form.Label>
-                    <Form.Select aria-label="Search by category type" required className="adminselectbox" onChange={handleFormChange} name={'category_type'} value={coupondata.category_type}>
+                    <Form.Select aria-label="Search by category type" required className="adminselectbox" onChange={(e)=>handleFormChange(e)} name={'category_type'} value={coupondata.category_type}>
                       <option value={''}>Search by category type</option>
                       <option value="Grocery">Grocery</option>
                       <option value="Health">Health</option>
@@ -296,7 +297,7 @@ const Coupon = () => {
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicCode">
                     <Form.Label>Coupon Code</Form.Label>
-                    <Form.Control onChange={handleFormChange} name='code' value={coupondata.code} required type="text" placeholder="Coupon Code" />
+                    <Form.Control onChange={(e)=>handleFormChange(e)} name='code' value={coupondata.code} required type="text" placeholder="Coupon Code" />
                     <Form.Control.Feedback type="invalid" className="h6">
                       Please fill coupon code
                     </Form.Control.Feedback>
@@ -305,7 +306,7 @@ const Coupon = () => {
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicAmount">
                     <Form.Label>Minimum Amount</Form.Label>
-                    <Form.Control onChange={handleFormChange} name='amount' value={coupondata.amount} required type="number" placeholder="Minimum Amount Required" />
+                    <Form.Control onChange={(e)=>handleFormChange(e)} name='amount' value={coupondata.amount} required type="number" placeholder="Minimum Amount Required" />
                     <Form.Control.Feedback type="invalid" className="h6">
                       Please fill minimum amount
                     </Form.Control.Feedback>
@@ -314,7 +315,7 @@ const Coupon = () => {
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicPercent">
                     <Form.Label>Discount Percentage</Form.Label>
-                    <Form.Control onChange={handleFormChange} name='percent' value={coupondata.percent} required type="number" placeholder="Discount Percentage" />
+                    <Form.Control onChange={(e)=>handleFormChange(e)} name='percent' value={coupondata.percent} required type="number" placeholder="Discount Percentage" />
                     <Form.Control.Feedback type="invalid" className="h6">
                       Please fill percentage
                     </Form.Control.Feedback>
@@ -323,7 +324,7 @@ const Coupon = () => {
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicStartDate">
                     <Form.Label>Coupon Start Date</Form.Label>
-                    <Form.Control onChange={handleFormChange} name='start_date' value={coupondata.start_date} required type="date" placeholder="Coupon Start Date" />
+                    <Form.Control onChange={(e)=>handleFormChange(e)} name='start_date' value={coupondata.start_date} required type="date" placeholder="Coupon Start Date" />
                     <Form.Control.Feedback type="invalid" className="h6">
                       Please fill start date
                     </Form.Control.Feedback>
@@ -331,7 +332,7 @@ const Coupon = () => {
                 </div>  <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicEndDate">
                     <Form.Label>Coupon End Date</Form.Label>
-                    <Form.Control onChange={handleFormChange} name='end_date' value={coupondata.end_date} required type="date" placeholder="Coupon End Date" />
+                    <Form.Control onChange={(e)=>handleFormChange(e)} name='end_date' value={coupondata.end_date} required type="date" placeholder="Coupon End Date" />
                     <Form.Control.Feedback type="invalid" className="h6">
                       Please fill end date
                     </Form.Control.Feedback>
@@ -340,32 +341,32 @@ const Coupon = () => {
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicEmail">
                     <Form.Label>Coupon Image</Form.Label>
-                    <Form.Control type="file" placeholder="Coupon Image" onChange={ImgFormChange} name={'logo'} />
+                    <Form.Control type="file" placeholder="Coupon Image" onChange={(e)=>ImgFormChange(e)} name={'logo'} />
                   </Form.Group>
                 </div>
               </div>
-          </Modal.Body>
-          <Modal.Footer className="addproductfooter">
-            <Iconbutton
-              btntext={"X Cancel"}
-              onClick={()=>handleClose()}
-              btnclass={"button main_outline_button adminmainbutton px-2"}
-            // Iconname={<GiCancel /> }
-            />
-            <Iconbutton
-              type={'submit'}
-              btntext={(show === 'add' ? "Add Coupons" : "Update Coupons")}
-              // onClick={(show === 'add' ? AddCouponClick : () => UpdateCouponClick(show))}
-              btnclass={"button main_button "}
-            />
+            </Modal.Body>
+            <Modal.Footer className="addproductfooter">
+              <Iconbutton
+                btntext={"X Cancel"}
+                onClick={() => handleClose()}
+                btnclass={"button main_outline_button adminmainbutton px-2"}
+              // Iconname={<GiCancel /> }
+              />
+              <Iconbutton
+                type={'submit'}
+                btntext={(show === 'add' ? "Add Coupons" : "Update Coupons")}
+                // onClick={(show === 'add' ? AddCouponClick : () => UpdateCouponClick(show))}
+                btnclass={"button main_button "}
+              />
 
-          </Modal.Footer>
+            </Modal.Footer>
           </Form>
 
         </Modal>
         <DataTable
           columns={columns}
-          data={couponjson.coupon}
+          data={couponjson}
           pagination
           highlightOnHover
           pointerOnHover

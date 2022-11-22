@@ -15,7 +15,12 @@ function Admin() {
   const [show, setShow] = useState('');
   const [admindata, setadmindata] = useState([]);
   const [addadmindata, setaddadmindata] = useState([]);
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    formRef.current.reset();
+    setadmindata('')
+    setValidated(false)
+    setShow(false);
+  }
   const handleShow = (e) => {
     if (e === 'add') {
       setShow(e);
@@ -26,6 +31,7 @@ function Admin() {
       setShow(e);
     }
   }
+
   const formRef = useRef();
   const adminjson = [
     {
@@ -112,13 +118,14 @@ function Admin() {
 
   useEffect(() => {
     setadmindata(adminjson)
-  }, [show])
+  }, [])
 
   const handleFormChange = (e) => {
-    setaddadmindata({
-      ...addadmindata,
+    setadmindata({
+      ...admindata,
       [e.target.name]: e.target.value
     });
+
   };
   const AddAdminClick = (e) => {
     const form = e.currentTarget;
@@ -130,19 +137,17 @@ function Admin() {
     }
     else {
       e.preventDefault();
-      console.log("form----------   " + JSON.stringify(addadmindata));
+      console.log("formadd----------   " + JSON.stringify(admindata));
       formRef.current.reset();
       setValidated(false);
     }
   };
 
-  const UpdateAdminClick = (show) => {
-    show.preventDefault()
-    console.log("form----------   " + JSON.stringify(addadmindata));
+  const UpdateAdminClick = (e, show) => {
+    e.preventDefault()
+    console.log("form----------   " + JSON.stringify(admindata));
   };
-console.log("------admin"+JSON.stringify(addadmindata))
 
-console.log("------admin"+JSON.stringify(addadmindata))
   return (
     <div className="App productlist_maindiv">
       <h2>Admin</h2>
@@ -161,12 +166,13 @@ console.log("------admin"+JSON.stringify(addadmindata))
         {/* datatable */}
         <Modal
           show={show}
-          onHide={handleClose}
+          onHide={() => handleClose()}
           dialogClassName="w-80"
           aria-labelledby="example-custom-modal-styling-title"
           centered
         >
           <Form className="" novalidate validated={validated} ref={formRef} onSubmit={(show === 'add' ? (e) => AddAdminClick(e) : (show) => UpdateAdminClick(show))}>
+
             <Modal.Header closeButton className="">
               <Modal.Title id="example-custom-modal-styling-title">
                 {show === 'add' ? 'Add Admin ' : ' Update Admin '}

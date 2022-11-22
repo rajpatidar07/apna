@@ -23,11 +23,10 @@ const Complaint = () => {
     setShow(false);
   }
   const handleShow = (e) => {
-    setcomplaintdata(complaintjson.complaint[e - 1])
+    setcomplaintdata(complaintjson[e - 1])
     setShow(e);
   }
-  const complaintjson = {
-    "complaint": [
+  const complaintjson =  [
       {
         id: 1,
         order_id: 124532,
@@ -60,7 +59,7 @@ const Complaint = () => {
       },
 
     ]
-  }
+  
   const columns = [
     {
       name: "Id",
@@ -184,7 +183,7 @@ const Complaint = () => {
 
   useEffect(() => {
     setcomplaintdata(complaintjson)
-  }, [show])
+  }, [])
 
   const handleFormChange = (e) => {
     setcomplaintdata({
@@ -247,7 +246,7 @@ const Complaint = () => {
 
         <DataTable
           columns={columns}
-          data={complaintdata.complaint}
+          data={complaintjson}
           pagination
           highlightOnHover
           pointerOnHover
@@ -261,13 +260,13 @@ const Complaint = () => {
           showCancelButton={true}
           onCancel={hideAlert}
         />
-        <Modal size="md" show={show} onHide={handleClose}>
+        <Modal size="md" show={show} onHide={()=>handleClose()}>
+        <Form className="" validated={validated} ref={formRef} onSubmit={(e)=>UpdateCategoryClick(e)}>
           <Modal.Header closeButton>
             <Modal.Title>Update Complaint Info</Modal.Title>
           </Modal.Header>
-          {show? 
+         
           <Modal.Body>
-            <Form className="" validated={validated} ref={formRef} onSubmit={(e)=>UpdateCategoryClick(e)}>
               <div className="row p-3 m-0">
                 <div className="col-md-6">
                   <Form.Group
@@ -337,12 +336,12 @@ const Complaint = () => {
                   </Form.Group>
                 </div>
               </div>
-            </Form>
-          </Modal.Body> : null}
+           
+          </Modal.Body> 
           <Modal.Footer>
             <button
               className="button main_outline_button"
-              onClick={handleClose}
+              onClick={()=>handleClose()}
             >
               Cancel
             </button>
@@ -350,6 +349,7 @@ const Complaint = () => {
               Update
             </button>
           </Modal.Footer>
+          </Form>
         </Modal>
       </div>
     </div>

@@ -20,55 +20,45 @@ const CategoryList = () => {
   const [validated, setValidated] = useState(false);
   const [categorydata, setcategorydata] = useState([]);
   const [addcategorydata, setaddcategorydata] = useState([]);
-  const [editcategorydata, seteditcategorydata] = useState([]);
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
   const [show, setShow] = useState('');
   const handleClose = () => {
     formRef.current.reset();
+    setcategorydata('')
     setValidated(false)
     setShow(false);
   }
   const handleShow = (e) => {
     if (e === 'add') {
       setShow(e)
-      setaddcategorydata('')
     }
     console.log(JSON.stringify(e))
     if (e !== 'add') {
-      setcategorydata(categoryjson.category[e - 1])
-      setaddcategorydata((addcategorydata) => { return { ...addcategorydata, category_icon: categoryjson.category[e - 1].category_icon } });
+      setcategorydata(categoryjson[e - 1])
+      // setaddcategorydata((addcategorydata) => { return { ...addcategorydata, category_icon: categoryjson[e - 1].category_icon } });
       setShow(e);
     }
   }
 
-  const categoryjson = {
-    "category": [
-      {
-        id: 1,
-        category_type: "Grocery",
-        category_name: "Green Leaf Lettuce",
-        product_desc: "The root vegetables include beets, and turnips",
-        parent_category: "Fruits & Vegetable",
-        price: "$14",
-        stock: "15",
-        category_icon: "https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg",
-        status: "Selling",
-      },
-      {
-        id: 2,
-        category_type: "Health & Care",
-        category_name: "Green Leaf Lettuce",
-        product_desc: "The root vegetables include beets, and turnips",
-        parent_category: "Fruits & Vegetable",
-        price: "$14",
-        stock: "15",
-        category_icon: "https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg",
-        status: "Sold out",
-      },
-    ]
-  }
+  const categoryjson = [
+    {
+      id: 1,
+      category_type: "Grocery",
+      category_name: "Green Leaf Lettuce",
+      parent_category: "Fruits & Vegetable",
+      category_icon: "https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg",
+    },
+    {
+      id: 2,
+      category_type: "Health & Care",
+      category_name: "Green Leaf Lettuce",
+      parent_category: "Fruits & Vegetable",
+      category_icon: "https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg",
+    },
+  ]
+
   const columns = [
     {
       name: "ID",
@@ -82,21 +72,21 @@ const CategoryList = () => {
         </p>
       ),
       sortable: true,
-      width: "70px",
+      width: "100px",
       center: true,
       style: {
-        paddingLeft: 0,
+        paddingLeft: '0',
       }
     },
     {
       name: "#",
-      width: "100px",
+      width: "250px",
       center: true,
       cell: (row) => (
         <img
           height="90px"
           width="75px"
-          alt={row.name}
+          alt={row.category_name}
           src={
             row.category_icon
           }
@@ -106,21 +96,13 @@ const CategoryList = () => {
             paddingBottom: 10,
             textAlign: "right",
           }}
-          onClick={handleClick}
+          onClick={()=>handleClick()}
         />
       ),
     },
     {
       name: "Category Name",
-      selector: (row) => <div className="productdescbox">
-        <b>
-          <p className="mb-0">{row.category_name}</p>
-        </b>
-        <p className="productdesc">
-          {" "}
-          {row.product_desc}
-        </p>
-      </div>,
+      selector: (row) => row.category_name,
       sortable: true,
       width: "250px",
     },
@@ -128,51 +110,17 @@ const CategoryList = () => {
       name: "Category",
       selector: (row) => row.parent_category,
       sortable: true,
-      width: "160px",
+      width: "250px",
     },
     {
       name: "Category Type",
       selector: (row) => row.category_type,
       sortable: true,
-      width: "160px",
-    },
-    {
-      name: "Price",
-      selector: (row) => row.price,
-      sortable: true,
-      width: "100px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
-    },
-    {
-      name: "Stock",
-      selector: (row) => row.stock,
-      sortable: true,
-      width: "100px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
-    },
-    {
-      name: "Status",
-      selector: (row) => (
-
-        <Badge bg={row.status === "Selling"
-          ? "success" : row.status === "Sold out"
-            ? "danger" : null}>{row.status}</Badge>
-      ),
-      sortable: true,
-      width: "105px",
-      // center: true,
+      width: "200px",
     },
     {
       name: "Action",
-      width: "100px",
+      width: "200px",
       style: {
         paddingRight: "12px",
         paddingLeft: "0px",
@@ -187,18 +135,13 @@ const CategoryList = () => {
     },
   ];
   useEffect(() => {
-    setcategorydata(categoryjson.category)
-  }, [show])
+    setcategorydata(categoryjson)
+  }, [])
   const handleFormChange = (e) => {
-    setaddcategorydata({
-      ...addcategorydata,
+    setcategorydata({
+      ...categorydata,
       [e.target.name]: e.target.value
     });
-    // seteditcategorydata({
-    //   ...editcategorydata,
-    //   [e.target.name]: e.target.value
-    // });
-    
   };
   const ImgFormChange = (e) => {
     let iconpath = URL.createObjectURL(e.target.files[0])
@@ -213,7 +156,7 @@ const CategoryList = () => {
     }
     if (form.checkValidity() === true) {
       e.preventDefault()
-      console.log("form----------   " + JSON.stringify(addcategorydata));
+      console.log("form----------   " + JSON.stringify(categorydata));
       formRef.current.reset();
       setValidated(false)
       setaddcategorydata('')
@@ -222,7 +165,7 @@ const CategoryList = () => {
   const UpdateCategoryClick = (show) => {
     // setadmindata(adminjson.admin[show])
     show.preventDefault()
-    console.log("form----------   " + JSON.stringify(addcategorydata));
+    console.log("form----------   " + JSON.stringify(categorydata));
   };
 
   const handleClick = () => { };
@@ -273,7 +216,7 @@ const CategoryList = () => {
         {/* datatable */}
         <Modal
           show={show}
-          onHide={handleClose}
+          onHide={()=>handleClose()}
           dialogClassName="addproductmainmodal"
           aria-labelledby="example-custom-modal-styling-title"
           centered
@@ -290,22 +233,16 @@ const CategoryList = () => {
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicName">
                     <Form.Label>Category Name</Form.Label>
-                    <Form.Control type="text" placeholder="Category Name" required onChange={() => handleFormChange()} value={categorydata.category_name} name={'category_name'} />
+                    <Form.Control type="text" placeholder="Category Name" required onChange={(e) => handleFormChange(e)} value={categorydata.category_name} name={'category_name'} />
                     <Form.Control.Feedback type="invalid" className="h6">
                       Please fill  name
                     </Form.Control.Feedback>
                   </Form.Group>
                 </div>
-                {/* <div className="col-md-6">
-                  <Form.Group className="mb-3 aos_input" controlId="formBasicEmail">
-                    <Form.Label>Product Description</Form.Label>
-                    <Form.Control type="text" placeholder="Product Description" required onChange={()=>handleFormChange()} value={categorydata.product_desc} name={'product_desc'} />
-                  </Form.Group>
-                </div> */}
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicCategory">
                     <Form.Label>Category Type</Form.Label>
-                    <Form.Select aria-label="Search by category type" className="adminselectbox" required onChange={() => handleFormChange()} value={categorydata.category_type} name={'category_type'}>
+                    <Form.Select aria-label="Search by category type" className="adminselectbox" required onChange={(e) => handleFormChange(e)} value={categorydata.category_type} name={'category_type'}>
                       <option value=''>Search by category type</option>
                       <option value="Grocery">Grocery</option>
                       <option value="Health">Health</option>
@@ -319,7 +256,7 @@ const CategoryList = () => {
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicParentCategory">
                     <Form.Label>Parent Category</Form.Label>
-                    <Form.Select aria-label="Search by status" className="adminselectbox" required onChange={handleFormChange} value={categorydata.parent_category} name={'parent_category'}>
+                    <Form.Select aria-label="Search by status" className="adminselectbox" required onChange={(e)=>handleFormChange(e)} value={categorydata.parent_category} name={'parent_category'}>
                       <option value=''>Search by category</option>
                       <option value="Fruits & Vegetable">Fruits & Vegetable</option>
                       <option value="Fish & Meat">Fish & Meat</option>
@@ -335,9 +272,9 @@ const CategoryList = () => {
                   <Form.Group className="mb-3 aos_input" controlId="formBasicImg">
                     <Form.Label>Category Icon</Form.Label>
                     <div className="category_icon_box">
-                      <Form.Control type="file" placeholder="Category Icon" onChange={ImgFormChange} name={'category_icon'} required />
-                      {addcategorydata.category_icon ?
-                        <img src={addcategorydata.category_icon} alt={'apna_organic'} className={'category_icon'} /> : null}
+                      <Form.Control type="file" placeholder="Category Icon" onChange={(e)=>ImgFormChange(e)} name={'category_icon'} required />
+                      {categorydata.category_icon ?
+                        <img src={categorydata.category_icon} alt={'apna_organic'} className={'category_icon'} /> : null}
                     </div>
 
                   </Form.Group>
@@ -348,7 +285,7 @@ const CategoryList = () => {
             <Modal.Footer className="addproductfooter">
               <Iconbutton
                 btntext={"X Cancel"}
-                onClick={handleClose}
+                onClick={()=>handleClose()}
                 btnclass={"button main_outline_button adminmainbutton px-2"}
               // Iconname={<GiCancel /> }
               />
@@ -363,7 +300,7 @@ const CategoryList = () => {
         </Modal>
         <DataTable
           columns={columns}
-          data={categoryjson.category}
+          data={categoryjson}
           pagination
           highlightOnHover
           pointerOnHover

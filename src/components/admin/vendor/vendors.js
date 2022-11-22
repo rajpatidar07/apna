@@ -16,9 +16,9 @@ const VendorsList = () => {
   const [show, setShow] = useState('');
   const [Alert, setAlert] = useState(false);
   const [vendordata, setvendordata] = useState([]);
-  const [addvendordata, setaddvendordata] = useState([]);
   const handleClose = () => {
     formRef.current.reset();
+    setvendordata('')
     // e.preventDefault()
     setValidated(false)
     setShow(false);
@@ -29,91 +29,89 @@ const VendorsList = () => {
     }
     console.log(JSON.stringify(e))
     if (e !== 'add') {
-      setvendordata(vendorjson.vendor[e - 1])
+      setvendordata(vendorjson[e - 1])
       setShow(e);
     }
   }
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
-
   const handleStatusChnage = (e) => {
   }
-  const vendorjson = {
-    "vendor": [
-      {
-        id: 1,
-        email: "shivani@we2cdodjj.com",
-        gstn: "6656",
-        p_id: "HHAHA",
-        shopname: "Bhati Sweets",
-        owner: "Kuldeep Bhati",
-        address: "Vijay Nagar Indore",
-        mobile: "1234567890",
-        status: "Active",
-        change: "Active",
-      },
-      {
-        id: 2,
-        email: "shivani@we2cdodjj.com",
-        gstn: "6656",
-        p_id: "HHAHA",
-        shopname: "Sharma Veg",
-        owner: "Anil Sharma",
-        address: "Palasia, Indore",
-        mobile: "1234567890",
-        status: "In Progress",
-        change: "In Progress",
-      },
-      {
-        id: 3,
-        email: "shivani@we2cdodjj.com",
-        gstn: "6656",
-        p_id: "HHAHA",
-        shopname: "Mohan Kirana",
-        owner: "Mohan Verma",
-        address: "PU4, Indore",
-        mobile: "1234567890",
-        status: "Pending",
-        change: "Blocked",
-      },
-      {
-        id: 4,
-        email: "shivani@we2cdodjj.com",
-        gstn: "6656",
-        p_id: "HHAHA",
-        shopname: "Bhati Sweets",
-        owner: "Kuldeep Bhati",
-        address: "Vijay Nagar Indore",
-        mobile: "1234567890",
-        status: "Active",
-        change: "Active",
-      },
-      {
-        id: 5,
-        email: "shivani@we2cdodjj.com",
-        gstn: "6656",
-        p_id: "HHAHA",
-        shopname: "Sharma Veg",
-        owner: "Anil Sharma",
-        address: "Palasia, Indore",
-        mobile: "1234567890",
-        status: "Pending",
-        change: "Pending",
-      },
-      {
-        id: 6,
-        email: "shivani@we2cdodjj.com",
-        gstn: "6656",
-        p_id: "HHAHA",
-        shopname: "Mohan Kirana",
-        owner: "Mohan Verma",
-        address: "PU4, Indore",
-        mobile: "1234567890",
-        status: "Blocked",
-        change: "Blocked",
-      },
-    ]
-  }
+  const vendorjson = [
+    {
+      id: 1,
+      email: "shivani@we2cdodjj.com",
+      gstn: "6656",
+      p_id: "HHAHA",
+      shopname: "Bhati Sweets",
+      owner: "Kuldeep Bhati",
+      address: "Vijay Nagar Indore",
+      mobile: "1234567890",
+      status: "Active",
+      change: "Active",
+    },
+    {
+      id: 2,
+      email: "shivani@we2cdodjj.com",
+      gstn: "6656",
+      p_id: "HHAHA",
+      shopname: "Sharma Veg",
+      owner: "Anil Sharma",
+      address: "Palasia, Indore",
+      mobile: "1234567890",
+      status: "In Progress",
+      change: "In Progress",
+    },
+    {
+      id: 3,
+      email: "shivani@we2cdodjj.com",
+      gstn: "6656",
+      p_id: "HHAHA",
+      shopname: "Mohan Kirana",
+      owner: "Mohan Verma",
+      address: "PU4, Indore",
+      mobile: "1234567890",
+      status: "Pending",
+      change: "Blocked",
+    },
+    {
+      id: 4,
+      email: "shivani@we2cdodjj.com",
+      gstn: "6656",
+      p_id: "HHAHA",
+      shopname: "Bhati Sweets",
+      owner: "Kuldeep Bhati",
+      address: "Vijay Nagar Indore",
+      mobile: "1234567890",
+      status: "Active",
+      change: "Active",
+    },
+    {
+      id: 5,
+      email: "shivani@we2cdodjj.com",
+      gstn: "6656",
+      p_id: "HHAHA",
+      shopname: "Sharma Veg",
+      owner: "Anil Sharma",
+      address: "Palasia, Indore",
+      mobile: "1234567890",
+      status: "Pending",
+      change: "Pending",
+    },
+    {
+      id: 6,
+      email: "shivani@we2cdodjj.com",
+      gstn: "6656",
+      p_id: "HHAHA",
+      shopname: "Mohan Kirana",
+      owner: "Mohan Verma",
+      address: "PU4, Indore",
+      mobile: "1234567890",
+      status: "Blocked",
+      change: "Blocked",
+    },
+  ]
+
   const columns = [
     {
       name: "ID",
@@ -216,10 +214,10 @@ const VendorsList = () => {
   ];
   useEffect(() => {
     setvendordata(vendorjson)
-  }, [show])
+  }, [])
   const handleFormChange = (e) => {
-    setaddvendordata({
-      ...addvendordata,
+    setvendordata({
+      ...vendordata,
       [e.target.name]: e.target.value
     });
   };
@@ -228,11 +226,11 @@ const VendorsList = () => {
 
   const ImgFormChange = (e) => {
     ([...e.target.files]).forEach((image) => docsImageUrls.push(URL.createObjectURL(image)));
-    setaddvendordata((addvendordata) => { return { ...addvendordata, other_document: docsImageUrls } });
+    setvendordata((vendordata) => { return { ...vendordata, other_document: docsImageUrls } });
   }
   const DocsFormChange = (e) => {
     ([...e.target.files]).forEach((image) => newImageUrls.push(URL.createObjectURL(image)));
-    setaddvendordata((addvendordata) => { return { ...addvendordata, gumasta: newImageUrls } });
+    setvendordata((vendordata) => { return { ...vendordata, gumasta: newImageUrls } });
   }
   const AddVendorClick = (e) => {
     const form = e.currentTarget;
@@ -244,7 +242,7 @@ const VendorsList = () => {
     }
     else {
       e.preventDefault();
-      console.log("form----------   " + JSON.stringify(addvendordata));
+      console.log("form----------   " + JSON.stringify(vendordata));
       formRef.current.reset();
       setValidated(false);
     }
@@ -252,7 +250,7 @@ const VendorsList = () => {
 
   const UpdateVendorClick = (e) => {
     e.preventDefault()
-    console.log("form----------   " + JSON.stringify(addvendordata));
+    console.log("form----------   " + JSON.stringify(vendordata));
   };
   return (
     <div>
@@ -293,7 +291,7 @@ const VendorsList = () => {
         <DataTable
           columns={columns}
           className="main_data_table"
-          data={vendordata.vendor}
+          data={vendorjson}
           pagination
           highlightOnHover
           pointerOnHover
@@ -307,7 +305,7 @@ const VendorsList = () => {
           onCancel={hideAlert}
         />
       </div>
-      <Modal size="lg" show={show} onHide={handleClose} >
+      <Modal size="lg" show={show} onHide={() => handleClose()} >
         <Form className="" noValidate validated={validated} ref={formRef} onSubmit={(show === 'add' ? (e) => AddVendorClick(e) : (e) => UpdateVendorClick(e))}>
           <Modal.Header closeButton>
             <Modal.Title>
@@ -397,7 +395,7 @@ const VendorsList = () => {
             </div>
           </Modal.Body>
           <Modal.Footer>
-            <button className='button main_outline_button' onClick={ handleClose}>Cancel</button>
+            <button className='button main_outline_button' onClick={() => handleClose()}>Cancel</button>
             <Iconbutton
               type={'submit'}
               btntext={(show === 'add' ? "Add Vendor" : "Update Vendor")}
