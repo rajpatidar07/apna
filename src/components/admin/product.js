@@ -47,121 +47,132 @@ function Product() {
   const [vdata, setvdata] = useState([]);
   const mainformRef = useRef();
   const formRef = useRef();
+const [data,setData] = useState({
+  "product_search":{
+  "search":"",
+  }
+  })
+  const ChangeStatus = () => {}
 
-  const ChangeStatus = () => { }
-  // useEffect(() => {
-  //   axios.get("https://apnaorganicstore.in/backend/products").then((response) => {
-  //     setpdata(response.data)
-  //   }).catch(function (error) {
-  //     console.log(error);
-  //   });
-  // }, []);
+  // const data = JSON.stringify(
+  //   "product_search":{
+  //   "search":"",
+  //   "colors":""
+  //   })
+  useEffect(() => {
+    axios.post("http://192.168.29.108:5000/products_search?page=0&per_page=10",data).then((response) => {
+      setpdata(response.data)
+      console.log("------product"+JSON.stringify(response.data.results))
+    }).catch(function (error) {
+      console.log(error);
+    });
+  }, []);
   //  json
   var varietyy = VariationJson;
-  const productjson = [
-    {
-    id: 1,
-    stock: "250",
-    product_title_name: "just herbs shampoo",
-    product_slug: "just_herbs_123",
-    store_name: "w2c_store_lapssi",
-    product_type: "organic_shampoo",
-    category: "18",
-    product_description:"this product is amazing yeh woh ",
-    parent_category: "5,18",
-    product_quantity: "250",
-    mrp: "600",
-    product_price: "500",
-    sale_price: "450",
-    discount: "10",
-    wholesale_sales_tax: "10",
-    manufacturers_sales_tax: "10",
-    retails_sales_tax: "5",
-    gst: "25",
-    value_added_tax: "5",
-    manufacturing_date: "2022-11-01",
-    expire_date: "2022-01-16",
-    special_offer: true,
-    variety: true,
-    seo_tag: [
-      "shampoo",
-        "herbs",
-        "organic"
-      ],
-      add_custom_input: [
-        "packaging,good quality",
-        "storage,500gb"
-      ]
-    },
-    {
-    id: 2,
-    stock: "250",
-    product_title_name: "just herbs shampoo",
-    product_slug: "just_herbs_123",
-    store_name: "w2c_store_lapssi",
-    product_type: "organic_shampoo",
-    product_description:"helo hey editorjkfcjksd",
-    category: "18",
-    parent_category: "5,18",
-    product_quantity: "250",
-    mrp: "600",
-    product_price: "500",
-    sale_price: "450",
-    discount: "10",
-    wholesale_sales_tax: "10",
-    manufacturers_sales_tax: "10",
-    retails_sales_tax: "5",
-    gst: "25",
-    value_added_tax: "5",
-    manufacturing_date: "2022-11-01",
-    expire_date: "2022-01-16",
-    special_offer: true,
-    variety: true,
-    seo_tag: [
-        "shampoo",
-        "herbs",
-        "organic"
-      ],
-      add_custom_input: [
-        "packaging,good quality",
-        "storage,500gb"
-      ]
-    },
-    {
-    id: 3,
-    stock: "250",
-    product_title_name: "just herbs shampoo",
-    product_slug: "just_herbs_123",
-    store_name: "w2c_store_lapssi",
-    product_type: "organic_shampoo",
-    product_description:"helo hey editorjkfcjksd",
-    category: "18",
-    parent_category: "5,18",
-    product_quantity: "250",
-    mrp: "600",
-    product_price: "500",
-    sale_price: "450",
-    discount: "10",
-    wholesale_sales_tax: "10",
-    manufacturers_sales_tax: "10",
-    retails_sales_tax: "5",
-    gst: "25",
-    value_added_tax: "5",
-    manufacturing_date: "2022-11-01",
-    expire_date: "2022-01-16",
-    special_offer: true,
-    variety: true,
-    seo_tag: [
-        "shampoo",
-        "herbs",
-        "organic"
-      ],
-      add_custom_input: [
-        "packaging,good quality",
-        "storage,500gb"
-      ]
-    },
-  ]
+  // const productjson = [
+  //   {
+  //   id: 1,
+  //   stock: "250",
+  //   product_title_name: "just herbs shampoo",
+  //   product_slug: "just_herbs_123",
+  //   store_name: "w2c_store_lapssi",
+  //   product_type: "organic_shampoo",
+  //   category: "18",
+  //   product_description:"this product is amazing yeh woh ",
+  //   parent_category: "5,18",
+  //   product_quantity: "250",
+  //   mrp: "600",
+  //   product_price: "500",
+  //   sale_price: "450",
+  //   discount: "10",
+  //   wholesale_sales_tax: "10",
+  //   manufacturers_sales_tax: "10",
+  //   retails_sales_tax: "5",
+  //   gst: "25",
+  //   value_added_tax: "5",
+  //   manufacturing_date: "2022-11-01",
+  //   expire_date: "2022-01-16",
+  //   special_offer: true,
+  //   variety: true,
+  //   seo_tag: [
+  //     "shampoo",
+  //       "herbs",
+  //       "organic"
+  //     ],
+  //     add_custom_input: [
+  //       "packaging,good quality",
+  //       "storage,500gb"
+  //     ]
+  //   },
+  //   {
+  //   id: 2,
+  //   stock: "250",
+  //   product_title_name: "just herbs shampoo",
+  //   product_slug: "just_herbs_123",
+  //   store_name: "w2c_store_lapssi",
+  //   product_type: "organic_shampoo",
+  //   product_description:"helo hey editorjkfcjksd",
+  //   category: "18",
+  //   parent_category: "5,18",
+  //   product_quantity: "250",
+  //   mrp: "600",
+  //   product_price: "500",
+  //   sale_price: "450",
+  //   discount: "10",
+  //   wholesale_sales_tax: "10",
+  //   manufacturers_sales_tax: "10",
+  //   retails_sales_tax: "5",
+  //   gst: "25",
+  //   value_added_tax: "5",
+  //   manufacturing_date: "2022-11-01",
+  //   expire_date: "2022-01-16",
+  //   special_offer: true,
+  //   variety: true,
+  //   seo_tag: [
+  //       "shampoo",
+  //       "herbs",
+  //       "organic"
+  //     ],
+  //     add_custom_input: [
+  //       "packaging,good quality",
+  //       "storage,500gb"
+  //     ]
+  //   },
+  //   {
+  //   id: 3,
+  //   stock: "250",
+  //   product_title_name: "just herbs shampoo",
+  //   product_slug: "just_herbs_123",
+  //   store_name: "w2c_store_lapssi",
+  //   product_type: "organic_shampoo",
+  //   product_description:"helo hey editorjkfcjksd",
+  //   category: "18",
+  //   parent_category: "5,18",
+  //   product_quantity: "250",
+  //   mrp: "600",
+  //   product_price: "500",
+  //   sale_price: "450",
+  //   discount: "10",
+  //   wholesale_sales_tax: "10",
+  //   manufacturers_sales_tax: "10",
+  //   retails_sales_tax: "5",
+  //   gst: "25",
+  //   value_added_tax: "5",
+  //   manufacturing_date: "2022-11-01",
+  //   expire_date: "2022-01-16",
+  //   special_offer: true,
+  //   variety: true,
+  //   seo_tag: [
+  //       "shampoo",
+  //       "herbs",
+  //       "organic"
+  //     ],
+  //     add_custom_input: [
+  //       "packaging,good quality",
+  //       "storage,500gb"
+  //     ]
+  //   },
+  // ]
 
 
   const varietyjson = [
@@ -203,9 +214,9 @@ function Product() {
     ]
   
   // json end
-  useEffect(() => {
-    setpdata(productjson)
-  }, []);
+  // useEffect(() => {
+  //   setpdata(productjson)
+  // }, []);
   const columns = [
     {
       name: "#",
@@ -272,7 +283,7 @@ function Product() {
 
     {
       name: "Stock",
-      selector: (row) => row.stock,
+      selector: (row) => row.quantity,
       sortable: true,
       width: "100px",
       center: true,
@@ -320,12 +331,12 @@ function Product() {
       name: "Change Status",
       selector: (row) => (
         <Form.Select aria-label="Search by delivery" size="sm" value={row.status} className="w-100" onChange={ChangeStatus}>
-          <option value="1">Pending</option>
-          <option value="2">Delivered</option>
-          <option value="3">Processing</option>
-          <option value="4">Cancel</option>
-          <option value="5">Approved  </option>
-          <option value="6">Return  </option>
+          <option value="">Select</option>
+          <option value="1">Expired</option>
+          <option value="2">Draft</option>
+          <option value="3">Featured</option>
+          <option value="4">Special Offer</option>
+          <option value="5">Promotional  </option>
         </Form.Select>
       ),
       sortable: true,
@@ -334,8 +345,9 @@ function Product() {
     {
       name: "Variety",
       selector: (row) => (
-        (row.variety) ?
-          <Button size="sm" onClick={handlevarietyShow}>Add Variety</Button> : null
+        // (row.variety) ?
+          <Button size="sm" onClick={handlevarietyShow}>Add Variety</Button> 
+          // : null
       ),
       sortable: true,
 
@@ -383,8 +395,8 @@ function Product() {
     }
     console.log(JSON.stringify(e))
     if (e !== 'add') {
-      setpdata(productjson[e - 1])
-      setseoArray(productjson[e - 1].seo_tag)
+      setpdata(pdata[e - 1])
+      setseoArray(pdata[e - 1].seo_tag)
       setmodalshow(e);
     }
   }
@@ -1514,7 +1526,7 @@ function Product() {
 
         <DataTable
           columns={columns}
-          data={productjson}
+          data={pdata.results}
           pagination
           highlightOnHover
           pointerOnHover
