@@ -15,6 +15,8 @@ import Iconbutton from "../common/iconbutton";
 import { Badge } from "react-bootstrap";
 import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
+import axios from "axios";
+
 const CategoryList = () => {
   const formRef = useRef();
   const [validated, setValidated] = useState(false);
@@ -25,6 +27,7 @@ const CategoryList = () => {
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
   const [show, setShow] = useState('');
+  const [data,setData]=useState([]);
   // const[data,setData]=useState([]);
   const handleClose = () => {
     formRef.current.reset();
@@ -43,22 +46,24 @@ const CategoryList = () => {
       setShow(e);
     }
   }
-  async function getUser() {
-    try {
-      const response = await fetch('http://192.168.29.108:5000/category?category=0');
-      if (!response.ok) {
-        throw new Error(`Error! status: ${response.status}`);
-      }
-      console.log("------"+response)
-      const result = await response.json();
-      console.log(result)
-     
-    } catch (err) {
-      console.log(err);
-    }
-  }
-  getUser()
 
+  useEffect(() => {
+   function getUser() {
+    try {
+    axios.get('http://192.168.29.108:5000/category').then((response) => {
+      let data = response.data
+      console.log(JSON.stringify(response.data))
+      setData(data)
+        });
+      }
+       catch (err) {
+    }
+    
+  }
+ 
+  getUser();
+  },[])
+  console.log("-----"+JSON.stringify(data))
   const categoryjson = {
     "category": [
       // {
@@ -105,6 +110,17 @@ const CategoryList = () => {
       }
     },
     {
+      name: "Parent id",
+      selector: (row) => row.parent_id,
+      sortable: true,
+      width: "100px",
+      center: true,
+      style: {
+        paddingRight: "32px",
+        paddingLeft: "0px",
+      },
+    },
+    {
       name: "#",
       width: "100px",
       center: true,
@@ -114,7 +130,7 @@ const CategoryList = () => {
           width="75px"
           alt={row.name}
           src={
-            row.category_icon
+            row.image
           }
           style={{
             borderRadius: 10,
@@ -132,40 +148,25 @@ const CategoryList = () => {
         <b>
           <p className="mb-0">{row.category_name}</p>
         </b>
-        <p className="productdesc">
-          {" "}
-          {row.product_desc}
-        </p>
       </div>,
       sortable: true,
       width: "250px",
     },
     {
       name: "Category",
-      selector: (row) => row.parent_category,
+      selector: (row) => row.all_parent_id,
       sortable: true,
       width: "160px",
     },
+    // {
+    //   name: "Category Type",
+    //   selector: (row) => row.category_type,
+    //   sortable: true,
+    //   width: "160px",
+    // },
     {
-      name: "Category Type",
-      selector: (row) => row.category_type,
-      sortable: true,
-      width: "160px",
-    },
-    {
-      name: "Price",
-      selector: (row) => row.price,
-      sortable: true,
-      width: "100px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
-    },
-    {
-      name: "Stock",
-      selector: (row) => row.stock,
+      name: "Level",
+      selector: (row) => row.level,
       sortable: true,
       width: "100px",
       center: true,
@@ -178,9 +179,9 @@ const CategoryList = () => {
       name: "Status",
       selector: (row) => (
 
-        <Badge bg={row.status === "Selling"
-          ? "success" : row.status === "Sold out"
-            ? "danger" : null}>{row.status}</Badge>
+        <Badge bg={row.is_active === 0
+          ? "success" : row.is_active === 1
+            ? "danger" : null}>{row.is_active === 0 ?'active':'inactive'}</Badge>
       ),
       sortable: true,
       width: "105px",
@@ -379,7 +380,7 @@ const CategoryList = () => {
         </Modal>
         <DataTable
           columns={columns}
-          data={categoryjson.category}
+          data={data}
           pagination
           highlightOnHover
           pointerOnHover
