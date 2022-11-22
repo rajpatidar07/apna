@@ -3,6 +3,7 @@ import Input from "../common/input";
 import {
   AiOutlinePlus,
 } from "react-icons/ai";
+import fetch from 'node-fetch';
 import { useNavigate } from "react-router-dom";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
@@ -14,7 +15,6 @@ import Iconbutton from "../common/iconbutton";
 import { Badge } from "react-bootstrap";
 import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
-
 const CategoryList = () => {
   const formRef = useRef();
   const [validated, setValidated] = useState(false);
@@ -25,6 +25,7 @@ const CategoryList = () => {
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
   const [show, setShow] = useState('');
+  // const[data,setData]=useState([]);
   const handleClose = () => {
     formRef.current.reset();
     setValidated(false)
@@ -42,31 +43,46 @@ const CategoryList = () => {
       setShow(e);
     }
   }
+  async function getUser() {
+    try {
+      const response = await fetch('http://192.168.29.108:5000/category?category=0');
+      if (!response.ok) {
+        throw new Error(`Error! status: ${response.status}`);
+      }
+      console.log("------"+response)
+      const result = await response.json();
+      console.log(result)
+     
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  getUser()
 
   const categoryjson = {
     "category": [
-      {
-        id: 1,
-        category_type: "Grocery",
-        category_name: "Green Leaf Lettuce",
-        product_desc: "The root vegetables include beets, and turnips",
-        parent_category: "Fruits & Vegetable",
-        price: "$14",
-        stock: "15",
-        category_icon: "https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg",
-        status: "Selling",
-      },
-      {
-        id: 2,
-        category_type: "Health & Care",
-        category_name: "Green Leaf Lettuce",
-        product_desc: "The root vegetables include beets, and turnips",
-        parent_category: "Fruits & Vegetable",
-        price: "$14",
-        stock: "15",
-        category_icon: "https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg",
-        status: "Sold out",
-      },
+      // {
+      //   id: 1,
+      //   category_type: "Grocery",
+      //   category_name: "Green Leaf Lettuce",
+      //   product_desc: "The root vegetables include beets, and turnips",
+      //   parent_category: "Fruits & Vegetable",
+      //   price: "$14",
+      //   stock: "15",
+      //   category_icon: "https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg",
+      //   status: "Selling",
+      // },
+      // {
+      //   id: 2,
+      //   category_type: "Health & Care",
+      //   category_name: "Green Leaf Lettuce",
+      //   product_desc: "The root vegetables include beets, and turnips",
+      //   parent_category: "Fruits & Vegetable",
+      //   price: "$14",
+      //   stock: "15",
+      //   category_icon: "https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg",
+      //   status: "Sold out",
+      // },
     ]
   }
   const columns = [
@@ -187,7 +203,7 @@ const CategoryList = () => {
     },
   ];
   useEffect(() => {
-    setcategorydata(categoryjson.category)
+    setaddcategorydata(categoryjson.category)
   }, [show])
   const handleFormChange = (e) => {
     setaddcategorydata({
