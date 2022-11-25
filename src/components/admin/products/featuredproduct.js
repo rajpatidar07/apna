@@ -13,16 +13,17 @@ const Featuredproduct = () => {
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
-  const [searchdata, setsearchData] = useState({
-    "product_search": {
-      "search": "",
-    }
-  })
+ 
   const [fdata, setfdata] = useState([]);
 
   const handleClick = () => {};
   useEffect(() => {
-    axios.post("http://192.168.29.108:5000/products_search?page=0&per_page=50", searchdata).then((response) => {
+    axios.post("http://192.168.29.108:5000/products_search?page=0&per_page=50", {
+      "product_search": {
+        "search": "",
+        "featured_product": 1
+
+      }}).then((response) => {
       setfdata(response.data)
     }).catch(function (error) {
       console.log(error);
@@ -64,7 +65,7 @@ const Featuredproduct = () => {
     },
     {
       name: "Product Name",
-      selector: (row) => row.pname,
+      selector: (row) => row.product_title_name,
       sortable: true,
       width: "170px",
     },
@@ -76,7 +77,7 @@ const Featuredproduct = () => {
     },
     {
       name: "Price",
-      selector: (row) => row.price,
+      selector: (row) => row.product_price,
       sortable: true,
       width: "100px",
       center: true,
@@ -88,7 +89,7 @@ const Featuredproduct = () => {
   
     {
       name: "Stock",
-      selector: (row) => row.stock,
+      selector: (row) => row.quantity,
       sortable: true,
       width: "100px",
       center: true,
@@ -111,7 +112,7 @@ const Featuredproduct = () => {
     },
     {
       name: "From Date",
-      selector: (row) => row.mdate,
+      selector: (row) => row.manufacturing_date,
       sortable: true,
       width: "130px",
       center: true,
@@ -122,7 +123,7 @@ const Featuredproduct = () => {
     },
     {
       name: "To Date",
-      selector: (row) => row.edate,
+      selector: (row) => row.expire_date,
       sortable: true,
       width: "130px",
       center: true,
@@ -147,56 +148,7 @@ const Featuredproduct = () => {
       ),
     },
   ];
-  const data = [
-    {
-      id: 1,
-      sku: "9AF4FE",
-      pname: (
-        <div className="productdescbox">
-          <b>
-            <p className="mb-0">Green Leaf Lettuce</p>
-          </b>
-  
-          <p className="productdesc">
-            {" "}
-            {`The root vegetables include beets, carrots, radishes, sweet potatoes,
-            and turnips`}
-          </p>
-        </div>
-      ),
-      category: (
-        <p className="productdesc">Fruits & Vegetable Fruits & Vegetable</p>
-      ),
-      price: "$14",
-      stock: "15",
-      status: "Selling",
-      discount: "50%",
-      mdate:'2022-01-01',
-      edate:'2022-05-16'
-    },
-    {
-      id: 2,
-      sku: "9AF4FE",
-      pname: (
-        <div className="productdescbox">
-          <b>
-            <p className="mb-0">Green Leaf Lettuce</p>
-          </b>
-          <p className="productdesc">
-            {" "}
-            The root vegetables include beets, and turnips
-          </p>
-        </div>
-      ),
-      category: "Fruits & Vegetable",
-      price: "$14",
-      stock: "15",
-      status: "Sold out",
-      discount: "50%",
-      mdate:'2022-01-01',
-      edate:'2022-05-16'
-    },
-  ];
+ 
   return (
     <div>
       <h2>Featured Products</h2>

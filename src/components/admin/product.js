@@ -29,9 +29,10 @@ import { GiCancel } from "react-icons/gi";
 
 function Product() {
   const [pdata, setpdata] = useState([]);
-  const handleAlert = () => setAlert(true);
-  const hideAlert = () => setAlert(false);
+  const [variantid, setvariantid] = useState('');
+  const [productid, setproductid] = useState('');
   const [Alert, setAlert] = useState(false);
+  const [apicall, setapicall] = useState(false);
   const [varietyshow, setvarietyShow] = useState(false);
   const [addtag, setaddtag] = useState();
   const [validated, setValidated] = useState(false);
@@ -87,27 +88,69 @@ function Product() {
   const mainformRef = useRef();
   const formRef = useRef();
   const [searchdata, setsearchData] = useState({
-    "product_search": {
-      "search": "",
-      "product_title_name":""
-    }
+  product_title_name:"",
+  category:"",
+  status:""
+
   })
-  const ChangeStatus = (e) => {
-console.log("--------change"+e.target.value)
-   }
+
+  const OnSearchChange = (e) =>{
+    setsearchData({...searchdata ,[e.target.name] : e.target.value})
+  }
+  useEffect(() => {
+    axios.post("http://192.168.29.108:5000/products_search?page=0&per_page=50", {
+      "product_search": {
+        "search": `${searchdata.product_title_name}`,
+        "category": `${searchdata.category}`,
+        "status": `${searchdata.status}`
+      }
+    }).then((response) => {
+      // let filterArray = response.data.filter(item => (item.is_delete === '0'));
+      setpdata(response.data)
+      
+  
+      setapicall(false)
+    }).catch(function (error) {
+      console.log(error);
+    });
+  }, [apicall,searchdata]);
+//  
+let filtered;
+if(pdata !== ''){
+   filtered = pdata.filter(employee => {
+    return employee.is_delete == '0';
+  });
+  console.log("detetetetetete=====77777============"+JSON.stringify(filtered));
+}
+
+   const handleAlert = (id) => {
+    setvariantid(id[0])
+    setproductid(id[1])
+    setAlert(true);
+  }
+  const hideAlert = () => {
+    console.log("---cdskf"+variantid+productid)
+
+    axios.put("http://192.168.29.108:5000/products_delete",{
+      "varient_id":`${variantid}`,
+      "product_id":`${productid}`,
+      "is_delete":"0"
+      }).then((response) => {
+      console.log("---delete"+JSON.stringify(response.data))
+      setapicall(true)
+      // setpdata(response.data)
+    }).catch(function (error) {
+      console.log(error);
+    });
+    setAlert(false);
+  }
 
   // const data = JSON.stringify(
   //   "product_search":{
   //   "search":"",
   //   "colors":""
   //   })
-  useEffect(() => {
-    axios.post("http://192.168.29.108:5000/products_search?page=0&per_page=50", searchdata).then((response) => {
-      setpdata(response.data)
-    }).catch(function (error) {
-      console.log(error);
-    });
-  }, []);
+  
   //  json
   var varietyy = VariationJson;
 
@@ -150,6 +193,7 @@ console.log("--------change"+e.target.value)
   ]
 
   const columns = [
+    
     {
       name: "#",
       width: "100px",
@@ -251,7 +295,7 @@ console.log("--------change"+e.target.value)
           }
         >
           {row.status === 1
-            ? "Active"
+            ? "Pending"
             : row.status === 2
               ? "Inactive"
               : "Draft"}
@@ -264,13 +308,14 @@ console.log("--------change"+e.target.value)
     {
       name: "Change Status",
       selector: (row) => (
-        <Form.Select aria-label="Search by delivery" size="sm" value={row.status} className="w-100" onChange={ChangeStatus}>
+        <Form.Select aria-label="Search by delivery" size="sm" value={row.status} className="w-100" onChange={undefined}>
           <option value="">Select</option>
-          <option value="1">Expired</option>
+          <option value="1">Pending</option>
           <option value="2">Draft</option>
-          <option value="3">Featured</option>
+          <option value="3">Expired</option>
           <option value="4">Special Offer</option>
-          <option value="5">Promotional  </option>
+          <option value="5">Featured Offer  </option>
+          <option value="6">Promotional  </option>
         </Form.Select>
       ),
       sortable: true,
@@ -299,7 +344,7 @@ console.log("--------change"+e.target.value)
           <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.id)} />
           <BsTrash
             className=" p-0 m-0 editiconn text-danger"
-            onClick={handleAlert}
+            onClick={handleAlert.bind(this,[row.id,row.product_id,row.is_delete])}
           />
 
         </div>
@@ -315,8 +360,8 @@ console.log("--------change"+e.target.value)
     }
     // console.log(JSON.stringify(e))
     if (e !== 'add') {
-      setpdata(pdata[e - 1])
-      setseoArray(pdata[e - 1].seo_tag)
+      setpdata(pdata[e])
+      setseoArray(pdata[e].seo_tag)
       setmodalshow(e);
     }
   }
@@ -490,8 +535,8 @@ console.log("--------change"+e.target.value)
       console.log("finallstart---" + JSON.stringify(productdataa))
     }
   };
-  console.log("variantarray---" + JSON.stringify(variantarray))
-  console.log("variantmainarray---" + JSON.stringify(variantmainarray))
+  // console.log("variantarray---" + JSON.stringify(variantarray))
+  // console.log("variantmainarray---" + JSON.stringify(variantmainarray))
 
   let productdataa = []
   const handleAddProduct = (e) => {
@@ -511,9 +556,8 @@ console.log("--------change"+e.target.value)
     setValidated(true);
     setcustomValidated(false);
     axios.post('http://192.168.29.108:5000/products', productdataa).then((response) => {
-      let data = response.data
       console.log("finall---" + JSON.stringify(response.data))
-
+      setapicall(true)
     });
     e.preventDefault();
     // mainformRef.current.reset();
@@ -528,7 +572,6 @@ console.log("--------change"+e.target.value)
 
 
 
-
   const handleClick = () => { };
   const navigate = useNavigate();
   return (
@@ -539,14 +582,20 @@ console.log("--------change"+e.target.value)
       <div className="card mt-3 p-3 ">
         <div className="row">
           <div className="col-md-3 col-sm-6 aos_input">
-            <Input type={"text"} plchldr={"Search by product name"} onChange={()=>ChangeStatus()} />
+            <input type={"text"} placeholder={"Search by product name"} onChange={OnSearchChange} name='product_title_name' 
+            value={searchdata.product_title_name}
+            className={'adminsideinput'}
+            />
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
             <Form.Select
               aria-label="Search by category"
               className="adminselectbox"
               placeholder="Search by category"
-              onChange={()=>ChangeStatus()}
+              onChange={OnSearchChange}
+              name='category'
+            value={searchdata.category}
+
             >
               <option>Search by category</option>
               <option value="1">Food</option>
@@ -559,12 +608,15 @@ console.log("--------change"+e.target.value)
               aria-label="Search by status"
               className="adminselectbox"
               placeholder="Search by status"
-              onChange={()=>ChangeStatus()}
+              onChange={OnSearchChange}
+              name='status'
+            value={searchdata.status}
+
             >
               <option>Search by status</option>
               <option value="1">Pending</option>
               <option value="2">Selling</option>
-              <option value="3">Sold Out</option>
+              <option value="3">Draft</option>
             </Form.Select>
           </div>
 
@@ -1910,7 +1962,7 @@ console.log("--------change"+e.target.value)
 
         <DataTable
           columns={columns}
-          data={pdata.results}
+          data={filtered.results}
           pagination
           highlightOnHover
           pointerOnHover
