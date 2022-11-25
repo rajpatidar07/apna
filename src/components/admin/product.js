@@ -41,7 +41,7 @@ function Product() {
   const [varietyval, setvarietyval] = useState('');
   const [variantarray, setvariantarray] = useState({
     unit: "",
-    unit_quantity : "",
+    unit_quantity: "",
     colors: "",
     size: "",
     product_price: "",
@@ -57,7 +57,9 @@ function Product() {
     retails_sales_tax: "",
     gst: "",
     value_added_tax: "",
-    quantity: ""
+    quantity: "",
+    product_status:"1"
+
   });
   const [variantmainarray, setvariantmainarray] = useState([]);
   const [data1, setdata1] = useState('');
@@ -67,28 +69,32 @@ function Product() {
   const [customarray, setcustomarray] = useState([]);
   const [vdata, setvdata] = useState([]);
   const [productdata, setproductdata] = useState({
-add_custom_input: "",
-product_title_name: "",
-product_slug: "",
-store_name: "",
-product_type: "",
-category: "",
-parent_category: "",
-wholesale_sales_tax: "",
-manufacturing_date: "",
-expire_date: "",
-seo_tag: "",
-variety:false,
-product_description: "",
-other_introduction: ""});
+    add_custom_input: "",
+    product_title_name: "",
+    product_slug: "",
+    store_name: "",
+    product_type: "",
+    category: "",
+    parent_category: "",
+    wholesale_sales_tax: "",
+    manufacturing_date: "",
+    expire_date: "",
+    seo_tag: "",
+    variety: false,
+    product_description: "",
+    other_introduction: "",
+  });
   const mainformRef = useRef();
   const formRef = useRef();
   const [searchdata, setsearchData] = useState({
     "product_search": {
       "search": "",
+      "product_title_name":""
     }
   })
-  const ChangeStatus = () => { }
+  const ChangeStatus = (e) => {
+console.log("--------change"+e.target.value)
+   }
 
   // const data = JSON.stringify(
   //   "product_search":{
@@ -96,9 +102,8 @@ other_introduction: ""});
   //   "colors":""
   //   })
   useEffect(() => {
-    axios.post("http://192.168.29.108:5000/products_search?page=0&per_page=10", searchdata).then((response) => {
+    axios.post("http://192.168.29.108:5000/products_search?page=0&per_page=50", searchdata).then((response) => {
       setpdata(response.data)
-      // console.log("------product"+JSON.stringify(response.data.results))
     }).catch(function (error) {
       console.log(error);
     });
@@ -271,16 +276,16 @@ other_introduction: ""});
       sortable: true,
 
     },
-    {
-      name: "Variety",
-      selector: (row) => (
-        // (row.variety) ?
-        <Button size="sm" onClick={handlevarietyShow}>Add Variety</Button>
-        // : null
-      ),
-      sortable: true,
+    // {
+    //   name: "Variety",
+    //   selector: (row) => (
+    //     // (row.variety) ?
+    //     <Button size="sm" onClick={handlevarietyShow}>Add Variety</Button>
+    //     // : null
+    //   ),
+    //   sortable: true,  
 
-    },
+    // },
     {
       name: "Action",
       width: "110px",
@@ -320,7 +325,6 @@ other_introduction: ""});
   const handlevarietyClose = () => { setvarietyShow(false) }
   const handleClose = () => {
     mainformRef.current.reset();
-    setpdata('')
     setValidated(false)
     setmodalshow(false)
   }
@@ -382,7 +386,7 @@ other_introduction: ""});
   }
   const handleVarietyChange = (e) => {
     // const varietyvalue = e.target.type === 'radio' ? e.target.checked : e.target.value
-    console.log("varietyvalue --------->  "+e.target.type)
+    console.log("varietyvalue --------->  " + e.target.type)
     setproductdata({
       ...productdata,
       [e.target.name]: e.target.value
@@ -391,10 +395,10 @@ other_introduction: ""});
 
   const onVariantaddclick = (e) => {
     // if (variantarray !== '') {
-      // e.preventDefault();
-      setvariantmainarray(variantmainarray => [...variantmainarray, variantarray]);
-      setcustomValidated(false);
-      formRef.current.reset();
+    // e.preventDefault();
+    setvariantmainarray(variantmainarray => [...variantmainarray, variantarray]);
+    setcustomValidated(false);
+    formRef.current.reset();
     // }
     // else {
     //   setcustomValidated(true);
@@ -419,32 +423,31 @@ other_introduction: ""});
   // handle click event of the Remove button
   let customvalue;
   const oncustomheadChange = (e) => {
-    // setheaderval(e.target.value);
+    setheaderval(e.target.value);
   };
   const oncustomdescChange = (e) => {
-    // setdescval(e.target.value);
+    setdescval(e.target.value);
   };
   const handleAddClick = (e) => {
-    // customvalue = headerval + ',' + descval;
+    customvalue = headerval + ',' + descval;
 
-    // if (headerval !== '' && descval !== '') {
-    //   setcustomarray(customarray => [...customarray, customvalue]);
-    //   setheaderval('');
-    //   setdescval('');
-    //   setcustomValidated(false);
-    // }
-    // else {
-    //   setcustomValidated(true);
-    // }
+    if (headerval !== '' && descval !== '') {
+      setcustomarray(customarray => [...customarray, customvalue]);
+      setheaderval('');
+      setdescval('');
+      setcustomValidated(false);
+    }
+    else {
+      setcustomValidated(true);
+    }
   }
   const handleRemoveClick = (e) => {
-    // setcustomarray(customarray.filter(item => item !== e));
+    setcustomarray(customarray.filter(item => item !== e));
   };
   useEffect(() => {
     setproductdata({
       ...productdata,
-      add_custom_input: 'no'
-      // customarray
+      add_custom_input: customarray
     });
   }, [customarray]);
   // end
@@ -456,7 +459,6 @@ other_introduction: ""});
       [e.target.name]: e.target.value
     });
   };
-  console.log("form----------   " + JSON.stringify(productdata));
 
   const handledescription = (event, editor) => {
     setdata1(editor.getData());
@@ -480,18 +482,27 @@ other_introduction: ""});
   //  const createMarkup = () => {
   //     return { __html: pdata.product_description };
   //   }
-  let productdataa = []
   const handleSaveDraft = (e) => {
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
-    setValidated(false);
+      setValidated(false);
       e.preventDefault()
-    console.log("finallstart---"+JSON.stringify(productdataa))
+      console.log("finallstart---" + JSON.stringify(productdataa))
     }
   };
+  console.log("variantarray---" + JSON.stringify(variantarray))
+  console.log("variantmainarray---" + JSON.stringify(variantmainarray))
+
+  let productdataa = []
   const handleAddProduct = (e) => {
+    // setvariantarray({
+    //   ...variantarray,
+    //   product_status: "1"
+    // });
     productdataa.push(productdata)
-    console.log("finallstart---"+JSON.stringify(productdataa))
+    console.log("productdata---" + JSON.stringify(productdata))
+    console.log("productdataa---" + JSON.stringify(productdataa))
+
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
       e.stopPropagation();
@@ -499,11 +510,11 @@ other_introduction: ""});
     }
     setValidated(true);
     setcustomValidated(false);
-    // axios.post('http://192.168.29.108:5000/products',productdataa).then((response) => {
-    //   let data = response.data
-    //   console.log("finall---"+JSON.stringify(response.data))
- 
-    // });
+    axios.post('http://192.168.29.108:5000/products', productdataa).then((response) => {
+      let data = response.data
+      console.log("finall---" + JSON.stringify(response.data))
+
+    });
     e.preventDefault();
     // mainformRef.current.reset();
     // setpdata('');
@@ -528,13 +539,14 @@ other_introduction: ""});
       <div className="card mt-3 p-3 ">
         <div className="row">
           <div className="col-md-3 col-sm-6 aos_input">
-            <Input type={"text"} plchldr={"Search by product name"} />
+            <Input type={"text"} plchldr={"Search by product name"} onChange={()=>ChangeStatus()} />
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
             <Form.Select
               aria-label="Search by category"
               className="adminselectbox"
               placeholder="Search by category"
+              onChange={()=>ChangeStatus()}
             >
               <option>Search by category</option>
               <option value="1">Food</option>
@@ -547,6 +559,7 @@ other_introduction: ""});
               aria-label="Search by status"
               className="adminselectbox"
               placeholder="Search by status"
+              onChange={()=>ChangeStatus()}
             >
               <option>Search by status</option>
               <option value="1">Pending</option>
@@ -911,7 +924,7 @@ other_introduction: ""});
                           className="inputlabelheading"
                           sm="12 d-flex align-itmes-center"
                         >
-                            <Form.Check  type="radio" aria-label="radio 1"  className="mx-2" onChange={handleVarietyChange} name='variety' value={false} checked={productdata.variety === false ? true : false} /> 
+                          <Form.Check type="radio" aria-label="radio 1" className="mx-2" onChange={handleVarietyChange} name='variety' value={false} checked={productdata.variety === false ? true : false} />
                           Single Product
                         </Form.Label>
                       </Form.Group>
@@ -923,8 +936,8 @@ other_introduction: ""});
                           className="inputlabelheading"
                           sm="12 d-flex align-itmes-center"
                         >
-                          
-                            <Form.Check  type="radio" aria-label="radio 2"  className="mx-2" onChange={handleVarietyChange} name='variety' checked={productdata.variety === true ? true : false} value={true} /> 
+
+                          <Form.Check type="radio" aria-label="radio 2" className="mx-2" onChange={handleVarietyChange} name='variety' checked={productdata.variety === true ? true : false} value={true} />
                           Multiple Variety
                         </Form.Label>
                       </Form.Group>
@@ -1002,7 +1015,7 @@ other_introduction: ""});
                                       <div className=" d-flex align-items-center">
                                         <InputGroup className="" size="sm">
                                           <Form.Control
-                                            value={(variantarray.unit === 'weight' ? variantarray.unit_quantity : variantarray.unit === 'volume' ? variantarray.unit_quantity : variantarray.unit === 'piece' ? variantarray.unit_quantity  : null)}
+                                            value={(variantarray.unit === 'weight' ? variantarray.unit_quantity : variantarray.unit === 'volume' ? variantarray.unit_quantity : variantarray.unit === 'piece' ? variantarray.unit_quantity : null)}
                                             type="number"
                                             sm="9"
                                             className={(customvalidated === true) ? 'border-danger' : null}
@@ -1162,9 +1175,9 @@ other_introduction: ""});
 
                                       </div>
                                     </td>
-                                   
-                                 {/* kdmskdm */}
-                                  {/* <td>
+
+                                    {/* kdmskdm */}
+                                    {/* <td>
                                  
                                      <div className="manufacture_date">
                                         <InputGroup className="" size="sm">
@@ -1218,7 +1231,7 @@ other_introduction: ""});
                                       </InputGroup>
                                       </div>
                                  </td> */}
-                                 <td className="p-0">
+                                    <td className="p-0">
                                       <div className="">
                                         <InputGroup className="" size="sm">
                                           <Form.Control
@@ -1331,7 +1344,7 @@ other_introduction: ""});
                                 </tbody>
 
                               </Table>
-                             
+
                             </div>
                           </div>
                         </div>
@@ -1806,7 +1819,7 @@ other_introduction: ""});
                                 <div className=" d-flex align-items-center">
                                   <Button variant="outline-success" className="addcategoryicon"
                                     type="submit"
-                                    onClick={()=>onVariantaddclick()}
+                                    onClick={() => onVariantaddclick()}
                                     size="sm">
                                     +
                                   </Button>

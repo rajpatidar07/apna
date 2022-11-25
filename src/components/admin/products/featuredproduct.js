@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
@@ -7,137 +7,33 @@ import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
+import axios from "axios";
 
 const Featuredproduct = () => {
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
+  const [searchdata, setsearchData] = useState({
+    "product_search": {
+      "search": "",
+    }
+  })
+  const [fdata, setfdata] = useState([]);
+
   const handleClick = () => {};
-  // const columns = [
-  //   {
-  //     name: "Sku",
-  //     selector: (row) => (
-  //       <p>
-  //         {row.sku}
-  //       </p>
-  //     ),
-  //     sortable: true,
-  //     width: "100px",
-  //     center: true,
-  //   },
-  //   {
-  //     name: "#",
-  //     width: "120px",
-  //     center: true,
-  //     cell: (row) => (
-  //       <img
-  //         height="90px"
-  //         width="75px"
-  //         alt={row.name}
-  //         src={
-  //           "https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg"
-  //         }
-  //         style={{
-  //           borderRadius: 15,
-  //           paddingTop: 10,
-  //           paddingBottom: 10,
-  //           textAlign: "right",
-  //         }}
-  //         onClick={handleClick}
-  //       />
-  //     ),
-  //   },
-  //   {
-  //     name: "Product Name",
-  //     selector: (row) => row.pname,
-  //     sortable: true,
-  //     width: "250px",
-  //   },
-  //   {
-  //     name: "Category",
-  //     selector: (row) => row.category,
-  //     sortable: true,
-  //     width: "170px",
-  //   },
-  //   {
-  //     name: "Price",
-  //     selector: (row) => row.price,
-  //     sortable: true,
-  //     width: "120px",
-  //     center: true,
-  //     style: {
-  //       paddingRight: "32px",
-  //       paddingLeft: "0px",
-  //     },
-  //   },
- 
-  //   {
-  //     name: "Stock",
-  //     selector: (row) => row.stock,
-  //     sortable: true,
-  //     width: "120px",
-  //     center: true,
-  //     style: {
-  //       paddingRight: "32px",
-  //       paddingLeft: "0px",
-  //     },
-  //   },
-  
-  //   {
-  //     name: "Discount",
-  //     selector: (row) => row.discount,
-  //     sortable: true,
-  //     width: "150px",
-  //     center: true,
-  //     style: {
-  //       paddingRight: "32px",
-  //       paddingLeft: "0px",
-  //     },
-  //   },
-  //   {
-  //     name: "From Date",
-  //     selector: (row) => row.mdate,
-  //     sortable: true,
-  //     width: "150px",
-  //     center: true,
-  //     style: {
-  //       paddingRight: "32px",
-  //       paddingLeft: "0px",
-  //     },
-  //   },
-  //   {
-  //     name: "To Date",
-  //     selector: (row) => row.edate,
-  //     sortable: true,
-  //     width: "150px",
-  //     center: true,
-  //     style: {
-  //       paddingRight: "32px",
-  //       paddingLeft: "0px",
-  //     },
-  //   },
-  //   {
-  //     name: "Action",
-  //     width: "110px",
-  //     style: {
-  //       paddingRight: "12px",
-  //       paddingLeft: "0px",
-  //     },
-  //     center: true,
-  //     selector: (row) => (
-  //       <div className={"actioncolimn"}>
-  //        <BiEdit className=" p-0 m-0  editiconn text-secondary" />
-  //           <BsTrash className=" p-0 m-0 editiconn text-danger"  onClick={handleAlert} />
-  //       </div>
-  //     ),
-  //   },
-  // ];
+  useEffect(() => {
+    axios.post("http://192.168.29.108:5000/products_search?page=0&per_page=50", searchdata).then((response) => {
+      setfdata(response.data)
+    }).catch(function (error) {
+      console.log(error);
+    });
+  }, []);
   const columns = [
     {
       name: "ID",
       selector: (row) => (
         <p>
-          {row.sku}
+          {row.id}
         </p>
       ),
       sortable: true,
@@ -334,7 +230,7 @@ const Featuredproduct = () => {
    
       <DataTable
         columns={columns}
-        data={data}
+        data={fdata.results}
         pagination
         highlightOnHover
         pointerOnHover
