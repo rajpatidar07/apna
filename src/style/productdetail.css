@@ -181,8 +181,33 @@ font-size: 20px;
   gap: 3%;
 }
 
+.inputsection_box .product_basixinfo {
+  margin-top: 15px;
+
+}
+
+.inputsection_box .product_basixinfo .product_detail-box.col-md-4 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .productvariety_boxx .productvariety_color .weight_checkbox_box {
   position: relative;
+}
+
+.inputsection_box .product_basixinfo .ck-rounded-corners .ck.ck-editor__main>.ck-editor__editable,
+.ck.ck-editor__main>.ck-editor__editable.ck-rounded-corners {
+  border-bottom-left-radius: 0.375rem;
+  border-bottom-right-radius: 0.375rem;
+  min-height: 240px;
+  height: auto;
+}
+
+.inputsection_box .product_basixinfo .ck-rounded-corners .ck.ck-editor__top .ck-sticky-panel .ck-toolbar,
+.ck.ck-editor__top .ck-sticky-panel .ck-toolbar.ck-rounded-corners {
+  border-top-left-radius: 0.375rem;
+  border-top-right-radius: 0.375rem;
 }
 
 .productvariety_boxx .productvariety_color .weightcheckbox {
@@ -258,10 +283,12 @@ font-size: 20px;
   max-width: 1035px;
   width: 100%;
 }
+
 .addproduct_form .addproductbody.p-2.modal-body {
   height: calc(100vh - 150px);
   overflow: hidden auto;
 }
+
 .productvariety .addcategoryicon {
   /* font-size: 10px; */
   color: #5cb85c;
@@ -318,4 +345,7 @@ font-size: 20px;
 
 .manufacture_date {
   width: 90px;
+}
+.aadvariety_table_{
+  overflow: scroll !important;
 }

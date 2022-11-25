@@ -39,20 +39,56 @@ function Product() {
   const [modalshow, setmodalshow] = useState(false);
   const [seoarray, setseoArray] = useState([]);
   const [varietyval, setvarietyval] = useState('');
-  const [variantarray, setvariantarray] = useState([]);
+  const [variantarray, setvariantarray] = useState({
+    unit: "",
+    unit_quantity : "",
+    colors: "",
+    size: "",
+    product_price: "",
+    mrp: "",
+    sale_price: "",
+    discount: "",
+    special_offer: false,
+    featured_product: false,
+    manufacturing_date: "",
+    expire_date: "",
+    wholesale_sales_tax: "",
+    manufacturers_sales_tax: "",
+    retails_sales_tax: "",
+    gst: "",
+    value_added_tax: "",
+    quantity: ""
+  });
+  const [variantmainarray, setvariantmainarray] = useState([]);
   const [data1, setdata1] = useState('');
+  const [otherintro, setotherintro] = useState('');
   const [headerval, setheaderval] = useState('');
   const [descval, setdescval] = useState('');
   const [customarray, setcustomarray] = useState([]);
   const [vdata, setvdata] = useState([]);
+  const [productdata, setproductdata] = useState({
+add_custom_input: "",
+product_title_name: "",
+product_slug: "",
+store_name: "",
+product_type: "",
+category: "",
+parent_category: "",
+wholesale_sales_tax: "",
+manufacturing_date: "",
+expire_date: "",
+seo_tag: "",
+variety:false,
+product_description: "",
+other_introduction: ""});
   const mainformRef = useRef();
   const formRef = useRef();
-const [data,setData] = useState({
-  "product_search":{
-  "search":"",
-  }
+  const [searchdata, setsearchData] = useState({
+    "product_search": {
+      "search": "",
+    }
   })
-  const ChangeStatus = () => {}
+  const ChangeStatus = () => { }
 
   // const data = JSON.stringify(
   //   "product_search":{
@@ -60,125 +96,20 @@ const [data,setData] = useState({
   //   "colors":""
   //   })
   useEffect(() => {
-    axios.post("http://192.168.29.108:5000/products_search?page=0&per_page=10",data).then((response) => {
+    axios.post("http://192.168.29.108:5000/products_search?page=0&per_page=10", searchdata).then((response) => {
       setpdata(response.data)
-      console.log("------product"+JSON.stringify(response.data.results))
+      // console.log("------product"+JSON.stringify(response.data.results))
     }).catch(function (error) {
       console.log(error);
     });
   }, []);
   //  json
   var varietyy = VariationJson;
-  // const productjson = [
-  //   {
-  //   id: 1,
-  //   stock: "250",
-  //   product_title_name: "just herbs shampoo",
-  //   product_slug: "just_herbs_123",
-  //   store_name: "w2c_store_lapssi",
-  //   product_type: "organic_shampoo",
-  //   category: "18",
-  //   product_description:"this product is amazing yeh woh ",
-  //   parent_category: "5,18",
-  //   product_quantity: "250",
-  //   mrp: "600",
-  //   product_price: "500",
-  //   sale_price: "450",
-  //   discount: "10",
-  //   wholesale_sales_tax: "10",
-  //   manufacturers_sales_tax: "10",
-  //   retails_sales_tax: "5",
-  //   gst: "25",
-  //   value_added_tax: "5",
-  //   manufacturing_date: "2022-11-01",
-  //   expire_date: "2022-01-16",
-  //   special_offer: true,
-  //   variety: true,
-  //   seo_tag: [
-  //     "shampoo",
-  //       "herbs",
-  //       "organic"
-  //     ],
-  //     add_custom_input: [
-  //       "packaging,good quality",
-  //       "storage,500gb"
-  //     ]
-  //   },
-  //   {
-  //   id: 2,
-  //   stock: "250",
-  //   product_title_name: "just herbs shampoo",
-  //   product_slug: "just_herbs_123",
-  //   store_name: "w2c_store_lapssi",
-  //   product_type: "organic_shampoo",
-  //   product_description:"helo hey editorjkfcjksd",
-  //   category: "18",
-  //   parent_category: "5,18",
-  //   product_quantity: "250",
-  //   mrp: "600",
-  //   product_price: "500",
-  //   sale_price: "450",
-  //   discount: "10",
-  //   wholesale_sales_tax: "10",
-  //   manufacturers_sales_tax: "10",
-  //   retails_sales_tax: "5",
-  //   gst: "25",
-  //   value_added_tax: "5",
-  //   manufacturing_date: "2022-11-01",
-  //   expire_date: "2022-01-16",
-  //   special_offer: true,
-  //   variety: true,
-  //   seo_tag: [
-  //       "shampoo",
-  //       "herbs",
-  //       "organic"
-  //     ],
-  //     add_custom_input: [
-  //       "packaging,good quality",
-  //       "storage,500gb"
-  //     ]
-  //   },
-  //   {
-  //   id: 3,
-  //   stock: "250",
-  //   product_title_name: "just herbs shampoo",
-  //   product_slug: "just_herbs_123",
-  //   store_name: "w2c_store_lapssi",
-  //   product_type: "organic_shampoo",
-  //   product_description:"helo hey editorjkfcjksd",
-  //   category: "18",
-  //   parent_category: "5,18",
-  //   product_quantity: "250",
-  //   mrp: "600",
-  //   product_price: "500",
-  //   sale_price: "450",
-  //   discount: "10",
-  //   wholesale_sales_tax: "10",
-  //   manufacturers_sales_tax: "10",
-  //   retails_sales_tax: "5",
-  //   gst: "25",
-  //   value_added_tax: "5",
-  //   manufacturing_date: "2022-11-01",
-  //   expire_date: "2022-01-16",
-  //   special_offer: true,
-  //   variety: true,
-  //   seo_tag: [
-  //       "shampoo",
-  //       "herbs",
-  //       "organic"
-  //     ],
-  //     add_custom_input: [
-  //       "packaging,good quality",
-  //       "storage,500gb"
-  //     ]
-  //   },
-  // ]
-
 
   const varietyjson = [
-      {
-        id:1,
-        variations: "volume",
+    {
+      id: 1,
+      variations: "volume",
       volume: "300",
       price: "250",
       mrp: "300",
@@ -190,12 +121,12 @@ const [data,setData] = useState({
       expire_date: "2022-11-27",
       quantity: "50",
       product_img: [
-          "blob:http://localhost:3000/4737c736-dcc9-4901-a5c9-41efb95667ce",
-          "blob:http://localhost:3000/e2394413-1533-42f0-858f-babcafefac1e"
-        ]
-      },
-      {
-        id:2,
+        "blob:http://localhost:3000/4737c736-dcc9-4901-a5c9-41efb95667ce",
+        "blob:http://localhost:3000/e2394413-1533-42f0-858f-babcafefac1e"
+      ]
+    },
+    {
+      id: 2,
       variations: "color",
       colorname: "pink",
       size: "xl",
@@ -207,16 +138,12 @@ const [data,setData] = useState({
       manufacturing_date: "2022-11-25",
       quantity: "40",
       product_img: [
-          "blob:http://localhost:3000/c9b8c6e6-c0b6-49e2-8940-c49e3382eea6",
-          "blob:http://localhost:3000/e2394413-1533-42f0-858f-babcafefac1e"
-        ]
-      },
-    ]
-  
-  // json end
-  // useEffect(() => {
-  //   setpdata(productjson)
-  // }, []);
+        "blob:http://localhost:3000/c9b8c6e6-c0b6-49e2-8940-c49e3382eea6",
+        "blob:http://localhost:3000/e2394413-1533-42f0-858f-babcafefac1e"
+      ]
+    },
+  ]
+
   const columns = [
     {
       name: "#",
@@ -246,8 +173,10 @@ const [data,setData] = useState({
         <div>
           <p className="mb-1" onClick={() => {
             navigate("/productdetail");
-          }}><b>{row.product_title_name}<br />SKU:</b>
-            {row.sku}
+          }}><b>{row.product_title_name}<br />SKU: {row.sku} <br />
+              <div dangerouslySetInnerHTML={{ __html: pdata.product_description }} className='editor'></div>
+            </b>
+
           </p>
         </div>),
       sortable: true,
@@ -346,8 +275,8 @@ const [data,setData] = useState({
       name: "Variety",
       selector: (row) => (
         // (row.variety) ?
-          <Button size="sm" onClick={handlevarietyShow}>Add Variety</Button> 
-          // : null
+        <Button size="sm" onClick={handlevarietyShow}>Add Variety</Button>
+        // : null
       ),
       sortable: true,
 
@@ -375,25 +304,11 @@ const [data,setData] = useState({
 
   // modal
 
-
-
-
-  // api
-  // useEffect(() => {
-  //   axios.get("https://apnaorganicstore.in/backend/products").then((response) => {
-  //     let udata = response.data[1];
-  //     setpdata(udata);
-  //   }).catch(function (error) {
-  //     console.log(error);
-  //   });
-  // }, []);
-  // api end
-
   const handleShow = (e) => {
     if (e === 'add') {
       setmodalshow(e);
     }
-    console.log(JSON.stringify(e))
+    // console.log(JSON.stringify(e))
     if (e !== 'add') {
       setpdata(pdata[e - 1])
       setseoArray(pdata[e - 1].seo_tag)
@@ -425,15 +340,20 @@ const [data,setData] = useState({
   }
   const ontagaddclick = (e) => {
     // e.preventDefault();
-    setseoArray(seoarray => [...seoarray, addtag]);
+    setproductdata({
+      ...productdata,
+      seo_tag: addtag
+    });
+    // setseoArray(seoarray => [...seoarray, addtag]);
     setaddtag('');
   };
-  useEffect(() => {
-    setpdata({
-      ...pdata,
-      seo_tag: seoarray
-    });
-  }, [seoarray]);
+
+  // useEffect(() => {
+  //   setproductdata({
+  //     ...productdata,
+  //     seo_tag: addtag
+  //   });
+  // }, [seoarray]);
   // useEffect(() => {
   //   setvariantarray(varietyjson)
   // }, []);
@@ -451,118 +371,150 @@ const [data,setData] = useState({
       [e.target.name]: e.target.value
     });
   };
+  const handleInputcheckboxChange = (e) => {
+    const target = e.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value
+
+    setvariantarray({
+      ...variantarray,
+      [e.target.name]: value
+    });
+  }
+  const handleVarietyChange = (e) => {
+    // const varietyvalue = e.target.type === 'radio' ? e.target.checked : e.target.value
+    console.log("varietyvalue --------->  "+e.target.type)
+    setproductdata({
+      ...productdata,
+      [e.target.name]: e.target.value
+    });
+  }
+
   const onVariantaddclick = (e) => {
-    if (vdata !== '') {
-      e.preventDefault();
-      setvdata(vdata => [...vdata, variantarray]);
-      console.log("------addvriety"+JSON.stringify(variantarray))
+    // if (variantarray !== '') {
+      // e.preventDefault();
+      setvariantmainarray(variantmainarray => [...variantmainarray, variantarray]);
       setcustomValidated(false);
       formRef.current.reset();
-    }
-    else {
-      setcustomValidated(true);
-    }
+    // }
+    // else {
+    //   setcustomValidated(true);
+    // }
   }
 
   const VariantRemoveClick = (id) => {
     setvdata(vdata.filter(item => item !== id));
   }
   const VariantEditClick = (id) => {
-    setvariantarray(vdata[id-1]);
+    setvariantarray(vdata[id - 1]);
     // setdata1(e)
     // setvariantmainarray(variantmainarray.filter(item => item !== e));
   }
+  useEffect(() => {
+    setproductdata({
+      ...productdata,
+      price: variantmainarray
+    });
+  }, [variantmainarray]);
   // varint end
   // handle click event of the Remove button
   let customvalue;
   const oncustomheadChange = (e) => {
-    setheaderval(e.target.value);
+    // setheaderval(e.target.value);
   };
   const oncustomdescChange = (e) => {
-    setdescval(e.target.value);
+    // setdescval(e.target.value);
   };
   const handleAddClick = (e) => {
-    customvalue = headerval + ',' + descval;
+    // customvalue = headerval + ',' + descval;
 
-    if (headerval !== '' && descval !== '') {
-      setcustomarray(customarray => [...customarray, customvalue]);
-      setheaderval('');
-      setdescval('');
-      setcustomValidated(false);
-    }
-    else {
-      setcustomValidated(true);
-    }
+    // if (headerval !== '' && descval !== '') {
+    //   setcustomarray(customarray => [...customarray, customvalue]);
+    //   setheaderval('');
+    //   setdescval('');
+    //   setcustomValidated(false);
+    // }
+    // else {
+    //   setcustomValidated(true);
+    // }
   }
   const handleRemoveClick = (e) => {
-    setcustomarray(customarray.filter(item => item !== e));
+    // setcustomarray(customarray.filter(item => item !== e));
   };
   useEffect(() => {
-    setpdata({
-      ...pdata,
-      add_custom_input: customarray
+    setproductdata({
+      ...productdata,
+      add_custom_input: 'no'
+      // customarray
     });
   }, [customarray]);
   // end
 
-  const handleInputcheckboxChange = (e) => {
-    const target = e.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value
-    setpdata({
-      ...pdata,
-      [e.target.name]: value
-    });
 
-  }
   const handleInputFieldChange = (e) => {
-    setpdata({
-      ...pdata,
-      [e.target.name]: [e.target.value]
+    setproductdata({
+      ...productdata,
+      [e.target.name]: e.target.value
     });
   };
+  console.log("form----------   " + JSON.stringify(productdata));
+
   const handledescription = (event, editor) => {
     setdata1(editor.getData());
-      console.log({ event, editor, data1 });
-      console.log(data1);
-      setpdata({
-        ...pdata,
-        product_description: data1
-      });
-    }
-   const createMarkup = () => {
-      return { __html: pdata.product_description };
-    }
+    console.log({ event, editor, data1 });
+    setproductdata({
+      ...productdata,
+      product_description: data1
+    });
+  }
 
+  const OtherDescription = (event, editor) => {
+    setotherintro(editor.getData());
+    console.log({ event, editor, otherintro });
+    console.log(otherintro);
+    setproductdata({
+      ...productdata,
+      other_introduction: otherintro
+    });
+  }
+
+  //  const createMarkup = () => {
+  //     return { __html: pdata.product_description };
+  //   }
+  let productdataa = []
   const handleSaveDraft = (e) => {
-    // const form = e.currentTarget;
-  };
-
-  const handleAddProduct = (e) => {
     const form = e.currentTarget;
-    console.log("form----------   " + JSON.stringify(pdata));
-
+    if (form.checkValidity() === false) {
+    setValidated(false);
+      e.preventDefault()
+    console.log("finallstart---"+JSON.stringify(productdataa))
+    }
+  };
+  const handleAddProduct = (e) => {
+    productdataa.push(productdata)
+    console.log("finallstart---"+JSON.stringify(productdataa))
+    const form = e.currentTarget;
     if (form.checkValidity() === false) {
       e.stopPropagation();
       e.preventDefault()
     }
     setValidated(true);
     setcustomValidated(false);
+    // axios.post('http://192.168.29.108:5000/products',productdataa).then((response) => {
+    //   let data = response.data
+    //   console.log("finall---"+JSON.stringify(response.data))
+ 
+    // });
     e.preventDefault();
-    mainformRef.current.reset();
-    setpdata('');
+    // mainformRef.current.reset();
+    // setpdata('');
     setValidated(false);
     // handleClose();
   }
   const handleUpdateProduct = (e) => {
     e.preventDefault();
-    console.log("---edit"+ JSON.stringify(pdata))
+    console.log("---edit" + JSON.stringify(pdata))
   }
-  // useEffect(() => {
-  //   setvdata({
-  //     ...vdata,
-  //     quantity: variantmainarray
-  //   });
-  // }, [variantmainarray]);
+
 
 
 
@@ -634,12 +586,12 @@ const [data,setData] = useState({
         {/* datatable */}
         <Modal
           show={modalshow}
-          onHide={()=>handleClose()}
+          onHide={() => handleClose()}
           dialogClassName="addproductmainmodal"
           aria-labelledby="example-custom-modal-styling-title"
           centered
         >
-          <Form className="p-2 addproduct_form" validated={validated} ref={mainformRef} onSubmit={(modalshow === 'add' ? (e)=>handleAddProduct(e) : (modalshow)=>handleUpdateProduct(modalshow))}>
+          <Form className="p-2 addproduct_form" validated={validated} ref={mainformRef} onSubmit={(modalshow === 'add' ? (e) => handleAddProduct(e) : (modalshow) => handleAddProduct(modalshow))}>
             <Modal.Header closeButton className="addproductheader">
               <Modal.Title id="example-custom-modal-styling-title">
                 Add Product
@@ -649,73 +601,84 @@ const [data,setData] = useState({
               <div className=" addproduct_form_boxx p-0 m-0">
                 <div className="my-3 inputsection_box">
                   <h5 className="m-0">Basic Info</h5>
-                  <div className="productvariety">
+                  <div className="d-flex product_basixinfo">
+                    <div className="product_detail-box col-md-4">
 
-                    <Form.Group className="mx-3" controlId="validationCustom01">
-                      <Form.Label className="inputlabelheading" sm="12">
-                        Product Title/Name<span className="text-danger">*
+                      <Form.Group className="mx-3" controlId="validationCustom01">
+                        <Form.Label className="inputlabelheading" sm="12">
+                          Product Title/Name<span className="text-danger">*
+                            <Form.Control.Feedback type="invalid" className="h6">
+                              Please fill productname
+                            </Form.Control.Feedback></span>
+                        </Form.Label>
+                        <Col sm="12">
+                          <Form.Control type="text" placeholder="Product Title/Name" required onChange={(e) => handleInputFieldChange(e)} name={'product_title_name'} value={pdata.product_title_name} />
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill productname
+                          </Form.Control.Feedback>
+                        </Col>
+                      </Form.Group>
+                      <Form.Group className="mx-3" controlId="validationCustom02">
+                        <Form.Label className="inputlabelheading" sm="12">
+                          Product Slug<span className="text-danger">* </span>
+                        </Form.Label>
+                        <Col sm="12">
+                          <Form.Control type="text" placeholder="Product Slug" onChange={(e) => handleInputFieldChange(e)} name={'product_slug'} value={pdata.product_slug} />
+                        </Col>
+                      </Form.Group>
+                      <Form.Group className="mx-3" controlId="validationCustomBrand">
+                        <Form.Label className="inputlabelheading" sm="12">
+                          Product Brand
+                        </Form.Label>
+                        <Col sm="12">
+                          <Form.Select
+                            aria-label="Product Type"
+                            className="adminselectbox"
+                            name="brand"
+                            onChange={(e) => handleInputFieldChange(e)}
+                            value={pdata.brand}
+                          >
+                            <option value={''}>Select Brand</option>
+                            <option value="puma">Puma</option>
+                            <option value="mamaearth">Mamaearth</option>
+                            <option value="adidas">Adidas</option>
+                            <option value="sketchers">Sketchers</option>
+                          </Form.Select>
+                        </Col>
+                      </Form.Group>
+                      <Form.Group className="mx-3" controlId="validationCustom03">
+                        <Form.Label className="inputlabelheading" sm="12">
+                          Store Name<span className="text-danger">* <Form.Control.Feedback type="invalid" className="h6">
+                            Please fill storename
                           </Form.Control.Feedback></span>
-                      </Form.Label>
-                      <Col sm="12">
-                        <Form.Control type="text" placeholder="Product Title/Name" required onChange={(e)=>handleInputFieldChange(e)} name={'product_title_name'} value={pdata.product_title_name} />
-                        <Form.Control.Feedback type="invalid" className="h6">
-                          Please fill productname
-                        </Form.Control.Feedback>
-                      </Col>
-                    </Form.Group>
-                    <Form.Group className="mx-3" controlId="validationCustom02">
-                      <Form.Label className="inputlabelheading" sm="12">
-                        Product Slug<span className="text-danger">* </span>
-                      </Form.Label>
-                      <Col sm="12">
-                        <Form.Control type="text" placeholder="Product Slug" onChange={(e)=>handleInputFieldChange(e)} name={'product_slug'} value={pdata.product_slug} />
-                      </Col>
-                    </Form.Group>
+                        </Form.Label>
+                        <Col sm="12">
+                          <Form.Control type="text" placeholder=" Store Name" required onChange={(e) => handleInputFieldChange(e)} name={'store_name'} value={pdata.store_name} />
+                          <Form.Control.Feedback type="invalid" className="h6">
+                            Please fill storename
+                          </Form.Control.Feedback>
+                        </Col>
+                      </Form.Group>
+                    </div>
+                    <div className="col-md-8">
+                      <Form.Group className="mx-3" controlId="validationCustom04">
+                        <Form.Label className="inputlabelheading" sm="12">
+                          Product Description
+                        </Form.Label>
+                        <Col sm="12">
+                          <CKEditor
+                            editor={ClassicEditor}
+                            data={pdata.product_description}
+                            onChange={handledescription}
+                            name={'product_description'}
+                          // value={pdata.product_description}
+                          />
+                        </Col>
+                        {/* <div dangerouslySetInnerHTML={createMarkup()} className='editor'></div> */}
+                      </Form.Group>
+                    </div>
 
-
-                    <Form.Group className="mx-3" controlId="validationCustom03">
-                      <Form.Label className="inputlabelheading" sm="12">
-                        Store Name<span className="text-danger">* <Form.Control.Feedback type="invalid" className="h6">
-                          Please fill storename
-                        </Form.Control.Feedback></span>
-                      </Form.Label>
-                      <Col sm="12">
-                        <Form.Control type="text" placeholder=" Store Name" required onChange={(e)=>handleInputFieldChange(e)} name={'store_name'} value={pdata.store_name} />
-                        <Form.Control.Feedback type="invalid" className="h6">
-                          Please fill storename
-                        </Form.Control.Feedback>
-                      </Col>
-                    </Form.Group>
                   </div>
-                  <Form.Group className="mx-3" controlId="validationCustom04">
-                    <Form.Label className="inputlabelheading" sm="12">
-                      Product Description
-                    </Form.Label>
-                    <Col sm="12">
-                      <CKEditor
-                        editor={ClassicEditor}
-                        data= {pdata.product_description}  
-                        onReady={editor => {
-                          // You can store the "editor" and use when it is needed.
-                          // console.log('Editor is ready to use!', editor);
-                        }}
-                        onChange={handledescription}
-                       
-                        
-                        onBlur={(event, editor) => {
-                          // console.log('Blur.', editor);
-                        }}
-                        onFocus={(event, editor) => {
-                          // console.log('Focus.', editor);
-                        }}
-                        name={'product_description'}
-                        value={pdata.product_description}
-                      />
-                    </Col>
-                    <div dangerouslySetInnerHTML={createMarkup()} className='editor'></div>
-                  </Form.Group>
                 </div>
                 {/* category */}
                 <div className="my-3 inputsection_box">
@@ -732,15 +695,15 @@ const [data,setData] = useState({
                           className="adminselectbox"
                           required
                           name="product_type"
-                          onChange={(e)=>handleInputFieldChange(e)}
+                          onChange={(e) => handleInputFieldChange(e)}
                           value={pdata.product_type}
                         >
                           <option value={''}>Select Product Type</option>
-                          <option value="organic_shampoo">organic_shampoo</option>
-                          <option value="Foods">Two</option>
-                          <option value="Clothes">Three</option>
-                          <option value="Health Care">Four</option>
-                          <option value="Books">Five</option>
+                          <option value="cloths">cloths</option>
+                          <option value="Foods">foods</option>
+                          <option value="electronic">Electronic</option>
+                          <option value="Health Care">Health Care</option>
+                          <option value="Books">Books</option>
                         </Form.Select>
                         <Form.Control.Feedback type="invalid" className="h6">
                           Please select producttype
@@ -752,7 +715,7 @@ const [data,setData] = useState({
                         Category<span className="text-danger">* </span>
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Select aria-label="Category" className="adminselectbox" required onChange={(e)=>handleInputFieldChange(e)} name={'category'} value={pdata.category}>
+                        <Form.Select aria-label="Category" className="adminselectbox" required onChange={(e) => handleInputFieldChange(e)} name={'category'} value={pdata.category}>
                           <option value={''}> Select Category</option>
                           <option value="18">18</option>
                           <option value="Drinks">Two</option>
@@ -769,7 +732,7 @@ const [data,setData] = useState({
                       </Form.Label>
                       <Col sm="12">
                         <Form.Select
-                          onChange={(e)=>handleInputFieldChange(e)} name={'parent_category'}
+                          onChange={(e) => handleInputFieldChange(e)} name={'parent_category'}
                           aria-label="Parent Category"
                           className="adminselectbox"
                           required
@@ -788,7 +751,7 @@ const [data,setData] = useState({
                   </div>
                 </div>
                 {/*Price and Quantity  */}
-                <div className="my-3 inputsection_box">
+                {/* <div className="my-3 inputsection_box">
                   <h5 className="m-0">Stock Info</h5>
                   <div className="productvariety mt-0">
                     <Form.Group className="mx-3" controlId="validationCustom08">
@@ -796,7 +759,7 @@ const [data,setData] = useState({
                         Product Quantity<span className="text-danger">* </span>
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Control type="number" placeholder="Product Quantity" required onChange={(e)=>handleInputFieldChange(e)} name={'product_quantity'} value={pdata.product_quantity} />
+                        <Form.Control type="number" placeholder="Product Quantity" required onChange={(e) => handleInputFieldChange(e)} name={'product_quantity'} value={pdata.product_quantity} />
                         <Form.Control.Feedback type="invalid" className="h6">
                           Please fill quantity
                         </Form.Control.Feedback>
@@ -807,7 +770,7 @@ const [data,setData] = useState({
                         Mrp<span className="text-danger">*</span>
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Control type="number" placeholder="mrp" required onChange={(e)=>handleInputFieldChange(e)} name={'mrp'} value={pdata.mrp} />
+                        <Form.Control type="number" placeholder="mrp" required onChange={(e) => handleInputFieldChange(e)} name={'mrp'} value={pdata.mrp} />
                         <Form.Control.Feedback type="invalid" className="h6">
                           Please fill mrp
                         </Form.Control.Feedback>
@@ -818,7 +781,7 @@ const [data,setData] = useState({
                         Product Price<span className="text-danger">* </span>
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Control type="number" placeholder="Price" required onChange={(e)=>handleInputFieldChange(e)} name={'product_price'} value={pdata.product_price} />
+                        <Form.Control type="number" placeholder="Price" required onChange={(e) => handleInputFieldChange(e)} name={'product_price'} value={pdata.product_price} />
                         <Form.Control.Feedback type="invalid" className="h6">
                           Please fill price
                         </Form.Control.Feedback>
@@ -829,7 +792,7 @@ const [data,setData] = useState({
                         Sale Price
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Control type="number" placeholder="Sale Price" onChange={(e)=>handleInputFieldChange(e)} name={'sale_price'} value={pdata.sale_price} />
+                        <Form.Control type="number" placeholder="Sale Price" onChange={(e) => handleInputFieldChange(e)} name={'sale_price'} value={pdata.sale_price} />
                       </Col>
                     </Form.Group>
                     <Form.Group className="mx-3" controlId="validationCustom11">
@@ -837,11 +800,11 @@ const [data,setData] = useState({
                         Discount
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Control type="number" placeholder="Discount" onChange={(e)=>handleInputFieldChange(e)} name={'discount'} value={pdata.discount} />
+                        <Form.Control type="number" placeholder="Discount" onChange={(e) => handleInputFieldChange(e)} name={'discount'} value={pdata.discount} />
                       </Col>
                     </Form.Group>
                   </div>
-                </div>
+                </div> */}
                 {/* Taxes */}
                 <div className="my-3 inputsection_box">
                   <h5 className="m-0">Taxes</h5>
@@ -856,7 +819,7 @@ const [data,setData] = useState({
                           placeholder="Wholesale Sales Tax"
                           name="wholesale_sales_tax"
                           value={pdata.wholesale_sales_tax}
-                          onChange={(e)=>handleInputFieldChange(e)}
+                          onChange={(e) => handleInputFieldChange(e)}
                         />
                       </Col>
                     </Form.Group>
@@ -870,7 +833,7 @@ const [data,setData] = useState({
                           placeholder="Manufacturers’ Sales Tax "
                           name="manufacturers_sales_tax"
                           value={pdata.manufacturers_sales_tax}
-                          onChange={(e)=>handleInputFieldChange(e)}
+                          onChange={(e) => handleInputFieldChange(e)}
                         />
                       </Col>
                     </Form.Group>
@@ -880,7 +843,7 @@ const [data,setData] = useState({
                       </Form.Label>
                       <Col sm="12">
                         <Form.Control type="number" placeholder="Retail Sales Tax" name="retails_sales_tax" value={pdata.retails_sales_tax}
-                          onChange={(e)=>handleInputFieldChange(e)} />
+                          onChange={(e) => handleInputFieldChange(e)} />
                       </Col>
                     </Form.Group>
                     <Form.Group className="mx-3" controlId="validationCustom11">
@@ -888,7 +851,7 @@ const [data,setData] = useState({
                         Gst
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Control type="number" placeholder="Gst" required name="gst" value={pdata.gst} onChange={(e)=>handleInputFieldChange(e)} />
+                        <Form.Control type="number" placeholder="Gst" required name="gst" value={pdata.gst} onChange={(e) => handleInputFieldChange(e)} />
                         <Form.Control.Feedback type="invalid">
                           Please choose a gst
                         </Form.Control.Feedback>
@@ -899,13 +862,13 @@ const [data,setData] = useState({
                         Value Added Tax
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Control type="number" placeholder="Value Added Tax" name="value_added_tax" value={pdata.value_added_tax} onChange={(e)=>handleInputFieldChange(e)} />
+                        <Form.Control type="number" placeholder="Value Added Tax" name="value_added_tax" value={pdata.value_added_tax} onChange={(e) => handleInputFieldChange(e)} />
                       </Col>
                     </Form.Group>
                   </div>
                 </div>
                 {/*Date  */}
-                <div className="my-3 inputsection_box">
+                {/* <div className="my-3 inputsection_box">
                   <h5 className="m-0">Date</h5>
                   <div className="productvariety">
                     <Form.Group className="mx-3" controlId="validationCustom11">
@@ -913,7 +876,7 @@ const [data,setData] = useState({
                         Manufacturing Date
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Control type="date" placeholder="manufacturing_date" name="manufacturing_date" required onChange={(e)=>handleInputFieldChange(e)} value={pdata.manufacturing_date} />
+                        <Form.Control type="date" placeholder="manufacturing_date" name="manufacturing_date" required onChange={(e) => handleInputFieldChange(e)} value={pdata.manufacturing_date} />
                         <Form.Control.Feedback type="invalid">
                           Please choose a date
                         </Form.Control.Feedback>
@@ -927,19 +890,18 @@ const [data,setData] = useState({
                         Expire Date
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Control type="date" placeholder="expire_date" required name="expire_date" value={pdata.expire_date} onChange={(e)=>handleInputFieldChange(e)} />
+                        <Form.Control type="date" placeholder="expire_date" required name="expire_date" value={pdata.expire_date} onChange={(e) => handleInputFieldChange(e)} />
                         <Form.Control.Feedback type="invalid">
                           Please choose a expire date
                         </Form.Control.Feedback>
                       </Col>
                     </Form.Group>
                   </div>
-                </div>
+                </div> */}
                 {/* Variation */}
 
                 <div className="my-3 inputsection_box">
                   <div className="productvariety_box">
-                    <h5 className="m-0">Offer</h5>
                     <div className="productvariety">
                       <Form.Group
                         className="mx-3"
@@ -949,18 +911,439 @@ const [data,setData] = useState({
                           className="inputlabelheading"
                           sm="12 d-flex align-itmes-center"
                         >
-                          {pdata.variety === true ?
-                            <Form.Check className="mx-2" onChange={handleInputcheckboxChange} name='variety' value={pdata.variety === true ? true : false} checked /> :
-                            <Form.Check className="mx-2" onChange={handleInputcheckboxChange} name='variety' value={pdata.variety === true ? true : false} />}
-                          Variety
+                            <Form.Check  type="radio" aria-label="radio 1"  className="mx-2" onChange={handleVarietyChange} name='variety' value={false} checked={productdata.variety === false ? true : false} /> 
+                          Single Product
+                        </Form.Label>
+                      </Form.Group>
+                      <Form.Group
+                        className="mx-3"
+                        controlId="validationCustom11"
+                      >
+                        <Form.Label
+                          className="inputlabelheading"
+                          sm="12 d-flex align-itmes-center"
+                        >
+                          
+                            <Form.Check  type="radio" aria-label="radio 2"  className="mx-2" onChange={handleVarietyChange} name='variety' checked={productdata.variety === true ? true : false} value={true} /> 
+                          Multiple Variety
                         </Form.Label>
                       </Form.Group>
                     </div>
+                    <div className="row">
+
+                      <Form.Group
+                        className="mx-3"
+                      // controlId="validationCustom13"
+                      >
+                        <div className="variation_box my-2">
+                          <div className="row">
+                            <div className="col-auto">
+                              <Table bordered className="align-middle my-2 aadvariety_table_">
+                                <thead className="align-middle">
+                                  <tr>
+                                    <th >Variety</th>
+                                    <th >Color</th>
+                                    <th >Weight</th>
+                                    <th >Size</th>
+                                    <th >Price</th>
+                                    <th >Mrp</th>
+                                    <th >Sale Price</th>
+                                    <th >Discount</th>
+                                    <th >Special Offer</th>
+                                    <th >Featured Product</th>
+                                    <th className="manufacture_date">Mdate</th>
+                                    <th className="manufacture_date">Edate</th>
+                                    <th className="manufacture_date">Image</th>
+                                    {/* <th className="manufacture_date">whole</th>
+                                    <th className="manufacture_date">manu</th>
+                                    <th className="manufacture_date">retail</th>
+                                    <th className="manufacture_date">gst</th>
+                                    <th className="manufacture_date">added</th> */}
+                                    <th className="">Qty</th>
+                                    <th ></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td className="p-0 text-center">
+                                      <div className=" d-flex align-items-center">
+                                        <InputGroup className="" size="sm">
+                                          <Form.Select aria-label="Default select example" name='unit' value={pdata.unit}
+                                            onChange={(e) => onVariantChange(e)}
+                                            className={(customvalidated === true) ? 'border-danger' : null}
+                                          >
+                                            <option value={''} >Select</option>
+                                            {(varietyy.variety || []).map((vari, i) => {
+                                              return (
+                                                <option value={vari === 'weight' ? 'gm' : vari === 'volume' ? 'l' : vari === 'piece' ? 'pcs' : vari === 'color' ? 'pcs' : null} key={i}>{vari}</option>
+                                              );
+                                            })}
+                                          </Form.Select>
+                                        </InputGroup>
+                                      </div>
+                                    </td>
+
+                                    <td className="p-0 text-center">
+                                      <div className=" d-flex align-items-center">
+                                        <InputGroup className="" size="sm">
+                                          <Form.Control
+                                            type="text"
+                                            sm="9"
+                                            className={(customvalidated === true) ? 'border-danger' : null}
+                                            onChange={(e) => onVariantChange(e)}
+                                            name={'colors'}
+                                            value={variantarray.colors}
+                                          />
+                                        </InputGroup>
+                                      </div>
+                                    </td>
+
+                                    <td className="p-0 text-center">
+                                      <div className=" d-flex align-items-center">
+                                        <InputGroup className="" size="sm">
+                                          <Form.Control
+                                            value={(variantarray.unit === 'weight' ? variantarray.unit_quantity : variantarray.unit === 'volume' ? variantarray.unit_quantity : variantarray.unit === 'piece' ? variantarray.unit_quantity  : null)}
+                                            type="number"
+                                            sm="9"
+                                            className={(customvalidated === true) ? 'border-danger' : null}
+                                            onChange={(e) => onVariantChange(e)}
+                                            name={'unit_quantity'}
+                                          />
+                                        </InputGroup>
+
+                                      </div>
+                                    </td>
+                                    <td className="p-0 text-center">
+                                      <div className=" d-flex align-items-center">
+                                        <InputGroup className="" size="sm">
+                                          <Form.Control
+                                            value={variantarray.unit === 'color' ? variantarray.size : ''}
+                                            type="text"
+                                            sm="9"
+                                            className={(customvalidated === true) ? 'border-danger' : null}
+                                            onChange={(e) => onVariantChange(e)}
+                                            name={'size'}
+                                          />
+                                        </InputGroup>
+
+                                      </div>
+                                    </td>
+                                    <td className="p-0 text-center">
+                                      <div className=" d-flex align-items-center">
+                                        <InputGroup className="" size="sm">
+                                          <Form.Control
+                                            min={1}
+                                            type="number"
+                                            sm="9"
+                                            className={(customvalidated === true) ? 'border-danger' : null}
+                                            onChange={(e) => onVariantChange(e)}
+                                            name={'product_price'}
+                                            value={variantarray.product_price}
+                                          />
+                                        </InputGroup>
+
+                                      </div>
+                                    </td>
+                                    <td className="p-0 text-center">
+                                      <div className=" d-flex align-items-center">
+                                        <InputGroup className="" size="sm">
+                                          <Form.Control
+                                            type="number"
+                                            min={1}
+                                            sm="9"
+                                            className={(customvalidated === true) ? 'border-danger' : null}
+                                            onChange={(e) => onVariantChange(e)}
+                                            name={'mrp'}
+                                            value={variantarray.mrp}
+
+                                          />
+                                        </InputGroup>
+
+                                      </div>
+                                    </td>
+                                    <td className="p-0 text-center">
+                                      <div className=" d-flex align-items-center">
+                                        <InputGroup className="" size="sm">
+                                          <Form.Control
+                                            type="number"
+                                            sm="9"
+                                            min={1}
+                                            className={(customvalidated === true) ? 'border-danger' : null}
+                                            onChange={(e) => onVariantChange(e)}
+                                            name={'sale_price'}
+                                            value={variantarray.sale_price}
+                                          />
+                                        </InputGroup>
+
+                                      </div>
+                                    </td>
+                                    <td className="p-0 text-center">
+                                      <div className=" d-flex align-items-center">
+                                        <InputGroup className="" size="sm">
+                                          <Form.Control
+                                            type="number"
+                                            sm="9"
+                                            min={1}
+                                            onChange={(e) => onVariantChange(e)}
+                                            name={'discount'}
+                                            value={variantarray.discount}
+                                          />
+                                        </InputGroup>
+
+                                      </div>
+                                    </td>
+                                    <td className="p-0 text-center">
+                                      <div className="">
+                                        {variantarray.special_offer === true ?
+                                          <Form.Check className="mx-2" onChange={handleInputcheckboxChange} name='special_offer' value={variantarray.special_offer === true ? true : false} checked /> :
+                                          <Form.Check className="mx-2" onChange={handleInputcheckboxChange} name='special_offer' value={variantarray.special_offer === true ? true : false} />}
+                                        {/* <Form.Check
+                                            onChange={(e) => handleInputcheckboxChange(e)}
+                                            name={'special_offer'}
+                                            value={variantarray.special_offer}
+                                          /> */}
+                                      </div>
+                                    </td>
+                                    <td className="p-0 text-center">
+                                      <div className="">
+                                        {variantarray.featured_product === true ?
+                                          <Form.Check className="mx-2" onChange={handleInputcheckboxChange} name={'featured_product'} value={variantarray.featured_product === true ? true : false} checked /> :
+                                          <Form.Check className="mx-2" onChange={handleInputcheckboxChange} name={'featured_product'} value={variantarray.featured_product === true ? true : false} />}
+                                        {/* <Form.Check
+                                            onChange={(e) => handleInputcheckboxChange(e)}
+                                            name={'featured_product'}
+                                            value={variantarray.featured_product}
+                                          /> */}
+                                      </div>
+                                    </td>
+                                    <td className="p-0 text-center">
+                                      <div className="manufacture_date" >
+                                        <InputGroup className="" size="sm">
+                                          <Form.Control
+                                            type="date"
+                                            sm="9"
+                                            className={(customvalidated === true) ? 'border-danger' : null}
+                                            onChange={(e) => onVariantChange(e)}
+                                            name={'manufacturing_date'}
+                                            value={variantarray.manufacturing_date}
+                                          />
+                                        </InputGroup>
+
+                                      </div>
+                                    </td>
+                                    <td className="p-0 text-center">
+                                      <div className="manufacture_date" >
+                                        <InputGroup className="" size="sm">
+                                          <Form.Control
+                                            type="date"
+                                            sm="9"
+                                            className={(customvalidated === true) ? 'border-danger' : null}
+                                            onChange={(e) => onVariantChange(e)}
+                                            name={'expire_date'}
+                                            value={variantarray.expire_date}
+                                          />
+                                        </InputGroup>
+
+                                      </div>
+                                    </td>
+                                    <td className="p-0 text-center">
+                                      <div className="manufacture_date">
+                                        <InputGroup className="" size="sm">
+                                          <Form.Control
+                                            multiple
+                                            type="file"
+                                            sm="9"
+                                            className={(customvalidated === true) ? 'border-danger' : null}
+                                            onChange={imguploadchange}
+                                            name={'product_img'}
+
+                                          />
+                                        </InputGroup>
+
+                                      </div>
+                                    </td>
+                                   
+                                 {/* kdmskdm */}
+                                  {/* <td>
+                                 
+                                     <div className="manufacture_date">
+                                        <InputGroup className="" size="sm">
+                                      <Form.Control
+                                        type="number"
+                                        placeholder="Wholesale Sales Tax"
+                                        name="wholesale_sales_tax"
+                                        value={variantarray.wholesale_sales_tax}
+                                        onChange={(e) => onVariantChange(e)}
+                                      />
+                                    </InputGroup>
+                                      </div>
+                                  </td>
+
+                                 <td>
+                                
+                                     <div className="manufacture_date">
+                                        <InputGroup className="" size="sm">
+                                      <Form.Control
+                                        type="number"
+                                        placeholder="Manufacturers’ Sales Tax "
+                                        name="manufacturers_sales_tax"
+                                        value={variantarray.manufacturers_sales_tax}
+                                        onChange={(e) => onVariantChange(e)}
+                                      />
+                                       </InputGroup>
+                                      </div>
+                                 </td>
+                                 <td>
+                                
+                                     <div className="manufacture_date">
+                                        <InputGroup className="" size="sm">
+                                      <Form.Control type="number" placeholder="Retail Sales Tax" name="retails_sales_tax" value={variantarray.retails_sales_tax}
+                                        onChange={(e) => onVariantChange(e)} />
+                                   </InputGroup>
+                                      </div>
+                                  </td>
+                                  <td>
+                                 
+                                     <div className="manufacture_date">
+                                        <InputGroup className="" size="sm">
+                                      <Form.Control type="number" placeholder="Gst" required name="gst" value={variantarray.gst} onChange={(e) => onVariantChange(e)} />
+                                      </InputGroup>
+                                      </div>
+                                  </td>
+                                 <td>
+                                
+                                     <div className="manufacture_date">
+                                        <InputGroup className="" size="sm">
+                                      <Form.Control type="number" placeholder="Value Added Tax" name="value_added_tax" value={variantarray.value_added_tax} onChange={(e) => onVariantChange(e)} />
+                                      </InputGroup>
+                                      </div>
+                                 </td> */}
+                                 <td className="p-0">
+                                      <div className="">
+                                        <InputGroup className="" size="sm">
+                                          <Form.Control
+                                            name={'quantity'}
+                                            type="number"
+                                            value={variantarray.quantity}
+                                            sm="9"
+                                            min={'1'}
+                                            className={(customvalidated === true) ? 'border-danger' : null}
+                                            onChange={(e) => onVariantChange(e)}
+                                            onKeyPress={event => {
+                                              if (event.key === "Enter") {
+                                                onVariantaddclick();
+                                              }
+                                            }
+                                            }
+                                          />
+                                        </InputGroup>
+                                      </div>
+                                    </td>
+                                    <td className="p-0">
+                                      <div className=" d-flex align-items-center">
+                                        <Button variant="outline-success" className="addcategoryicon"
+                                          onClick={onVariantaddclick}
+                                          size="sm">
+                                          +
+                                        </Button>
+                                      </div>
+                                    </td>
+                                  </tr>
+
+                                  {/* {
+              (p || []).map((variantdata, i) => {
+                return (
+                  <tr >
+                    <td className="p-0 text-center ">
+                    <InputGroup className="" size="sm">
+                    <Form.Select aria-label="Default select example" name='variations' value={variantdata.variations} 
+                   onChange={(e)=>onVariantChange(e)}
+                      className={(customvalidated === true) ? 'border-danger' : null}
+                    >
+                      <option value={''} >Select</option>
+                      {(varietyy.variety || []).map((vari, i) => {
+                        return (
+                          <option value={vari} key={i}>{vari}</option>
+                        );
+                      })}
+                    </Form.Select>
+                  </InputGroup>
+                      
+                    </td>
+                    <td className="p-0 text-center ">
+                      {variantdata.colorname}
+                    </td>
+                    <td className="p-0 text-center ">
+                      {(variantdata.variations === 'color' ? variantdata.size : variantdata.variations === 'weight' ? variantdata.weight : variantdata.variations === 'volume' ? variantdata.volume : variantdata.variations === 'piece' ? variantdata.piece : null)}
+                    </td>
+                    <td className="p-0 text-center ">
+                      {variantdata.price}
+                    </td>
+                    <td className="p-0 text-center ">
+                      {variantdata.mrp}
+                    </td>
+                    <td className="p-0 text-center ">
+                      {variantdata.sale_price}
+                    </td>
+                    <td className="p-0 text-center ">
+                      {variantdata.discount}
+                    </td>
+                    <td className="p-0 text-center ">
+                      {variantdata.special_offer}
+                    </td>
+                    <td className="p-0 text-center ">
+                      {variantdata.featured_product}
+                    </td>
+                    <td className="p-0 text-center ">
+                      {variantdata.manufacturing_date}
+                    </td>
+                    <td className="p-0 text-center ">
+                      {variantdata.expire_date}
+                    </td>
+                    <td className="p-0 text-center">
+                      <Carousel indicators={false} controls={false}>
+                        {(variantdata.product_img || []).map((data) => {
+                          return (
+                            <Carousel.Item interval={1000}>
+                              <img src={data} alt='apnaorganic' width={50} />
+                            </Carousel.Item>
+                          )
+                        })}
+                      </Carousel>
+                    </td>
+                    <td className="p-0 text-center">
+                      {variantdata.quantity}
+                    </td>
+                    <td className="p-0 text-center">
+                      <Button variant="text-danger" className="addcategoryicon text-danger"
+                        onClick={(id) => VariantRemoveClick(variantdata.id)} size="sm">
+                        &times;
+                      </Button>
+                      <Button variant="text-danger" className="addcategoryicon text-danger"
+                        onClick={(id) => VariantEditClick(variantdata.id)} size="sm">
+                        <MdOutlineEdit />
+                      </Button>
+                    </td>
+                  </tr>
+                )
+              })
+            } */}
+                                </tbody>
+
+                              </Table>
+                             
+                            </div>
+                          </div>
+                        </div>
+                      </Form.Group>
+
+                    </div>
+
                   </div>
                 </div>
                 {/* Offer */}
 
-                <div className="my-3 inputsection_box">
+                {/* <div className="my-3 inputsection_box">
                   <div>
                     <div className="productvariety_box">
                       <h5 className="m-0">Offer</h5>
@@ -996,13 +1379,13 @@ const [data,setData] = useState({
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
 
                 {/* seo tag */}
                 <div className="my-3 inputsection_box">
                   <h5 className="m-0">Seo Tag</h5>
                   <div className="productvariety">
-                    <Form.Group className="mx-3" controlId="validationCustom11">
+                    <Form.Group className="mx-3" controlId="validationCustomSeo">
                       <div className=" d-flex align-items-center my-2">
                         <InputGroup className="" size="sm">
                           <Form.Control
@@ -1011,7 +1394,7 @@ const [data,setData] = useState({
                             value={addtag}
                             onKeyPress={event => {
                               if (event.key === "Enter") {
-                                ontagaddclick();
+                                ontagaddclick()
                               }
                             }
                             }
@@ -1052,20 +1435,9 @@ const [data,setData] = useState({
                     <CKEditor
                       editor={ClassicEditor}
                       data="<p>Hello from CKEditor 5!</p>"
-                      onReady={editor => {
-                        // You can store the "editor" and use when it is needed.
-                        // console.log('Editor is ready to use!', editor);
-                      }}
-                      onChange={(event, editor) => {
-                        const data = editor.getData();
-                        // console.log({ event, editor, data });
-                      }}
-                      onBlur={(event, editor) => {
-                        // console.log('Blur.', editor);
-                      }}
-                      onFocus={(event, editor) => {
-                        // console.log('Focus.', editor);
-                      }}
+                      onChange={OtherDescription}
+                      name={'other_introduction'}
+
                     />
 
                   </Col>
@@ -1191,15 +1563,14 @@ const [data,setData] = useState({
               <Iconbutton
                 type={'submit'}
                 btntext={(modalshow === 'add' ? "Add Product" : "Update Product")}
-                // onClick={(modalshow === 'add' ? handleAddProduct : handleUpdateProduct)}
                 btnclass={"button main_button "}
               />
             </Modal.Footer>
           </Form>
         </Modal>
         {/* variety */}
-        <Modal size="lg" show={varietyshow} onHide={()=>handlevarietyClose()} dialogClassName="addproductmainmodal">
-          <Form ref={formRef} validated={validated} onSubmit={(e)=>onVariantaddclick(e)}>
+        <Modal size="lg" show={varietyshow} onHide={() => handlevarietyClose()} dialogClassName="addproductmainmodal">
+          <Form ref={formRef} validated={validated} onSubmit={(e) => onVariantaddclick(e)}>
             <Modal.Header closeButton>
               <Modal.Title>Add Variety</Modal.Title>
             </Modal.Header>
@@ -1237,8 +1608,8 @@ const [data,setData] = useState({
                               <td className="p-0 text-center">
                                 <div className=" d-flex align-items-center">
                                   <InputGroup className="" size="sm">
-                                    <Form.Select aria-label="Default select example" name='variations' value={vdata.variations} 
-                                   onChange={(e)=>onVariantChange(e)}
+                                    <Form.Select aria-label="Default select example" name='variations' value={vdata.variations}
+                                      onChange={(e) => onVariantChange(e)}
                                       className={(customvalidated === true) ? 'border-danger' : null}
                                     >
                                       <option value={''} >Select</option>
@@ -1259,7 +1630,7 @@ const [data,setData] = useState({
                                       type="text"
                                       sm="9"
                                       className={(customvalidated === true) ? 'border-danger' : null}
-                                      onChange={(e)=>onVariantChange(e)}
+                                      onChange={(e) => onVariantChange(e)}
                                       name={'colorname'}
                                       value={variantarray.colorname}
                                     />
@@ -1275,7 +1646,7 @@ const [data,setData] = useState({
                                       type="text"
                                       sm="9"
                                       className={(customvalidated === true) ? 'border-danger' : null}
-                                      onChange={(e)=>onVariantChange(e)}
+                                      onChange={(e) => onVariantChange(e)}
                                       name={(varietyval === 'weight' ? 'weight' : varietyval === 'volume' ? 'volume' : varietyval === 'piece' ? 'piece' : varietyval === 'color' ? 'size' : null)}
                                     />
                                   </InputGroup>
@@ -1290,7 +1661,7 @@ const [data,setData] = useState({
                                       type="number"
                                       sm="9"
                                       className={(customvalidated === true) ? 'border-danger' : null}
-                                      onChange={(e)=>onVariantChange(e)}
+                                      onChange={(e) => onVariantChange(e)}
                                       name={'price'}
                                       value={variantarray.price}
                                     />
@@ -1306,7 +1677,7 @@ const [data,setData] = useState({
                                       min={1}
                                       sm="9"
                                       className={(customvalidated === true) ? 'border-danger' : null}
-                                      onChange={(e)=>onVariantChange(e)}
+                                      onChange={(e) => onVariantChange(e)}
                                       name={'mrp'}
                                       value={variantarray.mrp}
 
@@ -1323,7 +1694,7 @@ const [data,setData] = useState({
                                       sm="9"
                                       min={1}
                                       className={(customvalidated === true) ? 'border-danger' : null}
-                                      onChange={(e)=>onVariantChange(e)}
+                                      onChange={(e) => onVariantChange(e)}
                                       name={'sale_price'}
                                       value={variantarray.sale_price}
                                     />
@@ -1338,7 +1709,7 @@ const [data,setData] = useState({
                                       type="number"
                                       sm="9"
                                       min={1}
-                                      onChange={(e)=>onVariantChange(e)}
+                                      onChange={(e) => onVariantChange(e)}
                                       name={'discount'}
                                       value={variantarray.discount}
                                     />
@@ -1349,7 +1720,7 @@ const [data,setData] = useState({
                               <td className="p-0 text-center">
                                 <div className="">
                                   <Form.Check
-                                    onChange={(e)=>onVariantChange(e)}
+                                    onChange={(e) => onVariantChange(e)}
                                     name={'special_offer'}
                                     value={variantarray.special_offer}
                                   />
@@ -1358,7 +1729,7 @@ const [data,setData] = useState({
                               <td className="p-0 text-center">
                                 <div className="">
                                   <Form.Check
-                                    onChange={(e)=>onVariantChange(e)}
+                                    onChange={(e) => onVariantChange(e)}
                                     name={'featured_product'}
                                     value={variantarray.featured_product}
                                   />
@@ -1371,7 +1742,7 @@ const [data,setData] = useState({
                                       type="date"
                                       sm="9"
                                       className={(customvalidated === true) ? 'border-danger' : null}
-                                      onChange={(e)=>onVariantChange(e)}
+                                      onChange={(e) => onVariantChange(e)}
                                       name={'manufacturing_date'}
                                       value={variantarray.manufacturing_date}
                                     />
@@ -1386,7 +1757,7 @@ const [data,setData] = useState({
                                       type="date"
                                       sm="9"
                                       className={(customvalidated === true) ? 'border-danger' : null}
-                                      onChange={(e)=>onVariantChange(e)}
+                                      onChange={(e) => onVariantChange(e)}
                                       name={'expire_date'}
                                       value={variantarray.expire_date}
                                     />
@@ -1420,7 +1791,7 @@ const [data,setData] = useState({
                                       sm="9"
                                       min={'1'}
                                       className={(customvalidated === true) ? 'border-danger' : null}
-                                      onChange={(e)=>onVariantChange(e)}
+                                      onChange={(e) => onVariantChange(e)}
                                       onKeyPress={event => {
                                         if (event.key === "Enter") {
                                           onVariantaddclick();
@@ -1435,7 +1806,7 @@ const [data,setData] = useState({
                                 <div className=" d-flex align-items-center">
                                   <Button variant="outline-success" className="addcategoryicon"
                                     type="submit"
-                                    // onClick={()=>onVariantaddclick()}
+                                    onClick={()=>onVariantaddclick()}
                                     size="sm">
                                     +
                                   </Button>
@@ -1443,7 +1814,7 @@ const [data,setData] = useState({
                               </td>
                             </tr>
 
-                            {
+                            {/* {
                               (vdata || []).map((variantdata, i) => {
                                 return (
                                   <tr >
@@ -1507,7 +1878,7 @@ const [data,setData] = useState({
                                   </tr>
                                 )
                               })
-                            }
+                            } */}
                           </tbody>
                         </Table>
                       </div>
@@ -1518,7 +1889,7 @@ const [data,setData] = useState({
               </div>
             </Modal.Body>
             <Modal.Footer>
-              <button className='button main_outline_button' onClick={()=>handlevarietyClose()}>Cancel</button>
+              <button className='button main_outline_button' onClick={() => handlevarietyClose()}>Cancel</button>
               <button className='button main_button' onClick={(e) => handlevarietyClose(e)}>Save</button>
             </Modal.Footer>
           </Form>
