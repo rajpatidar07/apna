@@ -49,7 +49,7 @@ const CategoryList = () => {
   useEffect(() => {
    function getUser() {
     try {
-    axios.get('http://192.168.29.108:5000/category').then((response) => {
+    axios.get('http://192.168.29.108:5000/category?category=all').then((response) => {
       let data = response.data
       console.log(JSON.stringify(response.data))
       setData(data)
