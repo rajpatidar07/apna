@@ -18,11 +18,24 @@ import axios from "axios";
 const CategoryList = () => {
   const formRef = useRef();
   const [validated, setValidated] = useState(false);
-  const handleAlert = () => setAlert(true);
-  const hideAlert = () => setAlert(false);
+  const handleAlert = (id) =>{
+    setParentid(id[0])
+
+    setlevel(id[1])
+    setAlert(true);
+  } 
+  const hideAlert = () =>{
+    console.log(parentid+level+"---ppppppppppp")
+    axios.put(`http://192.168.29.108::5000/delete_category`,{
+      "id":parentid,
+      "is_active":0,
+      "level": level
+  });setAlert(false);
+  } 
   const [Alert, setAlert] = useState(false);
   const [show, setShow] = useState("");
   const [newName, setnewName] = useState("");
+  const[type,setType]=useState("")
   const [image,setImage]=useState();
   const [data, setData] = useState([]);
   const [category, setCategory] = useState([]);
@@ -35,7 +48,7 @@ const CategoryList = () => {
   const [file, setFile] = useState();
   const [cid, setCid] = useState();
  const [fileName, setFileName] = useState("");
- const [parentid, setParentid] = useState();
+ const [parentid, setParentid] = useState('');
  const [allparentid, setAllparentid] = useState();
 const saveFile = (e) => {
 setFile(e.target.files[0]);
@@ -43,7 +56,7 @@ setFile(e.target.files[0]);
  };
   const handleClose = () => {
     formRef.current.reset();
-    setData("");
+    // setData("");
     setValidated(false);
     setShow(false);
   };
@@ -61,7 +74,7 @@ setFile(e.target.files[0]);
       setShow(e);
     }
   };
-
+ 
   useEffect(() => {
     function getUser() {
       try {
@@ -178,12 +191,12 @@ setFile(e.target.files[0]);
     //   sortable: true,
     //   width: "250px",
     // },
-    // {
-    //   name: "Category Type",
-    //   selector: (row) => row.category_type,
-    //   sortable: true,
-    //   width: "160px",
-    // },
+    {
+      name: "Category Type",
+      selector: (row) => row.category_type,
+      sortable: true,
+      width: "160px",
+    },
     {
       name: "Level",
       selector: (row) => row.level,
@@ -226,26 +239,26 @@ setFile(e.target.files[0]);
         <div className={"actioncolimn"}>
           <BiEdit
             className=" p-0 m-0  editiconn text-secondary"
-            onClick={handleShow.bind(this,row.id,row.category_name,row.all_parent_id,row.parent_id,row.level)}
+            onClick={handleShow.bind(this,row.id,row.category_name,row.all_parent_id,row.parent_id,row.level,row.category_type)}
           />
           <BsTrash
             className=" p-0 m-0 editiconn text-danger"
-            onClick={handleAlert}
+            onClick={handleAlert.bind(this,[row.parent_id,row.level])}
           />
         </div>
       ),
     },
   ];
-  const handleFormChange = (e, id) => {
-    // console.log(""+)
-    // setCategory({ ...category, [e.target.name]: e.target.value });
-  };
-  const handlChange = (e, id) => {
+ 
+  const handlChangeName = (e, id) => {
     setnewName(e.target.value);
+  };
+  const handlChangeType = (e, id) => {
+    setType(e.target.value);
   };
   const categoryFormChange = (e, id) => {
     setIndVal(e.target.value);
-    setScategory({ ...scategory, [e.target.name]: e.target.value });
+    setScategory({ ...scategory, [e.target.name]: e.target.value});
   };
 
   // const ImgFormChange = (e,id) => {
@@ -261,7 +274,7 @@ setFile(e.target.files[0]);
     }
     if (form.checkValidity() === true) {
       e.preventDefault();
-      console.log("_________________test____________")
+      console.log("_____________________________test____________")
 
       const formData = new FormData();
       formData.append("image", file);
@@ -270,6 +283,7 @@ setFile(e.target.files[0]);
       formData.append("level", level);
       formData.append("all_parent_id", scategory.category_name);
       formData.append("new_category", newName);
+      formData.append("category_type", type);
      
 // console.log({
 //   parent_id: parentid,
@@ -302,7 +316,8 @@ setFile(e.target.files[0]);
       parent_id: parentid,
       level: level,
       all_parent_id:allparentid,
-      new_category:newName
+      new_category:newName,
+      category_type:type
   }).then((response) => {
     console.log("possttttttt------"+JSON.stringify(response))
   });
@@ -311,9 +326,6 @@ setFile(e.target.files[0]);
   setData("");
   show.preventDefault();
   };
-  const DeleteCategoryClick=()=>{
-
-  }
   // // console.log("form----------   " + JSON.stringify(data));
   // console.log("level----------   " + JSON.stringify(scategory));
 
@@ -328,7 +340,7 @@ setFile(e.target.files[0]);
       <div className="card mt-3 p-3 ">
         <div className=" row">
           <div className="col-md-3 col-sm-6 aos_input">
-            <Input type={"text"} plchldr={"Search by category name"} />
+            <Input type={"text"} plchldr={"Search by category name"}/>
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
             <Form.Select
@@ -417,7 +429,7 @@ setFile(e.target.files[0]);
                       type="text"
                       placeholder="Category Name"
                       required
-                      onChange={(e) => handlChange(e)}
+                      onChange={(e) => handlChangeName(e)}
                       value={newName}
                       name={"category_name"}
                     />
@@ -435,11 +447,11 @@ setFile(e.target.files[0]);
                     <Form.Select
                       aria-label="Search by category type"
                       className="adminselectbox"
-                      onChange={(e) => handleFormChange(e)}
-                      value={data.category_type}
+                      onChange={(e) => handlChangeType(e)}
+                      value={type}
                       name={"category_type"}
                     >
-                      <option value="">Search by category type</option>
+                       <option value="">Search by category type</option>
                       <option value="Grocery">Grocery</option>
                       <option value="Health">Health</option>
                       <option value="Sports & Accessor">
@@ -594,7 +606,7 @@ setFile(e.target.files[0]);
         />
         <SweetAlert
           show={Alert}
-          title="Product Name"
+          title={"category_name"}
           text="Are you Sure you want to delete"
           onConfirm={hideAlert}
           showCancelButton={true}

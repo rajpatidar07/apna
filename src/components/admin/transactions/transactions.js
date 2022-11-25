@@ -1,4 +1,4 @@
-import React from "react";
+import React  from "react";
 import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
@@ -6,11 +6,8 @@ import Form from "react-bootstrap/Form";
 import { Link } from "react-router-dom";
 import "../../../style/order.css";
 import TransactionJson from "../json/transaction"
-
-
 function Transactions() {
   var transactions = TransactionJson.transactions;
-
   const columns = [
 
     {
@@ -82,8 +79,6 @@ function Transactions() {
       ),
       sortable: true,
     },
-
-
   ];
 
   return (
