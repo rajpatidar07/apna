@@ -35,6 +35,7 @@ function Product() {
   const [productid, setproductid] = useState('');
   const [Alert, setAlert] = useState(false);
   const [apicall, setapicall] = useState(false);
+  const [variantapicall, setvariantapicall] = useState(false);
   const [varietyshow, setvarietyShow] = useState(false);
   const [addtag, setaddtag] = useState();
   const [validated, setValidated] = useState(false);
@@ -43,9 +44,11 @@ function Product() {
   const [seoarray, setseoArray] = useState([]);
   const [varietyval, setvarietyval] = useState('');
   const [variantarray, setvariantarray] = useState({
+    product_status: "1",
+    product_id:"",
     unit: "",
-    unit_quantity: "",
     colors: "",
+    unit_quantity: "",
     size: "",
     product_price: "",
     mrp: "",
@@ -55,14 +58,7 @@ function Product() {
     featured_product: false,
     manufacturing_date: "",
     expire_date: "",
-    wholesale_sales_tax: "",
-    manufacturers_sales_tax: "",
-    retails_sales_tax: "",
-    gst: "",
-    value_added_tax: "",
-    quantity: "",
-    product_status: "1"
-
+    quantity: ""
   });
   const [variantmainarray, setvariantmainarray] = useState([]);
   const [data1, setdata1] = useState('');
@@ -172,7 +168,7 @@ function Product() {
         <div>
           <p className="mb-1" onClick={() => {
             navigate("/productdetail");
-          }}><b>{row.product_title_name}<br />SKU: {row.sku} <br />
+          }}><b>{row.product_title_name}<br />SKU: {row.product_id} <br />
               <div dangerouslySetInnerHTML={{ __html: pdata.product_description }} className='editor'></div>
             </b>
 
@@ -291,7 +287,7 @@ function Product() {
       center: true,
       selector: (row) => (
         <div className={"actioncolimn"}>
-          <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.id)} />
+          <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.product_id)} />
           <BsTrash
             className=" p-0 m-0 editiconn text-danger"
             onClick={handleAlert.bind(this, [row.id, row.product_id, row.is_delete])}
@@ -310,29 +306,34 @@ function Product() {
     }
     else {
       console.log(JSON.stringify(e))
-      axios.post("http://192.168.29.108:5000/products_search?page=0&per_page=50", {
-        "product_search": {
-          "search": "",
-          "id": `${e}`
-        }
-      }).then((response) => {
-        setproductdata(response.data.results[0])
+      axios.get(`http://192.168.29.108:5000/product?id=${e}`).then((response) => {
+        setproductdata(response.data)
       }).catch(function (error) {
         console.log(error);
       });
       // setpdata(pdata[e])
       // setseoArray(pdata[e].seo_tag)
       setmodalshow(e);
+    setvariantapicall(false)
+
     }
   }
+  useEffect(()=>{
+    handleShow();
+  },[variantapicall])
   const handlevarietyShow = (id) => {
     axios.post("http://192.168.29.108:5000/products_search?page=0&per_page=50", {
       "product_search": {
         "search": '',
         "product_id": `${id}`,
+        "is_delete":"0"
       }
     }).then((response) => {
       setvdata(response.data.results)
+      setvariantarray({
+        ...variantarray,
+        product_id : id
+      });
       console.log("---variety" + JSON.stringify(response.data))
     }).catch(function (error) {
       console.log(error);
@@ -390,7 +391,7 @@ function Product() {
       [e.target.name]: e.target.value
     });
   };
-  console.log("------changesinglevariant" + JSON.stringify(variantarray))
+  console.log("------addsinglevariant" + JSON.stringify(variantarray))
   const handleInputcheckboxChange = (e) => {
     const target = e.target;
     const value = target.type === 'checkbox' ? target.checked : target.value
@@ -409,16 +410,32 @@ function Product() {
     });
   }
 
-  const onVariantaddclick = (e) => {
-    e.preventDefault();
-      axios.put(`http://192.168.29.108:5000/products_varient_update`, variantarray).then((response) => {
-        // setvariantarray(response.data[0])
+  const onVariantaddclick = (id) => {
+    console.log("----------productid"+"id--  "+id)
+    // id.preventDefault();
+    if(id === ''){
+      axios.post(`http://192.168.29.108:5000/products_varient_add`, variantarray).then((response) => {
+      setvdata(response.data.results)
+console.log("---addvariety"+JSON.stringify(response.data))
+        // setvariantarray(response.data)
+        setvariantapicall(true)
         console.log("------changeediteddd---" + JSON.stringify(response.data))
       }).catch(function (error) {
         console.log(error);
       });
-
-    // if (variantarray !== '') {
+    }
+    else{
+      axios.put(`http://192.168.29.108:5000/products_varient_update`, variantarray).then((response) => {
+        setvariantarray(response.data)
+        setvariantapicall(true)
+        console.log("------changeediteddd---" + JSON.stringify(response.data))
+      }).catch(function (error) {
+        console.log(error);
+      });
+    }
+  }
+const VariantAddProduct = () =>{
+ // if (variantarray !== '') {
     // e.preventDefault();
     setvariantmainarray(variantmainarray => [...variantmainarray, variantarray]);
     setcustomValidated(false);
@@ -427,8 +444,7 @@ function Product() {
     // else {
     //   setcustomValidated(true);
     // }
-  }
-
+}
   const VariantRemoveClick = (id, productid) => {
     axios.put(`http://192.168.29.108:5000/products_delete`, {
       id:`${id}`,
@@ -437,7 +453,7 @@ function Product() {
       }).then((response) => {
         // setvariantarray(response.data[0])
         console.log("------changeediteddd---" + JSON.stringify(response.data))
-        setapicall(true)
+        setvariantapicall(true)
       }).catch(function (error) {
         console.log(error);
       });
@@ -448,7 +464,6 @@ function Product() {
     axios.get(`http://192.168.29.108:5000/products_pricing?id=${id}&product_id=${productid}`).then((response) => {
       setvariantarray(response.data[0])
       console.log("------edit" + JSON.stringify(response.data[0]))
-
     }).catch(function (error) {
       console.log(error);
     });
@@ -533,10 +548,6 @@ function Product() {
       console.log("finallstart---" + JSON.stringify(productdataa))
     }
   };
-  // console.log("v------------------------"+JSON.stringify(productdata))
-
-  // console.log("variantarray---" + JSON.stringify(variantarray))
-  // console.log("variantmainarray---" + JSON.stringify(variantmainarray))
 
   let productdataa = []
   const handleAddProduct = (e) => {
@@ -561,12 +572,13 @@ function Product() {
     setValidated(false);
     // handleClose();
   }
+  // console.log("udhdfhkjsf   "+JSON.stringify(productdata))
   const handleUpdateProduct = (e) => {
-    setproductdata({ ...productdata, is_active: "0" })
+    // setproductdata({ ...productdata, is_active: "0" })
     e.preventDefault();
     axios.put("http://192.168.29.108:5000/products_update", productdata
     ).then((response) => {
-      console.log("-----updatedata" + JSON.stringify(productdata))
+      console.log("-----updatedata" + JSON.stringify(response.data))
       setapicall(true)
       setmodalshow(false)
     }).catch(function (error) {
@@ -705,7 +717,7 @@ function Product() {
                             className="adminselectbox"
                             name="brand"
                             onChange={(e) => handleInputFieldChange(e)}
-                            value={productdata.brand}
+                            value={productdata.brand === null || productdata.brand === undefined ? '' : productdata.brand}
                           >
                             <option value={''}>Select Brand</option>
                             <option value="puma">Puma</option>
@@ -765,7 +777,7 @@ function Product() {
                           required
                           name="product_type"
                           onChange={(e) => handleInputFieldChange(e)}
-                          value={productdata.product_type}
+                          value={productdata.product_type === null || productdata.product_type === undefined ? '' : productdata.product_type}
                         >
                           <option value={''}>Select Product Type</option>
                           <option value="cloths">cloths</option>
@@ -784,7 +796,7 @@ function Product() {
                         Category<span className="text-danger">* </span>
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Select aria-label="Category" className="adminselectbox" required onChange={(e) => handleInputFieldChange(e)} name={'category'} value={productdata.category}>
+                        <Form.Select aria-label="Category" className="adminselectbox" required onChange={(e) => handleInputFieldChange(e)} name={'category'} value={productdata.category === null || productdata.category === undefined ? '' : productdata.category}>
                           <option value={''}> Select Category</option>
                           <option value="18">18</option>
                           <option value="Drinks">Two</option>
@@ -805,7 +817,7 @@ function Product() {
                           aria-label="Parent Category"
                           className="adminselectbox"
                           required
-                          value={productdata.parent_category}
+                          value={productdata.parent_category === null || productdata.parent_category === undefined ? '' : productdata.parent_category}
                         >
                           <option value={''}>Select Parent Category</option>
                           <option value="5,18">5,18</option>
@@ -832,7 +844,7 @@ function Product() {
                           type="number"
                           placeholder="Wholesale Sales Tax"
                           name="wholesale_sales_tax"
-                          value={productdata.wholesale_sales_tax}
+                          value={productdata.wholesale_sales_tax === null || productdata.wholesale_sales_tax === undefined ? '' : productdata.wholesale_sales_tax }
                           onChange={(e) => handleInputFieldChange(e)}
                         />
                       </Col>
@@ -846,7 +858,7 @@ function Product() {
                           type="number"
                           placeholder="Manufacturers’ Sales Tax "
                           name="manufacturers_sales_tax"
-                          value={productdata.manufacturers_sales_tax}
+                          value={productdata.manufacturers_sales_tax === null || productdata.manufacturers_sales_tax === undefined ? '' : productdata.manufacturers_sales_tax }
                           onChange={(e) => handleInputFieldChange(e)}
                         />
                       </Col>
@@ -856,7 +868,7 @@ function Product() {
                         Retail Sales Tax
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Control type="number" placeholder="Retail Sales Tax" name="retails_sales_tax" value={productdata.retails_sales_tax}
+                        <Form.Control type="number" placeholder="Retail Sales Tax" name="retails_sales_tax" value={productdata.retails_sales_tax === null || productdata.retails_sales_tax === undefined ? '' : productdata.retails_sales_tax}
                           onChange={(e) => handleInputFieldChange(e)} />
                       </Col>
                     </Form.Group>
@@ -876,42 +888,13 @@ function Product() {
                         Value Added Tax
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Control type="number" placeholder="Value Added Tax" name="value_added_tax" value={productdata.value_added_tax} onChange={(e) => handleInputFieldChange(e)} />
+                        <Form.Control type="number" placeholder="Value Added Tax" name="value_added_tax" value={productdata.value_added_tax === null || productdata.value_added_tax === undefined ? '' : productdata.value_added_tax} onChange={(e) => handleInputFieldChange(e)} />
                       </Col>
                     </Form.Group>
                   </div>
                 </div>
                 {/*Date  */}
-                {/* <div className="my-3 inputsection_box">
-                  <h5 className="m-0">Date</h5>
-                  <div className="productvariety">
-                    <Form.Group className="mx-3" controlId="validationCustom11">
-                      <Form.Label className="inputlabelheading" sm="12">
-                        Manufacturing Date
-                      </Form.Label>
-                      <Col sm="12">
-                        <Form.Control type="date" placeholder="manufacturing_date" name="manufacturing_date" required onChange={(e) => handleInputFieldChange(e)} value={pdata.manufacturing_date} />
-                        <Form.Control.Feedback type="invalid">
-                          Please choose a date
-                        </Form.Control.Feedback>
-                      </Col>
-                    </Form.Group>
-                    <Form.Group className="mx-3">
-                      <Form.Label
-                        className="inputlabelheading"
-                        sm="12 d-flex align-itmes-center"
-                      >
-                        Expire Date
-                      </Form.Label>
-                      <Col sm="12">
-                        <Form.Control type="date" placeholder="expire_date" required name="expire_date" value={pdata.expire_date} onChange={(e) => handleInputFieldChange(e)} />
-                        <Form.Control.Feedback type="invalid">
-                          Please choose a expire date
-                        </Form.Control.Feedback>
-                      </Col>
-                    </Form.Group>
-                  </div>
-                </div> */}
+               
                 {/* Variation */}
                 {(modalshow === 'add') ?
                   <div className="my-3 inputsection_box">
@@ -968,13 +951,7 @@ function Product() {
                                       <th className="manufacture_date">Mdate</th>
                                       <th className="manufacture_date">Edate</th>
                                       <th className="manufacture_date">Image</th>
-                                      {/* <th className="manufacture_date">whole</th>
-                                    <th className="manufacture_date">manu</th>
-                                    <th className="manufacture_date">retail</th>
-                                    <th className="manufacture_date">gst</th>
-                                    <th className="manufacture_date">added</th> */}
                                       <th className="">Qty</th>
-                                      <th ></th>
                                     </tr>
                                   </thead>
                                   <tbody>
@@ -982,7 +959,7 @@ function Product() {
                                       <td className="p-0 text-center">
                                         <div className=" d-flex align-items-center">
                                           <InputGroup className="" size="sm">
-                                            <Form.Select aria-label="Default select example" name='unit' value={pdata.unit}
+                                            <Form.Select aria-label="Default select example" name='unit' value={variantarray.unit}
                                               onChange={(e) => onVariantChange(e)}
                                               className={(customvalidated === true) ? 'border-danger' : null}
                                             >
@@ -1191,7 +1168,7 @@ function Product() {
                                               onChange={(e) => onVariantChange(e)}
                                               onKeyPress={event => {
                                                 if (event.key === "Enter") {
-                                                  onVariantaddclick();
+                                                  VariantAddProduct();
                                                 }
                                               }
                                               }
@@ -1202,7 +1179,7 @@ function Product() {
                                       <td className="p-0">
                                         <div className=" d-flex align-items-center">
                                           <Button variant="outline-success" className="addcategoryicon"
-                                            onClick={onVariantaddclick}
+                                            onClick={()=>VariantAddProduct()}
                                             size="sm">
                                             +
                                           </Button>
@@ -1210,34 +1187,24 @@ function Product() {
                                       </td>
                                     </tr>
 
-                                    {/* {
-              (p || []).map((variantdata, i) => {
+                                    {
+              (variantmainarray || []).map((variantdata, i) => {
                 return (
                   <tr >
                     <td className="p-0 text-center ">
-                    <InputGroup className="" size="sm">
-                    <Form.Select aria-label="Default select example" name='variations' value={variantdata.variations} 
-                   onChange={(e)=>onVariantChange(e)}
-                      className={(customvalidated === true) ? 'border-danger' : null}
-                    >
-                      <option value={''} >Select</option>
-                      {(varietyy.variety || []).map((vari, i) => {
-                        return (
-                          <option value={vari} key={i}>{vari}</option>
-                        );
-                      })}
-                    </Form.Select>
-                  </InputGroup>
-                      
+                    {variantdata.unit === 'pcs' ? 'color' : variantdata.unit === 'gms' ? 'weight' : variantdata.unit === 'ml' ? 'volume' : null}
                     </td>
                     <td className="p-0 text-center ">
-                      {variantdata.colorname}
+                      {variantdata.colors}
                     </td>
                     <td className="p-0 text-center ">
-                      {(variantdata.variations === 'color' ? variantdata.size : variantdata.variations === 'weight' ? variantdata.weight : variantdata.variations === 'volume' ? variantdata.volume : variantdata.variations === 'piece' ? variantdata.piece : null)}
+                      { variantdata.unit === 'gms' ? variantdata.unit_quantity: variantdata.unit === 'ml' ? variantdata.unit_quantity : variantdata.unit === 'pcs' ? variantdata.unit_quantity : null}
                     </td>
                     <td className="p-0 text-center ">
-                      {variantdata.price}
+                      {variantdata.unit === 'pcs' ? variantdata.size: null}
+                    </td>
+                    <td className="p-0 text-center ">
+                      {variantdata.product_price}
                     </td>
                     <td className="p-0 text-center ">
                       {variantdata.mrp}
@@ -1275,19 +1242,19 @@ function Product() {
                       {variantdata.quantity}
                     </td>
                     <td className="p-0 text-center">
-                      <Button variant="text-danger" className="addcategoryicon text-danger"
+                      {/* <Button variant="text-danger" className="addcategoryicon text-danger"
                         onClick={(id) => VariantRemoveClick(variantdata.id)} size="sm">
                         &times;
                       </Button>
                       <Button variant="text-danger" className="addcategoryicon text-danger"
                         onClick={(id) => VariantEditClick(variantdata.id)} size="sm">
                         <MdOutlineEdit />
-                      </Button>
+                      </Button> */}
                     </td>
                   </tr>
                 )
               })
-            } */}
+            }
                                   </tbody>
 
                                 </Table>
@@ -1334,7 +1301,9 @@ function Product() {
                       <div className="d-flex align-items-center tagselectbox mt-2" >
                         {/* {(seoarray || []).map((seotags, i) => {
                           return ( */}
-                        <Badge className="tagselecttitle mb-0" bg="success" >{productdata.seo_tag}
+                        <Badge className="tagselecttitle mb-0" bg="success" >
+                        {productdata.seo_tag === null || productdata.seo_tag === undefined ? '' : productdata.seo_tag
+                        }
                           <GiCancel
                             className=" mx-0 ms-1 btncancel"
                             onClick={() => tagRemoveClick(proddata.seo_tag)}
@@ -1418,7 +1387,8 @@ function Product() {
                             </Button>
                           </td>
                         </tr>
-                        {(pdata.add_custom_input || []).map((variantdata, i) => {
+                        {productdata.add_custom_input === null || productdata.add_custom_input === undefined ? '' : 
+                        (productdata.add_custom_input || []).map((variantdata, i) => {
                           const arr = variantdata.split(',')
                           return (
                             <tr className="">
@@ -1530,7 +1500,7 @@ function Product() {
                               <td className="p-0 text-center">
                                 <div className=" d-flex align-items-center">
                                   <InputGroup className="" size="sm">
-                                    <Form.Select aria-label="Default select example" name='variations' value={variantarray.unit === 'pcs' ? 'color' : variantarray.unit === 'gms' ? 'weight' : variantarray.unit === 'ml' ? 'volume' : null}
+                                    <Form.Select aria-label="Default select example" name='unit' value={variantarray.unit === 'pcs' ? 'color' : variantarray.unit === 'gms' ? 'weight' : variantarray.unit === 'ml' ? 'volume' : null}
                                       onChange={(e) => onVariantChange(e)}
                                       className={(customvalidated === true) ? 'border-danger' : null}
                                     >
@@ -1743,7 +1713,7 @@ function Product() {
                                 <div className=" d-flex align-items-center">
                                   <Button variant="outline-success" className="addcategoryicon"
                                     // type="submit"
-                                    onClick={(e) => onVariantaddclick(e)}
+                                    onClick={() => onVariantaddclick(variantarray.id)}
                                     size="sm">
                                     +
                                   </Button>

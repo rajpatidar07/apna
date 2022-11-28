@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../common/input";
 import {
   MdOutlineRestore
@@ -9,17 +9,46 @@ import Form from "react-bootstrap/Form";
 import Iconbutton from "../common/iconbutton";
 import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
+import axios from "axios";
 
 const Deletedproduct = () => {
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
+  const [deletedata, setdeletedata] = useState([]);
+const [searchdata, setsearchData] = useState({
+  product_title_name: "",
+  category: "",
+
+})
+
+const OnSearchChange = (e) => {
+  setsearchData({ ...searchdata, [e.target.name]: e.target.value })
+}
+const onSearchClick = () =>{
+  
+}
+  useEffect(() => {
+    axios.post("http://192.168.29.108:5000/products_search?page=0&per_page=50", {
+      "product_search": {
+        "search": `${searchdata.product_title_name}`,
+        "category": `${searchdata.category}`,
+        "is_delete": "0"
+
+      }}).then((response) => {
+      setdeletedata(response.data)
+      console.log("---sold"+JSON.stringify(deletedata))
+    }).catch(function (error) {
+      console.log(error);
+    });
+  }, [searchdata]);
+
   const columns = [
     {
       name: "Sku",
       selector: (row) => (
         <p>
-          {row.sku}
+          {row.id}
         </p>
       ),
       sortable: true,
@@ -34,9 +63,9 @@ const Deletedproduct = () => {
         <img
           height="90px"
           width="70px"
-          alt={row.name}
+          alt={row.product_title_name}
           src={
-            "https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg"
+            ""
           }
           style={{
             borderRadius: 10,
@@ -50,7 +79,7 @@ const Deletedproduct = () => {
     },
     {
       name: "Product Name",
-      selector: (row) => row.pname,
+      selector: (row) => row.product_title_name,
       sortable: true,
       width: "290px",
     },
@@ -62,7 +91,7 @@ const Deletedproduct = () => {
     },
     {
       name: "Price",
-      selector: (row) => row.price,
+      selector: (row) => row.product_price,
       sortable: true,
       width: "140px",
       center: true,
@@ -96,48 +125,7 @@ const Deletedproduct = () => {
     },
   ];
   
-  const data = [
-    {
-      id: 1,
-      sku: "9AF4FE",
-      pname: (
-        <div className="productdescbox">
-          <b>
-            <p className="mb-0">Green Leaf Lettuce</p>
-          </b>
   
-          <p className="productdesc">
-            {" "}
-            {`The root vegetables include beets, carrots, radishes, sweet potatoes,
-            and turnips`}
-          </p>
-        </div>
-      ),
-      category: (
-        <p className="productdesc">Fruits & Vegetable Fruits & Vegetable</p>
-      ),
-      price: "$14",
-      date: "2022-01-05",
-    },
-    {
-      id: 2,
-      sku: "9AF4FE",
-      pname: (
-        <div className="productdescbox">
-          <b>
-            <p className="mb-0">Green Leaf Lettuce</p>
-          </b>
-          <p className="productdesc">
-            {" "}
-            The root vegetables include beets, and turnips
-          </p>
-        </div>
-      ),
-      category: "Fruits & Vegetable",
-      price: "$14",
-      date: "2022-01-05",
-    },
-  ];
   const handleClick = () => {};
   return (
     <div>
@@ -147,10 +135,14 @@ const Deletedproduct = () => {
       <div className="card mt-3 p-3 ">
       <div className="row pb-3">
       <div className="col-md-3 col-sm-6 aos_input">
-        <Input type={"text"} plchldr={"Search by product name"} />
+        <input type={"text"} placeholder={"Search by product name"} onChange={OnSearchChange} name='product_title_name'
+              value={searchdata.product_title_name}
+              className={'adminsideinput'}/>
         </div>
         <div className="col-md-3 col-sm-6 aos_input">
-        <Form.Select aria-label="Search by category" className="adminselectbox" placeholder="Search by category">
+        <Form.Select aria-label="Search by category" className="adminselectbox" placeholder="Search by category" onChange={OnSearchChange}
+              name='category'
+              value={searchdata.category}>
         <option>Search by category</option>
           <option value="1">Food</option>
           <option value="2">Fish & Meat</option>
@@ -158,7 +150,7 @@ const Deletedproduct = () => {
         </Form.Select>
         </div>
         <div className="col-md-3 col-sm-6 aos_input">
-        <Input type={"date"} plchldr={"Search by product name"} />
+        <input type={"date"} placeholder={"Search by product name"} />
         </div>
         <div className="col-md-3 col-sm-6 aos_input">
         <MainButton btntext={"Search"} btnclass={'button main_button w-100'} />
@@ -171,7 +163,7 @@ const Deletedproduct = () => {
    
       <DataTable
         columns={columns}
-        data={data}
+        data={deletedata.results}
         pagination
         highlightOnHover
         pointerOnHover
