@@ -7,6 +7,7 @@ import Iconbutton from "../common/iconbutton";
 import SweetAlert from 'sweetalert-react';
 import Form from "react-bootstrap/Form";
 import { useEffect } from "react";
+import axios from "axios";
 function Admin() {
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
@@ -15,6 +16,9 @@ function Admin() {
   const [show, setShow] = useState('');
   const [admindata, setadmindata] = useState([]);
   const [addadmindata, setaddadmindata] = useState([]);
+  let loginid = localStorage.getItem("loginid")
+  let pass=localStorage.getItem("password");
+
   const handleClose = () => {
     formRef.current.reset();
     setadmindata('')
@@ -137,6 +141,21 @@ function Admin() {
     }
     else {
       e.preventDefault();
+      axios
+      .post(`http://192.168.29.108:5000/add_admin`,
+      {
+        admin_email:"mayur.we2code@gmail.com",
+        admin_name:"Ashish patidar",
+        admin_phone:"9999999999",
+        admin_type:"superadmin",
+        admin_password:"admin_password123"
+        }
+      
+      )
+      .then((response) => {
+        console.log("possttttttt------"+JSON.stringify(response))
+      });
+     
       console.log("formadd----------   " + JSON.stringify(admindata));
       formRef.current.reset();
       setValidated(false);

@@ -1,11 +1,60 @@
-import React, { Fragment } from "react";
+import React, { Fragment,useState } from "react";
 import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./login.css";
 import MainButton from "../common/button";
 import Logo from "../../../images/logo.png";
-
+import axios from "axios";
 const Login = () => {
-  // const navigate = useNavigate();
+  const navigate=useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  // const [validated, setValidated] = useState(false);
+  const [error,setError]=useState(true);
+  const onValueChange = (e) => {
+    setEmail(e.target.value);
+  };
+  console.log("email------"+JSON.stringify(email))
+  const onPasswordChange=(e)=>{
+    setPassword(e.target.value );
+  }
+  console.log("email------"+JSON.stringify(password))
+  const LoginCheck = () =>{
+    localStorage.setItem("loginid",email);
+    localStorage.setItem("password",password);
+
+    navigate('/dashboard') 
+  }
+   const handleSubmit = ((e) => {
+    const form = e.currentTarget;
+    if (form.checkValidity() === false ) {
+    console.log("----false")
+      e.preventDefault();
+    e.stopPropagation();
+    setError(false);
+    }
+   else{
+    axios.post(`http://192.168.29.108:5000/admin_login`,
+        {
+        admin_email:email,
+        admin_password:password
+        }
+        )
+        .then((response) => {
+          console.log("possttttttt------"+JSON.stringify(response.data))
+          if(response.data === true){
+           
+            LoginCheck()
+
+          }
+          else{
+            setError(false);
+          }
+        });
+   }
+    e.preventDefault();
+  });
+
   return (
     <Fragment>
       <div className="for_scrol">
@@ -25,17 +74,23 @@ const Login = () => {
                   <div className="log-in-title">
                     <h4>Log In Your Account</h4>
                   </div>
-
-                  <div className="input-box">
-                    <form className="row g-4">
+ <div className="input-box">
+                    <form className="row g-4"  onSubmit={handleSubmit}>
                       <div className="col-12">
                         <div className="form-floating theme-form-floating log-in-form">
                           <input
+                          required
+                          onChange={(e) => onValueChange(e)}
                             type="email"
                             className="form-control"
-                            id="email"
+                            name={"admin_email"}
+                            value={email}
                             placeholder="Email Address"
                           />
+                          {error===false ?
+                           <p className="mt-1 ms-2 text-danger" type="invalid">
+                      Please Enter Your Email
+                    </p>:null}
                           <label htmlFor="email">Email Address</label>
                         </div>
                       </div>
@@ -43,11 +98,18 @@ const Login = () => {
                       <div className="col-12">
                         <div className="form-floating theme-form-floating log-in-form">
                           <input
+                          required
+                          onChange={(e) => onPasswordChange(e)}
                             type="password"
                             className="form-control"
-                            id="password"
+                        name={"admin_password"}
+                            value={password}
                             placeholder="Password"
                           />
+                          {error===false ?
+                            <p className="mt-1 ms-2 text-danger" type="invalid">
+                      Please Enter Your Password
+                    </p>:null}
                           <label htmlFor="password">Password</label>
                         </div>
                       </div>
@@ -77,8 +139,7 @@ const Login = () => {
                         <MainButton
                           btntext={"Login"}
                           btnclass={"w-100 btn-success btn"}
-                          // onClick={navigate("home")}
-                        />
+                        ></MainButton>
                       </div>
                     </form>
                   </div>
