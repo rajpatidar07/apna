@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
@@ -7,18 +7,32 @@ import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
+import axios from "axios";
 const Offerproduct = () => {
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
-const handleClick = () => {};
+  const [odata, setodata] = useState([]);
 
+const handleClick = () => {};
+useEffect(() => {
+  axios.post("http://192.168.29.108:5000/products_search?page=0&per_page=50", {
+    "product_search": {
+      "search": "",
+      "special_product": 1
+
+    }}).then((response) => {
+    setodata(response.data)
+  }).catch(function (error) {
+    console.log(error);
+  });
+}, []);
   const columns = [
     {
       name: "Sku",
       selector: (row) => (
         <p>
-          {row.sku}
+          {row.id}
         </p>
       ),
       sortable: true,
@@ -33,7 +47,7 @@ const handleClick = () => {};
         <img
           height="90px"
           width="70px"
-          alt={row.name}
+          alt={row.product_title_name}
           src={
             "https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg"
           }
@@ -49,7 +63,7 @@ const handleClick = () => {};
     },
     {
       name: "Product Name",
-      selector: (row) => row.pname,
+      selector: (row) => row.product_title_name,
       sortable: true,
       width: "250px",
     },
@@ -61,7 +75,7 @@ const handleClick = () => {};
     },
     {
       name: "Price",
-      selector: (row) => row.price,
+      selector: (row) => row.product_price,
       sortable: true,
       width: "100px",
       center: true,
@@ -73,7 +87,7 @@ const handleClick = () => {};
   
     {
       name: "From Date",
-      selector: (row) => row.mdate,
+      selector: (row) => row.manufacturing_date,
       sortable: true,
       width: "150px",
       center: true,
@@ -84,7 +98,7 @@ const handleClick = () => {};
     },
     {
       name: "To Date",
-      selector: (row) => row.edate,
+      selector: (row) => row.expire_date,
       sortable: true,
       width: "120px",
       center: true,
@@ -110,51 +124,7 @@ const handleClick = () => {};
     },
    
   ];
-  
-  const data = [
-    {
-      id: 1,
-      sku: "9AF4FE",
-      pname: (
-        <div className="productdescbox">
-          <b>
-            <p className="mb-0">Green Leaf Lettuce</p>
-          </b>
-  
-          <p className="productdesc">
-            {" "}
-            {`The root vegetables include beets, carrots, radishes, sweet potatoes,
-            and turnips`}
-          </p>
-        </div>
-      ),
-      category: (
-        <p className="productdesc">Fruits & Vegetable Fruits & Vegetable</p>
-      ),
-      price: "$14",
-      mdate: "2022-01-05",
-      edate: "2022-01-05",
-    },
-    {
-      id: 2,
-      sku: "9AF4FE",
-      pname: (
-        <div className="productdescbox">
-          <b>
-            <p className="mb-0">Green Leaf Lettuce</p>
-          </b>
-          <p className="productdesc">
-            {" "}
-            The root vegetables include beets, and turnips
-          </p>
-        </div>
-      ),
-      category: "Fruits & Vegetable",
-      price: "$14",
-      mdate: "2022-01-05",
-      edate: "2022-01-05",
-    },
-  ];
+ 
     return (
         <div>
              <h2>Offer Products</h2>
@@ -188,7 +158,7 @@ const handleClick = () => {};
    
       <DataTable
         columns={columns}
-        data={data}
+        data={odata.results}
         pagination
         highlightOnHover
         pointerOnHover
