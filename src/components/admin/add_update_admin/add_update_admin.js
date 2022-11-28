@@ -6,71 +6,69 @@ import Modal from "react-bootstrap/Modal";
 import Iconbutton from "../common/iconbutton";
 import SweetAlert from 'sweetalert-react';
 import Form from "react-bootstrap/Form";
+import MainButton from "../common/button";
 import { useEffect } from "react";
 import axios from "axios";
+import { data } from "jquery";
 function Admin() {
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
-  const [validated, setValidated] = useState(false);
   const [Alert, setAlert] = useState(false);
   const [show, setShow] = useState('');
-  const [admindata, setadmindata] = useState([]);
+  const [validated, setValidated] = useState(false);
+  const [searchvalidated, setsearchValidated] = useState(false);
   const [addadmindata, setaddadmindata] = useState([]);
-  let loginid = localStorage.getItem("loginid")
-  let pass=localStorage.getItem("password");
+  const [admindata, setadmindata] = useState([]);
 
+  const [phone, setPhone] = useState("");
+  const [adminName, setadminName] = useState("");
+  const[email,setEmail]=useState([]);
+  const[password,setPassword]=useState([]);
+  const[adminType,setAdminType]=useState("");
+  const[searchAdmin,setSearchAdmin]=useState([]);
+  const[id,setId]=useState();
+  const [Searchad, setSearchAd] = useState({
+    "admin_name":"",
+    "admin_type":""
+  
+   });
+
+  //  const handleSubmit = (event) => {
+  //   const form = event.currentTarget;
+  //   if (form.checkValidity() === false) {
+  //     event.preventDefault();
+  //     event.stopPropagation();
+  //   }
+
+  //   setValidated(true);
+  // };
   const handleClose = () => {
     formRef.current.reset();
-    setadmindata('')
+    // setadmindata('')
     setValidated(false)
     setShow(false);
   }
-  const handleShow = (e) => {
+  const handleShow = (e,admin_email,admin_name,admin_password,admin_type,admin_phone) => {
     if (e === 'add') {
       setShow(e);
     }
     // console.log(JSON.stringify(e))
     if (e !== 'add') {
-      setadmindata(adminjson[e - 1])
+      // setadmindata(admindata[e - 1])
+      setadminName(admin_name)
+      setId(e)
+      setAdminType(admin_type)
+      setPhone(admin_phone)
+      setEmail(admin_email)
+      setPassword(admin_password)
       setShow(e);
     }
-  }
+      setShow(e);
+    }
+ 
 
   const formRef = useRef();
-  const adminjson = [
-    {
-      "id": "1",
-      "name": "Gourav",
-      "email": "we2code@gmail.com",
-      "mobile": "9876543210",
-      "admin_type": "1",
-      "password": "@123456",
-    },
-    {
-      "id": "2",
-      "name": "Vikram Soni",
-      "email": "we2code@gmail.com",
-      "mobile": "9876543210",
-      "admin_type": "2",
-      "password": "@123546"
-    },
-    {
-      "id": "3",
-      "name": "Shivani",
-      "email": "we2code@gmail.com",
-      "mobile": "9876543210",
-      "admin_type": "1",
-      "password": "@123456",
-    },
-    {
-      "id": "4",
-      "name": "Bhavna",
-      "email": "we2code@gmail.com",
-      "mobile": "9876543210",
-      "admin_type": "1",
-      "password": "@123456",
-    },
-  ]
+ 
 
   const columns = [
     {
@@ -81,18 +79,18 @@ function Admin() {
     },
     {
       name: "Name",
-      selector: (row) => row.name,
+      selector: (row) => row.admin_name,
       sortable: true,
       center: true,
     },
     {
       name: "Email",
       center: true,
-      selector: (row) => row.email,
+      selector: (row) => row.admin_email,
     },
     {
       name: "Mobile",
-      selector: (row) => row.mobile,
+      selector: (row) => row.admin_phone,
       sortable: true,
     },
     {
@@ -101,12 +99,12 @@ function Admin() {
       sortable: true,
       center: true,
     },
-    {
-      name: "Password",
-      selector: (row) => row.password,
-      sortable: true,
-      center: true,
-    },
+    // {
+    //   name: "Password",
+    //   selector: (row) => row.admin_password,
+    //   sortable: true,
+    //   center: true,
+    // },
     {
       name: "Action",
       width: "120px",
@@ -114,23 +112,72 @@ function Admin() {
       selector: (row) => (
         <div className={"actioncolimn"}>
           <AiFillEdit className=" p-0 m-0 editiconn" onClick={handleShow.bind(this, row.id)} />
-          <BsTrash className=" p-0 m-0 editiconn text-danger" onClick={handleAlert} />
+          {/* <BsTrash className=" p-0 m-0 editiconn text-danger" onClick={handleAlert} /> */}
         </div>
       ),
     },
   ];
-
   useEffect(() => {
-    setadmindata(adminjson)
-  }, [])
+    axios.post(`http://192.168.29.108:5000/admin_search`,{
+      "admin_name":`${Searchad.admin_name}`,
+      "admin_type":`${Searchad.admin_type}`,
+  }).then ((response) => {
+    console.log("data---------------"+JSON.stringify(response.data))
+    setadmindata(response.data);
+    setSearchAdmin(response.data)
+    setsearchValidated(false)
 
+    })
+  }, []);
+  // useEffect(() => {
+  //   AddAdminClick();
+  // }, [addadmindata]);
   const handleFormChange = (e) => {
-    setadmindata({
-      ...admindata,
-      [e.target.name]: e.target.value
-    });
+    setaddadmindata({...addadmindata,[e.target.name]: e.target.value});
+    setadminName({...adminName,[e.target.name]: e.target.value});
+    setPhone({...phone,[e.target.name]: e.target.value});
+    setEmail({...email,[e.target.name]: e.target.value});
+    setPassword({...password,[e.target.name]: e.target.value});
+    setAdminType({...adminType,[e.target.name]: e.target.value});
+    };
 
-  };
+    console.log("--------------addadmindata---------"+JSON.stringify(addadmindata))
+    const onValueChange=(e)=>{
+      setSearchAd({ ...Searchad, [e.target.name]: e.target.value });
+      // setadminName({ ...adminName, [e.target.name]: e.target.value })
+    }
+
+  const SearchAdmin=()=>{
+      axios.post(`http://192.168.29.108:5000/admin_search`,{
+        "admin_name":`${Searchad.admin_name}`,
+        "admin_type":`${Searchad.admin_type}`,
+    }).then ((response) => {
+      console.log("data---------------"+JSON.stringify(response.data))
+      setadmindata(response.data);
+      setSearchAd('')
+      setsearchValidated(false)
+
+      })
+    }
+    useEffect(() => {
+      function getAdmin() {
+        try {
+          axios
+            .get("http://192.168.29.108:5000/admin?id=6")
+            .then((response) => {
+              let data = response.data;
+              setadmindata(data);
+              // setSearchAd(data);
+              console.log("getttttttt---------------------------"+JSON.stringify(response.data))
+            });
+           
+        } catch (err) {}
+      }
+  
+      getAdmin();
+    }, []);
+  
+  
   const AddAdminClick = (e) => {
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
@@ -144,33 +191,77 @@ function Admin() {
       axios
       .post(`http://192.168.29.108:5000/add_admin`,
       {
-        admin_email:"mayur.we2code@gmail.com",
-        admin_name:"Ashish patidar",
-        admin_phone:"9999999999",
-        admin_type:"superadmin",
-        admin_password:"admin_password123"
+        admin_email:`${addadmindata.admin_email}`,
+        admin_name:`${addadmindata.admin_name}`,
+        admin_phone:`${addadmindata.admin_phone}`,
+        admin_type:`${addadmindata.admin_type}`,
+        admin_password:`${addadmindata.admin_password}`,
         }
       
       )
       .then((response) => {
-        console.log("possttttttt------"+JSON.stringify(response))
+        console.log("adminnnnnnnnnnnnnn----------   " + JSON.stringify(addadmindata));
       });
      
-      console.log("formadd----------   " + JSON.stringify(admindata));
+     
       formRef.current.reset();
       setValidated(false);
     }
-  };
+  }
 
   const UpdateAdminClick = (e, show) => {
     e.preventDefault()
-    console.log("form----------   " + JSON.stringify(admindata));
-  };
+    // console.log("form----------   " + JSON.stringify(admindata));
+    axios.put(`http://192.168.29.108:5000/update_admin`,{
+     id:id,
+    admin_email:email,
+    admin_name:adminName,
+    admin_phone:phone,
+    admin_type:adminType
+    }).then((response) => {
+    console.log("emailllllllllllllllllllllllllllllllll------"+JSON.stringify(response.email))
+  });
+  formRef.current.reset();
+  setValidated(false);
+  // setEmail('');
+  // setAdminType('');
+  // setPhone('');
+  admindata("")
+
+  show.preventDefault();
+}
+
 
   return (
     <div className="App productlist_maindiv">
       <h2>Admin</h2>
-      <div className="card mt-3 px-3">
+      {/* {search} */}
+      <div className=" row">
+          <div className="col-md-3 col-sm-6 aos_input">
+            <input  required type="text" className="adminsideinput"  placeholder={"Search by admin name"} value={Searchad.admin_name} name={"admin_name"} onChange={(e) => onValueChange(e)} />
+          </div>
+          <div className="col-md-3 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by status"
+              className="adminselectbox"
+              name="admin_type"
+              onChange={(e) => onValueChange(e)}
+              value={Searchad.admin_type}
+            >
+              <option>Search by admin type</option>
+                <option value="1">Super Admin</option>
+              <option value="2">Admin</option>
+              <option value="3">Editor</option>
+            </Form.Select>
+          </div>
+          <div className="col-md-3 col-sm-6 aos_input">
+            <MainButton
+              btntext={"Search"}
+              btnclass={"button main_button w-100"}
+              onClick={SearchAdmin}
+            />
+          </div>
+        </div>
         {/* upload */}
 
         <div className="product_page_uploadbox my-4">
@@ -190,7 +281,7 @@ function Admin() {
           aria-labelledby="example-custom-modal-styling-title"
           centered
         >
-          <Form className="" novalidate validated={validated} ref={formRef} onSubmit={(show === 'add' ? (e) => AddAdminClick(e) : (show) => UpdateAdminClick(show))}>
+          <Form className="" novalidate validated={validated} ref={formRef} onSubmit={(show === 'add' ? (e) => AddAdminClick(e) : (show) => UpdateAdminClick(show))} >
 
             <Modal.Header closeButton className="">
               <Modal.Title id="example-custom-modal-styling-title">
@@ -209,7 +300,7 @@ function Admin() {
                             Name
                           </Form.Label>
 
-                          <Form.Control type="text" placeholder="Name" onChange={(e) => handleFormChange(e)} value={admindata.name} name={'name'} required />
+                          <Form.Control type="text" placeholder="Name" onChange={(e) => handleFormChange(e)} value={addadmindata.admin_name} name={'admin_name'} required />
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill name
                           </Form.Control.Feedback>
@@ -224,7 +315,7 @@ function Admin() {
                             Email
                           </Form.Label>
 
-                          <Form.Control type="email" placeholder="Email" onChange={(e) => handleFormChange(e)} value={admindata.email} name={'email'} required />
+                          <Form.Control type="email" placeholder="Email" onChange={(e) => handleFormChange(e)} value={addadmindata.admin_email} name={'admin_email'} required />
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill email
                           </Form.Control.Feedback>
@@ -239,7 +330,7 @@ function Admin() {
                             Mobile
                           </Form.Label>
 
-                          <Form.Control type="number" placeholder="Mobile Number" min={1} onChange={(e) => handleFormChange(e)} value={admindata.mobile} name={'mobile'} required />
+                          <Form.Control type="number" placeholder="Mobile Number" min={1} onChange={(e) => handleFormChange(e)} value={addadmindata.admin_phone} name={'admin_phone'} required />
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill mobile number
                           </Form.Control.Feedback>
@@ -254,7 +345,7 @@ function Admin() {
                             Password
                           </Form.Label>
 
-                          <Form.Control type="password" placeholder="Password" onChange={(e) => handleFormChange(e)} value={admindata.password} name={'password'} required />
+                          <Form.Control type="password" placeholder="Password" onChange={(e) => handleFormChange(e)} value={addadmindata.admin_password} name={'admin_password'} required />
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill password
                           </Form.Control.Feedback>
@@ -269,7 +360,7 @@ function Admin() {
                             Admin Type
                           </Form.Label>
 
-                          <Form.Select aria-label="Default select example" onChange={(e) => handleFormChange(e)} value={admindata.admin_type} name={'admin_type'} required>
+                          <Form.Select aria-label="Default select example" onChange={(e) => handleFormChange(e)} value={addadmindata.admin_type} name={'admin_type'} required>
                             <option value=''>Select</option>
                             <option value="1">Super Admin</option>
                             <option value="2">Admin</option>
@@ -299,23 +390,22 @@ function Admin() {
         </Modal>
         <DataTable
           columns={columns}
-          data={adminjson}
+          data={admindata}
           pagination
           highlightOnHover
           pointerOnHover
           className={"table_body add_update_admin_table"}
         />
-        <SweetAlert
+        {/* <SweetAlert
           show={Alert}
           title="Admin Name"
           text="Are you Sure you want to delete"
           onConfirm={hideAlert}
           showCancelButton={true}
           onCancel={hideAlert}
-        />
+        /> */}
       </div>
-    </div>
   );
-}
-
+  }
+  
 export default Admin;

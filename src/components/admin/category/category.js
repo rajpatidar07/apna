@@ -421,8 +421,6 @@ setFile(e.target.files[0]);
                 return( 
                 <option value={lvl.level}>{lvl.level}</option>
                 )
-             
-
               })} 
               {/* <option value="2">Fish & Meat</option>
               <option value="21">Baby Care</option> */}

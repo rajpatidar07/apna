@@ -35,7 +35,7 @@ function AdminHeader() {
     e.preventDefault();
     axios.put(`http://192.168.29.108:5000/update_password`,
     {
-      admin_email:loginid,
+    admin_email:loginid,
     admin_password:pass,
     new_admin_password:newpassword
   }

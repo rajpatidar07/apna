@@ -1,11 +1,29 @@
-import React, { Fragment } from "react";
+import React, { Fragment,useState } from "react";
 import {  useNavigate } from "react-router-dom";
 import "./login.css";
 import MainButton from "../common/button";
 import Logo from "../../../images/logo.png";
-
+import axios from "axios";
 const Forgot = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  const[email,setEmail]=useState('')
+  // const[forgotInfo,setForgotInfo]=useState([]);
+  const forgotInfo=(e)=>{
+    e.preventDefault();
+    axios.put(`http://192.168.29.108:5000/admin_forget_password`, 
+    {
+      admin_email:email,
+  
+  }).then((response) => {
+    console.log("possttttttt------"+JSON.stringify(response))
+  });
+  }
+ 
+const handleFormChange =(e)=>{
+  setEmail(e.target.value);
+  // setForgotInfo({...forgotInfo,[e.target.name]: e.target.value})
+}
+console.log("forrrr"+JSON.stringify(email))
   return (
     <Fragment>
       <div className="for_scrol">
@@ -34,6 +52,7 @@ const Forgot = () => {
                             type="email"
                             className="form-control"
                             id="email"
+                            onChange={(e) => handleFormChange(e)} value={email} name={'admin_email'}
                             placeholder="Email Address"
                           />
                           <label for="email">Email Address</label>
@@ -44,9 +63,7 @@ const Forgot = () => {
                         <MainButton
                           btntext={"Forgot password"}
                           btnclass={"w-100 btn-success btn"}
-                          onClick={() => {
-                            navigate("/dashboard");
-                          }}
+                          onClick={forgotInfo}
                         />
                       </div>
                     </form>
