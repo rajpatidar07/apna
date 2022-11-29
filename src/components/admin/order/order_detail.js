@@ -1,29 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./order_detail.css";
 import Profile from "../../../images/user.jpg";
 import { AiOutlineFileText } from "react-icons/ai";
 import { BsTelephoneFill, BsFillEnvelopeFill } from "react-icons/bs";
 import axios from "axios";
-import { useEffect } from "react";
 const OrderDetail = () => {
-  let orid=localStorage.getItem("orderid")
-  console.log("================="+orid)
-  useEffect(() => {
-    function getOrderDetails() {
-      try {
-        axios.get(`http://192.168.29.108:5000/order_deteils?id=${orid}`)
-        .then((response) => {
-          let data= response.data;
-          // setProductData(data);
-          console.log("getttttttttttttttttttttttttttttt----------"+ JSON.stringify(data));
-
-        
-        });
-      } catch (err) {}
-    }
-
-    getOrderDetails();
-  }, []);
+  let orderid = localStorage.getItem("orderid")
+  useEffect(()=>{
+    axios.get(`http://192.168.29.108:5000/order_deteils?id=${orderid}`).then((response) => {
+      // setorderdata(response.data)
+      console.log("______uuuuu_____"+JSON.stringify(response.data))
+      // setapicall(false)
+    }).catch(function (error) {
+      console.log(error);
+    });
+  },[])
   return (
     <div className="order_detail_page">
       <div className="order_detail">
