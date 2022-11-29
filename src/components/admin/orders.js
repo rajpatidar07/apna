@@ -1,44 +1,93 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Input from "./common/input";
 import { FaFileInvoiceDollar } from "react-icons/fa";
 import DataTable from "react-data-table-component";
 import MainButton from "./common/button";
 import Form from "react-bootstrap/Form";
-import { Link } from "react-router-dom";
+import { Link,  useNavigate } from "react-router-dom";
 import "../../style/order.css";
 import OrderJson from "./json/orders"
+import axios from "axios";
+import moment from "moment";
 
 
 function Product() {
-  var orders = OrderJson.orders;
+  const navigate = useNavigate();
+  const [orderdata, setorderdata] = useState([]);
+  const [changstatus, setchangstatus] = useState('');
+  const [apicall, setapicall] = useState(false);
+  const [searchdata, setsearchData] = useState({
+  status:"",
+  created_on:""
+  })
+ 
+  const OnSearchChange = (e) => {
+    setsearchData({ ...searchdata, [e.target.name]: e.target.value })
+  }
+  const onSearchClick = () =>{
+  }
+    useEffect(() => {
+      axios.post("http://192.168.29.108:5000/orders_list", {
+        "status":`${searchdata.status}`,
+        "created_on":`${searchdata.created_on}`
+        }).then((response) => {
+        setorderdata(response.data)
+        console.log("______uuuuu_____"+JSON.stringify(response.data[0].status))
+        setapicall(false)
+      }).catch(function (error) {
+        console.log(error);
+      });
+    }, [searchdata,apicall,changstatus]);
 
+
+
+    const onStatusChange = (e,id) => {
+      // e.prevantDefault();
+      console.log("----e----status "+id+e.target.value)
+      setchangstatus(e.target.value)
+      axios.put("http://192.168.29.108:5000/order_status_change", {
+      status:e.target.value,
+      id:`${id}`
+        }).then((response) => {
+        // setorderdata(response.data)
+        setapicall(false)
+        console.log("---solddddddd--------"+JSON.stringify(response.data))
+      }).catch(function (error) {
+        console.log(error);
+      });
+    }
+    console.log("chshjhsdjkstaus"+changstatus)
+    const onOrderClick = (id) =>{
+      localStorage.setItem("orderid", id)
+      navigate('/order_detail')
+    }
   const columns = [
     {
       name: "Order Id",
-      selector: (row) => <Link to="/order_detail">{row.id}</Link>,
+      selector: (row) => <p onClick={onOrderClick.bind(this,row.id)}> {row.id}</p>,
       sortable: true,
     },
   
     {
       name: "Items",
       selector: (row) => (
-        <p className="m-0"><b>Product:</b> {row.totalProducts}<br/>
-        <b>Quantity:</b> {row.totalQuantity}</p>
+        <p className="m-0"><b>Product:</b> {row.product_id}<br/>
+        <b>Quantity:</b> {row.quantity}</p>
       ),
       sortable: true,
     },
     {
       name: "price",
-      selector: (row) => row.total,
+      selector: (row) => row.price,
       sortable: true,
     },
     {
       name: "Tax",
       selector: (row) => (
         <p className="m-0">
-          <b>GST:</b> {row.GST}<br/>
-          <b>CGST:</b> {row.CGST}<br/>
-          <b>SGST:</b> {row.SGST}<br/>
+          <b>GST:</b> {row.gst}<br/>
+          <b>CGST:</b> {row.cgst}<br/>
+          <b>SGST:</b> {row.sgst}<br/>
         </p>
       ),
       sortable: true,
@@ -46,30 +95,18 @@ function Product() {
   
     {
       name: "Order Date",
-      selector: (row) => row.orderDate,
+      selector: (row) => moment(row.created_on).format('YYYY-MM-DD'),
       sortable: true,
     },
     {
       name: "Delivery Date",
-      selector: (row) => row.deliveryDate,
+      selector: (row) => row.delivery_date,
       sortable: true,
     },
   
     {
       name: "Pyament Mode",
-      selector: (row) => (
-        row.paymentStatus === 1
-          ? "UPI"
-          : row.paymentStatus === 2
-            ? "Card"
-            : row.paymentStatus === 3
-              ? "COD"
-              : row.paymentStatus === 4
-                ? "Netbanking"
-                : row.paymentStatus === 5
-                  ? "Wallet"
-                  : "Other"
-      ),
+      selector: (row) => (row.payment_mode),
       sortable: true,
     },
     {
@@ -77,30 +114,30 @@ function Product() {
       selector: (row) => (
         <span
           className={
-            row.status === 1
+            row.status === "pending"
               ? "badge bg-warning"
-              : row.status === 2
+              : row.status === "delivered"
                 ? "badge bg-success"
-                : row.status === 3
+                : row.status === "packed"
                   ? "badge bg-primary"
-                  : row.status === 4
+                  : row.status === "cancelled"
                     ? "badge bg-danger"
-                    : row.status === 5
+                    : row.status === "approved"
                       ? "badge bg-info"
                       : "badge bg-dark"
           }
         >
-          {row.status === 1
-              ? "Pending"
-              : row.status === 2
-                ? "Delivered"
-                : row.status === 3
-                  ? "Processing"
-                  : row.status === 4
-                    ? "Cancelled"
-                    : row.status === 5
-                      ? "Approved"
-                      : "Return"}
+          {row.status === "pending"
+              ? "pending"
+              : row.status === "delivered"
+                ? "delivered"
+                : row.status === "packed"
+                  ? "packed"
+                  : row.status === "cancelled"
+                    ? "cancelled"
+                    : row.status === "approved"
+                      ? "approved"
+                      : "return"}
         </span>
       ),
       sortable: true,
@@ -108,23 +145,22 @@ function Product() {
     {
       name: "Change Status",
       selector: (row) => (
-        <Form.Select aria-label="Search by delivery" size="sm" value={row.status} className="w-100">
-          <option value="1">Pending</option>
-          <option value="2">Delivered</option>
-          <option value="3">Processing</option>
-          <option value="4">Cancel</option>
-          <option value="5">Approved  </option>
-          <option value="6">Return  </option>
+        <Form.Select aria-label="Search by delivery" size="sm"  className="w-100" onChange={(e)=>onStatusChange(e,row.id)} name='status' >
+          <option value="pending" selected={row.status === 'pending' ? true : false}>Pending</option>
+          <option value="delivered"  selected={row.status === 'delivered' ? true : false}>Delivered</option>
+          <option value="packed"  selected={row.status === 'packed' ? true : false}>Packed</option>
+          <option value="cancel" selected={row.status === 'cancel' ? true : false}>Cancel</option>
+          <option value="approved" selected={row.status === 'approved' ? true : false}>Approved  </option>
+          <option value="return" selected={row.status === 'return' ? true : false}>Return  </option>
         </Form.Select>
       ),      
       sortable: true,
-      
     },
   
     {
       name: "Invoice",  
       selector: (row) => (
-        row.status===2 ?
+        row.status==="packed" ?
         <Link to="/invoice">
           <h3 className="m-0 text-primary">
           <FaFileInvoiceDollar className="text-primary" />
@@ -143,29 +179,38 @@ function Product() {
         <div className="product_page_searchbox bg-gray my-4">
           <div className="row">
             <div className="col-md-3 col-sm-6">
-              <Input type={"text"} plchldr={"Search by order id"} />
-            </div>
-            <div className="col-md-3 col-sm-6">
               <Form.Select
                 aria-label="Search by delivery"
                 className="adminselectbox"
+                onChange={OnSearchChange}
+              name='status'
+              value={searchdata.status}
               >
                 <option>Delivery status</option>
-                <option value="1">Delivered</option>
-                <option value="2">Pending</option>
-                <option value="3">Processing</option>
-                <option value="4">Cancel</option>
+                <option value="delivered">Delivered</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="packed">Processing</option>
+                <option value="return">Return</option>
+                <option value="cancel">Cancel</option>
               </Form.Select>
             </div>
             <div className="col-md-3 col-sm-6">
               <Form.Select
                 aria-label="Search by delivery_status"
                 className="adminselectbox"
+                onChange={OnSearchChange}
+              name='created_on'
+              value={searchdata.created_on}
               >
                 <option>Order limits</option>
-                <option value="1">Last 5 days orders</option>
-                <option value="2">Last 7 days orders</option>
-                <option value="3">Last 15 days orders</option>
+                <option value="one">Today</option>
+                <option value="1">Yesterday</option>
+                <option value="15">Last 15 days orders</option>
+                <option value="30">Last 30 days orders</option>
+                <option value="90">Last 3 month orders</option>
+                <option value="180">Last 6 month orders</option>
+
               </Form.Select>
             </div>
             <div className="col-md-3 col-sm-6">
@@ -176,7 +221,7 @@ function Product() {
 
         <DataTable
           columns={columns}
-          data={orders}
+          data={orderdata}
           pagination
           highlightOnHover
           pointerOnHover
