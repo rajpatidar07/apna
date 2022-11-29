@@ -32,7 +32,7 @@ function Product() {
         "created_on":`${searchdata.created_on}`
         }).then((response) => {
         setorderdata(response.data)
-        console.log("______uuuuu_____"+JSON.stringify(response.data[0].status))
+        // console.log("______uuuuu_____"+JSON.stringify(response.data[0].status))
         setapicall(false)
       }).catch(function (error) {
         console.log(error);
@@ -43,20 +43,16 @@ function Product() {
 
     const onStatusChange = (e,id) => {
       // e.prevantDefault();
-      console.log("----e----status "+id+e.target.value)
       setchangstatus(e.target.value)
       axios.put("http://192.168.29.108:5000/order_status_change", {
-      status:e.target.value,
+      status_change:e.target.value,
       id:`${id}`
         }).then((response) => {
-        // setorderdata(response.data)
-        setapicall(false)
-        console.log("---solddddddd--------"+JSON.stringify(response.data))
+        setapicall(true)
       }).catch(function (error) {
         console.log(error);
       });
     }
-    console.log("chshjhsdjkstaus"+changstatus)
     const onOrderClick = (id) =>{
       localStorage.setItem("orderid", id)
       navigate('/order_detail')
@@ -64,7 +60,7 @@ function Product() {
   const columns = [
     {
       name: "Order Id",
-      selector: (row) => <p onClick={onOrderClick.bind(this,row.id)}> {row.id}</p>,
+      selector: (row) => <p onClick={onOrderClick.bind(this,row.order_id)}> {row.order_id}</p>,
       sortable: true,
     },
   
@@ -145,7 +141,7 @@ function Product() {
     {
       name: "Change Status",
       selector: (row) => (
-        <Form.Select aria-label="Search by delivery" size="sm"  className="w-100" onChange={(e)=>onStatusChange(e,row.id)} name='status' >
+        <Form.Select aria-label="Search by delivery" size="sm"  className="w-100" onChange={(e)=>onStatusChange(e,row.order_id)} name='status' >
           <option value="pending" selected={row.status === 'pending' ? true : false}>Pending</option>
           <option value="delivered"  selected={row.status === 'delivered' ? true : false}>Delivered</option>
           <option value="packed"  selected={row.status === 'packed' ? true : false}>Packed</option>
