@@ -332,7 +332,7 @@ setFile(e.target.files[0]);
       new_category:newName,
       category_type:type
   }).then((response) => {
-    console.log("possttttttt------"+JSON.stringify(response))
+    // console.log("possttttttt------"+JSON.stringify(response))
   });
   formRef.current.reset();
   setValidated(false);

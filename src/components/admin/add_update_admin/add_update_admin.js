@@ -11,61 +11,52 @@ import { useEffect } from "react";
 import axios from "axios";
 import { data } from "jquery";
 function Admin() {
-  const handleAlert = () => setAlert(true);
-  const hideAlert = () => setAlert(false);
+  // const handleAlert = () => setAlert(true);
+  // const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
+  const [apicall, setapicall] = useState(false);
   const [show, setShow] = useState('');
   const [validated, setValidated] = useState(false);
   const [searchvalidated, setsearchValidated] = useState(false);
   const [addadmindata, setaddadmindata] = useState([]);
   const [admindata, setadmindata] = useState([]);
-
-  const [phone, setPhone] = useState("");
-  const [adminName, setadminName] = useState("");
-  const[email,setEmail]=useState([]);
-  const[password,setPassword]=useState([]);
-  const[adminType,setAdminType]=useState("");
   const[searchAdmin,setSearchAdmin]=useState([]);
-  const[id,setId]=useState();
   const [Searchad, setSearchAd] = useState({
     "admin_name":"",
     "admin_type":""
   
    });
-
-  //  const handleSubmit = (event) => {
-  //   const form = event.currentTarget;
-  //   if (form.checkValidity() === false) {
-  //     event.preventDefault();
-  //     event.stopPropagation();
-  //   }
-
-  //   setValidated(true);
-  // };
   const handleClose = () => {
     formRef.current.reset();
     // setadmindata('')
     setValidated(false)
     setShow(false);
   }
-  const handleShow = (e,admin_email,admin_name,admin_password,admin_type,admin_phone) => {
+  const handleShow = (e) => {
+    console.log(e+"-----ooooooooooooooooooooo")
     if (e === 'add') {
       setShow(e);
     }
     // console.log(JSON.stringify(e))
     if (e !== 'add') {
       // setadmindata(admindata[e - 1])
-      setadminName(admin_name)
-      setId(e)
-      setAdminType(admin_type)
-      setPhone(admin_phone)
-      setEmail(admin_email)
-      setPassword(admin_password)
-      setShow(e);
+      console.log("updateeeeeeee")
+      try {
+              axios
+                .get(`http://192.168.29.108:5000/admin?id=${e}`)
+                .then((response) => {
+                  let data= response.data[0];
+                  setaddadmindata(data);
+                  console.log("getttttttttttttttttttttttttttttt----------   " + JSON.stringify(data));
+
+                
+                })
+            } catch (err) {}
+           
     }
-      setShow(e);
+    setShow(e);
     }
- 
+   
 
   const formRef = useRef();
  
@@ -122,29 +113,20 @@ function Admin() {
       "admin_name":`${Searchad.admin_name}`,
       "admin_type":`${Searchad.admin_type}`,
   }).then ((response) => {
-    console.log("data---------------"+JSON.stringify(response.data))
+    // console.log("data---------------"+JSON.stringify(response.data))
     setadmindata(response.data);
     setSearchAdmin(response.data)
     setsearchValidated(false)
-
+    setapicall(false);
     })
-  }, []);
-  // useEffect(() => {
-  //   AddAdminClick();
-  // }, [addadmindata]);
+  }, [apicall]);
   const handleFormChange = (e) => {
     setaddadmindata({...addadmindata,[e.target.name]: e.target.value});
-    setadminName({...adminName,[e.target.name]: e.target.value});
-    setPhone({...phone,[e.target.name]: e.target.value});
-    setEmail({...email,[e.target.name]: e.target.value});
-    setPassword({...password,[e.target.name]: e.target.value});
-    setAdminType({...adminType,[e.target.name]: e.target.value});
     };
 
     console.log("--------------addadmindata---------"+JSON.stringify(addadmindata))
     const onValueChange=(e)=>{
       setSearchAd({ ...Searchad, [e.target.name]: e.target.value });
-      // setadminName({ ...adminName, [e.target.name]: e.target.value })
     }
 
   const SearchAdmin=()=>{
@@ -159,25 +141,6 @@ function Admin() {
 
       })
     }
-    useEffect(() => {
-      function getAdmin() {
-        try {
-          axios
-            .get("http://192.168.29.108:5000/admin?id=6")
-            .then((response) => {
-              let data = response.data;
-              setadmindata(data);
-              // setSearchAd(data);
-              console.log("getttttttt---------------------------"+JSON.stringify(response.data))
-            });
-           
-        } catch (err) {}
-      }
-  
-      getAdmin();
-    }, []);
-  
-  
   const AddAdminClick = (e) => {
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
@@ -185,6 +148,7 @@ function Admin() {
       e.stopPropagation();
       console.log("falsecheckValidity----------");
       setValidated(true);
+      setapicall(true);
     }
     else {
       e.preventDefault();
@@ -206,28 +170,23 @@ function Admin() {
      
       formRef.current.reset();
       setValidated(false);
+      setapicall(true);
     }
   }
 
   const UpdateAdminClick = (e, show) => {
     e.preventDefault()
     // console.log("form----------   " + JSON.stringify(admindata));
-    axios.put(`http://192.168.29.108:5000/update_admin`,{
-     id:id,
-    admin_email:email,
-    admin_name:adminName,
-    admin_phone:phone,
-    admin_type:adminType
-    }).then((response) => {
-    console.log("emailllllllllllllllllllllllllllllllll------"+JSON.stringify(response.email))
+    axios.put(`http://192.168.29.108:5000/update_admin`,
+    
+    addadmindata).then((response) => {
+    console.log("idddllllllllllllllllllllllllllllllll------"+JSON.stringify(addadmindata))
   });
   formRef.current.reset();
   setValidated(false);
-  // setEmail('');
-  // setAdminType('');
-  // setPhone('');
-  admindata("")
-
+  setaddadmindata("")
+  setShow("");
+  setapicall(true);
   show.preventDefault();
 }
 

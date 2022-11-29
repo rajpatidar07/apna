@@ -23,7 +23,7 @@ const Login = () => {
     localStorage.setItem("loginid",email);
     localStorage.setItem("password",password);
 
-    navigate('/dashboard') 
+    navigate('/') 
   }
    const handleSubmit = ((e) => {
     const form = e.currentTarget;
