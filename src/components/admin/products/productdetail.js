@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import MainButton from "../common/button";
 import ShowMoreText from "react-show-more-text";
 import { AiFillPushpin } from "react-icons/ai";
@@ -7,7 +7,37 @@ import { BsCheckLg } from "react-icons/bs";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
 import ListGroup from 'react-bootstrap/ListGroup';
+import axios from "axios";
+import { useEffect } from "react";
 const Productdetail = () => {
+  const[productdata,setProductData]=useState([]);
+  let vid=localStorage.getItem("variantid")
+  let id=localStorage.getItem("productid");
+  console.log("================="+vid)
+  useEffect(() => {
+    function getProductDetails() {
+      try {
+        axios.get(`http://192.168.29.108:5000/product?id=${id}`)
+        .then((response) => {
+          let data= response.data;
+          setProductData(data);
+          console.log("getttttttttttttttttttttttttttttt----------"+ JSON.stringify(data));
+
+        
+        });
+      } catch (err) {}
+    }
+
+    getProductDetails();
+  }, []);
+  const productinfo = (e) => {
+    setProductData({ ...productdata, [e.target.name]: e.target.value});
+  };
+  // getProductDetails=()=>{
+  //    axios.get("http://192.168.29.108:5000/products_pricing?id=14&product_id=43").then((response)=>{
+  //     console.log("------------prodetailsssss------------------" + JSON.stringify(response.data))
+  //    })
+  // }
   return (
     <div>
       <h2 className="productname mb-0">Green Leaf Lettuce</h2>
@@ -95,8 +125,8 @@ const Productdetail = () => {
               <div className="product_mid_section">
                 <div className="productstatus align-items-start">
                   <AiFillPushpin className="text-success h5" />
-                  <h6 className="statuslabeltext">Color: </h6>
-                  <select className="coolorselect">
+                  <h6 className="statuslabeltext">Color:</h6>
+                  <select className="coolorselect"  onChange={(e) => productinfo(e)}>
                     <option>Pink</option>
                     <option>Red</option>
                     <option>Yellow</option>

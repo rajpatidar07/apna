@@ -136,8 +136,16 @@ function Product() {
 
   //  json
   var varietyy = VariationJson;
-
-
+const prodata=(id)=>{
+console.log(id[0]+"----------"+id[1]+"----------------------------------")
+localStorage.setItem("variantid", id[0])
+localStorage.setItem("productid", id[1])
+navigate('/productdetail') 
+    //  axios.get("http://192.168.29.108:5000/products_pricing?id=14&product_id=43").then((response)=>{
+    //   console.log("------------------------------" + JSON.stringify(response.data))
+    //  })
+    }
+    // console.log("---------------variandiddddddddd--------------"+variantid)
   const columns = [
 
     {
@@ -166,10 +174,8 @@ function Product() {
       name: "Product Name",
       selector: (row) => (
         <div>
-          <p className="mb-1" onClick={() => {
-            navigate("/productdetail");
-          }}><b>{row.product_title_name}<br />SKU: {row.product_id} <br />
-              <div dangerouslySetInnerHTML={{ __html: pdata.product_description }} className='editor'></div>
+          <p className="mb-1" onClick={prodata.bind(this,[row.id,row.product_id])}><b>{row.product_title_name}<br />SKU: {row.product_id} <br />
+              <div dangerouslySetInnerHTML={{ __html: pdata.product_description}} className='editor'></div>
             </b>
 
           </p>
