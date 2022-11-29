@@ -3,7 +3,27 @@ import "./order_detail.css";
 import Profile from "../../../images/user.jpg";
 import { AiOutlineFileText } from "react-icons/ai";
 import { BsTelephoneFill, BsFillEnvelopeFill } from "react-icons/bs";
+import axios from "axios";
+import { useEffect } from "react";
 const OrderDetail = () => {
+  let orid=localStorage.getItem("orderid")
+  console.log("================="+orid)
+  useEffect(() => {
+    function getOrderDetails() {
+      try {
+        axios.get(`http://192.168.29.108:5000/order_deteils?id=${orid}`)
+        .then((response) => {
+          let data= response.data;
+          // setProductData(data);
+          console.log("getttttttttttttttttttttttttttttt----------"+ JSON.stringify(data));
+
+        
+        });
+      } catch (err) {}
+    }
+
+    getOrderDetails();
+  }, []);
   return (
     <div className="order_detail_page">
       <div className="order_detail">
