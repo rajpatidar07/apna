@@ -12,42 +12,43 @@ import { useEffect } from "react";
 const Productdetail = () => {
   const[productdata,setProductData]=useState([]);
   let vid=localStorage.getItem("variantid")
-  let id=localStorage.getItem("productid");
-  console.log("================="+vid)
+  let pid=localStorage.getItem("productid");
   useEffect(() => {
     function getProductDetails() {
       try {
-        axios.get(`http://192.168.29.108:5000/product?id=${id}`)
+        axios.post(`http://192.168.29.108:5000/products_search?page=0&per_page=10`,
+        {
+          "product_search":{
+          "search":"",
+          "product_id": `${pid}`  
+          }
+          }
+        )
         .then((response) => {
-          let data= response.data;
+          let data= response.data.results;
           setProductData(data);
           console.log("getttttttttttttttttttttttttttttt----------"+ JSON.stringify(data));
-
-        
         });
       } catch (err) {}
     }
 
     getProductDetails();
   }, []);
-  const productinfo = (e) => {
-    setProductData({ ...productdata, [e.target.name]: e.target.value});
-  };
-  // getProductDetails=()=>{
-  //    axios.get("http://192.168.29.108:5000/products_pricing?id=14&product_id=43").then((response)=>{
-  //     console.log("------------prodetailsssss------------------" + JSON.stringify(response.data))
-  //    })
-  // }
+  // const productinfo = (e) => {
+  //   setProductData({ ...productdata, [e.target.name]: e.target.value});
+  // };
+  
   return (
+  
     <div>
-      <h2 className="productname mb-0">Green Leaf Lettuce</h2>
-
-      {/* deatil */}
-
-      <div className="productdetail_page_box card mt-3">
+ {(productdata || []).map((data)=>{ 
+return (
+  <>
+      <h2 className="productname mb-0">{data.product_title_name}</h2>
+      <div className="productdetail_page_box  mt-3">
         <div className="productimg_box">
-          {/* caerousel */}
-          <Carousel autoPlay interval="3000" transitionTime="3000" infiniteLoop showIndicators={false} className={'productimg_carousel'} showStatus={false}>
+        
+          {/* <Carousel autoPlay interval="3000" transitionTime="3000" infiniteLoop showIndicators={false} className={'productimg_carousel'} showStatus={false}>
             <div className="w-100 h-50">
               <img
                 src="https://images.unsplash.com/photo-1656268164012-119304af0c69?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1112&q=80"
@@ -81,20 +82,20 @@ const Productdetail = () => {
                 alt=""
               />
             </div>
-          </Carousel>
+          </Carousel> */}
 
         </div>
 
-        {/*  */}
+       
         <div className="product_detail_box mt-4">
           {/*  */}
           <div className="product_upper_section">
             <div>
-              <b><h5 className="statuslabeltext text-success">Green Leaf Lettuce</h5></b>
+              <b><h5 className="statuslabeltext text-success">{data.product_title_name}</h5></b>
               <div className="productstatus">
                 <h5 className="statuslabeltext">SKU:</h5>
                 <b>
-                  <h6 className="text-secondary statuslabeltext">#1213</h6>
+                  <h6 className="text-secondary statuslabeltext">{data.id}</h6>
                 </b>
               </div>
             </div>
@@ -104,29 +105,35 @@ const Productdetail = () => {
 
           <div className="product_upper_section ">
             <div className="product_mid_section product_variety_section">
-              <h3 className="mb-0">$14</h3>
+              <h3 className="mb-0">{data.product_price}</h3>
               <div className="priceboxx">
                 <b>
-                  <p className="text-success mb-0">50% off </p>
+                  <p className="text-success mb-0">{data.discount}% off </p>
                 </b>
-                <p className="mrprate text-danger">($25)</p>
+                <p className="mrprate text-danger">({data.mrp})</p>
               </div>
               <div className="priceboxx">
                 <b>
                   {" "}
                   <p className="text-secondary">Tax: </p>
                 </b>
-                <p className="">$2</p>
+                <p className="">{data.gst}</p>
               </div>
             </div>
-
+            
+            : null
+           
+          
             <div className="product_lower_section product_upper_section">
+               {data.id}{data.product_id}
               <h5 className="mb-1">Product Variety:</h5>
               <div className="product_mid_section">
+              {(vid == data.id && pid == data.product_id) ? 
+               <>
                 <div className="productstatus align-items-start">
                   <AiFillPushpin className="text-success h5" />
                   <h6 className="statuslabeltext">Color:</h6>
-                  <select className="coolorselect"  onChange={(e) => productinfo(e)}>
+                  <select className="coolorselect"  onChange={undefined}>
                     <option>Pink</option>
                     <option>Red</option>
                     <option>Yellow</option>
@@ -138,6 +145,8 @@ const Productdetail = () => {
                   <h6 className="statustextsize"> 14</h6>
                   {/* <h6 className="statustextred">(Out of Stock)</h6> */}
                 </div>
+                </>
+                : null}
                 <div className="productstatus align-items-start">
                   <AiFillPushpin className="text-success h5" />
                   <h6 className="statuslabeltext">Size:</h6>
@@ -150,6 +159,7 @@ const Productdetail = () => {
                 </div>
               </div>
             </div>
+
 
             {/* store */}
             <div className="product_lower_section product_upper_section">
@@ -278,9 +288,14 @@ const Productdetail = () => {
             btnclass={"btn btn-success my-4"}
           />
         </div>
-        {/*  */}
+   
       </div>
+      </>
+     )
+    })}
+    
     </div>
+   
   );
 };
 
