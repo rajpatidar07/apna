@@ -13,11 +13,14 @@ import Iconbutton from "../common/iconbutton";
 import { Badge } from "react-bootstrap";
 import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
+import InputGroup from 'react-bootstrap/InputGroup';
 import axios from "axios";
 
 const CategoryList = () => {
   const formRef = useRef();
   const [validated, setValidated] = useState(false);
+  const [searchvalidated, setsearchValidated] = useState(false);
+
   const handleAlert = (id) =>{
     setParentid(id[0])
 
@@ -27,9 +30,9 @@ const CategoryList = () => {
   const hideAlert = () =>{
     console.log(parentid+level+"---ppppppppppp")
     axios.put(`http://192.168.29.108::5000/delete_category`,{
-      "id":parentid,
-      "is_active":0,
-      "level": level
+      id:parentid,
+      is_active:0,
+      level: level
   });setAlert(false);
   } 
   const [Alert, setAlert] = useState(false);
@@ -38,18 +41,26 @@ const CategoryList = () => {
   const[type,setType]=useState("")
   const [image,setImage]=useState();
   const [data, setData] = useState([]);
+  const [searchdata, setsearchData] = useState([]);
   const [category, setCategory] = useState([]);
   const [indVal, setIndVal] = useState(0);
   const [subCategory, setSubCategory] = useState([]);
   const [childCategory, setchildCategory] = useState([]);
   const [grandcCategory, setgrandcCategory] = useState([]);
   const [scategory, setScategory] = useState([]);
-  const [level, setlevel] = useState(0);
+  const [level, setlevel] = useState('');
   const [file, setFile] = useState();
   const [cid, setCid] = useState();
  const [fileName, setFileName] = useState("");
  const [parentid, setParentid] = useState('');
  const [allparentid, setAllparentid] = useState();
+ const [SearchCat, setSearchCat] = useState({
+  "category_name":"",
+  "category_type":"",
+  "level":""
+
+ });
+
 const saveFile = (e) => {
 setFile(e.target.files[0]);
  setFileName(e.target.files[0].name);
@@ -83,6 +94,8 @@ setFile(e.target.files[0]);
           .then((response) => {
             let data = response.data;
             setData(data);
+            setsearchData(data);
+
           });
       } catch (err) {}
     }
@@ -326,6 +339,35 @@ setFile(e.target.files[0]);
   setData("");
   show.preventDefault();
   };
+  const onValueChange=(e)=>{
+    setSearchCat({ ...SearchCat, [e.target.name]: e.target.value });
+   
+  }
+  console.log("__"+SearchCat.category_name +"__" + SearchCat.category_type+ "_"+ SearchCat.level);
+  const SearchCategory=()=>{
+    if(SearchCat.category_name ==='' || SearchCat.category_name=== null || SearchCat.category_name === undefined){
+      console.log(SearchCat.category_name+"cat"+searchvalidated)
+       setsearchValidated(true)
+    }
+    else
+    {
+      axios.post(`http://192.168.29.108:5000/search_category`,{
+        "category_name":`${SearchCat.category_name}`,
+        "category_type":`${SearchCat.category_type}`,
+        "level":`${SearchCat.level}`
+
+    }) .then ((response) => {
+      setData(response.data);
+      setSearchCat('')
+      setsearchValidated(false)
+
+      })
+    }
+   
+  }
+ 
+  console.log(SearchCat.category_name)
+
   // // console.log("form----------   " + JSON.stringify(data));
   // console.log("level----------   " + JSON.stringify(scategory));
 
@@ -335,39 +377,60 @@ setFile(e.target.files[0]);
   return (
     <div className="App productlist_maindiv">
       <h2>Category</h2>
-
+         
       {/* search bar */}
       <div className="card mt-3 p-3 ">
         <div className=" row">
           <div className="col-md-3 col-sm-6 aos_input">
-            <Input type={"text"} plchldr={"Search by category name"}/>
+            <input  required type="text" className="adminsideinput"  placeholder={"Search by category name"} value={SearchCat.category_name} name={"category_name"} onChange={(e) => onValueChange(e)} />
+            {searchvalidated === true? 
+            <p className="mt-1 ms-2 text-danger" type="invalid">
+                      Please fill this field
+                    </p> : null}
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
             <Form.Select
               aria-label="Search by category type"
               className="adminselectbox"
+              onChange={(e) => onValueChange(e)}
+              name="category_type"
+                // placeholder={"Search by category type"}
+                value={SearchCat.category_type}
             >
               <option>Search by category type</option>
-              <option value="1">Grocery</option>
+              {searchdata.map((lvl)=>{
+                return( <option value={lvl.category_type}>{lvl.category_type}</option>)
+             
+
+              })}
+              {/* <option value="">{type.category_type}</option>
               <option value="2">Health</option>
-              <option value="3">Sports & Accessor</option>
+              <option value="3">Sports & Accessor</option> */}
             </Form.Select>
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
             <Form.Select
               aria-label="Search by status"
               className="adminselectbox"
+              name="level"
+              onChange={(e) => onValueChange(e)}
+              value={SearchCat.level}
             >
-              <option>Search by category</option>
-              <option value="1">Food</option>
-              <option value="2">Fish & Meat</option>
-              <option value="3">Baby Care</option>
+              <option>Search by level</option>
+              {searchdata.map((lvl)=>{
+                return( 
+                <option value={lvl.level}>{lvl.level}</option>
+                )
+              })} 
+              {/* <option value="2">Fish & Meat</option>
+              <option value="21">Baby Care</option> */}
             </Form.Select>
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
             <MainButton
               btntext={"Search"}
               btnclass={"button main_button w-100"}
+              onClick={SearchCategory}
             />
           </div>
         </div>
@@ -401,17 +464,6 @@ setFile(e.target.files[0]);
                 : (show) => UpdateCategoryClick(show)
             }
           >
-            <input
-              name="id"
-              type={"hidden"}
-              value={
-                category.id !== "" ||
-                category.id !== null ||
-                category.id !== undefined
-                  ? category.id
-                  : ""
-              }
-            />
             <Modal.Header closeButton className="addproductheader">
               <Modal.Title id="example-custom-modal-styling-title">
                 {show === "add" ? "Add Category" : " Update Category"}
