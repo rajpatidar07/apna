@@ -3,12 +3,15 @@ import "./order_detail.css";
 import Profile from "../../../images/user.jpg";
 import { AiOutlineFileText } from "react-icons/ai";
 import { BsTelephoneFill, BsFillEnvelopeFill } from "react-icons/bs";
+import { useState } from "react";
 import axios from "axios";
 const OrderDetail = () => {
+  const[order,setOrder]=useState([]);
   let orderid = localStorage.getItem("orderid")
   useEffect(()=>{
     axios.get(`http://192.168.29.108:5000/order_deteils?id=${orderid}`).then((response) => {
-      // setorderdata(response.data)
+      let data = response.data;
+      setOrder(data);
       console.log("______uuuuu_____"+JSON.stringify(response.data))
       // setapicall(false)
     }).catch(function (error) {
@@ -28,7 +31,13 @@ const OrderDetail = () => {
                     <span>#</span>Order Id
                   </div>
                   <div>
-                    <span>AS1568</span>
+                    {/* {order.map((orderdata)=>{
+                      return( */}
+                        {/* <span>{orderdata.ref_no}</span> */}
+                        <span>yyyy</span>
+                      {/* )
+                    })} */}
+                    
                   </div>
                 </div>
                 <div className="d-flex flex-column text-center">
@@ -37,7 +46,13 @@ const OrderDetail = () => {
                 </div>
                 <div className="d-flex flex-column text-center">
                   <div className="order_info_heading">Order Status</div>
-                  <div className="badge bg-warning">Pending</div>
+                  {/* {order.map(orderdata=>{
+                    return( */}
+                      <div  className="badge bg-warning">pending</div>
+                    {/* )
+                  
+                  })} */}
+                 
                 </div>
                 <div className="d-flex flex-column text-center">
                   <div className="order_info_heading">Order Date & Time</div>
@@ -50,9 +65,14 @@ const OrderDetail = () => {
 
             <div className="product_img_price">
               <div className="product_image_price"></div>
+
+{order.map(orderdata=>{
+                    return(
+
               <div className="d-flex justify-content-between mb-3 align-items-center">
+
                 <div className="product_img d-flex">
-                  <img src="https://lp2.hm.com/hmgoepprod?set=source[/40/71/4071b4a39844344e1de770b4a494ba7e3078219d.jpg],origin[dam],category[men_tshirtstanks_shortsleeve],type[DESCRIPTIVESTILLLIFE],res[w],hmver[2]&call=url[file:/product/main]" alt="apnaorganic"/>
+                  <img src="" alt="apnaorganic"/>
                   <div className="product_name_detial ps-3">
                     <h6>T-Shirt Blue</h6>
                     <p>color:blue</p>
@@ -60,11 +80,16 @@ const OrderDetail = () => {
                   </div>
                 </div>
 
-                <div className="product_price">$122</div>
-                <div className="product_quantity">2</div>
-                <div className="total_amount">$244</div>
+                <div className="product_price">{orderdata.price}</div>
+                <div className="product_quantity">{orderdata.quantity}</div>
+                <div className="total_amount">{orderdata.price*orderdata.quantity}</div>
               </div>
-              <div className="d-flex justify-content-between align-items-center">
+
+    )
+                  
+                  })} 
+              
+              {/* <div className="d-flex justify-content-between align-items-center">
                 <div className="product_img d-flex">
                   <img src="https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/5a60fd99-2c3a-44d3-91bb-62a47224e322/sportswear-heritage-86-adjustable-cap-7g0hKX.png" alt="apnaorganic"/>
                   <div className="product_name_detial ps-3">
@@ -76,12 +101,12 @@ const OrderDetail = () => {
                 <div className="product_price">$122.00</div>
                 <div className="product_quantity">2</div>
                 <div className="total_amount">$244.00</div>
-              </div>
+              </div> */}
             </div>
 
             <div className="delivery_charges">
               <h5 className="pb-3">Delivery</h5>
-              <div className="d-flex justify-content-between align-items-center">
+              {/* <div className="d-flex justify-content-between align-items-center">
                 <div className="delivery_img d-flex ">
                   <img src="https://media.istockphoto.com/vectors/express-delivery-symbol-vector-id1175078000?b=1&k=20&m=1175078000&s=612x612&w=0&h=2Y5FLXleVSLyaEfZztp2Mhf2pVV6BbqNYkXYs1KHpik=" alt="apnaorganic"/>
                   <div className="delivery_componay ps-3">
@@ -90,7 +115,7 @@ const OrderDetail = () => {
                   </div>
                 </div>
                 <div className="delivery_payment">$20.00</div>
-              </div>
+              </div> */}
             </div>
             <div className="payment_summary">
               <h5 className="pb-3">Payment Summary</h5>
