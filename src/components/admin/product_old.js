@@ -28,7 +28,7 @@ import { Button } from "react-bootstrap";
 import { GiCancel } from "react-icons/gi";
 import moment from "moment/moment";
 
-function Product() {
+function Product_Old() {
   const [pdata, setpdata] = useState([]);
   const [proddata, setproddata] = useState([]);
   const [variantid, setvariantid] = useState('');
@@ -307,8 +307,7 @@ function Product() {
     else {
       console.log(JSON.stringify(e))
       axios.get(`http://192.168.29.108:5000/product?id=${e}`).then((response) => {
-        let data = response.data
-        setproductdata(data)
+        setproductdata(response.data)
       }).catch(function (error) {
         console.log(error);
       });
@@ -316,13 +315,13 @@ function Product() {
       // setseoArray(pdata[e].seo_tag)
       setmodalshow(e);
     setvariantapicall(false)
+
     }
   }
   useEffect(()=>{
     handleShow();
   },[variantapicall])
   const handlevarietyShow = (id) => {
-    console.log("-----produfh"+id)
     axios.post("http://192.168.29.108:5000/products_search?page=0&per_page=50", {
       "product_search": {
         "search": '',
@@ -342,7 +341,7 @@ function Product() {
     setvarietyShow(true)
 
   };
-  const handlevarietyClose = () => {setvarietyShow(false) }
+  const handlevarietyClose = () => { setvarietyShow(false) }
   const handleClose = () => {
     mainformRef.current.reset();
     setValidated(false)
@@ -1832,4 +1831,4 @@ const VariantAddProduct = () =>{
   );
 }
 
-export default Product;
+export default Product_Old;
