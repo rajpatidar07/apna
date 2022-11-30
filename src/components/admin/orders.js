@@ -32,7 +32,7 @@ function Product() {
         "created_on":`${searchdata.created_on}`
         }).then((response) => {
         setorderdata(response.data)
-        // console.log("______uuuuu_____"+JSON.stringify(response.data[0].status))
+        console.log("order"+JSON.stringify(response.data))
         setapicall(false)
       }).catch(function (error) {
         console.log(error);
@@ -54,13 +54,15 @@ function Product() {
       });
     }
     const onOrderClick = (id) =>{
-      localStorage.setItem("orderid", id)
+      localStorage.setItem("orderid", id[0])
+      localStorage.setItem("userid", id[1])
+      
       navigate('/order_detail')
     }
   const columns = [
     {
       name: "Order Id",
-      selector: (row) => <p onClick={onOrderClick.bind(this,row.order_id)}> {row.order_id}</p>,
+      selector: (row) => <p onClick={onOrderClick.bind(this,[row.order_id,row.user_id])}> {row.order_id}</p>,
       sortable: true,
     },
   
@@ -141,7 +143,7 @@ function Product() {
     {
       name: "Change Status",
       selector: (row) => (
-        <Form.Select aria-label="Search by delivery" size="sm"  className="w-100" onChange={(e)=>onStatusChange(e,row.order_id)} name='status' >
+        <Form.Select aria-label="Search by delivery" size="sm" className="w-100" onChange={(e)=>onStatusChange(e,row.order_id)} name='status' >
           <option value="pending" selected={row.status === 'pending' ? true : false}>Pending</option>
           <option value="delivered"  selected={row.status === 'delivered' ? true : false}>Delivered</option>
           <option value="packed"  selected={row.status === 'packed' ? true : false}>Packed</option>
