@@ -3,7 +3,13 @@
   grid-template-columns: 54% 42%;
   gap: 35px;
 }
-
+.productdetail_page_box .productimg_box .variety_section_box {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid #e9e9e9;
+    padding: 10px;
+    border-radius: 10px;
+}
 .productdetail_page_box .productimg_box {
   width: 100%;
 }
@@ -17,16 +23,16 @@
 .productdetail_page_box .product_detail_box {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 10px;
 }
 
-.productdetail_page_box .product_detail_box .product_upper_section {
+.productdetail_page_box  .product_upper_section {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 15px;
 }
 
-.productdetail_page_box .product_detail_box .product_lower_section {
+.productdetail_page_box  .product_lower_section {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -48,15 +54,17 @@
 
 }
 
-.productdetail_page_box .product_detail_box .product_upper_section .productname {}
+.productdetail_page_box .product_detail_box .product_upper_section .productname {
 
-.productdetail_page_box .product_detail_box .product_upper_section .productstatus {
+}
+
+.productdetail_page_box   .productstatus {
   display: flex;
   gap: 10px;
   align-items: center;
 }
 
-.productdetail_page_box .product_detail_box .product_upper_section .productstatus .statuslabeltext {
+.productdetail_page_box  .productstatus .statuslabeltext {
   font-size: 16px;
 }
 
@@ -79,7 +87,7 @@
 }
 
 .productdetail_page_box .product_detail_box .product_upper_section .productstatus .categorytext1 {
-  background: rgb(65 70 75 / 0.4);
+  background: rgb(150 150 150 / 40%);
   border-radius: 50px;
   padding-left: 10px;
   padding-right: 10px;
@@ -102,7 +110,7 @@
   border: 1px dotted grey;
   padding: 5px;
   background-color: #fff;
-
+cursor: pointer;
 }
 
 .productdetail_page_box .product_detail_box .product_variety_section .statustextsize {
@@ -121,8 +129,9 @@
 font-size: 20px;
 } */
 .productdetail_page_box .product_detail_box .product_variety_section .coolorselect {
-  color: black;
-  border: 1px dotted grey;
+  border: 1px solid #e9e9e9;
+  padding: 0 5px;
+  border-radius: 10px;
 }
 
 
