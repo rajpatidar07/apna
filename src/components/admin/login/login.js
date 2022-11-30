@@ -18,7 +18,7 @@ const Login = () => {
   const onPasswordChange=(e)=>{
     setPassword(e.target.value );
   }
-  console.log("email------"+JSON.stringify(password))
+  console.log("password------"+JSON.stringify(password))
   const LoginCheck = () =>{
     localStorage.setItem("loginid",email);
     localStorage.setItem("password",password);
@@ -44,7 +44,7 @@ const Login = () => {
           console.log("possttttttt------"+JSON.stringify(response.data))
           if(response.data === true){
            
-            LoginCheck()
+            LoginCheck();
 
           }
           else{

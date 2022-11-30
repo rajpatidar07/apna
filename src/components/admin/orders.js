@@ -143,7 +143,7 @@ function Product() {
     {
       name: "Change Status",
       selector: (row) => (
-        <Form.Select aria-label="Search by delivery" size="sm"  className="w-100" onChange={(e)=>onStatusChange(e,row.order_id)} name='status' >
+        <Form.Select aria-label="Search by delivery" size="sm" className="w-100" onChange={(e)=>onStatusChange(e,row.order_id)} name='status' >
           <option value="pending" selected={row.status === 'pending' ? true : false}>Pending</option>
           <option value="delivered"  selected={row.status === 'delivered' ? true : false}>Delivered</option>
           <option value="packed"  selected={row.status === 'packed' ? true : false}>Packed</option>

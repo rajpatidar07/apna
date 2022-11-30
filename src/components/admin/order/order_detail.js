@@ -9,6 +9,14 @@ import axios from "axios";
 const OrderDetail = () => {
   const[order,setOrder]=useState([]);
   const[user,setUser]=useState([]);
+  // const [searchdataa, setsearchDataa] = useState({
+  //   status:"",
+  //   created_on:""
+  //   })
+   
+    // const OnSearchChangee = (e) => {
+    //   setsearchDataa({ ...searchdataa, [e.target.name]: e.target.value })
+    // }
   let orderid = localStorage.getItem("orderid")
   let userid= localStorage.getItem("userid")
   useEffect(()=>{
@@ -55,7 +63,11 @@ const OrderDetail = () => {
                 </div>
                 <div className="d-flex flex-column text-center">
                   <div className="order_info_heading">Order Status</div>
-                  <Form.Select aria-label="Floating label select example">
+                  <Form.Select aria-label="Floating label select example"
+              //      onChange={OnSearchChangee}
+              //      name='status'
+              // value={searchdataa.status}>
+              >
                   <option>Select Order Status</option>
                   <option value="delivered">Delivered</option>
                 <option value="pending">Pending</option>
@@ -181,7 +193,7 @@ const OrderDetail = () => {
                     {order.map((orderdata)=>{
                     return(
                     <div className="customer_orders_no ps-4 my-auto">
-                    {orderdata.quantity+orderdata.quantity}
+                    {orderdata.quantity}
                     </div>
                     )
                   })}
