@@ -7,6 +7,9 @@ import { useState } from "react";
 import Form from 'react-bootstrap/Form';
 import axios from "axios";
 const OrderDetail = () => {
+  let totalorder=0;
+  let orderid = localStorage.getItem("orderid")
+  let userid= localStorage.getItem("userid")
   const[order,setOrder]=useState([]);
   const[user,setUser]=useState([]);
   const [changstatuss, setchangstatuss] = useState('');
@@ -15,24 +18,23 @@ const OrderDetail = () => {
     created_on:""
     })
    
-    // const OnSearchChangee = (e) => {
-    //   setsearchDataa({ ...searchdataa, [e.target.name]: e.target.value })
-    // }
+    const OnSearchChangee = (e) => {
+      setsearchDataa({ ...searchdataa, [e.target.name]: e.target.value })
+    }
    
-    // const onStatusChangee = (e,id) => {
-    //   // e.prevantDefault();
-    //   setchangstatuss(e.target.value)
-    //   axios.put("http://192.168.29.108:5000/order_status_change", {
-    //   status_change:e.target.value,
-    //   id:`${id}`
-    //     }).then((response) => {
-    //     // setapicall(true)
-    //   }).catch(function (error) {
-    //     console.log(error);
-    //   });
-    // }
-  let orderid = localStorage.getItem("orderid")
-  let userid= localStorage.getItem("userid")
+    const onStatusChangee = (e) => {
+      // e.prevantDefault();
+      setchangstatuss(e.target.value)
+      axios.put("http://192.168.29.108:5000/order_status_change", {
+      status_change:e.target.value,
+      id:`${orderid}`
+        }).then((response) => {
+        // setapicall(true)
+      }).catch(function (error) {
+        console.log(error);
+      });
+    }
+
   useEffect(()=>{
     axios.get(`http://192.168.29.108:5000/order_deteils?id=${orderid}`).then((response) => {
       let data = response.data;
@@ -77,18 +79,27 @@ const OrderDetail = () => {
                 </div>
                 <div className="d-flex flex-column text-center">
                   <div className="order_info_heading">Order Status</div>
-                  <Form.Select aria-label="Floating label select example"
-                  //  onChange={onStatusChangee}
-                   name='status'
-                   value={searchdataa.status}>
-                  <option>Select Order Status</option>
-                  <option value="delivered">Delivered</option>
-                <option value="pending">Pending</option>
-                <option value="approved">Approved</option>
-                <option value="packed">Processing</option>
-                <option value="return">Return</option>
-                <option value="cancel">Cancel</option>
-      </Form.Select>
+                  {order.map((ostatus,i)=>{
+                   
+                    return(
+                      i===0 ?
+                      <Form.Select aria-label="Floating label select example"
+                      onChange={onStatusChangee}
+                      name='status'
+                      // value={changstatuss}
+                      >
+                     <option>Select Order Status</option>
+                     <option value="delivered" selected={ostatus.status === 'delivered' ? true:false}>Delivered</option>
+                   <option value="pending" selected={ostatus.status === 'pending' ? true:false}>Pending</option>
+                   <option value="approved" selected={ostatus.status === 'approved' ? true:false}>Approved</option>
+                   <option value="packed" selected= {ostatus.status === 'packed' ? true:false}>Packed</option>
+                   <option value="return" selected= {ostatus.status === 'return' ? true:false}>Return</option>
+                   <option value="cancel" selected= {ostatus.status === 'cancel' ? true:false}>Cancelled</option>
+         </Form.Select>
+         :null
+                    )
+                  })}
+                 
                       {/* <div  className="badge bg-warning">pending</div> */}
                 </div>
                 <div className="d-flex flex-column text-center">
@@ -206,7 +217,8 @@ const OrderDetail = () => {
                     {order.map((orderdata)=>{
                     return(
                     <div className="customer_orders_no ps-4 my-auto">
-                    {orderdata.quantity}
+                       {totalorder=Number(totalorder)+Number(orderdata.quantity)}
+                    {/* {orderdata.quantity} */}
                     </div>
                     )
                   })}

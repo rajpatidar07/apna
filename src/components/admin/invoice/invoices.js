@@ -20,7 +20,8 @@ const InvoiceList = () => {
   const [Alert, setAlert] = useState(false);
   const[invoice,setInvoice]=useState([]);
   const[invoiceno,setInvoiceNo]=useState([]);
-
+  const [invoiceid,setInvoiceId]=useState([]);
+  // const [invoiceprice,setInvoicePrice]=useState([]);
   const [SearchInvo, setSearchInvo] = useState({
     "search":"",
     "from_date":"",
@@ -28,10 +29,14 @@ const InvoiceList = () => {
     });
 
 
-    const Invoice_Check= (e) =>{
-       console.log("dataaa ofinvoice"+e)
-      localStorage.setItem("invoice_no",e);
-      if(e == undefined || e == '' || e==null){
+    const Invoice_Check= (id) =>{
+       console.log("dataaa ofinvoice"+id[1])
+       localStorage.setItem("invoiceid",id[1])
+      //  localStorage.setItem("invoiceprice")
+      //  console.log("idddddddddddddddddddddddddddddddddddddddd"+JSON.stringify(invoiceprice))
+       console.log("idddddddddddddddddddddddddddddddddddddddd"+JSON.stringify(invoiceid))
+      localStorage.setItem("invoice_no",id[0]);
+      if(id[0] == undefined || id[0] == '' || id[0]==null){
 
       }else{
       navigate('/invoice_detail');}
@@ -88,14 +93,14 @@ const InvoiceList = () => {
     {
       name: "Id",
       selector: (row) => (
-          row.vendor_id
+          row.id
       ),
       sortable: true,
       width: "75px",
     },
     {
       name: "Invoice Number",
-      selector: (row) =><p onClick={ Invoice_Check.bind(this,row.invoice_no) }>{row.invoice_no}</p>,
+      selector: (row) =><p onClick={ Invoice_Check.bind(this,[row.invoice_no,row.id]) }>{row.invoice_no}</p>,
       sortable: true,
       width: "150px",
       center: true,
