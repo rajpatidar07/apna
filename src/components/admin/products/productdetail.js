@@ -93,12 +93,12 @@ const Productdetail = () => {
 const onColorChange = (e,id) =>{
   setcolorchange(e.target.value)
  vid = localStorage.setItem("variantid" , id)
- console.log("----ejkfje"+e.target.value + "000"+id)
+ console.log("----color"+e.target.value + "000"+id)
 }
 const onSizeClick = (e,id) =>{
   setsizechange(e.target.value)
  vid = localStorage.setItem("variantid" , id)
- console.log("----ejkfje"+e.target.value + "000"+id)
+ console.log("----size"+e.target.value + "000"+id)
 }
 var varietyy = VariationJson;
 const handlevarietyShow = (id) => {
@@ -193,7 +193,7 @@ const VariantEditClick = (id, productid) => {
         return (
           <>
             {/* <h2 className="productname mb-0">{data.product_title_name}</h2> */}
-            {(vid == data.id && pid == data.product_id) ?
+            {(vid == data.id && pid == data.product_id && data.is_delete !== '0') ?
             <div className="productdetail_page_box  mt-3">
               <div className="productimg_box">
 
@@ -248,6 +248,7 @@ const VariantEditClick = (id, productid) => {
                           <select className="coolorselect" onChange={(e)=>onColorChange(e,data.id)} name='colors'>
                           {(productdata || []).map((data) => {
         return (
+           data.is_delete === '0' ? null :
                             <option>{data.colors}</option>
                             
         )})}
@@ -261,7 +262,7 @@ const VariantEditClick = (id, productid) => {
                           {(productdata || []).map((data) => {
         return (
                 colorchange === data.colors ?
-                            <h6 className="statustextoutsize" onClick={(e)=>onSizeClick(e,data.id)}>{data.size}</h6> : null
+                            <h6 className="statustextoutsize" onClick={(e)=>onSizeClick(e,data.id)} name='size' value={data.size}>{data.size}</h6> : null
                             )})}
                            
                           </div>
@@ -271,7 +272,7 @@ const VariantEditClick = (id, productid) => {
                           <h6 className="statuslabeltext">Quantity:</h6>
                           {(productdata || []).map((data) => {
         return (
-                sizechange === data.size && colorchange === data.colors  ?
+                sizechange === data.size && colorchange === data.colors && vid === data.id ?
                 
                           <h6 className="statustextsize"> {data.quantity}</h6>
                           : null
