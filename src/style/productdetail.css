@@ -13,7 +13,12 @@
 .productdetail_page_box .productimg_box {
   width: 100%;
 }
-
+.productdetail_page_box .productstatus .statustextoutsize {
+  border: 1px solid grey;
+  padding: 2px;
+  cursor: pointer;
+  /* margin-bottom: 0; */
+}
 .productdetail_page_box .productimg_box .productpicture {
   width: 600px;
   height: 560px;
@@ -177,7 +182,7 @@ font-size: 20px;
 .addproductmainmodal {
   display: flex;
   justify-content: center;
-  width: 70%;
+  width: 85%;
   max-width: 100%;
 }
 
