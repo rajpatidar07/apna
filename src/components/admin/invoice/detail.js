@@ -35,7 +35,7 @@ const Invoice = () => {
                                 {invoicedetails.map((invodetails)=>{
                                     return(
                                         <div className="table-responsive-sm p-3">
-                                        <table className="invoice_header">
+                                        <table className="invoice_header w-100">
                                             <tr className="border-bottom">
                                                 <td className="align-bottom" width={'50%'}>
                                                     {/* <img src={logo} className="w-25" /> */}
@@ -59,7 +59,7 @@ const Invoice = () => {
                                                         <p className="m-0"><b>Order Id:</b> {invodetails.order_id}</p>
                                                         <p className="m-0"><b>Order Date:</b>{invodetails.order_date}</p>
                                                         <p className="m-0"><b>Invoice Date:</b> {invodetails.invoice_date}</p>
-                                                        <p className="m-0"><b>GSTIN:</b> {invodetails.invoice_no}</p>
+                                                        <p className="m-0"><b>GSTIN:</b> {invodetails.gst}</p>
                                                     </td>
                                                     <td className="">
                                                         <h5 className="text-uppercase m-0"><b>Bill to:</b></h5>
@@ -82,14 +82,14 @@ const Invoice = () => {
                                             <thead>
                                                 <tr>
                                                     <th className="center">Product</th>
-                                                    <th>{invodetails.quantity}</th>
+                                                    <th>Qty</th>
                                                     <th>Gross Amount ₹</th>
     
-                                                    <th className="right">{invodetails.discount_coupon}₹</th>
-                                                    <th className="center">{invodetails.taxable_value}₹</th>
-                                                    <th className="center">{invodetails.cgst}₹</th>
-                                                    <th className="center">{invodetails.sgst} ₹</th>
-                                                    <th className="right">{invodetails.total_amount}₹</th>
+                                                    <th className="right">discount_coupon ₹</th>
+                                                    <th className="center">taxable_value ₹</th>
+                                                    <th className="center">cgst ₹</th>
+                                                    <th className="center">sgst ₹</th>
+                                                    <th className="right">total_amount ₹</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -98,13 +98,13 @@ const Invoice = () => {
                                                         <small>CGST: {invodetails.cgst} %</small><br />
                                                         <small>SGST/UTGST: {invodetails.sgst} %</small>
                                                     </td>
-                                                    <td className="">1</td>
-                                                    <td className="left">15999.00</td>
-                                                    <td className="left">-1283.00</td>
-                                                    <td className="left">12471.18</td>
-                                                    <td className="left">1122.40</td>
-                                                    <td className="left">1122.40</td>
-                                                    <td className="left">14716.00</td>
+                                                    <td className="">{invodetails.quantity}</td>
+                                                    <td className="left">{invodetails.price}</td>
+                                                    <td className="left">{invodetails.discount_coupon}</td>
+                                                    <td className="left">{invodetails.taxable_value}</td>
+                                                    <td className="left">{invodetails.cgst}</td>
+                                                    <td className="left">{invodetails.sgst}</td>
+                                                    <td className="left">{invodetails.total_amount}</td>
                                                 </tr>
                                                 <tr>
                                                     <td className="center"><b>OPPO K10 5G (Ocean Blue, 128 GB)</b><br />

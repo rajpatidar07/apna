@@ -9,13 +9,27 @@ import axios from "axios";
 const OrderDetail = () => {
   const[order,setOrder]=useState([]);
   const[user,setUser]=useState([]);
-  // const [searchdataa, setsearchDataa] = useState({
-  //   status:"",
-  //   created_on:""
-  //   })
+  const [changstatuss, setchangstatuss] = useState('');
+  const [searchdataa, setsearchDataa] = useState({
+    status:"",
+    created_on:""
+    })
    
     // const OnSearchChangee = (e) => {
     //   setsearchDataa({ ...searchdataa, [e.target.name]: e.target.value })
+    // }
+   
+    // const onStatusChangee = (e,id) => {
+    //   // e.prevantDefault();
+    //   setchangstatuss(e.target.value)
+    //   axios.put("http://192.168.29.108:5000/order_status_change", {
+    //   status_change:e.target.value,
+    //   id:`${id}`
+    //     }).then((response) => {
+    //     // setapicall(true)
+    //   }).catch(function (error) {
+    //     console.log(error);
+    //   });
     // }
   let orderid = localStorage.getItem("orderid")
   let userid= localStorage.getItem("userid")
@@ -64,10 +78,9 @@ const OrderDetail = () => {
                 <div className="d-flex flex-column text-center">
                   <div className="order_info_heading">Order Status</div>
                   <Form.Select aria-label="Floating label select example"
-              //      onChange={OnSearchChangee}
-              //      name='status'
-              // value={searchdataa.status}>
-              >
+                  //  onChange={onStatusChangee}
+                   name='status'
+                   value={searchdataa.status}>
                   <option>Select Order Status</option>
                   <option value="delivered">Delivered</option>
                 <option value="pending">Pending</option>
