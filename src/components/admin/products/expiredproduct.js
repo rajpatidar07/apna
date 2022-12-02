@@ -40,7 +40,6 @@ useEffect(() => {
       // "expire_date":`${currentdate}`
     }}).then((response) => {
       setexpiredata(response.data)
-    console.log("---expired"+JSON.stringify(expiredata))
   }).catch(function (error) {
     console.log(error);
   });

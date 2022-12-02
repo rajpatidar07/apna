@@ -33,7 +33,7 @@ const VendorsList = () => {
   store_type:"",
   shop_logo:"",
   status:"",
-  documents:[],
+  multiple_document_upload:['https://images.pexels.com/photos/13316720/pexels-photo-13316720.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'],
   document_name:[],
   availability:""
 
@@ -42,6 +42,8 @@ const VendorsList = () => {
   const [apicall, setapicall] = useState(false);
   const [addtag, setaddtag] = useState();
   const [Docnamearray, setDocnameArray] = useState([]);
+  const [DocuImgarray, setDocuImgArray] = useState([]);
+
   const [searchdata, setsearchData] = useState({
     status:"",
     store_type:"",
@@ -67,28 +69,185 @@ const VendorsList = () => {
         console.log(error);
       });
     }
+    const columns = [
+      {
+        name: "ID",
+        selector: (row) => row.id,
+        sortable: true,
+      },
+      {
+        name: "Logo",
+        center: true,
+        cell: (row) => (
+          <img
+            width={"100%"}
+            alt={row.owner_name}
+            src={row.shop_logo}
+            style={{
+              borderRadius: 15,
+              paddingTop: 10,
+              paddingBottom: 10,
+              textAlign: "right",
+            }}
+          />
+        ),
+      },
+      {
+        name: "Shop Name",
+        selector: (row) => row.shop_name,
+        sortable: true,
+      },
+      {
+        name: "Owner Name",
+        selector: (row) => row.owner_name,
+        sortable: true,
+      },
+      {
+        name: "Address",
+        selector: (row) => row.shop_address,
+        sortable: true,
+        center: true,
+      },
+      {
+        name: "Contact",
+        selector: (row) => row.mobile,
+        sortable: true,
+        center: true,
+      },
+      {
+        name: "Status",
+        selector: (row) => (
+          <span
+            className={
+              row.status === "pending"
+                ? "badge bg-secondary"
+                : row.status === "active"
+                ? "badge bg-success"
+                : row.status === "blocked"
+                ? "badge bg-danger"
+                : row.status === "in progress"
+                ? "badge bg-primary"
+                : "badge bg-dark"
+            }
+          >
+            {row.status}
+          </span>
+        ),
+        sortable: true,
+        center: true,
+      },
+      {
+        name: "Change",
+        selector: (row) => (
+          <Form.Group className="" controlId="formBasicEmail">
+            <Form.Select
+              size="sm"
+              aria-label="Default select example"
+              onChange={(e) => handleStatusChnage(e, row.id)}
+              name="status"
+            >
+              <option
+                value="pending"
+                selected={row.status === "pending" ? true : false}
+              >
+                Pending
+              </option>
+              <option
+                value="active"
+                selected={row.status === "active" ? true : false}
+              >
+                Active
+              </option>
+              <option
+                value="blocked"
+                selected={row.status === "blocked" ? true : false}
+              >
+                Block
+              </option>
+              <option
+                value="in progress"
+                selected={row.status === "in progress" ? true : false}
+              >
+                In Progress
+              </option>
+            </Form.Select>
+          </Form.Group>
+        ),
+        sortable: true,
+        center: true,
+      },
+  
+      {
+        name: "ACTION",
+        center: true,
+        selector: (row) => (
+          <div className={"actioncolimn"}>
+            <BiEdit
+              className=" p-0 m-0  editiconn text-secondary"
+              onClick={handleShow.bind(this, row.id)}
+            />
+            <BsTrash
+              className=" p-0 m-0 editiconn text-danger"
+              onClick={handleAlert}
+            />
+          </div>
+        ),
+      },
+    ];
+    useEffect(() => {
+      axios
+        .get(`http://192.168.29.108:5000/vendors?id=all`)
+        .then((response) => {
+          setvendordata(response.data);
+          setapicall(false);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    }, [apicall]);
+    useEffect(() => {
+      setaddvendordata({
+        ...addvendordata,
+        document_name: Docnamearray
+      });
+    }, [Docnamearray]);
+    const handleFormChange = (e) => {
+      setaddvendordata({
+        ...addvendordata,
+        [e.target.name]: e.target.value,
+      });
+    };
   const handleClose = () => {
     formRef.current.reset();
-    setvendordata("");
     // e.preventDefault()
     setValidated(false);
     setShow(false);
   };
+
+
   let arr;
   const handleShow = (e) => {
     if (e === "add") {
       setShow(e);
     }
-    console.log(JSON.stringify(e));
     if (e !== "add") {
       axios
     .get(`http://192.168.29.108:5000/vendors?id=${e}`,addvendordata)
     .then((response) => {
-    console.log("getup----------   " + JSON.stringify(response.data));
       setaddvendordata(response.data[0]);
-      //  arr = response.data[0].document_name.split(',');
-      //  console.log("000000-----> "+arr[0]);
-      // setseoArray(response.data[0].document_name);
+      setDocnameArray(JSON.parse((response.data[0].document_name)));
+      setDocuImgArray(JSON.parse(response.data[0].multiple_document_upload))
+     
+      // let v = response.data[0].multiple_document_upload;
+      // console.log("-------string   -"+JSON.parse(response.data[0].multiple_document_upload));
+      
+      // if(v == '' || v == undefined || v == null || v == []){
+      // console.log("+++++++nulllllllllllllll++++++");
+      // return false;
+      // }else{
+      //   console.log("+++++++parse++++++");
+      //   setDocuImgArray(JSON.parse(response.data[0].multiple_document_upload))
+      // }
       setapicall(false);
     })
     .catch(function(error) {
@@ -97,6 +256,9 @@ const VendorsList = () => {
       setShow(e);
     }
   };
+ 
+ 
+
   const onDocumentNamechange = (e) => {
     setaddtag(e.target.value);
   };
@@ -106,7 +268,6 @@ const VendorsList = () => {
     setaddtag('');
     
   };
-  console.log("---seoerj"+JSON.stringify(Docnamearray))
   const DocuRemoveClick = (e) => {
     setDocnameArray(Docnamearray.filter(item => item !== e));
   }
@@ -127,176 +288,36 @@ const VendorsList = () => {
       });
   };
 
-  const columns = [
-    {
-      name: "ID",
-      selector: (row) => row.id,
-      sortable: true,
-    },
-    {
-      name: "Logo",
-      center: true,
-      cell: (row) => (
-        <img
-          width={"100%"}
-          alt={row.owner_name}
-          src={row.shop_logo}
-          style={{
-            borderRadius: 15,
-            paddingTop: 10,
-            paddingBottom: 10,
-            textAlign: "right",
-          }}
-        />
-      ),
-    },
-    {
-      name: "Shop Name",
-      selector: (row) => row.shop_name,
-      sortable: true,
-    },
-    {
-      name: "Owner Name",
-      selector: (row) => row.owner_name,
-      sortable: true,
-    },
-    {
-      name: "Address",
-      selector: (row) => row.shop_address,
-      sortable: true,
-      center: true,
-    },
-    {
-      name: "Contact",
-      selector: (row) => row.mobile,
-      sortable: true,
-      center: true,
-    },
-    {
-      name: "Status",
-      selector: (row) => (
-        <span
-          className={
-            row.status === "pending"
-              ? "badge bg-secondary"
-              : row.status === "active"
-              ? "badge bg-success"
-              : row.status === "blocked"
-              ? "badge bg-danger"
-              : row.status === "in progress"
-              ? "badge bg-primary"
-              : "badge bg-dark"
-          }
-        >
-          {row.status}
-        </span>
-      ),
-      sortable: true,
-      center: true,
-    },
-    {
-      name: "Change",
-      selector: (row) => (
-        <Form.Group className="" controlId="formBasicEmail">
-          <Form.Select
-            size="sm"
-            aria-label="Default select example"
-            onChange={(e) => handleStatusChnage(e, row.id)}
-            name="status"
-          >
-            <option
-              value="pending"
-              selected={row.status === "pending" ? true : false}
-            >
-              Pending
-            </option>
-            <option
-              value="active"
-              selected={row.status === "active" ? true : false}
-            >
-              Active
-            </option>
-            <option
-              value="blocked"
-              selected={row.status === "blocked" ? true : false}
-            >
-              Block
-            </option>
-            <option
-              value="in progress"
-              selected={row.status === "in progress" ? true : false}
-            >
-              In Progress
-            </option>
-          </Form.Select>
-        </Form.Group>
-      ),
-      sortable: true,
-      center: true,
-    },
 
-    {
-      name: "ACTION",
-      center: true,
-      selector: (row) => (
-        <div className={"actioncolimn"}>
-          <BiEdit
-            className=" p-0 m-0  editiconn text-secondary"
-            onClick={handleShow.bind(this, row.id)}
-          />
-          <BsTrash
-            className=" p-0 m-0 editiconn text-danger"
-            onClick={handleAlert}
-          />
-        </div>
-      ),
-    },
-  ];
-  useEffect(() => {
-    axios
-      .get(`http://192.168.29.108:5000/vendors?id=all`)
-      .then((response) => {
-        setvendordata(response.data);
-        setapicall(false);
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-  }, [apicall]);
-  useEffect(() => {
-    setaddvendordata({
-      ...addvendordata,
-      document_name: Docnamearray
-    });
-  }, [Docnamearray]);
-  const handleFormChange = (e) => {
-    setaddvendordata({
-      ...addvendordata,
-      [e.target.name]: e.target.value,
-    });
-  };
-  console.log("--addvendor----------- "+JSON.stringify(addvendordata))
   
   const docsImageUrls = [];
   const newImageUrls = [];
-
   const ImgFormChange = (e) => {
-//     setFile(e.target.files[0]);
-//  setFileName(e.target.files[0].name);
-// console.log("--img"+JSON.stringify(e.target.files[0]))
-//     setaddvendordata((addvendordata) => {
-//       return { ...addvendordata, shop_logo: e.target.files[0]};
-//     });
+    setFile(e.target.files[0]);
+ setFileName(e.target.files[0].name);
+console.log("--img"+JSON.stringify(e.target.files[0]))
   };
+
+
   const DocsFormChange = (e) => {
-    // [...e.target.files].forEach((image) =>
-    //   newImageUrls.push(URL.createObjectURL(image))
-    // );
-    // setvendordata((vendordata) => {
-    //   return { ...vendordata, gumasta: newImageUrls };
-    // });
+    [e.target.files].forEach((image) =>
+      newImageUrls.push(image)
+    );
+    [e.target.files.name].forEach((image) =>
+    docsImageUrls.push((image))
+  );
+    setaddvendordata((addvendordata) => {
+      return { ...addvendordata, 
+        multiple_document_upload: newImageUrls,
+        MultipleDocs : docsImageUrls
+      };
+    });
   };
+  console.log("--img"+JSON.stringify(file) + fileName)
+  console.log("--imultplemg    "+JSON.stringify(newImageUrls) + JSON.stringify(docsImageUrls))
+
   const AddVendorClick = (e) => {
+
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
       e.preventDefault();
@@ -305,8 +326,24 @@ const VendorsList = () => {
       setValidated(true);
     } else {
       e.preventDefault();
+  const formData = new FormData();
+       formData.append("shop_logo", file);
+    formData.append("filename", fileName);
+    formData.append("owner_name", addvendordata.owner_name);
+    formData.append("shop_name", addvendordata.shop_name);
+    formData.append("mobile", addvendordata.mobile);
+    formData.append("email",addvendordata.email);
+    formData.append("shop_address",addvendordata.shop_address);
+    formData.append("gstn",addvendordata.gstn);
+    formData.append("geolocation",addvendordata.geolocation);
+    formData.append("store_type",addvendordata.store_type);
+    formData.append("multiple_document_upload",addvendordata.multiple_document_upload);
+    formData.append("document_name",addvendordata.document_name);
+    formData.append("status",addvendordata.status);
+console.log("--addvendor----------- "+JSON.stringify(formData))
+
       axios
-      .post(`http://192.168.29.108:5000/vendor_register`,addvendordata)
+      .post(`http://192.168.29.108:5000/vendor_register`,formData)
       .then((response) => {
         // setvendordata(response.data);
       console.log("formadd----------   " + JSON.stringify(response.data));
@@ -348,7 +385,6 @@ const VendorsList = () => {
       console.log(error);
     });
   };
-
 
   return (
     <div>
@@ -732,51 +768,6 @@ const VendorsList = () => {
                   </Form.Control.Feedback>
                 </Form.Group>
               </div>
-              <div classImg="col-md-6">
-                <Form.Group
-                  className="mb-3 aos_input"
-                  controlId="validationCustom08"
-                >
-                  <Form.Label>Shop Logo</Form.Label>
-                  <Form.Control
-                    onChange={(e) => ImgFormChange(e)}
-                    type="file"
-                    placeholder="Shop_logo"
-                    name={"shop_logo"}
-                  />
-                  <img src={addvendordata.shop_logo} width={'50px'}/>
-                  <Form.Control.Feedback type="invalid" className="h6">
-                    Please upload document
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </div>
-
-              <div className="col-md-6">
-                <Form.Group
-                  className="mb-3 aos_input"
-                  controlId="validationCustom09"
-                >
-                  <Form.Label>Gumasta</Form.Label>
-                  <Form.Control
-                    onChange={() => DocsFormChange()}
-                    multiple
-                    type="file"
-                    placeholder="Gumasta"
-                    name={"documents"}
-                    value={addvendordata.documents}
-                  />
-                  {/* {(addvendordata.multiple_document_upload).map ((imgdata)=>{
-                    return(
-                      <img src={imgdata} width={'50px'}/>
-                    )
-                  })} */}
-                 
-
-                  <Form.Control.Feedback type="invalid" className="h6">
-                    Please upload Img
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </div>
               <div className="col-md-6">
              
                 <Form.Group
@@ -804,19 +795,18 @@ const VendorsList = () => {
                           {Docnamearray === undefined || Docnamearray === null || Docnamearray === '' ? null :
                     <div className="d-flex align-items-center tagselectbox mt-2" >
                                                
-                          {(arr || []).map((seotags, i) => {
+                          {(Docnamearray || []).map((seotags, i) => {
                           return (
                             <>
                         <Badge className="tagselecttitle mb-0" bg="success" >
-                        {/* {seotags === null || seotags === undefined ? '' : seotags
-                        } */}
+                        {seotags === null || seotags === undefined ? '' : seotags
+                        }
                  
                           <GiCancel
                             className=" mx-0 ms-1 btncancel"
                             onClick={() => DocuRemoveClick(seotags)}
                           />
                         </Badge>
-                            {"hello------------------------------"+seotags}
                             </>
                           )
 
@@ -829,6 +819,56 @@ const VendorsList = () => {
                   </Form.Control.Feedback>
                 </Form.Group>
               </div>
+              <div classImg="col-md-6">
+                <Form.Group
+                  className="mb-3 aos_input"
+                  controlId="validationCustom08"
+                >
+                  <Form.Label>Shop Logo</Form.Label>
+                  <Form.Control
+                    onChange={(e) => ImgFormChange(e)}
+                    type="file"
+                    placeholder="Shop_logo"
+                    name={"shop_logo"}
+                  />
+                  {addvendordata.shop_logo ?
+                  <img src={addvendordata.shop_logo} width={'50px'}/> : null}
+                  <Form.Control.Feedback type="invalid" className="h6">
+                    Please upload document
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </div>
+
+              <div className="col-md-6">
+                <Form.Group
+                  className="mb-3 aos_input"
+                  controlId="validationCustom09"
+                >
+                  <Form.Label>Gumasta</Form.Label>
+                  <Form.Control
+                    onChange={(e) => DocsFormChange(e)}
+                    multiple
+                    type="file"
+                    placeholder="multiple_document_upload"
+                    name={"multiple_document_upload"}
+
+                  />
+
+                  {
+                  // DocuImgarray == undefined || DocuImgarray == null || DocuImgarray == "" || DocuImgarray ==[]  ? null : 
+                  (DocuImgarray).map((imgdata)=> {
+                    return(
+                      <img src={imgdata} width={'50px'}/>
+                    )
+                  })
+                 }
+
+                  <Form.Control.Feedback type="invalid" className="h6">
+                    Please upload Img
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </div>
+              
             </div>
           </Modal.Body>
           <Modal.Footer>

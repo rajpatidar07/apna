@@ -50,8 +50,7 @@ function AdminHeader() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  console.log("---emaillll"+loginid)
-  console.log("---passsworddd"+pass)
+
   return (
     <div className="container content_top_container">
       <div className="row content_top_row ">
