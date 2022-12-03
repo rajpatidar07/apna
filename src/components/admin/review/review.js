@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Input from "../common/input";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
@@ -9,14 +9,115 @@ import Modal from "react-bootstrap/Modal";
 import { Badge } from "react-bootstrap";
 import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
+import axios from "axios";
+import moment from "moment";
+import { AiOutlineStar } from 'react-icons/ai';
+import { AiFillStar } from 'react-icons/ai';
 
 const Review = () => {
+  const formRef = useRef();
+  const [validated, setValidated] = useState(false);
+  const [apicall, setapicall] = useState(false);
+  const [reviewdata, setreviewdata] = useState([]);
+  const [addreviewdata, setaddreviewdata] = useState([]);
+  const [editreviewdata, seteditreviewdata] = useState({
+  id:"",
+  status:"",
+  note:""
+});
     const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleShow = (e) => {
+      axios
+        .post(`http://192.168.29.108:5000/review_list`,{
+          "id":`${e}`,
+      })
+        .then((response) => {
+          setaddreviewdata(response.data[0]);
+          seteditreviewdata({...editreviewdata ,
+            id: response.data[0].id,
+            status:response.data[0].status,
+            note:response.data[0].note,
+           })
+          setapicall(false);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+      setShow(true)
+    };
+
+    const [searchdata, setsearchData] = useState({
+    product_name:"",
+    category_type:"",
+    status:""
+  })
+     
+      const OnSearchChange = (e) => {
+        setsearchData({ ...searchdata, [e.target.name]: e.target.value })
+      }
+      const onSearchClick = () =>{
+        axios
+        .post(`http://192.168.29.108:5000/review_list`,{
+          "product_name":`${searchdata.product_name}`,
+          "category_type":`${searchdata.category_type}`,
+          "status":`${searchdata.status}`
+          })
+        .then((response) => {
+        console.log("search----------   " + JSON.stringify(response.data));
+        setreviewdata(response.data);
+          setapicall(false);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+      }
+    const handleFormChange = (e) => {
+      seteditreviewdata({
+        ...editreviewdata,
+        [e.target.name]: e.target.value
+      });
+    };
+    const UpdateCategoryClick = (e) => {
+      const form = e.currentTarget;
+      if (form.checkValidity() === false) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("falsevalidatn----------   ");
+        setValidated(true)
+      }
+      else{
+        e.preventDefault();
+        axios
+        .put(`http://192.168.29.108:5000/review_approved`,editreviewdata)
+        .then((response) => {
+          setShow(false)
+          setapicall(true);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+        setValidated(false)
+      }
+    };
+    useEffect(() => {
+      axios
+        .post(`http://192.168.29.108:5000/review_list`,{
+          "product_name":"",
+          "category_type":"",
+          "status":""
+      })
+        .then((response) => {
+          setreviewdata(response.data);
+          setapicall(false);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    }, [apicall]);
     const columns = [
       {
         name: "ID",
@@ -33,20 +134,20 @@ const Review = () => {
       
       {
         name: "Product Name",
-        selector: (row) => row.cname,
+        selector: (row) => row.product_name,
         sortable: true,
         width: "180px",
 
       },
       {
         name: "Category Type",
-        selector: (row) => row.ctype,
+        selector: (row) => row.category_type,
         sortable: true,
         width: "150px",
       },
       {
         name: "Review Date",
-        selector: (row) => row.sdate,
+        selector: (row) => moment(row.review_date).format('YYYY-MM-DD'),
         sortable: true,
         width: "150px",
         style: {
@@ -57,9 +158,8 @@ const Review = () => {
       },
       {
         name: "Comment",
-        selector: (row) => row.cmnt,
+        selector: (row) => row.comment,
         sortable: true,
-        width: "250px",
         style: {
           paddingRight: "12px",
           paddingLeft: "12px",
@@ -71,9 +171,9 @@ const Review = () => {
         name: "Status",
         selector: (row) => (
          
-          <Badge  bg= {row.status === "Approve"
-          ?"success"  : row.status === "Reject"
-                ? "danger" :row.status === "Pending" ? "warning": null}>{row.status}</Badge>
+          <Badge  bg= {row.status === "approve"
+          ?"success"  : row.status === "reject"
+                ? "danger" :row.status === "pending" ? "warning": null}>{row.status}</Badge>
         ),
         sortable: true,
         width: "120px",
@@ -89,37 +189,10 @@ const Review = () => {
         center: true,
         selector: (row) => (
           <div className={"actioncolimn"}>
-           <BiEdit className=" p-0 m-0  editiconn text-secondary"  onClick={handleShow}/>
+           <BiEdit className=" p-0 m-0  editiconn text-secondary"  onClick={handleShow.bind(this,row.id)}/>
             <BsTrash className=" p-0 m-0 editiconn text-danger"  onClick={handleAlert} />
           </div>
         ),
-      },
-    ];
-    
-    const data = [
-      {
-        id: 102571,
-        ctype:"Health & Care",
-        cname: "Green Leaf Lettucer",
-        sdate: "Sep 26, 2022",
-        cmnt:<p className="reviewdesc">Nice products Bad product badBad product bad</p>,
-        status: "Approve",
-      },
-      {
-        id: 210257,
-        ctype:"Health ",
-        cname: "Green Leaf Lettuce",
-        sdate: "Sep 26, 2022",
-        cmnt:<p className="reviewdesc">Bad product bad qualityyuzuihcdisdj nrgknknk</p>,
-        status: "Reject",
-      },
-      {
-        id: 310257,
-        ctype:"Health & Care",
-        cname: "Green Leaf Lettuce",
-        sdate: "Sep 26, 2022",
-        cmnt:<p className="reviewdesc">Bad product bad qualityyuzuihcdisdj nrgknknk</p>,
-        status: "Pending",
       },
     ];
  
@@ -131,32 +204,36 @@ const Review = () => {
   <div className="card mt-3 p-3 ">
   <div className=" row">
   <div className="col-md-3 col-sm-6 aos_input">
-    <Input type={"text"} plchldr={"Search by product name"} />
+    <input type={"text"} placeholder={"Search by product name"} name={'product_name'} onChange={(e)=>OnSearchChange(e)}
+              value={searchdata.product_name} className={'adminsideinput'}/>
     </div>
     <div className="col-md-3 col-sm-6 aos_input">
             <Form.Select
               aria-label="Search by category"
               className="adminselectbox"
               placeholder="Search by category"
+              onChange={(e)=>OnSearchChange(e)} name={'category_type'}
+              value={searchdata.category_type}
             >
-              <option>Search by category</option>
-              <option value="1">Food</option>
-              <option value="2">Fish & Meat</option>
-              <option value="3">Baby Care</option>
+              <option value={''}>Search by category</option>
+              <option value="cloth">Clothes</option>
+              <option value="food">Fish & Meat</option>
+              <option value="baby care">Baby Care</option>
             </Form.Select>
           </div>
   <div className="col-md-3 col-sm-6 aos_input">
-  <Form.Select aria-label="Search by status" className="adminselectbox">
-            <option>Search by status</option>
-            <option value="1">Approve</option>
-            <option value="2">Reject</option>
-            <option value="3">Pending</option>
+  <Form.Select aria-label="Search by status" className="adminselectbox" onChange={(e)=>OnSearchChange(e)} name={'status'}
+              value={searchdata.status}>
+            <option value={''}>Search by status</option>
+            <option value="approve">Approve</option>
+            <option value="reject">Reject</option>
+            <option value="pending">Pending</option>
           </Form.Select>
     
     </div>
  
 <div className="col-md-3 col-sm-6 aos_input">
-    <MainButton btntext={"Search"} btnclass={'button main_button w-100'} />
+    <MainButton btntext={"Search"} btnclass={'button main_button w-100'} onClick={()=>onSearchClick()}/>
   </div>
 
   </div>
@@ -169,6 +246,7 @@ const Review = () => {
 
   {/* datatable */}
   <Modal size="md" show={show} onHide={handleClose}>
+  <Form className="" validated={validated} ref={formRef} onSubmit={(e)=>UpdateCategoryClick(e)}>
           <Modal.Header closeButton>
             <Modal.Title>Update Review Info</Modal.Title>
           </Modal.Header>
@@ -180,7 +258,7 @@ const Review = () => {
                   controlId="formBasicEmail"
                 >
                   <Form.Label className="mb-0">Order Id</Form.Label>
-                  <Form.Text className="mt-0">100333</Form.Text>
+                  <Form.Text className="mt-0">{addreviewdata.id}</Form.Text>
                 </Form.Group>
               </div>
               <div className="col-md-6">
@@ -189,7 +267,7 @@ const Review = () => {
                   controlId="formBasicEmail"
                 >
                   <Form.Label className="mb-0">Product Name</Form.Label>
-                  <Form.Text className="mt-0">Green Leaf Lettucer</Form.Text>
+                  <Form.Text className="mt-0">{addreviewdata.product_name}</Form.Text>
                 </Form.Group>
               </div>
               <div className="col-md-12">
@@ -198,11 +276,21 @@ const Review = () => {
                   controlId="formBasicEmail"
                 >
                   <Form.Label className="mb-0">Review</Form.Label>
-                  <Form.Text className="mt-0"> My phone is locked due to overdue payment But i have allreday paid
-            the remaining amount of 5400 on 29.07.2022 time 15.40.54 Transaction
-            no - EXTLINK[protected]_1</Form.Text>
+                  <Form.Text className="mt-0">{addreviewdata.comment}</Form.Text>
                 </Form.Group>
               </div>
+              {/* <div className="col-md-12">
+                <Form.Group
+                  className="mb-3 aos_input flex-column d-flex"
+                  controlId="formBasicEmail"
+                >
+                  <Form.Label className="mb-0">Rating</Form.Label>
+                
+                      <AiOutlineStar/>
+
+                  <Form.Text className="mt-0">{addreviewdata.review_rating}</Form.Text>
+                </Form.Group>
+              </div> */}
               <div className="col-md-12">
                 <Form.Group
                   className="mb-3 aos_input flex-column d-flex"
@@ -218,16 +306,21 @@ const Review = () => {
                     aria-label="Status"
                     className="adminselectbox"
                     placeholder="Status"
+                    name="status"
+                    value={editreviewdata.status}
+                    onChange={(e)=> handleFormChange(e)}
                   >
-                    <option>Status</option>
-                    <option value="1">Reject</option>
-                    <option value="2">Pending</option>
-                    <option value="3">Approve</option>
+                    <option value={''}>Status</option>
+                    <option value="reject">Reject</option>
+                    <option value="pending">Pending</option>
+                    <option value="approve">Approve</option>
                   </Form.Select>
                 </Form.Group>
               </div>
                   <Form.Label className="mb-0">Note</Form.Label>
-                  <Form.Control as="textarea" rows={3} className="mt-0">  </Form.Control>
+                  <Form.Control as="textarea" rows={3} className="mt-0" name="note"
+                    value={editreviewdata.note}
+                    onChange={(e)=> handleFormChange(e)}>  </Form.Control>
                 </Form.Group>
               </div>
              
@@ -240,14 +333,15 @@ const Review = () => {
             >
               Cancel
             </button>
-            <button className="button main_button" onClick={handleClose}>
+            <button className="button main_button" type="submit">
               Update
             </button>
           </Modal.Footer>
+          </Form>
         </Modal>
   <DataTable
     columns={columns}
-    data={data}
+    data={reviewdata}
     pagination
     highlightOnHover
     pointerOnHover
