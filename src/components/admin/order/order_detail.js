@@ -217,8 +217,8 @@ const OrderDetail = () => {
                     {order.map((orderdata)=>{
                     return(
                     <div className="customer_orders_no ps-4 my-auto">
-                       {totalorder=Number(totalorder)+Number(orderdata.quantity)}
-                    {/* {orderdata.quantity} */}
+                       {/* {totalorder=Number(totalorder)+Number(orderdata.quantity)} */}
+                    {orderdata.quantity}
                     </div>
                     )
                   })}

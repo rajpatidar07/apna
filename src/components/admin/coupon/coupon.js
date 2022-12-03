@@ -13,66 +13,111 @@ import Iconbutton from "../common/iconbutton";
 import { Badge } from "react-bootstrap";
 import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
+import axios from "axios";
+import moment from "moment";
 
 const Coupon = () => {
   const formRef = useRef();
+  const handleClick = () => { };
   const [validated, setValidated] = useState(false);
   const [coupondata, setcoupondata] = useState([]);
+ 
   const [addcoupondata, setaddcoupondata] = useState([]);
-  const handleAlert = () => setAlert(true);
-  const hideAlert = () => setAlert(false);
+  const [file, setFile] = useState();
+  const [fileName, setFileName] = useState("");
   const [Alert, setAlert] = useState(false);
   const [show, setShow] = useState(false);
+  const [apicall, setapicall] = useState(false);
+  const [dltapicall, setDltapicall] = useState(false);
+  const [cid, setCId] = useState(false);
+  const [isActive, setisActive] = useState(false);
+
+
+
+  const handleAlert=(id,is_active)=> {
+    setAlert(true);
+    setisActive(is_active)
+    setCId(id)
+    
+  }
+  const hideAlert =()=> {
+    setAlert(false);
+    console.log("no");
+  }
+  const showAlert =()=> {
+    console.log("yes")
+    setAlert(true);
+     axios.put(`http://192.168.29.108:5000/coupons_delete`,
+    {
+         id:cid,
+         is_active:'0'
+   
+    }) .then((response) => {
+      let data= response.data;
+      setcoupondata(data);
+      setAlert(false);
+      setDltapicall(true) 
+    })
+  }
+ 
+    // axios.put(`http://192.168.29.108:5000/coupons_delete`,
+    // {
+    //      id:cid,
+    //      is_active:isActive
+   
+    // }) .then((response) => {
+    //   let data= response.data;
+    //   setcoupondata(data);
+    //   setAlert(false);
+    //   setDltapicall(true) 
+    // })
+ 
+
   const handleClose = () => {
     formRef.current.reset();
-    setcoupondata('')
+    // setcoupondata('')
     setValidated(false)
     setShow(false);}
   const handleShow = (e) => {
+    console.log(e+"-----aaaiiiiiiiiooooooooooooooooooooo")
     if (e === 'add') {
       setShow(e)
     }
     console.log(JSON.stringify(e))
     if (e !== 'add') {
-      setcoupondata(couponjson[e - 1])
+      try {
+        axios
+          .get(`http://192.168.29.108:5000/coupon?coupon_id=${e}`)
+          .then((response) => {
+            let data= response.data[0];
+            setaddcoupondata(data);
+            // console.log("getttttttcouponnnnnnnnnnnnnnnnnnnnnnnnnn----------   " + JSON.stringify(data));
+
+          })
+      } catch (err) {}
+      // setcoupondata(couponjson[e - 1])
       setShow(e);
     }
   }
-  const couponjson = [
-      {
-        id: 1,
-        category_type: "Grocery",
-        coupon_name: "October Gift Voucher",
-        code: "OCTOBER21",
-        start_date: "2022-02-22",
-        end_date: "2022-02-22",
-        percent: "10",
-        amount: "2000",
-        status: "Active",
-      },
-      {
-        id: 2,
-        category_type: "Health & Care",
-        coupon_name: "Winter Gift Voucher",
-        code: "WINTER21",
-        start_date: "2022-02-22",
-        end_date: "2022-02-22",
-        amount: "2000",
-        percent: "10",
-        status: "Expired",
-      },
-      {
-        id: 3,
-        category_type: "Health & Care",
-        coupon_name: "Winter Gift Voucher",
-        code: "WINTER21",
-        start_date: "2022-02-22",
-        end_date: "2022-02-22",
-        amount: "2000",
-        percent: "10",
-        status: "Pending",
-      },
-    ]
+  useEffect(() => {
+    function getCouponList() {
+      try {
+        axios
+          .get("http://192.168.29.108:5000/coupon?coupon_id=all")
+          .then((response) => {
+            let data = response.data;
+            setcoupondata(data)
+            setaddcoupondata(data);
+            setapicall(false);
+            // console.log("couponnnnnnnnnnnnnn--------" + JSON.stringify(data));
+            // Invoice_Check();
+          });
+      } catch (err) {}
+    }
+
+    getCouponList();
+  }, [apicall,dltapicall]);
+  
   
   const columns = [
     {
@@ -90,7 +135,7 @@ const Coupon = () => {
 
     {
       name: "Campaign Name",
-      selector: (row) => row.coupon_name,
+      selector: (row) => row.campaign_name,
       sortable: true,
       width: "180px",
     },
@@ -102,13 +147,13 @@ const Coupon = () => {
     },
     {
       name: "Product Type",
-      selector: (row) => row.category_type,
+      selector: (row) => row.product_type,
       sortable: true,
       width: "140px",
     },
     {
       name: "Start Date",
-      selector: (row) => row.start_date,
+      selector: (row) => moment(row.start_date).format('YYYY-MM-DD'),
       sortable: true,
       width: "120px",
       center: true,
@@ -119,7 +164,7 @@ const Coupon = () => {
     },
     {
       name: "End Date",
-      selector: (row) => row.end_date,
+      selector: (row) => moment(row.end_date).format('YYYY-MM-DD'),
       sortable: true,
       width: "120px",
       center: true,
@@ -130,7 +175,7 @@ const Coupon = () => {
     },
     {
       name: "Mini Amt",
-      selector: (row) => row.amount,
+      selector: (row) => row.minimum_amount,
       sortable: true,
       width: "100px",
       center: true,
@@ -141,7 +186,7 @@ const Coupon = () => {
     },
     {
       name: "Percentage",
-      selector: (row) => row.percent,
+      selector: (row) => row.percentage,
       sortable: true,
       width: "100px",
       center: true,
@@ -163,6 +208,29 @@ const Coupon = () => {
       width: "105px",
       // center: true,
     },
+
+    {
+      name: "Image",
+      width: "100px",
+      center: true,
+      cell: (row) => (
+        <img
+          // height="90px"
+          // width="75px"
+          alt={'apna_organic'}
+          src={
+            row.image
+          }
+          style={{
+            padding: 10,
+            textAlign: "right",
+            maxHeight: "100px",
+            maxWidth: "100px"
+          }}
+          onClick={handleClick}
+        />
+      ),
+    },
     {
       name: "Action",
       width: "100px",
@@ -174,50 +242,126 @@ const Coupon = () => {
       selector: (row) => (
         <div className={"actioncolimn"}>
           <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.id)} />
-          <BsTrash className=" p-0 m-0 editiconn text-danger" onClick={handleAlert} />
+          <BsTrash className=" p-0 m-0 editiconn text-danger" onClick={handleAlert.bind(this,row.id,row.is_active)} />
         </div>
       ),
     },
   ];
 
   useEffect(() => {
-    setcoupondata(couponjson)
+    setcoupondata(coupondata)
   }, [])
   const handleFormChange = (e) => {
-    setcoupondata({
-      ...coupondata,
+    setaddcoupondata({
+      ...addcoupondata,
       [e.target.name]: e.target.value
     });
+    
+    
   };
 
-  const ImgFormChange = (e) => {
-    let imgapth = URL.createObjectURL([...e.target.files[0]])
-    // ([...e.target.files]).forEach((image) => docsImageUrls.push(URL.createObjectURL(image)));
-    setcoupondata((coupondata) => { return { ...coupondata, logo: imgapth } });
-  }
+   const ImgFormChange = (e) => {
+    // addcoupondata(e.target.files[0]);
+    setFile(e.target.files[0]);
+ setFileName(e.target.files[0].name);
+  };
+  const formData = new FormData();
+  let x = [];
+  x.push(formData);
+  let v = addcoupondata.concat(x);
+  console.log("rrrrrrrrrrrrr---------   " + JSON.stringify(v));
   const AddCouponClick = (e) => {
     const form = e.currentTarget;
+
+   
+
+
+    
+
+
+    // console.log("file --> "+file +" ----filename--> "+fileName +"  formdata-- > "+JSON.stringify(formData))
+
     if (form.checkValidity() === false) {
       e.stopPropagation();
       e.preventDefault()
       setValidated(true)
     }
-    if (form.checkValidity() === true) {
+    else {
       e.preventDefault();
-      console.log("form----------   " + JSON.stringify(coupondata));
+      axios
+      .post(`http://192.168.29.108:5000/coupons_add`,
+      {
+        campaign_name:`${addcoupondata.campaign_name}`,
+        code:`${addcoupondata.code}`,
+        product_type:`${addcoupondata.product_type}`,
+        start_date:`${addcoupondata.start_date}`,
+        end_date:`${addcoupondata.end_date}`,
+        minimum_amount:`${addcoupondata.minimum_amount}`,
+        percentage:`${addcoupondata.percentage}`,
+        status:`${addcoupondata.status}`,
+        image:`${addcoupondata.image}`
+        }
+      )
+      .then((response) => {
+        setapicall(true)
+        // console.log("addddd__________Coupon----------   " + JSON.stringify(addcoupondata));
+      });
       formRef.current.reset();
-      setValidated(false)
-    }
+      setValidated(false);
+      e.preventDefault();
+      formRef.current.reset();
+      //   setValidated(false)
+  
+    // if (form.checkValidity() === true) {
+    //   e.preventDefault();
+    //   console.log("form----------   " + JSON.stringify(coupondata));
+    //   formRef.current.reset();
+    //   setValidated(false)
+    // }
+    };
+  }
+//   console.log({
+//     campaign_name:`${addcoupondata.campaign_name}`,
+ 
+// })
+// console.log("coupon______________update------------------------"+JSON.stringify(addcoupondata))
+
+  const UpdateCouponClick = (e) => {
+
+    
+ console.log("coupon______________update------------------------")
+
+    e.preventDefault()
+    axios.put(`http://192.168.29.108:5000/coupon_update`,
+    {
+      id:`${addcoupondata.id}`,
+      campaign_name:`${addcoupondata.campaign_name}`,
+      code:`${addcoupondata.code}`,
+      product_type:`${addcoupondata.product_type}`,
+      start_date:moment(addcoupondata.start_date).format('YYYY-MM-DDThh:mm:00.000'),
+      end_date:moment(addcoupondata.end_date).format('YYYY-MM-DDThh:mm:00.000'),
+      minimum_amount:`${addcoupondata.minimum_amount}`,
+      percentage:`${addcoupondata.percentage}`, 
+      // note:"",
+      // image:"public/catgory_images/image-1669273978167.jpg"
+    },
+    
+    addcoupondata).then((response) => {
+      setapicall(true)
+  });
+  formRef.current.reset();
+  setValidated(false);
+  setaddcoupondata("");
+  setShow("");
+  // setapicall(true);
+  show.preventDefault();
+
   };
-  const UpdateCouponClick = (show) => {
-    // setadmindata(adminjson.admin[show])
-    show.preventDefault();
-    console.log("form----------   " + JSON.stringify(coupondata));
-  };
+  let a = [];
+  // console.log("form----------   " + JSON.stringify(addcoupondata));
   return (
     <div>
       <h2>Coupons</h2>
-
       {/* search bar */}
       <div className="card mt-3 p-3 ">
         <div className=" row">
@@ -273,7 +417,7 @@ const Coupon = () => {
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicNamel">
                     <Form.Label>Campaign Name</Form.Label>
-                    <Form.Control onChange={(e)=>handleFormChange(e)} name='coupon_name' value={coupondata.coupon_name} required type="text" placeholder="Campaign Name" />
+                    <Form.Control onChange={(e)=>handleFormChange(e)} name='campaign_name' value={addcoupondata.campaign_name} required type="text" placeholder="campaign_name" />
                     <Form.Control.Feedback type="invalid" className="h6">
                       Please fill  name
                     </Form.Control.Feedback>
@@ -282,7 +426,7 @@ const Coupon = () => {
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicCategoryType">
                     <Form.Label>Category Type</Form.Label>
-                    <Form.Select aria-label="Search by category type" required className="adminselectbox" onChange={(e)=>handleFormChange(e)} name={'category_type'} value={coupondata.category_type}>
+                    <Form.Select aria-label="Search by category type" required className="adminselectbox" onChange={(e)=>handleFormChange(e)} name={'product_type'} value={addcoupondata.product_type}>
                       <option value={''}>Search by category type</option>
                       <option value="Grocery">Grocery</option>
                       <option value="Health">Health</option>
@@ -297,7 +441,7 @@ const Coupon = () => {
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicCode">
                     <Form.Label>Coupon Code</Form.Label>
-                    <Form.Control onChange={(e)=>handleFormChange(e)} name='code' value={coupondata.code} required type="text" placeholder="Coupon Code" />
+                    <Form.Control onChange={(e)=>handleFormChange(e)} name='code' value={addcoupondata.code} required type="text" placeholder="Coupon Code" />
                     <Form.Control.Feedback type="invalid" className="h6">
                       Please fill coupon code
                     </Form.Control.Feedback>
@@ -306,7 +450,7 @@ const Coupon = () => {
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicAmount">
                     <Form.Label>Minimum Amount</Form.Label>
-                    <Form.Control onChange={(e)=>handleFormChange(e)} name='amount' value={coupondata.amount} required type="number" placeholder="Minimum Amount Required" />
+                    <Form.Control onChange={(e)=>handleFormChange(e)} name='minimum_amount' value={addcoupondata.minimum_amount} required type="number" placeholder="Minimum Amount Required" />
                     <Form.Control.Feedback type="invalid" className="h6">
                       Please fill minimum amount
                     </Form.Control.Feedback>
@@ -315,7 +459,7 @@ const Coupon = () => {
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicPercent">
                     <Form.Label>Discount Percentage</Form.Label>
-                    <Form.Control onChange={(e)=>handleFormChange(e)} name='percent' value={coupondata.percent} required type="number" placeholder="Discount Percentage" />
+                    <Form.Control onChange={(e)=>handleFormChange(e)} name='percentage' value={addcoupondata.percentage} required type="number" placeholder="Discount Percentage" />
                     <Form.Control.Feedback type="invalid" className="h6">
                       Please fill percentage
                     </Form.Control.Feedback>
@@ -324,7 +468,7 @@ const Coupon = () => {
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicStartDate">
                     <Form.Label>Coupon Start Date</Form.Label>
-                    <Form.Control onChange={(e)=>handleFormChange(e)} name='start_date' value={coupondata.start_date} required type="date" placeholder="Coupon Start Date" />
+                    <Form.Control onChange={(e)=>handleFormChange(e)} name='start_date' value={moment(addcoupondata.start_date).format('YYYY-MM-DD')} required type="date" placeholder="Coupon Start Date" />
                     <Form.Control.Feedback type="invalid" className="h6">
                       Please fill start date
                     </Form.Control.Feedback>
@@ -332,7 +476,7 @@ const Coupon = () => {
                 </div>  <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicEndDate">
                     <Form.Label>Coupon End Date</Form.Label>
-                    <Form.Control onChange={(e)=>handleFormChange(e)} name='end_date' value={coupondata.end_date} required type="date" placeholder="Coupon End Date" />
+                    <Form.Control onChange={(e)=>handleFormChange(e)} name='end_date' value={moment(addcoupondata.end_date).format('YYYY-MM-DD')} required type="date" placeholder="Coupon End Date" />
                     <Form.Control.Feedback type="invalid" className="h6">
                       Please fill end date
                     </Form.Control.Feedback>
@@ -341,14 +485,14 @@ const Coupon = () => {
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicEmail">
                     <Form.Label>Coupon Image</Form.Label>
-                    <Form.Control type="file" placeholder="Coupon Image" onChange={(e)=>ImgFormChange(e)} name={'logo'} />
+                    <Form.Control type="file" placeholder="Coupon Image" onChange={(e)=>ImgFormChange(e)} name='image'/>
                   </Form.Group>
                 </div>
               </div>
             </Modal.Body>
             <Modal.Footer className="addproductfooter">
               <Iconbutton
-                btntext={"X Cancel"}
+                btntext={"Cancel"}
                 onClick={() => handleClose()}
                 btnclass={"button main_outline_button adminmainbutton px-2"}
               // Iconname={<GiCancel /> }
@@ -356,7 +500,7 @@ const Coupon = () => {
               <Iconbutton
                 type={'submit'}
                 btntext={(show === 'add' ? "Add Coupons" : "Update Coupons")}
-                // onClick={(show === 'add' ? AddCouponClick : () => UpdateCouponClick(show))}
+                onClick={(show === 'add' ? AddCouponClick : () => UpdateCouponClick(show))}
                 btnclass={"button main_button "}
               />
 
@@ -366,7 +510,7 @@ const Coupon = () => {
         </Modal>
         <DataTable
           columns={columns}
-          data={couponjson}
+          data={coupondata}
           pagination
           highlightOnHover
           pointerOnHover
@@ -376,7 +520,7 @@ const Coupon = () => {
           show={Alert}
           title="Product Name"
           text="Are you Sure you want to delete"
-          onConfirm={hideAlert}
+          onConfirm={showAlert}
           showCancelButton={true}
           onCancel={hideAlert}
         />
