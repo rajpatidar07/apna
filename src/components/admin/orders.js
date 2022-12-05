@@ -32,7 +32,6 @@ function Product() {
         "created_on":`${searchdata.created_on}`
         }).then((response) => {
         setorderdata(response.data)
-        console.log("order"+JSON.stringify(response.data))
         setapicall(false)
       }).catch(function (error) {
         console.log(error);

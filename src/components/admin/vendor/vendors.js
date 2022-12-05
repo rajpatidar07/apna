@@ -326,24 +326,24 @@ console.log("--img"+JSON.stringify(e.target.files[0]))
       setValidated(true);
     } else {
       e.preventDefault();
-  const formData = new FormData();
-       formData.append("shop_logo", file);
-    formData.append("filename", fileName);
-    formData.append("owner_name", addvendordata.owner_name);
-    formData.append("shop_name", addvendordata.shop_name);
-    formData.append("mobile", addvendordata.mobile);
-    formData.append("email",addvendordata.email);
-    formData.append("shop_address",addvendordata.shop_address);
-    formData.append("gstn",addvendordata.gstn);
-    formData.append("geolocation",addvendordata.geolocation);
-    formData.append("store_type",addvendordata.store_type);
-    formData.append("multiple_document_upload",addvendordata.multiple_document_upload);
-    formData.append("document_name",addvendordata.document_name);
-    formData.append("status",addvendordata.status);
-console.log("--addvendor----------- "+JSON.stringify(formData))
+//   const formData = new FormData();
+//     formData.append("shop_logo", file);
+//     formData.append("filename", fileName);
+//     formData.append("owner_name", addvendordata.owner_name);
+//     formData.append("shop_name", addvendordata.shop_name);
+//     formData.append("mobile", addvendordata.mobile);
+//     formData.append("email",addvendordata.email);
+//     formData.append("shop_address",addvendordata.shop_address);
+//     formData.append("gstn",addvendordata.gstn);
+//     formData.append("geolocation",addvendordata.geolocation);
+//     formData.append("store_type",addvendordata.store_type);
+//     formData.append("multiple_document_upload",addvendordata.multiple_document_upload);
+//     formData.append("document_name",addvendordata.document_name);
+//     formData.append("status",addvendordata.status);
+// console.log("--addvendor----------- "+JSON.stringify(formData))
 
       axios
-      .post(`http://192.168.29.108:5000/vendor_register`,formData)
+      .post(`http://192.168.29.108:5000/vendor_register`,addvendordata)
       .then((response) => {
         // setvendordata(response.data);
       console.log("formadd----------   " + JSON.stringify(response.data));

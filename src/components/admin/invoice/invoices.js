@@ -29,20 +29,17 @@ const InvoiceList = () => {
     });
 
 
-    const Invoice_Check= (id) =>{
-       console.log("dataaa ofinvoice"+id[1])
+    const InvoiceCheck= (id) =>{
+      //  console.log("dataaa ofinvoice"+id[0]+id[1])
        localStorage.setItem("invoiceid",id[1])
       //  localStorage.setItem("invoiceprice")
       //  console.log("idddddddddddddddddddddddddddddddddddddddd"+JSON.stringify(invoiceprice))
-       console.log("idddddddddddddddddddddddddddddddddddddddd"+JSON.stringify(invoiceid))
       localStorage.setItem("invoice_no",id[0]);
       if(id[0] == undefined || id[0] == '' || id[0]==null){
 
       }else{
       navigate('/invoice_detail');}
     }
-    console.log("inviceNoooooooooooooodelailssssssssssssssssssssssssssssss"+JSON.stringify(invoiceno))
-    console.log("hello -----"+JSON.stringify(invoice))
 
   useEffect(() => {
     function getInvoiceList() {
@@ -52,8 +49,7 @@ const InvoiceList = () => {
           .then((response) => {
             let data = response.data;
             setInvoice(data);
-            console.log("invoice--------" + JSON.stringify(data));
-            Invoice_Check();
+            // InvoiceCheck();
           });
       } catch (err) {}
     }
@@ -100,7 +96,7 @@ const InvoiceList = () => {
     },
     {
       name: "Invoice Number",
-      selector: (row) =><p onClick={ Invoice_Check.bind(this,[row.invoice_no,row.id]) }>{row.invoice_no}</p>,
+      selector: (row) =><p onClick={InvoiceCheck.bind(this,[row.invoice_no,row.id]) }>{row.invoice_no}</p>,
       sortable: true,
       width: "150px",
       center: true,

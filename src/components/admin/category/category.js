@@ -344,7 +344,6 @@ setFile(e.target.files[0]);
     setSearchCat({ ...SearchCat, [e.target.name]: e.target.value });
    
   }
-  console.log("__"+SearchCat.category_name +"__" + SearchCat.category_type+ "_"+ SearchCat.level);
   const SearchCategory=()=>{
     if(SearchCat.category_name ==='' || SearchCat.category_name=== null || SearchCat.category_name === undefined){
       console.log(SearchCat.category_name+"cat"+searchvalidated)
@@ -366,11 +365,6 @@ setFile(e.target.files[0]);
     }
    
   }
- 
-  console.log(SearchCat.category_name)
-
-  // // console.log("form----------   " + JSON.stringify(data));
-  // console.log("level----------   " + JSON.stringify(scategory));
 
   const handleClick = () => {};
   const navigate = useNavigate();
