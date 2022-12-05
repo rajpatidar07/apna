@@ -266,13 +266,13 @@ const InvoiceList = () => {
           <input type={"date"} className="adminsideinput" placeholder={"Search by Order Date"} value={SearchInvo.to_date} name={"to_date"} onChange={(e) => onDateChange(e)} />
           </div>
 
-          <div className="col-md-3 col-sm-6 aos_input">
+          {/* <div className="col-md-3 col-sm-6 aos_input">
             <MainButton
               btntext={"Search"}
               btnclass={"button main_button w-100"}
               onClick={SearchInvoices}
             />
-          </div>
+          </div> */}
         </div>
 
         {/* upload */}
