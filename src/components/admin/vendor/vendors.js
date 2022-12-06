@@ -20,6 +20,9 @@ const VendorsList = () => {
   const [Alert, setAlert] = useState(false);
   const [vendordata, setvendordata] = useState([]);
   const [file, setFile] = useState();
+  const [fileDoc, setFileDoc] = useState();
+  const [fileDocName, setFileDocName] = useState("");
+
  const [fileName, setFileName] = useState("");
   const
    [addvendordata, setaddvendordata] = useState({
@@ -31,9 +34,9 @@ const VendorsList = () => {
   gstn:"",
   geolocation:"",
   store_type:"",
-  shop_logo:"",
+  image:"",
   status:"",
-  multiple_document_upload:['https://images.pexels.com/photos/13316720/pexels-photo-13316720.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'],
+  image:"",
   document_name:[],
   availability:""
 
@@ -235,19 +238,10 @@ const VendorsList = () => {
     .get(`http://192.168.29.108:5000/vendors?id=${e}`,addvendordata)
     .then((response) => {
       setaddvendordata(response.data[0]);
-      setDocnameArray(JSON.parse((response.data[0].document_name)));
-      setDocuImgArray(JSON.parse(response.data[0].multiple_document_upload))
-     
-      // let v = response.data[0].multiple_document_upload;
-      // console.log("-------string   -"+JSON.parse(response.data[0].multiple_document_upload));
-      
-      // if(v == '' || v == undefined || v == null || v == []){
-      // console.log("+++++++nulllllllllllllll++++++");
-      // return false;
-      // }else{
-      //   console.log("+++++++parse++++++");
-      //   setDocuImgArray(JSON.parse(response.data[0].multiple_document_upload))
-      // }
+      setDocnameArray(response.data[0].document_name);
+     setDocuImgArray(JSON.parse(response.data[0].multiple_document_upload))
+ console.log("---docname"+ (response.data[0].document_name))
+
       setapicall(false);
     })
     .catch(function(error) {
@@ -256,8 +250,7 @@ const VendorsList = () => {
       setShow(e);
     }
   };
- 
- 
+ console.log("---docname"+ Docnamearray)
 
   const onDocumentNamechange = (e) => {
     setaddtag(e.target.value);
@@ -295,26 +288,35 @@ const VendorsList = () => {
   const ImgFormChange = (e) => {
     setFile(e.target.files[0]);
  setFileName(e.target.files[0].name);
-console.log("--img"+JSON.stringify(e.target.files[0]))
   };
 
 
   const DocsFormChange = (e) => {
-    [e.target.files].forEach((image) =>
-      newImageUrls.push(image)
-    );
-    [e.target.files.name].forEach((image) =>
-    docsImageUrls.push((image))
-  );
-    setaddvendordata((addvendordata) => {
-      return { ...addvendordata, 
-        multiple_document_upload: newImageUrls,
-        MultipleDocs : docsImageUrls
-      };
-    });
+    setFileDoc(e.target.files[0])
+    setFileDocName(e.target.files[0].name);
+
+  //   [e.target.files].forEach((image) =>
+  //     newImageUrls.push(image)
+  //   );
+  //   [e.target.files.name].forEach((image) =>
+  //   docsImageUrls.push((image))
+  // );
+  //   setaddvendordata((addvendordata) => {
+  //     return { ...addvendordata, 
+  //       multiple_document_upload: newImageUrls,
+  //       MultipleDocs : docsImageUrls
+  //     };
+  //   });
   };
-  console.log("--img"+JSON.stringify(file) + fileName)
-  console.log("--imultplemg    "+JSON.stringify(newImageUrls) + JSON.stringify(docsImageUrls))
+
+
+  let shoplogo = `http://192.168.29.108:5000/${addvendordata.shop_logo}`
+  let docsdata = `http://192.168.29.108:5000/${DocuImgarray}`
+  var Newshoplogo = shoplogo.replace("/public", "");
+  var imgdata =docsdata.replace("/public", "");
+
+
+  console.log("---add vendorrr --- > "+  JSON.stringify(addvendordata));
 
   const AddVendorClick = (e) => {
 
@@ -326,24 +328,26 @@ console.log("--img"+JSON.stringify(e.target.files[0]))
       setValidated(true);
     } else {
       e.preventDefault();
-//   const formData = new FormData();
-//     formData.append("shop_logo", file);
-//     formData.append("filename", fileName);
-//     formData.append("owner_name", addvendordata.owner_name);
-//     formData.append("shop_name", addvendordata.shop_name);
-//     formData.append("mobile", addvendordata.mobile);
-//     formData.append("email",addvendordata.email);
-//     formData.append("shop_address",addvendordata.shop_address);
-//     formData.append("gstn",addvendordata.gstn);
-//     formData.append("geolocation",addvendordata.geolocation);
-//     formData.append("store_type",addvendordata.store_type);
-//     formData.append("multiple_document_upload",addvendordata.multiple_document_upload);
-//     formData.append("document_name",addvendordata.document_name);
-//     formData.append("status",addvendordata.status);
-// console.log("--addvendor----------- "+JSON.stringify(formData))
+
+  const formData = new FormData();
+  let x = [addvendordata.document_name]
+    formData.append("image", file);
+    formData.append("filename", fileName);
+    formData.append("owner_name", addvendordata.owner_name);
+    formData.append("shop_name", addvendordata.shop_name);
+    formData.append("mobile", addvendordata.mobile);
+    formData.append("email",addvendordata.email);
+    formData.append("shop_address",addvendordata.shop_address);
+    formData.append("gstn",addvendordata.gstn);
+    formData.append("geolocation",addvendordata.geolocation);
+    formData.append("store_type",addvendordata.store_type);
+    formData.append("image",fileDoc);
+    formData.append("filename", fileDocName);
+    formData.append("document_name",x);
+    formData.append("status",addvendordata.status);
 
       axios
-      .post(`http://192.168.29.108:5000/vendor_register`,addvendordata)
+      .post(`http://192.168.29.108:5000/vendor_register`,formData)
       .then((response) => {
         // setvendordata(response.data);
       console.log("formadd----------   " + JSON.stringify(response.data));
@@ -352,7 +356,6 @@ console.log("--img"+JSON.stringify(e.target.files[0]))
       .catch(function(error) {
         console.log(error);
       });
-      console.log("formadd----------   " + JSON.stringify(vendordata));
       formRef.current.reset();
       setValidated(false);
     }
@@ -832,7 +835,7 @@ console.log("--img"+JSON.stringify(e.target.files[0]))
                     name={"shop_logo"}
                   />
                   {addvendordata.shop_logo ?
-                  <img src={addvendordata.shop_logo} width={'50px'}/> : null}
+                  <img src={Newshoplogo} width={'50px'}/> : null}
                   <Form.Control.Feedback type="invalid" className="h6">
                     Please upload document
                   </Form.Control.Feedback>
@@ -854,14 +857,13 @@ console.log("--img"+JSON.stringify(e.target.files[0]))
 
                   />
 
-                  {
-                  // DocuImgarray == undefined || DocuImgarray == null || DocuImgarray == "" || DocuImgarray ==[]  ? null : 
+                  {/* {
                   (DocuImgarray).map((imgdata)=> {
-                    return(
+                    return( */}
                       <img src={imgdata} width={'50px'}/>
-                    )
+                    {/* )
                   })
-                 }
+                 } */}
 
                   <Form.Control.Feedback type="invalid" className="h6">
                     Please upload Img
