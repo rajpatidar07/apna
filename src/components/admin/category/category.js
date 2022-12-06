@@ -47,7 +47,12 @@ const CategoryList = () => {
   const [subCategory, setSubCategory] = useState([]);
   const [childCategory, setchildCategory] = useState([]);
   const [grandcCategory, setgrandcCategory] = useState([]);
-  const [scategory, setScategory] = useState([]);
+  const [scategory, setScategory] = useState({
+    category_name:"0",
+    sub_category:"",
+    child_category:"",
+    s_category:""
+  });
   const [level, setlevel] = useState('');
   const [file, setFile] = useState();
   const [cid, setCid] = useState();
@@ -273,7 +278,7 @@ setFile(e.target.files[0]);
     setIndVal(e.target.value);
     setScategory({ ...scategory, [e.target.name]: e.target.value});
   };
-
+console.log("-----chsnnf"+JSON.stringify(scategory) )
   // const ImgFormChange = (e,id) => {
   //   setImage(e.target.files[0]);
   // };
@@ -508,6 +513,7 @@ setFile(e.target.files[0]);
                        <option value="">Search by category type</option>
                       <option value="Grocery">Grocery</option>
                       <option value="Health">Health</option>
+                      <option value="Fashion">Fashion</option>
                       <option value="Sports & Accessor">
                         Sports & Accessor
                       </option>
@@ -530,7 +536,7 @@ setFile(e.target.files[0]);
                       onChange={(e, id) => categoryFormChange(e, id)}
                       name={"category_name"}
                     >
-                      <option value={data.category_name}>
+                      <option value={'0'}>
                         Search by category
                       </option>
 
