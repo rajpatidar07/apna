@@ -1,4 +1,4 @@
-import React, { useState, useRef,useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Input from "../common/input";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
@@ -8,51 +8,90 @@ import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-import { Search } from "react-bootstrap-icons";
+import axios from "axios";
+import moment from "moment";
 
 const Complaint = () => {
   const formRef = useRef();
   const [validated, setValidated] = useState(false);
   const [complaintdata, setcomplaintdata] = useState([]);
+  const [editcomplaintdata, seteditcomplaintdata] = useState([]);
+  const [complaintdatadetail, setcomplaintdatadetail] = useState(
+    {
+    id:1, 
+  assigned_to:"",
+  resolve_date:'',
+  status_:"",
+  resolve_description:""
+  });
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
-  const [show, setShow] = useState(false);
-  const [search, setNewSearch] = useState("");
-  const complaintjson = {
-    "complaint": [{
-      id: 1,
-      order_id: 124532,
-      subject: "American tourister trolley return",
-      description:"I have purchased Realme GT master edition with flipkart smart upgrade plan (order id - OD[protected]. From October 1st I suppose to be eligible to pay the remaining 30% balance that is 8400/-.",
-      ticket_date: "2022-01-22",
-      assign: "raj",
-      resolved_date: "2022-05-02",
-      status: "1",
-    },
-    {
-      id: 2,
-      order_id: 100333,
-      subject: "American tourister trolley return",
-      description: "I have purchased Realme GT master edition with flipkart smart upgrade plan (order id - OD[protected]. From October 1st I suppose to be eligible to pay the remaining 30% balance that is 8400/-. But I am unable to pay that as my pay later account is disabled.My due date for the payment is approaching.My phone will be locked if I am unable to pay the payment on time.I have tried to reach...",
-      ticket_date: "2022-01-22",
-      assign: "raj",
-      resolved_date: "2022-05-02",
-      status: "2",
-    },
-    {
-      id: 3,
-      order_id: 100333,
-      subject: "American tourister trolley return",
-      description: "I have purchased Realme GT master edition with flipkart smart upgrade plan (order id - OD[protected]. From October 1st I suppose to be eligible to pay the remaining 30% balance that is 8400/-. But I am unable to pay that as my pay later account is disabled.My due date for the payment is approaching.My phone will be locked if I am unable to pay the payment on time.I have tried to reach...",
-      ticket_date: "2022-01-22",
-      assign: "raj",
-      resolved_date: "2022-05-02",
-      status: "3",
-    },
-
-    ]
+  const [show, setShow] = useState('');
+  const [apicall, setapicall] = useState(false);
+  const handleClose = () => {
+    formRef.current.reset();
+    setValidated(false)
+    setShow(false);
   }
+  const handleShow = (e) => {
+    axios
+    .get(`http://192.168.29.108:5000/complaint_details?id=${e}`)
+    .then((response) => {
+      
+      seteditcomplaintdata({...editcomplaintdata ,
+         id: response.data[0].id,
+         assigned_to:response.data[0].assigned_to,
+         resolve_date:response.data[0].resolve_date,
+         status_:response.data[0].status_,
+         resolve_description:response.data[0].resolve_description,
+        })
+     setcomplaintdatadetail(response.data[0])
+      setapicall(false);
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+    setShow(e);
+  }
+  const [searchdata, setsearchData] = useState({
+  id:"",
+  status_:"",
+  ticket_date:""
+  })
+   
+    const OnSearchChange = (e) => {
+      setsearchData({ ...searchdata, [e.target.name]: e.target.value })
+    }
+
+    const onSearchClick = () =>{
+      axios
+      .post(`http://192.168.29.108:5000/complaint_search`,{
+        "id":`${searchdata.id}`,
+        "status_":`${searchdata.status_}`,
+        "ticket_date":`${searchdata.ticket_date}`
+        })
+      .then((response) => {
+        setcomplaintdata(response.data);
+        setapicall(false);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+    }
+  
+  useEffect(() => {
+    axios
+      .get(`http://192.168.29.108:5000/complaint_details?id=all`)
+      .then((response) => {
+        setcomplaintdata(response.data);
+        console.log("----complaint"+JSON.stringify(response.data))
+        setapicall(false);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }, [apicall]);
   const columns = [
     {
       name: "Id",
@@ -96,7 +135,7 @@ const Complaint = () => {
 
     {
       name: "Ticket Date",
-      selector: (row) => row.ticket_date,
+      selector: (row) => moment(row.ticket_date).format('DD-MM-YYYY'),
       sortable: true,
       width: "140px",
       center: true,
@@ -107,7 +146,7 @@ const Complaint = () => {
 
     {
       name: "Assigned To",
-      selector: (row) => row.assign,
+      selector: (row) => row.assigned_to,
       sortable: true,
       width: "150px",
       center: true,
@@ -118,7 +157,7 @@ const Complaint = () => {
     },
     {
       name: "Resolved at",
-      selector: (row) => row.resolved_date,
+      selector: (row) => moment(row.resolve_date).format("YYYY-MM-DD"),
       sortable: true,
       width: "140px",
       center: true,
@@ -132,20 +171,22 @@ const Complaint = () => {
       selector: (row) => (
         <span
           className={
-            row.status === "1"
+            row.status_ === "solved"
               ? "badge bg-success"
-              : row.status === "2"
+              : row.status_ === "failed"
                 ? "badge bg-danger"
-                : row.status === "3"
-                ? "badge bg-warning" : null
+                : row.status_ === "pending"
+                  ? "badge bg-warning" : row.status_ === "proccess"
+                  ? "badge bg-info" :null
           }
         >
-          { row.status === "1"
-              ? "Solved"
-              : row.status === "2"
-                ? "Pending"
-                : row.status === "3"
-                ? "Processing" : null}
+          {row.status_ === "solved"
+            ? "Solved"
+            : row.status_ === "pending"
+              ? "pending"
+              : row.status_ === "proccess"
+                ? "Processing" : row.status_ === "failed"
+                ? "Failed" :null}
         </span>
       ),
       sortable: true,
@@ -163,7 +204,7 @@ const Complaint = () => {
         <div className={"actioncolimn"}>
           <BiEdit
             className=" p-0 m-0  editiconn text-secondary"
-            onClick={handleShow.bind(this,row.id)}
+            onClick={handleShow.bind(this, row.id)}
           />
           <BsTrash
             className=" p-0 m-0 editiconn text-danger"
@@ -173,58 +214,38 @@ const Complaint = () => {
       ),
     },
   ];
-  const handleClose = () =>{ 
-    formRef.current.reset();
-    setValidated(false)
-    setShow(false);
-  }
-  const handleShow = (e) => {
-      setcomplaintdata(complaintjson.complaint[e - 1])
-      setShow(true);
-  }
-  useEffect(() => {
-    setcomplaintdata(complaintjson.complaint)
-  }, [])
- 
+
+
   const handleFormChange = (e) => {
-    setcomplaintdata({
-      ...complaintdata,
+    seteditcomplaintdata({
+      ...editcomplaintdata,
       [e.target.name]: e.target.value
     });
   };
-
   const UpdateCategoryClick = (e) => {
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
-      // e.stopPropagation();
-      e.preventDefault()
-      console.log("form----------   " + JSON.stringify(complaintdata));
-      formRef.current.reset();
-    setValidated(false)
-
+      e.preventDefault();
+      e.stopPropagation();
+      console.log("falsevalidatn----------   ");
+      setValidated(true)
     }
-    setValidated(true)
+    else{
+      e.preventDefault();
+      axios
+      .put(`http://192.168.29.108:5000/complaint_update`,editcomplaintdata)
+      .then((response) => {
+        // console.log("---update-complaint"+JSON.stringify(response.data))
+        setShow(false)
+        setapicall(true);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+      setValidated(false)
+    }
   };
-  const SearchOnChange = (e) =>{
-//     let value = e.target.value.toLowerCase();
-//     console.log(value);
-// let result = [];
-// result = complaintdata.filter((data) => {
-//   return Object.values(data).join('').toLowerCase().includes(value.toLowerCase())
-// });
-// setcomplaintdata(result);
-//     console.log("result"+JSON.stringify(result))
-setNewSearch(e.target.value);
-  }
-  // filter
-  // const filtered = !search
-  //   ? complaintdata
-  //   : complaintdata.filter((data) =>
-  //       data.id.toLowerCase().includes(search.toLowerCase())
-  //     );
-  // console.log("complaintdata"+JSON.stringify(complaintdata))
-
-  //
+ 
   return (
     <div className="App productlist_maindiv">
       <h2>Complaint/Support</h2>
@@ -233,19 +254,23 @@ setNewSearch(e.target.value);
       <div className="card mt-3 p-3">
         <div className="row pb-3">
           <div className="col-md-3 col-sm-6 aos_input">
-          <Form.Control type={"text"} placeholder={"Search by Id"} onChange={SearchOnChange} name={'idsearch'}/>
-            {/* <Input type={"text"} plchldr={"Search by Id"} onChange={SearchOnChange} name={'idsearch'}/> */}
+            <Form.Control type={"number"} placeholder={"Search by Id"} name={'id'} onChange={(e)=>OnSearchChange(e)}
+              value={searchdata.id}/>
           </div>
 
           <div className="col-md-3 col-sm-6 aos_input">
-            <Input type={"date"} plchldr={"Search by Order Date"} />
+            <input type={"date"} placeholder={"Search by Order Date"} onChange={(e)=>OnSearchChange(e)}
+              value={searchdata.ticket_date} name={'ticket_date'} className={'adminsideinput'}/>
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
-            <Form.Select aria-label="Search by category" className="adminselectbox">
-              <option>Status</option>
-              <option value="1">Pending</option>
-              <option value="2">Solved</option>
-              <option value="3">Failed</option>
+            <Form.Select aria-label="Search by category" className="adminselectbox" onChange={(e)=>OnSearchChange(e)} name={'status_'}
+              value={searchdata.status_}>
+              <option value={''}>Status</option>
+              <option value="pending">Pending</option>
+              <option value="solved">Solved</option>
+              <option value="failed">Failed</option>
+              <option value="proccess">Processing</option>
+
             </Form.Select>
           </div>
 
@@ -253,6 +278,7 @@ setNewSearch(e.target.value);
             <MainButton
               btntext={"Search"}
               btnclass={"button main_button w-100"}
+              onClick={()=>onSearchClick()}
             />
           </div>
         </div>
@@ -277,94 +303,105 @@ setNewSearch(e.target.value);
           showCancelButton={true}
           onCancel={hideAlert}
         />
-        <Modal size="md" show={show} onHide={handleClose}>
+        <Modal size="md" show={show} onHide={()=>handleClose()}>
+        <Form className="" validated={validated} ref={formRef} onSubmit={(e)=>UpdateCategoryClick(e)}>
           <Modal.Header closeButton>
             <Modal.Title>Update Complaint Info</Modal.Title>
           </Modal.Header>
+         
           <Modal.Body>
-          <Form className="" validated={validated} ref={formRef} onSubmit={UpdateCategoryClick}>
-            <div className="row p-3 m-0">
-              <div className="col-md-6">
-                <Form.Group
-                  className="mb-3 aos_input flex-column d-flex"
-                  controlId="formBasicEmail"
-                >
-                  <Form.Label className="mb-0">Ticket Id</Form.Label>
-                  <Form.Text className="mt-0" value={complaintdata.id} name={'id'}>100333</Form.Text>
-                </Form.Group>
-              </div>
-              <div className="col-md-6">
-                <Form.Group
-                  className="mb-3 aos_input flex-column d-flex"
-                  controlId="formBasicEmail"
-                >
-                  <Form.Label className="mb-0">Order Id</Form.Label>
-                  <Form.Text className="mt-0">124532</Form.Text>
-                </Form.Group>
-              </div>
-              <div className="col-md-12">
-                <Form.Group
-                  className="mb-3 aos_input flex-column d-flex"
-                  controlId="formBasicEmail"
-                >
-                  <Form.Label className="mb-0">Description</Form.Label>
-                  <Form.Text className="mt-0"> My phone is locked due to overdue payment But i have allreday paid
-                    the remaining amount of 5400 on 29.07.2022 time 15.40.54 Transaction
-                    no - EXTLINK[protected]_1</Form.Text>
-                </Form.Group>
-              </div>
-              <div className="col-md-12">
-                <Form.Group
-                  className="mb-3 aos_input"
-                  controlId="formBasicEmail"
-                >
-                  <Form.Label>Resolved Description</Form.Label>
-                  <Form.Control as="textarea" rows={3} placeholder="Assigned To" onChange={handleFormChange} name={'resolved_desc'}/>
-                </Form.Group>
-              </div>
-              <div className="col-md-6">
-                <Form.Group
-                  className="mb-3 aos_input"
-                  controlId="formBasicEmail"
-                >
-                  <Form.Label>Assigned To</Form.Label>
-                  <Form.Control type="text" placeholder="Assigned To" onChange={handleFormChange} name={'assign'} required value={complaintdata.assign}/>
-                </Form.Group>
-              </div>
-              <div className="col-md-6">
-                <Form.Group
-                  className="mb-3 aos_input"
-                  controlId="formBasicEmail"
-                >
-                  <Form.Label>Status</Form.Label>
-                  <Form.Select
-                    aria-label="Status"
-                    className="adminselectbox"
-                    placeholder="Status"
-                    onChange={handleFormChange} name={'status'}
-                    value={complaintdata.status}
+              <div className="row p-3 m-0">
+                <div className="col-md-6">
+                  <Form.Group
+                    className="mb-3 aos_input flex-column d-flex"
+                    controlId="formBasicEmail"
                   >
-                    <option value={''}>Status</option>
-                    <option value="1">Solved</option>
-                    <option value="2">Pending</option>
-                    <option value="3">Processing</option>
-                  </Form.Select>
-                </Form.Group>
+                    <Form.Label className="mb-0">Ticket Id</Form.Label>
+                    <Form.Text className="mt-0"  name={'id'}>{complaintdatadetail.id}</Form.Text>
+                  </Form.Group>
+                </div>
+                <div className="col-md-6">
+                  <Form.Group
+                    className="mb-3 aos_input flex-column d-flex"
+                    controlId="formBasicEmail"
+                  >
+                    <Form.Label className="mb-0">Order Id</Form.Label>
+                    <Form.Text className="mt-0">{complaintdatadetail.order_id}</Form.Text>
+                  </Form.Group>
+                </div>
+                <div className="col-md-12">
+                  <Form.Group
+                    className="mb-3 aos_input flex-column d-flex"
+                    controlId="formBasicEmail"
+                  >
+                    <Form.Label className="mb-0">Description</Form.Label>
+                    <Form.Text className="mt-0"> {complaintdatadetail.description}</Form.Text>
+                  </Form.Group>
+                </div>
+                <div className="col-md-12">
+                  <Form.Group
+                    className="mb-3 aos_input"
+                    controlId="formBasicEmail"
+                  >
+                    <Form.Label>Resolved Description</Form.Label>
+                    <Form.Control as="textarea" rows={3} placeholder="Resolve Description" onChange={(e)=>handleFormChange(e)} name={'resolve_description'} value={editcomplaintdata.resolve_description}/>
+                  </Form.Group>
+                </div>
+                <div className="col-md-6">
+                  <Form.Group
+                    className="mb-3 aos_input"
+                    controlId="formBasicEmail"
+                  >
+                    <Form.Label>Assigned To</Form.Label>
+                    <Form.Control type="text" placeholder="Assigned To" onChange={(e)=>handleFormChange(e)} name={'assigned_to'} required value={editcomplaintdata.assigned_to} />
+                  </Form.Group>
+                </div>
+                <div className="col-md-6">
+                  <Form.Group
+                    className="mb-3 aos_input"
+                    controlId="formBasicEmail"
+                  >
+                    <Form.Label>Resolved Date</Form.Label>
+                    <Form.Control type="date" placeholder="Resolved Date" onChange={(e)=>handleFormChange(e)} name={'resolve_date'}  value={moment(editcomplaintdata.resolve_date).format('YYYY-MM-DD')} />
+                  </Form.Group>
+                </div>
+                <div className="col-md-6">
+                  <Form.Group
+                    className="mb-3 aos_input"
+                    controlId="formBasicEmail"
+                  >
+                    <Form.Label>Status</Form.Label>
+                    <Form.Select
+                      aria-label="Status"
+                      className="adminselectbox"
+                      placeholder="Status"
+                      onChange={(e)=>handleFormChange(e)} name={'status_'}
+                      value={editcomplaintdata.status_}
+                    >
+                      <option value={''}>Status</option>
+                      <option value="solved">Solved</option>
+                      <option value="pending">Pending</option>
+                      <option value="proccess">Processing</option>
+                      <option value="failed">Failed</option>
+
+                    </Form.Select>
+                  </Form.Group>
+                </div>
               </div>
-            </div>
-            </Form>
-          </Modal.Body>
+           
+          </Modal.Body> 
           <Modal.Footer>
             <button
               className="button main_outline_button"
-              onClick={handleClose}
+              onClick={()=>handleClose()}
             >
               Cancel
             </button>
-            <button className="button main_button" onClick={UpdateCategoryClick} type='submit'>
+            <button className="button main_button"  type='submit'>
               Update
             </button>
           </Modal.Footer>
+          </Form>
         </Modal>
       </div>
     </div>

@@ -71,7 +71,7 @@ function AdminLayout() {
                   <Route path="/orders" element={<Orders />} />
                   <Route path="/addproduct" element={<Addproduct />} />
                   <Route path="/productdetail" element={<Productdetail />} />
-                  <Route path="/invoice" element={<InvoiceList />} />
+                  <Route path="/invoice" element={<InvoiceList/>} />
                   <Route path="/invoice_detail" element={<Invoice />} />
                   <Route path="/soldproduct" element={<Soldproduct />} />
                   <Route path="/featureproduct" element={<Featuredproduct />} />

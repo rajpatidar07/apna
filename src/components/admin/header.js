@@ -10,7 +10,47 @@ import { FiLogOut } from "react-icons/fi";
 import { CgProfile } from "react-icons/cg";
 import { AiOutlineSetting } from "react-icons/ai";
 import { BiTransfer } from "react-icons/bi";
+import { useState } from "react";
+import Modal from 'react-bootstrap/Modal';
+import axios from "axios";
 function AdminHeader() {
+  let loginid = localStorage.getItem("loginid")
+  let pass=localStorage.getItem("password");
+  // const formRef = useRef();
+  const [show, setShow] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [newpassword, setnewPassword] = useState("");
+  const onEmailChange=(e)=>{
+    setEmail(e.target.value);
+    // setnewPassword(e.target.value)
+  }
+  const onPasswordChange=(e)=>{
+    setPassword(e.target.value);
+  }
+  const newPass = (e, id) => {
+    setnewPassword(e.target.value);
+  };
+  const LoginForm=(e)=>{
+    e.preventDefault();
+    axios.put(`http://192.168.29.108:5000/update_password`,
+    {
+    admin_email:loginid,
+    admin_password:pass,
+    new_admin_password:newpassword
+  }
+  ).then((response) => {
+    // console.log("possttttttt------"+JSON.stringify(response))
+  });
+  setEmail("");
+  setPassword("");
+  e.preventDefault();
+  }
+  
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+
   return (
     <div className="container content_top_container">
       <div className="row content_top_row ">
@@ -113,7 +153,8 @@ function AdminHeader() {
                 <CgProfile />
                 profile
               </Dropdown.Item>
-              <Dropdown.Item href="#/action-2" className="profile_list py-2">
+              <Dropdown.Item href="#/action-2" className="profile_list py-2" onClick={handleShow}>
+             
                 <AiOutlineSetting />
                 Setting
               </Dropdown.Item>
@@ -123,6 +164,31 @@ function AdminHeader() {
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
+          <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Login</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+        <Form onSubmit={LoginForm}>
+      <Form.Group className="mb-3" controlId="formBasicEmail">
+        <Form.Label>Email</Form.Label>
+        <Form.Control  onChange={(e) => onEmailChange(e)} name={"admin_email"} value={loginid} type="email" placeholder="Enter Email"/>
+      </Form.Group>
+
+      <Form.Group className="mb-3" controlId="formBasicPassword">
+        <Form.Label>Old Password</Form.Label>
+        <Form.Control onChange={(e) => onPasswordChange(e)} value={pass}  name={"admin_password"} type="password" placeholder="Password" />
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="formBasicPassword">
+        <Form.Label>Update Password</Form.Label>
+        <Form.Control type="password" name={"new_admin_password"} value={newpassword} onChange={(e) => newPass(e)} placeholder="Password" />
+      </Form.Group>
+      <Button variant="primary" type="submit">
+        Submit
+      </Button>
+    </Form>
+        </Modal.Body>
+      </Modal>
         </div>
       </div>
     </div>

@@ -28,7 +28,7 @@ import { Button } from "react-bootstrap";
 import { GiCancel } from "react-icons/gi";
 import moment from "moment/moment";
 
-function Product() {
+function Product_Old() {
   const [pdata, setpdata] = useState([]);
   const [proddata, setproddata] = useState([]);
   const [variantid, setvariantid] = useState('');
@@ -136,16 +136,8 @@ function Product() {
 
   //  json
   var varietyy = VariationJson;
-const prodata=(id)=>{
-console.log(id[0]+"----------"+id[1]+"----------------------------------")
-localStorage.setItem("variantid", id[0])
-localStorage.setItem("productid", id[1])
-navigate('/productdetail') 
-    //  axios.get("http://192.168.29.108:5000/products_pricing?id=14&product_id=43").then((response)=>{
-    //   console.log("------------------------------" + JSON.stringify(response.data))
-    //  })
-    }
-    // console.log("---------------variandiddddddddd--------------"+variantid)
+
+
   const columns = [
 
     {
@@ -174,8 +166,10 @@ navigate('/productdetail')
       name: "Product Name",
       selector: (row) => (
         <div>
-          <p className="mb-1" onClick={prodata.bind(this,[row.id,row.product_id])}><b>{row.product_title_name}<br />SKU: {row.product_id} <br />
-              <div dangerouslySetInnerHTML={{ __html: pdata.product_description}} className='editor'></div>
+          <p className="mb-1" onClick={() => {
+            navigate("/productdetail");
+          }}><b>{row.product_title_name}<br />SKU: {row.product_id} <br />
+              <div dangerouslySetInnerHTML={{ __html: pdata.product_description }} className='editor'></div>
             </b>
 
           </p>
@@ -313,8 +307,7 @@ navigate('/productdetail')
     else {
       console.log(JSON.stringify(e))
       axios.get(`http://192.168.29.108:5000/product?id=${e}`).then((response) => {
-        let data = response.data
-        setproductdata(data)
+        setproductdata(response.data)
       }).catch(function (error) {
         console.log(error);
       });
@@ -322,13 +315,13 @@ navigate('/productdetail')
       // setseoArray(pdata[e].seo_tag)
       setmodalshow(e);
     setvariantapicall(false)
+
     }
   }
   useEffect(()=>{
     handleShow();
   },[variantapicall])
   const handlevarietyShow = (id) => {
-    console.log("-----produfh"+id)
     axios.post("http://192.168.29.108:5000/products_search?page=0&per_page=50", {
       "product_search": {
         "search": '',
@@ -348,7 +341,7 @@ navigate('/productdetail')
     setvarietyShow(true)
 
   };
-  const handlevarietyClose = () => {setvarietyShow(false) }
+  const handlevarietyClose = () => { setvarietyShow(false) }
   const handleClose = () => {
     mainformRef.current.reset();
     setValidated(false)
@@ -1838,4 +1831,4 @@ const VariantAddProduct = () =>{
   );
 }
 
-export default Product;
+export default Product_Old;

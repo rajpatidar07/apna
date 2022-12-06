@@ -1,9 +1,63 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./order_detail.css";
 import Profile from "../../../images/user.jpg";
 import { AiOutlineFileText } from "react-icons/ai";
 import { BsTelephoneFill, BsFillEnvelopeFill } from "react-icons/bs";
+import { useState } from "react";
+import Form from 'react-bootstrap/Form';
+import axios from "axios";
+import moment from "moment";
 const OrderDetail = () => {
+  let totalorder=0;
+  let orderid = localStorage.getItem("orderid")
+  let userid= localStorage.getItem("userid")
+  const[order,setOrder]=useState([]);
+  const[productorder,setproductOrder]=useState([]);
+  const[user,setUser]=useState([]);
+  const [changstatuss, setchangstatuss] = useState('');
+  const [searchdataa, setsearchDataa] = useState({
+    status:"",
+    created_on:""
+    })
+   
+    const OnSearchChangee = (e) => {
+      setsearchDataa({ ...searchdataa, [e.target.name]: e.target.value })
+    }
+   
+    const onStatusChangee = (e) => {
+      // e.prevantDefault();
+      setchangstatuss(e.target.value)
+      axios.put("http://192.168.29.108:5000/order_status_change", {
+      status_change:e.target.value,
+      id:`${orderid}`
+        }).then((response) => {
+        // setapicall(true)
+      }).catch(function (error) {
+        console.log(error);
+      });
+    }
+  useEffect(()=>{
+    axios.get(`http://192.168.29.108:5000/order_deteils?id=${orderid}`).then((response) => {
+      setOrder(response.data);
+      setproductOrder(response.data.product_types)
+      UserData();
+      // console.log("______uuuuu_____"+JSON.stringify(response.data))
+      // setapicall(false)
+    }).catch(function (error) {
+      console.log(error);
+    });
+    
+  },[])
+  const UserData = () =>{
+    axios.get(`http://192.168.29.108:5000/user_details?user_id=${userid}`).then((response) => {
+      let data = response.data;
+      setUser(data);
+      console.log("______uuuuserdataa_____"+JSON.stringify(response.data))
+      // setapicall(false)
+    }).catch(function (error) {
+      console.log(error);
+    });
+  }
   return (
     <div className="order_detail_page">
       <div className="order_detail">
@@ -17,21 +71,37 @@ const OrderDetail = () => {
                     <span>#</span>Order Id
                   </div>
                   <div>
-                    <span>AS1568</span>
+                        <span>{order.id}</span>
+                    
                   </div>
                 </div>
                 <div className="d-flex flex-column text-center">
                   <div className="order_info_heading">Payment</div>
-                  <div className="badge bg-success">Paid</div>
+                  <div className="badge bg-success">{order.payment_mode}</div>
                 </div>
                 <div className="d-flex flex-column text-center">
                   <div className="order_info_heading">Order Status</div>
-                  <div className="badge bg-warning">Pending</div>
+                
+                      <Form.Select aria-label="Floating label select example"
+                      onChange={onStatusChangee}
+                      name='status'
+                      // value={changstatuss}
+                      >
+                     <option>Select Order Status</option>
+                     <option value="delivered" selected={order.status === 'delivered' ? true:false}>Delivered</option>
+                   <option value="pending" selected={order.status === 'pending' ? true:false}>Pending</option>
+                   <option value="approved" selected={order.status === 'approved' ? true:false}>Approved</option>
+                   <option value="packed" selected= {order.status === 'packed' ? true:false}>Packed</option>
+                   <option value="return" selected= {order.status === 'return' ? true:false}>Return</option>
+                   <option value="cancel" selected= {order.status === 'cancel' ? true:false}>Cancelled</option>
+         </Form.Select>
+       
+                 
                 </div>
                 <div className="d-flex flex-column text-center">
                   <div className="order_info_heading">Order Date & Time</div>
                   <div className="date_time">
-                    06.10.22 <span className="">at 10:40 am</span>
+                  {order.order_date} 
                   </div>
                 </div>
               </div>
@@ -39,9 +109,14 @@ const OrderDetail = () => {
 
             <div className="product_img_price">
               <div className="product_image_price"></div>
+
+{(productorder || []).map(orderdata=>{
+                    return(
+
               <div className="d-flex justify-content-between mb-3 align-items-center">
+
                 <div className="product_img d-flex">
-                  <img src="https://lp2.hm.com/hmgoepprod?set=source[/40/71/4071b4a39844344e1de770b4a494ba7e3078219d.jpg],origin[dam],category[men_tshirtstanks_shortsleeve],type[DESCRIPTIVESTILLLIFE],res[w],hmver[2]&call=url[file:/product/main]" alt="apnaorganic"/>
+                  <img src="" alt="apnaorganic"/>
                   <div className="product_name_detial ps-3">
                     <h6>T-Shirt Blue</h6>
                     <p>color:blue</p>
@@ -49,23 +124,14 @@ const OrderDetail = () => {
                   </div>
                 </div>
 
-                <div className="product_price">$122</div>
-                <div className="product_quantity">2</div>
-                <div className="total_amount">$244</div>
+                <div className="product_price">{orderdata.price}₹</div>
+                <div className="product_quantity">{orderdata.quantity}</div>
+                <div className="total_amount">{orderdata.price*orderdata.quantity}</div>
+               
               </div>
-              <div className="d-flex justify-content-between align-items-center">
-                <div className="product_img d-flex">
-                  <img src="https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/5a60fd99-2c3a-44d3-91bb-62a47224e322/sportswear-heritage-86-adjustable-cap-7g0hKX.png" alt="apnaorganic"/>
-                  <div className="product_name_detial ps-3">
-                    <h6>Cap Blue</h6>
-                    <p>color:blue</p>
-                    <p>size: 10cm</p>
-                  </div>
-                </div>
-                <div className="product_price">$122.00</div>
-                <div className="product_quantity">2</div>
-                <div className="total_amount">$244.00</div>
-              </div>
+              )
+            })} 
+             
             </div>
 
             <div className="delivery_charges">
@@ -86,22 +152,22 @@ const OrderDetail = () => {
               <div className="payment_summary_total d-flex justify-content-between align-items-center">
                 <div className="Subtotal">
                   <p>
-                    Subtotal<span>(2 items)</span>
+                    Subtotal<span>({order.total_quantity} items)</span>
                   </p>
                 </div>
-                <div className="">$400.00</div>
+                <div className="">{order.total_amount - (order.total_cgst + order.total_sgst )}₹</div>
               </div>
               <div className="payment_summary_total d-flex justify-content-between align-items-center">
                 <div className="Subtotal">
                   <p>Delivery Charges</p>
                 </div>
-                <div className="">$20.00</div>
+                <div className="">00.00₹</div>
               </div>
               <div className="payment_summary_total d-flex justify-content-between align-items-center">
                 <div className="Subtotal">
                   <p>Tax</p>
                 </div>
-                <div className="">$0.00</div>
+                <div className="">{order.total_cgst + order.total_sgst}₹</div>
               </div>
               <div className="payment_summary_total d-flex justify-content-between align-items-center">
                 <div className="Subtotal">
@@ -110,16 +176,84 @@ const OrderDetail = () => {
                   </p>
                 </div>
                 <div className="">
-                  <strong>$420.00</strong>
+                  <strong>{order.total_amount}₹</strong>
                 </div>
               </div>
             </div>
           </div>
           <div className="col-lg-4">
             <div className="right_side">
-              <div className="customer_name_address">
-                <div className="customer_info">
+              
+              {user.map((userdata)=>{
+                    return(
+                      <div className="customer_name_address">
+                      <div className="customer_info">
                   <div className="customer">Customer</div>
+                  
+                  <div className="customer_name_img d-flex py-3">
+                    <img src={Profile} alt={'apnaorganic'}/>
+                    <div className="customer_name ps-4 my-auto">
+                      {userdata.first_name} {userdata.last_name}
+                    </div>
+                  </div>
+                  <div className="customer_orders d-flex py-3">
+                    <AiOutlineFileText className="order_icon p-1" />
+                   
+                    <div className="customer_orders_no ps-4 my-auto">
+                       {/* {totalorder=Number(totalorder)+Number(orderdata.quantity)} */}
+                    {order.total_quantity}
+                    </div>
+                  
+                  </div>
+                  
+                </div>
+                <div className="contact py-3">
+                  <div className="contact_heading pb-3">
+                    <h5>Contact Info</h5>
+                  </div>
+                  <div className="email py-2">
+                    <BsFillEnvelopeFill />
+                    <span>{userdata.email}</span>
+                  </div>
+                  <div className="number py-2">
+                    <BsTelephoneFill />
+                    <span>{userdata.phone_no}</span>
+                  </div>
+                </div>
+                <div className="ship_Address py-3">
+                  <h5>Ship Address</h5>
+                  <div className="address">
+                    <p> {userdata.first_name} {userdata.last_name}</p>
+                    <p>{userdata.gender}</p>
+                    <p>{userdata.date_of_birth}</p>
+                    <p>{userdata.address}</p>
+                    <p>{userdata.address2}</p>
+                    <p>Indore Madhya Pradesh</p>
+                    <p>Pin:452001</p>
+                    <p>{userdata.phone_no}</p>
+                  </div>
+                </div>
+                <div className="bill_Address py-3">
+                  <h5>Bill Address</h5>
+                  <div className="address">
+                    <p>{userdata.first_name} {userdata.last_name}</p>
+                    <p>{userdata.gender}</p>
+                    <p>{userdata.date_of_birth}</p>
+                    <p>{userdata.address}</p>
+                    <p>{userdata.address2}</p>
+                    <p>Indore Madhya Pradesh</p>
+                    <p>Pin:452001</p>
+                    <p>{userdata.phone_no}</p>
+                  </div>
+                </div>
+                 </div>
+                    )
+                  })}
+
+                  
+                {/* <div className="customer_info">
+                  <div className="customer">Customer</div>
+                  
                   <div className="customer_name_img d-flex py-3">
                     <img src={Profile} alt={'apnaorganic'}/>
                     <div className="customer_name ps-4 my-auto">
@@ -167,8 +301,8 @@ const OrderDetail = () => {
                     <p>Pin:452001</p>
                     <p>+91 9876543210</p>
                   </div>
-                </div>
-              </div>
+                </div> */}
+              {/* </div> */}
             </div>
           </div>
         </div>
