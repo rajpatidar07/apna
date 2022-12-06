@@ -22,7 +22,17 @@ const Coupon = () => {
   const [validated, setValidated] = useState(false);
   const [coupondata, setcoupondata] = useState([]);
  
-  const [addcoupondata, setaddcoupondata] = useState([]);
+  const [addcoupondata, setaddcoupondata] = useState({
+  campaign_name:"",
+  code:"",
+  product_type:"",
+  start_date:"",
+  end_date:"",
+  minimum_amount:"",
+  percentage:"",
+  status:"active",
+  image:""
+    });
   const [file, setFile] = useState();
   const [fileName, setFileName] = useState("");
   const [Alert, setAlert] = useState(false);
@@ -45,32 +55,18 @@ const Coupon = () => {
     console.log("no");
   }
   const showAlert =()=> {
-    console.log("yes")
     setAlert(true);
      axios.put(`http://192.168.29.108:5000/coupons_delete`,
     {
          id:cid,
          is_active:'0'
-   
     }) .then((response) => {
       let data= response.data;
-      setcoupondata(data);
+      // setcoupondata(data);
       setAlert(false);
       setDltapicall(true) 
     })
   }
- 
-    // axios.put(`http://192.168.29.108:5000/coupons_delete`,
-    // {
-    //      id:cid,
-    //      is_active:isActive
-   
-    // }) .then((response) => {
-    //   let data= response.data;
-    //   setcoupondata(data);
-    //   setAlert(false);
-    //   setDltapicall(true) 
-    // })
  
 
   const handleClose = () => {
@@ -79,7 +75,6 @@ const Coupon = () => {
     setValidated(false)
     setShow(false);}
   const handleShow = (e) => {
-    console.log(e+"-----aaaiiiiiiiiooooooooooooooooooooo")
     if (e === 'add') {
       setShow(e)
     }
@@ -91,8 +86,6 @@ const Coupon = () => {
           .then((response) => {
             let data= response.data[0];
             setaddcoupondata(data);
-            // console.log("getttttttcouponnnnnnnnnnnnnnnnnnnnnnnnnn----------   " + JSON.stringify(data));
-
           })
       } catch (err) {}
       // setcoupondata(couponjson[e - 1])
@@ -105,12 +98,10 @@ const Coupon = () => {
         axios
           .get("http://192.168.29.108:5000/coupon?coupon_id=all")
           .then((response) => {
-            let data = response.data;
-            setcoupondata(data)
-            setaddcoupondata(data);
+            let data =  response.data;
+            let filterArray =data.filter(item => (item.is_active === 0));
+            setcoupondata(filterArray)
             setapicall(false);
-            // console.log("couponnnnnnnnnnnnnn--------" + JSON.stringify(data));
-            // Invoice_Check();
           });
       } catch (err) {}
     }
@@ -248,9 +239,7 @@ const Coupon = () => {
     },
   ];
 
-  useEffect(() => {
-    setcoupondata(coupondata)
-  }, [])
+
   const handleFormChange = (e) => {
     setaddcoupondata({
       ...addcoupondata,
@@ -261,49 +250,50 @@ const Coupon = () => {
   };
 
    const ImgFormChange = (e) => {
-    // addcoupondata(e.target.files[0]);
+    // addcoupondata({
+    //   ...addcoupondata,
+    //   image: e.target.files[0]
+    // });
     setFile(e.target.files[0]);
  setFileName(e.target.files[0].name);
+ 
   };
-  const formData = new FormData();
-  let x = [];
-  x.push(formData);
-  let v = addcoupondata.concat(x);
-  console.log("rrrrrrrrrrrrr---------   " + JSON.stringify(v));
+
+  
+
   const AddCouponClick = (e) => {
+    // const startdate = moment(addcoupondata.start_date).format('YYYY-MM-DDThh:mm:00.000')
+    // const enddate = moment(addcoupondata.end_date).format('YYYY-MM-DDThh:mm:00.000')
     const form = e.currentTarget;
-
-   
-
-
-    
-
-
-    // console.log("file --> "+file +" ----filename--> "+fileName +"  formdata-- > "+JSON.stringify(formData))
-
     if (form.checkValidity() === false) {
       e.stopPropagation();
       e.preventDefault()
       setValidated(true)
     }
     else {
-      e.preventDefault();
-      axios
-      .post(`http://192.168.29.108:5000/coupons_add`,
-      {
-        campaign_name:`${addcoupondata.campaign_name}`,
-        code:`${addcoupondata.code}`,
-        product_type:`${addcoupondata.product_type}`,
-        start_date:`${addcoupondata.start_date}`,
-        end_date:`${addcoupondata.end_date}`,
-        minimum_amount:`${addcoupondata.minimum_amount}`,
-        percentage:`${addcoupondata.percentage}`,
-        status:`${addcoupondata.status}`,
-        image:`${addcoupondata.image}`
-        }
+      // e.preventDefault();
+      const formData = new FormData();
+      formData.append("filename", fileName);
+      formData.append("campaign_name",addcoupondata.campaign_name);
+      formData.append("code", addcoupondata.code);
+      formData.append("product_type", addcoupondata.product_type);
+      formData.append("start_date",moment(addcoupondata.start_date).format('YYYY-MM-DDThh:mm:00.000')); 
+      formData.append("end_date",moment(addcoupondata.end_date).format('YYYY-MM-DDThh:mm:00.000'));
+      formData.append("minimum_amount", addcoupondata.minimum_amount);
+      formData.append("percentage", addcoupondata.percentage);
+      formData.append("status", addcoupondata.status);
+      // formData.append("image",file); 
+      formData.append("image", file);
+
+      console.log("formData------->");
+      console.log("addcoupondata----_____"+JSON.stringify(addcoupondata));
+      axios.post(`http://192.168.29.108:5000/coupons_add`,formData
       )
       .then((response) => {
+
         setapicall(true)
+      console.log("formDataafterrrs------->"+JSON.stringify(response));
+
         // console.log("addddd__________Coupon----------   " + JSON.stringify(addcoupondata));
       });
       formRef.current.reset();
@@ -314,23 +304,16 @@ const Coupon = () => {
   
     // if (form.checkValidity() === true) {
     //   e.preventDefault();
-    //   console.log("form----------   " + JSON.stringify(coupondata));
     //   formRef.current.reset();
     //   setValidated(false)
     // }
     };
   }
-//   console.log({
-//     campaign_name:`${addcoupondata.campaign_name}`,
- 
-// })
+
 // console.log("coupon______________update------------------------"+JSON.stringify(addcoupondata))
 
   const UpdateCouponClick = (e) => {
-
-    
  console.log("coupon______________update------------------------")
-
     e.preventDefault()
     axios.put(`http://192.168.29.108:5000/coupon_update`,
     {
@@ -358,7 +341,6 @@ const Coupon = () => {
 
   };
   let a = [];
-  // console.log("form----------   " + JSON.stringify(addcoupondata));
   return (
     <div>
       <h2>Coupons</h2>

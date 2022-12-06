@@ -136,7 +136,6 @@ setFile(e.target.files[0]);
       } catch (err) {}
     }
   };
-  console.log("---------------level====" + level);
   const columns = [
     {
       name: "ID",
@@ -288,9 +287,8 @@ setFile(e.target.files[0]);
     }
     if (form.checkValidity() === true) {
       e.preventDefault();
-      console.log("_____________________________test____________")
-
       const formData = new FormData();
+      
       formData.append("image", file);
       formData.append("filename", fileName);
       formData.append("parent_id", scategory.category_name);
@@ -369,6 +367,15 @@ setFile(e.target.files[0]);
   const handleClick = () => {};
   const navigate = useNavigate();
 
+  const result1 = searchdata.filter((thing, index, self) =>
+  index === self.findIndex((t) => (
+    t.category_type == thing.category_type 
+  )))
+  const result2 = searchdata.filter((thing, index, self) =>
+  index === self.findIndex((t) => (
+    t.level == thing.level 
+  )))
+
   return (
     <div className="App productlist_maindiv">
       <h2>Category</h2>
@@ -393,7 +400,7 @@ setFile(e.target.files[0]);
                 value={SearchCat.category_type}
             >
               <option>Search by category type</option>
-              {searchdata.map((lvl)=>{
+              {result1.map((lvl)=>{
                 return( <option value={lvl.category_type}>{lvl.category_type}</option>)
              
 
@@ -412,7 +419,7 @@ setFile(e.target.files[0]);
               value={SearchCat.level}
             >
               <option>Search by level</option>
-              {searchdata.map((lvl)=>{
+              {result2.map((lvl)=>{
                 return( 
                 <option value={lvl.level}>{lvl.level}</option>
                 )
