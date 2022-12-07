@@ -23,7 +23,17 @@ const Coupon = () => {
   
   const [coupondata, setcoupondata] = useState([]);
  
-  const [addcoupondata, setaddcoupondata] = useState([]);
+  const [addcoupondata, setaddcoupondata] = useState({
+  campaign_name:"",
+  code:"",
+  product_type:"",
+  start_date:"",
+  end_date:"",
+  minimum_amount:"",
+  percentage:"",
+  status:"",
+  image:""
+    });
   const [file, setFile] = useState();
   const [fileName, setFileName] = useState("");
   const [Alert, setAlert] = useState(false);
@@ -52,13 +62,11 @@ const Coupon = () => {
     console.log("no");
   }
   const showAlert =()=> {
-    console.log("yes")
     setAlert(true);
      axios.put(`http://192.168.29.108:5000/coupons_delete`,
     {
          id:cid,
          is_active:'0'
-   
     }) .then((response) => {
       let data= response.data;
       
@@ -74,7 +82,6 @@ const Coupon = () => {
     setValidated(false)
     setShow(false);}
   const handleShow = (e) => {
-    console.log(e+"-----aaaiiiiiiiiooooooooooooooooooooo")
     if (e === 'add') {
       setShow(e)
     }
@@ -86,8 +93,6 @@ const Coupon = () => {
           .then((response) => {
             let data= response.data[0];
             setaddcoupondata(data);
-            // console.log("getttttttcouponnnnnnnnnnnnnnnnnnnnnnnnnn----------   " + JSON.stringify(data));
-
           })
       } catch (err) {}
       // setcoupondata(couponjson[e - 1])
@@ -106,8 +111,6 @@ const Coupon = () => {
             setaddcoupondata(data);
             setsearchCoupon(data);
             setapicall(false);
-            // console.log("couponnnnnnnnnnnnnn--------" + JSON.stringify(data));
-            // Invoice_Check();
           });
       } catch (err) {}
     }
@@ -211,12 +214,13 @@ const Coupon = () => {
       width: "100px",
       center: true,
       cell: (row) => (
+        
         <img
           // height="90px"
           // width="75px"
           alt={'apna_organic'}
           src={
-            row.image
+            `http://192.168.29.108:5000/${row.image}`
           }
           style={{
             padding: 10,
@@ -273,97 +277,76 @@ const Coupon = () => {
   };
 
    const ImgFormChange = (e) => {
-    // addcoupondata(e.target.files[0]);
     setFile(e.target.files[0]);
  setFileName(e.target.files[0].name);
+ 
   };
-  // const formData = new FormData();
-  // let x = [];
-  // x.push(formData);
-  // let v = addcoupondata.concat(x);
-  // console.log("rrrrrrrrrrrrr---------   " + JSON.stringify(v));
+
+  
+
   const AddCouponClick = (e) => {
     const form = e.currentTarget;
-    // console.log("file --> "+file +" ----filename--> "+fileName +"  formdata-- > "+JSON.stringify(formData))
-
     if (form.checkValidity() === false) {
       e.stopPropagation();
       e.preventDefault()
       setValidated(true)
     }
     else {
-      e.preventDefault();
-      axios
-      .post(`http://192.168.29.108:5000/coupons_add`,
-      {
-        campaign_name:`${addcoupondata.campaign_name}`,
-        code:`${addcoupondata.code}`,
-        product_type:`${addcoupondata.product_type}`,
-        start_date:`${addcoupondata.start_date}`,
-        end_date:`${addcoupondata.end_date}`,
-        minimum_amount:`${addcoupondata.minimum_amount}`,
-        percentage:`${addcoupondata.percentage}`,
-        status:`${addcoupondata.status}`,
-        image:`${addcoupondata.image}`
-        }
+      // e.preventDefault();
+      const formData = new FormData();
+      formData.append("filename", fileName);
+      formData.append("campaign_name",addcoupondata.campaign_name);
+      formData.append("code", addcoupondata.code);
+      formData.append("product_type", addcoupondata.product_type);
+      formData.append("start_date",moment(addcoupondata.start_date).format('YYYY-MM-DDThh:mm:00.000')); 
+      formData.append("end_date",moment(addcoupondata.end_date).format('YYYY-MM-DDThh:mm:00.000'));
+      formData.append("minimum_amount", addcoupondata.minimum_amount);
+      formData.append("percentage", addcoupondata.percentage);
+      formData.append("status", addcoupondata.status);
+      formData.append("image", file);
+      axios.post(`http://192.168.29.108:5000/coupons_add`,formData
       )
       .then((response) => {
+
         setapicall(true)
-        // console.log("addddd__________Coupon----------   " + JSON.stringify(addcoupondata));
+        setShow(false)
       });
       formRef.current.reset();
       setValidated(false);
       e.preventDefault();
       formRef.current.reset();
-      //   setValidated(false)
-  
-    // if (form.checkValidity() === true) {
-    //   e.preventDefault();
-    //   console.log("form----------   " + JSON.stringify(coupondata));
-    //   formRef.current.reset();
-    //   setValidated(false)
-    // }
     };
   }
-//   console.log({
-//     campaign_name:`${addcoupondata.campaign_name}`,
- 
-// })
-// console.log("coupon______________update------------------------"+JSON.stringify(addcoupondata))
+
 
   const UpdateCouponClick = (e) => {
+      const formData = new FormData();
+      formData.append("filename", fileName);
+      formData.append("id", e);
+      formData.append("campaign_name",addcoupondata.campaign_name);
+      formData.append("code", addcoupondata.code);
+      formData.append("product_type", addcoupondata.product_type);
+      formData.append("start_date",moment(addcoupondata.start_date).format('YYYY-MM-DDThh:mm:00.000')); 
+      formData.append("end_date",moment(addcoupondata.end_date).format('YYYY-MM-DDThh:mm:00.000'));
+      formData.append("minimum_amount", addcoupondata.minimum_amount);
+      formData.append("percentage", addcoupondata.percentage);
+      formData.append("status", addcoupondata.status);
+      formData.append("image", file);
 
-    
- console.log("coupon______________update------------------------")
-
-    e.preventDefault()
-    axios.put(`http://192.168.29.108:5000/coupon_update`,
-    {
-      id:`${addcoupondata.id}`,
-      campaign_name:`${addcoupondata.campaign_name}`,
-      code:`${addcoupondata.code}`,
-      product_type:`${addcoupondata.product_type}`,
-      start_date:moment(addcoupondata.start_date).format('YYYY-MM-DDThh:mm:00.000'),
-      end_date:moment(addcoupondata.end_date).format('YYYY-MM-DDThh:mm:00.000'),
-      minimum_amount:`${addcoupondata.minimum_amount}`,
-      percentage:`${addcoupondata.percentage}`, 
-      // note:"",
-      // image:"public/catgory_images/image-1669273978167.jpg"
-    },
-    
-    addcoupondata).then((response) => {
+    axios.put(`http://192.168.29.108:5000/coupon_update`,formData
+    ).then((response) => {
       setapicall(true)
   });
   formRef.current.reset();
   setValidated(false);
   setaddcoupondata("");
   setShow("");
-  // setapicall(true);
-  show.preventDefault();
-
   };
-  // let a = [];
-  // console.log("form----------   " + JSON.stringify(addcoupondata));
+
+  let couponlogo = `http://192.168.29.108:5000/${addcoupondata.image}`
+  var Newcouponlogo = couponlogo.replace("/public", "");
+ 
+  let a = [];
   return (
     <div>
       <h2>Coupons</h2>
@@ -379,14 +362,9 @@ const Coupon = () => {
           <div className="col-md-3 col-sm-6 aos_input">
             <Form.Select aria-label="Search by category"name={"status"} onChange={(e) =>  CouponSearch(e)}  value={SearchCoup.status} className="adminselectbox">
               <option>Status</option>
-              {searchcoupon.map((srch)=>{
-                return( <option value={srch.status}>{srch.status}</option>)
-             
-
-              })}
-              {/* <option value="1">Active</option>
-              <option value="2">Expired</option>
-              <option value="3">Pending</option> */}
+              <option value="active">Active</option>
+              <option value="expired">Expired</option>
+              <option value="pending">Pending</option>
             </Form.Select>
           </div>
 
@@ -485,6 +463,17 @@ const Coupon = () => {
             </Form.Select>
           </div>
                 <div className="col-md-6">
+                  <Form.Group className="mb-3 aos_input" controlId="formBasicPercent">
+                    <Form.Label>Status</Form.Label>
+<Form.Select onChange={(e)=>handleFormChange(e)} name='status' value={addcoupondata.status}>
+                <option value={''}>Status</option>
+              <option value="active">Active</option>
+              <option value="expired">Expired</option>
+              <option value="pending">Pending</option>
+            </Form.Select>
+            </Form.Group>
+                </div>
+                <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicStartDate">
                     <Form.Label>Coupon Start Date</Form.Label>
                     <Form.Control onChange={(e)=>handleFormChange(e)} name='start_date' value={moment(addcoupondata.start_date).format('YYYY-MM-DD')} required type="date" placeholder="Coupon Start Date" />
@@ -505,6 +494,8 @@ const Coupon = () => {
                   <Form.Group className="mb-3 aos_input" controlId="formBasicEmail">
                     <Form.Label>Coupon Image</Form.Label>
                     <Form.Control type="file" placeholder="Coupon Image" onChange={(e)=>ImgFormChange(e)} name='image'/>
+                    {addcoupondata.image ? 
+                    <img src={Newcouponlogo} width={'90px'} /> : null}
                   </Form.Group>
                 </div>
               </div>

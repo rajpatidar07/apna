@@ -6,32 +6,20 @@ import { useState,useEffect } from "react";
 
 
 const Invoice = () => {
-   let totalcount1=0; 
-   let totalcount2=0; 
-   let totalcount3=0; 
-   let totalcount4=0; 
-   let totalcount5=0; 
-   let totalcount6=0; 
-   let totalamount=0;
-   let grandtotal=0;
     let invoice_no=localStorage.getItem("invoice_no")
     let invoiceid=localStorage.getItem("invoiceid")
-      console.log("invoicebbbbbbbbbbbbbbbbb"+invoice_no)
     const[invoicedetails,setInvoiceDetails]=useState([]);
+    const[pdetails,setpDetails]=useState([]);
+
     // const total=(invoicedetails.reduce((total,price)=>total = total+price , 0 ));
     useEffect(() => {
-        function getInvoiceDetails() {
-          try {
             axios
               .get(`http://192.168.29.108:5000/invoice_details?invoice_no=${invoice_no}`)
               .then((response) => {
-                let data = response.data;
-                setInvoiceDetails(data);
-                console.log("invoiceeee detailsssssssssssssssssssss--------" + JSON.stringify(data));
+                // let data = response.data;
+                setInvoiceDetails(response.data);
+                setpDetails(response.data.product_types)
               });
-          } catch (err) {}
-        }
-        getInvoiceDetails();
       }, []);
     return (
         <>
@@ -60,22 +48,17 @@ const Invoice = () => {
                                         <div className="pb-4 pt-4">
                                          
                                                  <table className="invoice_header w-100">
-                                                
+                                                <tbody>
                                                 <tr className="">
-                                                {invoicedetails.map((invodetails)=>{
-                                                return(
-                                                    // invodetails.id === id? 
                                                     <td className="">
                                                         <h5 className="text-uppercase m-0"><b>Order Detail:</b></h5>
-                                                        <p className="m-0"><b>Invoice No:</b>{invodetails.invoice_no}</p>
-                                                        <p className="m-0"><b>Order Id:</b> {invodetails.order_id}</p>
-                                                        <p className="m-0"><b>Order Date:</b>{invodetails.order_date}</p>
-                                                        <p className="m-0"><b>Invoice Date:</b> {invodetails.invoice_date}</p>
-                                                        <p className="m-0"><b>GSTIN:</b> {invodetails.gst}</p>
+                                                        <p className="m-0"><b>Invoice No:</b>{invoicedetails.invoice_no}</p>
+                                                       
+                                                        <p className="m-0"><b>Order Id:</b> {invoicedetails.id}</p>
+                                                        <p className="m-0"><b>Order Date:</b>{invoicedetails.order_date}</p>
+                                                        <p className="m-0"><b>Invoice Date:</b> {invoicedetails.invoice_date}</p>
+                                                        {/* <p className="m-0"><b>GSTIN:</b> {invoicedetails.cgst}</p> */}
                                                     </td>
-                                                    // : null
-                                                    )
-                                        })}
                                                     <td className="">
                                                         <h5 className="text-uppercase m-0"><b>Bill to:</b></h5>
                                                         <p className="m-0">Plot No. 45 Universal Tower ,2nd Floor,</p>
@@ -91,6 +74,7 @@ const Invoice = () => {
                                                         <p className="m-0">1234567890</p>
                                                     </td>
                                                 </tr>
+                                                </tbody>
                                             </table>
                                           
                                             
@@ -104,6 +88,7 @@ const Invoice = () => {
     
                                                     <th className="right">discount_coupon ₹</th>
                                                     <th className="center">taxable_value ₹</th>
+                                                    <th className="center">gst ₹</th>
                                                     <th className="center">cgst ₹</th>
                                                     <th className="center">sgst ₹</th>
                                                     <th className="right">total_amount ₹</th>
@@ -112,31 +97,28 @@ const Invoice = () => {
                                            
                                             <tbody>
                                          
-                                                <>
-                                                {invoicedetails.map((invodetails)=>{
+                                                {(pdetails).map((invodetails)=>{
+                                                invodetails.discount = '0' 
+                                                    
                                              return(
+                                               
                                                 <tr>
+                                                    
                                                 <td className="center"><b>OPPO K10 5G (Ocean Blue, 128 GB)</b><br />
                                                     <small>CGST: {invodetails.cgst} %</small><br />
                                                     <small>SGST/UTGST: {invodetails.sgst} %</small>
                                                 </td>
                                                 <td className="">{invodetails.quantity}</td>
-                                                <td className="left">{invodetails.price}</td>
-                                                <td className="left">{invodetails.discount_coupon}</td>
-                            <td className="left">{(invodetails.price-invodetails.discount_coupon)+parseInt(invodetails.cgst)+parseInt(invodetails.sgst)}</td>
+                                                <td className="left">{parseInt(invodetails.quantity * invodetails.price)}</td>
+                                                <td className="left">{invodetails.discount}</td>
+                            <td className="left">{parseInt(invodetails.quantity * invodetails.price) - parseInt(invodetails.discount)}</td>
+                            <td className="left">{invodetails.gst}</td>
                                                 <td className="left">{invodetails.cgst}</td>
                                                 <td className="left">{invodetails.sgst}</td>
-                                                <td className="left">{(invodetails.price-invodetails.discount_coupon)+parseInt(invodetails.cgst)+parseInt(invodetails.sgst)}</td>
-                                             <p className="hideconcanet d-none o opacity-0"> 
-                                             {totalcount1=Number(totalcount1)+Number(invodetails.quantity)}
-                                                {totalcount2=Number(totalcount2)+Number(invodetails.price)}
-                                                {totalcount3=Number(totalcount3)+Number(invodetails.discount_coupon)}
-                                                {totalcount4=Number(totalcount4)+Number(invodetails.taxable_value)}
-                                                {totalcount5=Number(totalcount5)+Number(invodetails.cgst)}
-                                                {totalcount6=Number(totalcount6)+Number(invodetails.sgst)}
-                                               {totalamount=Number(totalamount)+Number((invodetails.price-invodetails.discount_coupon)+parseInt(invodetails.cgst)+parseInt(invodetails.sgst))}
-                                               {/* {grandtotal=Number(grandtotal)+Number(invodetails.price)-Number(invodetails.discount_coupon)-Number(invodetails.taxable_value)-Number(invodetails.cgst)-Number(invodetails.sgst)-Number(invodetails.total_amount)} */}
-                                               </p>
+                                                <td className="left">{parseInt(invodetails.quantity * invodetails.price) - invodetails.discount+parseInt(invodetails.cgst)+parseInt(invodetails.sgst)+parseInt(invodetails.gst)}</td>
+                                              
+                                                
+                                             
 
 
 
@@ -159,21 +141,21 @@ const Invoice = () => {
                                             <tr>
                                                 <th className="font-weight-bold"><b>Total</b></th>
                                                 
-                                                <th className=""><b>{totalcount1}</b></th>
-                                                <th className=""><b>{totalcount2}</b></th>
-                                                <th className=""><b>{totalcount3}</b></th>
-                                                <th className=""><b>{totalcount4}</b></th>
-                                                <th className=""><b>{totalcount5}</b></th>
-                                                <th className=""><b>{totalcount6}</b></th>
-                                                <th className=""><b>{totalamount}</b></th>
+                                                <th className=""><b>{invoicedetails.total_quantity}</b></th>
+                                                <th className=""><b>{invoicedetails.total_quantity - invoicedetails.discount_coupon - invoicedetails.taxable_value - invoicedetails.total_cgst - invoicedetails.total_cgst - invoicedetails.total_sgst}</b></th>
+                                                <th className=""><b>{invoicedetails.discount_coupon}</b></th>
+                                                <th className=""><b>{invoicedetails.taxable_value}</b></th>
+                                                <th className=""><b>{invoicedetails.total_cgst}</b></th>
+                                                <th className=""><b>{invoicedetails.total_cgst}</b></th>
+                                                 <th className=""><b>{invoicedetails.total_sgst}</b></th>
+                                                <th className=""><b>{invoicedetails.total_amount}</b></th>
                                             </tr>
                                               
                                             <tr>
                                                 <th colSpan={'7'} className="font-weight-bold text-end p-4"><h5><b>Grand Total</b></h5></th>
-                                                <th className="pt-4 pb-4"><h5><b>{totalamount}</b></h5></th>
+                                                <th className="pt-4 pb-4"><h5><b>{invoicedetails.total_amount}</b></h5></th>
                                             </tr>
-                                                </>
-                                               
+                                            
                                             </tbody>
                                         </table>
                                         <div className="col-md-12 text-end">
