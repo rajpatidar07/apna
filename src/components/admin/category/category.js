@@ -41,19 +41,20 @@ const CategoryList = () => {
   const[type,setType]=useState("")
   const [image,setImage]=useState();
   const [data, setData] = useState([]);
-  const [searchdata, setsearchData] = useState([]);
   const [category, setCategory] = useState([]);
   const [indVal, setIndVal] = useState(0);
   const [subCategory, setSubCategory] = useState([]);
   const [childCategory, setchildCategory] = useState([]);
   const [grandcCategory, setgrandcCategory] = useState([]);
-  const [scategory, setScategory] = useState([]);
+ 
   const [level, setlevel] = useState('');
   const [file, setFile] = useState();
   const [cid, setCid] = useState();
  const [fileName, setFileName] = useState("");
  const [parentid, setParentid] = useState('');
  const [allparentid, setAllparentid] = useState();
+ const [scategory, setScategory] = useState([]);
+ const [searchdata, setsearchData] = useState([]);
  const [SearchCat, setSearchCat] = useState({
   "category_name":"",
   "category_type":"",
@@ -357,7 +358,7 @@ setFile(e.target.files[0]);
         "category_type":`${SearchCat.category_type}`,
         "level":`${SearchCat.level}`
 
-    }) .then ((response) => {
+    }).then ((response) => {
       setData(response.data);
       setSearchCat('')
       setsearchValidated(false)
@@ -401,8 +402,6 @@ setFile(e.target.files[0]);
               <option>Search by category type</option>
               {searchdata.map((lvl)=>{
                 return( <option value={lvl.category_type}>{lvl.category_type}</option>)
-             
-
               })}
               {/* <option value="">{type.category_type}</option>
               <option value="2">Health</option>
