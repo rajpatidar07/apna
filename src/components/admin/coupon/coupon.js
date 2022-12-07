@@ -20,6 +20,7 @@ const Coupon = () => {
   const formRef = useRef();
   const handleClick = () => { };
   const [validated, setValidated] = useState(false);
+  
   const [coupondata, setcoupondata] = useState([]);
  
   const [addcoupondata, setaddcoupondata] = useState({
@@ -41,7 +42,13 @@ const Coupon = () => {
   const [dltapicall, setDltapicall] = useState(false);
   const [cid, setCId] = useState(false);
   const [isActive, setisActive] = useState(false);
-
+  // const [scoupon, setScoupon] = useState([]);
+  const [searchcoupon, setsearchCoupon] = useState([]);
+  const [SearchCoup, setSearchCoup] = useState({
+      "campaign_name":"",
+      "code":"",
+      "status":""
+   });
 
 
   const handleAlert=(id,is_active)=> {
@@ -62,13 +69,13 @@ const Coupon = () => {
          is_active:'0'
     }) .then((response) => {
       let data= response.data;
-      // setcoupondata(data);
+      
+      setcoupondata(data);
+      setsearchCoupon(data);
       setAlert(false);
       setDltapicall(true) 
     })
   }
- 
-
   const handleClose = () => {
     formRef.current.reset();
     // setcoupondata('')
@@ -92,15 +99,17 @@ const Coupon = () => {
       setShow(e);
     }
   }
+  
   useEffect(() => {
     function getCouponList() {
       try {
         axios
           .get("http://192.168.29.108:5000/coupon?coupon_id=all")
           .then((response) => {
-            let data =  response.data;
-          let filterArray =data.filter(item => (item.is_active === 0) && (item.image.replace("/public", "")));
-            setcoupondata(filterArray)
+            let data = response.data;
+            setcoupondata(data)
+            setaddcoupondata(data);
+            setsearchCoupon(data);
             setapicall(false);
           });
       } catch (err) {}
@@ -239,15 +248,32 @@ const Coupon = () => {
       ),
     },
   ];
+  const CouponSearch = (e) => {
+   
+    setSearchCoup({...SearchCoup, [e.target.name]: e.target.value });
+  };
+ 
+  const CoupondataSearch=()=>{
+    axios.post(`http://192.168.29.108:5000/coupons_list`,{
+      "campaign_name":`${SearchCoup.campaign_name}`,
+       "code":`${SearchCoup.code}`,
+       "status":`${SearchCoup.status}`
+   
 
+  }).then ((response) => {
+    setcoupondata(response.data)
+    setSearchCoup('');
 
+    })
+  }
+  useEffect(() => {
+    setcoupondata(coupondata)
+  }, [])
   const handleFormChange = (e) => {
     setaddcoupondata({
       ...addcoupondata,
       [e.target.name]: e.target.value
     });
-    
-    
   };
 
    const ImgFormChange = (e) => {
@@ -328,13 +354,13 @@ const Coupon = () => {
       <div className="card mt-3 p-3 ">
         <div className=" row">
           <div className="col-md-3 col-sm-6 aos_input">
-            <Input type={"text"} plchldr={"Search by campaign name"} />
+            <input type={"text"} name={"campaign_name" } className="adminsideinput" onChange={(e) => CouponSearch(e)} placeholder={"Search by campaign name"} value={SearchCoup.campaign_name} />
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
-            <Input type={"text"} plchldr={"Search by code name"} />
+            <input type={"text"} name={"code"}  className="adminsideinput" onChange={(e) =>  CouponSearch(e)} placeholder={"Search by code name"} value={SearchCoup.code}/>
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
-            <Form.Select aria-label="Search by category" className="adminselectbox">
+            <Form.Select aria-label="Search by category"name={"status"} onChange={(e) =>  CouponSearch(e)}  value={SearchCoup.status} className="adminselectbox">
               <option>Status</option>
               <option value="active">Active</option>
               <option value="expired">Expired</option>
@@ -343,7 +369,7 @@ const Coupon = () => {
           </div>
 
           <div className="col-md-3 col-sm-6 aos_input">
-            <MainButton btntext={"Search"} btnclass={'button main_button w-100'} />
+            <MainButton btntext={"Search"}   btnclass={'button main_button w-100'} onClick={CoupondataSearch} />
           </div>
 
         </div>
@@ -427,6 +453,15 @@ const Coupon = () => {
                     </Form.Control.Feedback>
                   </Form.Group>
                 </div>
+                <div className="col-md-6 aos_input">
+                <Form.Label>Status</Form.Label>
+            <Form.Select aria-label="Search by category" onChange={(e)=>handleFormChange(e)} name='status' value={addcoupondata.status} className="adminselectbox mt-0 ">
+              <option>Status</option>
+              <option value="active">active</option>
+              <option value="expired">expired</option>
+              <option value="pending">pending</option>
+            </Form.Select>
+          </div>
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicPercent">
                     <Form.Label>Status</Form.Label>
