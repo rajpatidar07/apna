@@ -104,19 +104,18 @@ setFile(e.target.files[0]);
     setIndVal(e.target.value);
     setScategory({ ...scategory, [e.target.name]: e.target.value});
   };
-  // const SubcategoryFormChange = (e, id) => {
-  //   addCategory();
-  //   setScategory({ ...scategory, sub_category: e.target.value});
-  // };
-  console.log("-----sub----  "+scategory.sub_category )
   let parentidd=[];
   parentidd.push(scategory.category_name)
   parentidd.push(scategory.sub_category)
+  parentidd.push(scategory.child_category)
+  // parentidd.push(scategory.s_category)
+
+
   useEffect(() => {
     function getUser() {
       try {
         axios
-          .get("${process.env.REACT_APP_BASEURL}/category?category=all")
+          .get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
           .then((response) => {
             let data = response.data;
             setData(data);
@@ -151,13 +150,14 @@ setFile(e.target.files[0]);
               setchildCategory(cgory);
               setlevel(2);
             }
-            // else if (indVal === scategory.child_category) {
-            //   console.log("---child_category"+scategory.child_category)
-            //   setlevel(3);
-            // }else if (indVal === scategory.s_category) {
-            //   setgrandcCategory(cgory);
-            //   setlevel(4);
-            // }
+            else if (indVal === scategory.child_category) {
+              setgrandcCategory(cgory);
+              console.log("---child_category"+scategory.child_category + indVal)
+              setlevel(3);
+            }else if (indVal === scategory.s_category) {
+              setgrandcCategory(cgory);
+              setlevel(4);
+            }
           });
       } catch (err) {}
     }
@@ -302,7 +302,6 @@ setFile(e.target.files[0]);
     if (form.checkValidity() === true) {
       e.preventDefault();
       const formData = new FormData();
-      
       formData.append("image", file);
       formData.append("filename", fileName);
       formData.append("parent_id", indVal);
@@ -312,10 +311,8 @@ setFile(e.target.files[0]);
       formData.append("category_type", type);
       axios
         .post(`${process.env.REACT_APP_BASEURL}/add_category`,formData, 
-        
         )
         .then((response) => {
-          console.log("possttttttt------"+JSON.stringify(response))
         });
       formRef.current.reset();
       setValidated(false);
@@ -344,7 +341,6 @@ setFile(e.target.files[0]);
   }
   const SearchCategory=()=>{
     if(SearchCat.category_name ==='' || SearchCat.category_name=== null || SearchCat.category_name === undefined){
-      console.log(SearchCat.category_name+"cat"+searchvalidated)
        setsearchValidated(true)
     }
     else
@@ -402,9 +398,6 @@ setFile(e.target.files[0]);
               {result1.map((lvl,i)=>{
                 return( <option value={lvl.category_type} key={i}>{lvl.category_type}</option>)
               })}
-              {/* <option value="">{type.category_type}</option>
-              <option value="2">Health</option>
-              <option value="3">Sports & Accessor</option> */}
             </Form.Select>
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
@@ -421,8 +414,6 @@ setFile(e.target.files[0]);
                 <option value={lvl.level} key={i}>{lvl.level}</option>
                 )
               })} 
-              {/* <option value="2">Fish & Meat</option>
-              <option value="21">Baby Care</option> */}
             </Form.Select>
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
@@ -589,10 +580,44 @@ setFile(e.target.files[0]);
                         aria-label="Search by status"
                         className="adminselectbox"
                         required
-                        // onChange={(e, id) => categoryFormChange(e, id)}
+                        onChange={(e, id) => categoryFormChange(e, id)}
                         name={"child_category"}
                       >
+                           <option value="">Search by category</option>
                         {childCategory.map((cdata, i) => {
+                          return (
+                            <option value={cdata.id} key={i}>
+                              {cdata.category_name}{" "}
+                            </option>
+                          );
+                        })}
+                      </Form.Select>
+                      <Form.Control.Feedback type="invalid" className="h6">
+                        Please fill category
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                  </div>
+                ) : null}
+              
+
+                {grandcCategory != "" ? (
+                  <div className="col-md-6">
+                    <Form.Group
+                      className="mb-3 aos_input"
+                      controlId="formBasicParentCategory"
+                    >
+                      <Form.Label> Inner Category</Form.Label>
+                      <Form.Select
+                        aria-label="Search by status"
+                        className="adminselectbox"
+                        required
+                        onChange={(e, id) => categoryFormChange(e, id)}
+                        name={"s_category"}
+                      >
+                         <option value={''} >
+                              Select Category
+                            </option>
+                        {grandcCategory.map((cdata, i) => {
                           return (
                             <option value={cdata.id} key={i}>
                               {cdata.category_name}{" "}

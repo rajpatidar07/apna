@@ -304,8 +304,6 @@ const VendorsList = () => {
     setFile(e.target.files[0]);
  setFileName(e.target.files[0].name);
   };
-
-
   const DocsFormChange = (e) => {
     setFileDoc(e.target.files[0])
     setFileDocName(e.target.files[0].name);
@@ -329,12 +327,9 @@ const VendorsList = () => {
   let docsdata = `${process.env.REACT_APP_BASEURL}/${DocuImgarray}`
   var Newshoplogo = shoplogo.replace("/public", "");
   var imgdata =docsdata.replace("/public", "");
-
-
   console.log("---add vendorrr --- > "+addvendordata.document_name);
 
   const AddVendorClick = (e) => {
-
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
       e.preventDefault();
@@ -356,6 +351,7 @@ const VendorsList = () => {
     formData.append("gstn",addvendordata.gstn);
     formData.append("geolocation",addvendordata.geolocation);
     formData.append("store_type",addvendordata.store_type);
+    formData.append("availability", addvendordata.availability);
     formData.append("image",fileDoc);
     formData.append("filename", fileDocName);
     formData.append("document_name",x);
@@ -367,6 +363,8 @@ const VendorsList = () => {
         // setvendordata(response.data);
       console.log("formadd----------   " + JSON.stringify(response.data));
         setapicall(true);
+    setShow(false);
+
       })
       .catch(function(error) {
         console.log(error);
@@ -378,26 +376,33 @@ const VendorsList = () => {
 
   const UpdateVendorClick = (e) => {
     e.preventDefault();
-    // const formData = new FormData();
-    // formData.append("shop_logo", file);
-    // formData.append("filename", fileName);
-    // formData.append("owner_name", addvendordata.owner_name);
-    // formData.append("shop_name", addvendordata.shop_name);
-    // formData.append("mobile", addvendordata.mobile);
-    // formData.append("email",addvendordata. email);
-    // formData.append("shop_address",addvendordata.shop_address);
-    // formData.append("gstn",addvendordata. gstn);
-    // formData.append("geolocation",addvendordata.geolocation);
-    // formData.append("store_type",addvendordata.store_type);
-    // formData.append("documents",addvendordata.multiple_document_upload);
-    // formData.append("document_name",addvendordata.document_name);
-    // formData.append("status",addvendordata. status);
+    console.log(addvendordata.id)
+
+    const formData = new FormData();
+    formData.append("id",addvendordata.id)
+    formData.append("image", file);
+    formData.append("filename", fileName);
+    formData.append("owner_name", addvendordata.owner_name);
+    formData.append("shop_name", addvendordata.shop_name);
+    formData.append("mobile", addvendordata.mobile);
+    formData.append("email",addvendordata.email);
+    formData.append("shop_address",addvendordata.shop_address);
+    formData.append("gstn",addvendordata.gstn);
+    formData.append("geolocation",addvendordata.geolocation);
+    formData.append("store_type",addvendordata.store_type);
+    formData.append("availability", addvendordata.availability);
+    formData.append("image",fileDoc);
+    formData.append("filename", fileDocName);
+    formData.append("document_name",addvendordata.document_name);
+    formData.append("status",addvendordata.status);
     axios
-    .put(`${process.env.REACT_APP_BASEURL}/vendor_update`,addvendordata)
+    .put(`${process.env.REACT_APP_BASEURL}/vendor_update`,formData)
     .then((response) => {
     console.log("formupdate----------   " + JSON.stringify(response.data));
-      // setvendordata(response.data);
+      
       setapicall(true);
+    setShow(false);
+
     })
     .catch(function(error) {
       console.log(error);
