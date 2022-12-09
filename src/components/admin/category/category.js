@@ -58,7 +58,11 @@ const CategoryList = () => {
  const [fileName, setFileName] = useState("");
  const [parentid, setParentid] = useState('');
  const [allparentid, setAllparentid] = useState();
+<<<<<<< HEAD
 //const [scategory, setScategory] = useState([]);
+=======
+//  const [scategory, setScategory] = useState([]);
+>>>>>>> bfa586befed2049c34e6979413976059176ab0b0
  const [searchdata, setsearchData] = useState([]);
  const [SearchCat, setSearchCat] = useState({
   "category_name":"",
@@ -92,12 +96,31 @@ setFile(e.target.files[0]);
       setShow(e);
     }
   };
- 
+  const handlChangeName = (e, id) => {
+    setnewName(e.target.value);
+  };
+
+  const handlChangeType = (e, id) => {
+    setType(e.target.value);
+  };
+
+  const categoryFormChange = (e, id) => {
+    setIndVal(e.target.value);
+    setScategory({ ...scategory, [e.target.name]: e.target.value});
+  };
+  // const SubcategoryFormChange = (e, id) => {
+  //   addCategory();
+  //   setScategory({ ...scategory, sub_category: e.target.value});
+  // };
+  console.log("-----sub----  "+scategory.sub_category )
+  let parentidd=[];
+  parentidd.push(scategory.category_name)
+  parentidd.push(scategory.sub_category)
   useEffect(() => {
     function getUser() {
       try {
         axios
-          .get("http://192.168.29.108:5000/category?category=all")
+          .get("http://apnaorganicstore.in/myapp/category?category=all")
           .then((response) => {
             let data = response.data;
             setData(data);
@@ -117,27 +140,28 @@ setFile(e.target.files[0]);
     if (id === "" || id === null || id === undefined) {
       try {
         axios
-          .get(`http://192.168.29.108:5000/category?category=${indVal}`)
+          .get(`http://apnaorganicstore.in/myapp/category?category=${indVal}`)
           .then((response) => {
             let cgory = response.data;
+            let specificValues = cgory.filter(obj => obj.all_parent_id.substring(0, obj.all_parent_id.length-1) === scategory.category_name);
             if (indVal === 0) {
               setCategory(cgory);
               setlevel(0);
-            } if (indVal === scategory.category_name) {
-              setSubCategory(cgory);
+            } 
+            if (indVal === scategory.category_name) {
+              setSubCategory(specificValues);
               setlevel(1);
             } else if (indVal === scategory.sub_category) {
               setchildCategory(cgory);
               setlevel(2);
-            } else if (indVal === scategory.child_category) {
-              setgrandcCategory(cgory);
-              setlevel(3);
-            }else if (indVal === scategory.s_category) {
-              setgrandcCategory(cgory);
-              setlevel(4);
             }
-            
-
+            // else if (indVal === scategory.child_category) {
+            //   console.log("---child_category"+scategory.child_category)
+            //   setlevel(3);
+            // }else if (indVal === scategory.s_category) {
+            //   setgrandcCategory(cgory);
+            //   setlevel(4);
+            // }
           });
       } catch (err) {}
     }
@@ -269,20 +293,8 @@ setFile(e.target.files[0]);
     },
   ];
  
-  const handlChangeName = (e, id) => {
-    setnewName(e.target.value);
-  };
-  const handlChangeType = (e, id) => {
-    setType(e.target.value);
-  };
-  const categoryFormChange = (e, id) => {
-    setIndVal(e.target.value);
-    setScategory({ ...scategory, [e.target.name]: e.target.value});
-  };
-console.log("-----chsnnf"+JSON.stringify(scategory) )
-  // const ImgFormChange = (e,id) => {
-  //   setImage(e.target.files[0]);
-  // };
+
+
 
   const AddCategoryClick = (e,id) => {
     const form = e.currentTarget;
@@ -297,21 +309,13 @@ console.log("-----chsnnf"+JSON.stringify(scategory) )
       
       formData.append("image", file);
       formData.append("filename", fileName);
-      formData.append("parent_id", scategory.category_name);
+      formData.append("parent_id", indVal);
       formData.append("level", level);
-      formData.append("all_parent_id", scategory.category_name);
+      formData.append("all_parent_id", parentidd);
       formData.append("new_category", newName);
       formData.append("category_type", type);
-     
-// console.log({
-//   parent_id: parentid,
-//   level: level,
-//   all_parent_id:allparentid,
-//   new_category: newName,
-//   image:formData,
-// })
       axios
-        .post(`http://192.168.29.108:5000/add_category`,formData, 
+        .post(`http://apnaorganicstore.in/myapp/add_category`,formData, 
         
         )
         .then((response) => {
@@ -323,13 +327,9 @@ console.log("-----chsnnf"+JSON.stringify(scategory) )
       
     }
   };
-  console.log("bahar------"+indVal)
   const UpdateCategoryClick = (show) => {
-
     console.log("indVal------"+indVal)
-
-
-     axios.put(`http://192.168.29.108:5000/update_category`, {
+     axios.put(`http://apnaorganicstore.in/myapp/update_category`, {
       id:cid,
       parent_id: parentid,
       level: level,
@@ -513,6 +513,7 @@ console.log("-----chsnnf"+JSON.stringify(scategory) )
                       <option value="Grocery">Grocery</option>
                       <option value="Health">Health</option>
                       <option value="Fashion">Fashion</option>
+                      <option value="Electronic">Electronic</option>
                       <option value="Sports & Accessor">
                         Sports & Accessor
                       </option>
@@ -595,11 +596,9 @@ console.log("-----chsnnf"+JSON.stringify(scategory) )
                         aria-label="Search by status"
                         className="adminselectbox"
                         required
-                        onChange={(e, id) => categoryFormChange(e, id)}
+                        // onChange={(e, id) => categoryFormChange(e, id)}
                         name={"child_category"}
                       >
-                        <option value="">category</option>
-
                         {childCategory.map((cdata, i) => {
                           return (
                             <option value={cdata.id}>
