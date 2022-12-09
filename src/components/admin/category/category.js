@@ -116,7 +116,7 @@ setFile(e.target.files[0]);
     function getUser() {
       try {
         axios
-          .get("http://apnaorganicstore.in/myapp/category?category=all")
+          .get("${process.env.REACT_APP_BASEURL}/category?category=all")
           .then((response) => {
             let data = response.data;
             setData(data);
@@ -136,7 +136,7 @@ setFile(e.target.files[0]);
     if (id === "" || id === null || id === undefined) {
       try {
         axios
-          .get(`http://apnaorganicstore.in/myapp/category?category=${indVal}`)
+          .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
           .then((response) => {
             let cgory = response.data;
             let specificValues = cgory.filter(obj => obj.all_parent_id.substring(0, obj.all_parent_id.length-1) === scategory.category_name);
@@ -311,7 +311,7 @@ setFile(e.target.files[0]);
       formData.append("new_category", newName);
       formData.append("category_type", type);
       axios
-        .post(`http://apnaorganicstore.in/myapp/add_category`,formData, 
+        .post(`${process.env.REACT_APP_BASEURL}/add_category`,formData, 
         
         )
         .then((response) => {
@@ -324,7 +324,7 @@ setFile(e.target.files[0]);
     }
   };
   const UpdateCategoryClick = (show) => {
-     axios.put(`http://apnaorganicstore.in/myapp/update_category`, {
+     axios.put(`${process.env.REACT_APP_BASEURL}/update_category`, {
       id:cid,
       parent_id: parentid,
       level: level,
