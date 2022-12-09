@@ -58,11 +58,7 @@ const CategoryList = () => {
  const [fileName, setFileName] = useState("");
  const [parentid, setParentid] = useState('');
  const [allparentid, setAllparentid] = useState();
-<<<<<<< HEAD
 //const [scategory, setScategory] = useState([]);
-=======
-//  const [scategory, setScategory] = useState([]);
->>>>>>> bfa586befed2049c34e6979413976059176ab0b0
  const [searchdata, setsearchData] = useState([]);
  const [SearchCat, setSearchCat] = useState({
   "category_name":"",
