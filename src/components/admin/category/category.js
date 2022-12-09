@@ -104,12 +104,17 @@ setFile(e.target.files[0]);
     setIndVal(e.target.value);
     setScategory({ ...scategory, [e.target.name]: e.target.value});
   };
-  let parentidd=[];
-  parentidd.push(scategory.category_name)
-  parentidd.push(scategory.sub_category)
-  parentidd.push(scategory.child_category)
+  let parentidddata=[];
+  // const parentidd = parentidddata.replace(/,*$/, '');
+  //  let parentidd = parentidddata.filter(obj => obj.category_name.substring(0, obj.category_name-1));
+  // const parentidd = parentidddata.endsWith(',') ? parentidddata.slice(0, -1): parentidddata;
+  const parentidd = parentidddata.join("");
+  
+  parentidddata.push(scategory.category_name)
+  parentidddata.push(scategory.sub_category)
+  parentidddata.push(scategory.child_category)
   // parentidd.push(scategory.s_category)
-
+console.log("--parenttttt---"+parentidddata.join(""))
 
   useEffect(() => {
     function getUser() {
@@ -306,7 +311,7 @@ setFile(e.target.files[0]);
       formData.append("filename", fileName);
       formData.append("parent_id", indVal);
       formData.append("level", level);
-      formData.append("all_parent_id", parentidd);
+      formData.append("all_parent_id", parentidddata.join(""));
       formData.append("new_category", newName);
       formData.append("category_type", type);
       axios

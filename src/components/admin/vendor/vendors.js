@@ -322,7 +322,6 @@ const VendorsList = () => {
   //   });
   };
 
-
   let shoplogo = `${process.env.REACT_APP_BASEURL}/${addvendordata.shop_logo}`
   let docsdata = `${process.env.REACT_APP_BASEURL}/${DocuImgarray}`
   var Newshoplogo = shoplogo.replace("/public", "");
@@ -356,6 +355,7 @@ const VendorsList = () => {
     formData.append("filename", fileDocName);
     formData.append("document_name",x);
     formData.append("status",addvendordata.status);
+    formData.append("availability", addvendordata.availability);
 
       axios
       .post(`${process.env.REACT_APP_BASEURL}/vendor_register`,formData)
@@ -376,8 +376,6 @@ const VendorsList = () => {
 
   const UpdateVendorClick = (e) => {
     e.preventDefault();
-    console.log(addvendordata.id)
-
     const formData = new FormData();
     formData.append("id",addvendordata.id)
     formData.append("image", file);
