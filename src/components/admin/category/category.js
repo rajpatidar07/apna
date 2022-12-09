@@ -60,6 +60,12 @@ const CategoryList = () => {
  const [allparentid, setAllparentid] = useState();
 //const [scategory, setScategory] = useState([]);
  const [searchdata, setsearchData] = useState([]);
+ const [CategoryEditparent, setCategoryEditparent] = useState("");
+ const [CategoryEditSubparent, setCategoryEditSubparent] = useState("");
+ const [CategoryEditChildparent, setCategoryEditChildparent] = useState("");
+
+ const [CategoryEditdata, setCategoryEditData] = useState([]);
+
  const [SearchCat, setSearchCat] = useState({
   "category_name":"",
   "category_type":"",
@@ -78,17 +84,51 @@ setFile(e.target.files[0]);
     setValidated(false);
     setShow(false);
   };
-  const handleShow = (e,name,all_parent_id,parent_id,level) => {
+  const handleShow = (e,name,all_parent_id,parent_id,level,category_type,category_name) => {
     if (e === "add") {
       setShow(e);
     }
     if (e !== "add") {
-      console.log("update")
+      try {
+        axios
+          .get(`${process.env.REACT_APP_BASEURL}/category_details?id=${e}`)
+          .then((response) => {
+            let data = response.data[0];
+            setCategoryEditData(data)
+            const arr = data.all_parent_id.split(',');
+for(let i=0 ; i < arr.length; i++){
+  axios
+  .get(`${process.env.REACT_APP_BASEURL}/category_details?id=${arr[i]}`)
+  .then((response) => {
+    let data = response.data[0];
+    if(i === 0 ){
+  console.log("----i--"+ i);
+  console.log("----idd"+ JSON.stringify(data.category_name));
+  setCategoryEditparent(data.category_name);
+    }
+    else if(i === 1 ){
+      console.log("----i--"+ i);
+      console.log("----idd"+ JSON.stringify(data.category_name));
+      setCategoryEditSubparent(data.category_name);
+    }
+    else if(i === 2 ){
+      console.log("----i--"+ i);
+      console.log("----idd"+ JSON.stringify(data.category_name));
+      setCategoryEditChildparent(data.category_name);
+    }
+  console.log("----idd"+ JSON.stringify(data));
+})
+}
+console.log("----CategoryEditdata----"+ JSON.stringify(CategoryEditdata));
+
+          });
+      } catch (err) {}
       setnewName(name)
       setCid(e)
       setParentid(parent_id)
       setAllparentid(all_parent_id)
       setlevel(level)
+      setType(category_type)
       setShow(e);
     }
   };
@@ -109,12 +149,10 @@ setFile(e.target.files[0]);
   //  let parentidd = parentidddata.filter(obj => obj.category_name.substring(0, obj.category_name-1));
   // const parentidd = parentidddata.endsWith(',') ? parentidddata.slice(0, -1): parentidddata;
   const parentidd = parentidddata.join("");
-  
   parentidddata.push(scategory.category_name)
   parentidddata.push(scategory.sub_category)
   parentidddata.push(scategory.child_category)
   // parentidd.push(scategory.s_category)
-console.log("--parenttttt---"+parentidddata.join(""))
 
   useEffect(() => {
     function getUser() {
@@ -144,6 +182,7 @@ console.log("--parenttttt---"+parentidddata.join(""))
           .then((response) => {
             let cgory = response.data;
             let specificValues = cgory.filter(obj => obj.all_parent_id.substring(0, obj.all_parent_id.length-1) === scategory.category_name);
+
             if (indVal === 0) {
               setCategory(cgory);
               setlevel(0);
@@ -326,14 +365,17 @@ console.log("--parenttttt---"+parentidddata.join(""))
     }
   };
   const UpdateCategoryClick = (show) => {
-     axios.put(`${process.env.REACT_APP_BASEURL}/update_category`, {
-      id:cid,
-      parent_id: parentid,
-      level: level,
-      all_parent_id:allparentid,
-      new_category:newName,
-      category_type:type
-  }).then((response) => {
+    console.log("---show"+CategoryEditdata.id)
+    const formData = new FormData();
+    formData.append("id", CategoryEditdata.id);
+    formData.append("image", file);
+    formData.append("filename", fileName);
+    formData.append("parent_id", indVal);
+    formData.append("level", level);
+    formData.append("all_parent_id", parentidddata.join(""));
+    formData.append("new_category", newName);
+    formData.append("category_type", type);
+     axios.put(`${process.env.REACT_APP_BASEURL}/update_category`,formData).then((response) => {
   });
   formRef.current.reset();
   setValidated(false);
@@ -375,6 +417,7 @@ console.log("--parenttttt---"+parentidddata.join(""))
   index === self.findIndex((t) => (
     t.level == thing.level 
   )))
+
 
   return (
     <div className="App productlist_maindiv">
@@ -524,14 +567,11 @@ console.log("--parenttttt---"+parentidddata.join(""))
                       required
                       onChange={(e, id) => categoryFormChange(e, id)}
                       name={"category_name"}
+                      placeholder={'Search by category'}
                     >
-                      <option value={'0'}>
-                        Search by category
-                      </option>
-
                       {category.map((cdata, i) => {
                         return (
-                          <option value={cdata.id} key={i}>
+                          <option value={cdata.id} key={i} selected={CategoryEditparent === cdata.category_name ? true :false }>
                             {cdata.category_name}{" "}
                           </option>
                         );
@@ -543,7 +583,7 @@ console.log("--parenttttt---"+parentidddata.join(""))
                   </Form.Group>
                 </div>
 
-                {subCategory !="" ? (
+                {subCategory !="" || CategoryEditSubparent !== ''? (
                   <div className="col-md-6">
                     <Form.Group
                       className="mb-3 aos_input"
@@ -556,12 +596,13 @@ console.log("--parenttttt---"+parentidddata.join(""))
                         required
                         onChange={(e, id) => categoryFormChange(e, id)}
                         name={"sub_category"}
+                        
                       >
-                        <option value="">Search by category</option>
+                        {/* <option value="">Search by category</option> */}
 
                         {subCategory.map((cdata, i) => {
                           return (
-                            <option value={cdata.id} key={i}>
+                            <option value={cdata.id} key={i} selected={CategoryEditSubparent === cdata.category_name ? true :false }>
                               {cdata.category_name}{" "}
                             </option>
                           );
@@ -574,7 +615,7 @@ console.log("--parenttttt---"+parentidddata.join(""))
                   </div>
                 ) : null}
 
-                {childCategory != "" ? (
+                {childCategory != "" || CategoryEditChildparent !== '' ? (
                   <div className="col-md-6">
                     <Form.Group
                       className="mb-3 aos_input"
@@ -587,11 +628,12 @@ console.log("--parenttttt---"+parentidddata.join(""))
                         required
                         onChange={(e, id) => categoryFormChange(e, id)}
                         name={"child_category"}
+
                       >
-                           <option value="">Search by category</option>
+                           {/* <option value="">Search by category</option> */}
                         {childCategory.map((cdata, i) => {
                           return (
-                            <option value={cdata.id} key={i}>
+                            <option value={cdata.id} key={i}  selected={CategoryEditChildparent === cdata.category_name ? true :false }>
                               {cdata.category_name}{" "}
                             </option>
                           );
@@ -605,7 +647,7 @@ console.log("--parenttttt---"+parentidddata.join(""))
                 ) : null}
               
 
-                {grandcCategory != "" ? (
+                {grandcCategory != ""  ? (
                   <div className="col-md-6">
                     <Form.Group
                       className="mb-3 aos_input"
@@ -619,12 +661,12 @@ console.log("--parenttttt---"+parentidddata.join(""))
                         onChange={(e, id) => categoryFormChange(e, id)}
                         name={"s_category"}
                       >
-                         <option value={''} >
+                         {/* <option value={''} >
                               Select Category
-                            </option>
+                            </option> */}
                         {grandcCategory.map((cdata, i) => {
                           return (
-                            <option value={cdata.id} key={i}>
+                            <option value={cdata.id} key={i}  selected={CategoryEditChildparent === cdata.category_name ? true :false }>
                               {cdata.category_name}{" "}
                             </option>
                           );

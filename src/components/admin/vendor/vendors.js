@@ -198,14 +198,6 @@ const VendorsList = () => {
       },
     ];
 
-    // useEffect(() => {
-      
-    //   // setaddtag(addvendordata.document_name);
-    //   let splitDoc = [];
-    //    splitDoc =  addvendordata.document_name.split(',');
-    //   setDocnameArray(Docnamearray => [...Docnamearray,splitDoc]);
-    // setCall(false);
-    // },[call]);
 
     useEffect(() => {
       axios
@@ -237,10 +229,11 @@ const VendorsList = () => {
     setValidated(false);
     setaddtag('');
     setDocnameArray('');
+    setapicall(true)
     setShow(false);
   };
 
-
+  let Docnarray =[];
   let arr;
   const handleShow = (e) => {
     if (e === "add") {
@@ -254,9 +247,9 @@ const VendorsList = () => {
     .then((response) => {
       setaddvendordata(response.data[0]);
       // setDocnameArray(response.data[0].document_name);
+      //  Docnarray.push(response.data[0].document_name)
      setDocuImgArray(JSON.parse(response.data[0].multiple_document_upload))
- console.log("---docname"+ (response.data[0].document_name))
-
+    console.log("---docname"+ (response.data[0].document_name))
       setapicall(false);
     })
     .catch(function(error) {
@@ -265,7 +258,6 @@ const VendorsList = () => {
       setShow(e);
     }
   };
- console.log("---docname"+ Docnamearray)
 
   const onDocumentNamechange = (e) => {
     setaddtag(e.target.value);
@@ -307,7 +299,6 @@ const VendorsList = () => {
   const DocsFormChange = (e) => {
     setFileDoc(e.target.files[0])
     setFileDocName(e.target.files[0].name);
-
   //   [e.target.files].forEach((image) =>
   //     newImageUrls.push(image)
   //   );
@@ -322,12 +313,11 @@ const VendorsList = () => {
   //   });
   };
 
+
   let shoplogo = `${process.env.REACT_APP_BASEURL}/${addvendordata.shop_logo}`
   let docsdata = `${process.env.REACT_APP_BASEURL}/${DocuImgarray}`
   var Newshoplogo = shoplogo.replace("/public", "");
   var imgdata =docsdata.replace("/public", "");
-  console.log("---add vendorrr --- > "+addvendordata.document_name);
-
   const AddVendorClick = (e) => {
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
@@ -356,13 +346,12 @@ const VendorsList = () => {
     formData.append("document_name",x);
     formData.append("status",addvendordata.status);
     formData.append("availability", addvendordata.availability);
-
       axios
       .post(`${process.env.REACT_APP_BASEURL}/vendor_register`,formData)
       .then((response) => {
         // setvendordata(response.data);
-      console.log("formadd----------   " + JSON.stringify(response.data));
-        setapicall(true);
+      // console.log("formadd----------   " + JSON.stringify(response.data));
+    setapicall(true);
     setShow(false);
 
       })
@@ -375,6 +364,7 @@ const VendorsList = () => {
   };
 
   const UpdateVendorClick = (e) => {
+  let x = [addvendordata.document_name]
     e.preventDefault();
     const formData = new FormData();
     formData.append("id",addvendordata.id)
@@ -391,12 +381,12 @@ const VendorsList = () => {
     formData.append("availability", addvendordata.availability);
     formData.append("image",fileDoc);
     formData.append("filename", fileDocName);
-    formData.append("document_name",addvendordata.document_name);
+    formData.append("document_name",x);
     formData.append("status",addvendordata.status);
     axios
     .put(`${process.env.REACT_APP_BASEURL}/vendor_update`,formData)
     .then((response) => {
-    console.log("formupdate----------   " + JSON.stringify(response.data));
+    // console.log("formupdate----------   " + JSON.stringify(response.data));
       
       setapicall(true);
     setShow(false);
@@ -830,7 +820,6 @@ const VendorsList = () => {
                         </Badge>
                             </>
                           )
-
                          })}
                         
                       </div>
