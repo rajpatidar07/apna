@@ -26,7 +26,7 @@ const OrderDetail = () => {
    
     const onStatusChangee = (e) => {
       setchangstatuss(e.target.value)
-      axios.put("http://192.168.29.108:5000/order_status_change", {
+      axios.put("${process.env.REACT_APP_BASEURL}/order_status_change", {
       status_change:e.target.value,
       id:`${orderid}`
         }).then((response) => {
@@ -36,7 +36,7 @@ const OrderDetail = () => {
       });
     }
   useEffect(()=>{
-    axios.get(`http://192.168.29.108:5000/order_deteils?id=${orderid}`).then((response) => {
+    axios.get(`${process.env.REACT_APP_BASEURL}/order_deteils?id=${orderid}`).then((response) => {
       setOrder(response.data);
       setproductOrder(response.data.product_types)
       UserData();
@@ -46,7 +46,7 @@ const OrderDetail = () => {
     
   },[])
   const UserData = () =>{
-    axios.get(`http://192.168.29.108:5000/user_details?user_id=${userid}`).then((response) => {
+    axios.get(`${process.env.REACT_APP_BASEURL}/user_details?user_id=${userid}`).then((response) => {
       let data = response.data;
       setUser(data);
       console.log("______uuuuserdataa_____"+JSON.stringify(response.data))

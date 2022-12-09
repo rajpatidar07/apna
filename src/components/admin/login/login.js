@@ -31,7 +31,7 @@ const Login = () => {
     setError(false);
     }
    else{
-    axios.post(`http://192.168.29.108:5000/admin_login`,
+    axios.post(`${process.env.REACT_APP_BASEURL}/admin_login`,
         {
         admin_email:email,
         admin_password:password

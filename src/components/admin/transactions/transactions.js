@@ -21,7 +21,7 @@ function Transactions() {
     function getTransactions() {
       try {
         axios
-          .get("http://192.168.29.108:5000/transaction_details?id=1")
+          .get("${process.env.REACT_APP_BASEURL}/transaction_details?id=1")
           .then((response) => {
             let data = response.data;
             setTransectionData(data);
@@ -34,7 +34,7 @@ function Transactions() {
     getTransactions();
   }, []);
   const TransectionSearch=()=>{
-    axios.post(`http://192.168.29.108:5000/transaction_list`,{
+    axios.post(`${process.env.REACT_APP_BASEURL}/transaction_list`,{
         "order_id":`${SearchTransection.order_id}`,
         "method":`${SearchTransection.method}`,
         "status":`${SearchTransection.status}`

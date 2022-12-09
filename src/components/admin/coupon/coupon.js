@@ -63,7 +63,7 @@ const Coupon = () => {
   }
   const showAlert =()=> {
     setAlert(true);
-     axios.put(`http://192.168.29.108:5000/coupons_delete`,
+     axios.put(`${process.env.REACT_APP_BASEURL}/coupons_delete`,
     {
          id:cid,
          is_active:'0'
@@ -89,7 +89,7 @@ const Coupon = () => {
     if (e !== 'add') {
       try {
         axios
-          .get(`http://192.168.29.108:5000/coupon?coupon_id=${e}`)
+          .get(`${process.env.REACT_APP_BASEURL}/coupon?coupon_id=${e}`)
           .then((response) => {
             let data= response.data[0];
             setaddcoupondata(data);
@@ -104,7 +104,7 @@ const Coupon = () => {
     function getCouponList() {
       try {
         axios
-          .get("http://192.168.29.108:5000/coupon?coupon_id=all")
+          .get("${process.env.REACT_APP_BASEURL}/coupon?coupon_id=all")
           .then((response) => {
             let data = response.data;
             setcoupondata(data)
@@ -220,7 +220,7 @@ const Coupon = () => {
           // width="75px"
           alt={'apna_organic'}
           src={
-            `http://192.168.29.108:5000/${row.image}`
+            `${process.env.REACT_APP_BASEURL}/${row.image}`
           }
           style={{
             padding: 10,
@@ -254,7 +254,7 @@ const Coupon = () => {
   };
  
   const CoupondataSearch=()=>{
-    axios.post(`http://192.168.29.108:5000/coupons_list`,{
+    axios.post(`${process.env.REACT_APP_BASEURL}/coupons_list`,{
       "campaign_name":`${SearchCoup.campaign_name}`,
        "code":`${SearchCoup.code}`,
        "status":`${SearchCoup.status}`
@@ -304,7 +304,7 @@ const Coupon = () => {
       formData.append("percentage", addcoupondata.percentage);
       formData.append("status", addcoupondata.status);
       formData.append("image", file);
-      axios.post(`http://192.168.29.108:5000/coupons_add`,formData
+      axios.post(`${process.env.REACT_APP_BASEURL}/coupons_add`,formData
       )
       .then((response) => {
 
@@ -333,7 +333,7 @@ const Coupon = () => {
       formData.append("status", addcoupondata.status);
       formData.append("image", file);
 
-    axios.put(`http://192.168.29.108:5000/coupon_update`,formData
+    axios.put(`${process.env.REACT_APP_BASEURL}/coupon_update`,formData
     ).then((response) => {
       setapicall(true)
   });
@@ -343,7 +343,7 @@ const Coupon = () => {
   setShow("");
   };
 
-  let couponlogo = `http://192.168.29.108:5000/${addcoupondata.image}`
+  let couponlogo = `${process.env.REACT_APP_BASEURL}/${addcoupondata.image}`
   var Newcouponlogo = couponlogo.replace("/public", "");
  
   let a = [];

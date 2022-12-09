@@ -10,7 +10,7 @@ const Forgot = () => {
   // const[forgotInfo,setForgotInfo]=useState([]);
   const forgotInfo=(e)=>{
     e.preventDefault();
-    axios.put(`http://192.168.29.108:5000/admin_forget_password`, 
+    axios.put(`${process.env.REACT_APP_BASEURL}/admin_forget_password`, 
     {
       admin_email:email,
   

@@ -39,7 +39,7 @@ function Admin() {
     if (e !== 'add') {
       try {
               axios
-                .get(`http://192.168.29.108:5000/admin?id=${e}`)
+                .get(`${process.env.REACT_APP_BASEURL}/admin?id=${e}`)
                 .then((response) => {
                   let data= response.data[0];
                   setaddadmindata(data);
@@ -101,7 +101,7 @@ function Admin() {
     },
   ];
   useEffect(() => {
-    axios.post(`http://192.168.29.108:5000/admin_search`,{
+    axios.post(`${process.env.REACT_APP_BASEURL}/admin_search`,{
       "admin_name":`${Searchad.admin_name}`,
       "admin_type":`${Searchad.admin_type}`,
   }).then ((response) => {
@@ -121,7 +121,7 @@ function Admin() {
     }
 
   const SearchAdmin=()=>{
-      axios.post(`http://192.168.29.108:5000/admin_search`,{
+      axios.post(`${process.env.REACT_APP_BASEURL}/admin_search`,{
         "admin_name":`${Searchad.admin_name}`,
         "admin_type":`${Searchad.admin_type}`,
     }).then ((response) => {
@@ -144,7 +144,7 @@ function Admin() {
     else {
       e.preventDefault();
       axios
-      .post(`http://192.168.29.108:5000/add_admin`,
+      .post(`${process.env.REACT_APP_BASEURL}/add_admin`,
       {
         admin_email:`${addadmindata.admin_email}`,
         admin_name:`${addadmindata.admin_name}`,
@@ -167,7 +167,7 @@ function Admin() {
 
   const UpdateAdminClick = (e, show) => {
     e.preventDefault()
-    axios.put(`http://192.168.29.108:5000/update_admin`,
+    axios.put(`${process.env.REACT_APP_BASEURL}/update_admin`,
     
     addadmindata).then((response) => {
     console.log("idddllllllllllllllllllllllllllllllll------"+JSON.stringify(addadmindata))

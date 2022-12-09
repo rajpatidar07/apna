@@ -324,7 +324,6 @@ setFile(e.target.files[0]);
     }
   };
   const UpdateCategoryClick = (show) => {
-    console.log("indVal------"+indVal)
      axios.put(`http://apnaorganicstore.in/myapp/update_category`, {
       id:cid,
       parent_id: parentid,
@@ -333,7 +332,6 @@ setFile(e.target.files[0]);
       new_category:newName,
       category_type:type
   }).then((response) => {
-    // console.log("possttttttt------"+JSON.stringify(response))
   });
   formRef.current.reset();
   setValidated(false);
@@ -351,7 +349,7 @@ setFile(e.target.files[0]);
     }
     else
     {
-      axios.post(`http://192.168.29.108:5000/search_category`,{
+      axios.post(`${process.env.REACT_APP_BASEURL}/search_category`,{
         "category_name":`${SearchCat.category_name}`,
         "category_type":`${SearchCat.category_type}`,
         "level":`${SearchCat.level}`
@@ -365,7 +363,6 @@ setFile(e.target.files[0]);
     }
    
   }
-
   const handleClick = () => {};
   const navigate = useNavigate();
 
@@ -402,8 +399,8 @@ setFile(e.target.files[0]);
                 value={SearchCat.category_type}
             >
               <option>Search by category type</option>
-              {result1.map((lvl)=>{
-                return( <option value={lvl.category_type}>{lvl.category_type}</option>)
+              {result1.map((lvl,i)=>{
+                return( <option value={lvl.category_type} key={i}>{lvl.category_type}</option>)
               })}
               {/* <option value="">{type.category_type}</option>
               <option value="2">Health</option>
@@ -419,9 +416,9 @@ setFile(e.target.files[0]);
               value={SearchCat.level}
             >
               <option>Search by level</option>
-              {result2.map((lvl)=>{
+              {result2.map((lvl,i)=>{
                 return( 
-                <option value={lvl.level}>{lvl.level}</option>
+                <option value={lvl.level} key={i}>{lvl.level}</option>
                 )
               })} 
               {/* <option value="2">Fish & Meat</option>
@@ -538,7 +535,7 @@ setFile(e.target.files[0]);
 
                       {category.map((cdata, i) => {
                         return (
-                          <option value={cdata.id}>
+                          <option value={cdata.id} key={i}>
                             {cdata.category_name}{" "}
                           </option>
                         );
@@ -568,7 +565,7 @@ setFile(e.target.files[0]);
 
                         {subCategory.map((cdata, i) => {
                           return (
-                            <option value={cdata.id}>
+                            <option value={cdata.id} key={i}>
                               {cdata.category_name}{" "}
                             </option>
                           );
@@ -597,7 +594,7 @@ setFile(e.target.files[0]);
                       >
                         {childCategory.map((cdata, i) => {
                           return (
-                            <option value={cdata.id}>
+                            <option value={cdata.id} key={i}>
                               {cdata.category_name}{" "}
                             </option>
                           );

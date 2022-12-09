@@ -97,7 +97,7 @@ function Product_Old() {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value })
   }
   useEffect(() => {
-    axios.post("http://192.168.29.108:5000/products_search?page=0&per_page=50", {
+    axios.post("${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50", {
       "product_search": {
         "search": `${searchdata.product_title_name}`,
         "category": `${searchdata.category}`,
@@ -119,7 +119,7 @@ function Product_Old() {
     setAlert(true);
   }
   const hideAlert = () => {
-    axios.put("http://192.168.29.108:5000/products_delete", {
+    axios.put("${process.env.REACT_APP_BASEURL}/products_delete", {
       "varient_id": `${variantid}`,
       "product_id": `${productid}`,
       "is_delete": "0"
@@ -306,7 +306,7 @@ function Product_Old() {
     }
     else {
       console.log(JSON.stringify(e))
-      axios.get(`http://192.168.29.108:5000/product?id=${e}`).then((response) => {
+      axios.get(`${process.env.REACT_APP_BASEURL}/product?id=${e}`).then((response) => {
         setproductdata(response.data)
       }).catch(function (error) {
         console.log(error);
@@ -322,7 +322,7 @@ function Product_Old() {
     handleShow();
   },[variantapicall])
   const handlevarietyShow = (id) => {
-    axios.post("http://192.168.29.108:5000/products_search?page=0&per_page=50", {
+    axios.post("${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50", {
       "product_search": {
         "search": '',
         "product_id": `${id}`,
@@ -414,7 +414,7 @@ function Product_Old() {
     console.log("----------productid"+"id--  "+id)
     // id.preventDefault();
     if(id === ''){
-      axios.post(`http://192.168.29.108:5000/products_varient_add`, variantarray).then((response) => {
+      axios.post(`${process.env.REACT_APP_BASEURL}/products_varient_add`, variantarray).then((response) => {
       setvdata(response.data.results)
 console.log("---addvariety"+JSON.stringify(response.data))
         // setvariantarray(response.data)
@@ -425,7 +425,7 @@ console.log("---addvariety"+JSON.stringify(response.data))
       });
     }
     else{
-      axios.put(`http://192.168.29.108:5000/products_varient_update`, variantarray).then((response) => {
+      axios.put(`${process.env.REACT_APP_BASEURL}/products_varient_update`, variantarray).then((response) => {
         setvariantarray(response.data)
         setvariantapicall(true)
         console.log("------changeediteddd---" + JSON.stringify(response.data))
@@ -446,7 +446,7 @@ const VariantAddProduct = () =>{
     // }
 }
   const VariantRemoveClick = (id, productid) => {
-    axios.put(`http://192.168.29.108:5000/products_delete`, {
+    axios.put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
       id:`${id}`,
       product_id:`${productid}`,
       is_delete:"1"
@@ -461,7 +461,7 @@ const VariantAddProduct = () =>{
     setvdata(vdata.filter(item => item !== id));
   }
   const VariantEditClick = (id, productid) => {
-    axios.get(`http://192.168.29.108:5000/products_pricing?id=${id}&product_id=${productid}`).then((response) => {
+    axios.get(`${process.env.REACT_APP_BASEURL}/products_pricing?id=${id}&product_id=${productid}`).then((response) => {
       setvariantarray(response.data[0])
       console.log("------edit" + JSON.stringify(response.data[0]))
     }).catch(function (error) {
@@ -562,7 +562,7 @@ const VariantAddProduct = () =>{
     }
     setValidated(true);
     setcustomValidated(false);
-    axios.post('http://192.168.29.108:5000/products', productdataa).then((response) => {
+    axios.post('${process.env.REACT_APP_BASEURL}/products', productdataa).then((response) => {
       console.log("finall---" + JSON.stringify(response.data))
       setapicall(true)
     });
@@ -576,7 +576,7 @@ const VariantAddProduct = () =>{
   const handleUpdateProduct = (e) => {
     // setproductdata({ ...productdata, is_active: "0" })
     e.preventDefault();
-    axios.put("http://192.168.29.108:5000/products_update", productdata
+    axios.put("${process.env.REACT_APP_BASEURL}/products_update", productdata
     ).then((response) => {
       console.log("-----updatedata" + JSON.stringify(response.data))
       setapicall(true)

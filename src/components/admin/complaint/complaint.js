@@ -36,7 +36,7 @@ const Complaint = () => {
   }
   const handleShow = (e) => {
     axios
-    .get(`http://192.168.29.108:5000/complaint_details?id=${e}`)
+    .get(`${process.env.REACT_APP_BASEURL}/complaint_details?id=${e}`)
     .then((response) => {
       
       seteditcomplaintdata({...editcomplaintdata ,
@@ -66,7 +66,7 @@ const Complaint = () => {
 
     const onSearchClick = () =>{
       axios
-      .post(`http://192.168.29.108:5000/complaint_search`,{
+      .post(`${process.env.REACT_APP_BASEURL}/complaint_search`,{
         "id":`${searchdata.id}`,
         "status_":`${searchdata.status_}`,
         "ticket_date":`${searchdata.ticket_date}`
@@ -82,7 +82,7 @@ const Complaint = () => {
   
   useEffect(() => {
     axios
-      .get(`http://192.168.29.108:5000/complaint_details?id=all`)
+      .get(`${process.env.REACT_APP_BASEURL}/complaint_details?id=all`)
       .then((response) => {
         setcomplaintdata(response.data);
         console.log("----complaint"+JSON.stringify(response.data))
@@ -233,7 +233,7 @@ const Complaint = () => {
     else{
       e.preventDefault();
       axios
-      .put(`http://192.168.29.108:5000/complaint_update`,editcomplaintdata)
+      .put(`${process.env.REACT_APP_BASEURL}/complaint_update`,editcomplaintdata)
       .then((response) => {
         // console.log("---update-complaint"+JSON.stringify(response.data))
         setShow(false)

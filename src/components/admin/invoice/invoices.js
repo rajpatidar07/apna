@@ -42,7 +42,7 @@ const InvoiceList = () => {
     function getInvoiceList() {
       try {
         axios
-          .get("http://192.168.29.108:5000/invoice_list")
+          .get("${process.env.REACT_APP_BASEURL}/invoice_list")
           .then((response) => {
             let data = response.data;
             setInvoice(data);
@@ -65,7 +65,7 @@ const InvoiceList = () => {
   }
   const SearchInvoices=()=>{
     {
-      axios.post(`http://192.168.29.108:5000/invoice_search`,{
+      axios.post(`${process.env.REACT_APP_BASEURL}/invoice_search`,{
         "search":`${SearchInvo.search}`,
         "from_date":`${SearchInvo.from_date}`,
         "to_date":`${SearchInvo.to_date}`

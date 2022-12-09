@@ -58,7 +58,7 @@ const VendorsList = () => {
     }
     const onSearchClick = () =>{
       axios
-      .post(`http://192.168.29.108:5000/vendor_list`,{
+      .post(`${process.env.REACT_APP_BASEURL}/vendor_list`,{
         "owner_name":`${searchdata.owner_name}`,
         "store_type":`${searchdata.store_type}`,
         "status":`${searchdata.status}`
@@ -198,19 +198,18 @@ const VendorsList = () => {
       },
     ];
 
-    useEffect(() => {
+    // useEffect(() => {
       
-      // setaddtag(addvendordata.document_name);
-      let splitDoc = [];
-       splitDoc =  addvendordata.document_name.split(',');
-      setDocnameArray(Docnamearray => [...Docnamearray,splitDoc]);
-    setCall(false);
-    },[call]);
-    console.log("dabbaa diya  --- "+JSON.stringify(Docnamearray))
+    //   // setaddtag(addvendordata.document_name);
+    //   let splitDoc = [];
+    //    splitDoc =  addvendordata.document_name.split(',');
+    //   setDocnameArray(Docnamearray => [...Docnamearray,splitDoc]);
+    // setCall(false);
+    // },[call]);
 
     useEffect(() => {
       axios
-        .get(`http://192.168.29.108:5000/vendors?id=all`)
+        .get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
         .then((response) => {
           setvendordata(response.data);
           setapicall(false);
@@ -251,7 +250,7 @@ const VendorsList = () => {
       setCall(true)
       console.log("clcikeddd");
       axios
-    .get(`http://192.168.29.108:5000/vendors?id=${e}`,addvendordata)
+    .get(`${process.env.REACT_APP_BASEURL}/vendors?id=${e}`,addvendordata)
     .then((response) => {
       setaddvendordata(response.data[0]);
       // setDocnameArray(response.data[0].document_name);
@@ -285,7 +284,7 @@ const VendorsList = () => {
   const handleStatusChnage = (e, id) => {
     setchangstatus(e.target.value);
     axios
-      .put("http://192.168.29.108:5000/vendor_status_change", {
+      .put("${process.env.REACT_APP_BASEURL}/vendor_status_change", {
         status_change: e.target.value,
         id: `${id}`,
       })
@@ -326,8 +325,8 @@ const VendorsList = () => {
   };
 
 
-  let shoplogo = `http://192.168.29.108:5000/${addvendordata.shop_logo}`
-  let docsdata = `http://192.168.29.108:5000/${DocuImgarray}`
+  let shoplogo = `${process.env.REACT_APP_BASEURL}/${addvendordata.shop_logo}`
+  let docsdata = `${process.env.REACT_APP_BASEURL}/${DocuImgarray}`
   var Newshoplogo = shoplogo.replace("/public", "");
   var imgdata =docsdata.replace("/public", "");
 
@@ -363,7 +362,7 @@ const VendorsList = () => {
     formData.append("status",addvendordata.status);
 
       axios
-      .post(`http://192.168.29.108:5000/vendor_register`,formData)
+      .post(`${process.env.REACT_APP_BASEURL}/vendor_register`,formData)
       .then((response) => {
         // setvendordata(response.data);
       console.log("formadd----------   " + JSON.stringify(response.data));
@@ -394,7 +393,7 @@ const VendorsList = () => {
     // formData.append("document_name",addvendordata.document_name);
     // formData.append("status",addvendordata. status);
     axios
-    .put(`http://192.168.29.108:5000/vendor_update`,addvendordata)
+    .put(`${process.env.REACT_APP_BASEURL}/vendor_update`,addvendordata)
     .then((response) => {
     console.log("formupdate----------   " + JSON.stringify(response.data));
       // setvendordata(response.data);
