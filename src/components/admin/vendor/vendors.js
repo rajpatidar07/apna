@@ -22,6 +22,7 @@ const VendorsList = () => {
   const [file, setFile] = useState();
   const [fileDoc, setFileDoc] = useState();
   const [fileDocName, setFileDocName] = useState("");
+  const [call, setCall] = useState(false);
 
  const [fileName, setFileName] = useState("");
   const
@@ -39,7 +40,6 @@ const VendorsList = () => {
   image:"",
   document_name:[],
   availability:""
-
     });
   const [changstatus, setchangstatus] = useState("");
   const [apicall, setapicall] = useState(false);
@@ -65,7 +65,7 @@ const VendorsList = () => {
         })
       .then((response) => {
       console.log("search----------   " + JSON.stringify(response.data));
-        setvendordata(response.data);
+        setvendordata(response.data); 
         setapicall(false);
       })
       .catch(function(error) {
@@ -197,6 +197,17 @@ const VendorsList = () => {
         ),
       },
     ];
+
+    useEffect(() => {
+      
+      // setaddtag(addvendordata.document_name);
+      let splitDoc = [];
+       splitDoc =  addvendordata.document_name.split(',');
+      setDocnameArray(Docnamearray => [...Docnamearray,splitDoc]);
+    setCall(false);
+    },[call]);
+    console.log("dabbaa diya  --- "+JSON.stringify(Docnamearray))
+
     useEffect(() => {
       axios
         .get(`http://192.168.29.108:5000/vendors?id=all`)
@@ -214,6 +225,7 @@ const VendorsList = () => {
         document_name: Docnamearray
       });
     }, [Docnamearray]);
+    
     const handleFormChange = (e) => {
       setaddvendordata({
         ...addvendordata,
@@ -224,6 +236,8 @@ const VendorsList = () => {
     formRef.current.reset();
     // e.preventDefault()
     setValidated(false);
+    setaddtag('');
+    setDocnameArray('');
     setShow(false);
   };
 
@@ -234,11 +248,13 @@ const VendorsList = () => {
       setShow(e);
     }
     if (e !== "add") {
+      setCall(true)
+      console.log("clcikeddd");
       axios
     .get(`http://192.168.29.108:5000/vendors?id=${e}`,addvendordata)
     .then((response) => {
       setaddvendordata(response.data[0]);
-      setDocnameArray(response.data[0].document_name);
+      // setDocnameArray(response.data[0].document_name);
      setDocuImgArray(JSON.parse(response.data[0].multiple_document_upload))
  console.log("---docname"+ (response.data[0].document_name))
 
@@ -316,7 +332,7 @@ const VendorsList = () => {
   var imgdata =docsdata.replace("/public", "");
 
 
-  console.log("---add vendorrr --- > "+  JSON.stringify(addvendordata));
+  console.log("---add vendorrr --- > "+addvendordata.document_name);
 
   const AddVendorClick = (e) => {
 
@@ -798,7 +814,7 @@ const VendorsList = () => {
                           {Docnamearray === undefined || Docnamearray === null || Docnamearray === '' ? null :
                     <div className="d-flex align-items-center tagselectbox mt-2" >
                                                
-                          {(Docnamearray || []).map((seotags, i) => {
+                          { Docnamearray.map((seotags, i) => {
                           return (
                             <>
                         <Badge className="tagselecttitle mb-0" bg="success" >
@@ -854,9 +870,7 @@ const VendorsList = () => {
                     type="file"
                     placeholder="multiple_document_upload"
                     name={"multiple_document_upload"}
-
                   />
-
                   {/* {
                   (DocuImgarray).map((imgdata)=> {
                     return( */}

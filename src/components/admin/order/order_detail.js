@@ -25,7 +25,6 @@ const OrderDetail = () => {
     }
    
     const onStatusChangee = (e) => {
-      // e.prevantDefault();
       setchangstatuss(e.target.value)
       axios.put("http://192.168.29.108:5000/order_status_change", {
       status_change:e.target.value,
@@ -41,8 +40,6 @@ const OrderDetail = () => {
       setOrder(response.data);
       setproductOrder(response.data.product_types)
       UserData();
-      // console.log("______uuuuu_____"+JSON.stringify(response.data))
-      // setapicall(false)
     }).catch(function (error) {
       console.log(error);
     });

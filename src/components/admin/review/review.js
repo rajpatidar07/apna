@@ -67,7 +67,6 @@ const Review = () => {
           "status":`${searchdata.status}`
           })
         .then((response) => {
-        console.log("search----------   " + JSON.stringify(response.data));
         setreviewdata(response.data);
           setapicall(false);
         })
@@ -86,7 +85,6 @@ const Review = () => {
       if (form.checkValidity() === false) {
         e.preventDefault();
         e.stopPropagation();
-        console.log("falsevalidatn----------   ");
         setValidated(true)
       }
       else{

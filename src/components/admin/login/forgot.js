@@ -15,7 +15,6 @@ const Forgot = () => {
       admin_email:email,
   
   }).then((response) => {
-    console.log("possttttttt------"+JSON.stringify(response))
   });
   }
  

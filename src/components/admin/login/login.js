@@ -14,11 +14,9 @@ const Login = () => {
   const onValueChange = (e) => {
     setEmail(e.target.value);
   };
-  console.log("email------"+JSON.stringify(email))
   const onPasswordChange=(e)=>{
     setPassword(e.target.value );
   }
-  console.log("password------"+JSON.stringify(password))
   const LoginCheck = () =>{
     localStorage.setItem("loginid",email);
     localStorage.setItem("password",password);
@@ -28,7 +26,6 @@ const Login = () => {
    const handleSubmit = ((e) => {
     const form = e.currentTarget;
     if (form.checkValidity() === false ) {
-    console.log("----false")
       e.preventDefault();
     e.stopPropagation();
     setError(false);
@@ -41,7 +38,6 @@ const Login = () => {
         }
         )
         .then((response) => {
-          console.log("possttttttt------"+JSON.stringify(response.data))
           if(response.data === true){
            
             LoginCheck();

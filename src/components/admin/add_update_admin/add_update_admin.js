@@ -33,23 +33,16 @@ function Admin() {
     setShow(false);
   }
   const handleShow = (e) => {
-    console.log(e+"-----ooooooooooooooooooooo")
     if (e === 'add') {
       setShow(e);
     }
-    // console.log(JSON.stringify(e))
     if (e !== 'add') {
-      // setadmindata(admindata[e - 1])
-      console.log("updateeeeeeee")
       try {
               axios
                 .get(`http://192.168.29.108:5000/admin?id=${e}`)
                 .then((response) => {
                   let data= response.data[0];
                   setaddadmindata(data);
-                  console.log("getttttttttttttttttttttttttttttt----------   " + JSON.stringify(data));
-
-                
                 })
             } catch (err) {}
            
@@ -59,7 +52,6 @@ function Admin() {
    
 
   const formRef = useRef();
- 
 
   const columns = [
     {
@@ -113,7 +105,6 @@ function Admin() {
       "admin_name":`${Searchad.admin_name}`,
       "admin_type":`${Searchad.admin_type}`,
   }).then ((response) => {
-    // console.log("data---------------"+JSON.stringify(response.data))
     setadmindata(response.data);
     setSearchAdmin(response.data)
     setsearchValidated(false)
@@ -176,7 +167,6 @@ function Admin() {
 
   const UpdateAdminClick = (e, show) => {
     e.preventDefault()
-    // console.log("form----------   " + JSON.stringify(admindata));
     axios.put(`http://192.168.29.108:5000/update_admin`,
     
     addadmindata).then((response) => {

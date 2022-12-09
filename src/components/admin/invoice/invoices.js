@@ -19,8 +19,8 @@ const InvoiceList = () => {
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
   const[invoice,setInvoice]=useState([]);
-  const[invoiceno,setInvoiceNo]=useState([]);
-  const [invoiceid,setInvoiceId]=useState([]);
+  // const[invoiceno,setInvoiceNo]=useState([]);
+  // const [invoiceid,setInvoiceId]=useState([]);
   // const [invoiceprice,setInvoicePrice]=useState([]);
   const [SearchInvo, setSearchInvo] = useState({
     "search":"",
@@ -30,10 +30,7 @@ const InvoiceList = () => {
 
 
     const InvoiceCheck= (id) =>{
-      //  console.log("dataaa ofinvoice"+id[0]+id[1])
        localStorage.setItem("invoiceid",id[1])
-      //  localStorage.setItem("invoiceprice")
-      //  console.log("idddddddddddddddddddddddddddddddddddddddd"+JSON.stringify(invoiceprice))
       localStorage.setItem("invoice_no",id[0]);
       if(id[0] == undefined || id[0] == '' || id[0]==null){
 
@@ -50,7 +47,7 @@ const InvoiceList = () => {
             let data = response.data;
             setInvoice(data);
             // InvoiceCheck();
-          });
+          })
       } catch (err) {}
     }
 
@@ -223,15 +220,6 @@ const InvoiceList = () => {
   const [resetPaginationToggle, setResetPaginationToggle] = React.useState(
     false
   );
-
-  // const filteredItems = data.filter(
-  //   item =>
-  //     JSON.stringify(item)
-  //       .toLowerCase()
-  //       .indexOf(filterText.toLowerCase()) !== -1
-  // );
-
- 
   const subHeaderComponent = useMemo(() => {
     const handleClear = () => {
       if (filterText) {
