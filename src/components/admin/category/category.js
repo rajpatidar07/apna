@@ -58,14 +58,12 @@ const CategoryList = () => {
  const [fileName, setFileName] = useState("");
  const [parentid, setParentid] = useState('');
  const [allparentid, setAllparentid] = useState();
-//const [scategory, setScategory] = useState([]);
+const [apicall, setapicall] = useState(false);
  const [searchdata, setsearchData] = useState([]);
  const [CategoryEditparent, setCategoryEditparent] = useState("");
  const [CategoryEditSubparent, setCategoryEditSubparent] = useState("");
  const [CategoryEditChildparent, setCategoryEditChildparent] = useState("");
-
  const [CategoryEditdata, setCategoryEditData] = useState([]);
-
  const [SearchCat, setSearchCat] = useState({
   "category_name":"",
   "category_type":"",
@@ -96,31 +94,32 @@ setFile(e.target.files[0]);
             let data = response.data[0];
             setCategoryEditData(data)
             const arr = data.all_parent_id.split(',');
-for(let i=0 ; i < arr.length; i++){
-  axios
-  .get(`${process.env.REACT_APP_BASEURL}/category_details?id=${arr[i]}`)
-  .then((response) => {
-    let data = response.data[0];
-    if(i === 0 ){
-  console.log("----i--"+ i);
-  console.log("----idd"+ JSON.stringify(data.category_name));
-  setCategoryEditparent(data.category_name);
-    }
-    else if(i === 1 ){
-      console.log("----i--"+ i);
-      console.log("----idd"+ JSON.stringify(data.category_name));
-      setCategoryEditSubparent(data.category_name);
-    }
-    else if(i === 2 ){
-      console.log("----i--"+ i);
-      console.log("----idd"+ JSON.stringify(data.category_name));
-      setCategoryEditChildparent(data.category_name);
-    }
-  console.log("----idd"+ JSON.stringify(data));
-})
-}
-console.log("----CategoryEditdata----"+ JSON.stringify(CategoryEditdata));
+            // let arrdata = arr.substring(0, arr.length-2);
 
+      console.log("---hgetttupdate"+arr)
+      // console.log("---length"+arrdata.length)
+
+for(let i=0 ; i < arr.length; i++){
+  console.log("---arr  "+arr[i])
+  if(arr[i] !== '' && arr[i] !== null ){
+    axios
+    .get(`${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`)
+    .then((response) => {
+      let data = response.data;
+      if(i === 0){
+    setSubCategory(response.data)
+    setCategoryEditparent(data.category_name);
+      }
+      else if(i === 1 ){
+        setchildCategory(response.data)
+        setCategoryEditSubparent(data.category_name);
+      }
+      else if(i === 2){
+        setCategoryEditChildparent(data.category_name);
+      }
+  })
+  }
+}
           });
       } catch (err) {}
       setnewName(name)
@@ -130,6 +129,8 @@ console.log("----CategoryEditdata----"+ JSON.stringify(CategoryEditdata));
       setlevel(level)
       setType(category_type)
       setShow(e);
+      setCategoryEditData(data)
+      parentidddata.push(all_parent_id)
     }
   };
   const handlChangeName = (e, id) => {
@@ -144,16 +145,16 @@ console.log("----CategoryEditdata----"+ JSON.stringify(CategoryEditdata));
     setIndVal(e.target.value);
     setScategory({ ...scategory, [e.target.name]: e.target.value});
   };
-  let parentidddata=[];
-  // const parentidd = parentidddata.replace(/,*$/, '');
-  //  let parentidd = parentidddata.filter(obj => obj.category_name.substring(0, obj.category_name-1));
-  // const parentidd = parentidddata.endsWith(',') ? parentidddata.slice(0, -1): parentidddata;
-  const parentidd = parentidddata.join("");
-  parentidddata.push(scategory.category_name)
-  parentidddata.push(scategory.sub_category)
-  parentidddata.push(scategory.child_category)
-  // parentidd.push(scategory.s_category)
 
+  let parentidddata=[];
+  const parentidd = parentidddata.join("");
+    parentidddata.push(scategory.category_name)
+    parentidddata.push( scategory.sub_category)
+    parentidddata.push( scategory.child_category)
+  
+  console.log("----djslij"+parentidddata)
+  // parentidd.push(scategory.s_category)
+console.log("----data"+scategory.category_name+scategory.sub_category+scategory.child_category)
   useEffect(() => {
     function getUser() {
       try {
@@ -163,13 +164,13 @@ console.log("----CategoryEditdata----"+ JSON.stringify(CategoryEditdata));
             let data = response.data;
             setData(data);
             setsearchData(data);
-
+            setapicall(false)
           });
       } catch (err) {}
     }
 
     getUser();
-  }, []);
+  }, [apicall]);
 
   useEffect(() => {
     addCategory();
@@ -181,7 +182,7 @@ console.log("----CategoryEditdata----"+ JSON.stringify(CategoryEditdata));
           .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
           .then((response) => {
             let cgory = response.data;
-            let specificValues = cgory.filter(obj => obj.all_parent_id.substring(0, obj.all_parent_id.length-1) === scategory.category_name);
+            let specificValues = cgory.filter(obj => obj.all_parent_id.substring(0, obj.all_parent_id.length-2) === scategory.category_name);
 
             if (indVal === 0) {
               setCategory(cgory);
@@ -240,12 +241,15 @@ console.log("----CategoryEditdata----"+ JSON.stringify(CategoryEditdata));
       name: "#",
       width: "250px",
       center: true,
-      cell: (row) => (
+      cell: (row) => 
+      
+      (
+        <>
         <img
           height="90px"
           width="75px"
           alt={row.category_name}
-          src={row.image}
+          src={`${process.env.REACT_APP_BASEURL}/`+(row.image).replace("public","")}
           style={{
             borderRadius: 10,
             paddingTop: 10,
@@ -254,6 +258,7 @@ console.log("----CategoryEditdata----"+ JSON.stringify(CategoryEditdata));
           }}
           onClick={() => handleClick()}
         />
+        </>
       ),
     },
     {
@@ -350,13 +355,15 @@ console.log("----CategoryEditdata----"+ JSON.stringify(CategoryEditdata));
       formData.append("filename", fileName);
       formData.append("parent_id", indVal);
       formData.append("level", level);
-      formData.append("all_parent_id", parentidddata.join(""));
+      formData.append("all_parent_id", parentidddata);
       formData.append("new_category", newName);
       formData.append("category_type", type);
       axios
         .post(`${process.env.REACT_APP_BASEURL}/add_category`,formData, 
         )
         .then((response) => {
+          setShow(false)
+          setapicall(true)
         });
       formRef.current.reset();
       setValidated(false);
@@ -372,10 +379,13 @@ console.log("----CategoryEditdata----"+ JSON.stringify(CategoryEditdata));
     formData.append("filename", fileName);
     formData.append("parent_id", indVal);
     formData.append("level", level);
-    formData.append("all_parent_id", parentidddata.join(""));
+    formData.append("all_parent_id", parentidddata);
     formData.append("new_category", newName);
     formData.append("category_type", type);
      axios.put(`${process.env.REACT_APP_BASEURL}/update_category`,formData).then((response) => {
+      console.log("---update"+JSON.stringify(response.data))
+      // setShow(false)
+      setapicall(true)
   });
   formRef.current.reset();
   setValidated(false);
@@ -583,7 +593,7 @@ console.log("----CategoryEditdata----"+ JSON.stringify(CategoryEditdata));
                   </Form.Group>
                 </div>
 
-                {subCategory !="" || CategoryEditSubparent !== ''? (
+                {subCategory !==""? (
                   <div className="col-md-6">
                     <Form.Group
                       className="mb-3 aos_input"
@@ -615,7 +625,7 @@ console.log("----CategoryEditdata----"+ JSON.stringify(CategoryEditdata));
                   </div>
                 ) : null}
 
-                {childCategory != "" || CategoryEditChildparent !== '' ? (
+                {childCategory !== ""  ? (
                   <div className="col-md-6">
                     <Form.Group
                       className="mb-3 aos_input"
