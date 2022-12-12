@@ -194,8 +194,8 @@ const VariantEditClick = (id, productid) => {
           <>
             {/* <h2 className="productname mb-0">{data.product_title_name}</h2> */}
             {(vid == data.id && pid == data.product_id ) ?
-            <div className="productdetail_page_box row mt-3">
-              <div className="productimg_box">
+            <div className="row mt-3">
+              <div className="productimg_box col-8">
 
                 <Carousel autoPlay interval="3000" transitionTime="3000" infiniteLoop showIndicators={false} className={'productimg_carousel'} showStatus={false}>
                   <div className="w-100 h-50">
@@ -237,10 +237,10 @@ const VariantEditClick = (id, productid) => {
               </div>
 
 
-              <div className="product_detail_box mt-4">
+              <div className="product_detail_box col-4 mt-4 ">
                 {/*  */}
-                <div className="product_upper_section">
-                  <div>
+                <div className="product_upper_section row">
+                  <div className="col-6">
                     <b><h5 className="statuslabeltext text-success">{data.product_title_name}</h5></b>
                     <div className="productstatus">
                       <h5 className="statuslabeltext">SKU:</h5>
@@ -248,131 +248,136 @@ const VariantEditClick = (id, productid) => {
                         <h6 className="text-secondary statuslabeltext">{data.id}</h6>
                       </b>
                     </div>
-                  </div>
-                </div>
 
                 {/* price */}
 
                 <div className="product_upper_section ">
-                  <div className="product_mid_section product_variety_section">
-                    <h3 className="mb-0">{data.product_price}</h3>
-                    <div className="priceboxx">
-                      <b>
-                        <p className="text-success mb-0">{data.discount}% off </p>
-                      </b>
-                      <p className="mrprate text-danger">({data.mrp})</p>
-                    </div>
-                    <div className="priceboxx">
-                      <b>
-                        {" "}
-                        <p className="text-secondary">Sale Price: </p>
-                      </b>
-                      <p className="">{data.sale_price}</p>
-                    </div>
+                <div className="product_mid_section product_variety_section">
+                  <h3 className="mb-0">{data.product_price}</h3>
+                  <div className="priceboxx">
+                    <b>
+                      <p className="text-success mb-0">{data.discount}% off </p>
+                    </b>
+                    <p className="mrprate text-danger">({data.mrp})</p>
                   </div>
-
-                  {/* tax */}
-                  <div className="product_mid_section product_variety_section">
-                    <h5 className="mb-0">Tax:</h5>
-                    <div className="productstatus">
-                      <h5 className="statuslabeltext">Gst:</h5>
-                      <b>
-                        <h6 className="text-secondary statuslabeltext">{data.gst}</h6>
-                      </b>
-                      <h5 className="statuslabeltext">wholesale_sales_tax:</h5>
-                      <b>
-                        <h6 className="text-secondary statuslabeltext">{data.wholesale_sales_tax}</h6>
-                      </b>
-                    </div>
-                    <div className="productstatus">
-                      <h5 className="statuslabeltext">manufacturers_sales_tax:</h5>
-                      <b>
-                        <h6 className="text-secondary statuslabeltext">{data.manufacturers_sales_tax}</h6>
-                      </b>
-                      <h5 className="statuslabeltext">retails_sales_tax:</h5>
-                      <b>
-                        <h6 className="text-secondary statuslabeltext">{data.retails_sales_tax}</h6>
-                      </b>
-                    </div>
-                  </div>
-
-
-                  {/* store */}
-                  <div className="product_lower_section product_upper_section">
-                    <div className="productquantity productstatus">
-                      <h5 className=" mb-0">Store:</h5>
-                      <p className="statuslabeltext mb-0 text-primary">{data.store_name}</p>
-                    </div>
-                  </div>
-                  {/*  */}
-                  {/*description  */}
-                  <div>
-                    <h5 className="mb-1">Product Description:</h5>
-                    <ShowMoreText
-                      /* Default options */
-                      lines={5}
-                      more="Show more"
-                      less="...Show less"
-                      anchorclassName="oooeeer"
-                      expanded={false}
-                      width={500}
-                      className={'detailproduct'}
-                    >
-                      <p className="detailproduct statuslabeltext">
-                        {data.product_description}
-                      </p>
-                    </ShowMoreText>
-                  </div>
-                  {/*  */}
-
-                  {/* category */}
-                  <div className="product_lower_section product_upper_section">
-                    <div className="productquantity productstatus">
-                      <h5 className="mb-0">Category:</h5>
-                      <p className="categorytext statuslabeltext mb-0">
-                        {data.category}
-                      </p>
-                    </div>
-                    <div className="productquantity productstatus">
-                      <h6 className="categorytext1">{data.parent_category}</h6>
-                      <h6 className="categorytext1">{data.parent_category}</h6>
-                    </div>
-                  </div>
-                  {/*  */}
-                  {/* other instarusction */}
-                  <div>
-                    <h5 className="mb-1">Other Instruction:</h5>
-                    <ShowMoreText
-                      /* Default options */
-                      lines={5}
-                      more="Show more"
-                      less="...Show less"
-                      anchorclassName="oooeeer"
-                      expanded={false}
-                      width={500}
-                    >
-                      <p className="detailproduct statuslabeltext">
-                        {data.other_introduction}
-                      </p>
-                      {/* <ListGroup variant="flush">
-                  <ListGroup.Item>No style</ListGroup.Item>
-                  <ListGroup.Item variant="secondary">Secondary</ListGroup.Item>
-                  <ListGroup.Item variant="secondary">Success</ListGroup.Item>
-                  <ListGroup.Item variant="secondary">Danger</ListGroup.Item>
-                  <ListGroup.Item variant="secondary">Warning</ListGroup.Item>
-                  <ListGroup.Item variant="secondary">Info</ListGroup.Item>
-                  <ListGroup.Item variant="secondary">Light</ListGroup.Item>
-                  <ListGroup.Item variant="secondary">Dark</ListGroup.Item>
-                </ListGroup> */}
-                    </ShowMoreText>
+                  <div className="priceboxx">
+                    <b>
+                      {" "}
+                      <p className="text-secondary">Sale Price: </p>
+                    </b>
+                    <p className="">{data.sale_price}</p>
                   </div>
                 </div>
+
+              
+
+
+                {/* store */}
+                <div className="product_lower_section product_upper_section">
+                  <div className="productquantity productstatus">
+                    <h5 className=" mb-0">Store:</h5>
+                    <p className="statuslabeltext mb-0 text-primary">{data.store_name}</p>
+                  </div>
+                </div>
+                {/*  */}
+                {/*description  */}
+                <div>
+                  <h5 className="mb-1">Product Description:</h5>
+                  <ShowMoreText
+                    /* Default options */
+                    lines={5}
+                    more="Show more"
+                    less="...Show less"
+                    anchorclassName="oooeeer"
+                    expanded={false}
+                    width={500}
+                    className={'detailproduct'}
+                  >
+                    <p className="detailproduct statuslabeltext">
+                      {data.product_description}
+                    </p>
+                  </ShowMoreText>
+                </div>
+                {/*  */}
+
+            
+                {/* other instarusction */}
+                <div>
+                  <h5 className="mb-1">Other Instruction:</h5>
+                  <ShowMoreText
+                    /* Default options */
+                    lines={5}
+                    more="Show more"
+                    less="...Show less"
+                    anchorclassName="oooeeer"
+                    expanded={false}
+                    width={500}
+                  >
+                    <p className="detailproduct statuslabeltext">
+                      {data.other_introduction}
+                    </p>
+                    {/* <ListGroup variant="flush">
+                <ListGroup.Item>No style</ListGroup.Item>
+                <ListGroup.Item variant="secondary">Secondary</ListGroup.Item>
+                <ListGroup.Item variant="secondary">Success</ListGroup.Item>
+                <ListGroup.Item variant="secondary">Danger</ListGroup.Item>
+                <ListGroup.Item variant="secondary">Warning</ListGroup.Item>
+                <ListGroup.Item variant="secondary">Info</ListGroup.Item>
+                <ListGroup.Item variant="secondary">Light</ListGroup.Item>
+                <ListGroup.Item variant="secondary">Dark</ListGroup.Item>
+              </ListGroup> */}
+                  </ShowMoreText>
+                </div>
+              </div>
+                  </div>
+    {/* category */}
+    <div className="col-6">
+    <div className="product_lower_section product_upper_section">
+    <div className="productquantity productstatus">
+      <h5 className="mb-0">Category:</h5>
+      <p className="categorytext statuslabeltext mb-0">
+        {data.category}
+      </p>
+    </div>
+    <div className="productquantity productstatus">
+      <h6 className="categorytext1">{data.parent_category}</h6>
+      <h6 className="categorytext1">{data.parent_category}</h6>
+    </div>
+  </div>
+    {/* tax */}
+    <div className="product_mid_section product_variety_section">
+    <h5 className="mb-0">Tax:</h5>
+    <div className="productstatus">
+      <h5 className="statuslabeltext">Gst:</h5>
+      <b>
+        <h6 className="text-secondary statuslabeltext">{data.gst}</h6>
+      </b>
+      <h5 className="statuslabeltext">wholesale_sales_tax:</h5>
+      <b>
+        <h6 className="text-secondary statuslabeltext">{data.wholesale_sales_tax}</h6>
+      </b>
+    </div>
+    <div className="productstatus">
+      <h5 className="statuslabeltext">manufacturers_sales_tax:</h5>
+      <b>
+        <h6 className="text-secondary statuslabeltext">{data.manufacturers_sales_tax}</h6>
+      </b>
+      <h5 className="statuslabeltext">retails_sales_tax:</h5>
+      <b>
+        <h6 className="text-secondary statuslabeltext">{data.retails_sales_tax}</h6>
+      </b>
+    </div>
+  </div>
+  </div>
+  {/*  */}
+                </div>
+
 
 
 
               </div>
    
-              <div className="variety_section_box">
+              <div className="variety_section_box col-12">
                   {/* <h3> Variety</h3> */}
                   <Form ref={formRef} validated={validated}>
                  
