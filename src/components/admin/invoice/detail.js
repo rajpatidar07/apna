@@ -14,7 +14,7 @@ const Invoice = () => {
     // const total=(invoicedetails.reduce((total,price)=>total = total+price , 0 ));
     useEffect(() => {
             axios
-              .get(`http://192.168.29.108:5000/invoice_details?invoice_no=${invoice_no}`)
+              .get(`${process.env.REACT_APP_BASEURL}/invoice_details?invoice_no=${invoice_no}`)
               .then((response) => {
                 // let data = response.data;
                 setInvoiceDetails(response.data);

@@ -32,7 +32,7 @@ const Review = () => {
     const handleClose = () => setShow(false);
     const handleShow = (e) => {
       axios
-        .post(`http://192.168.29.108:5000/review_list`,{
+        .post(`${process.env.REACT_APP_BASEURL}/review_list`,{
           "id":`${e}`,
       })
         .then((response) => {
@@ -61,13 +61,12 @@ const Review = () => {
       }
       const onSearchClick = () =>{
         axios
-        .post(`http://192.168.29.108:5000/review_list`,{
+        .post(`${process.env.REACT_APP_BASEURL}/review_list`,{
           "product_name":`${searchdata.product_name}`,
           "category_type":`${searchdata.category_type}`,
           "status":`${searchdata.status}`
           })
         .then((response) => {
-        console.log("search----------   " + JSON.stringify(response.data));
         setreviewdata(response.data);
           setapicall(false);
         })
@@ -86,13 +85,12 @@ const Review = () => {
       if (form.checkValidity() === false) {
         e.preventDefault();
         e.stopPropagation();
-        console.log("falsevalidatn----------   ");
         setValidated(true)
       }
       else{
         e.preventDefault();
         axios
-        .put(`http://192.168.29.108:5000/review_approved`,editreviewdata)
+        .put(`${process.env.REACT_APP_BASEURL}/review_approved`,editreviewdata)
         .then((response) => {
           setShow(false)
           setapicall(true);
@@ -105,7 +103,7 @@ const Review = () => {
     };
     useEffect(() => {
       axios
-        .post(`http://192.168.29.108:5000/review_list`,{
+        .post(`${process.env.REACT_APP_BASEURL}/review_list`,{
           "product_name":"",
           "category_type":"",
           "status":""

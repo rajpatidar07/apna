@@ -22,6 +22,7 @@ const VendorsList = () => {
   const [file, setFile] = useState();
   const [fileDoc, setFileDoc] = useState();
   const [fileDocName, setFileDocName] = useState("");
+  const [call, setCall] = useState(false);
 
  const [fileName, setFileName] = useState("");
   const
@@ -39,7 +40,6 @@ const VendorsList = () => {
   image:"",
   document_name:[],
   availability:""
-
     });
   const [changstatus, setchangstatus] = useState("");
   const [apicall, setapicall] = useState(false);
@@ -58,14 +58,14 @@ const VendorsList = () => {
     }
     const onSearchClick = () =>{
       axios
-      .post(`http://192.168.29.108:5000/vendor_list`,{
+      .post(`${process.env.REACT_APP_BASEURL}/vendor_list`,{
         "owner_name":`${searchdata.owner_name}`,
         "store_type":`${searchdata.store_type}`,
         "status":`${searchdata.status}`
         })
       .then((response) => {
       console.log("search----------   " + JSON.stringify(response.data));
-        setvendordata(response.data);
+        setvendordata(response.data); 
         setapicall(false);
       })
       .catch(function(error) {
@@ -197,9 +197,11 @@ const VendorsList = () => {
         ),
       },
     ];
+
+
     useEffect(() => {
       axios
-        .get(`http://192.168.29.108:5000/vendors?id=all`)
+        .get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
         .then((response) => {
           setvendordata(response.data);
           setapicall(false);
@@ -214,6 +216,7 @@ const VendorsList = () => {
         document_name: Docnamearray
       });
     }, [Docnamearray]);
+    
     const handleFormChange = (e) => {
       setaddvendordata({
         ...addvendordata,
@@ -224,24 +227,29 @@ const VendorsList = () => {
     formRef.current.reset();
     // e.preventDefault()
     setValidated(false);
+    setaddtag('');
+    setDocnameArray('');
+    setapicall(true)
     setShow(false);
   };
 
-
+  let Docnarray =[];
   let arr;
   const handleShow = (e) => {
     if (e === "add") {
       setShow(e);
     }
     if (e !== "add") {
+      setCall(true)
+      console.log("clcikeddd");
       axios
-    .get(`http://192.168.29.108:5000/vendors?id=${e}`,addvendordata)
+    .get(`${process.env.REACT_APP_BASEURL}/vendors?id=${e}`,addvendordata)
     .then((response) => {
       setaddvendordata(response.data[0]);
-      setDocnameArray(response.data[0].document_name);
+      // setDocnameArray(response.data[0].document_name);
+      //  Docnarray.push(response.data[0].document_name)
      setDocuImgArray(JSON.parse(response.data[0].multiple_document_upload))
- console.log("---docname"+ (response.data[0].document_name))
-
+    console.log("---docname"+ (response.data[0].document_name))
       setapicall(false);
     })
     .catch(function(error) {
@@ -250,7 +258,6 @@ const VendorsList = () => {
       setShow(e);
     }
   };
- console.log("---docname"+ Docnamearray)
 
   const onDocumentNamechange = (e) => {
     setaddtag(e.target.value);
@@ -269,7 +276,7 @@ const VendorsList = () => {
   const handleStatusChnage = (e, id) => {
     setchangstatus(e.target.value);
     axios
-      .put("http://192.168.29.108:5000/vendor_status_change", {
+      .put("${process.env.REACT_APP_BASEURL}/vendor_status_change", {
         status_change: e.target.value,
         id: `${id}`,
       })
@@ -289,12 +296,9 @@ const VendorsList = () => {
     setFile(e.target.files[0]);
  setFileName(e.target.files[0].name);
   };
-
-
   const DocsFormChange = (e) => {
     setFileDoc(e.target.files[0])
     setFileDocName(e.target.files[0].name);
-
   //   [e.target.files].forEach((image) =>
   //     newImageUrls.push(image)
   //   );
@@ -310,16 +314,11 @@ const VendorsList = () => {
   };
 
 
-  let shoplogo = `http://192.168.29.108:5000/${addvendordata.shop_logo}`
-  let docsdata = `http://192.168.29.108:5000/${DocuImgarray}`
+  let shoplogo = `${process.env.REACT_APP_BASEURL}/${addvendordata.shop_logo}`
+  let docsdata = `${process.env.REACT_APP_BASEURL}/${DocuImgarray}`
   var Newshoplogo = shoplogo.replace("/public", "");
   var imgdata =docsdata.replace("/public", "");
-
-
-  console.log("---add vendorrr --- > "+  JSON.stringify(addvendordata));
-
   const AddVendorClick = (e) => {
-
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
       e.preventDefault();
@@ -341,17 +340,20 @@ const VendorsList = () => {
     formData.append("gstn",addvendordata.gstn);
     formData.append("geolocation",addvendordata.geolocation);
     formData.append("store_type",addvendordata.store_type);
+    formData.append("availability", addvendordata.availability);
     formData.append("image",fileDoc);
     formData.append("filename", fileDocName);
     formData.append("document_name",x);
     formData.append("status",addvendordata.status);
-
+    formData.append("availability", addvendordata.availability);
       axios
-      .post(`http://192.168.29.108:5000/vendor_register`,formData)
+      .post(`${process.env.REACT_APP_BASEURL}/vendor_register`,formData)
       .then((response) => {
         // setvendordata(response.data);
-      console.log("formadd----------   " + JSON.stringify(response.data));
-        setapicall(true);
+      // console.log("formadd----------   " + JSON.stringify(response.data));
+    setapicall(true);
+    setShow(false);
+
       })
       .catch(function(error) {
         console.log(error);
@@ -362,27 +364,33 @@ const VendorsList = () => {
   };
 
   const UpdateVendorClick = (e) => {
+  let x = [addvendordata.document_name]
     e.preventDefault();
-    // const formData = new FormData();
-    // formData.append("shop_logo", file);
-    // formData.append("filename", fileName);
-    // formData.append("owner_name", addvendordata.owner_name);
-    // formData.append("shop_name", addvendordata.shop_name);
-    // formData.append("mobile", addvendordata.mobile);
-    // formData.append("email",addvendordata. email);
-    // formData.append("shop_address",addvendordata.shop_address);
-    // formData.append("gstn",addvendordata. gstn);
-    // formData.append("geolocation",addvendordata.geolocation);
-    // formData.append("store_type",addvendordata.store_type);
-    // formData.append("documents",addvendordata.multiple_document_upload);
-    // formData.append("document_name",addvendordata.document_name);
-    // formData.append("status",addvendordata. status);
+    const formData = new FormData();
+    formData.append("id",addvendordata.id)
+    formData.append("image", file);
+    formData.append("filename", fileName);
+    formData.append("owner_name", addvendordata.owner_name);
+    formData.append("shop_name", addvendordata.shop_name);
+    formData.append("mobile", addvendordata.mobile);
+    formData.append("email",addvendordata.email);
+    formData.append("shop_address",addvendordata.shop_address);
+    formData.append("gstn",addvendordata.gstn);
+    formData.append("geolocation",addvendordata.geolocation);
+    formData.append("store_type",addvendordata.store_type);
+    formData.append("availability", addvendordata.availability);
+    formData.append("image",fileDoc);
+    formData.append("filename", fileDocName);
+    formData.append("document_name",x);
+    formData.append("status",addvendordata.status);
     axios
-    .put(`http://192.168.29.108:5000/vendor_update`,addvendordata)
+    .put(`${process.env.REACT_APP_BASEURL}/vendor_update`,formData)
     .then((response) => {
-    console.log("formupdate----------   " + JSON.stringify(response.data));
-      // setvendordata(response.data);
+    // console.log("formupdate----------   " + JSON.stringify(response.data));
+      
       setapicall(true);
+    setShow(false);
+
     })
     .catch(function(error) {
       console.log(error);
@@ -798,7 +806,7 @@ const VendorsList = () => {
                           {Docnamearray === undefined || Docnamearray === null || Docnamearray === '' ? null :
                     <div className="d-flex align-items-center tagselectbox mt-2" >
                                                
-                          {(Docnamearray || []).map((seotags, i) => {
+                          { Docnamearray.map((seotags, i) => {
                           return (
                             <>
                         <Badge className="tagselecttitle mb-0" bg="success" >
@@ -812,7 +820,6 @@ const VendorsList = () => {
                         </Badge>
                             </>
                           )
-
                          })}
                         
                       </div>
@@ -854,9 +861,7 @@ const VendorsList = () => {
                     type="file"
                     placeholder="multiple_document_upload"
                     name={"multiple_document_upload"}
-
                   />
-
                   {/* {
                   (DocuImgarray).map((imgdata)=> {
                     return( */}

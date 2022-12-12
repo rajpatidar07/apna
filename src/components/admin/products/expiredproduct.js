@@ -32,7 +32,7 @@ const OnDateChange = (e) => {
   setsearchData({ ...searchdata,manufacturing_date: mdate })
 }
 useEffect(() => {
-  axios.post("http://192.168.29.108:5000/products_search?page=0&per_page=50", {
+  axios.post("${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50", {
     "product_search": {
       "search": `${searchdata.product_title_name}`,
       "category": `${searchdata.category}`,

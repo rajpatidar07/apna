@@ -69,7 +69,7 @@ const Productdetail = () => {
   useEffect(() => {
     function getProductDetails() {
       try {
-        axios.post(`http://192.168.29.108:5000/products_search?page=0&per_page=10`,
+        axios.post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=10`,
           {
             "product_search": {
               "search": "",
@@ -142,7 +142,7 @@ const handleVarietyChange = (e) => {
 
 const onVariantaddclick = (id) => {
   if(id === '' || id === null || id === undefined){
-    axios.post(`http://192.168.29.108:5000/products_varient_add`, variantarray).then((response) => {
+    axios.post(`${process.env.REACT_APP_BASEURL}/products_varient_add`, variantarray).then((response) => {
     // setvdata(response.data.results)
     formRef.current.reset();
       setvariantapicall(true)
@@ -151,7 +151,7 @@ const onVariantaddclick = (id) => {
     });
   }
   else{
-    axios.put(`http://192.168.29.108:5000/products_varient_update`, variantarray).then((response) => {
+    axios.put(`${process.env.REACT_APP_BASEURL}/products_varient_update`, variantarray).then((response) => {
       setvariantarray(response.data)
       formRef.current.reset();
       setvariantapicall(true)
@@ -166,7 +166,7 @@ const VariantAddProduct = () =>{
   formRef.current.reset();
 }
 const VariantRemoveClick = (id, productid) => {
-  axios.put(`http://192.168.29.108:5000/products_delete`, {
+  axios.put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
     id:`${id}`,
     product_id:`${productid}`,
     is_delete:"0"
@@ -180,7 +180,7 @@ const VariantRemoveClick = (id, productid) => {
   setvdata(vdata.filter(item => item !== id));
 }
 const VariantEditClick = (id, productid) => {
-  axios.get(`http://192.168.29.108:5000/products_pricing?id=${id}&product_id=${productid}`).then((response) => {
+  axios.get(`${process.env.REACT_APP_BASEURL}/products_pricing?id=${id}&product_id=${productid}`).then((response) => {
     setvariantarray(response.data[0])
   }).catch(function (error) {
     console.log(error);

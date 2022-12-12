@@ -66,9 +66,14 @@ function Product() {
   const [headerval, setheaderval] = useState('');
   const [descval, setdescval] = useState('');
   const [customarray, setcustomarray] = useState([]);
+  const [AddCustom, setAddCustom] = useState({
+    header:"",
+    description:""
+  });
+
   const [vdata, setvdata] = useState([]);
   const [productdata, setproductdata] = useState({
-    add_custom_input: "",
+    add_custom_input: [],
     product_title_name: "",
     product_slug: "",
     store_name: "",
@@ -82,7 +87,9 @@ function Product() {
     variety: false,
     product_description: "",
     other_introduction: "",
-    is_active: "0"
+    is_active: "0",
+   vendor_id:"803082",
+   shop:"my shop",
   });
   const mainformRef = useRef();
   const formRef = useRef();
@@ -97,7 +104,7 @@ function Product() {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value })
   }
   useEffect(() => {
-    axios.post("http://192.168.29.108:5000/products_search?page=0&per_page=50", {
+    axios.post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`, {
       "product_search": {
         "search": `${searchdata.product_title_name}`,
         "category": `${searchdata.category}`,
@@ -119,7 +126,7 @@ function Product() {
     setAlert(true);
   }
   const hideAlert = () => {
-    axios.put("http://192.168.29.108:5000/products_delete", {
+    axios.put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
       "varient_id": `${variantid}`,
       "product_id": `${productid}`,
       "is_delete": "0"
@@ -141,7 +148,7 @@ console.log(id[0]+"----------"+id[1]+"----------------------------------")
 localStorage.setItem("variantid", id[0])
 localStorage.setItem("productid", id[1])
 navigate('/productdetail') 
-    //  axios.get("http://192.168.29.108:5000/products_pricing?id=14&product_id=43").then((response)=>{
+    //  axios.get("${process.env.REACT_APP_BASEURL}/products_pricing?id=14&product_id=43").then((response)=>{
     //   console.log("------------------------------" + JSON.stringify(response.data))
     //  })
     }
@@ -311,29 +318,32 @@ navigate('/productdetail')
       setmodalshow(e);
     }
     else {
-      console.log(JSON.stringify(e))
-      axios.get(`http://192.168.29.108:5000/product?id=${e}`).then((response) => {
-        let data = response.data
+      console.log("eeeeeeeeee"+JSON.stringify(e))
+      axios.get(`${process.env.REACT_APP_BASEURL}/product?id=${e}`).then((response) => {
+        let data = response.data[0]
         setproductdata(data)
+        console.log("---prod"+JSON.stringify(response.data))
       }).catch(function (error) {
         console.log(error);
       });
       // setpdata(pdata[e])
       // setseoArray(pdata[e].seo_tag)
       setmodalshow(e);
-    setvariantapicall(false)
     }
   }
   useEffect(()=>{
     handleShow();
-  },[variantapicall])
+  },[])
+  // useEffect(()=>{
+  //   handlevarietyShow();
+  // },[variantapicall])
   const handlevarietyShow = (id) => {
     console.log("-----produfh"+id)
-    axios.post("http://192.168.29.108:5000/products_search?page=0&per_page=50", {
+    axios.post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`, {
       "product_search": {
         "search": '',
         "product_id": `${id}`,
-        "is_delete":"0"
+        // "is_delete":"0"
       }
     }).then((response) => {
       setvdata(response.data.results)
@@ -341,6 +351,7 @@ navigate('/productdetail')
         ...variantarray,
         product_id : id
       });
+      setvariantapicall(false)
       console.log("---variety" + JSON.stringify(response.data))
     }).catch(function (error) {
       console.log(error);
@@ -398,11 +409,10 @@ navigate('/productdetail')
       [e.target.name]: e.target.value
     });
   };
-  console.log("------addsinglevariant" + JSON.stringify(variantarray))
+  // console.log("------addsinglevariant" + JSON.stringify(variantarray))
   const handleInputcheckboxChange = (e) => {
     const target = e.target;
     const value = target.type === 'checkbox' ? target.checked : target.value
-
     setvariantarray({
       ...variantarray,
       [e.target.name]: value
@@ -416,13 +426,25 @@ navigate('/productdetail')
       [e.target.name]: e.target.value
     });
   }
+//   console.log("------productdata" + JSON.stringify(productdata.add_custom_input))
+//   const iterator =(JSON.stringify(productdata.add_custom_input))
+// const intt =JSON.parse(iterator)
+//   console.log("------iterator" + (typeof intt))
+//   console.log("------intt" + (intt[0]))
+  // console.log("------addcusotm[0" + (addcusotm[0]))
+  // console.log("------addcustomvalue------" +(addcustomvalue))
+
+  // for (const value of iterator) {
+  //   console.log("valueeeeeeeee      "+value);
+  // }
+
+  
 
   const onVariantaddclick = (id) => {
     console.log("----------productid"+"id--  "+id)
     // id.preventDefault();
-    if(id === ''){
-      axios.post(`http://192.168.29.108:5000/products_varient_add`, variantarray).then((response) => {
-      setvdata(response.data.results)
+    if(id === '' || id=== undefined || id === null){
+      axios.post(`${process.env.REACT_APP_BASEURL}/products_varient_add`, variantarray).then((response) => {
 console.log("---addvariety"+JSON.stringify(response.data))
         // setvariantarray(response.data)
         setvariantapicall(true)
@@ -432,7 +454,7 @@ console.log("---addvariety"+JSON.stringify(response.data))
       });
     }
     else{
-      axios.put(`http://192.168.29.108:5000/products_varient_update`, variantarray).then((response) => {
+      axios.put(`${process.env.REACT_APP_BASEURL}/products_varient_update`, variantarray).then((response) => {
         setvariantarray(response.data)
         setvariantapicall(true)
         console.log("------changeediteddd---" + JSON.stringify(response.data))
@@ -453,7 +475,7 @@ const VariantAddProduct = () =>{
     // }
 }
   const VariantRemoveClick = (id, productid) => {
-    axios.put(`http://192.168.29.108:5000/products_delete`, {
+    axios.put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
       id:`${id}`,
       product_id:`${productid}`,
       is_delete:"1"
@@ -468,7 +490,7 @@ const VariantAddProduct = () =>{
     setvdata(vdata.filter(item => item !== id));
   }
   const VariantEditClick = (id, productid) => {
-    axios.get(`http://192.168.29.108:5000/products_pricing?id=${id}&product_id=${productid}`).then((response) => {
+    axios.get(`${process.env.REACT_APP_BASEURL}/products_pricing?id=${id}&product_id=${productid}`).then((response) => {
       setvariantarray(response.data[0])
       console.log("------edit" + JSON.stringify(response.data[0]))
     }).catch(function (error) {
@@ -487,17 +509,31 @@ const VariantAddProduct = () =>{
   // varint end
   // handle click event of the Remove button
   let customvalue;
+  let headervalue;
+  let descriptionvalue;
+
   const oncustomheadChange = (e) => {
     setheaderval(e.target.value);
+    let headvl = e.target.value;
+    console.log(e.target.value+"------header")
+    headervalue.push(headerval)
+    setAddCustom((AddCustom) =>{ return {...AddCustom,  header : headervalue}});
   };
   const oncustomdescChange = (e) => {
+    console.log(e.target.value+"------desc")
     setdescval(e.target.value);
+    let devl = e.target.value;
+    descriptionvalue.push(descval)
+    setAddCustom((AddCustom) =>{ return {...AddCustom,  description : descriptionvalue}});
   };
+  console.log("----addcustom" + JSON.stringify(AddCustom))
+  var carray;
   const handleAddClick = (e) => {
     customvalue = headerval + ',' + descval;
 
     if (headerval !== '' && descval !== '') {
       setcustomarray(customarray => [...customarray, customvalue]);
+     carray = JSON.stringify(customarray)
       setheaderval('');
       setdescval('');
       setcustomValidated(false);
@@ -569,7 +605,7 @@ const VariantAddProduct = () =>{
     }
     setValidated(true);
     setcustomValidated(false);
-    axios.post('http://192.168.29.108:5000/products', productdataa).then((response) => {
+    axios.post(`${process.env.REACT_APP_BASEURL}/products`, productdataa).then((response) => {
       console.log("finall---" + JSON.stringify(response.data))
       setapicall(true)
     });
@@ -583,7 +619,7 @@ const VariantAddProduct = () =>{
   const handleUpdateProduct = (e) => {
     // setproductdata({ ...productdata, is_active: "0" })
     e.preventDefault();
-    axios.put("http://192.168.29.108:5000/products_update", productdata
+    axios.put(`${process.env.REACT_APP_BASEURL}/products_update`, productdata
     ).then((response) => {
       console.log("-----updatedata" + JSON.stringify(response.data))
       setapicall(true)
@@ -1357,12 +1393,12 @@ const VariantAddProduct = () =>{
                           <td className="text-center col-4">
                             <InputGroup className="">
                               <Form.Control
-                                value={headerval}
+                                // value={headerval}
                                 type="text"
                                 sm="9"
                                 min={'1'}
                                 onChange={oncustomheadChange}
-                                name={'custom_input_header'}
+                                name={'header'}
                                 className={(customvalidated === true) ? 'border-danger' : null}
                               />
                             </InputGroup>
@@ -1372,8 +1408,8 @@ const VariantAddProduct = () =>{
                             <InputGroup className="">
                               <Form.Control
                                 className={(customvalidated === true) ? 'border-danger' : null}
-                                value={descval}
-                                name={'custom_input_desc'}
+                                // value={descval}
+                                name={'description'}
                                 type="text"
                                 sm="9"
                                 min={'1'}
@@ -1395,7 +1431,7 @@ const VariantAddProduct = () =>{
                           </td>
                         </tr>
                         {productdata.add_custom_input === null || productdata.add_custom_input === undefined ? '' : 
-                        (productdata.add_custom_input || []).map((variantdata, i) => {
+                        ((productdata.add_custom_input) || []).map((variantdata, i) => {
                           const arr = variantdata.split(',')
                           return (
                             <tr className="">
@@ -1482,7 +1518,7 @@ const VariantAddProduct = () =>{
                   <div className="variation_box my-2">
                     <div className="row">
                       <div className="col-auto">
-                        <Table bordered className="align-middle my-2">
+                        {/* <Table bordered className="align-middle my-2">
                           <thead className="align-middle">
                             <tr>
                               <th >Variety</th>
@@ -1802,7 +1838,333 @@ const VariantAddProduct = () =>{
                                 })
                             }
                           </tbody>
+                        </Table> */}
+                        <div className="col-12">
+                        <Table bordered className="align-middle my-2">
+                          <thead className="align-middle">
+                            <tr>
+                              <th >Variety</th>
+                              <th >Color</th>
+                              <th >Weight</th>
+                              <th >Size</th>
+                              <th >Price</th>
+                              <th >Mrp</th>
+                              <th >Sale Price</th>
+                              <th >Discount</th>
+                              <th >Special Offer</th>
+                              <th >Featured Product</th>
+                              <th className="manufacture_date">Mdate</th>
+                              <th className="manufacture_date">Edate</th>
+                              <th className="manufacture_date">Image</th>
+                              <th className="manufacture_date">Quantity</th>
+                              <th ></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td className="p-0 text-center">
+                                <div className=" d-flex align-items-center">
+                                  <InputGroup className="" size="sm">
+                                    <Form.Select aria-label="Default select example" name='unit' 
+                                    // value={variantarray.unit === 'pcs' ? 'color' : variantarray.unit === 'gms' ? 'weight' : variantarray.unit === 'ml' ? 'volume' : null}
+                                      onChange={(e) => onVariantChange(e)}
+                                      className={(customvalidated === true) ? 'border-danger' : null}
+                                    >
+                                      <option value={variantarray.unit === 'pcs' ? 'color' : variantarray.unit === 'gms' ? 'weight' : variantarray.unit === 'l' ? 'volume' :variantarray.unit === 'piece' ? 'piece' : ''} >{variantarray.unit === 'pcs' ? 'color' : variantarray.unit === 'gms' ? 'weight' : variantarray.unit === 'l' ? 'volume':variantarray.unit === 'piece' ? 'piece' :   'Select'}</option>
+                                      {(varietyy.variety || []).map((vari, i) => {
+                                        return (
+                                          <option value={vari === 'color' ? 'pcs' : vari === 'weight' ? 'gms' : vari === 'volume' ? 'l' : vari === 'piece' ? 'piece'  :null} key={i}>{vari}</option>
+                                        );
+                                      })}
+                                    </Form.Select>
+                                  </InputGroup>
+                                </div>
+                              </td>
+
+                              <td className="p-0 text-center">
+                                <div className=" d-flex align-items-center">
+                                  <InputGroup className="" size="sm">
+                                    <Form.Control
+                                      type="text"
+                                      sm="9"
+                                      className={(customvalidated === true) ? 'border-danger' : null}
+                                      onChange={(e) => onVariantChange(e)}
+                                      name={'colors'}
+                                      value={variantarray.colors}
+                                    />
+                                  </InputGroup>
+                                </div>
+                              </td>
+
+                              <td className="p-0 text-center">
+                                <div className=" d-flex align-items-center">
+                                  <InputGroup className="" size="sm">
+                                    <Form.Control
+                                      value={(variantarray.unit === 'gms' ? variantarray.unit_quantity : variantarray.unit === 'ml' ? variantarray.unit_quantity : variantarray.unit === 'pcs' ? variantarray.unit_quantity : null)}
+                                      type="text"
+                                      sm="9"
+                                      className={(customvalidated === true) ? 'border-danger' : null}
+                                      onChange={(e) => onVariantChange(e)}
+                                      name={'unit_quantity'}
+                                    />
+                                  </InputGroup>
+
+                                </div>
+                              </td>
+                              <td className="p-0 text-center">
+                                <div className=" d-flex align-items-center">
+                                  <InputGroup className="" size="sm">
+                                    <Form.Control
+                                      value={(variantarray.unit === 'pcs' ? variantarray.size : null)}
+                                      type="text"
+                                      sm="9"
+                                      className={(customvalidated === true) ? 'border-danger' : null}
+                                      onChange={(e) => onVariantChange(e)}
+                                      name={'size'}
+                                    />
+                                  </InputGroup>
+
+                                </div>
+                              </td>
+                              <td className="p-0 text-center">
+                                <div className=" d-flex align-items-center">
+                                  <InputGroup className="" size="sm">
+                                    <Form.Control
+                                      min={1}
+                                      type="number"
+                                      sm="9"
+                                      className={(customvalidated === true) ? 'border-danger' : null}
+                                      onChange={(e) => onVariantChange(e)}
+                                      name={'product_price'}
+                                      value={variantarray.product_price}
+                                    />
+                                  </InputGroup>
+
+                                </div>
+                              </td>
+                              <td className="p-0 text-center">
+                                <div className=" d-flex align-items-center">
+                                  <InputGroup className="" size="sm">
+                                    <Form.Control
+                                      type="number"
+                                      min={1}
+                                      sm="9"
+                                      className={(customvalidated === true) ? 'border-danger' : null}
+                                      onChange={(e) => onVariantChange(e)}
+                                      name={'mrp'}
+                                      value={variantarray.mrp}
+
+                                    />
+                                  </InputGroup>
+
+                                </div>
+                              </td>
+                              <td className="p-0 text-center">
+                                <div className=" d-flex align-items-center">
+                                  <InputGroup className="" size="sm">
+                                    <Form.Control
+                                      type="number"
+                                      sm="9"
+                                      min={1}
+                                      className={(customvalidated === true) ? 'border-danger' : null}
+                                      onChange={(e) => onVariantChange(e)}
+                                      name={'sale_price'}
+                                      value={variantarray.sale_price}
+                                    />
+                                  </InputGroup>
+
+                                </div>
+                              </td>
+                              <td className="p-0 text-center">
+                                <div className=" d-flex align-items-center">
+                                  <InputGroup className="" size="sm">
+                                    <Form.Control
+                                      type="number"
+                                      sm="9"
+                                      min={1}
+                                      onChange={(e) => onVariantChange(e)}
+                                      name={'discount'}
+                                      value={variantarray.discount}
+                                    />
+                                  </InputGroup>
+
+                                </div>
+                              </td>
+                              <td className="p-0 text-center">
+                                <div className="">
+                                  <Form.Check
+                                    onChange={(e) => handleInputcheckboxChange(e)}
+                                    name={'special_offer'}
+                                    value={variantarray.special_offer}
+                                    checked={variantarray.special_offer === 1 || true ? true : false}
+                                  />
+                                </div>
+                              </td>
+                              <td className="p-0 text-center">
+                                <div className="">
+                                  <Form.Check
+                                    onChange={(e) => handleInputcheckboxChange(e)}
+                                    name={'featured_product'}
+                                    value={variantarray.featured_product}
+                                    checked={variantarray.featured_product === 1 || true ? true : false}
+                                  />
+                                </div>
+                              </td>
+                              <td className="p-0 text-center">
+                                <div className="manufacture_date" >
+                                  <InputGroup className="" size="sm">
+                                    <Form.Control
+                                      type="date"
+                                      sm="9"
+                                      className={(customvalidated === true) ? 'border-danger' : null}
+                                      onChange={(e) => onVariantChange(e)}
+                                      name={'manufacturing_date'}
+                                      value={moment(variantarray.manufacturing_date).format('YYYY-MM-DD')}
+                                    />
+                                  </InputGroup>
+
+                                </div>
+                              </td>
+                              <td className="p-0 text-center">
+                                <div className="manufacture_date" >
+                                  <InputGroup className="" size="sm">
+                                    <Form.Control
+                                      type="date"
+                                      sm="9"
+                                      className={(customvalidated === true) ? 'border-danger' : null}
+                                      onChange={(e) => onVariantChange(e)}
+                                      name={'expire_date'}
+                                      value={moment(variantarray.expire_date).format('YYYY-MM-DD')}
+                                    />
+                                  </InputGroup>
+
+                                </div>
+                              </td>
+                              <td className="p-0 text-center">
+                                <div className="manufacture_date">
+                                  <InputGroup className="" size="sm">
+                                    <Form.Control
+                                      multiple
+                                      type="file"
+                                      sm="9"
+                                      className={(customvalidated === true) ? 'border-danger' : null}
+                                      onChange={imguploadchange}
+                                      name={'product_img'}
+
+                                    />
+                                  </InputGroup>
+
+                                </div>
+                              </td>
+                              <td className="p-0">
+                                <div className="manufacture_date">
+                                  <InputGroup className="" size="sm">
+                                    <Form.Control
+                                      name={'quantity'}
+                                      type="number"
+                                      value={variantarray.quantity}
+                                      sm="9"
+                                      min={'1'}
+                                      className={(customvalidated === true) ? 'border-danger' : null}
+                                      onChange={(e) => onVariantChange(e)}
+                                      onKeyPress={event => {
+                                        if (event.key === "Enter") {
+                                        onVariantaddclick();
+                                        }
+                                      }
+                                      }
+                                    />
+                                  </InputGroup>
+                                </div>
+                              </td>
+                              <td className="p-0">
+                                <div className=" d-flex align-items-center">
+                                  <Button variant="outline-success" className="addcategoryicon"
+                                    // type="submit"
+                                    onClick={() => onVariantaddclick(variantarray.id)}
+                                    size="sm">
+                                    +
+                                  </Button>
+                                </div>
+                              </td>
+                            </tr>
+
+                            {
+                              vdata === '' || vdata === null || vdata === undefined ?
+                                null
+                                : (vdata || []).map((variantdata, i) => {
+                                
+                                  return (
+                                    variantdata.is_delete !== '0' ? null :
+                                    <tr >
+                                      <td className="p-0 text-center ">
+                                        {variantdata.unit === 'pcs' ? 'color' : variantdata.unit === 'piece' ? 'piece' : variantdata.unit === 'gms' ? 'weight' : variantdata.unit === 'l' ? 'volume' : null}
+                                      </td>
+                                      <td className="p-0 text-center ">
+                                        {variantdata.colors}
+                                      </td>
+                                      <td className="p-0 text-center ">
+                                        {(variantdata.unit === 'gms' ? variantdata.unit_quantity : variantdata.unit === 'l' ? variantdata.unit_quantity : variantdata.unit === 'piece' ? variantdata.unit_quantity : null)}
+                                      </td>
+                                      <td className="p-0 text-center ">
+                                        {(variantdata.unit === 'pcs' ? variantdata.size : null)}
+                                      </td>
+                                      <td className="p-0 text-center ">
+                                        {variantdata.product_price}
+                                      </td>
+                                      <td className="p-0 text-center ">
+                                        {variantdata.mrp}
+                                      </td>
+                                      <td className="p-0 text-center ">
+                                        {variantdata.sale_price}
+                                      </td>
+                                      <td className="p-0 text-center ">
+                                        {variantdata.discount}
+                                      </td>
+                                      <td className="p-0 text-center ">
+                                        {variantdata.special_offer}
+                                      </td>
+                                      <td className="p-0 text-center ">
+                                        {variantdata.featured_product}
+                                      </td>
+                                      <td className="p-0 text-center ">
+                                        {moment(variantdata.manufacturing_date).format('YYYY-MM-DD')}
+                                      </td>
+                                      <td className="p-0 text-center ">
+                                        {moment(variantdata.expire_date).format('YYYY-MM-DD')}
+                                      </td>
+                                      <td className="p-0 text-center">
+                                        <Carousel indicators={false} controls={false}>
+                                          {(variantdata.product_img || []).map((data) => {
+                                            return (
+                                              <Carousel.Item interval={1000}>
+                                                <img src={data} alt='apnaorganic' width={50} />
+                                              </Carousel.Item>
+                                            )
+                                          })}
+                                        </Carousel>
+                                      </td>
+                                      <td className="p-0 text-center">
+                                        {variantdata.quantity}
+                                      </td>
+                                      <td className="p-0 text-center">
+                                        <Button variant="text-danger" className="addcategoryicon text-danger"
+                                          onClick={(id) => VariantRemoveClick(variantdata.id, variantdata.product_id)} size="sm">
+                                          &times;
+                                        </Button>
+                                        <Button variant="text-danger" className="addcategoryicon text-danger"
+                                          onClick={(id) => VariantEditClick(variantdata.id, variantdata.product_id)} size="sm">
+                                          <MdOutlineEdit />
+                                        </Button>
+                                      </td>
+                                    </tr>
+                                        
+                                  )
+                                })
+                            }
+                          </tbody>
                         </Table>
+                      </div>
                       </div>
                     </div>
                   </div>

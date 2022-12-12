@@ -58,8 +58,12 @@ const CategoryList = () => {
  const [fileName, setFileName] = useState("");
  const [parentid, setParentid] = useState('');
  const [allparentid, setAllparentid] = useState();
-//  const [scategory, setScategory] = useState([]);
+const [apicall, setapicall] = useState(false);
  const [searchdata, setsearchData] = useState([]);
+ const [CategoryEditparent, setCategoryEditparent] = useState("");
+ const [CategoryEditSubparent, setCategoryEditSubparent] = useState("");
+ const [CategoryEditChildparent, setCategoryEditChildparent] = useState("");
+ const [CategoryEditdata, setCategoryEditData] = useState([]);
  const [SearchCat, setSearchCat] = useState({
   "category_name":"",
   "category_type":"",
@@ -78,37 +82,95 @@ setFile(e.target.files[0]);
     setValidated(false);
     setShow(false);
   };
-  const handleShow = (e,name,all_parent_id,parent_id,level) => {
+  const handleShow = (e,name,all_parent_id,parent_id,level,category_type,category_name) => {
     if (e === "add") {
       setShow(e);
     }
     if (e !== "add") {
-      console.log("update")
+      try {
+        axios
+          .get(`${process.env.REACT_APP_BASEURL}/category_details?id=${e}`)
+          .then((response) => {
+            let data = response.data[0];
+            setCategoryEditData(data)
+            const arr = data.all_parent_id.split(',');
+            // let arrdata = arr.substring(0, arr.length-2);
+
+      console.log("---hgetttupdate"+arr)
+      // console.log("---length"+arrdata.length)
+
+for(let i=0 ; i < arr.length; i++){
+  console.log("---arr  "+arr[i])
+  if(arr[i] !== '' && arr[i] !== null ){
+    axios
+    .get(`${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`)
+    .then((response) => {
+      let data = response.data;
+      if(i === 0){
+    setSubCategory(response.data)
+    setCategoryEditparent(data.category_name);
+      }
+      else if(i === 1 ){
+        setchildCategory(response.data)
+        setCategoryEditSubparent(data.category_name);
+      }
+      else if(i === 2){
+        setCategoryEditChildparent(data.category_name);
+      }
+  })
+  }
+}
+          });
+      } catch (err) {}
       setnewName(name)
       setCid(e)
       setParentid(parent_id)
       setAllparentid(all_parent_id)
       setlevel(level)
+      setType(category_type)
       setShow(e);
+      setCategoryEditData(data)
+      parentidddata.push(all_parent_id)
     }
   };
- 
+  const handlChangeName = (e, id) => {
+    setnewName(e.target.value);
+  };
+
+  const handlChangeType = (e, id) => {
+    setType(e.target.value);
+  };
+
+  const categoryFormChange = (e, id) => {
+    setIndVal(e.target.value);
+    setScategory({ ...scategory, [e.target.name]: e.target.value});
+  };
+
+  let parentidddata=[];
+  const parentidd = parentidddata.join("");
+    parentidddata.push(scategory.category_name)
+    parentidddata.push( scategory.sub_category)
+    parentidddata.push( scategory.child_category)
+  
+  console.log("----djslij"+parentidddata)
+  // parentidd.push(scategory.s_category)
+console.log("----data"+scategory.category_name+scategory.sub_category+scategory.child_category)
   useEffect(() => {
     function getUser() {
       try {
         axios
-          .get("http://192.168.29.108:5000/category?category=all")
+          .get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
           .then((response) => {
             let data = response.data;
             setData(data);
             setsearchData(data);
-
+            setapicall(false)
           });
       } catch (err) {}
     }
 
     getUser();
-  }, []);
+  }, [apicall]);
 
   useEffect(() => {
     addCategory();
@@ -117,27 +179,30 @@ setFile(e.target.files[0]);
     if (id === "" || id === null || id === undefined) {
       try {
         axios
-          .get(`http://192.168.29.108:5000/category?category=${indVal}`)
+          .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
           .then((response) => {
             let cgory = response.data;
+            let specificValues = cgory.filter(obj => obj.all_parent_id.substring(0, obj.all_parent_id.length-2) === scategory.category_name);
+
             if (indVal === 0) {
               setCategory(cgory);
               setlevel(0);
-            } if (indVal === scategory.category_name) {
-              setSubCategory(cgory);
+            } 
+            if (indVal === scategory.category_name) {
+              setSubCategory(specificValues);
               setlevel(1);
             } else if (indVal === scategory.sub_category) {
               setchildCategory(cgory);
               setlevel(2);
-            } else if (indVal === scategory.child_category) {
+            }
+            else if (indVal === scategory.child_category) {
               setgrandcCategory(cgory);
+              console.log("---child_category"+scategory.child_category + indVal)
               setlevel(3);
             }else if (indVal === scategory.s_category) {
               setgrandcCategory(cgory);
               setlevel(4);
             }
-            
-
           });
       } catch (err) {}
     }
@@ -176,12 +241,15 @@ setFile(e.target.files[0]);
       name: "#",
       width: "250px",
       center: true,
-      cell: (row) => (
+      cell: (row) => 
+      
+      (
+        <>
         <img
           height="90px"
           width="75px"
           alt={row.category_name}
-          src={row.image}
+          src={`${process.env.REACT_APP_BASEURL}/`+(row.image).replace("public","")}
           style={{
             borderRadius: 10,
             paddingTop: 10,
@@ -190,6 +258,7 @@ setFile(e.target.files[0]);
           }}
           onClick={() => handleClick()}
         />
+        </>
       ),
     },
     {
@@ -269,20 +338,8 @@ setFile(e.target.files[0]);
     },
   ];
  
-  const handlChangeName = (e, id) => {
-    setnewName(e.target.value);
-  };
-  const handlChangeType = (e, id) => {
-    setType(e.target.value);
-  };
-  const categoryFormChange = (e, id) => {
-    setIndVal(e.target.value);
-    setScategory({ ...scategory, [e.target.name]: e.target.value});
-  };
-console.log("-----chsnnf"+JSON.stringify(scategory) )
-  // const ImgFormChange = (e,id) => {
-  //   setImage(e.target.files[0]);
-  // };
+
+
 
   const AddCategoryClick = (e,id) => {
     const form = e.currentTarget;
@@ -294,28 +351,19 @@ console.log("-----chsnnf"+JSON.stringify(scategory) )
     if (form.checkValidity() === true) {
       e.preventDefault();
       const formData = new FormData();
-      
       formData.append("image", file);
       formData.append("filename", fileName);
-      formData.append("parent_id", scategory.category_name);
+      formData.append("parent_id", indVal);
       formData.append("level", level);
-      formData.append("all_parent_id", scategory.category_name);
+      formData.append("all_parent_id", parentidddata);
       formData.append("new_category", newName);
       formData.append("category_type", type);
-     
-// console.log({
-//   parent_id: parentid,
-//   level: level,
-//   all_parent_id:allparentid,
-//   new_category: newName,
-//   image:formData,
-// })
       axios
-        .post(`http://192.168.29.108:5000/add_category`,formData, 
-        
+        .post(`${process.env.REACT_APP_BASEURL}/add_category`,formData, 
         )
         .then((response) => {
-          console.log("possttttttt------"+JSON.stringify(response))
+          setShow(false)
+          setapicall(true)
         });
       formRef.current.reset();
       setValidated(false);
@@ -323,21 +371,21 @@ console.log("-----chsnnf"+JSON.stringify(scategory) )
       
     }
   };
-  console.log("bahar------"+indVal)
   const UpdateCategoryClick = (show) => {
-
-    console.log("indVal------"+indVal)
-
-
-     axios.put(`http://192.168.29.108:5000/update_category`, {
-      id:cid,
-      parent_id: parentid,
-      level: level,
-      all_parent_id:allparentid,
-      new_category:newName,
-      category_type:type
-  }).then((response) => {
-    // console.log("possttttttt------"+JSON.stringify(response))
+    console.log("---show"+CategoryEditdata.id)
+    const formData = new FormData();
+    formData.append("id", CategoryEditdata.id);
+    formData.append("image", file);
+    formData.append("filename", fileName);
+    formData.append("parent_id", indVal);
+    formData.append("level", level);
+    formData.append("all_parent_id", parentidddata);
+    formData.append("new_category", newName);
+    formData.append("category_type", type);
+     axios.put(`${process.env.REACT_APP_BASEURL}/update_category`,formData).then((response) => {
+      console.log("---update"+JSON.stringify(response.data))
+      // setShow(false)
+      setapicall(true)
   });
   formRef.current.reset();
   setValidated(false);
@@ -350,12 +398,11 @@ console.log("-----chsnnf"+JSON.stringify(scategory) )
   }
   const SearchCategory=()=>{
     if(SearchCat.category_name ==='' || SearchCat.category_name=== null || SearchCat.category_name === undefined){
-      console.log(SearchCat.category_name+"cat"+searchvalidated)
        setsearchValidated(true)
     }
     else
     {
-      axios.post(`http://192.168.29.108:5000/search_category`,{
+      axios.post(`${process.env.REACT_APP_BASEURL}/search_category`,{
         "category_name":`${SearchCat.category_name}`,
         "category_type":`${SearchCat.category_type}`,
         "level":`${SearchCat.level}`
@@ -369,7 +416,6 @@ console.log("-----chsnnf"+JSON.stringify(scategory) )
     }
    
   }
-
   const handleClick = () => {};
   const navigate = useNavigate();
 
@@ -381,6 +427,7 @@ console.log("-----chsnnf"+JSON.stringify(scategory) )
   index === self.findIndex((t) => (
     t.level == thing.level 
   )))
+
 
   return (
     <div className="App productlist_maindiv">
@@ -406,12 +453,9 @@ console.log("-----chsnnf"+JSON.stringify(scategory) )
                 value={SearchCat.category_type}
             >
               <option>Search by category type</option>
-              {result1.map((lvl)=>{
-                return( <option value={lvl.category_type}>{lvl.category_type}</option>)
+              {result1.map((lvl,i)=>{
+                return( <option value={lvl.category_type} key={i}>{lvl.category_type}</option>)
               })}
-              {/* <option value="">{type.category_type}</option>
-              <option value="2">Health</option>
-              <option value="3">Sports & Accessor</option> */}
             </Form.Select>
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
@@ -423,13 +467,11 @@ console.log("-----chsnnf"+JSON.stringify(scategory) )
               value={SearchCat.level}
             >
               <option>Search by level</option>
-              {result2.map((lvl)=>{
+              {result2.map((lvl,i)=>{
                 return( 
-                <option value={lvl.level}>{lvl.level}</option>
+                <option value={lvl.level} key={i}>{lvl.level}</option>
                 )
               })} 
-              {/* <option value="2">Fish & Meat</option>
-              <option value="21">Baby Care</option> */}
             </Form.Select>
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
@@ -513,6 +555,7 @@ console.log("-----chsnnf"+JSON.stringify(scategory) )
                       <option value="Grocery">Grocery</option>
                       <option value="Health">Health</option>
                       <option value="Fashion">Fashion</option>
+                      <option value="Electronic">Electronic</option>
                       <option value="Sports & Accessor">
                         Sports & Accessor
                       </option>
@@ -534,14 +577,11 @@ console.log("-----chsnnf"+JSON.stringify(scategory) )
                       required
                       onChange={(e, id) => categoryFormChange(e, id)}
                       name={"category_name"}
+                      placeholder={'Search by category'}
                     >
-                      <option value={'0'}>
-                        Search by category
-                      </option>
-
                       {category.map((cdata, i) => {
                         return (
-                          <option value={cdata.id}>
+                          <option value={cdata.id} key={i} selected={CategoryEditparent === cdata.category_name ? true :false }>
                             {cdata.category_name}{" "}
                           </option>
                         );
@@ -553,7 +593,7 @@ console.log("-----chsnnf"+JSON.stringify(scategory) )
                   </Form.Group>
                 </div>
 
-                {subCategory !="" ? (
+                {subCategory !==""? (
                   <div className="col-md-6">
                     <Form.Group
                       className="mb-3 aos_input"
@@ -566,12 +606,13 @@ console.log("-----chsnnf"+JSON.stringify(scategory) )
                         required
                         onChange={(e, id) => categoryFormChange(e, id)}
                         name={"sub_category"}
+                        
                       >
-                        <option value="">Search by category</option>
+                        {/* <option value="">Search by category</option> */}
 
                         {subCategory.map((cdata, i) => {
                           return (
-                            <option value={cdata.id}>
+                            <option value={cdata.id} key={i} selected={CategoryEditSubparent === cdata.category_name ? true :false }>
                               {cdata.category_name}{" "}
                             </option>
                           );
@@ -584,7 +625,7 @@ console.log("-----chsnnf"+JSON.stringify(scategory) )
                   </div>
                 ) : null}
 
-                {childCategory != "" ? (
+                {childCategory !== ""  ? (
                   <div className="col-md-6">
                     <Form.Group
                       className="mb-3 aos_input"
@@ -597,12 +638,45 @@ console.log("-----chsnnf"+JSON.stringify(scategory) )
                         required
                         onChange={(e, id) => categoryFormChange(e, id)}
                         name={"child_category"}
-                      >
-                        <option value="">category</option>
 
+                      >
+                           {/* <option value="">Search by category</option> */}
                         {childCategory.map((cdata, i) => {
                           return (
-                            <option value={cdata.id}>
+                            <option value={cdata.id} key={i}  selected={CategoryEditChildparent === cdata.category_name ? true :false }>
+                              {cdata.category_name}{" "}
+                            </option>
+                          );
+                        })}
+                      </Form.Select>
+                      <Form.Control.Feedback type="invalid" className="h6">
+                        Please fill category
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                  </div>
+                ) : null}
+              
+
+                {grandcCategory != ""  ? (
+                  <div className="col-md-6">
+                    <Form.Group
+                      className="mb-3 aos_input"
+                      controlId="formBasicParentCategory"
+                    >
+                      <Form.Label> Inner Category</Form.Label>
+                      <Form.Select
+                        aria-label="Search by status"
+                        className="adminselectbox"
+                        required
+                        onChange={(e, id) => categoryFormChange(e, id)}
+                        name={"s_category"}
+                      >
+                         {/* <option value={''} >
+                              Select Category
+                            </option> */}
+                        {grandcCategory.map((cdata, i) => {
+                          return (
+                            <option value={cdata.id} key={i}  selected={CategoryEditChildparent === cdata.category_name ? true :false }>
                               {cdata.category_name}{" "}
                             </option>
                           );
