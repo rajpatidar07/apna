@@ -80,6 +80,7 @@ const Productdetail = () => {
         )
           .then((response) => {
             let data = response.data.results;
+            console.log("0----------"+JSON.stringify(data))
             setProductData(data);
       setvariantapicall(false)
             
