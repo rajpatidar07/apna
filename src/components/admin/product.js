@@ -27,7 +27,6 @@ import axios from "axios";
 import { Button } from "react-bootstrap";
 import { GiCancel } from "react-icons/gi";
 import moment from "moment/moment";
-
 function Product() {
   const [pdata, setpdata] = useState([]);
   const [proddata, setproddata] = useState([]);
@@ -67,8 +66,8 @@ function Product() {
   const [descval, setdescval] = useState('');
   const [customarray, setcustomarray] = useState([]);
   const [AddCustom, setAddCustom] = useState({
-    header:"",
-    description:""
+    header:[],
+    description:[]
   });
 
   const [vdata, setvdata] = useState([]);
@@ -109,7 +108,7 @@ function Product() {
         "search": `${searchdata.product_title_name}`,
         "category": `${searchdata.category}`,
         "status": `${searchdata.status}`,
-        // "is_delete":"no",
+        "is_delete":"1",
       }
     }).then((response) => {
       setpdata(response.data)
@@ -126,6 +125,7 @@ function Product() {
     setAlert(true);
   }
   const hideAlert = () => {
+    // product delete
     axios.put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
       "varient_id": `${variantid}`,
       "product_id": `${productid}`,
@@ -137,6 +137,19 @@ function Product() {
     }).catch(function (error) {
       console.log(error);
     });
+
+
+    // variety delete
+    axios.put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
+      id:`${variantid}`,
+      product_id:`${productid}`,
+      is_delete:"0"
+      }).then((response) => {
+        setvariantapicall(true)
+      }).catch(function (error) {
+        console.log(error);
+      });
+
     setAlert(false);
   }
 
@@ -312,7 +325,7 @@ navigate('/productdetail')
   ];
 
   // modal
-
+  let customdatra;
   const handleShow = (e) => {
     if (e === 'add') {
       setmodalshow(e);
@@ -322,6 +335,7 @@ navigate('/productdetail')
       axios.get(`${process.env.REACT_APP_BASEURL}/product?id=${e}`).then((response) => {
         let data = response.data[0]
         setproductdata(data)
+         customdatra = JSON.parse(response.data[0].add_custom_input)
         console.log("---prod"+JSON.stringify(response.data))
       }).catch(function (error) {
         console.log(error);
@@ -338,12 +352,11 @@ navigate('/productdetail')
   //   handlevarietyShow();
   // },[variantapicall])
   const handlevarietyShow = (id) => {
-    console.log("-----produfh"+id)
     axios.post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`, {
       "product_search": {
         "search": '',
         "product_id": `${id}`,
-        // "is_delete":"0"
+        "is_delete":"1"
       }
     }).then((response) => {
       setvdata(response.data.results)
@@ -352,7 +365,6 @@ navigate('/productdetail')
         product_id : id
       });
       setvariantapicall(false)
-      console.log("---variety" + JSON.stringify(response.data))
     }).catch(function (error) {
       console.log(error);
     });
@@ -445,9 +457,9 @@ navigate('/productdetail')
     // id.preventDefault();
     if(id === '' || id=== undefined || id === null){
       axios.post(`${process.env.REACT_APP_BASEURL}/products_varient_add`, variantarray).then((response) => {
-console.log("---addvariety"+JSON.stringify(response.data))
         // setvariantarray(response.data)
-        setvariantapicall(true)
+        // setvariantapicall(true)
+        setvarietyShow(false)
         console.log("------changeediteddd---" + JSON.stringify(response.data))
       }).catch(function (error) {
         console.log(error);
@@ -455,8 +467,9 @@ console.log("---addvariety"+JSON.stringify(response.data))
     }
     else{
       axios.put(`${process.env.REACT_APP_BASEURL}/products_varient_update`, variantarray).then((response) => {
-        setvariantarray(response.data)
-        setvariantapicall(true)
+        // setvariantarray(response.data)
+        // setvariantapicall(true)
+        setvarietyShow(false)
         console.log("------changeediteddd---" + JSON.stringify(response.data))
       }).catch(function (error) {
         console.log(error);
@@ -475,19 +488,17 @@ const VariantAddProduct = () =>{
     // }
 }
   const VariantRemoveClick = (id, productid) => {
-    axios.put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
-      id:`${id}`,
-      product_id:`${productid}`,
-      is_delete:"1"
-      }).then((response) => {
-        // setvariantarray(response.data[0])
-        console.log("------changeediteddd---" + JSON.stringify(response.data))
-        setvariantapicall(true)
-      }).catch(function (error) {
-        console.log(error);
-      });
-    console.log("-----id" + id + 'productid' + productid)
-    setvdata(vdata.filter(item => item !== id));
+    setAlert(true);
+    // axios.put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
+    //   id:id,
+    //   product_id:productid,
+    //   is_delete:"0"
+    //   }).then((response) => {
+    //     setvariantapicall(true)
+    //   }).catch(function (error) {
+    //     console.log(error);
+    //   });
+    // setvdata(vdata.filter(item => item !== id));
   }
   const VariantEditClick = (id, productid) => {
     axios.get(`${process.env.REACT_APP_BASEURL}/products_pricing?id=${id}&product_id=${productid}`).then((response) => {
@@ -508,40 +519,43 @@ const VariantAddProduct = () =>{
   }, [variantmainarray]);
   // varint end
   // handle click event of the Remove button
-  let customvalue;
-  let headervalue;
-  let descriptionvalue;
+  let customvalue={};
+  let headervalue=[];
+  let descriptionvalue=[];
 
   const oncustomheadChange = (e) => {
     setheaderval(e.target.value);
-    let headvl = e.target.value;
-    console.log(e.target.value+"------header")
-    headervalue.push(headerval)
-    setAddCustom((AddCustom) =>{ return {...AddCustom,  header : headervalue}});
+    // var headvl = e.target.value;
+    // console.log(e.target.value+"------header")
+    setAddCustom((AddCustom) =>{ return {...AddCustom,  header : e.target.value}});
   };
   const oncustomdescChange = (e) => {
     console.log(e.target.value+"------desc")
     setdescval(e.target.value);
-    let devl = e.target.value;
-    descriptionvalue.push(descval)
-    setAddCustom((AddCustom) =>{ return {...AddCustom,  description : descriptionvalue}});
+    // var devl = e.target.value;
+    setAddCustom((AddCustom) =>{ return {...AddCustom,  description : e.target.value}});
   };
-  console.log("----addcustom" + JSON.stringify(AddCustom))
   var carray;
   const handleAddClick = (e) => {
-    customvalue = headerval + ',' + descval;
+    // customvalue =headerval +',' + descval;
 
-    if (headerval !== '' && descval !== '') {
-      setcustomarray(customarray => [...customarray, customvalue]);
-     carray = JSON.stringify(customarray)
-      setheaderval('');
-      setdescval('');
+    // headervalue.push(headerval)
+    // descriptionvalue.push(descval)
+    console.log("----descriptionvalue" + (headervalue)+descriptionvalue)
+
+    // if (headerval !== '' && descval !== '') {
+      setcustomarray(customarray => [...customarray, AddCustom]);
+      // setcustomarray((customarray) =>{return {...customarray, headervalue :descriptionvalue}});
+      // setheaderval('');
+      // setdescval('');
       setcustomValidated(false);
-    }
-    else {
-      setcustomValidated(true);
-    }
+    // }
+    // else {
+    //   setcustomValidated(true);
+    // }
   }
+  console.log("----customarray" + JSON.stringify(customarray))
+
   const handleRemoveClick = (e) => {
     setcustomarray(customarray.filter(item => item !== e));
   };
@@ -1431,14 +1445,14 @@ const VariantAddProduct = () =>{
                           </td>
                         </tr>
                         {productdata.add_custom_input === null || productdata.add_custom_input === undefined ? '' : 
-                        ((productdata.add_custom_input) || []).map((variantdata, i) => {
-                          const arr = variantdata.split(',')
+                        ((customdatra) || []).map((variantdata, i) => {
+                          // const arr = variantdata.split(',')
                           return (
                             <tr className="">
                               <td className=" text-center">
                                 <InputGroup className="">
                                   <Form.Control
-                                    value={arr[0]}
+                                    value={variantdata.header}
                                     type="text"
                                     sm="9"
                                     min={'1'}
@@ -1453,7 +1467,7 @@ const VariantAddProduct = () =>{
                                 <InputGroup className="">
                                   <Form.Control
                                     required
-                                    value={arr[1]}
+                                    value={variantdata.header}
                                     name={'custom_input_desc'}
                                     type="text"
                                     sm="9"
@@ -1995,8 +2009,8 @@ const VariantAddProduct = () =>{
                                   <Form.Check
                                     onChange={(e) => handleInputcheckboxChange(e)}
                                     name={'special_offer'}
-                                    value={variantarray.special_offer}
-                                    checked={variantarray.special_offer === 1 || true ? true : false}
+                                    // value={variantarray.special_offer}
+                                    checked={variantarray.special_offer === 1 || variantarray.special_offer === true ? true : false}
                                   />
                                 </div>
                               </td>
@@ -2005,8 +2019,8 @@ const VariantAddProduct = () =>{
                                   <Form.Check
                                     onChange={(e) => handleInputcheckboxChange(e)}
                                     name={'featured_product'}
-                                    value={variantarray.featured_product}
-                                    checked={variantarray.featured_product === 1 || true ? true : false}
+                                    // value={variantarray.featured_product}
+                                    checked={variantarray.featured_product === 1 || variantarray.featured_product === true ? true : false}
                                   />
                                 </div>
                               </td>
@@ -2095,7 +2109,7 @@ const VariantAddProduct = () =>{
                                 : (vdata || []).map((variantdata, i) => {
                                 
                                   return (
-                                    variantdata.is_delete !== '0' ? null :
+                                    variantdata.is_delete === '0' ? null :
                                     <tr >
                                       <td className="p-0 text-center ">
                                         {variantdata.unit === 'pcs' ? 'color' : variantdata.unit === 'piece' ? 'piece' : variantdata.unit === 'gms' ? 'weight' : variantdata.unit === 'l' ? 'volume' : null}
