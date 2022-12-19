@@ -10,6 +10,7 @@ import Iconbutton from "./common/iconbutton";
 import { MdOutlineEdit } from 'react-icons/md';
 import InputGroup from 'react-bootstrap/InputGroup';
 import VariationJson from './json/variation';
+import CategoryJson from './json/categorytype';
 import Table from 'react-bootstrap/Table';
 import Carousel from 'react-bootstrap/Carousel';
 import {
@@ -27,8 +28,19 @@ import axios from "axios";
 import { Button } from "react-bootstrap";
 import { GiCancel } from "react-icons/gi";
 import moment from "moment/moment";
-
 function Product() {
+  const [category, setCategory] = useState([]);
+  const [indVal, setIndVal] = useState(0);
+  const [subCategory, setSubCategory] = useState([]);
+  const [childCategory, setchildCategory] = useState([]);
+  const [grandcCategory, setgrandcCategory] = useState([]);
+  const [scategory, setScategory] = useState({
+    category_name:"0",
+    sub_category:"",
+    child_category:"",
+    s_category:""
+  });
+  const [level, setlevel] = useState('');
   const [pdata, setpdata] = useState([]);
   const [proddata, setproddata] = useState([]);
   const [variantid, setvariantid] = useState('');
@@ -65,10 +77,11 @@ function Product() {
   const [otherintro, setotherintro] = useState('');
   const [headerval, setheaderval] = useState('');
   const [descval, setdescval] = useState('');
+  const [paraddcustom, setparaddcustom] = useState();
   const [customarray, setcustomarray] = useState([]);
   const [AddCustom, setAddCustom] = useState({
-    header:"",
-    description:""
+    header:[],
+    description:[]
   });
 
   const [vdata, setvdata] = useState([]);
@@ -79,7 +92,7 @@ function Product() {
     store_name: "",
     product_type: "",
     category: "",
-    parent_category: "",
+    parent_category: "73",
     wholesale_sales_tax: "",
     manufacturing_date: "",
     expire_date: "",
@@ -88,8 +101,9 @@ function Product() {
     product_description: "",
     other_introduction: "",
     is_active: "0",
-   vendor_id:"803082",
+   vendor_id:"2",
    shop:"my shop",
+   rating:"2"
   });
   const mainformRef = useRef();
   const formRef = useRef();
@@ -109,7 +123,7 @@ function Product() {
         "search": `${searchdata.product_title_name}`,
         "category": `${searchdata.category}`,
         "status": `${searchdata.status}`,
-        // "is_delete":"no",
+        "is_delete":"1",
       }
     }).then((response) => {
       setpdata(response.data)
@@ -126,6 +140,7 @@ function Product() {
     setAlert(true);
   }
   const hideAlert = () => {
+    // product delete
     axios.put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
       "varient_id": `${variantid}`,
       "product_id": `${productid}`,
@@ -137,22 +152,32 @@ function Product() {
     }).catch(function (error) {
       console.log(error);
     });
+
+
+    // variety delete
+    axios.put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
+      id:`${variantid}`,
+      product_id:`${productid}`,
+      is_delete:"0"
+      }).then((response) => {
+        setvariantapicall(true)
+      }).catch(function (error) {
+        console.log(error);
+      });
+
     setAlert(false);
   }
 
 
   //  json
   var varietyy = VariationJson;
+  var categorytype =CategoryJson;
 const prodata=(id)=>{
 console.log(id[0]+"----------"+id[1]+"----------------------------------")
 localStorage.setItem("variantid", id[0])
 localStorage.setItem("productid", id[1])
 navigate('/productdetail') 
-    //  axios.get("${process.env.REACT_APP_BASEURL}/products_pricing?id=14&product_id=43").then((response)=>{
-    //   console.log("------------------------------" + JSON.stringify(response.data))
-    //  })
     }
-    // console.log("---------------variandiddddddddd--------------"+variantid)
   const columns = [
 
     {
@@ -310,24 +335,68 @@ navigate('/productdetail')
       ),
     },
   ];
-
+console.log("indvallll-------"+indVal)
+  const categoryFormChange = (e, id) => {
+console.log("eeeeeee-------"+e.target.value)
+    setIndVal(e.target.value);
+    setScategory({ ...scategory, [e.target.name]: e.target.value});
+    try {
+      axios
+        .get(`${process.env.REACT_APP_BASEURL}/category?category=${e.target.value}`)
+        .then((response) => {
+          let cgory = response.data;
+          let specificValues = cgory.filter(obj => obj.all_parent_id.substring(0, obj.all_parent_id.length-2) === scategory.category_name);
+        console.log("---ppppp"+(specificValues))
+          if (e.target.value === scategory.category_name) {
+              setSubCategory(cgory);
+              setchildCategory('');
+              setlevel(1);
+          
+          } else if (e.target.value === scategory.sub_category) {
+            setchildCategory(cgory);
+            setgrandcCategory('');
+            setlevel(2);
+          }
+          else if (e.target.value === scategory.child_category) {
+            setgrandcCategory(cgory);
+            console.log("---child_category"+scategory.child_category + e.target.value)
+            setlevel(3);
+          }else if (e.target.value === scategory.s_category) {
+            setgrandcCategory(cgory);
+            setlevel(4);
+          }
+        });
+    } catch (err) {}
+  };
   // modal
-
   const handleShow = (e) => {
     if (e === 'add') {
       setmodalshow(e);
-    }
+       try {
+      axios
+        .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
+        .then((response) => {
+          let cgory = response.data;
+          let specificValues = cgory.filter(obj => obj.all_parent_id.substring(0, obj.all_parent_id.length-2) === scategory.category_name);
+        console.log("---ppppp"+(specificValues))
+          if (indVal === 0) {
+            setCategory(cgory);
+            setlevel(0);
+          } 
+        });
+    } catch (err) {}
+      }
+    
     else {
-      console.log("eeeeeeeeee"+JSON.stringify(e))
       axios.get(`${process.env.REACT_APP_BASEURL}/product?id=${e}`).then((response) => {
         let data = response.data[0]
         setproductdata(data)
-        console.log("---prod"+JSON.stringify(response.data))
+        let customdatra = JSON.parse(response.data[0].add_custom_input)
+        setcustomarray(customdatra) 
+        console.log("---[0]"+JSON.stringify(response.data[0]))
       }).catch(function (error) {
         console.log(error);
       });
-      // setpdata(pdata[e])
-      // setseoArray(pdata[e].seo_tag)
       setmodalshow(e);
     }
   }
@@ -338,12 +407,11 @@ navigate('/productdetail')
   //   handlevarietyShow();
   // },[variantapicall])
   const handlevarietyShow = (id) => {
-    console.log("-----produfh"+id)
     axios.post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`, {
       "product_search": {
         "search": '',
         "product_id": `${id}`,
-        // "is_delete":"0"
+        "is_delete":"1"
       }
     }).then((response) => {
       setvdata(response.data.results)
@@ -352,7 +420,6 @@ navigate('/productdetail')
         product_id : id
       });
       setvariantapicall(false)
-      console.log("---variety" + JSON.stringify(response.data))
     }).catch(function (error) {
       console.log(error);
     });
@@ -409,7 +476,6 @@ navigate('/productdetail')
       [e.target.name]: e.target.value
     });
   };
-  // console.log("------addsinglevariant" + JSON.stringify(variantarray))
   const handleInputcheckboxChange = (e) => {
     const target = e.target;
     const value = target.type === 'checkbox' ? target.checked : target.value
@@ -426,17 +492,6 @@ navigate('/productdetail')
       [e.target.name]: e.target.value
     });
   }
-//   console.log("------productdata" + JSON.stringify(productdata.add_custom_input))
-//   const iterator =(JSON.stringify(productdata.add_custom_input))
-// const intt =JSON.parse(iterator)
-//   console.log("------iterator" + (typeof intt))
-//   console.log("------intt" + (intt[0]))
-  // console.log("------addcusotm[0" + (addcusotm[0]))
-  // console.log("------addcustomvalue------" +(addcustomvalue))
-
-  // for (const value of iterator) {
-  //   console.log("valueeeeeeeee      "+value);
-  // }
 
   
 
@@ -445,9 +500,9 @@ navigate('/productdetail')
     // id.preventDefault();
     if(id === '' || id=== undefined || id === null){
       axios.post(`${process.env.REACT_APP_BASEURL}/products_varient_add`, variantarray).then((response) => {
-console.log("---addvariety"+JSON.stringify(response.data))
         // setvariantarray(response.data)
-        setvariantapicall(true)
+        // setvariantapicall(true)
+        setvarietyShow(false)
         console.log("------changeediteddd---" + JSON.stringify(response.data))
       }).catch(function (error) {
         console.log(error);
@@ -455,8 +510,9 @@ console.log("---addvariety"+JSON.stringify(response.data))
     }
     else{
       axios.put(`${process.env.REACT_APP_BASEURL}/products_varient_update`, variantarray).then((response) => {
-        setvariantarray(response.data)
-        setvariantapicall(true)
+        // setvariantarray(response.data)
+        // setvariantapicall(true)
+        setvarietyShow(false)
         console.log("------changeediteddd---" + JSON.stringify(response.data))
       }).catch(function (error) {
         console.log(error);
@@ -475,19 +531,17 @@ const VariantAddProduct = () =>{
     // }
 }
   const VariantRemoveClick = (id, productid) => {
-    axios.put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
-      id:`${id}`,
-      product_id:`${productid}`,
-      is_delete:"1"
-      }).then((response) => {
-        // setvariantarray(response.data[0])
-        console.log("------changeediteddd---" + JSON.stringify(response.data))
-        setvariantapicall(true)
-      }).catch(function (error) {
-        console.log(error);
-      });
-    console.log("-----id" + id + 'productid' + productid)
-    setvdata(vdata.filter(item => item !== id));
+    setAlert(true);
+    // axios.put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
+    //   id:id,
+    //   product_id:productid,
+    //   is_delete:"0"
+    //   }).then((response) => {
+    //     setvariantapicall(true)
+    //   }).catch(function (error) {
+    //     console.log(error);
+    //   });
+    // setvdata(vdata.filter(item => item !== id));
   }
   const VariantEditClick = (id, productid) => {
     axios.get(`${process.env.REACT_APP_BASEURL}/products_pricing?id=${id}&product_id=${productid}`).then((response) => {
@@ -508,40 +562,29 @@ const VariantAddProduct = () =>{
   }, [variantmainarray]);
   // varint end
   // handle click event of the Remove button
-  let customvalue;
-  let headervalue;
-  let descriptionvalue;
+
 
   const oncustomheadChange = (e) => {
     setheaderval(e.target.value);
-    let headvl = e.target.value;
-    console.log(e.target.value+"------header")
-    headervalue.push(headerval)
-    setAddCustom((AddCustom) =>{ return {...AddCustom,  header : headervalue}});
+    setAddCustom((AddCustom) =>{ return {...AddCustom,  header : e.target.value}});
   };
   const oncustomdescChange = (e) => {
-    console.log(e.target.value+"------desc")
     setdescval(e.target.value);
-    let devl = e.target.value;
-    descriptionvalue.push(descval)
-    setAddCustom((AddCustom) =>{ return {...AddCustom,  description : descriptionvalue}});
+    setAddCustom((AddCustom) =>{ return {...AddCustom,  description : e.target.value}});
   };
-  console.log("----addcustom" + JSON.stringify(AddCustom))
-  var carray;
   const handleAddClick = (e) => {
-    customvalue = headerval + ',' + descval;
-
     if (headerval !== '' && descval !== '') {
-      setcustomarray(customarray => [...customarray, customvalue]);
-     carray = JSON.stringify(customarray)
+      setcustomarray(customarray => [...customarray, AddCustom]);
       setheaderval('');
       setdescval('');
+      setAddCustom('')
       setcustomValidated(false);
     }
     else {
       setcustomValidated(true);
     }
   }
+
   const handleRemoveClick = (e) => {
     setcustomarray(customarray.filter(item => item !== e));
   };
@@ -579,6 +622,7 @@ const VariantAddProduct = () =>{
       other_introduction: otherintro
     });
   }
+  console.log("change---" + JSON.stringify(productdata))
 
   //  const createMarkup = () => {
   //     return { __html: pdata.product_description };
@@ -615,9 +659,8 @@ const VariantAddProduct = () =>{
     setValidated(false);
     // handleClose();
   }
-  // console.log("udhdfhkjsf   "+JSON.stringify(productdata))
   const handleUpdateProduct = (e) => {
-    // setproductdata({ ...productdata, is_active: "0" })
+    // productdataa.push(productdata)
     e.preventDefault();
     axios.put(`${process.env.REACT_APP_BASEURL}/products_update`, productdata
     ).then((response) => {
@@ -633,6 +676,7 @@ const VariantAddProduct = () =>{
 
   const handleClick = () => { };
   const navigate = useNavigate();
+  console.log("_________++subcategory---"+subCategory[0])
   return (
     <div className="App productlist_maindiv">
       <h2>Products</h2>
@@ -823,18 +867,152 @@ const VariantAddProduct = () =>{
                           value={productdata.product_type === null || productdata.product_type === undefined ? '' : productdata.product_type}
                         >
                           <option value={''}>Select Product Type</option>
-                          <option value="cloths">cloths</option>
-                          <option value="Foods">foods</option>
+
+                          {(categorytype.categorytype).map((data)=>{
+return(
+                       <option value={data}>{data}</option>
+
+)
+                          })}
+                          {/* <option value="Foods">foods</option>
                           <option value="electronic">Electronic</option>
                           <option value="Health Care">Health Care</option>
-                          <option value="Books">Books</option>
+                          <option value="Books">Books</option> */}
                         </Form.Select>
                         <Form.Control.Feedback type="invalid" className="h6">
                           Please select producttype
                         </Form.Control.Feedback>
                       </Col>
                     </Form.Group>
-                    <Form.Group className="mx-3" controlId="validationCustom06">
+
+{/* category select */}
+                  <Form.Group
+                    className=" aos_input"
+                    controlId="formBasicParentCategory"
+                  >
+                    <Form.Label className="inputlabelheading" sm="12">Parent Category</Form.Label>
+                    <Form.Select
+                     onChange={(e) => handleInputFieldChange(e)} name={'parent_category'}
+                     aria-label="Parent Category"
+                     className="adminselectbox"
+                     required
+                     value={productdata.parent_category === null || productdata.parent_category === undefined ? '' : productdata.parent_category}
+                    >
+                      {category.map((cdata, i) => {
+                        return (
+                          <option value={cdata.id} key={i} 
+                          // selected={CategoryEditparent === cdata.category_name ? true :false }
+                          >
+                            {cdata.category_name}{" "}
+                          </option>
+                        );
+                      })}
+                    </Form.Select>
+                    <Form.Control.Feedback type="invalid" className="h6">
+                      Please fill category
+                    </Form.Control.Feedback>
+                  </Form.Group>
+{subCategory[0] === "" || subCategory[0] === null || subCategory[0] === undefined? null :(
+                    <Form.Group
+                      className=" aos_input"
+                      controlId="formBasicParentCategory"
+                    >
+                      <Form.Label>Sub Category</Form.Label>
+                      <Form.Select
+                        aria-label="Search by status"
+                        className="adminselectbox"
+                        required
+                        onChange={(e, id) => categoryFormChange(e, id)}
+                        name={"category"}
+                        // value={CategoryEditdata.category_name}
+                      >
+                        {/* <option value="" selected={CategoryEditdata === '' ? true :false }>Search by category</option> */}
+
+                        {subCategory.map((cdata, i) => {
+                          return (
+                            <option value={cdata.id} key={i}
+                            //  selected={CategoryEditSubparent === cdata.category_name ? true :false }
+                             >
+                              {cdata.category_name}{" "}
+                            </option>
+                          );
+                        })}
+                      </Form.Select>
+                      <Form.Control.Feedback type="invalid" className="h6">
+                        Please fill category
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                )}
+
+                {childCategory[0] === "" || childCategory[0] === null || childCategory[0] === undefined   ? null : (
+                    <Form.Group
+                      className="mb-3 aos_input"
+                      controlId="formBasicParentCategory"
+                    >
+                      <Form.Label> Child Category</Form.Label>
+                      <Form.Select
+                        aria-label="Search by status"
+                        className="adminselectbox"
+                        required
+                        onChange={(e, id) => categoryFormChange(e, id)}
+                        name={"category"}
+
+                      >
+                           {/* <option value="">Search by category</option> */}
+                        {childCategory.map((cdata, i) => {
+                          return (
+                            <option value={cdata.id} key={i} 
+                            //  selected={CategoryEditChildparent === cdata.category_name ? true :false }
+                             >
+                              {cdata.category_name}{" "}
+                            </option>
+                          );
+                        })}
+                      </Form.Select>
+                      <Form.Control.Feedback type="invalid" className="h6">
+                        Please fill category
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                ) }
+              
+
+                {grandcCategory[0] === "" || grandcCategory[0] === null || grandcCategory[0] === undefined   ? null :(
+                    <Form.Group
+                      className="mb-3 aos_input"
+                      controlId="formBasicParentCategory"
+                    >
+                      <Form.Label> Inner Category</Form.Label>
+                      <Form.Select
+                        aria-label="Search by status"
+                        className="adminselectbox"
+                        required
+                        onChange={(e, id) => categoryFormChange(e, id)}
+                        name={"category"}
+                      >
+                         {/* <option value={''} >
+                              Select Category
+                            </option> */}
+                        {grandcCategory.map((cdata, i) => {
+                          return (
+                            <option value={cdata.id} key={i} 
+                            //  selected={CategoryEditChildparent === cdata.category_name ? true :false }
+                             >
+                              {cdata.category_name}{" "}
+                            </option>
+                          );
+                        })}
+                      </Form.Select>
+                      <Form.Control.Feedback type="invalid" className="h6">
+                        Please fill category
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                ) }
+
+                {/* end category select */}
+
+
+
+                    {/* <Form.Group className="mx-3" controlId="validationCustom06">
                       <Form.Label className="inputlabelheading" sm="12">
                         Category<span className="text-danger">* </span>
                       </Form.Label>
@@ -871,7 +1049,7 @@ const VariantAddProduct = () =>{
                           Please select parentcategory
                         </Form.Control.Feedback>
                       </Col>
-                    </Form.Group>
+                    </Form.Group> */}
                   </div>
                 </div>
                 {/* Taxes */}
@@ -1368,7 +1546,7 @@ const VariantAddProduct = () =>{
                   <Col sm="12" className="mt-3">
                     <CKEditor
                       editor={ClassicEditor}
-                      data="<p>Hello from CKEditor 5!</p>"
+                      data={productdata.other_introduction}
                       onChange={OtherDescription}
                       name={'other_introduction'}
 
@@ -1393,7 +1571,7 @@ const VariantAddProduct = () =>{
                           <td className="text-center col-4">
                             <InputGroup className="">
                               <Form.Control
-                                // value={headerval}
+                                value={headerval}
                                 type="text"
                                 sm="9"
                                 min={'1'}
@@ -1408,7 +1586,7 @@ const VariantAddProduct = () =>{
                             <InputGroup className="">
                               <Form.Control
                                 className={(customvalidated === true) ? 'border-danger' : null}
-                                // value={descval}
+                                value={descval}
                                 name={'description'}
                                 type="text"
                                 sm="9"
@@ -1430,15 +1608,16 @@ const VariantAddProduct = () =>{
                             </Button>
                           </td>
                         </tr>
-                        {productdata.add_custom_input === null || productdata.add_custom_input === undefined ? '' : 
-                        ((productdata.add_custom_input) || []).map((variantdata, i) => {
-                          const arr = variantdata.split(',')
+                        {
+                        // paraddcustom === null || paraddcustom === undefined ? '' : 
+                        ((customarray) || []).map((variantdata, i) => {
+                          // const arr = variantdata.split(',')
                           return (
                             <tr className="">
                               <td className=" text-center">
                                 <InputGroup className="">
                                   <Form.Control
-                                    value={arr[0]}
+                                    value={variantdata.header}
                                     type="text"
                                     sm="9"
                                     min={'1'}
@@ -1453,7 +1632,7 @@ const VariantAddProduct = () =>{
                                 <InputGroup className="">
                                   <Form.Control
                                     required
-                                    value={arr[1]}
+                                    value={variantdata.description}
                                     name={'custom_input_desc'}
                                     type="text"
                                     sm="9"
@@ -1476,7 +1655,8 @@ const VariantAddProduct = () =>{
                               </td>
                             </tr>
                           )
-                        })}
+                        })
+                        }
                       </tbody>
                     </Table>
                   </div>
@@ -1995,8 +2175,8 @@ const VariantAddProduct = () =>{
                                   <Form.Check
                                     onChange={(e) => handleInputcheckboxChange(e)}
                                     name={'special_offer'}
-                                    value={variantarray.special_offer}
-                                    checked={variantarray.special_offer === 1 || true ? true : false}
+                                    // value={variantarray.special_offer}
+                                    checked={variantarray.special_offer === 1 || variantarray.special_offer === true ? true : false}
                                   />
                                 </div>
                               </td>
@@ -2005,8 +2185,8 @@ const VariantAddProduct = () =>{
                                   <Form.Check
                                     onChange={(e) => handleInputcheckboxChange(e)}
                                     name={'featured_product'}
-                                    value={variantarray.featured_product}
-                                    checked={variantarray.featured_product === 1 || true ? true : false}
+                                    // value={variantarray.featured_product}
+                                    checked={variantarray.featured_product === 1 || variantarray.featured_product === true ? true : false}
                                   />
                                 </div>
                               </td>
@@ -2095,7 +2275,7 @@ const VariantAddProduct = () =>{
                                 : (vdata || []).map((variantdata, i) => {
                                 
                                   return (
-                                    variantdata.is_delete !== '0' ? null :
+                                    variantdata.is_delete === '0' ? null :
                                     <tr >
                                       <td className="p-0 text-center ">
                                         {variantdata.unit === 'pcs' ? 'color' : variantdata.unit === 'piece' ? 'piece' : variantdata.unit === 'gms' ? 'weight' : variantdata.unit === 'l' ? 'volume' : null}
