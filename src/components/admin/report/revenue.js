@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
+import axios from 'axios';
 import Form from "react-bootstrap/Form";
+import moment from "moment/moment";
 import {
     BsCashCoin
   } from "react-icons/bs";
@@ -16,6 +18,14 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 const RevenueReport = () => {
   const [filterchange,setFilterchange] = useState('')
+
+  const [getRevenue, setGetRevenue]= useState({})
+
+  const [fromDate, setFromDate]=useState(moment().format("YYYY-MM-DD"));
+  const [toDate,setToDate]=useState(moment().format("YYYY-MM-DD"))
+
+  // const [fromDate, setFrom]
+
     const options = {
         chart: {
           type: 'line',
@@ -223,8 +233,82 @@ const RevenueReport = () => {
           },
       ];
       const TimeChange = (e)=>{
-setFilterchange(e.target.value)
+        let value = e.target.value;
+        console.log("---------------------------------------------"+value);
+        if(value==1){
+          setFromDate(moment().format("YYYY-MM-DD"))
+          console.log("From date"+e.target.value)
+          console.log("today")
+          setToDate(moment().format("YYYY-MM-DD"))
+        }
+
+        if(value==2){
+          setFromDate(moment().format("YYYY-MM-DD"));
+          console.log("From date"+e.target.value);
+          
+          setToDate(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'));
+          console.log("yesterday--"+moment().subtract(1, 'day').startOf('day').format('YYYY-MM-DD'));
+
+        }
+       if(value==3){
+          setFromDate(moment().subtract(1, 'weeks').startOf('weeks').format('YYYY-MM-DD'));
+          console.log("From date"+e.target.value)
+          
+          setToDate(moment().format("YYYY-MM-DD"));
+          // console.log("last week"+moment().subtract(1, 'week').startOf('week').format('YYYY-MM-DD'))
+       
+       }
+
+       if(value==4){
+       
+
+        setFromDate(moment().format("YYYY-MM-DD"));
+        console.log("From last month"+e.target.value)
+        setToDate(moment().subtract(1, 'months').startOf('months').format('YYYY-MM-DD'));
+        // setToDate("2022-12-14");
+  
+        
+     }
+     if(value==5){
+      setFromDate(moment().format("YYYY-MM-DD"));
+      console.log("From last 6 month"+e.target.value)
+      setToDate(moment().subtract(6, 'month').startOf('month').format('YYYY-MM-DD'));
+   }
       }
+
+      // console.log("fromDate"+fromDate);
+      // console.log(" To Date"+toDate);
+
+      //  console.log("month"+moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD'));
+      //  console.log(" 6 month"+moment().subtract(6, 'month').startOf('month').format('YYYY-MM-DD'));
+   
+      useEffect(() => {
+        console.log( "from_date"+fromDate)
+        console.log( "to_date"+toDate)
+        axios.post(`${process.env.REACT_APP_BASEURL}/revenue`
+        ,
+         {
+          "from_date":fromDate,
+         
+         "to_date":toDate
+        }
+        ).then((response) => {
+            console.log('revenue data'+JSON.stringify(response.data))
+              setGetRevenue(response.data[0])
+              console.log("get revenue"+getRevenue)
+        }).catch(function (error) {
+          console.log(error);
+        });
+
+       
+      }, [fromDate, toDate]);
+        
+     
+      // console.log(moment(new Date()).format('MMMM Do YYYY, h:mm:ss a'))
+      // console.log(  moment("20111031", "YYYYMMDD").fromNow())
+      // console.log(moment("20021219","YYYYMMDD").fromNow())
+      // console.log(' from now'+moment().fromNow())
+
     return (
         <div>
               <h2>Revenue Report</h2>
@@ -238,14 +322,14 @@ setFilterchange(e.target.value)
               placeholder="Search by category"
               onChange={TimeChange}
             >
-              <option>Search by category</option>
-              <option value="1">1 day</option>
-              <option value="2">1 week</option>
-              <option value="3">current month</option>
-              <option value="4">last month</option>
-              <option value="5">last 6  month</option>
-              <option value="6">custom month</option>
-              <option value="7">custom date</option>
+              <option >Search by category</option>
+              <option name="today" value={1}>Today</option>
+              <option name="yesterday" value={2}>yesterday</option>
+              <option name="last_week" value={3}>Last week</option>
+              <option name="last_month" value={4}>last month</option>
+              <option name="last_6_month" value={5}>last 6  month</option>
+              <option name="custom_month" value="6">custom month</option>
+              <option name="custom_date" value="7">custom date</option>
 
             </Form.Select>
           </div>
@@ -291,7 +375,7 @@ setFilterchange(e.target.value)
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                    <h3>2,356</h3>
+                    <h3>{getRevenue.gross_total_amount}</h3>
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
                      <p className="mb-0 h5">0%</p>
@@ -318,7 +402,7 @@ setFilterchange(e.target.value)
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                    <h3>2,356</h3>
+                    <h3>{getRevenue.return_total}</h3>
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
                      <p className="mb-0 h5">0%</p>
@@ -345,7 +429,7 @@ setFilterchange(e.target.value)
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                    <h3>2,356</h3>
+                    <h3>{getRevenue.total_discount}</h3>
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
                      <p className="mb-0 h5">0%</p>
@@ -372,7 +456,7 @@ setFilterchange(e.target.value)
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                    <h3>2,356</h3>
+                    <h3>{getRevenue.total_gst}</h3>
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
                      <p className="mb-0 h5">0%</p>
@@ -399,7 +483,7 @@ setFilterchange(e.target.value)
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                    <h3>2,356</h3>
+                    <h3>{getRevenue.total_shipping_charges}</h3>
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
                      <p className="mb-0 h5">0%</p>
@@ -426,7 +510,7 @@ setFilterchange(e.target.value)
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                    <h3>2,356</h3>
+                    <h3>{getRevenue.net_sale}</h3>
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
                      <p className="mb-0 h5">0%</p>
@@ -441,6 +525,37 @@ setFilterchange(e.target.value)
 
                 
               </div>
+
+              
+            </div>
+
+
+            <div className="card p-2 col-2 rounded-right shadow-none">
+              <div className=" d-flex mt-0 align-items-center">
+                <GiTakeMyMoney className="text-success h1 mb-0 mx-2" />
+                <h5 className="text-success">Total Sales </h5>
+              </div>
+              <div className="row mt-3">
+                <div className="col-12">
+                  <div className="row  d-flex flex-column align-items-center">
+                  <div className="d-flex align-items-baseline justify-content-between">
+                    <h3>{getRevenue.total_amount_with_shipping}</h3>
+                    <div className="d-flex align-items-center justify-content-center">
+                     <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
+                     <p className="mb-0 h5">0%</p>
+                    </div>
+                    </div>
+                    <div>
+                        <h5>Previous Year:</h5>
+                        <p className="h5">$0.00</p>
+                    </div>
+                  </div>
+                </div>
+
+                
+              </div>
+
+              
             </div>
 {/*  */}
 </div>

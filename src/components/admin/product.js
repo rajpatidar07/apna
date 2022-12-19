@@ -117,6 +117,7 @@ function Product() {
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value })
   }
+  
   useEffect(() => {
     axios.post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`, {
       "product_search": {
