@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
@@ -12,8 +12,11 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
+import axios from "axios";
+import moment from "moment/moment";
 
 const ProductReport = () => {
+  
   const options = {
     chart: {
       type: "line",
@@ -62,33 +65,33 @@ const ProductReport = () => {
   const columns = [
     {
       name: "Sku",
-      selector: (row) => row.sku,
+      selector: (row) => row.product_id,
       sortable: true,
       width: "150px",
     },
     {
       name: "Product Name",
-      selector: (row) => row.pname,
+      selector: (row) => row.product_name,
       sortable: true,
       width: "160px",
     },
 
     {
       name: "Item Sold",
-      selector: (row) => row.isold,
+      selector: (row) => row.product_name,
       sortable: true,
       width: "140px",
       center: true,
     },
     {
       name: "Category",
-      selector: (row) => row.category,
+      selector: (row) => row.category_name,
       sortable: true,
       width: "190px",
     },
     {
       name: "Net Revenue",
-      selector: (row) => row.net,
+      selector: (row) => row.net_sales,
       sortable: true,
       width: "150px",
       center: true,
@@ -100,7 +103,7 @@ const ProductReport = () => {
 
     {
       name: "Orders",
-      selector: (row) => row.order,
+      selector: (row) => row.order_count,
       sortable: true,
       width: "150px",
       center: true,
@@ -111,7 +114,7 @@ const ProductReport = () => {
     },
     {
       name: "Stock",
-      selector: (row) => row.stock,
+      selector: (row) => row.product_count,
       sortable: true,
       width: "140px",
       center: true,
@@ -122,7 +125,7 @@ const ProductReport = () => {
     },
     {
       name: "Status",
-      selector: (row) => row.status,
+      selector: (row) => row.product_count,
       sortable: true,
       width: "100px",
       center: true,
@@ -133,121 +136,218 @@ const ProductReport = () => {
     },
   ];
 
-  const data = [
-    {
-      id: 1,
-      net: "$250",
-      sku: "256143",
-      pname: <p className="reviewdesc">Light House Device Bag</p>,
-      isold: "45",
-      stock: "25",
-      category: <p className="reviewdesc"> Decoration Decoration </p>,
-      order: "120",
-    },
-    {
-      id: 2,
-      net: "$250",
-      sku: "256143",
-      pname: <p className="reviewdesc">Light House Device Bag</p>,
-      isold: "45",
-      category: "Backpacks",
-      order: "120",
-      status: "$14",
-      stock: "25",
-    },
-    {
-      id: 1,
-      net: "$250",
-      sku: "256143",
-      pname: <p className="reviewdesc">Light House Device Bag</p>,
-      isold: "45",
-      category: "Backpacks",
-      order: "120",
-      stock: "25",
-      status: "$14",
-    },
-    {
-      id: 2,
-      net: "$250",
-      sku: "256143",
-      pname: <p className="reviewdesc">Solo Device Bag</p>,
-      isold: "45",
-      category: "Backpacks",
-      order: "120",
-      stock: "25",
-      status: "$14",
-    },
-    {
-      id: 1,
-      net: "$250",
-      sku: "256143",
-      pname: <p className="reviewdesc">Solo Device Bag</p>,
-      isold: "45",
-      category: "Backpacks",
-      order: "120",
-      stock: "25",
-      status: "$14",
-    },
-    {
-      id: 2,
-      net: "$250",
-      sku: "256143",
-      pname: <p className="reviewdesc">Solo Device Bag</p>,
-      isold: "45",
-      category: "Backpacks",
-      order: "120",
-      stock: "25",
-      status: "$14",
-    },
-    {
-      id: 1,
-      net: "$250",
-      sku: "256143",
-      pname: <p className="reviewdesc">Solo Device Bag</p>,
-      isold: "45",
-      category: "Backpacks",
-      order: "120",
-      stock: "25",
-      status: "$14",
-    },
-    {
-      id: 2,
-      net: "$250",
-      sku: "256143",
-      pname: <p className="reviewdesc">Solo Device Bag</p>,
-      isold: "45",
-      category: "Backpacks",
-      order: "120",
-      stock: "25",
-      status: "$14",
-    },
-    {
-      id: 1,
-      net: "$250",
-      sku: "256143",
-      pname: <p className="reviewdesc">Solo Device Bag</p>,
-      isold: "45",
-      category: "Backpacks",
-      order: "120",
-      stock: "25",
-      status: "$14",
-    },
-    {
-      id: 2,
-      net: "$250",
-      sku: "256143",
-      pname: <p className="reviewdesc">Solo Device Bag</p>,
-      isold: "45",
-      category: "Backpacks",
-      order: "120",
-      stock: "25",
-      status: "$14",
-    },
-  ];
+  // const data = [
+  //   {
+  //     id: 1,
+  //     net: "$250",
+  //     sku: "256143",
+  //     pname: <p className="reviewdesc">Light House Device Bag</p>,
+  //     isold: "45",
+  //     stock: "25",
+  //     category: <p className="reviewdesc"> Decoration Decoration </p>,
+  //     order: "120",
+  //   },
+  //   {
+  //     id: 2,
+  //     net: "$250",
+  //     sku: "256143",
+  //     pname: <p className="reviewdesc">Light House Device Bag</p>,
+  //     isold: "45",
+  //     category: "Backpacks",
+  //     order: "120",
+  //     status: "$14",
+  //     stock: "25",
+  //   },
+  //   {
+  //     id: 1,
+  //     net: "$250",
+  //     sku: "256143",
+  //     pname: <p className="reviewdesc">Light House Device Bag</p>,
+  //     isold: "45",
+  //     category: "Backpacks",
+  //     order: "120",
+  //     stock: "25",
+  //     status: "$14",
+  //   },
+  //   {
+  //     id: 2,
+  //     net: "$250",
+  //     sku: "256143",
+  //     pname: <p className="reviewdesc">Solo Device Bag</p>,
+  //     isold: "45",
+  //     category: "Backpacks",
+  //     order: "120",
+  //     stock: "25",
+  //     status: "$14",
+  //   },
+  //   {
+  //     id: 1,
+  //     net: "$250",
+  //     sku: "256143",
+  //     pname: <p className="reviewdesc">Solo Device Bag</p>,
+  //     isold: "45",
+  //     category: "Backpacks",
+  //     order: "120",
+  //     stock: "25",
+  //     status: "$14",
+  //   },
+  //   {
+  //     id: 2,
+  //     net: "$250",
+  //     sku: "256143",
+  //     pname: <p className="reviewdesc">Solo Device Bag</p>,
+  //     isold: "45",
+  //     category: "Backpacks",
+  //     order: "120",
+  //     stock: "25",
+  //     status: "$14",
+  //   },
+  //   {
+  //     id: 1,
+  //     net: "$250",
+  //     sku: "256143",
+  //     pname: <p className="reviewdesc">Solo Device Bag</p>,
+  //     isold: "45",
+  //     category: "Backpacks",
+  //     order: "120",
+  //     stock: "25",
+  //     status: "$14",
+  //   },
+  //   {
+  //     id: 2,
+  //     net: "$250",
+  //     sku: "256143",
+  //     pname: <p className="reviewdesc">Solo Device Bag</p>,
+  //     isold: "45",
+  //     category: "Backpacks",
+  //     order: "120",
+  //     stock: "25",
+  //     status: "$14",
+  //   },
+  //   {
+  //     id: 1,
+  //     net: "$250",
+  //     sku: "256143",
+  //     pname: <p className="reviewdesc">Solo Device Bag</p>,
+  //     isold: "45",
+  //     category: "Backpacks",
+  //     order: "120",
+  //     stock: "25",
+  //     status: "$14",
+  //   },
+  //   {
+  //     id: 2,
+  //     net: "$250",
+  //     sku: "256143",
+  //     pname: <p className="reviewdesc">Solo Device Bag</p>,
+  //     isold: "45",
+  //     category: "Backpacks",
+  //     order: "120",
+  //     stock: "25",
+  //     status: "$14",
+  //   },
+  // ];
   const [filterchange,setFilterchange] = useState('')
+
+  const [getProduct, setGetProduct]= useState([])
+  const [tableProduct, setGetTableProduct]= useState([])
+
+  const [fromDate, setFromDate]=useState(moment().format("YYYY-MM-DD"));
+  const [toDate,setToDate]=useState(moment().format("YYYY-MM-DD"))
+  const [apicall,setapicall]=useState(false)
+
   const TimeChange = (e)=>{
+
     setFilterchange(e.target.value)
-          }
+
+    let value = e.target.value;
+    console.log("---------------------------------------------"+value);
+    if(value==1){
+      setFromDate(moment().format("YYYY-MM-DD"))
+      console.log("From date"+e.target.value)
+      console.log("today")
+      setToDate(moment().format("YYYY-MM-DD"))
+    }
+
+    if(value==2){
+      setFromDate(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'));
+      console.log("From date"+e.target.value);
+     
+      setToDate( moment().format("YYYY-MM-DD"));
+      console.log("yesterday--"+moment().subtract(1, 'day').startOf('day').format('YYYY-MM-DD'));
+
+    }
+   if(value==3){
+      setFromDate( moment().subtract(1, 'weeks').startOf('weeks').format('YYYY-MM-DD')  );
+    
+      console.log("From date"+e.target.value)
+      
+      setToDate( moment().format("YYYY-MM-DD")  );
+      // console.log("last week"+moment().subtract(1, 'week').startOf('week').format('YYYY-MM-DD'))
+   
+   }
+
+   if(value==4){
+   
+
+    setFromDate(moment().subtract(1, 'months').startOf('months').format('YYYY-MM-DD'));
+    console.log("From last month"+e.target.value)
+    setToDate(  moment().format("YYYY-MM-DD")    );
+    // setToDate("2022-12-14");
+
+    
+ }
+ if(value==5){
+  setFromDate(moment().subtract(6, 'month').startOf('month').format('YYYY-MM-DD') );
+  console.log("From last 6 month"+e.target.value)
+  setToDate( moment().format("YYYY-MM-DD") );
+}
+  }
+
+   
+  
+  const fetchData=()=>{
+    console.log( "from_date---"+fromDate)
+    console.log( "to_date---"+toDate)
+
+    axios.post(`${process.env.REACT_APP_BASEURL}/products_report`
+    ,
+    {
+      "from_date":fromDate,
+      "to_date":toDate,
+      "products_search":""
+  }
+    ).then((response) => {
+        // console.log('product data-all---'+JSON.stringify(response.data))
+        // console.log('product data [0] [0]--'+JSON.stringify(response.data[0][0]))
+        console.log('revenue data'+JSON.stringify(response.data[1]))
+      //  console.log('product data [1] [0]---'+JSON.stringify(response.data[1][0]))
+      //  console.log('product data [1] [1]---'+JSON.stringify(response.data[1][1]))
+      //  console.log('product data [1] [2]---'+JSON.stringify(response.data[1][2]))
+         setGetProduct(response.data[0][0])
+         setGetTableProduct(response.data[1])
+          // console.log("get Product"+getProduct)
+    }).catch(function (error) {
+      console.log(error);
+    });
+
+  }
+
+          useEffect(() => {
+
+          fetchData();
+    
+           
+          }, [apicall]);
+
+          
+      const submitHandler=()=>{
+       
+        setapicall(true)
+         fetchData()
+       }
+            
+
   return (
     <div>
       <h2>Product Report</h2>
@@ -262,12 +362,12 @@ const ProductReport = () => {
               onChange={TimeChange}
             >
               <option>Search by category</option>
-              <option value="1">1 day</option>
-              <option value="2">1 week</option>
-              <option value="3">current month</option>
-              <option value="4">last month</option>
-              <option value="5">last 6  month</option>
-              <option value="6">custom month</option>
+              <option name="today" value={1}>Today</option>
+              <option name="yesterday" value={2}>yesterday</option>
+              <option name="last_week" value={3}>Last week</option>
+              <option name="last_month" value={4}>last month</option>
+              <option name="last_6_month" value={5}>last 6  month</option>
+              {/* <option value="6">custom month</option> */}
               <option value="7">custom date</option>
 
             </Form.Select>
@@ -275,18 +375,19 @@ const ProductReport = () => {
           {filterchange==='7'?
           <>
       <div className="col-md-3 col-sm-6 aos_input">
-        <Input type={"date"} plchldr={"Search by date"} />
+        <input type={"date"} plchldr={"Search by date"} onChange={(e)=>{setFromDate(e.target.value)}} className={'adminsideinput'} />
         </div>
         
         <div className="col-md-3 col-sm-6 aos_input">
-        <Input type={"date"} plchldr={"Search by date"} />
+        <input type={"date"} plchldr={"Search by date"}onChange={(e)=>{setToDate(e.target.value)}} className={'adminsideinput'}/> 
         </div>
         </>
         :filterchange==='6'? <div className="col-md-3 col-sm-6 aos_input">
         <Input type={"month"} plchldr={"Search by month"} />
         </div> : null}
+
         <div className="col-md-auto col-sm-6 aos_input">
-        <MainButton btntext={"Search"} btnclass={'button main_button'} />
+        <MainButton btntext={"Search"} btnclass={'button main_button'} onClick={submitHandler}  />
         </div>
         <div className="col-md-auto col-sm-6 aos_input">
         <DropdownButton id="dropdown-variant-success" title="Download" variant="button main_button">
@@ -314,7 +415,10 @@ const ProductReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                      <h3>2,356</h3>
+                      <h3>
+                        
+                        { (getProduct.product_count)==null? <h3>No Record</h3>:  <h3>{getProduct.product_count}</h3> }  
+                        </h3>
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
                         <p className="mb-0 h5">0%</p>
@@ -339,7 +443,8 @@ const ProductReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                      <h3>2,356</h3>
+                    { (getProduct.net_sales)==null? <h3>No Record</h3>:  <h3>{getProduct.net_sales}</h3> }  
+                     
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
                         <p className="mb-0 h5">0%</p>
@@ -364,7 +469,8 @@ const ProductReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                      <h3>2,356</h3>
+                     
+                      { (getProduct.order_count)==null? <h3>No Record</h3>:  <h3>{getProduct.order_count}</h3> }  
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
                         <p className="mb-0 h5">0%</p>
@@ -394,7 +500,7 @@ const ProductReport = () => {
 
         <DataTable
           columns={columns}
-          data={data}
+          data={tableProduct}
           pagination
           highlightOnHover
           pointerOnHover
