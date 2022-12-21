@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import axios from "axios";
 
 const StockReport = () => {
   // const options = {
@@ -58,91 +59,148 @@ const StockReport = () => {
   //   },
   // };
   const columns = [
-    {
-      name: "Sku",
-      selector: (row) => row.sku,
-      sortable: true,
-    },
+  
     {
       name: "Product Name",
-      selector: (row) => row.pname,
+      selector: (row) => row.product_title_name,
       sortable: true,
       width: "260px",
     },
    
     {
       name: "Status",
-      selector: (row) => row.status,
+      selector: (row) => row.product_status,
       sortable: true,
       
     },
     {
       name: "Stock",
-      selector: (row) => row.stock,
+      selector: (row) => row.quantity,
       sortable: true,
      
     },
   ];
 
-  const data = [
-    {
-      id: 1,
-      sku: "#de250",
-      pname: "leaves lettuce green",
-      status:"$230",
-    stock:"$23",
-    },
-    {
-      id: 1,
-      sku: "#de250",
-      pname: "leaves lettuce green",
-      status:"$230",
-    stock:"$23",
-    }, {
-      id: 1,
-      sku: "#de250",
-      pname: "leaves lettuce green",
-      status:"$230",
-    stock:"$23",
-    }, {
-      id: 1,
-      sku: "#de250",
-      pname: "leaves lettuce green",
-      status:"$230",
-    stock:"$23",
-    }, {
-      id: 1,
-      sku: "#de250",
-      pname: "leaves lettuce green",
-      status:"$230",
-    stock:"$23",
-    }, {
-      id: 1,
-      sku: "#de250",
-      pname: "leaves lettuce green",
-      status:"$230",
-    stock:"$23",
-    }, {
-      id: 1,
-      sku: "#de250",
-      pname: "leaves lettuce green",
-      status:"$230",
-    stock:"$23",
-    }, {
-      id: 1,
-      sku: "#de250",
-      pname: "leaves lettuce green",
-      status:"$230",
-    stock:"$23",
-    },
-  ];
+  // const data = [
+  //   {
+  //     id: 1,
+  //     sku: "#de250",
+  //     pname: "leaves lettuce green",
+  //     status:"$230",
+  //   stock:"$23",
+  //   },
+  //   {
+  //     id: 1,
+  //     sku: "#de250",
+  //     pname: "leaves lettuce green",
+  //     status:"$230",
+  //   stock:"$23",
+  //   }, {
+  //     id: 1,
+  //     sku: "#de250",
+  //     pname: "leaves lettuce green",
+  //     status:"$230",
+  //   stock:"$23",
+  //   }, {
+  //     id: 1,
+  //     sku: "#de250",
+  //     pname: "leaves lettuce green",
+  //     status:"$230",
+  //   stock:"$23",
+  //   }, {
+  //     id: 1,
+  //     sku: "#de250",
+  //     pname: "leaves lettuce green",
+  //     status:"$230",
+  //   stock:"$23",
+  //   }, {
+  //     id: 1,
+  //     sku: "#de250",
+  //     pname: "leaves lettuce green",
+  //     status:"$230",
+  //   stock:"$23",
+  //   }, {
+  //     id: 1,
+  //     sku: "#de250",
+  //     pname: "leaves lettuce green",
+  //     status:"$230",
+  //   stock:"$23",
+  //   }, {
+  //     id: 1,
+  //     sku: "#de250",
+  //     pname: "leaves lettuce green",
+  //     status:"$230",
+  //   stock:"$23",
+  //   },
+  // ];
   const [filterchange,setFilterchange] = useState('')
+  const [getTableStock, setGetTableStock]= useState([])
+  const [apicall,setapicall]=useState(false)
+  const [StockStatus,setStockStatus]=useState("")
+  
+
   const TimeChange = (e)=>{
     setFilterchange(e.target.value)
+   const  value= e.target.value;
+    if(value==""){
+        setStockStatus("")
+    }
+    if(value=="in stock"){
+        setStockStatus("in stock")
+    }
+    if(value=="low stock"){
+        setStockStatus("low stock")
+    }
+    if(value=="out of stock"){
+        setStockStatus("out of stock")
+    }
+
+    
+
           }
+
+
+
+            
+  const fetchData=()=>{
+
+      console.log("Stock status-----"+StockStatus)
+     axios.post(`${process.env.REACT_APP_BASEURL}/stock_report`
+     ,
+     {
+      "values":StockStatus
+    }
+     ).then((response) => {
+          //  console.log('stock data-all---'+JSON.stringify(response.data))
+         
+          setGetTableStock(response.data)
+         
+     }).catch(function (error) {
+       console.log(error);
+     });
+ 
+   }
+ 
+ 
+ 
+   useEffect(() => {
+ 
+     fetchData();
+     }, [apicall]);
+ 
+       
+     const submitHandler=()=>{
+       
+      setapicall(true)
+       fetchData()
+     }
+
+
+
+
     return (
         <div>
-         <h2>Taxes Report</h2>
+         <h2>Stock Report</h2>
               {/* search bar */}
       <div className="card mt-3 p-3 ">
       <div className="row pb-3">
@@ -153,14 +211,12 @@ const StockReport = () => {
               placeholder="Search by category"
               onChange={TimeChange}
             >
-              <option>Search by category</option>
-              <option value="1">1 day</option>
-              <option value="2">1 week</option>
-              <option value="3">current month</option>
-              <option value="4">last month</option>
-              <option value="5">last 6  month</option>
-              <option value="6">custom month</option>
-              <option value="7">custom date</option>
+              <option value="">Our Stock Status</option>
+              <option value="">All Product</option>
+              <option value="in stock">In Stock</option>
+              <option value="low stock">Low Stock</option>
+              <option value="out of stock">Out of Stock</option>
+
 
             </Form.Select>
           </div>
@@ -177,8 +233,9 @@ const StockReport = () => {
         :filterchange==='6'? <div className="col-md-3 col-sm-6 aos_input">
         <Input type={"month"} plchldr={"Search by month"} />
         </div> : null}
+
         <div className="col-md-auto col-sm-6 aos_input">
-        <MainButton btntext={"Search"} btnclass={'button main_button'} />
+        <MainButton btntext={"Search"} btnclass={'button main_button'}  onClick={submitHandler}/>
         </div>
         <div className="col-md-auto col-sm-6 aos_input">
         <DropdownButton id="dropdown-variant-success" title="Download" variant="button main_button">
@@ -319,7 +376,7 @@ const StockReport = () => {
    
       <DataTable
         columns={columns}
-        data={data}
+        data={getTableStock}
         pagination
         highlightOnHover
         pointerOnHover

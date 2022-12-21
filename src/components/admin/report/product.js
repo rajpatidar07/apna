@@ -277,7 +277,7 @@ const ProductReport = () => {
       console.log("yesterday--"+moment().subtract(1, 'day').startOf('day').format('YYYY-MM-DD'));
 
     }
-   if(value==3){
+   if(value===3){
       setFromDate( moment().subtract(1, 'weeks').startOf('weeks').format('YYYY-MM-DD')  );
     
       console.log("From date"+e.target.value)
@@ -318,8 +318,8 @@ const ProductReport = () => {
       "products_search":""
   }
     ).then((response) => {
-        // console.log('product data-all---'+JSON.stringify(response.data))
-        // console.log('product data [0] [0]--'+JSON.stringify(response.data[0][0]))
+         console.log('product data-all---'+JSON.stringify(response.data))
+         console.log('product data [0] [0]--'+JSON.stringify(response.data[0][0]))
         console.log('revenue data'+JSON.stringify(response.data[1]))
       //  console.log('product data [1] [0]---'+JSON.stringify(response.data[1][0]))
       //  console.log('product data [1] [1]---'+JSON.stringify(response.data[1][1]))

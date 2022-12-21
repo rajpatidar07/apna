@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState } from "react";
 import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
@@ -9,6 +9,8 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import axios from 'axios';
+import moment from "moment/moment";
 
 const CouponReport = () => {
   const options = {
@@ -57,18 +59,24 @@ const CouponReport = () => {
   
     {
       name: "Coupon Code",
-      selector: (row) => row.code,
+      selector: (row) => row.coupons_code,
+      sortable: true,
+      width: "260px",
+    },
+    {
+      name: " Discount Coupon",
+      selector: (row) => row.discount_coupon,
       sortable: true,
       width: "260px",
     },
     {
       name: "Amount Discounted",
-      selector: (row) => row.discount,
+      selector: (row) => row.amount_discounted,
       sortable: true,
     },
     {
       name: "Created",
-      selector: (row) => row.cdate,
+      selector: (row) => row.created_date,
       sortable: true,
       
     },
@@ -80,92 +88,200 @@ const CouponReport = () => {
     },
     {
       name: "Orders",
-      selector: (row) => row.order,
+      selector: (row) => row.order_count,
       sortable: true,
       
     },
-    {
-      name: "Type",
-      selector: (row) => row.type,
-      sortable: true,
-      
-    },
+ 
    
    
   ];
 
-  const data = [
-    {
-      id: 1,
-      code: "Coupon250",
-      type: "PErcentage",
-      cdate:"23 Sep,2021",
-    edate:"23 Sep,2021",
-  discount:"12",
-  order: "120",
-    },
-    {
-      id: 1,
-      code: "Coupon250",
-      type: "PErcentage",
-      cdate:"23 Sep,2021",
-    edate:"23 Sep,2021",
-  discount:"12",
-  order: "120",
-    }, {
-      id: 1,
-      code: "Coupon250",
-      type: "PErcentage",
-      cdate:"23 Sep,2021",
-    edate:"23 Sep,2021",
-  discount:"12",
-  order: "120",
-    }, {
-      id: 1,
-      code: "Coupon250",
-      type: "PErcentage",
-      cdate:"23 Sep,2021",
-    edate:"23 Sep,2021",
-  discount:"12",
-  order: "120",
-    }, {
-      id: 1,
-      code: "Coupon250",
-      type: "PErcentage",
-      cdate:"23 Sep,2021",
-    edate:"23 Sep,2021",
-  discount:"12",
-  order: "120",
-    }, {
-      id: 1,
-      code: "Coupon250",
-      type: "PErcentage",
-      cdate:"23 Sep,2021",
-    edate:"23 Sep,2021",
-  discount:"12",
-  order: "120",
-    }, {
-      id: 1,
-      code: "Coupon250",
-      type: "PErcentage",
-      cdate:"23 Sep,2021",
-    edate:"23 Sep,2021",
-  discount:"12",
-  order: "120",
-    }, {
-      id: 1,
-      code: "Coupon250",
-      type: "PErcentage",
-      cdate:"23 Sep,2021",
-    edate:"23 Sep,2021",
-  discount:"12",
-  order: "120",
-    },
-  ];
+  // const data = [
+  //   {
+  //     id: 1,
+  //     code: "Coupon250",
+  //     type: "PErcentage",
+  //     cdate:"23 Sep,2021",
+  //   edate:"23 Sep,2021",
+  // discount:"12",
+  // order: "120",
+  //   },
+  //   {
+  //     id: 1,
+  //     code: "Coupon250",
+  //     type: "PErcentage",
+  //     cdate:"23 Sep,2021",
+  //   edate:"23 Sep,2021",
+  // discount:"12",
+  // order: "120",
+  //   }, {
+  //     id: 1,
+  //     code: "Coupon250",
+  //     type: "PErcentage",
+  //     cdate:"23 Sep,2021",
+  //   edate:"23 Sep,2021",
+  // discount:"12",
+  // order: "120",
+  //   }, {
+  //     id: 1,
+  //     code: "Coupon250",
+  //     type: "PErcentage",
+  //     cdate:"23 Sep,2021",
+  //   edate:"23 Sep,2021",
+  // discount:"12",
+  // order: "120",
+  //   }, {
+  //     id: 1,
+  //     code: "Coupon250",
+  //     type: "PErcentage",
+  //     cdate:"23 Sep,2021",
+  //   edate:"23 Sep,2021",
+  // discount:"12",
+  // order: "120",
+  //   }, {
+  //     id: 1,
+  //     code: "Coupon250",
+  //     type: "PErcentage",
+  //     cdate:"23 Sep,2021",
+  //   edate:"23 Sep,2021",
+  // discount:"12",
+  // order: "120",
+  //   }, {
+  //     id: 1,
+  //     code: "Coupon250",
+  //     type: "PErcentage",
+  //     cdate:"23 Sep,2021",
+  //   edate:"23 Sep,2021",
+  // discount:"12",
+  // order: "120",
+  //   }, {
+  //     id: 1,
+  //     code: "Coupon250",
+  //     type: "PErcentage",
+  //     cdate:"23 Sep,2021",
+  //   edate:"23 Sep,2021",
+  // discount:"12",
+  // order: "120",
+  //   },
+  // ];
+
+
+  
   const [filterchange,setFilterchange] = useState('')
+
+  
+  const [getCoupon, setGetCoupon]= useState([])
+
+  const [fromDate, setFromDate]=useState(moment().format("YYYY-MM-DD"));
+  const [toDate,setToDate]=useState(moment().format("YYYY-MM-DD"))
+  const [apicall,setapicall]=useState(false)
+  const [tabledate, setTabledata]=useState([])
+  const [searchCoupon, setSearchCoupon]=useState("")
+
+
+
+
   const TimeChange = (e)=>{
     setFilterchange(e.target.value)
-          }
+
+    let value = e.target.value;
+    console.log("---------------------------------------------"+value);
+    if(value==1){
+      setFromDate(moment().format("YYYY-MM-DD"))
+      console.log("From date"+e.target.value)
+      console.log("today")
+      setToDate(moment().format("YYYY-MM-DD"))
+    }
+
+    if(value==2){
+      setFromDate(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'));
+      console.log("From date"+e.target.value);
+     
+      setToDate( moment().format("YYYY-MM-DD"));
+      console.log("yesterday--"+moment().subtract(1, 'day').startOf('day').format('YYYY-MM-DD'));
+
+    }
+   if(value==3){
+      setFromDate( moment().subtract(1, 'weeks').startOf('weeks').format('YYYY-MM-DD')  );
+    
+      console.log("From date"+e.target.value)
+      
+      setToDate( moment().format("YYYY-MM-DD")  );
+      // console.log("last week"+moment().subtract(1, 'week').startOf('week').format('YYYY-MM-DD'))
+   
+   }
+
+   if(value==4){
+   
+
+    setFromDate(moment().subtract(1, 'months').startOf('months').format('YYYY-MM-DD'));
+    console.log("From last month"+e.target.value)
+    setToDate(  moment().format("YYYY-MM-DD")    );
+    // setToDate("2022-12-14");
+
+    
+ }
+ if(value==5){
+  setFromDate(moment().subtract(6, 'month').startOf('month').format('YYYY-MM-DD') );
+  console.log("From last 6 month"+e.target.value)
+  setToDate( moment().format("YYYY-MM-DD") );
+}
+  }
+
+
+
+          const fetchData=()=>{
+            console.log( "from_date---"+fromDate)
+            console.log( "to_date----"+toDate)
+              axios.post(`${process.env.REACT_APP_BASEURL}/coupons_report`
+            ,
+             {
+               "from_date":fromDate,
+                  "to_date":toDate,
+                  "coupons_search":searchCoupon
+            }
+            ).then((response) => {
+                console.log('Coupon orders'+JSON.stringify(response.data[0]))
+                console.log('All  Coupon '+JSON.stringify(response.data[1]))
+                  setGetCoupon(response.data[0])
+                  setTabledata(response.data[1])
+             
+            }).catch(function (error) {
+              console.log(error);
+            });
+           } 
+    
+    
+           
+    
+    
+           
+    
+    
+          useEffect(() => {
+        
+        
+            fetchData();
+        
+           
+          }, [ apicall]);
+            
+
+
+
+          const submitHandler=()=>{
+       
+            setapicall(true)
+             fetchData()
+           }
+     
+
+          //  console.log("get Coupon+++++"+JSON.stringify(getCoupon[0].total_order))
+          //  console.log("get Coupon+++++"+JSON.stringify(getCoupon[0].amount))
+           console.log("get Table====="+ JSON.stringify(tabledate))
+
+
     return (
         <div>
             <h2>Coupon Report</h2>
@@ -179,33 +295,40 @@ const CouponReport = () => {
               placeholder="Search by category"
               onChange={TimeChange}
             >
-              <option>Search by category</option>
-              <option value="1">1 day</option>
-              <option value="2">1 week</option>
-              <option value="3">current month</option>
-              <option value="4">last month</option>
-              <option value="5">last 6  month</option>
-              <option value="6">custom month</option>
-              <option value="7">custom date</option>
+              <option >Search by category</option>
+              <option name="today" value={1}>Today</option>
+              <option name="yesterday" value={2}>yesterday</option>
+              <option name="last_week" value={3}>Last week</option>
+              <option name="last_month" value={4}>last month</option>
+              <option name="last_6_month" value={5}>last 6  month</option>
+              {/* <option name="custom_month" value="6">custom month</option> */}
+              <option name="custom_date" value="7">custom date</option>
 
             </Form.Select>
-          </div>
+            </div>
+           
           {filterchange==='7'?
+         
           <>
+             
       <div className="col-md-3 col-sm-6 aos_input">
-        <Input type={"date"} plchldr={"Search by date"} />
+        <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setFromDate(e.target.value)}} className={'adminsideinput'}/>
         </div>
         
         <div className="col-md-3 col-sm-6 aos_input">
-        <Input type={"date"} plchldr={"Search by date"} />
+        <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setToDate(e.target.value)}} className={'adminsideinput'}/>
         </div>
         </>
         :filterchange==='6'? <div className="col-md-3 col-sm-6 aos_input">
         <Input type={"month"} plchldr={"Search by month"} />
+       
         </div> : null}
+        
+        
         <div className="col-md-auto col-sm-6 aos_input">
-        <MainButton btntext={"Search"} btnclass={'button main_button'} />
+        <MainButton btntext={"Search"} btnclass={'button main_button'} onClick={submitHandler} />
         </div>
+       
         <div className="col-md-auto col-sm-6 aos_input">
         <DropdownButton id="dropdown-variant-success" title="Download" variant="button main_button">
       <Dropdown.Item href="#/action-1">Excel</Dropdown.Item>
@@ -231,7 +354,8 @@ const CouponReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                    <h3>2,356</h3>
+                  <h3>{getCoupon[0].total_order}</h3>
+                  {/* { (getCoupon[0].total_order)==null? <h3>No Record</h3>:  <h3>{getCoupon[0].total_order}</h3> }   */}
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
                      <p className="mb-0 h5">0%</p>
@@ -258,7 +382,8 @@ const CouponReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                    <h3>2,356</h3>
+                    <h3>{getCoupon[0].amount}</h3>
+                  {/* { (getCoupon[0].amount)==null? <h3>No Record</h3>:  <h3>{getCoupon[0].amount}</h3> }  */}
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
                      <p className="mb-0 h5">0%</p>
@@ -290,7 +415,7 @@ const CouponReport = () => {
    
       <DataTable
         columns={columns}
-        data={data}
+        data={tabledate}
         pagination
         highlightOnHover
         pointerOnHover

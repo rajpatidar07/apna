@@ -16,7 +16,13 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+
+
+
 const RevenueReport = () => {
+
+  
+ 
   const [filterchange,setFilterchange] = useState('')
 
   const [getRevenue, setGetRevenue]= useState([])
@@ -24,6 +30,14 @@ const RevenueReport = () => {
   const [fromDate, setFromDate]=useState(moment().format("YYYY-MM-DD"));
   const [toDate,setToDate]=useState(moment().format("YYYY-MM-DD"))
   const [apicall,setapicall]=useState(false)
+  const [tabledate, setTabledata]=useState([])
+
+  let GrossAmmount=[];
+  var totalSales=[];
+  var totalGSt=[];
+  var TotalShipping=[];
+  var NetSales=[];
+  var Discount=[]
 
   // const [fromDate, setFrom]
 
@@ -41,42 +55,39 @@ const RevenueReport = () => {
         series: [
           {
             name:"Gross Revenue",
-            data: [1, 2, 1, 4, 3, 6,9,4,1,8,3,5]
+            data:GrossAmmount
           },
+     
           {
-            name:"Refund",
-            data: [1, 3, 1, 3, 2, 5,1,4,1,8,3,5]
-          },
-          {
-            name:"Coupon",
-            data: [2, 1, 6, 7, 4, 6,2,4,1,8,3,5]
+            name:"Discount",
+            data:Discount
           },
           {
             name:"Taxes",
-            data: [1, 9, 1, 8, 1, 5,7,4,1,8,3,5]
+            data: totalGSt
           },
           {
             name:"Net Revenue",
-            data: [0, 1, 2, 3, 3, 4,5,6,7,8,9,10]
+            data:NetSales
           },
           {
             name:"shipping",
-            data: [1, 0, 5, 4, 3, 4,8,4,1,8,3,5]
+            data:TotalShipping
           }
         ],
         xAxis: {
-            categories: ['1', '3', '5', '7', '9', '11', '13', '15',
-                '17', '19', '21', '23']
+            categories:GrossAmmount
         },
-        yAxis: {
-          categories: ['0', '200', '400', '600', '800', '1000']
+        yAxis: { 
+          
+          categories:totalSales
       },
       };
     const columns = [
         {
           name: "Date",
           selector: (row) => (
-              row.sku
+              row.uniquedates
           ),
           sortable: true,
           width: "170px",
@@ -85,19 +96,19 @@ const RevenueReport = () => {
         
         {
           name: "Gross Revenue",
-          selector: (row) => row.pname,
+          selector: (row) => row.gross_amount,
           sortable: true,
-          width: "170px",
+          width: "150px",
         },
         {
-          name: "Refunds",
-          selector: (row) => row.category,
+          name: "Total GST",
+          selector: (row) => row.total_gst,
           sortable: true,
-          width: "170px",
+          width: "150px",
         },
         {
-          name: "Coupons",
-          selector: (row) => row.price,
+          name: "Discount",
+          selector: (row) => row.discount,
           sortable: true,
           width: "150px",
           center: true,
@@ -109,7 +120,7 @@ const RevenueReport = () => {
       
         {
           name: "Taxes",
-          selector: (row) => row.mdate,
+          selector: (row) => row.return_value,
           sortable: true,
           width: "150px",
           center: true,
@@ -120,7 +131,7 @@ const RevenueReport = () => {
         },
         {
           name: "Shipping",
-          selector: (row) => row.edate,
+          selector: (row) => row.total_shipping_charges,
           sortable: true,
           width: "160px",
           center: true,
@@ -131,7 +142,19 @@ const RevenueReport = () => {
         },
         {
             name: "Net Revenue",
-            selector: (row) => row.edate,
+            selector: (row) => row.net_sales,
+            sortable: true,
+            width: "150px",
+            center: true,
+            style: {
+              paddingRight: "32px",
+              paddingLeft: "0px",
+            },
+          },
+
+          {
+            name: "Total Revenue",
+            selector: (row) => row.total_sales,
             sortable: true,
             width: "150px",
             center: true,
@@ -144,95 +167,95 @@ const RevenueReport = () => {
        
       ];
       
-      const data = [
-        {
-          id: 1,
-          sku: "23 Sep,2022",
-          pname: "$1,485.73",
-          category:"$0.00",
-          price: "$14",
-          mdate: "$1,009.00",
-          edate: "$476.73",
-        },
-        {
-          id: 2,
-          sku: "23 Sep,2022",
-          pname:"$361.00",
-          category: "$0.00",
-          price: "$14",
-          mdate: "$1,009.00",
-          edate: "$476.73",
-        },
-        {
-            id: 1,
-            sku: "23 Sep,2022",
-            pname: "$1,485.73",
-            category:"$0.00",
-            price: "$14",
-            mdate: "$1,009.00",
-            edate: "$476.73",
-          },
-          {
-            id: 2,
-            sku: "23 Sep,2022",
-            pname:"$361.00",
-            category: "$0.00",
-            price: "$14",
-            mdate: "$1,009.00",
-            edate: "$476.73",
-          },{
-            id: 1,
-            sku: "23 Sep,2022",
-            pname: "$1,485.73",
-            category:"$0.00",
-            price: "$14",
-            mdate: "$1,009.00",
-            edate: "$476.73",
-          },
-          {
-            id: 2,
-            sku: "23 Sep,2022",
-            pname:"$361.00",
-            category: "$0.00",
-            price: "$14",
-            mdate: "$1,009.00",
-            edate: "$476.73",
-          },{
-            id: 1,
-            sku: "23 Sep,2022",
-            pname: "$1,485.73",
-            category:"$0.00",
-            price: "$14",
-            mdate: "$1,009.00",
-            edate: "$476.73",
-          },
-          {
-            id: 2,
-            sku: "23 Sep,2022",
-            pname:"$361.00",
-            category: "$0.00",
-            price: "$14",
-            mdate: "$1,009.00",
-            edate: "$476.73",
-          },{
-            id: 1,
-            sku: "23 Sep,2022",
-            pname: "$1,485.73",
-            category:"$0.00",
-            price: "$14",
-            mdate: "$1,009.00",
-            edate: "$476.73",
-          },
-          {
-            id: 2,
-            sku: "23 Sep,2022",
-            pname:"$361.00",
-            category: "$0.00",
-            price: "$14",
-            mdate: "$1,009.00",
-            edate: "$476.73",
-          },
-      ];
+      // const data = [
+      //   {
+      //     id: 1,
+      //     sku: "23 Sep,2022",
+      //     pname: "$1,485.73",
+      //     category:"$0.00",
+      //     price: "$14",
+      //     mdate: "$1,009.00",
+      //     edate: "$476.73",
+      //   },
+      //   {
+      //     id: 2,
+      //     sku: "23 Sep,2022",
+      //     pname:"$361.00",
+      //     category: "$0.00",
+      //     price: "$14",
+      //     mdate: "$1,009.00",
+      //     edate: "$476.73",
+      //   },
+      //   {
+      //       id: 1,
+      //       sku: "23 Sep,2022",
+      //       pname: "$1,485.73",
+      //       category:"$0.00",
+      //       price: "$14",
+      //       mdate: "$1,009.00",
+      //       edate: "$476.73",
+      //     },
+      //     {
+      //       id: 2,
+      //       sku: "23 Sep,2022",
+      //       pname:"$361.00",
+      //       category: "$0.00",
+      //       price: "$14",
+      //       mdate: "$1,009.00",
+      //       edate: "$476.73",
+      //     },{
+      //       id: 1,
+      //       sku: "23 Sep,2022",
+      //       pname: "$1,485.73",
+      //       category:"$0.00",
+      //       price: "$14",
+      //       mdate: "$1,009.00",
+      //       edate: "$476.73",
+      //     },
+      //     {
+      //       id: 2,
+      //       sku: "23 Sep,2022",
+      //       pname:"$361.00",
+      //       category: "$0.00",
+      //       price: "$14",
+      //       mdate: "$1,009.00",
+      //       edate: "$476.73",
+      //     },{
+      //       id: 1,
+      //       sku: "23 Sep,2022",
+      //       pname: "$1,485.73",
+      //       category:"$0.00",
+      //       price: "$14",
+      //       mdate: "$1,009.00",
+      //       edate: "$476.73",
+      //     },
+      //     {
+      //       id: 2,
+      //       sku: "23 Sep,2022",
+      //       pname:"$361.00",
+      //       category: "$0.00",
+      //       price: "$14",
+      //       mdate: "$1,009.00",
+      //       edate: "$476.73",
+      //     },{
+      //       id: 1,
+      //       sku: "23 Sep,2022",
+      //       pname: "$1,485.73",
+      //       category:"$0.00",
+      //       price: "$14",
+      //       mdate: "$1,009.00",
+      //       edate: "$476.73",
+      //     },
+      //     {
+      //       id: 2,
+      //       sku: "23 Sep,2022",
+      //       pname:"$361.00",
+      //       category: "$0.00",
+      //       price: "$14",
+      //       mdate: "$1,009.00",
+      //       edate: "$476.73",
+      //     },
+      // ];
 
 
       const TimeChange = (e)=>{
@@ -286,7 +309,7 @@ const RevenueReport = () => {
       const fetchData=()=>{
         console.log( "from_date---"+fromDate)
         console.log( "to_date----"+toDate)
-      const data=  axios.post(`${process.env.REACT_APP_BASEURL}/revenue`
+          axios.post(`${process.env.REACT_APP_BASEURL}/revenue`
         ,
          {
            "from_date":fromDate,
@@ -295,19 +318,25 @@ const RevenueReport = () => {
         ).then((response) => {
             console.log('revenue data'+JSON.stringify(response.data))
               setGetRevenue(response.data[0])
-              console.log("get revenue"+getRevenue)
+              setTabledata(response.data[0].ravenue_date_data)
+         
         }).catch(function (error) {
           console.log(error);
         });
        } 
 
 
+       
+
+
+       
+
 
       useEffect(() => {
     
     
         fetchData();
-      
+    
        
       }, [ apicall]);
         
@@ -323,9 +352,36 @@ const RevenueReport = () => {
        setapicall(true)
         fetchData()
       }
+
+
+
+      console.log("get revenue------"+JSON.stringify(getRevenue))
+      console.log("data====="+ JSON.stringify(tabledate))
       
-    
+
+
       
+
+
+  
+
+     tabledate.map((item)=>{
+
+      GrossAmmount.push(item.gross_amount)
+      totalSales.push(item.total_sales)
+      totalGSt.push(item.total_gst)
+       TotalShipping.push(item.total_shipping_charges)
+       NetSales.push(item.net_sales)
+       Discount.push(item.discount)
+
+     })
+ 
+     console.log("gross ammount ------"+GrossAmmount)
+     console.log("total sales ------"+ totalSales)
+     console.log("total GST ------"+ totalGSt)
+     console.log("total Shipping ------"+ TotalShipping)
+     console.log("net Sales ------"+ NetSales)
+     console.log("Discount ------"+ Discount)
        
 
     return (
@@ -599,7 +655,7 @@ const RevenueReport = () => {
    
       <DataTable
         columns={columns}
-        data={data}
+        data={tabledate}
         pagination
         highlightOnHover
         pointerOnHover
