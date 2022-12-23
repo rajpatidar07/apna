@@ -141,6 +141,8 @@ const ProductReport = () => {
   const [toDate,setToDate]=useState(moment().format("YYYY-MM-DD"))
   const [apicall,setapicall]=useState(false)
   const [ProductSearch,setProductSearch]=useState("")
+  const [ProductError,setProductError]=useState("")
+
 
   const TimeChange = (e)=>{
 
@@ -206,15 +208,32 @@ const ProductReport = () => {
       "products_search":ProductSearch
   }
     ).then((response) => {
-         console.log('product data-all---'+JSON.stringify(response.data))
-         console.log('product data [0] [0]--'+JSON.stringify(response.data[0][0]))
-        console.log('revenue data'+JSON.stringify(response.data[1]))
-      //  console.log('product data [1] [0]---'+JSON.stringify(response.data[1][0]))
-      //  console.log('product data [1] [1]---'+JSON.stringify(response.data[1][1]))
-      //  console.log('product data [1] [2]---'+JSON.stringify(response.data[1][2]))
-         setGetProduct(response.data[0][0])
-         setGetTableProduct(response.data[1])
-          // console.log("get Product"+getProduct)
+        //  console.log('product data-all---'+JSON.stringify(response.data))
+        //  console.log('product data [0] [0]--'+JSON.stringify(response.data[0][0]))
+        console.log('Product data'+JSON.stringify(response.data[1]))
+        console.log('Product Error'+JSON.stringify(response))
+
+
+
+        if(response.data.message=="no_data"){
+          setProductError(response.data.message)
+          setGetProduct([0])
+          setGetTableProduct([0])
+        
+   
+        }
+        else{
+
+
+          setProductError('')
+          setGetProduct(response.data[0][0])
+          setGetTableProduct(response.data[1])
+         
+       
+        }
+     
+         
+      
     }).catch(function (error) {
       console.log(error);
     });
@@ -286,16 +305,17 @@ const ProductReport = () => {
       series: [
         {
           name: "Item Sold",
-          data: ItemSold,
-        },
-        {
-          name: "Net Sales",
-          data: NetSales,
+          data: [ItemSold],
         },
         {
           name: "Orders",
-          data: Order,
+          data: [Order],
         },
+        {
+          name: "Net Sales",
+          data: [NetSales],
+        }
+       
       ],
       xAxis: {
         categories: [
@@ -465,7 +485,7 @@ const ProductReport = () => {
                     <div className="d-flex align-items-baseline justify-content-between">
                       <h3>
                         
-                        { (getProduct.product_count)==null? <h3>No Record</h3>:  <h3>{getProduct.product_count}</h3> }  
+                        { (ProductError)=="no_data"||(getProduct.product_count)==null||(getProduct.product_count)==undefined||(getProduct.product_count)==""? <h3>No Record</h3>:  <h3>{getProduct.product_count}</h3> }  
                         </h3>
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
@@ -491,7 +511,7 @@ const ProductReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                    { (getProduct.net_sales)==null? <h3>No Record</h3>:  <h3>{getProduct.net_sales}</h3> }  
+                    { (ProductError)=="no_data"||(getProduct.net_sales)==null||(getProduct.net_sales)==undefined||(getProduct.net_sales)==""? <h3>No Record</h3>:  <h3>{getProduct.net_sales}</h3> }  
                      
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
@@ -518,7 +538,7 @@ const ProductReport = () => {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
                      
-                      { (getProduct.order_count)==null? <h3>No Record</h3>:  <h3>{getProduct.order_count}</h3> }  
+                      { (ProductError)=="no_data"||(getProduct.order_count)==null||(getProduct.order_count)==undefined||(getProduct.order_count)==""? <h3>No Record</h3>:  <h3>{getProduct.order_count}</h3> }  
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
                         <p className="mb-0 h5">0%</p>
