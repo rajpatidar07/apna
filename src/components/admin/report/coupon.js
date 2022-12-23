@@ -178,6 +178,7 @@ const CouponReport = () => {
   const [apicall,setapicall]=useState(false)
   const [tabledate, setTabledata]=useState([])
   const [searchCoupon, setSearchCoupon]=useState("")
+  const [couponError,setCouponError]=useState("")
 
 
 
@@ -244,8 +245,21 @@ const CouponReport = () => {
             ).then((response) => {
                 console.log('Coupon orders'+JSON.stringify(response.data[0]))
                 console.log('All  Coupon '+JSON.stringify(response.data[1]))
-                  setGetCoupon(response.data[0])
+
+                console.log('Error-----'+JSON.stringify(response.data))
+               
+
+                  if(response.data.message=="no_data"){
+                    setCouponError(response.data.message)
+                     setGetCoupon([0])
+                  setTabledata([0])
+
+                  }
+                  else{
+                    setCouponError('')
+                    setGetCoupon(response.data[0][0])
                   setTabledata(response.data[1])
+                  }
              
             }).catch(function (error) {
               console.log(error);
@@ -268,7 +282,23 @@ const CouponReport = () => {
           }, [ apicall]);
             
 
-
+          const ProductChange =(e)=>{
+            setSearchCoupon(e.target.value)
+             
+           }
+    
+           const OnReset =()=>{
+            setSearchCoupon("")
+           fetchData();
+            //  setapicall(true)
+            
+             
+              
+         
+            
+           
+           
+        }
 
           const submitHandler=()=>{
        
@@ -279,7 +309,12 @@ const CouponReport = () => {
 
           //  console.log("get Coupon+++++"+JSON.stringify(getCoupon[0].total_order))
           //  console.log("get Coupon+++++"+JSON.stringify(getCoupon[0].amount))
-           console.log("get Table====="+ JSON.stringify(tabledate))
+          console.log("get Table====="+ JSON.stringify(tabledate))
+          console.log("get Table++++"+ tabledate)
+          console.log("couponError.message=====  "+ couponError);
+          console.log("getCoupon====="+ getCoupon);
+          console.log("getCoupon====="+JSON.stringify( getCoupon));
+
 
 
     return (
@@ -351,11 +386,13 @@ const CouponReport = () => {
                 <h5 className="text-success">Discounted Orders </h5>
               </div>
               <div className="row mt-3 px-2">
+
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                  <h3>{getCoupon[0].total_order}</h3>
-                  {/* { (getCoupon[0].total_order)==null? <h3>No Record</h3>:  <h3>{getCoupon[0].total_order}</h3> }   */}
+                  
+                  {(couponError)=="no_data"||(getCoupon.total_order)==null || (getCoupon.total_order)==undefined?<h3>No Record</h3>: <h3>{getCoupon.total_order}</h3>}
+
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
                      <p className="mb-0 h5">0%</p>
@@ -382,8 +419,10 @@ const CouponReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                    <h3>{getCoupon[0].amount}</h3>
-                  {/* { (getCoupon[0].amount)==null? <h3>No Record</h3>:  <h3>{getCoupon[0].amount}</h3> }  */}
+                
+                  {console.log("get coupon Ammount"+getCoupon.amount)}
+                        {(couponError)=="no_data"||(getCoupon.amount)==null || (getCoupon.amount)==undefined || (getCoupon.amount)==""?<h3>No Record</h3>: <h3>{getCoupon.amount}</h3>}
+                
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
                      <p className="mb-0 h5">0%</p>
@@ -410,7 +449,24 @@ const CouponReport = () => {
 
 {/*  */}
 
+  {/* datatable */}
+  <div className="row justify-content-end py-2">
+<div className="col-md-3 col-sm-6">
+        <Form.Group className="mb-3">        
+            <Form.Control type="text" placeholder="Search by name"   onChange={ProductChange}  value={searchCoupon}/>
+            </Form.Group>
+            </div>
 
+            <div className="col-md-auto col-sm-6">
+        <MainButton btntext={"Search"} btnclass={'button main_button'} onClick={submitHandler} />
+
+        
+       
+        </div>
+        <div className="col-md-auto col-sm-6 aos_input">
+        <MainButton btntext={"Reset"} btnclass={'button main_button'}  onClick={OnReset}/>
+        </div>
+        </div>
       {/* datatable */}
    
       <DataTable

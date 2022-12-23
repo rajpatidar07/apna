@@ -201,14 +201,16 @@ const CustomerReport = () => {
       const submitHandler=()=>{
        
         setapicall(true)
-         fetchData()
+          fetchData()
        }
 
        const OnReset =()=>{
     
         setUser("")
-        // setapicall(true)
-          fetchData()
+        //  setapicall(true)
+         fetchData()
+         
+          
      
         
        
@@ -240,7 +242,7 @@ const CustomerReport = () => {
             </Form.Select> */}
             <Form.Group className="mb-3" >
         
-            <Form.Control type="text" placeholder="Search by name" onChange={TimeChange} />
+            <Form.Control type="text" placeholder="Search by name" onChange={TimeChange} value={user}/>
             </Form.Group>
           </div>
           {filterchange==='7'?

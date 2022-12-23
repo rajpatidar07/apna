@@ -16,125 +16,10 @@ import axios from "axios";
 import moment from "moment/moment";
 
 const ProductReport = () => {
-  
-  const options = {
-    chart: {
-      type: "line",
-      borderRadius: "5",
-      borderColor: "#335cad",
-    },
-    title: {
-      text: " Figures",
-      style: { color: "green", fontSize: "22px" },
-      align: "left",
-    },
-    series: [
-      {
-        name: "Item Sold",
-        data: [1, 2, 1, 4, 3, 6, 9, 4, 1, 8, 3, 5],
-      },
-      {
-        name: "Net Sales",
-        data: [1, 3, 1, 3, 2, 5, 1, 4, 1, 8, 3, 5],
-      },
-      {
-        name: "Orders",
-        data: [2, 1, 6, 7, 4, 6, 2, 4, 1, 8, 3, 5],
-      },
-    ],
-    xAxis: {
-      categories: [
-        "1",
-        "3",
-        "5",
-        "7",
-        "9",
-        "11",
-        "13",
-        "15",
-        "17",
-        "19",
-        "21",
-        "23",
-      ],
-    },
-    yAxis: {
-      categories: ["0", "200", "400", "600", "800", "1000"],
-    },
-  };
-  const columns = [
-    {
-      name: "Sku",
-      selector: (row) => row.product_id,
-      sortable: true,
-      width: "150px",
-    },
-    {
-      name: "Product Name",
-      selector: (row) => row.product_name,
-      sortable: true,
-      width: "160px",
-    },
+ 
+  var NetSales=[];
+  var Order=[];
 
-    {
-      name: "Item Sold",
-      selector: (row) => row.product_name,
-      sortable: true,
-      width: "140px",
-      center: true,
-    },
-    {
-      name: "Category",
-      selector: (row) => row.category_name,
-      sortable: true,
-      width: "190px",
-    },
-    {
-      name: "Net Revenue",
-      selector: (row) => row.net_sales,
-      sortable: true,
-      width: "150px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
-    },
-
-    {
-      name: "Orders",
-      selector: (row) => row.order_count,
-      sortable: true,
-      width: "150px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
-    },
-    {
-      name: "Stock",
-      selector: (row) => row.product_count,
-      sortable: true,
-      width: "140px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
-    },
-    {
-      name: "Status",
-      selector: (row) => row.product_count,
-      sortable: true,
-      width: "100px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
-    },
-  ];
 
   // const data = [
   //   {
@@ -255,6 +140,7 @@ const ProductReport = () => {
   const [fromDate, setFromDate]=useState(moment().format("YYYY-MM-DD"));
   const [toDate,setToDate]=useState(moment().format("YYYY-MM-DD"))
   const [apicall,setapicall]=useState(false)
+  const [ProductSearch,setProductSearch]=useState("")
 
   const TimeChange = (e)=>{
 
@@ -302,6 +188,8 @@ const ProductReport = () => {
   console.log("From last 6 month"+e.target.value)
   setToDate( moment().format("YYYY-MM-DD") );
 }
+
+
   }
 
    
@@ -315,7 +203,7 @@ const ProductReport = () => {
     {
       "from_date":fromDate,
       "to_date":toDate,
-      "products_search":""
+      "products_search":ProductSearch
   }
     ).then((response) => {
          console.log('product data-all---'+JSON.stringify(response.data))
@@ -347,6 +235,166 @@ const ProductReport = () => {
          fetchData()
        }
             
+
+       const ProductChange =(e)=>{
+        setProductSearch(e.target.value)
+         
+       }
+
+       const OnReset =()=>{
+        
+       setProductSearch("")
+       fetchData();
+        //  setapicall(true)
+        
+         
+          
+     
+        
+       
+       
+    }
+
+    // getProduct.forEach((item,key)=>{
+      
+    //  ItemSold.push(item.product_count)
+    // //  NetSales.push(item.net_sales)
+    // //  Order.push(item.order_count)
+    // })
+    var ItemSold=getProduct.product_count;
+    var NetSales=getProduct.net_sales;
+    var Order=getProduct.order_count;
+    console.log("Item Sold ------"+ItemSold)
+    console.log("Net sales ------"+NetSales)
+    console.log("Order ------"+Order)
+    // // console.log("Net Sales ------"+ NetSales)
+    // // console.log("Order ------"+ Order)
+
+
+    const options = {
+      chart: {
+        type: "bar",
+        borderRadius: "5",
+        borderColor: "#335cad",
+      },
+      title: {
+        text: " Figures",
+        style: { color: "green", fontSize: "22px" },
+        align: "left",
+      },
+      
+      series: [
+        {
+          name: "Item Sold",
+          data: ItemSold,
+        },
+        {
+          name: "Net Sales",
+          data: NetSales,
+        },
+        {
+          name: "Orders",
+          data: Order,
+        },
+      ],
+      xAxis: {
+        categories: [
+          "1",
+          "3",
+          "5",
+          "7",
+          "9",
+          "11",
+          "13",
+          "15",
+          "17",
+          "19",
+          "21",
+          "23",
+        ],
+      },
+      yAxis: {
+        categories: ["0", "200", "400", "600", "800", "1000"],
+      },
+    };
+    const columns = [
+      {
+        name: "Sku",
+        selector: (row) => row.product_id,
+        sortable: true,
+        width: "150px",
+      },
+      {
+        name: "Product Name",
+        selector: (row) => row.product_name,
+        sortable: true,
+        width: "160px",
+      },
+  
+      {
+        name: "Item Sold",
+        selector: (row) => row.product_name,
+        sortable: true,
+        width: "140px",
+        center: true,
+      },
+      {
+        name: "Category",
+        selector: (row) => row.category_name,
+        sortable: true,
+        width: "190px",
+      },
+      {
+        name: "Net Revenue",
+        selector: (row) => row.net_sales,
+        sortable: true,
+        width: "150px",
+        center: true,
+        style: {
+          paddingRight: "32px",
+          paddingLeft: "0px",
+        },
+      },
+  
+      {
+        name: "Orders",
+        selector: (row) => row.order_count,
+        sortable: true,
+        width: "150px",
+        center: true,
+        style: {
+          paddingRight: "32px",
+          paddingLeft: "0px",
+        },
+      },
+      {
+        name: "Stock",
+        selector: (row) => row.product_count,
+        sortable: true,
+        width: "140px",
+        center: true,
+        style: {
+          paddingRight: "32px",
+          paddingLeft: "0px",
+        },
+      },
+      {
+        name: "Status",
+        selector: (row) => row.product_count,
+        sortable: true,
+        width: "100px",
+        center: true,
+        style: {
+          paddingRight: "32px",
+          paddingLeft: "0px",
+        },
+      },
+    ];
+
+
+
+
+
 
   return (
     <div>
@@ -497,6 +545,23 @@ const ProductReport = () => {
         {/*  */}
 
         {/* datatable */}
+        <div className="row justify-content-end py-2">
+<div className="col-md-3 col-sm-6">
+        <Form.Group className="mb-3">        
+            <Form.Control type="text" placeholder="Search by name"   onChange={ProductChange}  value={ProductSearch}/>
+            </Form.Group>
+            </div>
+
+            <div className="col-md-auto col-sm-6">
+        <MainButton btntext={"Search"} btnclass={'button main_button'} onClick={submitHandler} />
+
+        
+       
+        </div>
+        <div className="col-md-auto col-sm-6 aos_input">
+        <MainButton btntext={"Reset"} btnclass={'button main_button'}  onClick={OnReset}/>
+        </div>
+        </div>
 
         <DataTable
           columns={columns}
