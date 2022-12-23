@@ -11,13 +11,17 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
+import moment from "moment/moment";
+
 
 const OrderReport = () => {
   const [filterchange, setFilterchange] = useState("");
+  const [ordersreport, setordersreport] = useState([]);
+  const [tableProduct, setGetTableProduct]= useState([])
+
   const TimeChange = (e) => {
     setFilterchange(e.target.value);
   };
-  const [ordersreport, setordersreport] = useState({})
 
 
   const options = {
@@ -72,7 +76,7 @@ const OrderReport = () => {
   const columns = [
     {
       name: "Date",
-      selector: (row) => row.sku,
+      selector: (row) => row.created_on,
       sortable: true,
       width: "170px",
       center: true,
@@ -80,19 +84,19 @@ const OrderReport = () => {
 
     {
       name: "Order",
-      selector: (row) => row.Order,
+      selector: (row) => row.id,
       sortable: true,
       width: "170px",
     },
     {
       name: "Status",
-      selector: (row) => row.Status,
+      selector: (row) => row.status,
       sortable: true,
       width: "170px",
     },
     {
       name: "Customer",
-      selector: (row) => row.Customer,
+      selector: (row) => row.user_id,
       sortable: true,
       width: "150px",
       center: true,
@@ -115,7 +119,7 @@ const OrderReport = () => {
     },
     {
       name: "Item Sold",
-      selector: (row) => row.isold,
+      selector: (row) => row.item_sold,
       sortable: true,
       width: "160px",
       center: true,
@@ -126,7 +130,7 @@ const OrderReport = () => {
     },
     {
       name: "Net Revenue",
-      selector: (row) => row.net,
+      selector: (row) => row.total_amount,
       sortable: true,
       width: "150px",
       center: true,
@@ -137,114 +141,122 @@ const OrderReport = () => {
     },
   ];
 
-  const data = [
-    {
-      id: 1,
-      sku: "23 Sep,2022",
-      Order: "$1,485.73",
-      Status: "$0.00",
-      Customer: "$14",
-      Product: "$1,009.00",
-      isold: "$476.73",
-      net: "$476.73",
-    },
-    {
-      id: 2,
-      sku: "23 Sep,2022",
-      Order: "$361.00",
-      Status: "$0.00",
-      Customer: "$14",
-      Product: "$1,009.00",
-      isold: "$476.73",
-      net: "$476.73",
-    },
-    {
-      id: 1,
-      sku: "23 Sep,2022",
-      Order: "$1,485.73",
-      Status: "$0.00",
-      Customer: "$14",
-      Product: "$1,009.00",
-      isold: "$476.73",
-      net: "$476.73",
-    },
-    {
-      id: 2,
-      sku: "23 Sep,2022",
-      Order: "$361.00",
-      Status: "$0.00",
-      Customer: "$14",
-      Product: "$1,009.00",
-      isold: "$476.73",
-      net: "$476.73",
-    },
-    {
-      id: 1,
-      sku: "23 Sep,2022",
-      Order: "$1,485.73",
-      Status: "$0.00",
-      Customer: "$14",
-      Product: "$1,009.00",
-      isold: "$476.73",
-      net: "$476.73",
-    },
-    {
-      id: 2,
-      sku: "23 Sep,2022",
-      Order: "$361.00",
-      Status: "$0.00",
-      Customer: "$14",
-      Product: "$1,009.00",
-      isold: "$476.73",
-      net: "$476.73",
-    },
-    {
-      id: 1,
-      sku: "23 Sep,2022",
-      Order: "$1,485.73",
-      Status: "$0.00",
-      Customer: "$14",
-      Product: "$1,009.00",
-      isold: "$476.73",
-      net: "$476.73",
-    },
-    {
-      id: 2,
-      sku: "23 Sep,2022",
-      Order: "$361.00",
-      Status: "$0.00",
-      Customer: "$14",
-      Product: "$1,009.00",
-      isold: "$476.73",
-      net: "$476.73",
-    },
-    {
-      id: 1,
-      sku: "23 Sep,2022",
-      Order: "$1,485.73",
-      Status: "$0.00",
-      Customer: "$14",
-      Product: "$1,009.00",
-      isold: "$476.73",
-      net: "$476.73",
-    },
-    {
-      id: 2,
-      sku: "23 Sep,2022",
-      Order: "$361.00",
-      Status: "$0.00",
-      Customer: "$14",
-      Product: "$1,009.00",
-      isold: "$476.73",
-      net: "$476.73",
-    },
-  ];
+  // const data = [
+  //   {
+  //     id: 1,
+  //     sku: "23 Sep,2022",
+  //     Order: "$1,485.73",
+  //     Status: "$0.00",
+  //     Customer: "$14",
+  //     Product: "$1,009.00",
+  //     isold: "$476.73",
+  //     net: "$476.73",
+  //   },
+  //   {
+  //     id: 2,
+  //     sku: "23 Sep,2022",
+  //     Order: "$361.00",
+  //     Status: "$0.00",
+  //     Customer: "$14",
+  //     Product: "$1,009.00",
+  //     isold: "$476.73",
+  //     net: "$476.73",
+  //   },
+  //   {
+  //     id: 1,
+  //     sku: "23 Sep,2022",
+  //     Order: "$1,485.73",
+  //     Status: "$0.00",
+  //     Customer: "$14",
+  //     Product: "$1,009.00",
+  //     isold: "$476.73",
+  //     net: "$476.73",
+  //   },
+  //   {
+  //     id: 2,
+  //     sku: "23 Sep,2022",
+  //     Order: "$361.00",
+  //     Status: "$0.00",
+  //     Customer: "$14",
+  //     Product: "$1,009.00",
+  //     isold: "$476.73",
+  //     net: "$476.73",
+  //   },
+  //   {
+  //     id: 1,
+  //     sku: "23 Sep,2022",
+  //     Order: "$1,485.73",
+  //     Status: "$0.00",
+  //     Customer: "$14",
+  //     Product: "$1,009.00",
+  //     isold: "$476.73",
+  //     net: "$476.73",
+  //   },
+  //   {
+  //     id: 2,
+  //     sku: "23 Sep,2022",
+  //     Order: "$361.00",
+  //     Status: "$0.00",
+  //     Customer: "$14",
+  //     Product: "$1,009.00",
+  //     isold: "$476.73",
+  //     net: "$476.73",
+  //   },
+  //   {
+  //     id: 1,
+  //     sku: "23 Sep,2022",
+  //     Order: "$1,485.73",
+  //     Status: "$0.00",
+  //     Customer: "$14",
+  //     Product: "$1,009.00",
+  //     isold: "$476.73",
+  //     net: "$476.73",
+  //   },
+  //   {
+  //     id: 2,
+  //     sku: "23 Sep,2022",
+  //     Order: "$361.00",
+  //     Status: "$0.00",
+  //     Customer: "$14",
+  //     Product: "$1,009.00",
+  //     isold: "$476.73",
+  //     net: "$476.73",
+  //   },
+  //   {
+  //     id: 1,
+  //     sku: "23 Sep,2022",
+  //     Order: "$1,485.73",
+  //     Status: "$0.00",
+  //     Customer: "$14",
+  //     Product: "$1,009.00",
+  //     isold: "$476.73",
+  //     net: "$476.73",
+  //   },
+  //   {
+  //     id: 2,
+  //     sku: "23 Sep,2022",
+  //     Order: "$361.00",
+  //     Status: "$0.00",
+  //     Customer: "$14",
+  //     Product: "$1,009.00",
+  //     isold: "$476.73",
+  //     net: "$476.73",
+  //   },
+  // ];
   useEffect(() => {
-    axios.post(`${process.env.REACT_APP_BASEURL}/orders_report`, {
-      "from_date":"2022-11-28","to_date":"2022-11-29"
-    }).then((response) => {
+
+    axios.post(`${process.env.REACT_APP_BASEURL}/orders_report`,
+    {
+      "from_date":"2022-11-28",
+      "to_date":"2022-11-29",
+      "order_search":""
+    }
+    ).then((response) => {
+         console.log("getdata------"+ JSON.stringify(response.data[0]))
+         console.log('revenue data'+JSON.stringify(response.data[1]))
        setordersreport(response.data[0])
-       console.log("getdata"+ JSON.stringify(response.data[0]))
+       setGetTableProduct(response.data[1])
+    
     }).catch(function (error) {
       console.log(error);
     });
@@ -427,7 +439,7 @@ const OrderReport = () => {
 
         <DataTable
           columns={columns}
-          data={data}
+          data={tableProduct}
           pagination
           highlightOnHover
           pointerOnHover
