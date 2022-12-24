@@ -183,7 +183,7 @@ const CustomerReport = () => {
         // console.log('coustomer data'+JSON.stringify(response.data[0]))
  
           setGetTableCoustomer(response.data)
-        
+          setapicall(false)
     }).catch(function (error) {
       console.log(error);
     });
@@ -201,14 +201,14 @@ const CustomerReport = () => {
       const submitHandler=()=>{
        
         setapicall(true)
-          fetchData()
+       
        }
 
        const OnReset =()=>{
     
         setUser("")
-        //  setapicall(true)
-         fetchData()
+         setapicall(true)
+        
          
           
      

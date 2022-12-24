@@ -257,6 +257,7 @@ const CouponReport = () => {
                   }
                   else{
                     setCouponError('')
+                    setapicall(false)
                     setGetCoupon(response.data[0][0])
                   setTabledata(response.data[1])
                   }
@@ -289,8 +290,8 @@ const CouponReport = () => {
     
            const OnReset =()=>{
             setSearchCoupon("")
-           fetchData();
-            //  setapicall(true)
+        
+             setapicall(true)
             
              
               
@@ -303,7 +304,7 @@ const CouponReport = () => {
           const submitHandler=()=>{
        
             setapicall(true)
-             fetchData()
+            
            }
      
 
