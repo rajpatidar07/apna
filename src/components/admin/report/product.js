@@ -191,6 +191,7 @@ const ProductReport = () => {
   setToDate( moment().format("YYYY-MM-DD") );
 }
 
+fetchData()
 
   }
 
@@ -205,7 +206,11 @@ const ProductReport = () => {
     {
       "from_date":fromDate,
       "to_date":toDate,
-      "products_search":ProductSearch
+      "products_search":ProductSearch,  
+        "vendors_id":[],
+      "categorys":[],
+      "user_locations":[],
+      "brand":[]
   }
     ).then((response) => {
         //  console.log('product data-all---'+JSON.stringify(response.data))
