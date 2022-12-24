@@ -421,7 +421,7 @@ const ProductReport = () => {
             </Form.Select>
           </div>
           {filterchange==='7'?
-          <>
+          <div>
       <div className="col-md-3 col-sm-6 aos_input">
         <input type={"date"} plchldr={"Search by date"} onChange={(e)=>{setFromDate(e.target.value)}} className={'adminsideinput'} />
         </div>
@@ -429,7 +429,7 @@ const ProductReport = () => {
         <div className="col-md-3 col-sm-6 aos_input">
         <input type={"date"} plchldr={"Search by date"}onChange={(e)=>{setToDate(e.target.value)}} className={'adminsideinput'}/> 
         </div>
-        </>
+        </div>
         :filterchange==='6'? <div className="col-md-3 col-sm-6 aos_input">
         <Input type={"month"} plchldr={"Search by month"} />
         </div> : null}
