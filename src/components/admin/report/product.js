@@ -20,6 +20,8 @@ const ProductReport = () => {
   var NetSales=[];
   var Order=[];
 
+  
+
 
   // const data = [
   //   {
@@ -141,6 +143,14 @@ const ProductReport = () => {
   const [toDate,setToDate]=useState(moment().format("YYYY-MM-DD"))
   const [apicall,setapicall]=useState(false)
   const [ProductSearch,setProductSearch]=useState("")
+  const [ProductError,setProductError]=useState("")
+
+  const [venderList,setVenderList]=useState([])
+  const[vendorId,setVendorId]=useState("")
+  const[category,setCategory]=useState([])
+  const[categoryId,setCategoryId]=useState("")
+
+
 
   const TimeChange = (e)=>{
 
@@ -189,6 +199,7 @@ const ProductReport = () => {
   setToDate( moment().format("YYYY-MM-DD") );
 }
 
+fetchData()
 
   }
 
@@ -203,28 +214,71 @@ const ProductReport = () => {
     {
       "from_date":fromDate,
       "to_date":toDate,
-      "products_search":ProductSearch
+      // "products_search":ProductSearch,  
+      "vendors_id":[vendorId],
+      "categorys":[categoryId],
+      "user_locations":[],
+      "brand":[]
   }
     ).then((response) => {
-         console.log('product data-all---'+JSON.stringify(response.data))
-         console.log('product data [0] [0]--'+JSON.stringify(response.data[0][0]))
-        console.log('revenue data'+JSON.stringify(response.data[1]))
-      //  console.log('product data [1] [0]---'+JSON.stringify(response.data[1][0]))
-      //  console.log('product data [1] [1]---'+JSON.stringify(response.data[1][1]))
-      //  console.log('product data [1] [2]---'+JSON.stringify(response.data[1][2]))
-         setGetProduct(response.data[0][0])
-         setGetTableProduct(response.data[1])
-          // console.log("get Product"+getProduct)
+        //  console.log('product data-all---'+JSON.stringify(response.data))
+        //  console.log('product data [0] [0]--'+JSON.stringify(response.data[0][0]))
+        console.log('Product data'+JSON.stringify(response.data[1]))
+        console.log('Product Error'+JSON.stringify(response))
+
+
+
+        if(response.data.message=="no_data"){
+          setProductError(response.data.message)
+          setGetProduct([0])
+          setGetTableProduct([0])
+        
+   
+        }
+        else{
+
+
+          setProductError('')
+          setGetProduct(response.data[0][0])
+          setGetTableProduct(response.data[1])
+         
+       
+        }
+     
+         
+      
     }).catch(function (error) {
       console.log(error);
     });
 
   }
 
+
+  const VenderData= async()=>{
+    let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
+    // console.log(result.data)
+    if(result.data){
+      setVenderList(result.data)
+      console.log("resultdata---"+JSON.stringify(result.data[0].shop_name))
+    }
+    
+ }
+
+
+ const CategoryData= async()=>{
+  let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
+  // console.log(result.data)
+  if(result.data){
+    setCategory(result.data)
+  }
+  
+}
+
           useEffect(() => {
 
           fetchData();
-    
+          VenderData();
+          CategoryData();    
            
           }, [apicall]);
 
@@ -286,16 +340,17 @@ const ProductReport = () => {
       series: [
         {
           name: "Item Sold",
-          data: ItemSold,
-        },
-        {
-          name: "Net Sales",
-          data: NetSales,
+          data: [ItemSold],
         },
         {
           name: "Orders",
-          data: Order,
+          data: [Order],
         },
+        {
+          name: "Net Sales",
+          data: [NetSales],
+        }
+       
       ],
       xAxis: {
         categories: [
@@ -393,6 +448,7 @@ const ProductReport = () => {
 
 
 
+    console.log("111111111---"+JSON.stringify(venderList))
 
 
 
@@ -420,8 +476,66 @@ const ProductReport = () => {
 
             </Form.Select>
           </div>
+ 
+          <div className="col-md-3 col-sm-6 aos_input">
+          <Form.Select
+            aria-label="Search by category"
+            className="adminselectbox"
+            placeholder="Search by category"
+            onChange={(e)=>{setVendorId(e.target.value)}}
+          >
+            <option >Search by Vendorddddd ID</option>
+            {
+              venderList.map((item)=>{
+                console.log("return-----> "+item.shop_name);
+                return(
+                  <>
+                   <option value={item.id}>{item.shop_name}</option>
+                  </>
+                )
+              })
+            }
+            
+        
+   
+
+          </Form.Select>
+
+
+          
+          </div>
+
+
+          
+          <div className="col-md-3 col-sm-6 aos_input">
+          <Form.Select
+            aria-label="Search by category"
+            className="adminselectbox"
+            placeholder="Search by category"
+            onChange={(e)=>{setCategoryId(e.target.value)}}
+          >
+            <option >Search by Category</option>
+            {
+              category.map((item)=>{
+                return(
+                 
+                   <option  value={item.id}>{item.category_name}</option>
+                 
+                )
+              })
+            }
+            
+        
+   
+
+          </Form.Select>
+
+
+          
+          </div>
+
           {filterchange==='7'?
-          <>
+          <div>
       <div className="col-md-3 col-sm-6 aos_input">
         <input type={"date"} plchldr={"Search by date"} onChange={(e)=>{setFromDate(e.target.value)}} className={'adminsideinput'} />
         </div>
@@ -429,7 +543,7 @@ const ProductReport = () => {
         <div className="col-md-3 col-sm-6 aos_input">
         <input type={"date"} plchldr={"Search by date"}onChange={(e)=>{setToDate(e.target.value)}} className={'adminsideinput'}/> 
         </div>
-        </>
+        </div>
         :filterchange==='6'? <div className="col-md-3 col-sm-6 aos_input">
         <Input type={"month"} plchldr={"Search by month"} />
         </div> : null}
@@ -465,7 +579,7 @@ const ProductReport = () => {
                     <div className="d-flex align-items-baseline justify-content-between">
                       <h3>
                         
-                        { (getProduct.product_count)==null? <h3>No Record</h3>:  <h3>{getProduct.product_count}</h3> }  
+                        { (ProductError)=="no_data"||(getProduct.product_count)==null||(getProduct.product_count)==undefined||(getProduct.product_count)==""? <h3>No Record</h3>:  <h3>{getProduct.product_count}</h3> }  
                         </h3>
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
@@ -491,7 +605,7 @@ const ProductReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                    { (getProduct.net_sales)==null? <h3>No Record</h3>:  <h3>{getProduct.net_sales}</h3> }  
+                    { (ProductError)=="no_data"||(getProduct.net_sales)==null||(getProduct.net_sales)==undefined||(getProduct.net_sales)==""? <h3>No Record</h3>:  <h3>{getProduct.net_sales}</h3> }  
                      
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
@@ -518,7 +632,7 @@ const ProductReport = () => {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
                      
-                      { (getProduct.order_count)==null? <h3>No Record</h3>:  <h3>{getProduct.order_count}</h3> }  
+                      { (ProductError)=="no_data"||(getProduct.order_count)==null||(getProduct.order_count)==undefined||(getProduct.order_count)==""? <h3>No Record</h3>:  <h3>{getProduct.order_count}</h3> }  
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
                         <p className="mb-0 h5">0%</p>

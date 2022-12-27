@@ -389,9 +389,11 @@ console.log("eeeeeee-------"+e.target.value)
       }
     
     else {
-      axios.get(`${process.env.REACT_APP_BASEURL}/product?id=${e}`).then((response) => {
+      axios.get(`${process.env.REACT_APP_BASEURL}/product_details?id=${e}`).then((response) => {
         let data = response.data[0]
-        setproductdata(data)
+        if(data != undefined || data != '' || data != null){
+          setproductdata(data)
+        }
         let customdatra = JSON.parse(response.data[0].add_custom_input)
         setcustomarray(customdatra) 
         console.log("---[0]"+JSON.stringify(response.data[0]))

@@ -222,6 +222,7 @@ const VendorsList = () => {
         ...addvendordata,
         [e.target.name]: e.target.value,
       });
+      console.log("dataa"+JSON.stringify(addvendordata))
     };
   const handleClose = () => {
     formRef.current.reset();

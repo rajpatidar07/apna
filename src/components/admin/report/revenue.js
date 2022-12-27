@@ -33,7 +33,12 @@ const RevenueReport = () => {
   const [fromDate, setFromDate]=useState(moment().format("YYYY-MM-DD"));
   const [toDate,setToDate]=useState(moment().format("YYYY-MM-DD"))
   const [apicall,setapicall]=useState(false)
-  const [tabledate, setTabledata]=useState([])
+  const [tabledate, setTabledata]=useState([]) 
+   const [RevenueError,setRevenueError]=useState("")
+   const [venderList,setVenderList]=useState([])
+   const[vendorId,setVendorId]=useState("")
+   const[category,setCategory]=useState([])
+   const[categoryId,setCategoryId]=useState("")
 
   var GrossAmmount=[];
   var totalSales=[];
@@ -42,85 +47,15 @@ const RevenueReport = () => {
   var NetSales=[];
   var Discount=[]
 
+  // var Refund=[]
+
   // const [fromDate, setFrom]
 
 
 
-  const [option,setOption]=useState({
-    chart: {
-      height: 350,
-      type: 'line',
-      stacked: false,
-    },
-    stroke: {
-      width: [0, 2, 5],
-      curve: 'smooth'
-    },
-    plotOptions: {
-      bar: {
-        columnWidth: '50%'
-      }
-    },
-    
-    fill: {
-      opacity: [0.85, 0.25, 1],
-      gradient: {
-        inverseColors: false,
-        shade: 'light',
-        type: "vertical",
-        opacityFrom: 0.85,
-        opacityTo: 0.55,
-        stops: [0, 100, 100, 100]
-      }
-    },
-    labels: ['01/01/2003', '02/01/2003', '03/01/2003', '04/01/2003', '05/01/2003', '06/01/2003', '07/01/2003',
-      '08/01/2003', '09/01/2003', '10/01/2003', '11/01/2003'
-    ],
-    markers: {
-      size: 0
-    },
-    xaxis: {
-      type: 'datetime'
-    },
-    yaxis: {
-      title: {
-        text: 'Points',
-      },
-      min: 0
-    },
-    tooltip: {
-      shared: true,
-      intersect: false,
-      y: {
-        formatter: function (y) {
-          if (typeof y !== "undefined") {
-            return y.toFixed(0) + " points";
-          }
-          return y;
-    
-        }
-      }
-    }
-  })
-
-
-  const [series,setSeries]=useState([{
-    name: 'TEAM A',
-    type: 'column',
-    data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30]
-  }, {
-    name: 'TEAM B',
-    type: 'area',
-    data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43]
-  }, {
-    name: 'TEAM C',
-    type: 'line',
-    data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39]
-  }])
- 
-
-
-  // setOption({
+  // const [option,setOption]=useState(
+  //   {
+  
   //   chart: {
   //     height: 350,
   //     type: 'line',
@@ -147,14 +82,118 @@ const RevenueReport = () => {
   //       stops: [0, 100, 100, 100]
   //     }
   //   },
-  //   labels: ['01/01/2003', '02/01/2003', '03/01/2003', '04/01/2003', '05/01/2003', '06/01/2003', '07/01/2003',
-  //     '08/01/2003', '09/01/2003', '10/01/2003', '11/01/2003'
-  //   ],
+  //   labels: []  ,
   //   markers: {
   //     size: 0
   //   },
   //   xaxis: {
-  //     type: 'datetime'
+  //     type: ''
+  //   },
+  //   yaxis: {
+  //     title: {
+  //       text: 'Points',
+  //     },
+  //     min: 0
+  //   },
+  //   tooltip: {
+  //     shared: true,
+  //     intersect: false,
+  //     y: {
+  //       formatter: function (y) {
+  //         if (typeof y !== "undefined") {
+  //           return y.toFixed(0) + " points";
+  //         }
+  //         return y;
+    
+  //       }
+  //     }
+  //   }
+  // }
+  // )
+
+
+//   const [series,setSeries]=useState([
+ 
+//    {
+//     name: 'TEAM B',
+//     type: 'area',
+//     data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43]
+//   }, 
+//   {
+//     name: 'TEAM C',
+//     type: 'line',
+//     data: [30, 25, 36, 30, 70, 35, 64, 52, 45, 36, 39]
+//   },
+
+//   {
+//     name: 'TEAM D',
+//     type: 'line',
+//     data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39]
+//   }
+
+// ])
+ 
+
+
+// setSeries([
+ 
+//   {
+//    name: 'TEAM B',
+//    type: 'area',
+//    data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43]
+//  }, 
+//  {
+//    name: 'TEAM C',
+//    type: 'line',
+//    data: GrossAmmount
+//  },
+
+//  {
+//    name: 'TEAM D',
+//    type: 'line',
+//    data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39]
+//  }
+
+// ])
+
+
+
+
+
+  // setOption( {
+  
+  //   chart: {
+  //     height: 350,
+  //     type: 'line',
+  //     stacked: false,
+  //   },
+  //   stroke: {
+  //     width: [0, 2, 5],
+  //     curve: 'smooth'
+  //   },
+  //   plotOptions: {
+  //     bar: {
+  //       columnWidth: '50%'
+  //     }
+  //   },
+    
+  //   fill: {
+  //     opacity: [0.85, 0.25, 1],
+  //     gradient: {
+  //       inverseColors: false,
+  //       shade: 'light',
+  //       type: "vertical",
+  //       opacityFrom: 0.85,
+  //       opacityTo: 0.55,
+  //       stops: [0, 100, 100, 100]
+  //     }
+  //   },
+  //   labels: GrossAmmount,
+  //   markers: {
+  //     size: 0
+  //   },
+  //   xaxis: {
+  //     type: 'value'
   //   },
   //   yaxis: {
   //     title: {
@@ -180,51 +219,143 @@ const RevenueReport = () => {
 
 
 
-    // const options = {
-    //     chart: {
-    //       type: 'line',
-    //       borderRadius:'5',
-    //       borderColor:'#335cad'
-    //     },
-    //     title: {
-    //         text: ' Figures',
-    //         style:{ "color": "green", "fontSize": "22px" },
-    //         align:"left"
-    //       },
-    //     series: [
-    //       {
-    //         name:"Gross Revenue",
-    //         data:GrossAmmount
-    //       },
+    const options = {
+        chart: {
+          type: 'spline',
+          borderRadius:'5',
+          borderColor:'#335cad'
+        },
+        title: {
+            text: ' Figures',
+            style:{ "color": "green", "fontSize": "22px" },
+            align:"left"
+          },
+        series: [
+          {
+            name:"Gross Revenue",
+            data:GrossAmmount
+          },
      
-    //       {
-    //         name:"Discount",
-    //         data:Discount
-    //       },
-    //       {
-    //         name:"Taxes",
-    //         data: totalGSt
-    //       },
-    //       {
-    //         name:"Net Revenue",
-    //         data:NetSales
-    //       },
-    //       {
-    //         name:"shipping",
-    //         data:TotalShipping
-    //       }
-    //     ],
-    //     xAxis: {
-    //         categories:GrossAmmount
-    //     },
-    //     yAxis: { 
+          {
+            name:"Discount",
+            data:Discount
+          },
+          {
+            name:"Taxes",
+            data: totalGSt
+          },
+          {
+            name:"Net Revenue",
+            data:NetSales
+          },
+          {
+            name:"shipping",
+            data:TotalShipping
+          },
+
+          {
+            name:" Total Refund",
+            data:[getRevenue.return_total]
+          },
           
-    //       categories:totalSales
-    //   },
-    //   };
+          {
+            name:"Coupon",
+            data:[getRevenue.total_discount]
+          },
+          {
+            name:" Total Shipping Charge",
+            data:[getRevenue.total_shipping_charges]
+          },
+          {
+            name:"Taxes",
+            data:[getRevenue.total_gst]
+          },
+
+          {
+            name:"Total Sales",
+            data:[getRevenue.net_sale]
+          }
+        ],
+        xAxis: {
+            categories:GrossAmmount
+        },
+        yAxis: { 
+          
+          categories:totalSales
+      },
+      };
 
 
+/////////////////////////////////////////////////New Apexchart //////////////////////////////////////////////
 
+// var  Chartoptions = {
+//   series: [
+//   {
+//     name: "High - 2013",
+//     data: [28, 29, 33, 36, 32, 32, 33]
+//   },
+//   {
+//     name: "Low - 2013",
+//     data: [12, 11, 14, 18, 17, 13, 13]
+//   }
+// ],
+//   chart: {
+//   height: 350,
+//   type: 'line',
+//   dropShadow: {
+//     enabled: true,
+//     color: '#000',
+//     top: 18,
+//     left: 7,
+//     blur: 10,
+//     opacity: 0.2
+//   },
+//   toolbar: {
+//     show: false
+//   }
+// },
+// colors: ['#77B6EA', '#545454'],
+// dataLabels: {
+//   enabled: true,
+// },
+// stroke: {
+//   curve: 'smooth'
+// },
+// title: {
+//   text: 'Average High & Low Temperature',
+//   align: 'left'
+// },
+// grid: {
+//   borderColor: '#e7e7e7',
+//   row: {
+//     colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+//     opacity: 0.5
+//   },
+// },
+// markers: {
+//   size: 1
+// },
+// xaxis: {
+//   categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+//   title: {
+//     text: 'Month'
+//   }
+// },
+// yaxis: {
+//   title: {
+//     text: 'Temperature'
+//   },
+//   min: 5,
+//   max: 40
+// },
+// legend: {
+//   position: 'top',
+//   horizontalAlign: 'right',
+//   floating: true,
+//   offsetY: -25,
+//   offsetX: -5
+// }
+// };
 
 
     const columns = [
@@ -236,8 +367,9 @@ const RevenueReport = () => {
           sortable: true,
           width: "170px",
           center: true,
-        },
-        
+        }
+        ,
+         
         {
           name: "Gross Revenue",
           selector: (row) => row.gross_amount,
@@ -311,95 +443,7 @@ const RevenueReport = () => {
        
       ];
       
-      // const data = [
-      //   {
-      //     id: 1,
-      //     sku: "23 Sep,2022",
-      //     pname: "$1,485.73",
-      //     category:"$0.00",
-      //     price: "$14",
-      //     mdate: "$1,009.00",
-      //     edate: "$476.73",
-      //   },
-      //   {
-      //     id: 2,
-      //     sku: "23 Sep,2022",
-      //     pname:"$361.00",
-      //     category: "$0.00",
-      //     price: "$14",
-      //     mdate: "$1,009.00",
-      //     edate: "$476.73",
-      //   },
-      //   {
-      //       id: 1,
-      //       sku: "23 Sep,2022",
-      //       pname: "$1,485.73",
-      //       category:"$0.00",
-      //       price: "$14",
-      //       mdate: "$1,009.00",
-      //       edate: "$476.73",
-      //     },
-      //     {
-      //       id: 2,
-      //       sku: "23 Sep,2022",
-      //       pname:"$361.00",
-      //       category: "$0.00",
-      //       price: "$14",
-      //       mdate: "$1,009.00",
-      //       edate: "$476.73",
-      //     },{
-      //       id: 1,
-      //       sku: "23 Sep,2022",
-      //       pname: "$1,485.73",
-      //       category:"$0.00",
-      //       price: "$14",
-      //       mdate: "$1,009.00",
-      //       edate: "$476.73",
-      //     },
-      //     {
-      //       id: 2,
-      //       sku: "23 Sep,2022",
-      //       pname:"$361.00",
-      //       category: "$0.00",
-      //       price: "$14",
-      //       mdate: "$1,009.00",
-      //       edate: "$476.73",
-      //     },{
-      //       id: 1,
-      //       sku: "23 Sep,2022",
-      //       pname: "$1,485.73",
-      //       category:"$0.00",
-      //       price: "$14",
-      //       mdate: "$1,009.00",
-      //       edate: "$476.73",
-      //     },
-      //     {
-      //       id: 2,
-      //       sku: "23 Sep,2022",
-      //       pname:"$361.00",
-      //       category: "$0.00",
-      //       price: "$14",
-      //       mdate: "$1,009.00",
-      //       edate: "$476.73",
-      //     },{
-      //       id: 1,
-      //       sku: "23 Sep,2022",
-      //       pname: "$1,485.73",
-      //       category:"$0.00",
-      //       price: "$14",
-      //       mdate: "$1,009.00",
-      //       edate: "$476.73",
-      //     },
-      //     {
-      //       id: 2,
-      //       sku: "23 Sep,2022",
-      //       pname:"$361.00",
-      //       category: "$0.00",
-      //       price: "$14",
-      //       mdate: "$1,009.00",
-      //       edate: "$476.73",
-      //     },
-      // ];
+      
 
 
       const TimeChange = (e)=>{
@@ -447,32 +491,79 @@ const RevenueReport = () => {
       console.log("From last 6 month"+e.target.value)
       setToDate( moment().format("YYYY-MM-DD") );
    }
+
+   fetchData()
       }
 
-
+      
       const fetchData=()=>{
         console.log( "from_date---"+fromDate)
         console.log( "to_date----"+toDate)
+       
           axios.post(`${process.env.REACT_APP_BASEURL}/revenue`
         ,
+        
          {
            "from_date":fromDate,
               "to_date":toDate,
-              "vendors_id":[],
-              "categorys":[],
+              "vendors_id":[vendorId],
+              "categorys":[categoryId],
               "user_locations":[],
               "brand":[]
         }
         ).then((response) => {
-            console.log('revenue data'+JSON.stringify(response.data))
-              setGetRevenue(response.data[0])
+            // console.log('revenue data'+JSON.stringify(response.data))
+            // console.log(" revenue error"+JSON.stringify(response))
+
+
+                
+            if(response.data.message=="no_data"){
+              setRevenueError(response.data.message)
+              
+                setGetRevenue([0])
+              setTabledata([0])
+       
+            }
+            else{
+
+
+              setRevenueError('')
+               setGetRevenue(response.data[0])
               setTabledata(response.data[0].ravenue_date_data)
+             
+           
+            }
+       
+
+          
+
          
         }).catch(function (error) {
           console.log(error);
+          
         });
        } 
 
+       const VenderData= async()=>{
+          let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
+          // console.log(result.data)
+          if(result.data){
+            setVenderList(result.data)
+          }
+          
+       }
+
+
+       const CategoryData= async()=>{
+        let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
+        // console.log(result.data)
+        if(result.data){
+          setCategory(result.data)
+        }
+        
+     }
+
+      
 
        
 
@@ -484,15 +575,13 @@ const RevenueReport = () => {
     
     
         fetchData();
+        VenderData();
+        CategoryData();
     
        
       }, [ apicall]);
         
-     
-      // console.log(moment(new Date()).format('MMMM Do YYYY, h:mm:ss a'))
-      // console.log(  moment("20111031", "YYYYMMDD").fromNow())
-      // console.log(moment("20021219","YYYYMMDD").fromNow())
-      // console.log(' from now'+moment().fromNow())
+
 
 
       const submitHandler=()=>{
@@ -503,8 +592,8 @@ const RevenueReport = () => {
 
 
 
-      console.log("get revenue------"+JSON.stringify(getRevenue))
-      console.log("data====="+ JSON.stringify(tabledate))
+      // console.log("get revenue------"+JSON.stringify(getRevenue))
+      // console.log("data====="+ JSON.stringify(tabledate))
       
 
 
@@ -523,13 +612,19 @@ const RevenueReport = () => {
        Discount.push(item.discount)
 
      })
+
+   
+
  
-     console.log("gross ammount ------"+GrossAmmount)
-     console.log("total sales ------"+ totalSales)
-     console.log("total GST ------"+ totalGSt)
-     console.log("total Shipping ------"+ TotalShipping)
-     console.log("net Sales ------"+ NetSales)
-     console.log("Discount ------"+ Discount)
+    //  console.log("gross ammount ------"+GrossAmmount)
+    //  console.log("total sales ------"+ totalSales)
+    //  console.log("total GST ------"+ totalGSt)
+    //  console.log("total Shipping ------"+ TotalShipping)
+    //  console.log("net Sales ------"+ NetSales)
+    //  console.log("Discount ------"+ Discount)
+   
+  // console.log("categoryList--"+ category)
+     
        
 
 
@@ -540,7 +635,7 @@ const RevenueReport = () => {
               {/* search bar */}
       <div className="card mt-3 p-3 ">
       <div className="row pb-3">
-      <div className="col-md-3 col-sm-6 aos_input">
+      <div className="col-md-3 col-sm-6   aos_input">
             <Form.Select
               aria-label="Search by category"
               className="adminselectbox"
@@ -557,11 +652,73 @@ const RevenueReport = () => {
               <option name="custom_date" value="7">custom date</option>
 
             </Form.Select>
+
+
+            
             </div>
+
+            <div className="col-md-3 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by category"
+              className="adminselectbox"
+              placeholder="Search by category"
+              onChange={(e)=>{setVendorId(e.target.value)}}
+            >
+              <option >Search by Vendor ID</option>
+              {
+                venderList.map((item)=>{
+                  return(
+                   
+                     <option  value={item.id}>{item.shop_name}</option>
+                   
+                  )
+                })
+              }
+              
+          
+     
+
+            </Form.Select>
+
+
+            
+            </div>
+
+
+            
+            <div className="col-md-3 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by category"
+              className="adminselectbox"
+              placeholder="Search by category"
+              onChange={(e)=>{setCategoryId(e.target.value)}}
+            >
+              <option >Search by Category</option>
+              {
+                category.map((item)=>{
+                  return(
+                   
+                     <option  value={item.id}>{item.category_name}</option>
+                   
+                  )
+                })
+              }
+              
+          
+     
+
+            </Form.Select>
+
+
+            
+            </div>
+
+
+
            
           {filterchange==='7'?
          
-          <>
+          <div>
              
       <div className="col-md-3 col-sm-6 aos_input">
         <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setFromDate(e.target.value)}} className={'adminsideinput'}/>
@@ -570,7 +727,7 @@ const RevenueReport = () => {
         <div className="col-md-3 col-sm-6 aos_input">
         <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setToDate(e.target.value)}} className={'adminsideinput'}/>
         </div>
-        </>
+        </div>
         :filterchange==='6'? <div className="col-md-3 col-sm-6 aos_input">
         <Input type={"month"} plchldr={"Search by month"} />
        
@@ -608,7 +765,7 @@ const RevenueReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                  { (getRevenue.gross_total_amount)==null? <h3>No Record</h3>:  <h3>{getRevenue.gross_total_amount}</h3> }  
+                  { (RevenueError)=="no_data"||(getRevenue.gross_total_amount)==null||(getRevenue.gross_total_amount)==undefined||(getRevenue.gross_total_amount)==""? <h3>No Record</h3>:  <h3>{getRevenue.gross_total_amount}</h3> }  
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
                      <p className="mb-0 h5">0%</p>
@@ -629,13 +786,13 @@ const RevenueReport = () => {
             <div className="card p-2 col-2 rounded-0 shadow-none">
               <div className=" d-flex mt-0 align-items-center">
                 <HiOutlineReceiptRefund className="text-success h1 mx-2" />
-                <h5 className="text-success">Refund </h5>
+                <h5 className="text-success">Discount Ammount </h5>
               </div>
               <div className="row mt-3">
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                  { (getRevenue.return_total)==null? <h3>No Record</h3>:  <h3>{getRevenue.return_total}</h3> }  
+                  { (RevenueError)=="no_data"||(getRevenue.discount_amount)==null||(getRevenue.discount_amount)==undefined||(getRevenue.discount_amount)==""? <h3>No Record</h3>:  <h3>{getRevenue.discount_amount}</h3> }  
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
                      <p className="mb-0 h5">0%</p>
@@ -656,13 +813,13 @@ const RevenueReport = () => {
 <div className="card p-2 col-2 rounded-0 shadow-none">
               <div className=" d-flex mt-0 align-items-end">
                 <HiOutlineGift className="text-success h1 mb-0 mx-2" />
-                <h5 className="text-success">Coupons </h5>
+                <h5 className="text-success">Return Total</h5>
               </div>
               <div className="row mt-3">
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                  { (getRevenue.total_discount)==null? <h3>No Record</h3>:  <h3>{getRevenue.total_discount}</h3> }  
+                  { (RevenueError)=="no_data"||(getRevenue.return_total)==null||(getRevenue.return_total)==undefined||(getRevenue.return_total)==""? <h3>No Record</h3>:  <h3>{getRevenue.return_total}</h3> }  
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
                      <p className="mb-0 h5">0%</p>
@@ -689,7 +846,7 @@ const RevenueReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                  { (getRevenue.total_gst)==null? <h3>No Record</h3>:  <h3>{getRevenue.total_gst}</h3> }  
+                  { (RevenueError)=="no_data"||(getRevenue.total_gst)==null||(getRevenue.total_gst)==undefined||(getRevenue.total_gst)==""? <h3>No Record</h3>:  <h3>{getRevenue.total_gst}</h3> }  
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
                      <p className="mb-0 h5">0%</p>
@@ -716,7 +873,7 @@ const RevenueReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                  { (getRevenue.total_shipping_charges)==null? <h3>No Record</h3>:  <h3>{getRevenue.total_shipping_charges}</h3> }  
+                  { (RevenueError)=="no_data"||(getRevenue.total_shipping_charges)==null||(getRevenue.total_shipping_charges)==undefined||(getRevenue.total_shipping_charges)==""? <h3>No Record</h3>:  <h3>{getRevenue.total_shipping_charges}</h3> }  
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
                      <p className="mb-0 h5">0%</p>
@@ -734,62 +891,9 @@ const RevenueReport = () => {
             </div>
    
             {/* net */}
-            <div className="card p-2 col-2 rounded-right shadow-none">
-              <div className=" d-flex mt-0 align-items-center">
-                <GiTakeMyMoney className="text-success h1 mb-0 mx-2" />
-                <h5 className="text-success">Net Revenue </h5>
-              </div>
-              <div className="row mt-3">
-                <div className="col-12">
-                  <div className="row  d-flex flex-column align-items-center">
-                  <div className="d-flex align-items-baseline justify-content-between">
-                  { (getRevenue.net_sale)==null? <h3>No Record</h3>:  <h3>{getRevenue.net_sale}</h3> }  
-                    <div className="d-flex align-items-center justify-content-center">
-                     <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
-                     <p className="mb-0 h5">0%</p>
-                    </div>
-                    </div>
-                    <div>
-                        <h5>Previous Year:</h5>
-                        <p className="h5">$0.00</p>
-                    </div>
-                  </div>
-                </div>
-
-                
-              </div>
-
-              
-            </div>
+        
 
 
-            <div className="card p-2 col-2 rounded-right shadow-none">
-              <div className=" d-flex mt-0 align-items-center">
-                <GiTakeMyMoney className="text-success h1 mb-0 mx-2" />
-                <h5 className="text-success">Total Sales </h5>
-              </div>
-              <div className="row mt-3">
-                <div className="col-12">
-                  <div className="row  d-flex flex-column align-items-center">
-                  <div className="d-flex align-items-baseline justify-content-between">
-                  { (getRevenue.total_amount_with_shipping)==null? <h3>No Record</h3>:  <h3>{getRevenue.total_amount_with_shipping}</h3> }  
-                    <div className="d-flex align-items-center justify-content-center">
-                     <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
-                     <p className="mb-0 h5">0%</p>
-                    </div>
-                    </div>
-                    <div>
-                        <h5>Previous Year:</h5>
-                        <p className="h5">$0.00</p>
-                    </div>
-                  </div>
-                </div>
-
-                
-              </div>
-
-              
-            </div>
 {/*  */}
 </div>
 </div>
@@ -797,11 +901,13 @@ const RevenueReport = () => {
 
 {/* graph */}
 
-{/* <HighchartsReact highcharts={Highcharts} options={options}  /> */}
+<HighchartsReact highcharts={Highcharts} options={options}  />
 
-<div id="chart">
+{/* <div id="chart">
   <ReactApexChart options={option} series={series} type="line" height={350} />
-</div>
+</div> */}
+
+
 
 
 
@@ -812,7 +918,7 @@ const RevenueReport = () => {
    
       <DataTable
         columns={columns}
-        data={tabledate}
+        data={tabledate }
         pagination
         highlightOnHover
         pointerOnHover

@@ -13,161 +13,8 @@ import axios from 'axios';
 import moment from "moment/moment";
 
 const CouponReport = () => {
-  const options = {
-    chart: {
-      type: "line",
-      borderRadius: "5",
-      borderColor: "#335cad",
-    },
-    title: {
-      text: " Figures",
-      style: { color: "green", fontSize: "22px" },
-      align: "left",
-    },
-    series: [
-      {
-        name: "Discounted Orders",
-        data: [1, 2, 1, 4, 3, 6, 9, 4, 1, 8, 3, 5],
-      },
-      {
-        name: "Amount",
-        data: [1, 3, 1, 3, 2, 5, 1, 4, 1, 8, 3, 5],
-      },
-      
-    ],
-    xAxis: {
-      categories: [
-        "1",
-        "3",
-        "5",
-        "7",
-        "9",
-        "11",
-        "13",
-        "15",
-        "17",
-        "19",
-        "21",
-        "23",
-      ],
-    },
-    yAxis: {
-      categories: ["0", "200", "400", "600", "800", "1000"],
-    },
-  };
-  const columns = [
-  
-    {
-      name: "Coupon Code",
-      selector: (row) => row.coupons_code,
-      sortable: true,
-      width: "260px",
-    },
-    {
-      name: " Discount Coupon",
-      selector: (row) => row.discount_coupon,
-      sortable: true,
-      width: "260px",
-    },
-    {
-      name: "Amount Discounted",
-      selector: (row) => row.amount_discounted,
-      sortable: true,
-    },
-    {
-      name: "Created",
-      selector: (row) => row.created_date,
-      sortable: true,
-      
-    },
-    {
-      name: "Expires",
-      selector: (row) => row.edate,
-      sortable: true,
-     
-    },
-    {
-      name: "Orders",
-      selector: (row) => row.order_count,
-      sortable: true,
-      
-    },
- 
-   
-   
-  ];
-
-  // const data = [
-  //   {
-  //     id: 1,
-  //     code: "Coupon250",
-  //     type: "PErcentage",
-  //     cdate:"23 Sep,2021",
-  //   edate:"23 Sep,2021",
-  // discount:"12",
-  // order: "120",
-  //   },
-  //   {
-  //     id: 1,
-  //     code: "Coupon250",
-  //     type: "PErcentage",
-  //     cdate:"23 Sep,2021",
-  //   edate:"23 Sep,2021",
-  // discount:"12",
-  // order: "120",
-  //   }, {
-  //     id: 1,
-  //     code: "Coupon250",
-  //     type: "PErcentage",
-  //     cdate:"23 Sep,2021",
-  //   edate:"23 Sep,2021",
-  // discount:"12",
-  // order: "120",
-  //   }, {
-  //     id: 1,
-  //     code: "Coupon250",
-  //     type: "PErcentage",
-  //     cdate:"23 Sep,2021",
-  //   edate:"23 Sep,2021",
-  // discount:"12",
-  // order: "120",
-  //   }, {
-  //     id: 1,
-  //     code: "Coupon250",
-  //     type: "PErcentage",
-  //     cdate:"23 Sep,2021",
-  //   edate:"23 Sep,2021",
-  // discount:"12",
-  // order: "120",
-  //   }, {
-  //     id: 1,
-  //     code: "Coupon250",
-  //     type: "PErcentage",
-  //     cdate:"23 Sep,2021",
-  //   edate:"23 Sep,2021",
-  // discount:"12",
-  // order: "120",
-  //   }, {
-  //     id: 1,
-  //     code: "Coupon250",
-  //     type: "PErcentage",
-  //     cdate:"23 Sep,2021",
-  //   edate:"23 Sep,2021",
-  // discount:"12",
-  // order: "120",
-  //   }, {
-  //     id: 1,
-  //     code: "Coupon250",
-  //     type: "PErcentage",
-  //     cdate:"23 Sep,2021",
-  //   edate:"23 Sep,2021",
-  // discount:"12",
-  // order: "120",
-  //   },
-  // ];
 
 
-  
   const [filterchange,setFilterchange] = useState('')
 
   
@@ -228,6 +75,7 @@ const CouponReport = () => {
   console.log("From last 6 month"+e.target.value)
   setToDate( moment().format("YYYY-MM-DD") );
 }
+fetchData();
   }
 
 
@@ -240,7 +88,11 @@ const CouponReport = () => {
              {
                "from_date":fromDate,
                   "to_date":toDate,
-                  "coupons_search":searchCoupon
+                  "coupons_search":searchCoupon, 
+                   "vendors_id":[],
+                  "categorys":[],
+                  "user_locations":[],
+                  "brand":[]
             }
             ).then((response) => {
                 console.log('Coupon orders'+JSON.stringify(response.data[0]))
@@ -250,14 +102,17 @@ const CouponReport = () => {
                
 
                   if(response.data.message=="no_data"){
+
                     setCouponError(response.data.message)
+                   
                      setGetCoupon([0])
-                  setTabledata([0])
+                     setTabledata([0])
 
                   }
                   else{
                     setCouponError('')
-                    setGetCoupon(response.data[0][0])
+                    setapicall(false)
+                    setGetCoupon(response.data[0])
                   setTabledata(response.data[1])
                   }
              
@@ -267,11 +122,6 @@ const CouponReport = () => {
            } 
     
     
-           
-    
-    
-           
-    
     
           useEffect(() => {
         
@@ -279,7 +129,7 @@ const CouponReport = () => {
             fetchData();
         
            
-          }, [ apicall]);
+          }, [apicall]);
             
 
           const ProductChange =(e)=>{
@@ -289,21 +139,17 @@ const CouponReport = () => {
     
            const OnReset =()=>{
             setSearchCoupon("")
-           fetchData();
-            //  setapicall(true)
+        
+             setapicall(true)
             
-             
-              
-         
-            
-           
            
         }
 
           const submitHandler=()=>{
        
             setapicall(true)
-             fetchData()
+            fetchData();
+            
            }
      
 
@@ -313,10 +159,90 @@ const CouponReport = () => {
           console.log("get Table++++"+ tabledate)
           console.log("couponError.message=====  "+ couponError);
           console.log("getCoupon====="+ getCoupon);
+ 
           console.log("getCoupon====="+JSON.stringify( getCoupon));
 
 
 
+          var OrderCount=getCoupon.orders_count;
+          var DiscountAmmount=getCoupon.discount_amount
+
+
+
+
+
+          const options = {
+            chart: {
+              type: "bar",
+              borderRadius: "5",
+              borderColor: "#335cad",
+            },
+            title: {
+              text: " Figures",
+              style: { color: "green", fontSize: "22px" },
+              align: "left",
+            },
+            series: [
+              {
+                name: "Discounted Orders",
+                data: [OrderCount],
+              },
+              {
+                name: "Amount",
+                data: [DiscountAmmount],
+              },
+              
+            ],
+            xAxis: {
+              categories: [
+              
+              ],
+            },
+            yAxis: {
+              categories: [],
+            },
+          };
+          const columns = [
+          
+            {
+              name: "Coupon Code",
+              selector: (row) => row.coupons_code,
+              sortable: true,
+              width: "260px",
+            },
+            {
+              name: " Discount Coupon",
+              selector: (row) => row.discount_coupon,
+              sortable: true,
+              width: "260px",
+            },
+            {
+              name: "Amount Discounted",
+              selector: (row) => row.amount_discounted,
+              sortable: true,
+            },
+            {
+              name: "Created",
+              selector: (row) => row.created_date,
+              sortable: true,
+              
+            },
+            {
+              name: "Expires",
+              selector: (row) => row.edate,
+              sortable: true,
+             
+            },
+            {
+              name: "Orders",
+              selector: (row) => row.order_count,
+              sortable: true,
+              
+            },
+         
+           
+           
+          ];
     return (
         <div>
             <h2>Coupon Report</h2>
@@ -390,8 +316,9 @@ const CouponReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                  
-                  {(couponError)=="no_data"||(getCoupon.total_order)==null || (getCoupon.total_order)==undefined?<h3>No Record</h3>: <h3>{getCoupon.total_order}</h3>}
+                  {console.log("********"+couponError)}
+                  {console.log(" order===="+getCoupon.orders_count)}
+                  {(couponError)=="no_data"||(getCoupon.orders_count)==null || (getCoupon.orders_count)==undefined?<h3>No Record</h3>: <h3>{getCoupon.orders_count}</h3>}
 
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
@@ -420,8 +347,9 @@ const CouponReport = () => {
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
                 
-                  {console.log("get coupon Ammount"+getCoupon.amount)}
-                        {(couponError)=="no_data"||(getCoupon.amount)==null || (getCoupon.amount)==undefined || (getCoupon.amount)==""?<h3>No Record</h3>: <h3>{getCoupon.amount}</h3>}
+                           {console.log("********"+couponError)}
+                           {console.log(" Ammount===="+getCoupon.discount_amount)}
+                        {(couponError)=="no_data"||(getCoupon.discount_amount)==null || (getCoupon.discount_amount)==undefined || (getCoupon.discount_amount)==""?<h3>No Record</h3>: <h3>{getCoupon.discount_amount}</h3>}
                 
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
