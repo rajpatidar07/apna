@@ -36,6 +36,9 @@ const RevenueReport = () => {
   const [tabledate, setTabledata]=useState([]) 
    const [RevenueError,setRevenueError]=useState("")
    const [venderList,setVenderList]=useState([])
+   const[vendorId,setVendorId]=useState("")
+   const[category,setCategory]=useState([])
+   const[categoryId,setCategoryId]=useState("")
 
   var GrossAmmount=[];
   var totalSales=[];
@@ -50,85 +53,85 @@ const RevenueReport = () => {
 
 
 
-  const [option,setOption]=useState(
-    {
+  // const [option,setOption]=useState(
+  //   {
   
-    chart: {
-      height: 350,
-      type: 'line',
-      stacked: false,
-    },
-    stroke: {
-      width: [0, 2, 5],
-      curve: 'smooth'
-    },
-    plotOptions: {
-      bar: {
-        columnWidth: '50%'
-      }
-    },
+  //   chart: {
+  //     height: 350,
+  //     type: 'line',
+  //     stacked: false,
+  //   },
+  //   stroke: {
+  //     width: [0, 2, 5],
+  //     curve: 'smooth'
+  //   },
+  //   plotOptions: {
+  //     bar: {
+  //       columnWidth: '50%'
+  //     }
+  //   },
     
-    fill: {
-      opacity: [0.85, 0.25, 1],
-      gradient: {
-        inverseColors: false,
-        shade: 'light',
-        type: "vertical",
-        opacityFrom: 0.85,
-        opacityTo: 0.55,
-        stops: [0, 100, 100, 100]
-      }
-    },
-    labels: []  ,
-    markers: {
-      size: 0
-    },
-    xaxis: {
-      type: ''
-    },
-    yaxis: {
-      title: {
-        text: 'Points',
-      },
-      min: 0
-    },
-    tooltip: {
-      shared: true,
-      intersect: false,
-      y: {
-        formatter: function (y) {
-          if (typeof y !== "undefined") {
-            return y.toFixed(0) + " points";
-          }
-          return y;
+  //   fill: {
+  //     opacity: [0.85, 0.25, 1],
+  //     gradient: {
+  //       inverseColors: false,
+  //       shade: 'light',
+  //       type: "vertical",
+  //       opacityFrom: 0.85,
+  //       opacityTo: 0.55,
+  //       stops: [0, 100, 100, 100]
+  //     }
+  //   },
+  //   labels: []  ,
+  //   markers: {
+  //     size: 0
+  //   },
+  //   xaxis: {
+  //     type: ''
+  //   },
+  //   yaxis: {
+  //     title: {
+  //       text: 'Points',
+  //     },
+  //     min: 0
+  //   },
+  //   tooltip: {
+  //     shared: true,
+  //     intersect: false,
+  //     y: {
+  //       formatter: function (y) {
+  //         if (typeof y !== "undefined") {
+  //           return y.toFixed(0) + " points";
+  //         }
+  //         return y;
     
-        }
-      }
-    }
-  }
-  )
+  //       }
+  //     }
+  //   }
+  // }
+  // )
 
 
-  const [series,setSeries]=useState([
+//   const [series,setSeries]=useState([
  
-   {
-    name: 'TEAM B',
-    type: 'area',
-    data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43]
-  }, 
-  {
-    name: 'TEAM C',
-    type: 'line',
-    data: [30, 25, 36, 30, 70, 35, 64, 52, 45, 36, 39]
-  },
+//    {
+//     name: 'TEAM B',
+//     type: 'area',
+//     data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43]
+//   }, 
+//   {
+//     name: 'TEAM C',
+//     type: 'line',
+//     data: [30, 25, 36, 30, 70, 35, 64, 52, 45, 36, 39]
+//   },
 
-  {
-    name: 'TEAM D',
-    type: 'line',
-    data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39]
-  }
+//   {
+//     name: 'TEAM D',
+//     type: 'line',
+//     data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39]
+//   }
 
-])
+// ])
  
 
 
@@ -355,26 +358,6 @@ const RevenueReport = () => {
 // };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     const columns = [
         {
           name: "Date",
@@ -386,12 +369,7 @@ const RevenueReport = () => {
           center: true,
         }
         ,
-        {
-          name: "Vendor list",
-          selector: (venderList) => venderList.id,
-          sortable: true,
-          width: "150px",
-        },
+         
         {
           name: "Gross Revenue",
           selector: (row) => row.gross_amount,
@@ -513,19 +491,23 @@ const RevenueReport = () => {
       console.log("From last 6 month"+e.target.value)
       setToDate( moment().format("YYYY-MM-DD") );
    }
+
+   fetchData()
       }
 
-
+      
       const fetchData=()=>{
         console.log( "from_date---"+fromDate)
         console.log( "to_date----"+toDate)
+       
           axios.post(`${process.env.REACT_APP_BASEURL}/revenue`
         ,
+        
          {
            "from_date":fromDate,
               "to_date":toDate,
-              "vendors_id":[],
-              "categorys":[],
+              "vendors_id":[vendorId],
+              "categorys":[categoryId],
               "user_locations":[],
               "brand":[]
         }
@@ -564,12 +546,24 @@ const RevenueReport = () => {
 
        const VenderData= async()=>{
           let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
-          console.log(result.data)
+          // console.log(result.data)
           if(result.data){
             setVenderList(result.data)
           }
           
        }
+
+
+       const CategoryData= async()=>{
+        let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
+        // console.log(result.data)
+        if(result.data){
+          setCategory(result.data)
+        }
+        
+     }
+
+      
 
        
 
@@ -582,6 +576,7 @@ const RevenueReport = () => {
     
         fetchData();
         VenderData();
+        CategoryData();
     
        
       }, [ apicall]);
@@ -618,8 +613,7 @@ const RevenueReport = () => {
 
      })
 
-
-  
+   
 
  
     //  console.log("gross ammount ------"+GrossAmmount)
@@ -629,7 +623,7 @@ const RevenueReport = () => {
     //  console.log("net Sales ------"+ NetSales)
     //  console.log("Discount ------"+ Discount)
    
-
+  // console.log("categoryList--"+ category)
      
        
 
@@ -641,7 +635,7 @@ const RevenueReport = () => {
               {/* search bar */}
       <div className="card mt-3 p-3 ">
       <div className="row pb-3">
-      <div className="col-md-3 col-sm-6 aos_input">
+      <div className="col-md-3 col-sm-6   aos_input">
             <Form.Select
               aria-label="Search by category"
               className="adminselectbox"
@@ -668,15 +662,15 @@ const RevenueReport = () => {
               aria-label="Search by category"
               className="adminselectbox"
               placeholder="Search by category"
-              onChange={TimeChange}
+              onChange={(e)=>{setVendorId(e.target.value)}}
             >
               <option >Search by Vendor ID</option>
               {
                 venderList.map((item)=>{
                   return(
-                    <>
-                     <option  value={1}>{item.id}</option>
-                    </>
+                   
+                     <option  value={item.id}>{item.shop_name}</option>
+                   
                   )
                 })
               }
@@ -691,10 +685,40 @@ const RevenueReport = () => {
             </div>
 
 
+            
+            <div className="col-md-3 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by category"
+              className="adminselectbox"
+              placeholder="Search by category"
+              onChange={(e)=>{setCategoryId(e.target.value)}}
+            >
+              <option >Search by Category</option>
+              {
+                category.map((item)=>{
+                  return(
+                   
+                     <option  value={item.id}>{item.category_name}</option>
+                   
+                  )
+                })
+              }
+              
+          
+     
+
+            </Form.Select>
+
+
+            
+            </div>
+
+
+
            
           {filterchange==='7'?
          
-          <>
+          <div>
              
       <div className="col-md-3 col-sm-6 aos_input">
         <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setFromDate(e.target.value)}} className={'adminsideinput'}/>
@@ -703,7 +727,7 @@ const RevenueReport = () => {
         <div className="col-md-3 col-sm-6 aos_input">
         <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setToDate(e.target.value)}} className={'adminsideinput'}/>
         </div>
-        </>
+        </div>
         :filterchange==='6'? <div className="col-md-3 col-sm-6 aos_input">
         <Input type={"month"} plchldr={"Search by month"} />
        
@@ -762,13 +786,13 @@ const RevenueReport = () => {
             <div className="card p-2 col-2 rounded-0 shadow-none">
               <div className=" d-flex mt-0 align-items-center">
                 <HiOutlineReceiptRefund className="text-success h1 mx-2" />
-                <h5 className="text-success">Refund </h5>
+                <h5 className="text-success">Discount Ammount </h5>
               </div>
               <div className="row mt-3">
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                  { (RevenueError)=="no_data"||(getRevenue.return_total)==null||(getRevenue.return_total)==undefined||(getRevenue.return_total)==""? <h3>No Record</h3>:  <h3>{getRevenue.return_total}</h3> }  
+                  { (RevenueError)=="no_data"||(getRevenue.discount_amount)==null||(getRevenue.discount_amount)==undefined||(getRevenue.discount_amount)==""? <h3>No Record</h3>:  <h3>{getRevenue.discount_amount}</h3> }  
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
                      <p className="mb-0 h5">0%</p>
@@ -789,13 +813,13 @@ const RevenueReport = () => {
 <div className="card p-2 col-2 rounded-0 shadow-none">
               <div className=" d-flex mt-0 align-items-end">
                 <HiOutlineGift className="text-success h1 mb-0 mx-2" />
-                <h5 className="text-success">Coupons </h5>
+                <h5 className="text-success">Return Total</h5>
               </div>
               <div className="row mt-3">
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                  { (RevenueError)=="no_data"||(getRevenue.total_discount)==null||(getRevenue.total_discount)==undefined||(getRevenue.total_discount)==""? <h3>No Record</h3>:  <h3>{getRevenue.total_discount}</h3> }  
+                  { (RevenueError)=="no_data"||(getRevenue.return_total)==null||(getRevenue.return_total)==undefined||(getRevenue.return_total)==""? <h3>No Record</h3>:  <h3>{getRevenue.return_total}</h3> }  
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
                      <p className="mb-0 h5">0%</p>
@@ -822,7 +846,7 @@ const RevenueReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                  { (RevenueError)=="no_data"||(getRevenue.total_discount)==null||(getRevenue.total_discount)==undefined||(getRevenue.total_discount)==""? <h3>No Record</h3>:  <h3>{getRevenue.total_gst}</h3> }  
+                  { (RevenueError)=="no_data"||(getRevenue.total_gst)==null||(getRevenue.total_gst)==undefined||(getRevenue.total_gst)==""? <h3>No Record</h3>:  <h3>{getRevenue.total_gst}</h3> }  
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
                      <p className="mb-0 h5">0%</p>
@@ -867,62 +891,9 @@ const RevenueReport = () => {
             </div>
    
             {/* net */}
-            <div className="card p-2 col-2 rounded-right shadow-none">
-              <div className=" d-flex mt-0 align-items-center">
-                <GiTakeMyMoney className="text-success h1 mb-0 mx-2" />
-                <h5 className="text-success">Net Revenue </h5>
-              </div>
-              <div className="row mt-3">
-                <div className="col-12">
-                  <div className="row  d-flex flex-column align-items-center">
-                  <div className="d-flex align-items-baseline justify-content-between">
-                  {(RevenueError)=="no_data"|| (getRevenue.net_sale)==null||(getRevenue.net_sale)==undefined||(getRevenue.net_sale)==""? <h3>No Record</h3>:  <h3>{getRevenue.net_sale}</h3> }  
-                    <div className="d-flex align-items-center justify-content-center">
-                     <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
-                     <p className="mb-0 h5">0%</p>
-                    </div>
-                    </div>
-                    <div>
-                        <h5>Previous Year:</h5>
-                        <p className="h5">$0.00</p>
-                    </div>
-                  </div>
-                </div>
-
-                
-              </div>
-
-              
-            </div>
+        
 
 
-            <div className="card p-2 col-2 rounded-right shadow-none">
-              <div className=" d-flex mt-0 align-items-center">
-                <GiTakeMyMoney className="text-success h1 mb-0 mx-2" />
-                <h5 className="text-success">Total Sales </h5>
-              </div>
-              <div className="row mt-3">
-                <div className="col-12">
-                  <div className="row  d-flex flex-column align-items-center">
-                  <div className="d-flex align-items-baseline justify-content-between">
-                  { (RevenueError)=="no_data"||(getRevenue.total_amount_with_shipping)==null||(getRevenue.total_amount_with_shipping)==undefined||(getRevenue.total_amount_with_shipping)==""? <h3>No Record</h3>:  <h3>{getRevenue.total_amount_with_shipping}</h3> }  
-                    <div className="d-flex align-items-center justify-content-center">
-                     <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
-                     <p className="mb-0 h5">0%</p>
-                    </div>
-                    </div>
-                    <div>
-                        <h5>Previous Year:</h5>
-                        <p className="h5">$0.00</p>
-                    </div>
-                  </div>
-                </div>
-
-                
-              </div>
-
-              
-            </div>
 {/*  */}
 </div>
 </div>
@@ -932,9 +903,9 @@ const RevenueReport = () => {
 
 <HighchartsReact highcharts={Highcharts} options={options}  />
 
-<div id="chart">
+{/* <div id="chart">
   <ReactApexChart options={option} series={series} type="line" height={350} />
-</div>
+</div> */}
 
 
 

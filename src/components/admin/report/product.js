@@ -20,6 +20,8 @@ const ProductReport = () => {
   var NetSales=[];
   var Order=[];
 
+  
+
 
   // const data = [
   //   {
@@ -143,6 +145,12 @@ const ProductReport = () => {
   const [ProductSearch,setProductSearch]=useState("")
   const [ProductError,setProductError]=useState("")
 
+  const [venderList,setVenderList]=useState([])
+  const[vendorId,setVendorId]=useState("")
+  const[category,setCategory]=useState([])
+  const[categoryId,setCategoryId]=useState("")
+
+
 
   const TimeChange = (e)=>{
 
@@ -191,6 +199,7 @@ const ProductReport = () => {
   setToDate( moment().format("YYYY-MM-DD") );
 }
 
+fetchData()
 
   }
 
@@ -205,7 +214,11 @@ const ProductReport = () => {
     {
       "from_date":fromDate,
       "to_date":toDate,
-      "products_search":ProductSearch
+      // "products_search":ProductSearch,  
+      "vendors_id":[vendorId],
+      "categorys":[categoryId],
+      "user_locations":[],
+      "brand":[]
   }
     ).then((response) => {
         //  console.log('product data-all---'+JSON.stringify(response.data))
@@ -240,10 +253,32 @@ const ProductReport = () => {
 
   }
 
+
+  const VenderData= async()=>{
+    let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
+    // console.log(result.data)
+    if(result.data){
+      setVenderList(result.data)
+      console.log("resultdata---"+JSON.stringify(result.data[0].shop_name))
+    }
+    
+ }
+
+
+ const CategoryData= async()=>{
+  let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
+  // console.log(result.data)
+  if(result.data){
+    setCategory(result.data)
+  }
+  
+}
+
           useEffect(() => {
 
           fetchData();
-    
+          VenderData();
+          CategoryData();    
            
           }, [apicall]);
 
@@ -413,6 +448,7 @@ const ProductReport = () => {
 
 
 
+    console.log("111111111---"+JSON.stringify(venderList))
 
 
 
@@ -440,6 +476,64 @@ const ProductReport = () => {
 
             </Form.Select>
           </div>
+ 
+          <div className="col-md-3 col-sm-6 aos_input">
+          <Form.Select
+            aria-label="Search by category"
+            className="adminselectbox"
+            placeholder="Search by category"
+            onChange={(e)=>{setVendorId(e.target.value)}}
+          >
+            <option >Search by Vendorddddd ID</option>
+            {
+              venderList.map((item)=>{
+                console.log("return-----> "+item.shop_name);
+                return(
+                  <>
+                   <option value={item.id}>{item.shop_name}</option>
+                  </>
+                )
+              })
+            }
+            
+        
+   
+
+          </Form.Select>
+
+
+          
+          </div>
+
+
+          
+          <div className="col-md-3 col-sm-6 aos_input">
+          <Form.Select
+            aria-label="Search by category"
+            className="adminselectbox"
+            placeholder="Search by category"
+            onChange={(e)=>{setCategoryId(e.target.value)}}
+          >
+            <option >Search by Category</option>
+            {
+              category.map((item)=>{
+                return(
+                 
+                   <option  value={item.id}>{item.category_name}</option>
+                 
+                )
+              })
+            }
+            
+        
+   
+
+          </Form.Select>
+
+
+          
+          </div>
+
           {filterchange==='7'?
           <div>
       <div className="col-md-3 col-sm-6 aos_input">

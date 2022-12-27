@@ -13,20 +13,129 @@ import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import moment from "moment/moment";
 
-
 const OrderReport = () => {
   const [filterchange, setFilterchange] = useState("");
-  const [ordersreport, setordersreport] = useState([]);
-  const [tableProduct, setGetTableProduct]= useState([])
+ 
+  const [ordersreport, setordersreport] = useState([])
+  const [orderTable, setorderTable] = useState([])
+  const [fromDate, setFromDate]=useState(moment().format("YYYY-MM-DD"));
+  const [toDate,setToDate]=useState(moment().format("YYYY-MM-DD"))
+  const [apicall,setapicall]=useState(false)
+  const [OrderError,setOrderError]=useState("")
+
+   const fetchData=()=>{
+    axios.post(`${process.env.REACT_APP_BASEURL}/orders_report`, 
+    {
+      "from_date":fromDate,
+      "to_date":toDate,
+      "vendors_id":[],
+      "categorys":[],
+      "user_locations":[],
+      "brand":[]
+    }).then((response) => {
+     
+       console.log("Order data----"+ JSON.stringify(response.data[0]))
+       console.log("Order Table data---"+ JSON.stringify(response.data[1]))
+       console.log('Error-----'+JSON.stringify(response.data))
+
+
+       if(response.data.message=="No_Data"){
+
+        setOrderError(response.data.message)
+        setordersreport([0])
+        setorderTable([0])
+
+      }
+      else{
+        setOrderError("")
+        
+        setordersreport(response.data[0][0])
+        setorderTable(response.data[1])
+        setapicall(false)
+      }
+
+    }).catch(function (error) {
+      console.log(error);
+    });
+   }
+
+  useEffect(() => {
+     fetchData()
+  }, [apicall]);
+
+
 
   const TimeChange = (e) => {
     setFilterchange(e.target.value);
+    let value = e.target.value;
+    console.log("---------------------------------------------"+value);
+    if(value==1){
+      setFromDate(moment().format("YYYY-MM-DD"))
+      console.log("From date"+e.target.value)
+      console.log("today")
+      setToDate(moment().format("YYYY-MM-DD"))
+    }
+
+    if(value==2){
+      setFromDate(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'));
+      console.log("From date"+e.target.value);
+     
+      setToDate( moment().format("YYYY-MM-DD"));
+      console.log("yesterday--"+moment().subtract(1, 'day').startOf('day').format('YYYY-MM-DD'));
+
+    }
+   if(value==3){
+      setFromDate( moment().subtract(1, 'weeks').startOf('weeks').format('YYYY-MM-DD')  );
+    
+      console.log("From date"+e.target.value)
+      
+      setToDate( moment().format("YYYY-MM-DD")  );
+      // console.log("last week"+moment().subtract(1, 'week').startOf('week').format('YYYY-MM-DD'))
+   
+   }
+
+   if(value==4){
+   
+
+    setFromDate(moment().subtract(1, 'months').startOf('months').format('YYYY-MM-DD'));
+    console.log("From last month"+e.target.value)
+    setToDate(  moment().format("YYYY-MM-DD")    );
+    // setToDate("2022-12-14");
+
+    
+ }
+ if(value==5){
+  setFromDate(moment().subtract(6, 'month').startOf('month').format('YYYY-MM-DD') );
+  console.log("From last 6 month"+e.target.value)
+  setToDate( moment().format("YYYY-MM-DD") );
+}
+
+
+fetchData()
   };
 
 
-  const options = {
+  const submitHandler=()=>{
+       
+    setapicall(true)
+    fetchData()
+ 
+    
+   }
+
+
+
+    var Order= ordersreport.order_count
+    var NetSales=ordersreport.net_sales
+    var AvarageOrderValue=ordersreport.avg_order_value
+    var AvarageItemPerOrder=ordersreport.avg_item_per_order
+    
+
+
+
+   const options = {
     chart: {
-      type: "line",
+      type: "bar",
       borderRadius: "5",
       borderColor: "#335cad",
     },
@@ -38,19 +147,19 @@ const OrderReport = () => {
     series: [
       {
         name: "Orders",
-        data: [1, 2, 1, 4, 3, 6, 9, 4, 1, 8, 3, 5],
+        data: [Order],
       },
       {
         name: "Net Revenue",
-        data: [1, 3, 1, 3, 2, 5, 1, 4, 1, 8, 3, 5],
+        data: [NetSales],
       },
       {
         name: "Average Order Value",
-        data: [2, 1, 6, 7, 4, 6, 2, 4, 1, 8, 3, 5],
+        data: [AvarageOrderValue],
       },
       {
         name: "Average Items Per Order",
-        data: [1, 9, 1, 8, 1, 5, 7, 4, 1, 8, 3, 5],
+        data: [AvarageItemPerOrder],
       },
     ],
     xAxis: {
@@ -83,8 +192,8 @@ const OrderReport = () => {
     },
 
     {
-      name: "Order",
-      selector: (row) => row.id,
+      name: "Order ID",
+      selector: (row) => row.order_id,
       sortable: true,
       width: "170px",
     },
@@ -95,7 +204,7 @@ const OrderReport = () => {
       width: "170px",
     },
     {
-      name: "Customer",
+      name: "Customer ID",
       selector: (row) => row.user_id,
       sortable: true,
       width: "150px",
@@ -107,8 +216,8 @@ const OrderReport = () => {
     },
 
     {
-      name: "Product(s)",
-      selector: (row) => row.Product,
+      name: "Product ID",
+      selector: (row) => row.p_id,
       sortable: true,
       width: "150px",
       center: true,
@@ -117,20 +226,10 @@ const OrderReport = () => {
         paddingLeft: "0px",
       },
     },
-    {
-      name: "Item Sold",
-      selector: (row) => row.item_sold,
-      sortable: true,
-      width: "160px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
-    },
+   
     {
       name: "Net Revenue",
-      selector: (row) => row.total_amount,
+      selector: (row) => row.total_order_amount,
       sortable: true,
       width: "150px",
       center: true,
@@ -141,126 +240,8 @@ const OrderReport = () => {
     },
   ];
 
-  // const data = [
-  //   {
-  //     id: 1,
-  //     sku: "23 Sep,2022",
-  //     Order: "$1,485.73",
-  //     Status: "$0.00",
-  //     Customer: "$14",
-  //     Product: "$1,009.00",
-  //     isold: "$476.73",
-  //     net: "$476.73",
-  //   },
-  //   {
-  //     id: 2,
-  //     sku: "23 Sep,2022",
-  //     Order: "$361.00",
-  //     Status: "$0.00",
-  //     Customer: "$14",
-  //     Product: "$1,009.00",
-  //     isold: "$476.73",
-  //     net: "$476.73",
-  //   },
-  //   {
-  //     id: 1,
-  //     sku: "23 Sep,2022",
-  //     Order: "$1,485.73",
-  //     Status: "$0.00",
-  //     Customer: "$14",
-  //     Product: "$1,009.00",
-  //     isold: "$476.73",
-  //     net: "$476.73",
-  //   },
-  //   {
-  //     id: 2,
-  //     sku: "23 Sep,2022",
-  //     Order: "$361.00",
-  //     Status: "$0.00",
-  //     Customer: "$14",
-  //     Product: "$1,009.00",
-  //     isold: "$476.73",
-  //     net: "$476.73",
-  //   },
-  //   {
-  //     id: 1,
-  //     sku: "23 Sep,2022",
-  //     Order: "$1,485.73",
-  //     Status: "$0.00",
-  //     Customer: "$14",
-  //     Product: "$1,009.00",
-  //     isold: "$476.73",
-  //     net: "$476.73",
-  //   },
-  //   {
-  //     id: 2,
-  //     sku: "23 Sep,2022",
-  //     Order: "$361.00",
-  //     Status: "$0.00",
-  //     Customer: "$14",
-  //     Product: "$1,009.00",
-  //     isold: "$476.73",
-  //     net: "$476.73",
-  //   },
-  //   {
-  //     id: 1,
-  //     sku: "23 Sep,2022",
-  //     Order: "$1,485.73",
-  //     Status: "$0.00",
-  //     Customer: "$14",
-  //     Product: "$1,009.00",
-  //     isold: "$476.73",
-  //     net: "$476.73",
-  //   },
-  //   {
-  //     id: 2,
-  //     sku: "23 Sep,2022",
-  //     Order: "$361.00",
-  //     Status: "$0.00",
-  //     Customer: "$14",
-  //     Product: "$1,009.00",
-  //     isold: "$476.73",
-  //     net: "$476.73",
-  //   },
-  //   {
-  //     id: 1,
-  //     sku: "23 Sep,2022",
-  //     Order: "$1,485.73",
-  //     Status: "$0.00",
-  //     Customer: "$14",
-  //     Product: "$1,009.00",
-  //     isold: "$476.73",
-  //     net: "$476.73",
-  //   },
-  //   {
-  //     id: 2,
-  //     sku: "23 Sep,2022",
-  //     Order: "$361.00",
-  //     Status: "$0.00",
-  //     Customer: "$14",
-  //     Product: "$1,009.00",
-  //     isold: "$476.73",
-  //     net: "$476.73",
-  //   },
-  // ];
-  useEffect(() => {
 
-    axios.post(`${process.env.REACT_APP_BASEURL}/orders_report`,
-    {
-      "from_date":"2022-11-28",
-      "to_date":"2022-11-29",
-      "order_search":""
-    }
-    ).then((response) => {
-         console.log("getdata------"+ JSON.stringify(response.data[0]))
-         console.log('revenue data'+JSON.stringify(response.data[1]))
-       setordersreport(response.data[0])
-       setGetTableProduct(response.data[1])
-    
-    }).catch(function (error) {
-      console.log(error);
-    });
-  }, []);
+
 
   return (
     <div>
@@ -275,34 +256,41 @@ const OrderReport = () => {
               placeholder="Search by category"
               onChange={TimeChange}
             >
-              <option>Search by category</option>
-              <option value="1">1 day</option>
-              <option value="2">1 week</option>
-              <option value="3">current month</option>
-              <option value="4">last month</option>
-              <option value="5">last 6 month</option>
-              <option value="6">custom month</option>
-              <option value="7">custom date</option>
-            </Form.Select>
-          </div>
-          {filterchange === "7" ? (
-            <div>
-              <div className="col-md-3 col-sm-6 aos_input">
-                <Input type={"date"} plchldr={"Search by date"} />
-              </div>
+             <option >Search by category</option>
+              <option name="today" value={1}>Today</option>
+              <option name="yesterday" value={2}>yesterday</option>
+              <option name="last_week" value={3}>Last week</option>
+              <option name="last_month" value={4}>last month</option>
+              <option name="last_6_month" value={5}>last 6  month</option>
+              {/* <option name="custom_month" value="6">custom month</option> */}
+              <option name="custom_date" value="7">custom date</option>
 
-              <div className="col-md-3 col-sm-6 aos_input">
-                <Input type={"date"} plchldr={"Search by date"} />
-              </div>
+            </Form.Select>
             </div>
-          ) : filterchange === "6" ? (
-            <div className="col-md-3 col-sm-6 aos_input">
-              <Input type={"month"} plchldr={"Search by month"} />
-            </div>
-          ) : null}
-          <div className="col-md-auto col-sm-6 aos_input">
-            <MainButton btntext={"Search"} btnclass={"button main_button"} />
-          </div>
+           
+          {filterchange==='7'?
+         
+          <div>
+             
+      <div className="col-md-3 col-sm-6 aos_input">
+        <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setFromDate(e.target.value)}} className={'adminsideinput'}/>
+        </div>
+        
+        <div className="col-md-3 col-sm-6 aos_input">
+        <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setToDate(e.target.value)}} className={'adminsideinput'}/>
+        </div>
+        </div>
+        :filterchange==='6'? <div className="col-md-3 col-sm-6 aos_input">
+        <Input type={"month"} plchldr={"Search by month"} />
+       
+        </div> : null}
+        
+        
+        <div className="col-md-auto col-sm-6 aos_input">
+        <MainButton btntext={"Search"} btnclass={'button main_button'} onClick={submitHandler} />
+        </div>
+       
+
           <div className="col-md-auto col-sm-6 aos_input">
             <DropdownButton
               id="dropdown-variant-success"
@@ -333,7 +321,9 @@ const OrderReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                      <h3>{ordersreport.order_count}</h3>
+
+                    {(OrderError)=="No_Data"||(ordersreport.order_count)==null || (ordersreport.order_count)==undefined  || (ordersreport.order_count)==""?<h3>No Record</h3>: <h3>{ordersreport.order_count}</h3>}
+
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
                         <p className="mb-0 h5">0%</p>
@@ -358,7 +348,9 @@ const OrderReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                      <h3>{parseFloat(ordersreport.avg_order_value).toFixed(2)}</h3> 
+                    {console.log("********"+OrderError)}
+                  {console.log(" Order avarage value===="+ordersreport.avg_order_value)}
+                    {(OrderError)=="No_Data"||(ordersreport.avg_order_value)==null || (ordersreport.avg_order_value)==undefined  || (ordersreport.avg_order_value)==""?<h3>No Record</h3>: <h3>{ordersreport.avg_order_value}</h3>}
                       
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
@@ -384,7 +376,10 @@ const OrderReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                      <h3>{ordersreport.avg_item_per_order}</h3>
+                    {console.log("********"+OrderError)}
+                  {console.log(" Avarage item per order===="+ordersreport.avg_item_per_order)}
+                    {(OrderError)=="No_Data"||(ordersreport.avg_item_per_order)==null || (ordersreport.avg_item_per_order)==undefined  || (ordersreport.avg_item_per_order)==""?<h3>No Record</h3>: <h3>{ordersreport.avg_item_per_order}</h3>}
+
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
                         <p className="mb-0 h5">0%</p>
@@ -411,7 +406,10 @@ const OrderReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                      <h3>{ordersreport.net_sales}</h3>
+                    {console.log("********"+OrderError)}
+                  {console.log(" Net Revenue===="+ordersreport.net_sales)}
+                    {(OrderError)=="No_Data"||(ordersreport.net_sales)==null || (ordersreport.net_sales)==undefined  || (ordersreport.net_sales)==""?<h3>No Record</h3>: <h3>{ordersreport.net_sales}</h3>}
+               
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
                         <p className="mb-0 h5">0%</p>
@@ -439,7 +437,7 @@ const OrderReport = () => {
 
         <DataTable
           columns={columns}
-          data={tableProduct}
+          data={orderTable}
           pagination
           highlightOnHover
           pointerOnHover
