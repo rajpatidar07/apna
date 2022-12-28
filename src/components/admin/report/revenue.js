@@ -39,6 +39,9 @@ const RevenueReport = () => {
    const[vendorId,setVendorId]=useState("")
    const[category,setCategory]=useState([])
    const[categoryId,setCategoryId]=useState("")
+   const [brand,setBrand]=useState([])
+   const[brandName,setBrandName]=useState([])
+   const[location,setLocation]=useState("")
 
   var GrossAmmount=[];
   var totalSales=[];
@@ -499,6 +502,8 @@ const RevenueReport = () => {
       const fetchData=()=>{
         console.log( "from_date---"+fromDate)
         console.log( "to_date----"+toDate)
+        console.log( "brand----"+brandName)
+
        
           axios.post(`${process.env.REACT_APP_BASEURL}/revenue`
         ,
@@ -508,8 +513,8 @@ const RevenueReport = () => {
               "to_date":toDate,
               "vendors_id":[vendorId],
               "categorys":[categoryId],
-              "user_locations":[],
-              "brand":[]
+              "user_locations":[location],
+              "brand":brandName
         }
         ).then((response) => {
             // console.log('revenue data'+JSON.stringify(response.data))
@@ -563,6 +568,17 @@ const RevenueReport = () => {
         
      }
 
+
+     const BrandData= async()=>{
+      let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/brand_list`)
+
+       console.log("Brand data-----"+ JSON.stringify(result.data))
+      if(result.data){
+        setBrand(result.data)
+      }
+      
+   }
+
       
 
        
@@ -577,18 +593,31 @@ const RevenueReport = () => {
         fetchData();
         VenderData();
         CategoryData();
+        BrandData();
     
        
       }, [ apicall]);
         
 
+     const locationSearch=(e)=>{
+      setLocation(e.target.value)
 
+     }
 
       const submitHandler=()=>{
        
        setapicall(true)
         fetchData()
       }
+
+      const handleSelect = function(items) {
+        const brandselect = [];
+        for (let i=0; i<items.length; i++) {
+            brandselect.push(items[i].value);
+        }
+        console.log("selectdata++"+brandselect)
+        setBrandName(brandselect)
+    }
 
 
 
@@ -685,6 +714,38 @@ const RevenueReport = () => {
             </div>
 
 
+
+            <div className="col-md-3 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by category"
+              className="adminselectbox"
+              placeholder="Search by Brand"
+              onChange={(e)=> {handleSelect(e.target.selectedOptions)}}
+              value={brandName}
+              multiple={true}
+            
+            >
+              <option >Search by Brand</option>
+              {
+                brand.map((item)=>{
+                  return(
+                   
+                     <option  value={item.brand}>{item.brand}</option>
+                   
+                  )
+                })
+              }
+              
+          
+     
+
+            </Form.Select>
+
+
+            
+            </div>
+
+
             
             <div className="col-md-3 col-sm-6 aos_input">
             <Form.Select
@@ -711,6 +772,12 @@ const RevenueReport = () => {
 
 
             
+            </div>
+
+            <div className="col-md-3 col-sm-6">
+        <Form.Group className="mb-3">        
+            <Form.Control type="text" placeholder="Search by Location" onChange={locationSearch}  />
+            </Form.Group>
             </div>
 
 

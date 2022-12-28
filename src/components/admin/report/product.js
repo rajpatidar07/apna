@@ -23,117 +23,6 @@ const ProductReport = () => {
   
 
 
-  // const data = [
-  //   {
-  //     id: 1,
-  //     net: "$250",
-  //     sku: "256143",
-  //     pname: <p className="reviewdesc">Light House Device Bag</p>,
-  //     isold: "45",
-  //     stock: "25",
-  //     category: <p className="reviewdesc"> Decoration Decoration </p>,
-  //     order: "120",
-  //   },
-  //   {
-  //     id: 2,
-  //     net: "$250",
-  //     sku: "256143",
-  //     pname: <p className="reviewdesc">Light House Device Bag</p>,
-  //     isold: "45",
-  //     category: "Backpacks",
-  //     order: "120",
-  //     status: "$14",
-  //     stock: "25",
-  //   },
-  //   {
-  //     id: 1,
-  //     net: "$250",
-  //     sku: "256143",
-  //     pname: <p className="reviewdesc">Light House Device Bag</p>,
-  //     isold: "45",
-  //     category: "Backpacks",
-  //     order: "120",
-  //     stock: "25",
-  //     status: "$14",
-  //   },
-  //   {
-  //     id: 2,
-  //     net: "$250",
-  //     sku: "256143",
-  //     pname: <p className="reviewdesc">Solo Device Bag</p>,
-  //     isold: "45",
-  //     category: "Backpacks",
-  //     order: "120",
-  //     stock: "25",
-  //     status: "$14",
-  //   },
-  //   {
-  //     id: 1,
-  //     net: "$250",
-  //     sku: "256143",
-  //     pname: <p className="reviewdesc">Solo Device Bag</p>,
-  //     isold: "45",
-  //     category: "Backpacks",
-  //     order: "120",
-  //     stock: "25",
-  //     status: "$14",
-  //   },
-  //   {
-  //     id: 2,
-  //     net: "$250",
-  //     sku: "256143",
-  //     pname: <p className="reviewdesc">Solo Device Bag</p>,
-  //     isold: "45",
-  //     category: "Backpacks",
-  //     order: "120",
-  //     stock: "25",
-  //     status: "$14",
-  //   },
-  //   {
-  //     id: 1,
-  //     net: "$250",
-  //     sku: "256143",
-  //     pname: <p className="reviewdesc">Solo Device Bag</p>,
-  //     isold: "45",
-  //     category: "Backpacks",
-  //     order: "120",
-  //     stock: "25",
-  //     status: "$14",
-  //   },
-  //   {
-  //     id: 2,
-  //     net: "$250",
-  //     sku: "256143",
-  //     pname: <p className="reviewdesc">Solo Device Bag</p>,
-  //     isold: "45",
-  //     category: "Backpacks",
-  //     order: "120",
-  //     stock: "25",
-  //     status: "$14",
-  //   },
-  //   {
-  //     id: 1,
-  //     net: "$250",
-  //     sku: "256143",
-  //     pname: <p className="reviewdesc">Solo Device Bag</p>,
-  //     isold: "45",
-  //     category: "Backpacks",
-  //     order: "120",
-  //     stock: "25",
-  //     status: "$14",
-  //   },
-  //   {
-  //     id: 2,
-  //     net: "$250",
-  //     sku: "256143",
-  //     pname: <p className="reviewdesc">Solo Device Bag</p>,
-  //     isold: "45",
-  //     category: "Backpacks",
-  //     order: "120",
-  //     stock: "25",
-  //     status: "$14",
-  //   },
-  // ];
   const [filterchange,setFilterchange] = useState('')
 
   const [getProduct, setGetProduct]= useState([])
@@ -208,13 +97,14 @@ fetchData()
   const fetchData=()=>{
     console.log( "from_date---"+fromDate)
     console.log( "to_date---"+toDate)
+    console.log( "Product searcj--"+ProductSearch)
 
     axios.post(`${process.env.REACT_APP_BASEURL}/products_report`
     ,
     {
       "from_date":fromDate,
       "to_date":toDate,
-      // "products_search":ProductSearch,  
+      "products_search":ProductSearch,  
       "vendors_id":[vendorId],
       "categorys":[categoryId],
       "user_locations":[],
@@ -222,7 +112,7 @@ fetchData()
   }
     ).then((response) => {
         //  console.log('product data-all---'+JSON.stringify(response.data))
-        //  console.log('product data [0] [0]--'+JSON.stringify(response.data[0][0]))
+         console.log('product data [0] [0]--'+JSON.stringify(response.data[0][0]))
         console.log('Product data'+JSON.stringify(response.data[1]))
         console.log('Product Error'+JSON.stringify(response))
 
@@ -259,7 +149,7 @@ fetchData()
     // console.log(result.data)
     if(result.data){
       setVenderList(result.data)
-      console.log("resultdata---"+JSON.stringify(result.data[0].shop_name))
+      // console.log("resultdata---"+JSON.stringify(result.data))
     }
     
  }
@@ -448,7 +338,7 @@ fetchData()
 
 
 
-    console.log("111111111---"+JSON.stringify(venderList))
+    // console.log("111111111---"+JSON.stringify(venderList))
 
 
 
@@ -484,10 +374,10 @@ fetchData()
             placeholder="Search by category"
             onChange={(e)=>{setVendorId(e.target.value)}}
           >
-            <option >Search by Vendorddddd ID</option>
+            <option >Search by Vendor ID</option>
             {
               venderList.map((item)=>{
-                console.log("return-----> "+item.shop_name);
+                // console.log("return-----> "+item.shop_name);
                 return(
                   <>
                    <option value={item.id}>{item.shop_name}</option>
