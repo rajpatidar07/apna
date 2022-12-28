@@ -26,12 +26,12 @@ const OrderReport = () => {
    const fetchData=()=>{
     axios.post(`${process.env.REACT_APP_BASEURL}/orders_report`, 
     {
-      "from_date":fromDate,
-      "to_date":toDate,
-      "vendors_id":[],
-      "categorys":[],
-      "user_locations":[],
-      "brand":[]
+      from_date:fromDate,
+      to_date:toDate,
+      vendors_id:[],
+      categorys:[],
+      user_locations:[],
+      brand:[]
     }).then((response) => {
      
        console.log("Order data----"+ JSON.stringify(response.data[0]))
@@ -241,7 +241,7 @@ fetchData()
   ];
 
 
-
+console.log("dd"+orderTable)
 
   return (
     <div>

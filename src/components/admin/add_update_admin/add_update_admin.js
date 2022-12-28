@@ -43,6 +43,7 @@ function Admin() {
                 .then((response) => {
                   let data= response.data[0];
                   setaddadmindata(data);
+console.log("hellooooooo"+JSON.stringify(data))
                 })
             } catch (err) {}
            
@@ -152,7 +153,6 @@ function Admin() {
         admin_type:`${addadmindata.admin_type}`,
         admin_password:`${addadmindata.admin_password}`,
         }
-      
       )
       .then((response) => {
         console.log("adminnnnnnnnnnnnnn----------   " + JSON.stringify(addadmindata));

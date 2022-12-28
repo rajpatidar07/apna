@@ -906,7 +906,7 @@ return(
                           <option value={cdata.id} key={i} 
                           // selected={CategoryEditparent === cdata.category_name ? true :false }
                           >
-                            {cdata.category_name}{" "}
+                            {cdata.category_name}{""}
                           </option>
                         );
                       })}

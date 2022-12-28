@@ -35,21 +35,24 @@ const Review = () => {
         .post(`${process.env.REACT_APP_BASEURL}/review_list`,{
           "id":`${e}`,
       })
+
         .then((response) => {
           setaddreviewdata(response.data[0]);
+
           seteditreviewdata({...editreviewdata ,
             id: response.data[0].id,
             status:response.data[0].status,
             note:response.data[0].note,
            })
+
           setapicall(false);
         })
         .catch(function(error) {
           console.log(error);
         });
       setShow(true)
-    };
 
+    };
     const [searchdata, setsearchData] = useState({
     product_name:"",
     category_type:"",
@@ -193,6 +196,7 @@ const Review = () => {
         ),
       },
     ];
+    console.log("eeeeeee"+JSON.stringify(reviewdata))
  
     return (
         <div>

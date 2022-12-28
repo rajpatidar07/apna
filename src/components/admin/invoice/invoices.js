@@ -42,7 +42,7 @@ const InvoiceList = () => {
     function getInvoiceList() {
       try {
         axios
-          .get("${process.env.REACT_APP_BASEURL}/invoice_list")
+          .get(`${process.env.REACT_APP_BASEURL}/invoice_list`)
           .then((response) => {
             let data = response.data;
             setInvoice(data);
