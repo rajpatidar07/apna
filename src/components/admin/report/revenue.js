@@ -18,6 +18,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import ApexCharts from 'apexcharts'
 import ReactApexChart from "react-apexcharts";
+import Select from 'react-select'
 
 
 
@@ -41,7 +42,7 @@ const RevenueReport = () => {
    const[categoryId,setCategoryId]=useState("")
    const [brand,setBrand]=useState([])
    const[brandName,setBrandName]=useState([])
-   const[location,setLocation]=useState("")
+   const[location,setLocation]=useState([])
 
   var GrossAmmount=[];
   var totalSales=[];
@@ -503,6 +504,8 @@ const RevenueReport = () => {
         console.log( "from_date---"+fromDate)
         console.log( "to_date----"+toDate)
         console.log( "brand----"+brandName)
+        console.log( "locations by name----"+location)
+
 
        
           axios.post(`${process.env.REACT_APP_BASEURL}/revenue`
@@ -511,9 +514,9 @@ const RevenueReport = () => {
          {
            "from_date":fromDate,
               "to_date":toDate,
-              "vendors_id":[vendorId],
-              "categorys":[categoryId],
-              "user_locations":[location],
+              "vendors_id":vendorId,
+              "categorys":categoryId,
+              "user_locations":location,
               "brand":brandName
         }
         ).then((response) => {
@@ -551,7 +554,7 @@ const RevenueReport = () => {
 
        const VenderData= async()=>{
           let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
-          // console.log(result.data)
+           console.log("vendor----"+JSON.stringify(result.data))
           if(result.data){
             setVenderList(result.data)
           }
@@ -598,11 +601,18 @@ const RevenueReport = () => {
        
       }, [ apicall]);
         
+      let locationArray=[]
 
      const locationSearch=(e)=>{
-      setLocation(e.target.value)
+       console.log("^^^^"+e.target.value)
 
+       locationArray.push(e.target.value)
+
+      setLocation(locationArray)
+      console.log("location arry"+locationArray)
      }
+
+ 
 
       const submitHandler=()=>{
        
@@ -610,14 +620,7 @@ const RevenueReport = () => {
         fetchData()
       }
 
-      const handleSelect = function(items) {
-        const brandselect = [];
-        for (let i=0; i<items.length; i++) {
-            brandselect.push(items[i].value);
-        }
-        console.log("selectdata++"+brandselect)
-        setBrandName(brandselect)
-    }
+
 
 
 
@@ -655,7 +658,85 @@ const RevenueReport = () => {
   // console.log("categoryList--"+ category)
      
        
+ 
+    // brand.map((item)=>{
 
+    //   const optionsBrand = [
+    //     { value: `${item.brand}` },
+  
+    //   ]
+    // })
+
+    
+    const options1 = [
+      brand.map((item)=>(
+        { value: `${item.brand}` ,label:`${item.brand}` }
+      ))
+    ]
+
+   let  arrr=[];
+
+    const brandHandler=(e)=>{
+
+     arrr=[]
+      e.map((item)=>{
+       
+      arrr.push(item.value)
+      
+      })
+      setBrandName(arrr)
+     
+     }
+
+
+
+    //  console.log("$$$$$$------"+JSON.stringify(brandName[0]))
+
+
+    const options2 = [
+      venderList.map((item)=>(
+        { value: `${item.id}` ,label:`${item.shop_name}` }
+      ))
+    ]
+
+     let  vendorArray=[];
+
+     const VendorHandler=(e)=>{
+ 
+      vendorArray=[]
+       e.map((item)=>{
+        
+       vendorArray.push(item.value)
+       
+       })
+       setVendorId(vendorArray)
+      
+      }
+
+ console.log("$$$$$$------"+JSON.stringify(vendorId[0]))
+
+
+ 
+ const options3 = [
+  category.map((item)=>(
+    { value: `${item.id}` ,label:`${item.category_name}` }
+  ))
+]
+
+
+let  CategoryArray=[];
+
+const categoryHandler=(e)=>{
+
+ CategoryArray=[]
+  e.map((item)=>{
+   
+  CategoryArray.push(item.value)
+  
+  })
+  setCategoryId(CategoryArray)
+ 
+ }
 
 
     return (
@@ -686,68 +767,54 @@ const RevenueReport = () => {
             
             </div>
 
-            <div className="col-md-3 col-sm-6 aos_input">
-            <Form.Select
-              aria-label="Search by category"
-              className="adminselectbox"
-              placeholder="Search by category"
-              onChange={(e)=>{setVendorId(e.target.value)}}
-            >
-              <option >Search by Vendor ID</option>
-              {
-                venderList.map((item)=>{
-                  return(
-                   
-                     <option  value={item.id}>{item.shop_name}</option>
-                   
-                  )
-                })
-              }
-              
-          
-     
+        
 
-            </Form.Select>
-
-
+<div className="col-md-3 col-sm-6 aos_input">
+            <Select
+      
+              className=" basic-multi-select"
+              placeholder="Search by Vendor"
+              onChange={VendorHandler}
+             
+              classNamePrefix="select"
+              isMulti  
+              options={options2[0]} 
+            />
             
             </div>
 
-
+          
 
             <div className="col-md-3 col-sm-6 aos_input">
-            <Form.Select
-              aria-label="Search by category"
-              className="adminselectbox"
+            <Select
+      
+              className=" basic-multi-select"
               placeholder="Search by Brand"
-              onChange={(e)=> {handleSelect(e.target.selectedOptions)}}
-              value={brandName}
-              multiple={true}
-            
-            >
-              <option >Search by Brand</option>
-              {
-                brand.map((item)=>{
-                  return(
-                   
-                     <option  value={item.brand}>{item.brand}</option>
-                   
-                  )
-                })
-              }
-              
-          
-     
-
-            </Form.Select>
-
-
-            
+              onChange={brandHandler}
+             
+              classNamePrefix="select"
+              isMulti  
+              options={options1[0]} 
+            />
+         
             </div>
 
 
             
             <div className="col-md-3 col-sm-6 aos_input">
+            <Select
+      
+              className=" basic-multi-select"
+              placeholder="Search by Category"
+              onChange={categoryHandler}
+             
+              classNamePrefix="select"
+              isMulti  
+              options={options3[0]} 
+            />
+         
+            </div>
+            {/* <div className="col-md-3 col-sm-6 aos_input">
             <Form.Select
               aria-label="Search by category"
               className="adminselectbox"
@@ -772,7 +839,7 @@ const RevenueReport = () => {
 
 
             
-            </div>
+            </div> */}
 
             <div className="col-md-3 col-sm-6">
         <Form.Group className="mb-3">        
