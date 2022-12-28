@@ -25,7 +25,7 @@ function Product() {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value })
   }
     useEffect(() => {
-      axios.post("${process.env.REACT_APP_BASEURL}/orders_list", {
+      axios.post(`${process.env.REACT_APP_BASEURL}/orders_list`, {
         "status":`${searchdata.status}`,
         "created_on":`${searchdata.created_on}`
         }).then((response) => {
@@ -41,7 +41,7 @@ function Product() {
     const onStatusChange = (e,id) => {
       // e.prevantDefault();
       setchangstatus(e.target.value)
-      axios.put("${process.env.REACT_APP_BASEURL}/order_status_change", {
+      axios.put(`${process.env.REACT_APP_BASEURL}/order_status_change`, {
       status_change:e.target.value,
       id:`${id}`
         }).then((response) => {

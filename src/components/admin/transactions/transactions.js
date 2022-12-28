@@ -21,7 +21,7 @@ function Transactions() {
     function getTransactions() {
       try {
         axios
-          .get("${process.env.REACT_APP_BASEURL}/transaction_details?id=1")
+          .get(`${process.env.REACT_APP_BASEURL}/transaction_details?id=1`)
           .then((response) => {
             let data = response.data;
             setTransectionData(data);
