@@ -168,7 +168,6 @@ function Admin() {
   const UpdateAdminClick = (e, show) => {
     e.preventDefault()
     axios.put(`${process.env.REACT_APP_BASEURL}/update_admin`,
-    
     addadmindata).then((response) => {
     console.log("idddllllllllllllllllllllllllllllllll------"+JSON.stringify(addadmindata))
   });

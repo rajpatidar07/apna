@@ -335,9 +335,7 @@ navigate('/productdetail')
       ),
     },
   ];
-console.log("indvallll-------"+indVal)
   const categoryFormChange = (e, id) => {
-console.log("eeeeeee-------"+e.target.value)
     setIndVal(e.target.value);
     setScategory({ ...scategory, [e.target.name]: e.target.value});
     try {
@@ -391,9 +389,9 @@ console.log("eeeeeee-------"+e.target.value)
       axios.get(`${process.env.REACT_APP_BASEURL}/product?id=${e}`).then((response) => {
         let data = response.data[0]
         setproductdata(data)
-        let customdatra = JSON.parse(response.data[0].add_custom_input)
-        setcustomarray(customdatra) 
-        console.log("---[0]"+JSON.stringify(response.data[0]))
+        // let customdatra = JSON.parse(response.data[0].add_custom_input)
+        // setcustomarray(customdatra) 
+        // console.log("---[0]"+JSON.stringify(response.data[0]))
       }).catch(function (error) {
         console.log(error);
       });
