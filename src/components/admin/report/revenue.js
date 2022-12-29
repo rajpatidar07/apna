@@ -19,7 +19,8 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import ApexCharts from 'apexcharts'
 import ReactApexChart from "react-apexcharts";
 import Select from 'react-select'
-
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 
 
@@ -50,6 +51,44 @@ const RevenueReport = () => {
   var TotalShipping=[];
   var NetSales=[];
   var Discount=[]
+
+  // pdf
+  const exportPDF = () => {
+    const unit = "pt";
+    const size = "A4"; // Use A1, A2, A3 or A4
+    const orientation = "portrait"; // portrait or landscape
+
+    const marginLeft = 40;
+    // const backgroundColor = "pink";
+
+    const doc = new jsPDF(orientation, unit, size);
+
+    doc.setFontSize(15);
+
+    const title = "My Awesome Report";
+    const headers = [["Date", "Total GST","Total Sales","Gross Amount"]];
+
+    const data =tabledate.map(elt=> [elt.uniquedates, elt.total_gst, elt.total_sales,elt.gross_amount]);
+
+    let content = {
+      startY: 50,
+      head: headers,
+      body: data
+    };
+
+    // doc.text(headers, backgroundColor, "pink");
+    doc.text(title, marginLeft, 40);
+    doc.autoTable(content);
+    doc.save("report.pdf")
+    doc.setFillColor("Gray" ,100)
+  }
+
+  // end pdf
+
+
+
+
+
 
   // var Refund=[]
 
@@ -912,7 +951,7 @@ const SearchHandler=(e)=>{
         <div className="col-md-auto col-sm-6 mt-3 aos_input">
         <DropdownButton id="dropdown-variant-success" title="Download" variant="button main_button">
       <Dropdown.Item href="#/action-1">Excel</Dropdown.Item>
-      <Dropdown.Item href="#/action-2">Pdf</Dropdown.Item>
+      <Dropdown.Item onClick={()=>exportPDF()}>Pdf</Dropdown.Item>
       <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
     </DropdownButton>
         </div>
