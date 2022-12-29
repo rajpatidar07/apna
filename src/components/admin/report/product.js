@@ -504,7 +504,7 @@ if(result.data){
          
             </div>
 
-            <div className="col-md-3 col-sm-6 aos_input">
+            <div className="col-md-3 col-sm-6 mt-3 aos_input">
             <Select
       
               className=" basic-multi-select"
@@ -519,12 +519,12 @@ if(result.data){
             </div>
   
           {filterchange==='7'?
-          <div>
-      <div className="col-md-3 col-sm-6 aos_input">
+          <div className="col-md-3 col-sm-6 mt-3 d-flex aos_input">
+      <div className="col-6  aos_input">
         <input type={"date"} plchldr={"Search by date"} onChange={(e)=>{setFromDate(e.target.value)}} className={'adminsideinput'} />
         </div>
         
-        <div className="col-md-3 col-sm-6 aos_input">
+        <div className="col-6 aos_input">
         <input type={"date"} plchldr={"Search by date"}onChange={(e)=>{setToDate(e.target.value)}} className={'adminsideinput'}/> 
         </div>
         </div>
@@ -532,10 +532,10 @@ if(result.data){
         <Input type={"month"} plchldr={"Search by month"} />
         </div> : null}
 
-        <div className="col-md-auto col-sm-6 aos_input">
+        <div className="col-md-auto col-sm-6 mt-3 aos_input">
         <MainButton btntext={"Search"} btnclass={'button main_button'} onClick={submitHandler}  />
         </div>
-        <div className="col-md-auto col-sm-6 aos_input">
+        <div className="col-md-auto col-sm-6 mt-3 aos_input">
         <DropdownButton id="dropdown-variant-success" title="Download" variant="button main_button">
       <Dropdown.Item href="#/action-1">Excel</Dropdown.Item>
       <Dropdown.Item href="#/action-2">Pdf</Dropdown.Item>

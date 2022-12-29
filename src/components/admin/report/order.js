@@ -452,7 +452,7 @@ SearchArray=[]
          
             </div>
 
-            <div className="col-md-3 col-sm-6 aos_input">
+            <div className="col-md-3 col-sm-6 mt-3 aos_input">
             <Select
       
               className=" basic-multi-select"
@@ -468,29 +468,29 @@ SearchArray=[]
 
            
           {filterchange==='7'?
-         
-          <div>
-             
-      <div className="col-md-3 col-sm-6 aos_input">
+       
+             <div className="col-md-3 col-sm-6 d-flex mt-3 aos_input">
+      <div className="col-6  pe-2 col-sm-6 aos_input">
         <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setFromDate(e.target.value)}} className={'adminsideinput'}/>
         </div>
         
-        <div className="col-md-3 col-sm-6 aos_input">
+        <div className="col-6 col-sm-6 aos_input">
         <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setToDate(e.target.value)}} className={'adminsideinput'}/>
         </div>
         </div>
-        :filterchange==='6'? <div className="col-md-3 col-sm-6 aos_input">
+    
+        :filterchange==='6'? <div className="col-md-3 col-sm-6 mt-3 aos_input">
         <Input type={"month"} plchldr={"Search by month"} />
        
         </div> : null}
         
         
-        <div className="col-md-auto col-sm-6 aos_input">
+        <div className="col-md-auto col-sm-6 mt-3 aos_input">
         <MainButton btntext={"Search"} btnclass={'button main_button'} onClick={submitHandler} />
         </div>
        
 
-          <div className="col-md-auto col-sm-6 aos_input">
+          <div className="col-md-auto col-sm-6 mt-3 aos_input">
             <DropdownButton
               id="dropdown-variant-success"
               title="Download"
