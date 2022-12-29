@@ -1035,8 +1035,8 @@ const SearchHandler=(e)=>{
 {/*  */}
 
 {/* graph */}
+{(getRevenue.gross_total_amount)||(getRevenue.discount_amount)||(getRevenue.return_total)||(getRevenue.total_gst)?<HighchartsReact highcharts={Highcharts} options={options}  />:null}
 
-<HighchartsReact highcharts={Highcharts} options={options}  />
 
 {/* <div id="chart">
   <ReactApexChart options={option} series={series} type="line" height={350} />
