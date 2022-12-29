@@ -424,7 +424,7 @@ fetchData()
          
             </div>
 
-            <div className="col-md-3 col-sm-6 aos_input">
+            <div className="col-md-3 col-sm-6 mt-3 aos_input">
             <Select
       
               className=" basic-multi-select"
@@ -439,14 +439,14 @@ fetchData()
             </div> 
 
           {filterchange==='7'?
-           <div>
+           <div className="col-md-3 d-flex mt-3 col-sm-6 aos_input">
              
-           <div className="col-md-3 col-sm-6 aos_input">
-             <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setFromDate(e.target.value)}} className={'adminsideinput'} max={moment().format('YYYY-MM-DD')}/>
+           <div className="col-6 pe-2 aos_input">
+             <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setFromDate(e.target.value)}} className={'adminsideinput'}max={moment().format("YYYY-MM-DD")}/>
              </div>
              
-             <div className="col-md-3 col-sm-6 aos_input">
-             <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setToDate(e.target.value)}} className={'adminsideinput'} max={moment().format('YYYY-MM-DD')}/>
+             <div className="col-6">
+             <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setToDate(e.target.value)}} className={'adminsideinput'}max={moment().format("YYYY-MM-DD")}/>
              </div>
              </div>
              :filterchange==='6'? <div className="col-md-3 col-sm-6 aos_input">
@@ -455,12 +455,12 @@ fetchData()
              </div> : null}
              
              
-             <div className="col-md-auto col-sm-6 aos_input">
+             <div className="col-md-auto col-sm-6 aos_input mt-3">
              <MainButton btntext={"Search"} btnclass={'button main_button'} onClick={submitHandler} />
              </div>
 
 
-        <div className="col-md-auto col-sm-6 aos_input">
+        <div className="col-md-auto col-sm-6 aos_input mt-3">
         <DropdownButton id="dropdown-variant-success" title="Download" variant="button main_button">
       <Dropdown.Item href="#/action-1">Excel</Dropdown.Item>
       <Dropdown.Item href="#/action-2">Pdf</Dropdown.Item>
