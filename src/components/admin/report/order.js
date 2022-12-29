@@ -12,6 +12,7 @@ import HighchartsReact from "highcharts-react-official";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import moment from "moment/moment";
+import Select from 'react-select'
 
 const OrderReport = () => {
   const [filterchange, setFilterchange] = useState("");
@@ -22,16 +23,23 @@ const OrderReport = () => {
   const [toDate,setToDate]=useState(moment().format("YYYY-MM-DD"))
   const [apicall,setapicall]=useState(false)
   const [OrderError,setOrderError]=useState("")
+  const [venderList,setVenderList]=useState([])
+  const[vendorId,setVendorId]=useState("")
+  const[category,setCategory]=useState([])
+  const[categoryId,setCategoryId]=useState("")
+  const [brand,setBrand]=useState([])
+  const[brandName,setBrandName]=useState([])
+  const[location,setLocation]=useState([])
 
    const fetchData=()=>{
     axios.post(`${process.env.REACT_APP_BASEURL}/orders_report`, 
     {
       from_date:fromDate,
       to_date:toDate,
-      vendors_id:[],
-      categorys:[],
-      user_locations:[],
-      brand:[]
+      vendors_id:vendorId,
+      categorys:categoryId,
+      user_locations:location,
+      brand:brandName
     }).then((response) => {
      
        console.log("Order data----"+ JSON.stringify(response.data[0]))
@@ -59,8 +67,48 @@ const OrderReport = () => {
     });
    }
 
+
+
+
+   const VenderData= async()=>{
+    let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
+     console.log("vendor----"+JSON.stringify(result.data))
+    if(result.data){
+      setVenderList(result.data)
+    }
+    
+ }
+
+
+ const CategoryData= async()=>{
+  let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
+  // console.log(result.data)
+  if(result.data){
+    setCategory(result.data)
+  }
+  
+}
+
+
+const BrandData= async()=>{
+let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/brand_list`)
+
+ console.log("Brand data-----"+ JSON.stringify(result.data))
+if(result.data){
+  setBrand(result.data)
+}
+
+}
+
+
+
+
+
   useEffect(() => {
      fetchData()
+     VenderData();
+     CategoryData();
+     BrandData();
   }, [apicall]);
 
 
@@ -243,6 +291,99 @@ fetchData()
 
 console.log("dd"+orderTable)
 
+const options1 = [
+  brand.map((item)=>(
+    { value: `${item.brand}` ,label:`${item.brand}` }
+  ))
+]
+
+let  arrr=[];
+
+const brandHandler=(e)=>{
+
+ arrr=[]
+  e.map((item)=>{
+   
+  arrr.push(item.value)
+  
+  })
+  setBrandName(arrr)
+ 
+ }
+
+
+
+//  console.log("$$$$$$------"+JSON.stringify(brandName[0]))
+const options2 = [
+  venderList.map((item)=>(
+    { value: `${item.id}` ,label:`${item.shop_name}` }
+  ))
+]
+
+ let  vendorArray=[];
+
+ const VendorHandler=(e)=>{
+
+  vendorArray=[]
+   e.map((item)=>{
+    
+   vendorArray.push(item.value)
+   
+   })
+   setVendorId(vendorArray)
+  
+  }
+
+console.log("$$$$$$------"+JSON.stringify(vendorId[0]))
+
+ 
+const options3 = [
+  category.map((item)=>(
+    { value: `${item.id}` ,label:`${item.category_name}` }
+  ))
+]
+
+
+let  CategoryArray=[];
+
+const categoryHandler=(e)=>{
+
+ CategoryArray=[]
+  e.map((item)=>{
+   
+  CategoryArray.push(item.value)
+  
+  })
+  setCategoryId(CategoryArray)
+ 
+ }
+
+
+
+
+  
+ const options4 = [
+
+  { value: "indore" ,label:"Indore" },
+  { value: "bhopal" ,label:"Bhopal" },
+  { value: "dhar" ,label:"Dhar" },
+  { value: "khandwa" ,label:"Khandwa" },
+  { value: "khargone" ,label:"Khargone" },
+
+]
+var  SearchArray=[]
+const SearchHandler=(e)=>{
+
+SearchArray=[]
+ e.map((item)=>{
+  
+  SearchArray.push(item.value)
+ 
+ })
+ setLocation(SearchArray)
+
+}
+
   return (
     <div>
       <h2>Order Report</h2>
@@ -267,6 +408,64 @@ console.log("dd"+orderTable)
 
             </Form.Select>
             </div>
+
+            <div className="col-md-3 col-sm-6 aos_input">
+            <Select
+      
+              className=" basic-multi-select"
+              placeholder="Search by Vendor"
+              onChange={VendorHandler}
+             
+              classNamePrefix="select"
+              isMulti  
+              options={options2[0]} 
+            />
+            
+            </div>
+
+
+            <div className="col-md-3 col-sm-6 aos_input">
+            <Select
+      
+              className=" basic-multi-select"
+              placeholder="Search by Brand"
+              onChange={brandHandler}
+             
+              classNamePrefix="select"
+              isMulti  
+              options={options1[0]} 
+            />
+         
+            </div>
+
+            <div className="col-md-3 col-sm-6 aos_input">
+            <Select
+      
+              className=" basic-multi-select"
+              placeholder="Search by Category"
+              onChange={categoryHandler}
+             
+              classNamePrefix="select"
+              isMulti  
+              options={options3[0]} 
+            />
+         
+            </div>
+
+            <div className="col-md-3 col-sm-6 aos_input">
+            <Select
+      
+              className=" basic-multi-select"
+              placeholder="Search by Location"
+              onChange={SearchHandler}
+             
+              classNamePrefix="select"
+              isMulti  
+              options={options4} 
+            />
+         
+            </div>
+
            
           {filterchange==='7'?
          
@@ -429,7 +628,8 @@ console.log("dd"+orderTable)
         {/*  */}
 
         {/* graph */}
-        <HighchartsReact highcharts={Highcharts} options={options} />
+        {(ordersreport.order_count)||(ordersreport.avg_order_value)||(ordersreport.avg_item_per_order)||(ordersreport.net_sales)? <HighchartsReact highcharts={Highcharts} options={options} />:null}
+       
 
         {/*  */}
 
