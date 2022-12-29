@@ -457,11 +457,11 @@ SearchArray=[]
           <>
              
       <div className="col-md-3 col-sm-6 aos_input">
-        <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setFromDate(e.target.value)}} className={'adminsideinput'}/>
+        <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setFromDate(e.target.value)}} className={'adminsideinput'} max={moment().format('YYYY-MM-DD')}/>
         </div>
         
         <div className="col-md-3 col-sm-6 aos_input">
-        <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setToDate(e.target.value)}} className={'adminsideinput'}/>
+        <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setToDate(e.target.value)}} className={'adminsideinput'} max={moment().format('YYYY-MM-DD')}/>
         </div>
         </>
         :filterchange==='6'? <div className="col-md-3 col-sm-6 aos_input">

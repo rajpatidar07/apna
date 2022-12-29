@@ -521,11 +521,11 @@ if(result.data){
           {filterchange==='7'?
           <div>
       <div className="col-md-3 col-sm-6 aos_input">
-        <input type={"date"} plchldr={"Search by date"} onChange={(e)=>{setFromDate(e.target.value)}} className={'adminsideinput'} />
+        <input type={"date"} plchldr={"Search by date"} onChange={(e)=>{setFromDate(e.target.value)}} className={'adminsideinput'} max={moment().format('YYYY-MM-DD')}/>
         </div>
         
         <div className="col-md-3 col-sm-6 aos_input">
-        <input type={"date"} plchldr={"Search by date"}onChange={(e)=>{setToDate(e.target.value)}} className={'adminsideinput'}/> 
+        <input type={"date"} plchldr={"Search by date"}onChange={(e)=>{setToDate(e.target.value)}} className={'adminsideinput'} max={moment().format('YYYY-MM-DD')}/> 
         </div>
         </div>
         :filterchange==='6'? <div className="col-md-3 col-sm-6 aos_input">

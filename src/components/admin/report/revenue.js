@@ -255,30 +255,9 @@ const RevenueReport = () => {
           {
             name:"shipping",
             data:TotalShipping
-          },
-
-          {
-            name:" Total Refund",
-            data:[getRevenue.return_total]
-          },
-          
-          {
-            name:"Coupon",
-            data:[getRevenue.total_discount]
-          },
-          {
-            name:" Total Shipping Charge",
-            data:[getRevenue.total_shipping_charges]
-          },
-          {
-            name:"Taxes",
-            data:[getRevenue.total_gst]
-          },
-
-          {
-            name:"Total Sales",
-            data:[getRevenue.net_sale]
           }
+
+         
         ],
         xAxis: {
             categories:GrossAmmount
@@ -360,6 +339,62 @@ const RevenueReport = () => {
 //   offsetX: -5
 // }
 // };
+
+const optionss = {
+  chart: {
+    type: "bar",
+    borderRadius: "5",
+    borderColor: "#335cad",
+  },
+  title: {
+    text: " Figures",
+    style: { color: "green", fontSize: "22px" },
+    align: "left",
+  },
+  series: [
+    {
+      name:" Total Revenue",
+      data:[getRevenue.gross_total_amount]
+    },
+    
+    {
+      name:"Discount Ammont",
+      data:[getRevenue.discount_amount]
+    },
+    {
+      name:" Return Total",
+      data:[getRevenue.return_total]
+    },
+    {
+      name:"Taxes",
+      data:[getRevenue.total_gst]
+    },
+
+    {
+      name:"Total Shopping Charge",
+      data:[getRevenue.total_shipping_charges]
+    }
+  ],
+  xAxis: {
+    categories: [
+      "1",
+      "3",
+      "5",
+      "7",
+      "9",
+      "11",
+      "13",
+      "15",
+      "17",
+      "19",
+      "21",
+      "23",
+    ],
+  },
+  yAxis: {
+    categories: ["0", "200", "400", "600", "800", "1000"],
+  },
+};
 
 
     const columns = [
@@ -529,7 +564,7 @@ const RevenueReport = () => {
               setRevenueError(response.data.message)
               
                 setGetRevenue([0])
-              setTabledata([0])
+              setTabledata([])
        
             }
             else{
@@ -856,11 +891,11 @@ const SearchHandler=(e)=>{
           <div>
              
       <div className="col-md-3 col-sm-6 aos_input">
-        <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setFromDate(e.target.value)}} className={'adminsideinput'}/>
+        <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setFromDate(e.target.value)}} className={'adminsideinput'} max={moment().format('YYYY-MM-DD')} />
         </div>
         
         <div className="col-md-3 col-sm-6 aos_input">
-        <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setToDate(e.target.value)}} className={'adminsideinput'}/>
+        <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setToDate(e.target.value)}} className={'adminsideinput'} max={moment().format('YYYY-MM-DD')}/>
         </div>
         </div>
         :filterchange==='6'? <div className="col-md-3 col-sm-6 aos_input">
@@ -1035,9 +1070,9 @@ const SearchHandler=(e)=>{
 {/*  */}
 
 {/* graph */}
+{(getRevenue.gross_total_amount)||(getRevenue.discount_amount)||(getRevenue.return_total)||(getRevenue.total_gst)?<HighchartsReact highcharts={Highcharts} options={optionss}  />:null}
+
 {(getRevenue.gross_total_amount)||(getRevenue.discount_amount)||(getRevenue.return_total)||(getRevenue.total_gst)?<HighchartsReact highcharts={Highcharts} options={options}  />:null}
-
-
 {/* <div id="chart">
   <ReactApexChart options={option} series={series} type="line" height={350} />
 </div> */}
