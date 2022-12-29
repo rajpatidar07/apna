@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
@@ -12,242 +12,336 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
+import axios from "axios";
+import moment from "moment/moment";
 
 const ProductReport = () => {
-  const options = {
-    chart: {
-      type: "line",
-      borderRadius: "5",
-      borderColor: "#335cad",
-    },
-    title: {
-      text: " Figures",
-      style: { color: "green", fontSize: "22px" },
-      align: "left",
-    },
-    series: [
+ 
+  var NetSales=[];
+  var Order=[];
+
+  
+
+
+  const [filterchange,setFilterchange] = useState('')
+
+  const [getProduct, setGetProduct]= useState([])
+  const [tableProduct, setGetTableProduct]= useState([])
+
+  const [fromDate, setFromDate]=useState(moment().format("YYYY-MM-DD"));
+  const [toDate,setToDate]=useState(moment().format("YYYY-MM-DD"))
+  const [apicall,setapicall]=useState(false)
+  const [ProductSearch,setProductSearch]=useState("")
+  const [ProductError,setProductError]=useState("")
+
+  const [venderList,setVenderList]=useState([])
+  const[vendorId,setVendorId]=useState("")
+  const[category,setCategory]=useState([])
+  const[categoryId,setCategoryId]=useState("")
+
+
+
+  const TimeChange = (e)=>{
+
+    setFilterchange(e.target.value)
+
+    let value = e.target.value;
+    console.log("---------------------------------------------"+value);
+    if(value==1){
+      setFromDate(moment().format("YYYY-MM-DD"))
+      console.log("From date"+e.target.value)
+      console.log("today")
+      setToDate(moment().format("YYYY-MM-DD"))
+    }
+
+    if(value==2){
+      setFromDate(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'));
+      console.log("From date"+e.target.value);
+     
+      setToDate( moment().format("YYYY-MM-DD"));
+      console.log("yesterday--"+moment().subtract(1, 'day').startOf('day').format('YYYY-MM-DD'));
+
+    }
+   if(value===3){
+      setFromDate( moment().subtract(1, 'weeks').startOf('weeks').format('YYYY-MM-DD')  );
+    
+      console.log("From date"+e.target.value)
+      
+      setToDate( moment().format("YYYY-MM-DD")  );
+      // console.log("last week"+moment().subtract(1, 'week').startOf('week').format('YYYY-MM-DD'))
+   
+   }
+
+   if(value==4){
+   
+
+    setFromDate(moment().subtract(1, 'months').startOf('months').format('YYYY-MM-DD'));
+    console.log("From last month"+e.target.value)
+    setToDate(  moment().format("YYYY-MM-DD")    );
+    // setToDate("2022-12-14");
+
+    
+ }
+ if(value==5){
+  setFromDate(moment().subtract(6, 'month').startOf('month').format('YYYY-MM-DD') );
+  console.log("From last 6 month"+e.target.value)
+  setToDate( moment().format("YYYY-MM-DD") );
+}
+
+fetchData()
+
+  }
+
+   
+  
+  const fetchData=()=>{
+    console.log( "from_date---"+fromDate)
+    console.log( "to_date---"+toDate)
+    console.log( "Product searcj--"+ProductSearch)
+
+    axios.post(`${process.env.REACT_APP_BASEURL}/products_report`
+    ,
+    {
+      "from_date":fromDate,
+      "to_date":toDate,
+      "products_search":ProductSearch,  
+      "vendors_id":[vendorId],
+      "categorys":[categoryId],
+      "user_locations":[],
+      "brand":[]
+  }
+    ).then((response) => {
+        //  console.log('product data-all---'+JSON.stringify(response.data))
+         console.log('product data [0] [0]--'+JSON.stringify(response.data[0][0]))
+        console.log('Product data'+JSON.stringify(response.data[1]))
+        console.log('Product Error'+JSON.stringify(response))
+
+
+
+        if(response.data.message=="no_data"){
+          setProductError(response.data.message)
+          setGetProduct([0])
+          setGetTableProduct([0])
+        
+   
+        }
+        else{
+
+
+          setProductError('')
+          setGetProduct(response.data[0][0])
+          setGetTableProduct(response.data[1])
+         
+       
+        }
+     
+         
+      
+    }).catch(function (error) {
+      console.log(error);
+    });
+
+  }
+
+
+  const VenderData= async()=>{
+    let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
+    // console.log(result.data)
+    if(result.data){
+      setVenderList(result.data)
+      // console.log("resultdata---"+JSON.stringify(result.data))
+    }
+    
+ }
+
+
+ const CategoryData= async()=>{
+  let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
+  // console.log(result.data)
+  if(result.data){
+    setCategory(result.data)
+  }
+  
+}
+
+          useEffect(() => {
+
+          fetchData();
+          VenderData();
+          CategoryData();    
+           
+          }, [apicall]);
+
+          
+      const submitHandler=()=>{
+       
+        setapicall(true)
+         fetchData()
+       }
+            
+
+       const ProductChange =(e)=>{
+        setProductSearch(e.target.value)
+         
+       }
+
+       const OnReset =()=>{
+        
+       setProductSearch("")
+       fetchData();
+        //  setapicall(true)
+        
+         
+          
+     
+        
+       
+       
+    }
+
+    // getProduct.forEach((item,key)=>{
+      
+    //  ItemSold.push(item.product_count)
+    // //  NetSales.push(item.net_sales)
+    // //  Order.push(item.order_count)
+    // })
+    var ItemSold=getProduct.product_count;
+    var NetSales=getProduct.net_sales;
+    var Order=getProduct.order_count;
+    console.log("Item Sold ------"+ItemSold)
+    console.log("Net sales ------"+NetSales)
+    console.log("Order ------"+Order)
+    // // console.log("Net Sales ------"+ NetSales)
+    // // console.log("Order ------"+ Order)
+
+
+    const options = {
+      chart: {
+        type: "bar",
+        borderRadius: "5",
+        borderColor: "#335cad",
+      },
+      title: {
+        text: " Figures",
+        style: { color: "green", fontSize: "22px" },
+        align: "left",
+      },
+      
+      series: [
+        {
+          name: "Item Sold",
+          data: [ItemSold],
+        },
+        {
+          name: "Orders",
+          data: [Order],
+        },
+        {
+          name: "Net Sales",
+          data: [NetSales],
+        }
+       
+      ],
+      xAxis: {
+        categories: [
+          "1",
+          "3",
+          "5",
+          "7",
+          "9",
+          "11",
+          "13",
+          "15",
+          "17",
+          "19",
+          "21",
+          "23",
+        ],
+      },
+      yAxis: {
+        categories: ["0", "200", "400", "600", "800", "1000"],
+      },
+    };
+    const columns = [
+      {
+        name: "Sku",
+        selector: (row) => row.product_id,
+        sortable: true,
+        width: "150px",
+      },
+      {
+        name: "Product Name",
+        selector: (row) => row.product_name,
+        sortable: true,
+        width: "160px",
+      },
+  
       {
         name: "Item Sold",
-        data: [1, 2, 1, 4, 3, 6, 9, 4, 1, 8, 3, 5],
+        selector: (row) => row.product_name,
+        sortable: true,
+        width: "140px",
+        center: true,
       },
       {
-        name: "Net Sales",
-        data: [1, 3, 1, 3, 2, 5, 1, 4, 1, 8, 3, 5],
+        name: "Category",
+        selector: (row) => row.category_name,
+        sortable: true,
+        width: "190px",
       },
+      {
+        name: "Net Revenue",
+        selector: (row) => row.net_sales,
+        sortable: true,
+        width: "150px",
+        center: true,
+        style: {
+          paddingRight: "32px",
+          paddingLeft: "0px",
+        },
+      },
+  
       {
         name: "Orders",
-        data: [2, 1, 6, 7, 4, 6, 2, 4, 1, 8, 3, 5],
+        selector: (row) => row.order_count,
+        sortable: true,
+        width: "150px",
+        center: true,
+        style: {
+          paddingRight: "32px",
+          paddingLeft: "0px",
+        },
       },
-    ],
-    xAxis: {
-      categories: [
-        "1",
-        "3",
-        "5",
-        "7",
-        "9",
-        "11",
-        "13",
-        "15",
-        "17",
-        "19",
-        "21",
-        "23",
-      ],
-    },
-    yAxis: {
-      categories: ["0", "200", "400", "600", "800", "1000"],
-    },
-  };
-  const columns = [
-    {
-      name: "Sku",
-      selector: (row) => row.sku,
-      sortable: true,
-      width: "150px",
-    },
-    {
-      name: "Product Name",
-      selector: (row) => row.pname,
-      sortable: true,
-      width: "160px",
-    },
+      {
+        name: "Stock",
+        selector: (row) => row.product_count,
+        sortable: true,
+        width: "140px",
+        center: true,
+        style: {
+          paddingRight: "32px",
+          paddingLeft: "0px",
+        },
+      },
+      {
+        name: "Status",
+        selector: (row) => row.product_count,
+        sortable: true,
+        width: "100px",
+        center: true,
+        style: {
+          paddingRight: "32px",
+          paddingLeft: "0px",
+        },
+      },
+    ];
 
-    {
-      name: "Item Sold",
-      selector: (row) => row.isold,
-      sortable: true,
-      width: "140px",
-      center: true,
-    },
-    {
-      name: "Category",
-      selector: (row) => row.category,
-      sortable: true,
-      width: "190px",
-    },
-    {
-      name: "Net Revenue",
-      selector: (row) => row.net,
-      sortable: true,
-      width: "150px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
-    },
 
-    {
-      name: "Orders",
-      selector: (row) => row.order,
-      sortable: true,
-      width: "150px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
-    },
-    {
-      name: "Stock",
-      selector: (row) => row.stock,
-      sortable: true,
-      width: "140px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
-    },
-    {
-      name: "Status",
-      selector: (row) => row.status,
-      sortable: true,
-      width: "100px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
-    },
-  ];
 
-  const data = [
-    {
-      id: 1,
-      net: "$250",
-      sku: "256143",
-      pname: <p className="reviewdesc">Light House Device Bag</p>,
-      isold: "45",
-      stock: "25",
-      category: <p className="reviewdesc"> Decoration Decoration </p>,
-      order: "120",
-    },
-    {
-      id: 2,
-      net: "$250",
-      sku: "256143",
-      pname: <p className="reviewdesc">Light House Device Bag</p>,
-      isold: "45",
-      category: "Backpacks",
-      order: "120",
-      status: "$14",
-      stock: "25",
-    },
-    {
-      id: 1,
-      net: "$250",
-      sku: "256143",
-      pname: <p className="reviewdesc">Light House Device Bag</p>,
-      isold: "45",
-      category: "Backpacks",
-      order: "120",
-      stock: "25",
-      status: "$14",
-    },
-    {
-      id: 2,
-      net: "$250",
-      sku: "256143",
-      pname: <p className="reviewdesc">Solo Device Bag</p>,
-      isold: "45",
-      category: "Backpacks",
-      order: "120",
-      stock: "25",
-      status: "$14",
-    },
-    {
-      id: 1,
-      net: "$250",
-      sku: "256143",
-      pname: <p className="reviewdesc">Solo Device Bag</p>,
-      isold: "45",
-      category: "Backpacks",
-      order: "120",
-      stock: "25",
-      status: "$14",
-    },
-    {
-      id: 2,
-      net: "$250",
-      sku: "256143",
-      pname: <p className="reviewdesc">Solo Device Bag</p>,
-      isold: "45",
-      category: "Backpacks",
-      order: "120",
-      stock: "25",
-      status: "$14",
-    },
-    {
-      id: 1,
-      net: "$250",
-      sku: "256143",
-      pname: <p className="reviewdesc">Solo Device Bag</p>,
-      isold: "45",
-      category: "Backpacks",
-      order: "120",
-      stock: "25",
-      status: "$14",
-    },
-    {
-      id: 2,
-      net: "$250",
-      sku: "256143",
-      pname: <p className="reviewdesc">Solo Device Bag</p>,
-      isold: "45",
-      category: "Backpacks",
-      order: "120",
-      stock: "25",
-      status: "$14",
-    },
-    {
-      id: 1,
-      net: "$250",
-      sku: "256143",
-      pname: <p className="reviewdesc">Solo Device Bag</p>,
-      isold: "45",
-      category: "Backpacks",
-      order: "120",
-      stock: "25",
-      status: "$14",
-    },
-    {
-      id: 2,
-      net: "$250",
-      sku: "256143",
-      pname: <p className="reviewdesc">Solo Device Bag</p>,
-      isold: "45",
-      category: "Backpacks",
-      order: "120",
-      stock: "25",
-      status: "$14",
-    },
-  ];
-  const [filterchange,setFilterchange] = useState('')
-  const TimeChange = (e)=>{
-    setFilterchange(e.target.value)
-          }
+    // console.log("111111111---"+JSON.stringify(venderList))
+
+
+
   return (
     <div>
       <h2>Product Report</h2>
@@ -262,31 +356,90 @@ const ProductReport = () => {
               onChange={TimeChange}
             >
               <option>Search by category</option>
-              <option value="1">1 day</option>
-              <option value="2">1 week</option>
-              <option value="3">current month</option>
-              <option value="4">last month</option>
-              <option value="5">last 6  month</option>
-              <option value="6">custom month</option>
+              <option name="today" value={1}>Today</option>
+              <option name="yesterday" value={2}>yesterday</option>
+              <option name="last_week" value={3}>Last week</option>
+              <option name="last_month" value={4}>last month</option>
+              <option name="last_6_month" value={5}>last 6  month</option>
+              {/* <option value="6">custom month</option> */}
               <option value="7">custom date</option>
 
             </Form.Select>
           </div>
+ 
+          <div className="col-md-3 col-sm-6 aos_input">
+          <Form.Select
+            aria-label="Search by category"
+            className="adminselectbox"
+            placeholder="Search by category"
+            onChange={(e)=>{setVendorId(e.target.value)}}
+          >
+            <option >Search by Vendor ID</option>
+            {
+              venderList.map((item)=>{
+                // console.log("return-----> "+item.shop_name);
+                return(
+                  <>
+                   <option value={item.id}>{item.shop_name}</option>
+                  </>
+                )
+              })
+            }
+            
+        
+   
+
+          </Form.Select>
+
+
+          
+          </div>
+
+
+          
+          <div className="col-md-3 col-sm-6 aos_input">
+          <Form.Select
+            aria-label="Search by category"
+            className="adminselectbox"
+            placeholder="Search by category"
+            onChange={(e)=>{setCategoryId(e.target.value)}}
+          >
+            <option >Search by Category</option>
+            {
+              category.map((item)=>{
+                return(
+                 
+                   <option  value={item.id}>{item.category_name}</option>
+                 
+                )
+              })
+            }
+            
+        
+   
+
+          </Form.Select>
+
+
+          
+          </div>
+
           {filterchange==='7'?
-          <>
+          <div>
       <div className="col-md-3 col-sm-6 aos_input">
-        <Input type={"date"} plchldr={"Search by date"} />
+        <input type={"date"} plchldr={"Search by date"} onChange={(e)=>{setFromDate(e.target.value)}} className={'adminsideinput'} />
         </div>
         
         <div className="col-md-3 col-sm-6 aos_input">
-        <Input type={"date"} plchldr={"Search by date"} />
+        <input type={"date"} plchldr={"Search by date"}onChange={(e)=>{setToDate(e.target.value)}} className={'adminsideinput'}/> 
         </div>
-        </>
+        </div>
         :filterchange==='6'? <div className="col-md-3 col-sm-6 aos_input">
         <Input type={"month"} plchldr={"Search by month"} />
         </div> : null}
+
         <div className="col-md-auto col-sm-6 aos_input">
-        <MainButton btntext={"Search"} btnclass={'button main_button'} />
+        <MainButton btntext={"Search"} btnclass={'button main_button'} onClick={submitHandler}  />
         </div>
         <div className="col-md-auto col-sm-6 aos_input">
         <DropdownButton id="dropdown-variant-success" title="Download" variant="button main_button">
@@ -314,7 +467,10 @@ const ProductReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                      <h3>2,356</h3>
+                      <h3>
+                        
+                        { (ProductError)=="no_data"||(getProduct.product_count)==null||(getProduct.product_count)==undefined||(getProduct.product_count)==""? <h3>No Record</h3>:  <h3>{getProduct.product_count}</h3> }  
+                        </h3>
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
                         <p className="mb-0 h5">0%</p>
@@ -339,7 +495,8 @@ const ProductReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                      <h3>2,356</h3>
+                    { (ProductError)=="no_data"||(getProduct.net_sales)==null||(getProduct.net_sales)==undefined||(getProduct.net_sales)==""? <h3>No Record</h3>:  <h3>{getProduct.net_sales}</h3> }  
+                     
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
                         <p className="mb-0 h5">0%</p>
@@ -364,7 +521,8 @@ const ProductReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                      <h3>2,356</h3>
+                     
+                      { (ProductError)=="no_data"||(getProduct.order_count)==null||(getProduct.order_count)==undefined||(getProduct.order_count)==""? <h3>No Record</h3>:  <h3>{getProduct.order_count}</h3> }  
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
                         <p className="mb-0 h5">0%</p>
@@ -391,10 +549,27 @@ const ProductReport = () => {
         {/*  */}
 
         {/* datatable */}
+        <div className="row justify-content-end py-2">
+<div className="col-md-3 col-sm-6">
+        <Form.Group className="mb-3">        
+            <Form.Control type="text" placeholder="Search by name"   onChange={ProductChange}  value={ProductSearch}/>
+            </Form.Group>
+            </div>
+
+            <div className="col-md-auto col-sm-6">
+        <MainButton btntext={"Search"} btnclass={'button main_button'} onClick={submitHandler} />
+
+        
+       
+        </div>
+        <div className="col-md-auto col-sm-6 aos_input">
+        <MainButton btntext={"Reset"} btnclass={'button main_button'}  onClick={OnReset}/>
+        </div>
+        </div>
 
         <DataTable
           columns={columns}
-          data={data}
+          data={tableProduct}
           pagination
           highlightOnHover
           pointerOnHover

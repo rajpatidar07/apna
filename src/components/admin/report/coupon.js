@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState } from "react";
 import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
@@ -9,163 +9,240 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import axios from 'axios';
+import moment from "moment/moment";
 
 const CouponReport = () => {
-  const options = {
-    chart: {
-      type: "line",
-      borderRadius: "5",
-      borderColor: "#335cad",
-    },
-    title: {
-      text: " Figures",
-      style: { color: "green", fontSize: "22px" },
-      align: "left",
-    },
-    series: [
-      {
-        name: "Discounted Orders",
-        data: [1, 2, 1, 4, 3, 6, 9, 4, 1, 8, 3, 5],
-      },
-      {
-        name: "Amount",
-        data: [1, 3, 1, 3, 2, 5, 1, 4, 1, 8, 3, 5],
-      },
-      
-    ],
-    xAxis: {
-      categories: [
-        "1",
-        "3",
-        "5",
-        "7",
-        "9",
-        "11",
-        "13",
-        "15",
-        "17",
-        "19",
-        "21",
-        "23",
-      ],
-    },
-    yAxis: {
-      categories: ["0", "200", "400", "600", "800", "1000"],
-    },
-  };
-  const columns = [
-  
-    {
-      name: "Coupon Code",
-      selector: (row) => row.code,
-      sortable: true,
-      width: "260px",
-    },
-    {
-      name: "Amount Discounted",
-      selector: (row) => row.discount,
-      sortable: true,
-    },
-    {
-      name: "Created",
-      selector: (row) => row.cdate,
-      sortable: true,
-      
-    },
-    {
-      name: "Expires",
-      selector: (row) => row.edate,
-      sortable: true,
-     
-    },
-    {
-      name: "Orders",
-      selector: (row) => row.order,
-      sortable: true,
-      
-    },
-    {
-      name: "Type",
-      selector: (row) => row.type,
-      sortable: true,
-      
-    },
-   
-   
-  ];
 
-  const data = [
-    {
-      id: 1,
-      code: "Coupon250",
-      type: "PErcentage",
-      cdate:"23 Sep,2021",
-    edate:"23 Sep,2021",
-  discount:"12",
-  order: "120",
-    },
-    {
-      id: 1,
-      code: "Coupon250",
-      type: "PErcentage",
-      cdate:"23 Sep,2021",
-    edate:"23 Sep,2021",
-  discount:"12",
-  order: "120",
-    }, {
-      id: 1,
-      code: "Coupon250",
-      type: "PErcentage",
-      cdate:"23 Sep,2021",
-    edate:"23 Sep,2021",
-  discount:"12",
-  order: "120",
-    }, {
-      id: 1,
-      code: "Coupon250",
-      type: "PErcentage",
-      cdate:"23 Sep,2021",
-    edate:"23 Sep,2021",
-  discount:"12",
-  order: "120",
-    }, {
-      id: 1,
-      code: "Coupon250",
-      type: "PErcentage",
-      cdate:"23 Sep,2021",
-    edate:"23 Sep,2021",
-  discount:"12",
-  order: "120",
-    }, {
-      id: 1,
-      code: "Coupon250",
-      type: "PErcentage",
-      cdate:"23 Sep,2021",
-    edate:"23 Sep,2021",
-  discount:"12",
-  order: "120",
-    }, {
-      id: 1,
-      code: "Coupon250",
-      type: "PErcentage",
-      cdate:"23 Sep,2021",
-    edate:"23 Sep,2021",
-  discount:"12",
-  order: "120",
-    }, {
-      id: 1,
-      code: "Coupon250",
-      type: "PErcentage",
-      cdate:"23 Sep,2021",
-    edate:"23 Sep,2021",
-  discount:"12",
-  order: "120",
-    },
-  ];
+
   const [filterchange,setFilterchange] = useState('')
+
+  
+  const [getCoupon, setGetCoupon]= useState([])
+
+  const [fromDate, setFromDate]=useState(moment().format("YYYY-MM-DD"));
+  const [toDate,setToDate]=useState(moment().format("YYYY-MM-DD"))
+  const [apicall,setapicall]=useState(false)
+  const [tabledate, setTabledata]=useState([])
+  const [searchCoupon, setSearchCoupon]=useState("")
+  const [couponError,setCouponError]=useState("")
+
+
+
+
   const TimeChange = (e)=>{
     setFilterchange(e.target.value)
-          }
+
+    let value = e.target.value;
+    console.log("---------------------------------------------"+value);
+    if(value==1){
+      setFromDate(moment().format("YYYY-MM-DD"))
+      console.log("From date"+e.target.value)
+      console.log("today")
+      setToDate(moment().format("YYYY-MM-DD"))
+    }
+
+    if(value==2){
+      setFromDate(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'));
+      console.log("From date"+e.target.value);
+     
+      setToDate( moment().format("YYYY-MM-DD"));
+      console.log("yesterday--"+moment().subtract(1, 'day').startOf('day').format('YYYY-MM-DD'));
+
+    }
+   if(value==3){
+      setFromDate( moment().subtract(1, 'weeks').startOf('weeks').format('YYYY-MM-DD')  );
+    
+      console.log("From date"+e.target.value)
+      
+      setToDate( moment().format("YYYY-MM-DD")  );
+      // console.log("last week"+moment().subtract(1, 'week').startOf('week').format('YYYY-MM-DD'))
+   
+   }
+
+   if(value==4){
+   
+
+    setFromDate(moment().subtract(1, 'months').startOf('months').format('YYYY-MM-DD'));
+    console.log("From last month"+e.target.value)
+    setToDate(  moment().format("YYYY-MM-DD")    );
+    // setToDate("2022-12-14");
+
+    
+ }
+ if(value==5){
+  setFromDate(moment().subtract(6, 'month').startOf('month').format('YYYY-MM-DD') );
+  console.log("From last 6 month"+e.target.value)
+  setToDate( moment().format("YYYY-MM-DD") );
+}
+fetchData();
+  }
+
+
+
+          const fetchData=()=>{
+            console.log( "from_date---"+fromDate)
+            console.log( "to_date----"+toDate)
+              axios.post(`${process.env.REACT_APP_BASEURL}/coupons_report`
+            ,
+             {
+               "from_date":fromDate,
+                  "to_date":toDate,
+                  "coupons_search":searchCoupon, 
+                   "vendors_id":[],
+                  "categorys":[],
+                  "user_locations":[],
+                  "brand":[]
+            }
+            ).then((response) => {
+                console.log('Coupon orders'+JSON.stringify(response.data[0]))
+                console.log('All  Coupon '+JSON.stringify(response.data[1]))
+
+                console.log('Error-----'+JSON.stringify(response.data))
+               
+
+                  if(response.data.message=="no_data"){
+
+                    setCouponError(response.data.message)
+                   
+                     setGetCoupon([0])
+                     setTabledata([0])
+
+                  }
+                  else{
+                    setCouponError('')
+                    setapicall(false)
+                    setGetCoupon(response.data[0])
+                  setTabledata(response.data[1])
+                  }
+             
+            }).catch(function (error) {
+              console.log(error);
+            });
+           } 
+    
+    
+    
+          useEffect(() => {
+        
+        
+            fetchData();
+        
+           
+          }, [apicall]);
+            
+
+          const ProductChange =(e)=>{
+            setSearchCoupon(e.target.value)
+             
+           }
+    
+           const OnReset =()=>{
+            setSearchCoupon("")
+        
+             setapicall(true)
+            
+           
+        }
+
+          const submitHandler=()=>{
+       
+            setapicall(true)
+            fetchData();
+            
+           }
+     
+
+          //  console.log("get Coupon+++++"+JSON.stringify(getCoupon[0].total_order))
+          //  console.log("get Coupon+++++"+JSON.stringify(getCoupon[0].amount))
+          console.log("get Table====="+ JSON.stringify(tabledate))
+          console.log("get Table++++"+ tabledate)
+          console.log("couponError.message=====  "+ couponError);
+          console.log("getCoupon====="+ getCoupon);
+ 
+          console.log("getCoupon====="+JSON.stringify( getCoupon));
+
+
+
+          var OrderCount=getCoupon.orders_count;
+          var DiscountAmmount=getCoupon.discount_amount
+
+
+
+
+
+          const options = {
+            chart: {
+              type: "bar",
+              borderRadius: "5",
+              borderColor: "#335cad",
+            },
+            title: {
+              text: " Figures",
+              style: { color: "green", fontSize: "22px" },
+              align: "left",
+            },
+            series: [
+              {
+                name: "Discounted Orders",
+                data: [OrderCount],
+              },
+              {
+                name: "Amount",
+                data: [DiscountAmmount],
+              },
+              
+            ],
+            xAxis: {
+              categories: [
+              
+              ],
+            },
+            yAxis: {
+              categories: [],
+            },
+          };
+          const columns = [
+          
+            {
+              name: "Coupon Code",
+              selector: (row) => row.coupons_code,
+              sortable: true,
+              width: "260px",
+            },
+            {
+              name: " Discount Coupon",
+              selector: (row) => row.discount_coupon,
+              sortable: true,
+              width: "260px",
+            },
+            {
+              name: "Amount Discounted",
+              selector: (row) => row.amount_discounted,
+              sortable: true,
+            },
+            {
+              name: "Created",
+              selector: (row) => row.created_date,
+              sortable: true,
+              
+            },
+            {
+              name: "Expires",
+              selector: (row) => row.edate,
+              sortable: true,
+             
+            },
+            {
+              name: "Orders",
+              selector: (row) => row.order_count,
+              sortable: true,
+              
+            },
+         
+           
+           
+          ];
     return (
         <div>
             <h2>Coupon Report</h2>
@@ -179,33 +256,40 @@ const CouponReport = () => {
               placeholder="Search by category"
               onChange={TimeChange}
             >
-              <option>Search by category</option>
-              <option value="1">1 day</option>
-              <option value="2">1 week</option>
-              <option value="3">current month</option>
-              <option value="4">last month</option>
-              <option value="5">last 6  month</option>
-              <option value="6">custom month</option>
-              <option value="7">custom date</option>
+              <option >Search by category</option>
+              <option name="today" value={1}>Today</option>
+              <option name="yesterday" value={2}>yesterday</option>
+              <option name="last_week" value={3}>Last week</option>
+              <option name="last_month" value={4}>last month</option>
+              <option name="last_6_month" value={5}>last 6  month</option>
+              {/* <option name="custom_month" value="6">custom month</option> */}
+              <option name="custom_date" value="7">custom date</option>
 
             </Form.Select>
-          </div>
+            </div>
+           
           {filterchange==='7'?
+         
           <>
+             
       <div className="col-md-3 col-sm-6 aos_input">
-        <Input type={"date"} plchldr={"Search by date"} />
+        <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setFromDate(e.target.value)}} className={'adminsideinput'}/>
         </div>
         
         <div className="col-md-3 col-sm-6 aos_input">
-        <Input type={"date"} plchldr={"Search by date"} />
+        <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setToDate(e.target.value)}} className={'adminsideinput'}/>
         </div>
         </>
         :filterchange==='6'? <div className="col-md-3 col-sm-6 aos_input">
         <Input type={"month"} plchldr={"Search by month"} />
+       
         </div> : null}
+        
+        
         <div className="col-md-auto col-sm-6 aos_input">
-        <MainButton btntext={"Search"} btnclass={'button main_button'} />
+        <MainButton btntext={"Search"} btnclass={'button main_button'} onClick={submitHandler} />
         </div>
+       
         <div className="col-md-auto col-sm-6 aos_input">
         <DropdownButton id="dropdown-variant-success" title="Download" variant="button main_button">
       <Dropdown.Item href="#/action-1">Excel</Dropdown.Item>
@@ -228,10 +312,14 @@ const CouponReport = () => {
                 <h5 className="text-success">Discounted Orders </h5>
               </div>
               <div className="row mt-3 px-2">
+
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                    <h3>2,356</h3>
+                  {console.log("********"+couponError)}
+                  {console.log(" order===="+getCoupon.orders_count)}
+                  {(couponError)=="no_data"||(getCoupon.orders_count)==null || (getCoupon.orders_count)==undefined?<h3>No Record</h3>: <h3>{getCoupon.orders_count}</h3>}
+
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
                      <p className="mb-0 h5">0%</p>
@@ -258,7 +346,11 @@ const CouponReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                    <h3>2,356</h3>
+                
+                           {console.log("********"+couponError)}
+                           {console.log(" Ammount===="+getCoupon.discount_amount)}
+                        {(couponError)=="no_data"||(getCoupon.discount_amount)==null || (getCoupon.discount_amount)==undefined || (getCoupon.discount_amount)==""?<h3>No Record</h3>: <h3>{getCoupon.discount_amount}</h3>}
+                
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
                      <p className="mb-0 h5">0%</p>
@@ -285,12 +377,29 @@ const CouponReport = () => {
 
 {/*  */}
 
+  {/* datatable */}
+  <div className="row justify-content-end py-2">
+<div className="col-md-3 col-sm-6">
+        <Form.Group className="mb-3">        
+            <Form.Control type="text" placeholder="Search by name"   onChange={ProductChange}  value={searchCoupon}/>
+            </Form.Group>
+            </div>
 
+            <div className="col-md-auto col-sm-6">
+        <MainButton btntext={"Search"} btnclass={'button main_button'} onClick={submitHandler} />
+
+        
+       
+        </div>
+        <div className="col-md-auto col-sm-6 aos_input">
+        <MainButton btntext={"Reset"} btnclass={'button main_button'}  onClick={OnReset}/>
+        </div>
+        </div>
       {/* datatable */}
    
       <DataTable
         columns={columns}
-        data={data}
+        data={tabledate}
         pagination
         highlightOnHover
         pointerOnHover

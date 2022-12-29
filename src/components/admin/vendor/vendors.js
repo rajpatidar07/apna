@@ -210,6 +210,7 @@ const VendorsList = () => {
           console.log(error);
         });
     }, [apicall]);
+
     useEffect(() => {
       setaddvendordata({
         ...addvendordata,
@@ -221,7 +222,9 @@ const VendorsList = () => {
       setaddvendordata({
         ...addvendordata,
         [e.target.name]: e.target.value,
+        
       });
+      console.log("dataa"+JSON.stringify(addvendordata))
     };
   const handleClose = () => {
     formRef.current.reset();
@@ -396,6 +399,8 @@ const VendorsList = () => {
       console.log(error);
     });
   };
+  console.log("VEDORR"+JSON.stringify(addvendordata))
+  console.log("VEDORRDAATTTTAAAAAAAAAA"+JSON.stringify(vendordata))
 
   return (
     <div>

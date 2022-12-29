@@ -104,7 +104,7 @@ const Coupon = () => {
     function getCouponList() {
       try {
         axios
-          .get("${process.env.REACT_APP_BASEURL}/coupon?coupon_id=all")
+          .get(`${process.env.REACT_APP_BASEURL}/coupon?coupon_id=all`)
           .then((response) => {
             let data = response.data;
             setcoupondata(data)
