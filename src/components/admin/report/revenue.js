@@ -601,16 +601,8 @@ const RevenueReport = () => {
        
       }, [ apicall]);
         
-      let locationArray=[]
+      
 
-     const locationSearch=(e)=>{
-       console.log("^^^^"+e.target.value)
-
-       locationArray.push(e.target.value)
-
-      setLocation(locationArray)
-      console.log("location arry"+locationArray)
-     }
 
  
 
@@ -739,6 +731,30 @@ const categoryHandler=(e)=>{
  }
 
 
+
+  
+ const options4 = [
+
+    { value: "indore" ,label:"Indore" },
+    { value: "bhopal" ,label:"Bhopal" },
+    { value: "dhar" ,label:"Dhar" },
+    { value: "khandwa" ,label:"Khandwa" },
+    { value: "khargone" ,label:"Khargone" },
+  
+]
+ var  SearchArray=[]
+const SearchHandler=(e)=>{
+
+  SearchArray=[]
+   e.map((item)=>{
+    
+    SearchArray.push(item.value)
+   
+   })
+   setLocation(SearchArray)
+  
+  }
+
     return (
         <div>
               <h2>Revenue Report</h2>
@@ -814,38 +830,23 @@ const categoryHandler=(e)=>{
             />
          
             </div>
-            {/* <div className="col-md-3 col-sm-6 aos_input">
-            <Form.Select
-              aria-label="Search by category"
-              className="adminselectbox"
-              placeholder="Search by category"
-              onChange={(e)=>{setCategoryId(e.target.value)}}
-            >
-              <option >Search by Category</option>
-              {
-                category.map((item)=>{
-                  return(
-                   
-                     <option  value={item.id}>{item.category_name}</option>
-                   
-                  )
-                })
-              }
-              
-          
+
+
+            <div className="col-md-3 col-sm-6 aos_input">
+            <Select
+      
+              className=" basic-multi-select"
+              placeholder="Search by Location"
+              onChange={SearchHandler}
+             
+              classNamePrefix="select"
+              isMulti  
+              options={options4} 
+            />
+         
+            </div>
      
 
-            </Form.Select>
-
-
-            
-            </div> */}
-
-            <div className="col-md-3 col-sm-6">
-        <Form.Group className="mb-3">        
-            <Form.Control type="text" placeholder="Search by Location" onChange={locationSearch}  />
-            </Form.Group>
-            </div>
 
 
 
