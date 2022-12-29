@@ -388,13 +388,13 @@ fetchData()
             </div>
           {filterchange==='7'?
                   
-                  <div>
+                  <div className="col-md-3 col-sm-6 aos_input d-flex">
              
-                  <div className="col-md-3 col-sm-6 aos_input">
+                  <div className="col-6 aos_input pe-2">
                     <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setFromDate(e.target.value)}} className={'adminsideinput'}/>
                     </div>
                     
-                    <div className="col-md-3 col-sm-6 aos_input">
+                    <div className="col-6">
                     <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setToDate(e.target.value)}} className={'adminsideinput'}/>
                     </div>
                     </div>
