@@ -13,6 +13,7 @@ const OrderDetail = () => {
   let userid= localStorage.getItem("userid")
   const[order,setOrder]=useState([]);
   const[productorder,setproductOrder]=useState([]);
+  const [amt,setAmt]=useState("")
   const[user,setUser]=useState([]);
   const [changstatuss, setchangstatuss] = useState('');
   const [searchdataa, setsearchDataa] = useState({
@@ -40,6 +41,8 @@ const OrderDetail = () => {
     axios.get(`http://192.168.29.108:5000/order_deteils?id=${orderid}`).then((response) => {
       setOrder(response.data);
       setproductOrder(response.data.product_types)
+     
+      
       UserData();
       // console.log("______uuuuu_____"+JSON.stringify(response.data))
       // setapicall(false)
@@ -58,6 +61,7 @@ const OrderDetail = () => {
       console.log(error);
     });
   }
+  let v=0;
   return (
     <div className="order_detail_page">
       <div className="order_detail">
@@ -104,6 +108,14 @@ const OrderDetail = () => {
                   {order.order_date} 
                   </div>
                 </div>
+
+
+                <div className="d-flex flex-column text-center">
+                  <div className="order_info_heading">Delivery Date</div>
+                  <div className="date_time">
+                  {order.delivery_date} 
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -111,6 +123,12 @@ const OrderDetail = () => {
               <div className="product_image_price"></div>
 
 {(productorder || []).map(orderdata=>{
+                  
+                  
+                   v += orderdata.sale_price*orderdata.quantity;
+
+              
+                  
                     return(
 
               <div className="d-flex justify-content-between mb-3 align-items-center">
@@ -118,20 +136,20 @@ const OrderDetail = () => {
                 <div className="product_img d-flex">
                   <img src="" alt="apnaorganic"/>
                   <div className="product_name_detial ps-3">
-                    <h6>T-Shirt Blue</h6>
-                    <p>color:blue</p>
-                    <p>size: M</p>
+                    <h6>{orderdata.product_title_name}</h6>
+                    <p>color:{orderdata.colors}</p>
+                    <p>size: {orderdata.size}</p>
                   </div>
                 </div>
 
-                <div className="product_price">{orderdata.price}₹</div>
+                <div className="product_price">{orderdata.sale_price}₹</div>
                 <div className="product_quantity">{orderdata.quantity}</div>
-                <div className="total_amount">{orderdata.price*orderdata.quantity}</div>
+                <div className="total_amount">{  orderdata.sale_price*orderdata.quantity}</div>
                
               </div>
               )
             })} 
-             
+            
             </div>
 
             <div className="delivery_charges">
@@ -155,7 +173,7 @@ const OrderDetail = () => {
                     Subtotal<span>({order.total_quantity} items)</span>
                   </p>
                 </div>
-                <div className="">{order.total_amount - (order.total_cgst + order.total_sgst )}₹</div>
+                <div className="">{v}₹</div>
               </div>
               <div className="payment_summary_total d-flex justify-content-between align-items-center">
                 <div className="Subtotal">

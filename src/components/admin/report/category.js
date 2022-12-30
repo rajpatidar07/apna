@@ -256,97 +256,97 @@ fetchData()
            
           ];
         
-          const data = [
-            {
-              id: 1,
-              net: "$250",
-              isold: "25",
-              category: <p className="reviewdesc"> Decoration Decoration </p>,
-              product: "120",
-              order:"12"
-            },
-            {
-              id: 2,
-              net: "$250",
-              category: "Backpacks",
-              order: "120",
-              products: "$14",
-              isold: "25",
-            },
-            {
-              id: 1,
-              net: "$250",
-              category: "Backpacks",
-              order: "120",
-              product: "25",
-              isold: "25",
+          // const data = [
+          //   {
+          //     id: 1,
+          //     net: "$250",
+          //     isold: "25",
+          //     category: <p className="reviewdesc"> Decoration Decoration </p>,
+          //     product: "120",
+          //     order:"12"
+          //   },
+          //   {
+          //     id: 2,
+          //     net: "$250",
+          //     category: "Backpacks",
+          //     order: "120",
+          //     products: "$14",
+          //     isold: "25",
+          //   },
+          //   {
+          //     id: 1,
+          //     net: "$250",
+          //     category: "Backpacks",
+          //     order: "120",
+          //     product: "25",
+          //     isold: "25",
         
         
-            },
-            {
-              id: 2,
-              net: "$250",
-              category: "Backpacks",
-              order: "120",
-              product: "25",
-              isold: "25",
+          //   },
+          //   {
+          //     id: 2,
+          //     net: "$250",
+          //     category: "Backpacks",
+          //     order: "120",
+          //     product: "25",
+          //     isold: "25",
         
-            },
-            {
-              id: 1,
-              net: "$250",
-              category: "Backpacks",
-              order: "120",
-              product: "25",
-              isold: "25",
+          //   },
+          //   {
+          //     id: 1,
+          //     net: "$250",
+          //     category: "Backpacks",
+          //     order: "120",
+          //     product: "25",
+          //     isold: "25",
         
-            },
-            {
-              id: 2,
-              net: "$250",
-              category: "Backpacks",
-              order: "120",
-              product: "25",
-              isold: "25",
+          //   },
+          //   {
+          //     id: 2,
+          //     net: "$250",
+          //     category: "Backpacks",
+          //     order: "120",
+          //     product: "25",
+          //     isold: "25",
         
-            },
-            {
-              id: 1,
-              net: "$250",
-              category: "Backpacks",
-              order: "120",
-              product: "25",
-              isold: "25",
+          //   },
+          //   {
+          //     id: 1,
+          //     net: "$250",
+          //     category: "Backpacks",
+          //     order: "120",
+          //     product: "25",
+          //     isold: "25",
         
-            },
-            {
-              id: 2,
-              net: "$250",
-              category: "Backpacks",
-              order: "120",
-              product: "25",
-              isold: "25",
+          //   },
+          //   {
+          //     id: 2,
+          //     net: "$250",
+          //     category: "Backpacks",
+          //     order: "120",
+          //     product: "25",
+          //     isold: "25",
         
-            },
-            {
-              id: 1,
-              net: "$250",
-              category: "Backpacks",
-              order: "120",
-              product: "25",
-              isold: "25",
+          //   },
+          //   {
+          //     id: 1,
+          //     net: "$250",
+          //     category: "Backpacks",
+          //     order: "120",
+          //     product: "25",
+          //     isold: "25",
         
-            },
-            {
-              id: 2,
-              net: "$250",
-              category: "Backpacks",
-              order: "120",
-              product: "25",
-              isold: "25",
+          //   },
+          //   {
+          //     id: 2,
+          //     net: "$250",
+          //     category: "Backpacks",
+          //     order: "120",
+          //     product: "25",
+          //     isold: "25",
         
-            },
-          ];
+          //   },
+          // ];
           
           
   return (
@@ -518,7 +518,7 @@ fetchData()
 
         <DataTable
           columns={columns}
-          data={data}
+          // data={data}
           pagination
           highlightOnHover
           pointerOnHover

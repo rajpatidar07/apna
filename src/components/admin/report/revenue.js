@@ -21,6 +21,7 @@ import ReactApexChart from "react-apexcharts";
 import Select from 'react-select'
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import { downloadExcel } from "react-export-table-to-excel";
 
 
 
@@ -59,16 +60,16 @@ const RevenueReport = () => {
     const orientation = "portrait"; // portrait or landscape
 
     const marginLeft = 40;
-    // const backgroundColor = "pink";
+
 
     const doc = new jsPDF(orientation, unit, size);
 
     doc.setFontSize(15);
 
-    const title = "My Awesome Report";
-    const headers = [["Date", "Total GST","Total Sales","Gross Amount"]];
+    const title = "Revenue Report";
+    const headers = [["Date", "Gross Revenue","Total GST","Discount", "shipping","Net Revenue","Total Revenue"]];
 
-    const data =tabledate.map(elt=> [elt.uniquedates, elt.total_gst, elt.total_sales,elt.gross_amount]);
+    const data =tabledate.map(elt=> [elt.uniquedates, elt.gross_amount, elt.total_gst,elt.discount, elt.total_shipping_charges,elt.net_sales,elt.total_sales]);
 
     let content = {
       startY: 50,
@@ -79,16 +80,33 @@ const RevenueReport = () => {
     // doc.text(headers, backgroundColor, "pink");
     doc.text(title, marginLeft, 40);
     doc.autoTable(content);
-    doc.save("report.pdf")
-    doc.setFillColor("Gray" ,100)
+    doc.save("Revenue Report.pdf")
+    // doc.setFillColor("Gray" ,100)
   }
 
   // end pdf
 
+ //----------------------------------------------------+++=++++++ excel--------------------------------------------------->
+ const header = ["Date", "Gross Revenue","Total GST","Discount", "shipping","Net Revenue","Total Revenue"];
 
+//  const body2 = [
+//   { firstname: "Edison", lastname: "Padilla", age: 14 ,mobile:"87787866"},
+//   { firstname: "Cheila", lastname: "Rodrigez", age: 56 },
+// ];
 
+function handleDownloadExcel() {
+  downloadExcel({
+    fileName: "Revenue Report -> downloadExcel method",
+    sheet: "Revenue Report",
+    tablePayload: {
+       header,
+      // accept two different data structures
+      body: tabledate ,
+    },
+  });
+}
 
-
+ //----------------------------------------------------+++=++++++ excel-  end-------------------------------------------------->
 
   // var Refund=[]
 
@@ -284,7 +302,7 @@ const RevenueReport = () => {
             data:Discount
           },
           {
-            name:"Taxes",
+            name:"Total GST",
             data: totalGSt
           },
           {
@@ -400,12 +418,9 @@ const optionss = {
       name:"Discount Ammont",
       data:[getRevenue.discount_amount]
     },
+
     {
-      name:" Return Total",
-      data:[getRevenue.return_total]
-    },
-    {
-      name:"Taxes",
+      name:"Total GST",
       data:[getRevenue.total_gst]
     },
 
@@ -472,17 +487,7 @@ const optionss = {
           },
         },
       
-        {
-          name: "Taxes",
-          selector: (row) => row.return_value,
-          sortable: true,
-          width: "150px",
-          center: true,
-          style: {
-            paddingRight: "32px",
-            paddingLeft: "0px",
-          },
-        },
+  
         {
           name: "Shipping",
           selector: (row) => row.total_shipping_charges,
@@ -950,9 +955,9 @@ const SearchHandler=(e)=>{
    
         <div className="col-md-auto col-sm-6 mt-3 aos_input">
         <DropdownButton id="dropdown-variant-success" title="Download" variant="button main_button">
-      <Dropdown.Item href="#/action-1">Excel</Dropdown.Item>
+      <Dropdown.Item onClick={handleDownloadExcel}>Excel</Dropdown.Item>
       <Dropdown.Item onClick={()=>exportPDF()}>Pdf</Dropdown.Item>
-      <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+
     </DropdownButton>
         </div>
       </div>
