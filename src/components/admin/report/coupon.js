@@ -11,6 +11,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import axios from 'axios';
 import moment from "moment/moment";
+import Select from 'react-select'
 
 const CouponReport = () => {
 
@@ -24,8 +25,15 @@ const CouponReport = () => {
   const [toDate,setToDate]=useState(moment().format("YYYY-MM-DD"))
   const [apicall,setapicall]=useState(false)
   const [tabledate, setTabledata]=useState([])
-  const [searchCoupon, setSearchCoupon]=useState("")
+  // const [searchCoupon, setSearchCoupon]=useState("")
   const [couponError,setCouponError]=useState("")
+  const [venderList,setVenderList]=useState([])
+  const[vendorId,setVendorId]=useState("")
+  const[category,setCategory]=useState([])
+  const[categoryId,setCategoryId]=useState("")
+  const [brand,setBrand]=useState([])
+  const[brandName,setBrandName]=useState([])
+  const[location,setLocation]=useState([])
 
 
 
@@ -88,11 +96,11 @@ fetchData();
              {
                "from_date":fromDate,
                   "to_date":toDate,
-                  "coupons_search":searchCoupon, 
-                   "vendors_id":[],
-                  "categorys":[],
-                  "user_locations":[],
-                  "brand":[]
+                  // "coupons_search":searchCoupon, 
+                  vendors_id:vendorId,
+                  categorys:categoryId,
+                  user_locations:location,
+                  brand:brandName
             }
             ).then((response) => {
                 console.log('Coupon orders'+JSON.stringify(response.data[0]))
@@ -123,27 +131,50 @@ fetchData();
     
     
     
+           const VenderData= async()=>{
+            let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
+             console.log("vendor----"+JSON.stringify(result.data))
+            if(result.data){
+              setVenderList(result.data)
+            }
+            
+         }
+        
+        
+         const CategoryData= async()=>{
+          let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
+          // console.log(result.data)
+          if(result.data){
+            setCategory(result.data)
+          }
+          
+        }
+        
+        
+        const BrandData= async()=>{
+        let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/brand_list`)
+        
+         console.log("Brand data-----"+ JSON.stringify(result.data))
+        if(result.data){
+          setBrand(result.data)
+        }
+        
+        }
+        
+
           useEffect(() => {
         
         
             fetchData();
+            VenderData();
+            CategoryData();
+            BrandData();
         
            
           }, [apicall]);
             
 
-          const ProductChange =(e)=>{
-            setSearchCoupon(e.target.value)
-             
-           }
-    
-           const OnReset =()=>{
-            setSearchCoupon("")
-        
-             setapicall(true)
-            
-           
-        }
+      
 
           const submitHandler=()=>{
        
@@ -243,6 +274,103 @@ fetchData();
            
            
           ];
+
+
+
+
+      
+const options1 = [
+  brand.map((item)=>(
+    { value: `${item.brand}` ,label:`${item.brand}` }
+  ))
+]
+
+let  arrr=[];
+
+const brandHandler=(e)=>{
+
+ arrr=[]
+  e.map((item)=>{
+   
+  arrr.push(item.value)
+  
+  })
+  setBrandName(arrr)
+ 
+ }
+
+
+
+//  console.log("$$$$$$------"+JSON.stringify(brandName[0]))
+const options2 = [
+  venderList.map((item)=>(
+    { value: `${item.id}` ,label:`${item.shop_name}` }
+  ))
+]
+
+ let  vendorArray=[];
+
+ const VendorHandler=(e)=>{
+
+  vendorArray=[]
+   e.map((item)=>{
+    
+   vendorArray.push(item.value)
+   
+   })
+   setVendorId(vendorArray)
+  
+  }
+
+console.log("$$$$$$------"+JSON.stringify(vendorId[0]))
+
+ 
+const options3 = [
+  category.map((item)=>(
+    { value: `${item.id}` ,label:`${item.category_name}` }
+  ))
+]
+
+
+let  CategoryArray=[];
+
+const categoryHandler=(e)=>{
+
+ CategoryArray=[]
+  e.map((item)=>{
+   
+  CategoryArray.push(item.value)
+  
+  })
+  setCategoryId(CategoryArray)
+ 
+ }
+
+
+
+
+  
+ const options4 = [
+
+  { value: "indore" ,label:"Indore" },
+  { value: "bhopal" ,label:"Bhopal" },
+  { value: "dhar" ,label:"Dhar" },
+  { value: "khandwa" ,label:"Khandwa" },
+  { value: "khargone" ,label:"Khargone" },
+
+]
+var  SearchArray=[]
+const SearchHandler=(e)=>{
+
+SearchArray=[]
+ e.map((item)=>{
+  
+  SearchArray.push(item.value)
+ 
+ })
+ setLocation(SearchArray)
+
+}    
     return (
         <div>
             <h2>Coupon Report</h2>
@@ -267,30 +395,86 @@ fetchData();
 
             </Form.Select>
             </div>
-           
+            <div className="col-md-3 col-sm-6 aos_input">
+            <Select
+      
+              className=" basic-multi-select"
+              placeholder="Search by Vendor"
+              onChange={VendorHandler}
+             
+              classNamePrefix="select"
+              isMulti  
+              options={options2[0]} 
+            />
+            
+            </div>
+
+
+            <div className="col-md-3 col-sm-6 aos_input">
+            <Select
+      
+              className=" basic-multi-select"
+              placeholder="Search by Brand"
+              onChange={brandHandler}
+             
+              classNamePrefix="select"
+              isMulti  
+              options={options1[0]} 
+            />
+         
+            </div>
+
+            <div className="col-md-3 col-sm-6 aos_input">
+            <Select
+      
+              className=" basic-multi-select"
+              placeholder="Search by Category"
+              onChange={categoryHandler}
+             
+              classNamePrefix="select"
+              isMulti  
+              options={options3[0]} 
+            />
+         
+            </div>
+
+            <div className="col-md-3 col-sm-6 mt-3 aos_input">
+            <Select
+      
+              className=" basic-multi-select"
+              placeholder="Search by Location"
+              onChange={SearchHandler}
+             
+              classNamePrefix="select"
+              isMulti  
+              options={options4} 
+            />
+         
+            </div>
+
           {filterchange==='7'?
          
-          <>
+          <div className="col-md-3 col-sm-6 d-flex mt-3 aos_input">
              
-      <div className="col-md-3 col-sm-6 aos_input">
-        <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setFromDate(e.target.value)}} className={'adminsideinput'}/>
+      <div className="col-6 ps-2">
+        <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setFromDate(e.target.value)}} className={'adminsideinput'} max={moment().format("YYYY-MM-DD")}/>
         </div>
         
-        <div className="col-md-3 col-sm-6 aos_input">
-        <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setToDate(e.target.value)}} className={'adminsideinput'}/>
+        <div className="col-6 ps-2">
+        <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setToDate(e.target.value)}} className={'adminsideinput'} max={moment().format("YYYY-MM-DD")}/>
         </div>
-        </>
+        </div>
         :filterchange==='6'? <div className="col-md-3 col-sm-6 aos_input">
         <Input type={"month"} plchldr={"Search by month"} />
        
         </div> : null}
         
         
-        <div className="col-md-auto col-sm-6 aos_input">
+        <div className="col-md-auto col-sm-6 mt-3  aos_input">
         <MainButton btntext={"Search"} btnclass={'button main_button'} onClick={submitHandler} />
         </div>
        
-        <div className="col-md-auto col-sm-6 aos_input">
+        <div className="col-md-auto col-sm-6 mt-3 aos_input">
         <DropdownButton id="dropdown-variant-success" title="Download" variant="button main_button">
       <Dropdown.Item href="#/action-1">Excel</Dropdown.Item>
       <Dropdown.Item href="#/action-2">Pdf</Dropdown.Item>
@@ -378,23 +562,7 @@ fetchData();
 {/*  */}
 
   {/* datatable */}
-  <div className="row justify-content-end py-2">
-<div className="col-md-3 col-sm-6">
-        <Form.Group className="mb-3">        
-            <Form.Control type="text" placeholder="Search by name"   onChange={ProductChange}  value={searchCoupon}/>
-            </Form.Group>
-            </div>
 
-            <div className="col-md-auto col-sm-6">
-        <MainButton btntext={"Search"} btnclass={'button main_button'} onClick={submitHandler} />
-
-        
-       
-        </div>
-        <div className="col-md-auto col-sm-6 aos_input">
-        <MainButton btntext={"Reset"} btnclass={'button main_button'}  onClick={OnReset}/>
-        </div>
-        </div>
       {/* datatable */}
    
       <DataTable

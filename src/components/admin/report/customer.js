@@ -14,6 +14,7 @@ const CustomerReport = () => {
         selector: (row) => row.user_id,
         sortable: true,
         width:"70px"
+   
 
       },
         {
@@ -160,6 +161,7 @@ const CustomerReport = () => {
       const [tableCoustomer, setGetTableCoustomer]= useState([])
       const [user,setUser]=useState([])
       const [apicall,setapicall]=useState(false)
+      const [CustomerError,setCustomerError]=useState("")
 
 
       const TimeChange = (e)=>{
@@ -179,11 +181,27 @@ const CustomerReport = () => {
   }
     ).then((response) => {
           console.log('coustomer data-all---'+JSON.stringify(response.data))
-        
+          console.log('Error-----'+JSON.stringify(response.data))
         // console.log('coustomer data'+JSON.stringify(response.data[0]))
  
-          setGetTableCoustomer(response.data)
-          setapicall(false)
+
+
+        
+       if(response.data.message=="No_Data"){
+
+        setCustomerError(response.data.message)
+        setGetTableCoustomer([])
+        setapicall(false)
+
+      }
+      else{
+        setCustomerError("")
+        setGetTableCoustomer(response.data)   
+        setapicall(false)
+      }
+
+         
+    
     }).catch(function (error) {
       console.log(error);
     });
@@ -208,6 +226,7 @@ const CustomerReport = () => {
     
         setUser("")
          setapicall(true)
+     
         
          
           
