@@ -77,7 +77,6 @@ function Product() {
   const [otherintro, setotherintro] = useState('');
   const [headerval, setheaderval] = useState('');
   const [descval, setdescval] = useState('');
-  const [paraddcustom, setparaddcustom] = useState();
   const [customarray, setcustomarray] = useState([]);
   const [AddCustom, setAddCustom] = useState({
     header:[],
