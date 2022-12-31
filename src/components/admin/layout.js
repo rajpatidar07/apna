@@ -45,6 +45,7 @@ import TaxesReport from "./report/taxes";
 import ContentManager from "./setting/content_manager";
 import CustomerReport from "./report/customer";
 import StoreReport from "./report/store";
+import BlogList from "./blog/add_blog";
 function AdminLayout() {
   // const location = useLocation();
   console.log("-------" + window.location.pathname);
@@ -83,6 +84,8 @@ function AdminLayout() {
                   <Route path="/order_detail" element={<OrderDetail />} />
                   <Route path="/footer" element={<Footer />} />
                   <Route path="/vendors" element={<VendorsList />} />
+                  <Route path="/add_blog" element={<BlogList/>} />
+                  
                   <Route path="/components" element={<AdminComponents />} />
                   <Route path="/add_admin" element={<Admin />} />
                   <Route path="/category" element={<CategoryList />} />
