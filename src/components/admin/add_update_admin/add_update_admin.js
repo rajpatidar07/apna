@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import { data } from "jquery";
 function Admin() {
+
   // const handleAlert = () => setAlert(true);
   // const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
@@ -43,7 +44,9 @@ function Admin() {
                 .then((response) => {
                   let data= response.data[0];
                   setaddadmindata(data);
-console.log("hellooooooo"+JSON.stringify(data))
+  localStorage.setItem("adminid",response.data.id);
+  // console.log(""+response.data.id)
+
                 })
             } catch (err) {}
            
