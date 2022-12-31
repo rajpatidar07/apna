@@ -6,14 +6,80 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Form from "react-bootstrap/Form";
 import axios from 'axios';
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import { downloadExcel } from "react-export-table-to-excel";
 
 const CustomerReport = () => {
+
+
+   //----------------------------------------------------------------- pdf----------------------------------------------------->
+   const exportPDF = () => {
+    const unit = "pt";
+    const size = "A3"; // Use A1, A2, A3 or A4
+    const orientation = "portrait"; // portrait or landscape
+
+    const marginLeft = 40;
+    
+
+
+    const doc = new jsPDF(orientation, unit, size);
+
+    doc.setFontSize(15);
+    doc.setLineWidth(10)
+   
+
+    const title = "Customer Report";
+    const headers = [["First Name","Last Name","UserID","Email","Address","Order","Total Ammount","Average Ammount"]];
+
+    const data =tableCoustomer.map(elt=> [elt.first_name, elt.last_name, elt.user_id,elt.email,elt.address,elt.order_count,elt.total_amount,elt.avg_value]);
+
+    let content = {
+      startY: 50,
+      head: headers,
+      body: data
+    };
+
+    // doc.text(headers, backgroundColor, "pink");
+    doc.text(title, marginLeft, 40);
+
+
+    doc.autoTable(content);
+    doc.save("Customer Report.pdf")
+  
+    
+  }
+
+  //-------------------------------------------- end pdf----------------------------------------------------------------->
+
+
+
+
+
+
+ //----------------------------------------------------+++=++++++ excel--------------------------------------------------->
+ const header = ["First Name","Last Name" ," User ID","Email","Address","Order", "Total Ammount"," Average Ammount","Created On"];
+
+function handleDownloadExcel() {
+  downloadExcel({
+    fileName: "Customer Report -> downloadExcel method",
+    sheet: "Customer Report",
+    tablePayload: {
+       header,
+      // accept two different data structures
+      body: tableCoustomer ,
+    },
+  });
+}
+ //----------------------------------------------------+++=++++++ excel--------------------------------------------------->
+
     const columns = [
       {
         name: "ID",
         selector: (row) => row.user_id,
         sortable: true,
         width:"70px"
+   
 
       },
         {
@@ -160,6 +226,7 @@ const CustomerReport = () => {
       const [tableCoustomer, setGetTableCoustomer]= useState([])
       const [user,setUser]=useState([])
       const [apicall,setapicall]=useState(false)
+      const [CustomerError,setCustomerError]=useState("")
 
 
       const TimeChange = (e)=>{
@@ -179,11 +246,27 @@ const CustomerReport = () => {
   }
     ).then((response) => {
           console.log('coustomer data-all---'+JSON.stringify(response.data))
-        
+          console.log('Error-----'+JSON.stringify(response.data))
         // console.log('coustomer data'+JSON.stringify(response.data[0]))
  
-          setGetTableCoustomer(response.data)
-          setapicall(false)
+
+
+        
+       if(response.data.message=="No_Data"){
+
+        setCustomerError(response.data.message)
+        setGetTableCoustomer([])
+        setapicall(false)
+
+      }
+      else{
+        setCustomerError("")
+        setGetTableCoustomer(response.data)   
+        setapicall(false)
+      }
+
+         
+    
     }).catch(function (error) {
       console.log(error);
     });
@@ -208,6 +291,7 @@ const CustomerReport = () => {
     
         setUser("")
          setapicall(true)
+     
         
          
           
@@ -268,9 +352,9 @@ const CustomerReport = () => {
         </div>
         <div className="col-md-auto col-sm-6 aos_input">
         <DropdownButton id="dropdown-variant-success" title="Download" variant="button main_button">
-      <Dropdown.Item href="#/action-1">Excel</Dropdown.Item>
-      <Dropdown.Item href="#/action-2">Pdf</Dropdown.Item>
-      <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+        <Dropdown.Item onClick={handleDownloadExcel}>Excel</Dropdown.Item>
+        <Dropdown.Item onClick={()=>exportPDF()}>Pdf</Dropdown.Item>
+    
     </DropdownButton>
         </div>
       </div>

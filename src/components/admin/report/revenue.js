@@ -18,7 +18,10 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import ApexCharts from 'apexcharts'
 import ReactApexChart from "react-apexcharts";
-
+import Select from 'react-select'
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import { downloadExcel } from "react-export-table-to-excel";
 
 
 
@@ -39,6 +42,9 @@ const RevenueReport = () => {
    const[vendorId,setVendorId]=useState("")
    const[category,setCategory]=useState([])
    const[categoryId,setCategoryId]=useState("")
+   const [brand,setBrand]=useState([])
+   const[brandName,setBrandName]=useState([])
+   const[location,setLocation]=useState([])
 
   var GrossAmmount=[];
   var totalSales=[];
@@ -46,6 +52,61 @@ const RevenueReport = () => {
   var TotalShipping=[];
   var NetSales=[];
   var Discount=[]
+
+  // pdf
+  const exportPDF = () => {
+    const unit = "pt";
+    const size = "A4"; // Use A1, A2, A3 or A4
+    const orientation = "portrait"; // portrait or landscape
+
+    const marginLeft = 40;
+
+
+    const doc = new jsPDF(orientation, unit, size);
+
+    doc.setFontSize(15);
+
+    const title = "Revenue Report";
+    const headers = [["Date", "Gross Revenue","Total GST","Discount", "shipping","Net Revenue","Total Revenue"]];
+
+    const data =tabledate.map(elt=> [elt.uniquedates, elt.gross_amount, elt.total_gst,elt.discount, elt.total_shipping_charges,elt.net_sales,elt.total_sales]);
+
+    let content = {
+      startY: 50,
+      head: headers,
+      body: data
+    };
+
+    // doc.text(headers, backgroundColor, "pink");
+    doc.text(title, marginLeft, 40);
+    doc.autoTable(content);
+    doc.save("Revenue Report.pdf")
+    // doc.setFillColor("Gray" ,100)
+  }
+
+  // end pdf
+
+ //----------------------------------------------------+++=++++++ excel--------------------------------------------------->
+ const header = ["Date", "Gross Revenue","Total GST","Discount", "shipping","Net Revenue","Total Revenue"];
+
+//  const body2 = [
+//   { firstname: "Edison", lastname: "Padilla", age: 14 ,mobile:"87787866"},
+//   { firstname: "Cheila", lastname: "Rodrigez", age: 56 },
+// ];
+
+function handleDownloadExcel() {
+  downloadExcel({
+    fileName: "Revenue Report -> downloadExcel method",
+    sheet: "Revenue Report",
+    tablePayload: {
+       header,
+      // accept two different data structures
+      body: tabledate ,
+    },
+  });
+}
+
+ //----------------------------------------------------+++=++++++ excel-  end-------------------------------------------------->
 
   // var Refund=[]
 
@@ -241,7 +302,7 @@ const RevenueReport = () => {
             data:Discount
           },
           {
-            name:"Taxes",
+            name:"Total GST",
             data: totalGSt
           },
           {
@@ -251,30 +312,9 @@ const RevenueReport = () => {
           {
             name:"shipping",
             data:TotalShipping
-          },
-
-          {
-            name:" Total Refund",
-            data:[getRevenue.return_total]
-          },
-          
-          {
-            name:"Coupon",
-            data:[getRevenue.total_discount]
-          },
-          {
-            name:" Total Shipping Charge",
-            data:[getRevenue.total_shipping_charges]
-          },
-          {
-            name:"Taxes",
-            data:[getRevenue.total_gst]
-          },
-
-          {
-            name:"Total Sales",
-            data:[getRevenue.net_sale]
           }
+
+         
         ],
         xAxis: {
             categories:GrossAmmount
@@ -357,6 +397,59 @@ const RevenueReport = () => {
 // }
 // };
 
+const optionss = {
+  chart: {
+    type: "bar",
+    borderRadius: "5",
+    borderColor: "#335cad",
+  },
+  title: {
+    text: " Figures",
+    style: { color: "green", fontSize: "22px" },
+    align: "left",
+  },
+  series: [
+    {
+      name:" Total Revenue",
+      data:[getRevenue.gross_total_amount]
+    },
+    
+    {
+      name:"Discount Ammont",
+      data:[getRevenue.discount_amount]
+    },
+
+    {
+      name:"Total GST",
+      data:[getRevenue.total_gst]
+    },
+
+    {
+      name:"Total Shopping Charge",
+      data:[getRevenue.total_shipping_charges]
+    }
+  ],
+  xAxis: {
+    categories: [
+      "1",
+      "3",
+      "5",
+      "7",
+      "9",
+      "11",
+      "13",
+      "15",
+      "17",
+      "19",
+      "21",
+      "23",
+    ],
+  },
+  yAxis: {
+    categories: ["0", "200", "400", "600", "800", "1000"],
+  },
+};
+
 
     const columns = [
         {
@@ -394,17 +487,7 @@ const RevenueReport = () => {
           },
         },
       
-        {
-          name: "Taxes",
-          selector: (row) => row.return_value,
-          sortable: true,
-          width: "150px",
-          center: true,
-          style: {
-            paddingRight: "32px",
-            paddingLeft: "0px",
-          },
-        },
+  
         {
           name: "Shipping",
           selector: (row) => row.total_shipping_charges,
@@ -499,6 +582,10 @@ const RevenueReport = () => {
       const fetchData=()=>{
         console.log( "from_date---"+fromDate)
         console.log( "to_date----"+toDate)
+        console.log( "brand----"+brandName)
+        console.log( "locations by name----"+location)
+
+
        
           axios.post(`${process.env.REACT_APP_BASEURL}/revenue`
         ,
@@ -506,10 +593,10 @@ const RevenueReport = () => {
          {
            "from_date":fromDate,
               "to_date":toDate,
-              "vendors_id":[vendorId],
-              "categorys":[categoryId],
-              "user_locations":[],
-              "brand":[]
+              "vendors_id":vendorId,
+              "categorys":categoryId,
+              "user_locations":location,
+              "brand":brandName
         }
         ).then((response) => {
             // console.log('revenue data'+JSON.stringify(response.data))
@@ -521,7 +608,7 @@ const RevenueReport = () => {
               setRevenueError(response.data.message)
               
                 setGetRevenue([0])
-              setTabledata([0])
+              setTabledata([])
        
             }
             else{
@@ -546,7 +633,7 @@ const RevenueReport = () => {
 
        const VenderData= async()=>{
           let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
-          // console.log(result.data)
+           console.log("vendor----"+JSON.stringify(result.data))
           if(result.data){
             setVenderList(result.data)
           }
@@ -563,6 +650,17 @@ const RevenueReport = () => {
         
      }
 
+
+     const BrandData= async()=>{
+      let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/brand_list`)
+
+       console.log("Brand data-----"+ JSON.stringify(result.data))
+      if(result.data){
+        setBrand(result.data)
+      }
+      
+   }
+
       
 
        
@@ -577,18 +675,23 @@ const RevenueReport = () => {
         fetchData();
         VenderData();
         CategoryData();
+        BrandData();
     
        
       }, [ apicall]);
         
+      
 
 
+ 
 
       const submitHandler=()=>{
        
        setapicall(true)
         fetchData()
       }
+
+
 
 
 
@@ -626,8 +729,110 @@ const RevenueReport = () => {
   // console.log("categoryList--"+ category)
      
        
+ 
+    // brand.map((item)=>{
+
+    //   const optionsBrand = [
+    //     { value: `${item.brand}` },
+  
+    //   ]
+    // })
+
+    
+    const options1 = [
+      brand.map((item)=>(
+        { value: `${item.brand}` ,label:`${item.brand}` }
+      ))
+    ]
+
+   let  arrr=[];
+
+    const brandHandler=(e)=>{
+
+     arrr=[]
+      e.map((item)=>{
+       
+      arrr.push(item.value)
+      
+      })
+      setBrandName(arrr)
+     
+     }
 
 
+
+    //  console.log("$$$$$$------"+JSON.stringify(brandName[0]))
+
+
+    const options2 = [
+      venderList.map((item)=>(
+        { value: `${item.id}` ,label:`${item.shop_name}` }
+      ))
+    ]
+
+     let  vendorArray=[];
+
+     const VendorHandler=(e)=>{
+ 
+      vendorArray=[]
+       e.map((item)=>{
+        
+       vendorArray.push(item.value)
+       
+       })
+       setVendorId(vendorArray)
+      
+      }
+
+ console.log("$$$$$$------"+JSON.stringify(vendorId[0]))
+
+
+ 
+ const options3 = [
+  category.map((item)=>(
+    { value: `${item.id}` ,label:`${item.category_name}` }
+  ))
+]
+
+
+let  CategoryArray=[];
+
+const categoryHandler=(e)=>{
+
+ CategoryArray=[]
+  e.map((item)=>{
+   
+  CategoryArray.push(item.value)
+  
+  })
+  setCategoryId(CategoryArray)
+ 
+ }
+
+
+
+  
+ const options4 = [
+
+    { value: "indore" ,label:"Indore" },
+    { value: "bhopal" ,label:"Bhopal" },
+    { value: "dhar" ,label:"Dhar" },
+    { value: "khandwa" ,label:"Khandwa" },
+    { value: "khargone" ,label:"Khargone" },
+  
+]
+ var  SearchArray=[]
+const SearchHandler=(e)=>{
+
+  SearchArray=[]
+   e.map((item)=>{
+    
+    SearchArray.push(item.value)
+   
+   })
+   setLocation(SearchArray)
+  
+  }
 
     return (
         <div>
@@ -657,93 +862,102 @@ const RevenueReport = () => {
             
             </div>
 
-            <div className="col-md-3 col-sm-6 aos_input">
-            <Form.Select
-              aria-label="Search by category"
-              className="adminselectbox"
-              placeholder="Search by category"
-              onChange={(e)=>{setVendorId(e.target.value)}}
-            >
-              <option >Search by Vendor ID</option>
-              {
-                venderList.map((item)=>{
-                  return(
-                   
-                     <option  value={item.id}>{item.shop_name}</option>
-                   
-                  )
-                })
-              }
-              
-          
-     
+        
 
-            </Form.Select>
-
-
+<div className="col-md-3 col-sm-6 aos_input">
+            <Select
+      
+              className=" basic-multi-select"
+              placeholder="Search by Vendor"
+              onChange={VendorHandler}
+             
+              classNamePrefix="select"
+              isMulti  
+              options={options2[0]} 
+            />
             
+            </div>
+
+          
+
+            <div className="col-md-3 col-sm-6 aos_input">
+            <Select
+      
+              className=" basic-multi-select"
+              placeholder="Search by Brand"
+              onChange={brandHandler}
+             
+              classNamePrefix="select"
+              isMulti  
+              options={options1[0]} 
+            />
+         
             </div>
 
 
             
             <div className="col-md-3 col-sm-6 aos_input">
-            <Form.Select
-              aria-label="Search by category"
-              className="adminselectbox"
-              placeholder="Search by category"
-              onChange={(e)=>{setCategoryId(e.target.value)}}
-            >
-              <option >Search by Category</option>
-              {
-                category.map((item)=>{
-                  return(
-                   
-                     <option  value={item.id}>{item.category_name}</option>
-                   
-                  )
-                })
-              }
-              
-          
+            <Select
+      
+              className=" basic-multi-select"
+              placeholder="Search by Category"
+              onChange={categoryHandler}
+             
+              classNamePrefix="select"
+              isMulti  
+              options={options3[0]} 
+            />
+         
+            </div>
+
+
+            <div className="col-md-3 col-sm-6 aos_input mt-3">
+            <Select
+      
+              className=" basic-multi-select"
+              placeholder="Search by Location"
+              onChange={SearchHandler}
+             
+              classNamePrefix="select"
+              isMulti  
+              options={options4} 
+            />
+         
+            </div>
      
 
-            </Form.Select>
-
-
-            
-            </div>
 
 
 
            
           {filterchange==='7'?
          
-          <div>
+          <div className="col-md-3 col-sm-6 d-flex mt-3  aos_input">
              
-      <div className="col-md-3 col-sm-6 aos_input">
-        <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setFromDate(e.target.value)}} className={'adminsideinput'}/>
+      <div className="col-6 pe-2 aos_input">
+        <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setFromDate(e.target.value)}} className={'adminsideinput'} max={moment().format("YYYY-MM-DD")}/>
         </div>
         
-        <div className="col-md-3 col-sm-6 aos_input">
-        <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setToDate(e.target.value)}} className={'adminsideinput'}/>
+        <div className="col-6 aos_input">
+        <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setToDate(e.target.value)}} className={'adminsideinput'} max={moment().format("YYYY-MM-DD")}/>
         </div>
         </div>
-        :filterchange==='6'? <div className="col-md-3 col-sm-6 aos_input">
+        :filterchange==='6'? <div className="col-md-3 mt-2 col-sm-6 aos_input">
         <Input type={"month"} plchldr={"Search by month"} />
        
         </div> : null}
         
         
-        <div className="col-md-auto col-sm-6 aos_input">
+        <div className="col-md-auto col-sm-6 mt-3  aos_input">
         <MainButton btntext={"Search"} btnclass={'button main_button'} onClick={submitHandler} />
         </div>
        
    
-        <div className="col-md-auto col-sm-6 aos_input">
+        <div className="col-md-auto col-sm-6 mt-3 aos_input">
         <DropdownButton id="dropdown-variant-success" title="Download" variant="button main_button">
-      <Dropdown.Item href="#/action-1">Excel</Dropdown.Item>
-      <Dropdown.Item href="#/action-2">Pdf</Dropdown.Item>
-      <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+      <Dropdown.Item onClick={handleDownloadExcel}>Excel</Dropdown.Item>
+      <Dropdown.Item onClick={()=>exportPDF()}>Pdf</Dropdown.Item>
+
     </DropdownButton>
         </div>
       </div>
@@ -900,9 +1114,9 @@ const RevenueReport = () => {
 {/*  */}
 
 {/* graph */}
+{(getRevenue.gross_total_amount)||(getRevenue.discount_amount)||(getRevenue.return_total)||(getRevenue.total_gst)?<HighchartsReact highcharts={Highcharts} options={optionss}  />:null}
 
-<HighchartsReact highcharts={Highcharts} options={options}  />
-
+{(getRevenue.gross_total_amount)||(getRevenue.discount_amount)||(getRevenue.return_total)||(getRevenue.total_gst)?<HighchartsReact highcharts={Highcharts} options={options}  />:null}
 {/* <div id="chart">
   <ReactApexChart options={option} series={series} type="line" height={350} />
 </div> */}
