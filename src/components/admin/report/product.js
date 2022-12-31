@@ -15,6 +15,9 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import axios from "axios";
 import moment from "moment/moment";
 import Select from 'react-select'
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import { downloadExcel } from "react-export-table-to-excel";
 
 const ProductReport = () => {
  
@@ -32,7 +35,7 @@ const ProductReport = () => {
   const [fromDate, setFromDate]=useState(moment().format("YYYY-MM-DD"));
   const [toDate,setToDate]=useState(moment().format("YYYY-MM-DD"))
   const [apicall,setapicall]=useState(false)
-  const [ProductSearch,setProductSearch]=useState("")
+  // const [ProductSearch,setProductSearch]=useState("")
   const [ProductError,setProductError]=useState("")
   const [venderList,setVenderList]=useState([])
   const[vendorId,setVendorId]=useState("")
@@ -263,36 +266,89 @@ if(result.data){
         categories: ["0", "200", "400", "600", "800", "1000"],
       },
     };
+
+
+          //----------------------------------------------------------------- pdf----------------------------------------------------->
+  const exportPDF = () => {
+    const unit = "pt";
+    const size = "A4"; // Use A1, A2, A3 or A4
+    const orientation = "portrait"; // portrait or landscape
+
+    const marginLeft = 40;
+
+
+    const doc = new jsPDF(orientation, unit, size);
+
+    doc.setFontSize(15);
+
+    const title = "Product Report";
+    const headers = [["Product ID", "Product Name","Category","Net Revenue", "Orders","Stock"]];
+
+    const data =tableProduct.map(elt=> [elt.product_id, elt.product_name, elt.category_name,elt.net_sales, elt.order_count,elt.product_count]);
+
+    let content = {
+      startY: 50,
+      head: headers,
+      body: data,
+      blankrows:"No Record"
+    };
+
+    // doc.text(headers, backgroundColor, "pink");
+    doc.text(title, marginLeft, 40);
+    doc.autoTable(content);
+    doc.save("Product Report.pdf")
+
+  }
+
+  //-------------------------------------------- end pdf----------------------------------------------------------------->
+
+
+
+
+
+
+ //----------------------------------------------------+++=++++++ excel--------------------------------------------------->
+ const header = ["Product ID", "Order","Stock","Net Revenue", "Product Name","Category"];
+
+function handleDownloadExcel() {
+  downloadExcel({
+    fileName: "Product Report -> downloadExcel method",
+    sheet: "Product Report",
+    tablePayload: {
+       header,
+      // accept two different data structures
+      body: tableProduct ,
+      blankrows:"No Record"
+    },
+  });
+}
+ //----------------------------------------------------+++=++++++ excel--------------------------------------------------->
+
+
+
     const columns = [
       {
-        name: "Sku",
+        name: "Product ID",
         selector: (row) => row.product_id,
         sortable: true,
         width: "150px",
       },
       {
         name: "Product Name",
-        selector: (row) => row.product_name,
+        selector: (row) => (row.product_name==null)?"No Record":row.product_name,
         sortable: true,
         width: "160px",
       },
-  
-      {
-        name: "Item Sold",
-        selector: (row) => row.product_name,
-        sortable: true,
-        width: "140px",
-        center: true,
-      },
+
       {
         name: "Category",
-        selector: (row) => row.category_name,
+        selector: (row) =>( row.category_name==null)?"No Record":row.category_name,
         sortable: true,
         width: "190px",
       },
       {
         name: "Net Revenue",
-        selector: (row) => row.net_sales,
+        selector: (row) =>( row.net_sales==null)?"No Record":row.net_sales,
         sortable: true,
         width: "150px",
         center: true,
@@ -304,7 +360,7 @@ if(result.data){
   
       {
         name: "Orders",
-        selector: (row) => row.order_count,
+        selector: (row) => (row.order_count==null)?"No Record":row.order_count,
         sortable: true,
         width: "150px",
         center: true,
@@ -315,7 +371,7 @@ if(result.data){
       },
       {
         name: "Stock",
-        selector: (row) => row.product_count,
+        selector: (row) => (row.product_count==null)?"No Record":row.product_count,
         sortable: true,
         width: "140px",
         center: true,
@@ -324,17 +380,17 @@ if(result.data){
           paddingLeft: "0px",
         },
       },
-      {
-        name: "Status",
-        selector: (row) => row.product_count,
-        sortable: true,
-        width: "100px",
-        center: true,
-        style: {
-          paddingRight: "32px",
-          paddingLeft: "0px",
-        },
-      },
+      // {
+      //   name: "Status",
+      //   selector: (row) => row.product_count,
+      //   sortable: true,
+      //   width: "100px",
+      //   center: true,
+      //   style: {
+      //     paddingRight: "32px",
+      //     paddingLeft: "0px",
+      //   },
+      // },
     ];
 
 
@@ -537,9 +593,10 @@ if(result.data){
         </div>
         <div className="col-md-auto col-sm-6 mt-3 aos_input">
         <DropdownButton id="dropdown-variant-success" title="Download" variant="button main_button">
-      <Dropdown.Item href="#/action-1">Excel</Dropdown.Item>
-      <Dropdown.Item href="#/action-2">Pdf</Dropdown.Item>
-      <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+        
+            <Dropdown.Item onClick={handleDownloadExcel}>Excel</Dropdown.Item>
+             <Dropdown.Item onClick={()=>exportPDF()}>Pdf</Dropdown.Item>
+     
     </DropdownButton>
         </div>
       </div>

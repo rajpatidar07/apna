@@ -12,6 +12,9 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import axios from 'axios';
 import moment from "moment/moment";
 import Select from 'react-select'
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import { downloadExcel } from "react-export-table-to-excel";
 
 const CouponReport = () => {
 
@@ -233,6 +236,63 @@ fetchData();
               categories: [],
             },
           };
+
+
+
+
+         //----------------------------------------------------------------- pdf----------------------------------------------------->
+  const exportPDF = () => {
+    const unit = "pt";
+    const size = "A4"; // Use A1, A2, A3 or A4
+    const orientation = "portrait"; // portrait or landscape
+
+    const marginLeft = 40;
+
+
+    const doc = new jsPDF(orientation, unit, size);
+
+    doc.setFontSize(15);
+
+    const title = "Coupon Report";
+    const headers = [[" Discount Coupon", "Amount Discounted" ,"Orders","Created", "Coupon Code"]];
+
+    const data =tabledate.map(elt=> [elt.discount_coupon, elt.amount_discounted, elt.order_count,elt.created_date, elt.coupons_code]);
+
+    let content = {
+      startY: 50,
+      head: headers,
+      body: data
+    };
+
+    // doc.text(headers, backgroundColor, "pink");
+    doc.text(title, marginLeft, 40);
+    doc.autoTable(content);
+    doc.save("Coupon Report.pdf")
+    // doc.setFillColor("Gray" ,100)
+  }
+
+  //-------------------------------------------- end pdf----------------------------------------------------------------->
+
+
+
+
+
+
+ //----------------------------------------------------+++=++++++ excel--------------------------------------------------->
+ const header = [" Discount Coupon", ,"Orders", "Coupon Code","Amount Discounted" ,"Created", ];
+
+function handleDownloadExcel() {
+  downloadExcel({
+    fileName: "Coupon Report -> downloadExcel method",
+    sheet: "Coupon Report",
+    tablePayload: {
+       header,
+      // accept two different data structures
+      body: tabledate ,
+    },
+  });
+}
+ //----------------------------------------------------+++=++++++ excel--------------------------------------------------->  
           const columns = [
           
             {
@@ -258,12 +318,12 @@ fetchData();
               sortable: true,
               
             },
-            {
-              name: "Expires",
-              selector: (row) => row.edate,
-              sortable: true,
+            // {
+            //   name: "Expires",
+            //   selector: (row) => row.edate,
+            //   sortable: true,
              
-            },
+            // },
             {
               name: "Orders",
               selector: (row) => row.order_count,
@@ -476,9 +536,9 @@ SearchArray=[]
        
         <div className="col-md-auto col-sm-6 mt-3 aos_input">
         <DropdownButton id="dropdown-variant-success" title="Download" variant="button main_button">
-      <Dropdown.Item href="#/action-1">Excel</Dropdown.Item>
-      <Dropdown.Item href="#/action-2">Pdf</Dropdown.Item>
-      <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+        <Dropdown.Item onClick={handleDownloadExcel}>Excel</Dropdown.Item>
+             <Dropdown.Item onClick={()=>exportPDF()}>Pdf</Dropdown.Item>
+
     </DropdownButton>
         </div>
       </div>

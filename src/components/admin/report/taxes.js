@@ -18,6 +18,9 @@ import { useEffect } from "react";
 import axios from "axios";
 import moment from "moment/moment";
 import Select from 'react-select'
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import { downloadExcel } from "react-export-table-to-excel";
 
 const TaxesReport = () => {
  
@@ -328,6 +331,64 @@ fetchData()
       categories: ["0", "200", "400", "600", "800", "1000"],
     },
   };
+
+
+
+   
+         //----------------------------------------------------------------- pdf----------------------------------------------------->
+  const exportPDF = () => {
+    const unit = "pt";
+    const size = "A4"; // Use A1, A2, A3 or A4
+    const orientation = "portrait"; // portrait or landscape
+
+    const marginLeft = 40;
+
+
+    const doc = new jsPDF(orientation, unit, size);
+
+    doc.setFontSize(15);
+
+    const title = "Taxes Report";
+    const headers = [[" GST", "Order Taxes" ,"Orders"]];
+
+    const data =TaxesTable.map(elt=> [elt.gst, elt.order_taxes, elt.order_count]);
+
+    let content = {
+      startY: 50,
+      head: headers,
+      body: data
+    };
+
+    // doc.text(headers, backgroundColor, "pink");
+    doc.text(title, marginLeft, 40);
+    doc.autoTable(content);
+    doc.save("Taxes Report.pdf")
+    // doc.setFillColor("Gray" ,100)
+  }
+
+  //-------------------------------------------- end pdf----------------------------------------------------------------->
+
+
+
+
+
+
+ //----------------------------------------------------+++=++++++ excel--------------------------------------------------->
+ const header = [" GST", "Order Taxes" ,"Orders"];
+
+function handleDownloadExcel() {
+  downloadExcel({
+    fileName: "Taxes Report -> downloadExcel method",
+    sheet: "Taxes Report",
+    tablePayload: {
+       header,
+      // accept two different data structures
+      body: TaxesTable ,
+    },
+  });
+}
+ //----------------------------------------------------+++=++++++ excel--------------------------------------------------->
+
   const columns = [
   
  
@@ -462,9 +523,9 @@ fetchData()
 
         <div className="col-md-auto col-sm-6 aos_input mt-3">
         <DropdownButton id="dropdown-variant-success" title="Download" variant="button main_button">
-      <Dropdown.Item href="#/action-1">Excel</Dropdown.Item>
-      <Dropdown.Item href="#/action-2">Pdf</Dropdown.Item>
-      <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+        <Dropdown.Item onClick={handleDownloadExcel}>Excel</Dropdown.Item>
+             <Dropdown.Item onClick={()=>exportPDF()}>Pdf</Dropdown.Item>
+  
     </DropdownButton>
         </div>
       </div>

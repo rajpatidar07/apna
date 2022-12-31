@@ -13,6 +13,9 @@ import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import moment from "moment/moment";
 import Select from 'react-select'
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import { downloadExcel } from "react-export-table-to-excel";
 
 const OrderReport = () => {
   const [filterchange, setFilterchange] = useState("");
@@ -230,6 +233,62 @@ fetchData()
       categories: ["0", "200", "400", "600", "800", "1000"],
     },
   };
+
+
+
+     //----------------------------------------------------------------- pdf----------------------------------------------------->
+  const exportPDF = () => {
+    const unit = "pt";
+    const size = "A4"; // Use A1, A2, A3 or A4
+    const orientation = "portrait"; // portrait or landscape
+
+    const marginLeft = 40;
+
+
+    const doc = new jsPDF(orientation, unit, size);
+
+    doc.setFontSize(15);
+
+    const title = "Order Report";
+    const headers = [["Date", "Order ID","Status","Customer ID", "Product ID","Net Revenue"]];
+
+    const data =orderTable.map(elt=> [elt.created_on, elt.order_id, elt.status,elt.user_id, elt.p_id,elt.total_order_amount]);
+
+    let content = {
+      startY: 50,
+      head: headers,
+      body: data
+    };
+
+    // doc.text(headers, backgroundColor, "pink");
+    doc.text(title, marginLeft, 40);
+    doc.autoTable(content);
+    doc.save("Order Report.pdf")
+    // doc.setFillColor("Gray" ,100)
+  }
+
+  //-------------------------------------------- end pdf----------------------------------------------------------------->
+
+
+
+
+
+
+ //----------------------------------------------------+++=++++++ excel--------------------------------------------------->
+ const header = ["Order ID","Date" ,"Status","Customer ID", "Product ID","Net Revenue"];
+
+function handleDownloadExcel() {
+  downloadExcel({
+    fileName: "Order Report -> downloadExcel method",
+    sheet: "Order Report",
+    tablePayload: {
+       header,
+      // accept two different data structures
+      body: orderTable ,
+    },
+  });
+}
+ //----------------------------------------------------+++=++++++ excel--------------------------------------------------->
   const columns = [
     {
       name: "Date",
@@ -496,9 +555,9 @@ SearchArray=[]
               title="Download"
               variant="button main_button"
             >
-              <Dropdown.Item href="#/action-1">Excel</Dropdown.Item>
-              <Dropdown.Item href="#/action-2">Pdf</Dropdown.Item>
-              <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+            <Dropdown.Item onClick={handleDownloadExcel}>Excel</Dropdown.Item>
+             <Dropdown.Item onClick={()=>exportPDF()}>Pdf</Dropdown.Item>
+           
             </DropdownButton>
           </div>
         </div>
