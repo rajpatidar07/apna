@@ -29,6 +29,7 @@
     "react-bootstrap-icons": "^1.9.1",
     "react-data-table-component": "^7.5.3",
     "react-dom": "^18.2.0",
+    "react-export-table-to-excel": "^1.0.6",
     "react-icons": "^4.4.0",
     "react-pdf": "^6.0.2",
     "react-responsive-carousel": "^3.2.23",
