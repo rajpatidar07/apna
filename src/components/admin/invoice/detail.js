@@ -1,8 +1,8 @@
 import React from "react";
 import axios from "axios";
 import { useState,useEffect } from "react";
-// import {  pdf,Page, Text, View, Document, StyleSheet, usePDF, PDFDownloadLink } from '@react-pdf/renderer';
-// import DownloadInvoice from './download.js';
+import jsPDF from "jspdf";
+import html2canvas from 'html2canvas';
 
 
 const Invoice = () => {
@@ -21,11 +21,48 @@ const Invoice = () => {
                 setpDetails(response.data.product_types)
               });
       }, []);
+      var qty=0;
+      var mrpTotal=0;
+      var disCountTotal=0;
+      var taxable_value_total=0
+      var taxTotal=0;
+      var salePrice_total=0;
+      var totalGSt=0;
+      var totalCGST=0;
+      var totalSGST=0;
+      var GrandTotal=0;
+
+
+
+
+
+
+
+
+
+
+     function printDocument() {
+    const input = document.getElementById('container1');
+    html2canvas(input)
+      .then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const unit = "pt";
+        const size = "A2"; // Use A1, A2, A3 or A4
+        const orientation = "portrait"; // portrait or landscape
+        const pdf = new jsPDF(orientation, unit, size);
+      
+        pdf.addImage(imgData, 'JPEG', 0, 0);
+        // pdf.output('dataurlnewwindow');
+        pdf.save("Invoice.pdf");
+      });
+    }
+
+
     return (
         <>
         {/* <Document >
             <Page size="A4" style={''}> */}
-                <div className="container">
+                <div className="container" id="container1">
                     <div className="invoice">
                         <div className="card">
                             <div className="card-body">
@@ -83,15 +120,16 @@ const Invoice = () => {
                                             <thead>
                                                 <tr>
                                                     <th className="center">Product</th>
+                                                    
+                                                    <th> ₹ MRP  </th>
+                                                    <th>  ₹ Discount (10%)</th>
+
+                                                    <th className="center">₹ Taxable Price </th>
+                                                    <th className="center"> ₹ Tax </th>
                                                     <th>Qty</th>
-                                                    <th>Gross Amount ₹</th>
-    
-                                                    <th className="right">discount_coupon ₹</th>
-                                                    <th className="center">taxable_value ₹</th>
-                                                    <th className="center">gst ₹</th>
-                                                    <th className="center">cgst ₹</th>
-                                                    <th className="center">sgst ₹</th>
-                                                    <th className="right">total_amount ₹</th>
+                                                    <th className="right">₹ Sale Price </th>
+                                            
+                                                    <th className="right">₹  Total amount </th>
                                                 </tr>
                                             </thead>
                                            
@@ -99,23 +137,57 @@ const Invoice = () => {
                                          
                                                  {(pdetails).map((invodetails)=>{
                                                 invodetails.discount = '0' 
+                                                let discont=(invodetails.mrp)*10/100;
+                                                let taxeble_price=  (invodetails.mrp) -(discont)
+                                                 let tax= taxeble_price *(Number(invodetails.gst)+Number(invodetails.cgst)+Number(invodetails.sgst))/100;
+                                                 let salePrice=taxeble_price+tax
+                                                 let totalAmmount=(parseInt(invodetails.quantity)*(salePrice)).toFixed(2)
+                                                 qty += Number(invodetails.quantity);
+                                                 mrpTotal +=Number(invodetails.mrp)
+                                                 disCountTotal +=Number(discont)
+                                                 taxable_value_total +=taxeble_price
+                                                 taxTotal += tax
+                                                 salePrice_total +=salePrice
+                                                 totalGSt += Number(invodetails.gst)
+                                                 totalCGST += Number(invodetails.cgst)
+                                                 totalSGST += Number(invodetails.sgst)
+                                                 GrandTotal +=  Number(totalAmmount)
+                                                
+
+
                                                     
                                              return(
                                                
                                                 <tr>
                                                     
-                                                <td className="center"><b>OPPO K10 5G (Ocean Blue, 128 GB)</b><br />
+                                                <td className="center"><b> {invodetails.product_title_name}</b><br />
+                                                    
+                                                     <small>GST: {invodetails.gst} %</small><br />
                                                     <small>CGST: {invodetails.cgst} %</small><br />
-                                                    <small>SGST/UTGST: {invodetails.sgst} %</small>
+                                                    <small>SGST: {invodetails.sgst} %</small>
+                                                    
                                                 </td>
-                                                <td className="">{invodetails.quantity}</td>
-                                                <td className="left">{parseInt(invodetails.quantity * invodetails.product_price)}</td>
-                                                <td className="left">{invodetails.discount}</td>
-                            <td className="left">{parseInt(invodetails.quantity * invodetails.product_price) - parseInt(invodetails.discount)}</td>
-                            <td className="left">{invodetails.gst}</td>
-                                                <td className="left">{invodetails.cgst}</td>
-                                                <td className="left">{invodetails.sgst}</td>
-                                                <td className="left">{parseInt(invodetails.quantity * invodetails.product_price) - invodetails.discount+parseInt(invodetails.cgst)+parseInt(invodetails.sgst)+parseInt(invodetails.gst)}</td>
+                                                
+                                                <td className="left">
+                                                     {parseInt(invodetails.mrp)}
+                                                    
+                                                </td>
+                                                <td className="left">
+                                                    ₹ {discont.toFixed(2)} <br/>
+                                                 
+                                                    </td>
+                                                <td className="left">
+                                                    ₹ {taxeble_price.toFixed(2)} <br/>
+                                                 
+                                                    </td>
+                                                    <td className="left">
+                                                    ₹ {tax.toFixed(2)} 
+                                                 
+                                                    </td>
+                                                    <td className="">{invodetails.quantity}</td>
+                                              <td className="left">{salePrice.toFixed(2)}</td>
+                                            
+                                                <td className="left">{totalAmmount}</td>
                                               
                                                 
                                             </tr>
@@ -138,19 +210,21 @@ const Invoice = () => {
                                             <tr>
                                                 <th className="font-weight-bold"><b>Total</b></th>
                                                 
-                                                <th className=""><b>{invoicedetails.total_quantity}</b></th>
-                                                <th className=""><b>{invoicedetails.total_quantity - invoicedetails.discount_coupon - invoicedetails.taxable_value - invoicedetails.total_cgst - invoicedetails.total_cgst - invoicedetails.total_sgst}</b></th>
-                                                <th className=""><b>{invoicedetails.discount_coupon}</b></th>
-                                                <th className=""><b>{invoicedetails.taxable_value}</b></th>
-                                                <th className=""><b>{invoicedetails.total_cgst}</b></th>
-                                                <th className=""><b>{invoicedetails.total_cgst}</b></th>
-                                                 <th className=""><b>{invoicedetails.total_sgst}</b></th>
-                                                <th className=""><b>{invoicedetails.total_amount}</b></th>
+                                             
+                                                <th className=""><b> ₹ {mrpTotal} </b></th>
+                                                <th className=""><b>₹ {disCountTotal} </b></th>
+
+                                                <th className=""><b> ₹ {((taxable_value_total).toFixed(2)) } </b></th>
+                                                <th className=""><b> ₹ {((taxTotal).toFixed(2)) } </b></th>
+                                                <th className=""><b> ₹ {qty}</b></th>
+                                                <th className=""><b> ₹ {(salePrice_total).toFixed(2)}</b></th>
+                                             
+                                                <th className=""><b> ₹ {GrandTotal}</b></th>
                                             </tr>
                                               
                                             <tr>
                                                 <th colSpan={'7'} className="font-weight-bold text-end p-4"><h5><b>Grand Total</b></h5></th>
-                                                <th className="pt-4 pb-4"><h5><b>{invoicedetails.total_amount}</b></h5></th>
+                                                <th className="pt-4 pb-4"><h5><b> ₹ {GrandTotal}</b></h5></th>
                                             </tr> 
                                             
                                             </tbody>
@@ -169,9 +243,19 @@ const Invoice = () => {
                                     </div>
                                    
                             </div>
+                                  <div className="mb-5 m-auto">
+                            <button onClick={()=> printDocument ()} className="btn btn-outline-success m-auto" >Print</button>
+                         </div>
                         </div>
                     </div>
                 </div>
+
+
+
+
+{/* ----------------------------------------------------jjj ---------------------------------------------------------------*/}
+
+               
             {/* </Page>
 
         </Document> */}
