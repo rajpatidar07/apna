@@ -54,10 +54,10 @@ const CategoryList = () => {
     s_category:""
   });
   const [level, setlevel] = useState('');
-  const [file, setFile] = useState();
   const [cid, setCid] = useState();
- const [fileName, setFileName] = useState("");
  const [parentid, setParentid] = useState('');
+ const [file, setFile] = useState();
+ const [fileName, setFileName] = useState("");
  const [allparentid, setAllparentid] = useState([]);
 const [apicall, setapicall] = useState(false);
  const [searchdata, setsearchData] = useState([]);
@@ -71,7 +71,7 @@ const [apicall, setapicall] = useState(false);
   "level":""
 
  });
-
+console.log("kkkkkkk"+JSON.stringify(SearchCat))
 const saveFile = (e) => {
 setFile(e.target.files[0]);
  setFileName(e.target.files[0].name);
@@ -137,6 +137,8 @@ for(let i=0 ; i < arr.length; i++){
       setnewName(name)
       setCid(e)
       setParentid(parent_id)
+  console.log("dddddddddddddd"+parent_id)
+
       setAllparentid(all_parent_id)
       setlevel(level)
       setType(category_type)
@@ -156,6 +158,7 @@ for(let i=0 ; i < arr.length; i++){
 
   const categoryFormChange = (e, id) => {
     setIndVal(e.target.value);
+    console.log("uuuuuuuuuuu"+indVal)
     setScategory({ ...scategory, [e.target.name]: e.target.value});
   };
      let parentidddata=[];
@@ -399,6 +402,7 @@ for(let i=0 ; i < arr.length; i++){
       
     }
   };
+
   const UpdateCategoryClick = (show) => {
     console.log("---show"+CategoryEditdata.id)
     const formData = new FormData();

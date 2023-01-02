@@ -97,7 +97,7 @@ const Invoice = () => {
                                            
                                             <tbody>
                                          
-                                                {(pdetails).map((invodetails)=>{
+                                                 {(pdetails).map((invodetails)=>{
                                                 invodetails.discount = '0' 
                                                     
                                              return(
@@ -109,23 +109,20 @@ const Invoice = () => {
                                                     <small>SGST/UTGST: {invodetails.sgst} %</small>
                                                 </td>
                                                 <td className="">{invodetails.quantity}</td>
-                                                <td className="left">{parseInt(invodetails.quantity * invodetails.price)}</td>
+                                                <td className="left">{parseInt(invodetails.quantity * invodetails.product_price)}</td>
                                                 <td className="left">{invodetails.discount}</td>
-                            <td className="left">{parseInt(invodetails.quantity * invodetails.price) - parseInt(invodetails.discount)}</td>
+                            <td className="left">{parseInt(invodetails.quantity * invodetails.product_price) - parseInt(invodetails.discount)}</td>
                             <td className="left">{invodetails.gst}</td>
                                                 <td className="left">{invodetails.cgst}</td>
                                                 <td className="left">{invodetails.sgst}</td>
-                                                <td className="left">{parseInt(invodetails.quantity * invodetails.price) - invodetails.discount+parseInt(invodetails.cgst)+parseInt(invodetails.sgst)+parseInt(invodetails.gst)}</td>
+                                                <td className="left">{parseInt(invodetails.quantity * invodetails.product_price) - invodetails.discount+parseInt(invodetails.cgst)+parseInt(invodetails.sgst)+parseInt(invodetails.gst)}</td>
                                               
                                                 
-                                             
-
-
-
                                             </tr>
 
                                               )
                                             })} 
+                                          
                                             {/* <tr>
                                                 <td className="center"><b>Shipping And Packaging Charges</b>
                                                 </td>
@@ -154,7 +151,7 @@ const Invoice = () => {
                                             <tr>
                                                 <th colSpan={'7'} className="font-weight-bold text-end p-4"><h5><b>Grand Total</b></h5></th>
                                                 <th className="pt-4 pb-4"><h5><b>{invoicedetails.total_amount}</b></h5></th>
-                                            </tr>
+                                            </tr> 
                                             
                                             </tbody>
                                         </table>

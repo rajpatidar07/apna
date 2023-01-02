@@ -105,6 +105,13 @@ function AdminSidebar() {
             </Link>
           </Accordion>
         </Accordion.Item>
+        <Accordion.Item eventKey="5">
+          <Accordion>
+            <Link to="/add_blog" className="nav-link nav_heading">
+              <BsShopWindow /> Blogs
+            </Link>
+          </Accordion>
+        </Accordion.Item>
         <Accordion.Item eventKey="6">
           <Accordion>
             {" "}

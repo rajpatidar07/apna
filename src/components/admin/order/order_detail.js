@@ -13,6 +13,7 @@ const OrderDetail = () => {
   let userid= localStorage.getItem("userid")
   const[order,setOrder]=useState([]);
   const[productorder,setproductOrder]=useState([]);
+  const [amt,setAmt]=useState("")
   const[user,setUser]=useState([]);
   const [changstatuss, setchangstatuss] = useState('');
   const [searchdataa, setsearchDataa] = useState({
@@ -40,6 +41,8 @@ const OrderDetail = () => {
     axios.get(`http://192.168.29.108:5000/order_deteils?id=${orderid}`).then((response) => {
       setOrder(response.data);
       setproductOrder(response.data.product_types)
+     
+      
       UserData();
       // console.log("______uuuuu_____"+JSON.stringify(response.data))
       // setapicall(false)
@@ -58,6 +61,10 @@ const OrderDetail = () => {
       console.log(error);
     });
   }
+
+ var total=0;
+ var sub_total=0;
+ var total_tax=0;
   return (
     <div className="order_detail_page">
       <div className="order_detail">
@@ -104,6 +111,14 @@ const OrderDetail = () => {
                   {order.order_date} 
                   </div>
                 </div>
+
+
+                <div className="d-flex flex-column text-center">
+                  <div className="order_info_heading">Delivery Date</div>
+                  <div className="date_time">
+                  {order.delivery_date} 
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -111,27 +126,53 @@ const OrderDetail = () => {
               <div className="product_image_price"></div>
 
 {(productorder || []).map(orderdata=>{
-                    return(
+                  
+                orderdata.gst=="null"? (orderdata.gst="0"):Number(orderdata.gst)
+                  orderdata.sgst=="null"? (orderdata.sgst="0"):Number(orderdata.sgst)
+                  orderdata.cgst=="null"? (orderdata.cgst="0"):Number(orderdata.cgst)
+                 
+                   console.log("-------"+orderdata.sgst)
+
+                  let discont=(orderdata.mrp)*10/100
+                   let product_price=(orderdata.mrp)-(orderdata.mrp)*10/100;
+                   let tax= Number((orderdata.mrp)-(orderdata.mrp)*10/100 ) *(Number(orderdata.gst)+Number(orderdata.cgst)+Number(orderdata.sgst))/100;
+                   let sale_price=((orderdata.mrp)-(orderdata.mrp)*10/100)+(((orderdata.mrp)-(orderdata.mrp)*10/100 ) *(Number(orderdata.gst)+Number(orderdata.cgst)+Number(orderdata.sgst))/100)
+                   let total_price=( ((orderdata.mrp)-(orderdata.mrp)*10/100)+(((orderdata.mrp)-(orderdata.mrp)*10/100 ) *(Number(orderdata.gst)+Number(orderdata.cgst)+Number(orderdata.sgst))/100))*orderdata.quantity
+                    total += total_price*orderdata.quantity;
+                    sub_total += Number(sale_price)
+                    total_tax += Number(tax)
+                   return(
 
               <div className="d-flex justify-content-between mb-3 align-items-center">
 
                 <div className="product_img d-flex">
                   <img src="" alt="apnaorganic"/>
                   <div className="product_name_detial ps-3">
-                    <h6>T-Shirt Blue</h6>
-                    <p>color:blue</p>
-                    <p>size: M</p>
+                    <h6>{orderdata.product_title_name}</h6>
+                    <p>color:{orderdata.colors}</p>
+                    <p>size: {orderdata.size}</p>
                   </div>
                 </div>
 
-                <div className="product_price">{orderdata.price}₹</div>
-                <div className="product_quantity">{orderdata.quantity}</div>
-                <div className="total_amount">{orderdata.price*orderdata.quantity}</div>
+                <div className="product_price"> MRP-{orderdata.mrp}₹ (10% )
+                    <br/> Discount- {discont}₹
+                     <br/>Product Price- {product_price}₹ 
+                    </div>
+
+                    <div className="product_quantity">Taxable Price- <br/>{product_price}₹
+                           
+                           <br/> Tax -{ tax}₹
+                    </div>
+
+                    <div className="product_quantity">Sale Price-<br/>{ sale_price}₹</div>
+                  
+                <div className="product_quantity">QTY-{orderdata.quantity}</div>
+                <div className="total_amount"> Total Price- <br/>{total_price}₹</div>
                
               </div>
               )
             })} 
-             
+            
             </div>
 
             <div className="delivery_charges">
@@ -155,19 +196,19 @@ const OrderDetail = () => {
                     Subtotal<span>({order.total_quantity} items)</span>
                   </p>
                 </div>
-                <div className="">{order.total_amount - (order.total_cgst + order.total_sgst )}₹</div>
+                <div className="">{sub_total}₹</div>
               </div>
               <div className="payment_summary_total d-flex justify-content-between align-items-center">
                 <div className="Subtotal">
                   <p>Delivery Charges</p>
                 </div>
-                <div className="">00.00₹</div>
+                <div className="">{order.shipping_charges}₹</div>
               </div>
               <div className="payment_summary_total d-flex justify-content-between align-items-center">
                 <div className="Subtotal">
                   <p>Tax</p>
                 </div>
-                <div className="">{order.total_cgst + order.total_sgst}₹</div>
+                <div className="">{total_tax}₹</div>
               </div>
               <div className="payment_summary_total d-flex justify-content-between align-items-center">
                 <div className="Subtotal">
@@ -176,7 +217,7 @@ const OrderDetail = () => {
                   </p>
                 </div>
                 <div className="">
-                  <strong>{order.total_amount}₹</strong>
+                  <strong>{total}₹</strong>
                 </div>
               </div>
             </div>

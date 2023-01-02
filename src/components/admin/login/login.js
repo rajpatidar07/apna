@@ -1,4 +1,4 @@
-import React, { Fragment,useState } from "react";
+import React, { Fragment,useState,useEffect} from "react";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "./login.css";
@@ -7,20 +7,26 @@ import Logo from "../../../images/logo.png";
 import axios from "axios";
 const Login = () => {
   const navigate=useNavigate();
+  const[admindata,setAdminData]=useState([])
+  const[id,setId]=useState();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   // const [validated, setValidated] = useState(false);
   const [error,setError]=useState(true);
-  const onValueChange = (e) => {
+  const onValueChange = (e,id) => {
     setEmail(e.target.value);
+  
   };
-  const onPasswordChange=(e)=>{
+  const onPasswordChange=(e,id)=>{
     setPassword(e.target.value );
+ 
   }
+  console.log("id free-----"+id)
+
   const LoginCheck = () =>{
     localStorage.setItem("loginid",email);
     localStorage.setItem("password",password);
-
+    localStorage.setItem("adminid",id)
     navigate('/') 
   }
    const handleSubmit = ((e) => {
@@ -31,14 +37,18 @@ const Login = () => {
     setError(false);
     }
    else{
+  console.log("elseeeeeee")
+
     axios.post(`${process.env.REACT_APP_BASEURL}/admin_login`,
         {
         admin_email:email,
-        admin_password:password
+        admin_password:password,
         }
         )
         .then((response) => {
-          if(response.data === true){
+  
+
+          if(response){
            
             LoginCheck();
 
@@ -50,6 +60,15 @@ const Login = () => {
    }
     e.preventDefault();
   });
+  useEffect(() => {
+    axios.get(`${process.env.REACT_APP_BASEURL}/admin?id=1`
+    ).then ((response) => {
+   let data=response.data[0]
+   setId(data.id);
+   setAdminData(data);
+    })
+  },[]);
+
 
   return (
     <Fragment>
@@ -76,7 +95,7 @@ const Login = () => {
                         <div className="form-floating theme-form-floating log-in-form">
                           <input
                           required
-                          onChange={(e) => onValueChange(e)}
+                          onChange={(e,id) => onValueChange(e,id)}
                             type="email"
                             className="form-control"
                             name={"admin_email"}
@@ -95,7 +114,7 @@ const Login = () => {
                         <div className="form-floating theme-form-floating log-in-form">
                           <input
                           required
-                          onChange={(e) => onPasswordChange(e)}
+                          onChange={(e,id) =>onPasswordChange(e,id)}
                             type="password"
                             className="form-control"
                         name={"admin_password"}

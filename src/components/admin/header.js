@@ -158,7 +158,7 @@ function AdminHeader() {
                 <AiOutlineSetting />
                 Setting
               </Dropdown.Item>
-              <Dropdown.Item href="#/action-3" className="profile_list py-2">
+              <Dropdown.Item href="/login" className="profile_list py-2">
                 <FiLogOut />
                 LogOut
               </Dropdown.Item>

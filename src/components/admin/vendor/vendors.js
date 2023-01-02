@@ -11,7 +11,7 @@ import { BiEdit } from "react-icons/bi";
 import { useEffect } from "react";
 import Iconbutton from "../common/iconbutton";
 import axios from "axios";
-import { Badge, Button, InputGroup } from "react-bootstrap";
+import { Badge, Button, InputGroup, Table } from "react-bootstrap";
 import { GiCancel } from "react-icons/gi";
 const VendorsList = () => {
   const formRef = useRef();
@@ -39,14 +39,22 @@ const VendorsList = () => {
   status:"",
   image:"",
   document_name:[],
-  availability:""
+  availability:"",
+  social_media_links:[]
     });
   const [changstatus, setchangstatus] = useState("");
   const [apicall, setapicall] = useState(false);
   const [addtag, setaddtag] = useState();
   const [Docnamearray, setDocnameArray] = useState([]);
   const [DocuImgarray, setDocuImgArray] = useState([]);
-
+  const [headerval, setheaderval] = useState('');
+  const [descval, setdescval] = useState('');
+  const [customarray, setcustomarray] = useState([]);
+  const [AddCustom, setAddCustom] = useState({
+    name:[],
+    link:[]
+  });
+  const [customvalidated, setcustomValidated] = useState(false);
   const [searchdata, setsearchData] = useState({
     status:"",
     store_type:"",
@@ -236,8 +244,7 @@ const VendorsList = () => {
     setShow(false);
   };
 
-  let Docnarray =[];
-  let arr;
+ 
   const handleShow = (e) => {
     if (e === "add") {
       setShow(e);
@@ -249,10 +256,13 @@ const VendorsList = () => {
     .get(`${process.env.REACT_APP_BASEURL}/vendors?id=${e}`,addvendordata)
     .then((response) => {
       setaddvendordata(response.data[0]);
-      // setDocnameArray(response.data[0].document_name);
-      //  Docnarray.push(response.data[0].document_name)
      setDocuImgArray(JSON.parse(response.data[0].multiple_document_upload))
-    console.log("---docname"+ (response.data[0].document_name))
+    //  let i = JSON.parse(response.data[0].social_media_links);
+    // console.log("---iiiii"+ typeof i)
+
+    // console.log("---docname"+ JSON.stringify(i[0]))
+    // console.log("---docname"+ (response.data[0].social_media_links))
+
       setapicall(false);
     })
     .catch(function(error) {
@@ -316,6 +326,39 @@ const VendorsList = () => {
   //   });
   };
 
+  // social media link
+  const oncustomheadChange = (e) => {
+    setheaderval(e.target.value);
+    setAddCustom((AddCustom) =>{ return {...AddCustom,  name : e.target.value}});
+  };
+  const oncustomdescChange = (e) => {
+    setdescval(e.target.value);
+    setAddCustom((AddCustom) =>{ return {...AddCustom,  link : e.target.value}});
+  };
+  const handleAddClick = (e) => {
+    if (headerval !== '' && descval !== '') {
+      setcustomarray(customarray => [...customarray, AddCustom]);
+      setheaderval('');
+      setdescval('');
+      setAddCustom('')
+      setcustomValidated(false);
+    }
+    else {
+      setcustomValidated(true);
+    }
+  }
+
+  const handleRemoveClick = (e) => {
+    setcustomarray(customarray.filter(item => item !== e));
+  };
+  useEffect(() => {
+    setaddvendordata({
+      ...addvendordata,
+      testjson: customarray
+    });
+  }, [customarray]);
+
+  // end social media link
 
   let shoplogo = `${process.env.REACT_APP_BASEURL}/${addvendordata.shop_logo}`
   let docsdata = `${process.env.REACT_APP_BASEURL}/${DocuImgarray}`
@@ -333,6 +376,11 @@ const VendorsList = () => {
 
   const formData = new FormData();
   let x = [addvendordata.document_name]
+  let socialname =  addvendordata.testjson
+  console.log("socialname----------"+JSON.stringify(socialname));
+  console.log("socialname----------"+socialname);
+
+
     formData.append("image", file);
     formData.append("filename", fileName);
     formData.append("owner_name", addvendordata.owner_name);
@@ -348,15 +396,13 @@ const VendorsList = () => {
     formData.append("filename", fileDocName);
     formData.append("document_name",x);
     formData.append("status",addvendordata.status);
-    formData.append("availability", addvendordata.availability);
+    formData.append("social_media_links", socialname);
       axios
       .post(`${process.env.REACT_APP_BASEURL}/vendor_register`,formData)
       .then((response) => {
-        // setvendordata(response.data);
-      // console.log("formadd----------   " + JSON.stringify(response.data));
     setapicall(true);
     setShow(false);
-
+console.log("-------done"+response.data)
       })
       .catch(function(error) {
         console.log(error);
@@ -399,8 +445,10 @@ const VendorsList = () => {
       console.log(error);
     });
   };
-  console.log("VEDORR"+JSON.stringify(addvendordata))
-  console.log("VEDORRDAATTTTAAAAAAAAAA"+JSON.stringify(vendordata))
+
+
+
+  // console.log("VEDORR"+JSON.stringify(addvendordata))
 
   return (
     <div>
@@ -834,6 +882,117 @@ const VendorsList = () => {
                   </Form.Control.Feedback>
                 </Form.Group>
               </div>
+
+              {/* social media links */}
+
+              <div className="my-3 inputsection_box">
+                  <h5 className="m-0">Add Social Media Link</h5>
+                  <div className=" mt-0 mb-3">
+                    <Table className="align-middle" >
+                      <thead>
+                        <tr>
+                          <th >Social Media</th>
+                          <th >Link</th>
+                          <th ></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td className="text-center col-4">
+                            <InputGroup className="">
+                              <Form.Control
+                                value={headerval}
+                                type="text"
+                                sm="9"
+                                min={'1'}
+                                onChange={oncustomheadChange}
+                                name={'header'}
+                                className={(customvalidated === true) ? 'border-danger' : null}
+                              />
+                            </InputGroup>
+
+                          </td>
+                          <td className="col-4">
+                            <InputGroup className="">
+                              <Form.Control
+                                className={(customvalidated === true) ? 'border-danger' : null}
+                                value={descval}
+                                name={'description'}
+                                type="text"
+                                sm="9"
+                                min={'1'}
+                                onChange={oncustomdescChange}
+                                onKeyPress={event => {
+                                  if (event.key === "Enter") {
+                                    handleAddClick();
+                                  }
+                                }
+                                }
+                              />
+                            </InputGroup>
+                          </td>
+                          <td className="">
+                            <Button variant="outline-success" className="addcategoryicon"
+                              onClick={() => handleAddClick()} size="sm">
+                              +
+                            </Button>
+                          </td>
+                        </tr>
+                        {
+                        ((customarray) || []).map((variantdata, i) => {
+                          return (
+                            <tr className="">
+                              <td className=" text-center">
+                                <InputGroup className="">
+                                  <Form.Control
+                                    value={variantdata.name}
+                                    type="text"
+                                    sm="9"
+                                    min={'1'}
+                                    onChange={oncustomheadChange}
+                                    name={'custom_input_header'}
+                                    required
+                                  />
+                                </InputGroup>
+
+                              </td>
+                              <td className="text-center">
+                                <InputGroup className="">
+                                  <Form.Control
+                                    required
+                                    value={variantdata.link}
+                                    name={'custom_input_desc'}
+                                    type="text"
+                                    sm="9"
+                                    min={'1'}
+                                    onChange={oncustomdescChange}
+                                    onKeyPress={event => {
+                                      if (event.key === "Enter") {
+                                        handleAddClick();
+                                      }
+                                    }
+                                    }
+                                  />
+                                </InputGroup>
+                              </td>
+                              <td className="">
+                                <Button variant="text-danger" className="addcategoryicon text-danger"
+                                  onClick={() => handleRemoveClick(variantdata)} size="sm">
+                                  &times;
+                                </Button>
+                              </td>
+                            </tr>
+                          )
+                        })
+                        }
+                      </tbody>
+                    </Table>
+                  </div>
+                  {/* );
+                })} */}
+                  {/* --------------------------------------------- */}
+                </div>
+{/* end social media link */}
               <div classImg="col-md-6">
                 <Form.Group
                   className="mb-3 aos_input"
