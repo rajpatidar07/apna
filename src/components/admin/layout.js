@@ -30,6 +30,7 @@ import InvoiceList from "./invoice/invoices";
 import Complaint from "./complaint/complaint";
 import Transactions from "./transactions/transactions";
 import TranDetail from "./transactions/transactions_detail";
+import Email_send from "./email_send /email_send";
 import Banner from "./setting/banner_manager";
 import Coupon from "./coupon/coupon";
 import Home from "./setting/home_manager";
@@ -108,6 +109,8 @@ function AdminLayout() {
                   <Route path="/content_manager" element={<ContentManager />} />
                   <Route path="/customerreport" element={<CustomerReport />} />
                   <Route path="/storereport" element={<StoreReport />} />
+                  <Route path="/email_send" element={<Email_send/>} />
+                  
                 </Routes>
               </div>
             </div>
