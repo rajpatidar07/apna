@@ -61,7 +61,10 @@ const OrderDetail = () => {
       console.log(error);
     });
   }
-  let v=0;
+
+ var total=0;
+ var sub_total=0;
+ var total_tax=0;
   return (
     <div className="order_detail_page">
       <div className="order_detail">
@@ -124,12 +127,24 @@ const OrderDetail = () => {
 
 {(productorder || []).map(orderdata=>{
                   
-                  
-                   v += orderdata.sale_price*orderdata.quantity;
+                orderdata.gst=="null" ||orderdata.gst=="undefined"||orderdata.gst==""? (orderdata.gst="0"):Number(orderdata.gst)
+                  orderdata.sgst=="null"||orderdata.sgst=="undefined"||orderdata.sgst==""? (orderdata.sgst="0"):Number(orderdata.sgst)
+                  orderdata.cgst=="null"||orderdata.cgst=="undefined"||orderdata.cgst==""? (orderdata.cgst="0"):Number(orderdata.cgst)
+                  orderdata.mrp=="undefined"||orderdata.mrp=="null"||orderdata.mrp==""?(orderdata.mrp="0"):Number(orderdata.mrp)
 
-              
-                  
-                    return(
+                
+                 
+                   console.log("-------"+orderdata.sgst)
+
+                  let discont=(orderdata.mrp)*10/100
+                   let product_price=(orderdata.mrp)-(orderdata.mrp)*10/100;
+                   let tax= Number((orderdata.mrp)-(orderdata.mrp)*10/100 ) *(Number(orderdata.gst)+Number(orderdata.cgst)+Number(orderdata.sgst))/100;
+                   let sale_price=((orderdata.mrp)-(orderdata.mrp)*10/100)+(((orderdata.mrp)-(orderdata.mrp)*10/100 ) *(Number(orderdata.gst)+Number(orderdata.cgst)+Number(orderdata.sgst))/100)
+                   let total_price=( ((orderdata.mrp)-(orderdata.mrp)*10/100)+(((orderdata.mrp)-(orderdata.mrp)*10/100 ) *(Number(orderdata.gst)+Number(orderdata.cgst)+Number(orderdata.sgst))/100))*orderdata.quantity
+                    total += total_price*orderdata.quantity;
+                    sub_total += Number(sale_price)
+                    total_tax += Number(tax)
+                   return(
 
               <div className="d-flex justify-content-between mb-3 align-items-center">
 
@@ -142,9 +157,20 @@ const OrderDetail = () => {
                   </div>
                 </div>
 
-                <div className="product_price">{orderdata.sale_price}₹</div>
-                <div className="product_quantity">{orderdata.quantity}</div>
-                <div className="total_amount">{  orderdata.sale_price*orderdata.quantity}</div>
+                <div className="product_price"> MRP-{orderdata.mrp}₹ (10% )
+                    <br/> Discount- {discont}₹
+                     <br/>Product Price- {product_price}₹ 
+                    </div>
+
+                    <div className="product_quantity">Taxable Price- <br/>{product_price}₹
+                           
+                           <br/> Tax -{ tax}₹
+                    </div>
+
+                    <div className="product_quantity">Sale Price-<br/>{ sale_price}₹</div>
+                  
+                <div className="product_quantity">QTY-{orderdata.quantity}</div>
+                <div className="total_amount"> Total Price- <br/>{total_price}₹</div>
                
               </div>
               )
@@ -173,19 +199,19 @@ const OrderDetail = () => {
                     Subtotal<span>({order.total_quantity} items)</span>
                   </p>
                 </div>
-                <div className="">{v}₹</div>
+                <div className="">{sub_total}₹</div>
               </div>
               <div className="payment_summary_total d-flex justify-content-between align-items-center">
                 <div className="Subtotal">
                   <p>Delivery Charges</p>
                 </div>
-                <div className="">00.00₹</div>
+                <div className="">{order.shipping_charges}₹</div>
               </div>
               <div className="payment_summary_total d-flex justify-content-between align-items-center">
                 <div className="Subtotal">
                   <p>Tax</p>
                 </div>
-                <div className="">{order.total_cgst + order.total_sgst}₹</div>
+                <div className="">{total_tax}₹</div>
               </div>
               <div className="payment_summary_total d-flex justify-content-between align-items-center">
                 <div className="Subtotal">
@@ -194,7 +220,7 @@ const OrderDetail = () => {
                   </p>
                 </div>
                 <div className="">
-                  <strong>{order.total_amount}₹</strong>
+                  <strong>{total}₹</strong>
                 </div>
               </div>
             </div>

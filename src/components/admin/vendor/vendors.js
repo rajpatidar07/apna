@@ -87,20 +87,27 @@ const VendorsList = () => {
         sortable: true,
       },
       {
-        name: "Logo",
+        name: "#",
+        width: "250px",
         center: true,
-        cell: (row) => (
+        cell: (row) => 
+        
+        (
+          <>
           <img
-            width={"100%"}
+            height="90px"
+            width="75px"
             alt={row.owner_name}
-            src={row.shop_logo}
+            src={`${process.env.REACT_APP_BASEURL}/`+(row.shop_logo).replace("public","")}
             style={{
-              borderRadius: 15,
+              borderRadius: 10,
               paddingTop: 10,
               paddingBottom: 10,
               textAlign: "right",
             }}
+            onClick={() => handleClick()}
           />
+          </>
         ),
       },
       {
@@ -364,6 +371,7 @@ const VendorsList = () => {
   let docsdata = `${process.env.REACT_APP_BASEURL}/${DocuImgarray}`
   var Newshoplogo = shoplogo.replace("/public", "");
   var imgdata =docsdata.replace("/public", "");
+  const handleClick = () => {};
   const AddVendorClick = (e) => {
     const form = e.currentTarget;
     if (form.checkValidity() === false) {

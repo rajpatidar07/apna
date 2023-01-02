@@ -1,0 +1,554 @@
+import React, { useState, useRef } from "react";
+import Input from "../common/input";
+import DataTable from "react-data-table-component";
+import Form from "react-bootstrap/Form";
+import Modal from "react-bootstrap/Modal";
+import SweetAlert from "sweetalert-react";
+import "sweetalert/dist/sweetalert.css";
+import logo from "../../../images/logo.png";
+import { BsTrash } from "react-icons/bs";
+import { BiEdit } from "react-icons/bi";
+import { useEffect } from "react";
+import Iconbutton from "../common/iconbutton";
+import axios from "axios";
+import { Badge, Button, InputGroup } from "react-bootstrap";
+import { GiCancel } from "react-icons/gi";
+import { data } from "jquery";
+let categoryArray=[];
+const BlogList = () => {
+  const formRef = useRef();
+  const[apicall,setapicall]=useState([]);
+  const [validated, setValidated] = useState(false);
+  const [show, setShow] = useState("");
+  const [Alert, setAlert] = useState(false);
+  const [file, setFile] = useState();
+  const [fileName, setFileName] = useState("");
+  const [image,setImage]=useState();
+  
+  const[id,setId]=useState('');
+  const[blog,setBlog]=useState([]);
+  const
+   [addblog, setaddBlog] = useState({
+    admin_id: "",
+    image: "",
+    title: "",
+    description: "",
+    category: "",
+    product_tag: "",
+    publish_date: ""
+}); 
+const [searchdata, setsearchData] = useState([]);
+const [searchblog, setsearchBlog] = useState({
+  id:"",
+  for_:"admin",
+  recent:"",
+  category:"",
+  product_tag:""
+  })
+console.log("kkkkkkk"+JSON.stringify(searchblog))
+
+  const OnSearchChange = (e) => {
+    setsearchBlog({ ...searchblog, [e.target.name]: e.target.value })
+   
+  }
+  const OnCtegorySearch = (e) => {
+    setsearchBlog({ ...searchblog, category: e.target.value })
+    categoryArray.push(e.target.value )
+    console.log("searchblog.category"+e.target.value)
+    console.log("hiiiiiiiiiiiiii"+JSON.stringify(categoryArray))
+
+   
+  }
+  const onSearchClick = () =>{
+
+    axios
+    .post(`${process.env.REACT_APP_BASEURL}/blogs`, {
+      id:"",
+      for_:"admin",
+      recent:`${searchblog.recent}`,
+      category:categoryArray,
+      product_tag:`${searchblog.product_tag}`
+    })
+    .then((response) => {
+      let data=response.data
+    console.log("search----------   " + JSON.stringify(response.data));
+      setBlog(response.data); 
+      setsearchBlog('')
+      setapicall(false);
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+  }
+   const ImgFormChange = (e) => {
+    setFile(e.target.files[0]);
+ setFileName(e.target.files[0].name);
+  };
+const handleFormChange = (e) => {
+  setaddBlog({...addblog,[e.target.name]: e.target.value,
+  });
+  // console.log("dataaaaaaaaaaaaaaaaaaaaaaa"+JSON.stringify(addblog))
+};
+
+const handleClose = () => {
+  formRef.current.reset();
+  setValidated(false);
+  setShow(false);
+};
+const handleShow=(e,id)=>{
+  // console.log("gggggggggggggg"+e)
+
+  if (e === "add") {
+    setShow(e);
+  }
+  else
+  {
+      function getBlog(){
+        try {
+          axios.post(`${process.env.REACT_APP_BASEURL}/blogs`,
+            {
+            id:e,
+            for_:"admin",
+            recent:"",
+            category:[],
+            product_tag:""
+          }).then ((response) => {
+            let data= response.data;
+            // console.log("gggggggggggggg"+JSON.stringify(data));
+            setaddBlog(response.data[0]);
+            setsearchData(data);
+            setId(id);
+            // setBlog(response.data);
+            // setAdminId(response.data.admin_id);
+              setapicall(false);
+              })
+        } catch (err) {}
+      }
+      getBlog();
+      setShow(true);
+
+    }
+}
+    useEffect(() => {
+      axios.post(`${process.env.REACT_APP_BASEURL}/blogs`,
+      {
+      id:"",
+      for_:"admin",
+      recent:"",
+      category:[],
+      product_tag:""
+    }).then ((response) => {
+    let data= response.data;
+    setBlog(response.data);
+    // console.log("ALL DATA"+JSON.stringify(response.data))
+    setaddBlog(response.data)
+    setsearchData(data)
+      setapicall(false);
+      })
+    }, [apicall]);
+
+    const admid=localStorage.getItem("adminid");
+    // console.log("adminnnnnnnnnnnn___________________-"+(admid))
+const AddBlog = (e,id) => {
+  const form = e.currentTarget;
+  if (form.checkValidity() === false) {
+    e.stopPropagation();
+    e.preventDefault();
+    setValidated(true);
+  }
+  if (form.checkValidity() === true) {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("image",file);
+    formData.append("filename", fileName);
+    formData.append("admin_id",admid);
+    formData.append("title",addblog.title);
+    formData.append("description",addblog.description);
+    formData.append("category",addblog.category);
+    formData.append("product_tag",addblog.product_tag);
+    formData.append("publish_date", addblog.publish_date);
+    // console.log("adminmmmmmmm"+adminId)
+    axios
+      .post(`${process.env.REACT_APP_BASEURL}/add_blog`,formData, 
+      )
+      .then((response) => {
+        let data=response.data
+        setShow(false);
+        setapicall(true);
+        // setAdminId();
+        
+      });
+    formRef.current.reset();
+    setValidated(false);
+    // setData("");
+    
+  }
+};
+
+console.log("kkkkkkkkkkk_______________________kkkkkkkk"+admid)
+const UpdateBlog = (show) => {
+
+  const formData = new FormData();
+  console.log("---show"+addblog.id)
+
+  formData.append("image", file);
+  formData.append("filename", fileName);
+  formData.append("admin_id",admid);
+  formData.append("title",addblog.title);
+  formData.append("description",addblog.description);
+  formData.append("category",addblog.category);
+  formData.append("product_tag",addblog.product_tag);
+  formData.append("publish_date", addblog.publish_date);
+  formData.append("id",addblog.id)
+   axios.put(`${process.env.REACT_APP_BASEURL}/update_blog`,formData)
+   .then((response) => {
+    let data=response.data
+    console.log("formupdate----------   " + JSON.stringify(response.data));
+    setapicall(true)
+    setShow(false)
+
+});
+formRef.current.reset();
+setValidated(false);
+show.preventDefault();
+};
+const handleAlert = (id) =>{
+    setId(id)
+  setAlert(true);
+  console.log("idddddddd"+id)
+} 
+const hideAlert = () =>{
+  console.log("--id"+id)
+  axios.put(`${process.env.REACT_APP_BASEURL}/delete_blog`,{
+    is_delete:0,
+    id:`${id}`
+});
+setapicall(true)
+setAlert(false);
+} 
+console.log("newwwwwwwwww consoleeeeeeee"+id)
+    const columns = [
+      {
+        name: "Admin_id",
+        selector: (row) => row.admin_id,
+        sortable: true,
+      },
+      {
+        name: "id",
+        selector: (row) => row.id,
+        sortable: true,
+      },
+      {
+        name: "Logo",
+        center: true,
+        cell: (row) => (
+          <img
+            width={"100%"}
+            alt={row.title}
+            src={row.image}
+            style={{
+              borderRadius: 15,
+              paddingTop: 10,
+              paddingBottom: 10,
+              textAlign: "right",
+            }}
+          />
+        ),
+      },
+      {
+        name: "Title",
+        selector: (row) => row.title,
+        sortable: true,
+      },
+      {
+        name: "Category",
+        selector: (row) => row.category,
+        sortable: true,
+      },
+      {
+        name: "Product_tag",
+        selector: (row) => row.product_tag,
+        sortable: true,
+        center: true,
+      },
+      {
+        name: "Description",
+        selector: (row) => row.description,
+        sortable: true,
+      },
+      {
+        name: "Publish_date",
+        selector: (row) => row.publish_date,
+        sortable: true,
+        center: true,
+      },
+      {
+        name: "ACTION",
+        center: true,
+        selector: (row) => (
+          <div className={"actioncolimn"}>
+            <BiEdit
+              className=" p-0 m-0  editiconn text-secondary"
+              onClick={handleShow.bind(this, row.id,row.title,row.category,row.description,row.product_tag,row.publish_date,row.image)}
+            />
+            <BsTrash
+              className=" p-0 m-0 editiconn text-danger"
+              onClick={handleAlert.bind(this,row.id)}
+            />
+          </div>
+        ),
+      },
+    ];
+    const result1 = searchdata.filter((thing, index, self) =>
+  index === self.findIndex((t) => (
+    t.category == thing.category
+  )))
+  const result2 = searchdata.filter((thing, index, self) =>
+  index === self.findIndex((t) => (
+    t.product_tag == thing.product_tag
+  )))
+
+    // console.log("dataaSHOWWWWWWWWWWWWW"+JSON.stringify(searchdata))
+  return (
+    <div>
+      <h2>Blog List</h2>
+
+      {/* search bar */}
+      <div className="card p-3">
+      <div className="row page_searchbox">
+       
+          <div className="col-md-3 col-sm-6 aos_input">
+            <input type={"text"} placeholder={"Search by recent"} onChange={(e) => OnSearchChange(e)}
+              name='recent'
+              value={searchblog.recent} className={'adminsideinput'}/>
+          </div>
+           
+          <div className="col-md-3 col-sm-6 aos_input">
+           
+            <Form.Select
+              aria-label="Search by Category"
+              className="adminselectbox"
+              onChange={(e) => OnCtegorySearch(e)}
+              // value={searchblog.category}
+              name='category'
+              
+            > 
+            <option>Select Category</option>
+            {result1.map((searchData)=>{
+          return(
+            <>
+             <option value={searchData.category}>{searchData.category}</option>
+            </>
+          )
+        })}
+            </Form.Select>
+          </div>
+          <div className="col-md-3 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by Store Type"
+              className="adminselectbox"
+              name='product_tag'
+              // value={searchblog.product_tag}
+
+              onChange={(e) =>OnSearchChange(e)}
+            >
+              <option>Select Product Tag</option>
+            {result2.map((searchData)=>{
+          return(
+            <>
+             <option value={searchData.product_tag}>{searchData.product_tag}</option>
+            </>
+          )
+        })}
+            </Form.Select>
+          
+          </div>
+          
+          <div className="col-md-3 col-sm-6 aos_input">
+            <button className="button main_button w-100" onClick={()=>onSearchClick()}>Search</button>
+          </div>
+         
+          
+        </div>
+
+        <div className="product_page_uploadbox my-4">
+          <button
+            className="button main_button ml-auto"
+            onClick={() => handleShow("add")}
+          >
+            Add Blogs
+          </button>
+        </div>
+        <DataTable
+          columns={columns}
+          className="main_data_table"
+          data={blog}
+          pagination
+          highlightOnHover
+          pointerOnHover
+        />
+        <SweetAlert
+          show={Alert}
+          title="Demo"
+          text="SweetAlert in React"
+          onConfirm={hideAlert}
+          showCancelButton={true}
+          onCancel={hideAlert}
+        />
+      </div>
+      <Modal size="lg" show={show} onHide={() => handleClose()}>
+        <Form
+          className=""
+          noValidate
+          validated={validated}
+          ref={formRef}
+          onSubmit={
+            show === "add"
+              ? (e) => AddBlog(e)
+              : (e) => UpdateBlog(e)
+          }
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>
+              {show === "add" ? "Add New Blog " : " Update Blog "}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="row p-3 m-0">
+              <div className="col-md-6">
+                <Form.Group
+                  className="mb-3 aos_input"
+                  controlId="validationCustom01"
+                >
+                  <Form.Label>Title</Form.Label>
+                  <Form.Control
+                    onChange={(e) => handleFormChange(e)}
+                    value={addblog.title}
+                    
+                    type="text"
+                    placeholder="Add Title"
+                    name={"title"}
+                  />
+                  <Form.Control.Feedback type="invalid" className="h6">
+                    Please fill title
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </div>
+              <div className="col-md-6">
+                <Form.Group
+                  className="mb-3 aos_input"
+                  controlId="validationCustom06"
+                >
+                  <Form.Label>Category</Form.Label>
+                  <Form.Select
+                    size="sm"
+                    aria-label="Default select example"
+                    onChange={(e) => handleFormChange(e)}
+                    value={addblog.category}
+                    name={"category"}
+                  ><option>Select Category</option>
+                     <option>Feshion</option>
+                     <option>Grocry</option>
+                     <option>Electronic</option>
+
+                  </Form.Select>
+                  <Form.Control.Feedback type="invalid" className="h6">
+                    Please fill category
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </div>
+              <div className="col-md-6">
+                  <Form.Group className="mb-3 aos_input" controlId="formBasicStartDate">
+                    <Form.Label>Publish Date</Form.Label>
+                    <Form.Control  name='publish_date'  type="date" value={addblog.publishDate} onChange={(e) => handleFormChange(e)} placeholder="Coupon Start Date" />
+                    <Form.Control.Feedback type="invalid" className="h6">
+                      Please fill date
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                </div> 
+                <div className="col-md-6">
+                <Form.Group
+                  className="mb-3 aos_input"
+                  controlId="validationCustom01"
+                >
+                  <Form.Label>Product_Tag</Form.Label>
+                  <Form.Control
+                    onChange={(e) => handleFormChange(e)}
+                    value={addblog.productTag}
+                    
+                    type="text"
+                    placeholder="Add Tag"
+                    name={"product_tag"}
+                  />
+                  <Form.Control.Feedback type="invalid" className="h6">
+                    Please fill field
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </div>
+              <div className="col-md-12">
+                <Form.Group
+                  className="mb-3 aos_input"
+                  controlId="validationCustom05"
+                >
+                  <Form.Label>Description</Form.Label>
+                  <Form.Control
+                    className="vendor_address"
+                    as="textarea"
+                    rows={3}
+                    placeholder="write your blog..."
+                    name={"description"}
+                    onChange={(e) => handleFormChange(e)}
+                    value={addblog.description}
+                    
+                  />
+                  <Form.Control.Feedback type="invalid" className="h6">
+                    Please fill description
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </div>
+              
+              <div classImg="col-md-6">
+                <Form.Group
+                  className="mb-3 aos_input"
+                  controlId="validationCustom08"
+                >
+                  <Form.Label>Blog Image</Form.Label>
+                  <Form.Control
+                    // onChange={(e) => saveFile(e)}
+                    onChange={(e) => ImgFormChange(e)}
+                    
+                    type="file"
+                    placeholder="Shop_logo"
+                    name={"image"}
+                  />
+                  {/* {addvendordata.shop_logo ?
+                  <img src={Newshoplogo} width={'50px'}/> : null} */}
+                  <Form.Control.Feedback type="invalid" className="h6">
+                    Please upload image
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </div>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <button
+              className="button main_outline_button"
+              onClick={() => handleClose()}
+            >
+              Cancel
+            </button>
+            <Iconbutton
+              type={"submit"}
+                 
+              btntext={show === "add" ? "Add Blog" : "Update Blog"}
+              // onClick={(show === 'add' ? AddVendorClick : UpdateVendorClick(show))}
+              btnclass={"button main_button "}
+            />
+          </Modal.Footer>
+        </Form>
+      </Modal>
+    </div>
+  );
+};
+
+export default BlogList;
