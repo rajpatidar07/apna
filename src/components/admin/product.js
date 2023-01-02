@@ -25,7 +25,12 @@ import axios from "axios";
 import { Button } from "react-bootstrap";
 import { GiCancel } from "react-icons/gi";
 import moment from "moment/moment";
+import { decode as base64_decode, encode as base64_encode } from "base-64";
 let categoryArray = [];
+let encoded;
+let newImageUrls = [];
+let ImgObj = [];
+
 function Product() {
   const [category, setCategory] = useState([]);
   const [indVal, setIndVal] = useState(0);
@@ -109,6 +114,7 @@ function Product() {
     category: "",
     status: "",
   });
+  const [imgarr, setimgarr] = useState([]);
 
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
@@ -157,7 +163,7 @@ function Product() {
       .put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
         varient_id: `${variantid}`,
         product_id: `${productid}`,
-        is_delete: "0",
+        is_delete: ["0"],
       })
       .then((response) => {
         console.log("---delete" + JSON.stringify(response.data));
@@ -423,7 +429,7 @@ function Product() {
                 obj.all_parent_id.substring(0, obj.all_parent_id.length - 2) ===
                 scategory.category_name
             );
-            console.log("---ppppp" + specificValues);
+            // console.log("---ppppp" + specificValues);
             if (indVal === 0) {
               setCategory(cgory);
               setlevel(0);
@@ -464,16 +470,16 @@ function Product() {
         `${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`,
         {
           product_search: {
-            category: [],
+            search: "",
+            category: "",
+            is_delete: ["1"],
             price_from: "",
             price_to: "",
             colors: [],
             size: [],
             parent_category: [],
             product_type: [],
-            search: "",
-            product_id: `${id}`,
-            is_delete: ["1"],
+            product_id: [`${id}`],
           },
         }
       )
@@ -483,6 +489,22 @@ function Product() {
           ...variantarray,
           product_id: id,
         });
+        setvariantapicall(false);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+      // image show
+
+      axios
+      .get(
+        `${process.env.REACT_APP_BASEURL}/product_images_get?product_id=${id}&product_verient_id=11`)
+      .then((response) => {
+        console.log("-----response"+JSON.stringify(response.data))
+        // setvariantarray({
+        //   ...variantarray,
+        //   product_id: id,
+        // });
         setvariantapicall(false);
       })
       .catch(function (error) {
@@ -531,15 +553,66 @@ function Product() {
   // end seotag
 
   // variant
-  const newImageUrls = [];
-  const imguploadchange = (e) => {
-    [...e.target.files].forEach((image) =>
-      newImageUrls.push(URL.createObjectURL(image))
-    );
-    setvariantarray((variantarray) => {
-      return { ...variantarray, product_img: newImageUrls };
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      // const { type, name, size } = file;
+      fileReader.addEventListener("load", () => {
+        resolve(fileReader.result);
+      });
+      fileReader.readAsDataURL(file);
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
     });
   };
+  const imguploadchange = async (
+    e,
+    product_id,
+    id,
+    vendor_id,
+    product_title_name
+  ) => {
+    for (let i = 0; i < e.target.files.length; i++) {
+      newImageUrls.push(URL.createObjectURL(e.target.files[i]));
+      encoded = await convertToBase64(e.target.files[i]);
+      const [first, ...rest] = encoded.split(",");
+      const productimg = rest.join("-");
+      let imar = {
+        product_id: `${product_id}`,
+        product_verient_id: `${id}`,
+        vendor_id: `${vendor_id}`,
+        product_image_name: `${product_title_name}${i}${id}`,
+        image_position: `${i}`,
+        img_64: productimg,
+      }
+      ImgObj.push(imar)
+    }
+     // image
+     axios
+     .post(
+       `${process.env.REACT_APP_BASEURL}/product_images`,
+       ImgObj
+     )
+     .then((response) => {
+       console.log(
+         "------changeediteddd---" + JSON.stringify(response.data)
+       );
+     })
+     .catch(function (error) {
+       console.log(error);
+     });
+  };
+
+  const onImgRemove = () =>{
+  }
+  const onImgAdd = () =>{
+    
+  }
+  console.log("-------ImgObj----------------ooo"+JSON.stringify(ImgObj))
+  console.log("-------newImageUrls----------------ooo"+JSON.stringify(newImageUrls))
+
+
   const onVariantChange = (e) => {
     setvariantarray({
       ...variantarray,
@@ -598,6 +671,9 @@ function Product() {
         .catch(function (error) {
           console.log(error);
         });
+
+       
+    
     }
   };
   const VariantAddProduct = () => {
@@ -616,16 +692,7 @@ function Product() {
   };
   const VariantRemoveClick = (id, productid) => {
     setAlert(true);
-    // axios.put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
-    //   id:id,
-    //   product_id:productid,
-    //   is_delete:"0"
-    //   }).then((response) => {
-    //     setvariantapicall(true)
-    //   }).catch(function (error) {
-    //     console.log(error);
-    //   });
-    // setvdata(vdata.filter(item => item !== id));
+   
   };
   const VariantEditClick = (id, productid) => {
     axios
@@ -764,7 +831,8 @@ function Product() {
 
   const handleClick = () => {};
   const navigate = useNavigate();
-  console.log("_________++subcategory---" + subCategory[0]);
+  // console.log("_________++subcategory---" + subCategory[0]);
+
   return (
     <div className="App productlist_maindiv">
       <h2>Products</h2>
@@ -782,7 +850,7 @@ function Product() {
               className={"adminsideinput"}
             />
           </div>
-          <div className="col-md-3 col-sm-6 aos_input">
+          {/* <div className="col-md-3 col-sm-6 aos_input">
             <Form.Select
               aria-label="Search by category"
               className="adminselectbox"
@@ -795,7 +863,7 @@ function Product() {
               <option value="2">Fish & Meat</option>
               <option value="3">Baby Care</option>
             </Form.Select>
-          </div>
+          </div> */}
           <div className="col-md-3 col-sm-6 aos_input">
             <Form.Select
               aria-label="Search by status"
@@ -1405,9 +1473,7 @@ function Product() {
                                       <th className="manufacture_date">
                                         Edate
                                       </th>
-                                      <th className="manufacture_date">
-                                        Image
-                                      </th>
+
                                       <th className="">Qty</th>
                                     </tr>
                                   </thead>
@@ -1733,7 +1799,7 @@ function Product() {
                                           </InputGroup>
                                         </div>
                                       </td>
-                                      <td className="p-0 text-center">
+                                      {/* <td className="p-0 text-center">
                                         <div className="manufacture_date">
                                           <InputGroup className="" size="sm">
                                             <Form.Control
@@ -1750,8 +1816,7 @@ function Product() {
                                             />
                                           </InputGroup>
                                         </div>
-                                      </td>
-
+                                      </td> */}
                                       <td className="p-0">
                                         <div className="">
                                           <InputGroup className="" size="sm">
@@ -2127,327 +2192,6 @@ function Product() {
                   <div className="variation_box my-2">
                     <div className="row">
                       <div className="col-auto">
-                        {/* <Table bordered className="align-middle my-2">
-                          <thead className="align-middle">
-                            <tr>
-                              <th >Variety</th>
-                              <th >Color</th>
-                              <th >Weight</th>
-                              <th >Size</th>
-                              <th >Price</th>
-                              <th >Mrp</th>
-                              <th >Sale Price</th>
-                              <th >Discount</th>
-                              <th >Special Offer</th>
-                              <th >Featured Product</th>
-                              <th className="manufacture_date">Mdate</th>
-                              <th className="manufacture_date">Edate</th>
-                              <th className="manufacture_date">Image</th>
-                              <th className="manufacture_date">Quantity</th>
-                              <th ></th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td className="p-0 text-center">
-                                <div className=" d-flex align-items-center">
-                                  <InputGroup className="" size="sm">
-                                    <Form.Select aria-label="Default select example" name='unit' value={variantarray.unit === 'pcs' ? 'color' : variantarray.unit === 'gms' ? 'weight' : variantarray.unit === 'ml' ? 'volume' : null}
-                                      onChange={(e) => onVariantChange(e)}
-                                      className={(customvalidated === true) ? 'border-danger' : null}
-                                    >
-                                      <option value={''} >Select</option>
-                                      {(varietyy.variety || []).map((vari, i) => {
-                                        return (
-                                          <option value={vari} key={i}>{vari}</option>
-                                        );
-                                      })}
-                                    </Form.Select>
-                                  </InputGroup>
-                                </div>
-                              </td>
-
-                              <td className="p-0 text-center">
-                                <div className=" d-flex align-items-center">
-                                  <InputGroup className="" size="sm">
-                                    <Form.Control
-                                      type="text"
-                                      sm="9"
-                                      className={(customvalidated === true) ? 'border-danger' : null}
-                                      onChange={(e) => onVariantChange(e)}
-                                      name={'colors'}
-                                      value={variantarray.colors}
-                                    />
-                                  </InputGroup>
-                                </div>
-                              </td>
-
-                              <td className="p-0 text-center">
-                                <div className=" d-flex align-items-center">
-                                  <InputGroup className="" size="sm">
-                                    <Form.Control
-                                      value={(variantarray.unit === 'gms' ? variantarray.unit_quantity : variantarray.unit === 'ml' ? variantarray.unit_quantity : variantarray.unit === 'pcs' ? variantarray.unit_quantity : null)}
-                                      type="text"
-                                      sm="9"
-                                      className={(customvalidated === true) ? 'border-danger' : null}
-                                      onChange={(e) => onVariantChange(e)}
-                                      name={'unit_quantity'}
-                                    />
-                                  </InputGroup>
-
-                                </div>
-                              </td>
-                              <td className="p-0 text-center">
-                                <div className=" d-flex align-items-center">
-                                  <InputGroup className="" size="sm">
-                                    <Form.Control
-                                      value={(variantarray.unit === 'pcs' ? variantarray.size : null)}
-                                      type="text"
-                                      sm="9"
-                                      className={(customvalidated === true) ? 'border-danger' : null}
-                                      onChange={(e) => onVariantChange(e)}
-                                      name={'size'}
-                                    />
-                                  </InputGroup>
-
-                                </div>
-                              </td>
-                              <td className="p-0 text-center">
-                                <div className=" d-flex align-items-center">
-                                  <InputGroup className="" size="sm">
-                                    <Form.Control
-                                      min={1}
-                                      type="number"
-                                      sm="9"
-                                      className={(customvalidated === true) ? 'border-danger' : null}
-                                      onChange={(e) => onVariantChange(e)}
-                                      name={'product_price'}
-                                      value={variantarray.product_price}
-                                    />
-                                  </InputGroup>
-
-                                </div>
-                              </td>
-                              <td className="p-0 text-center">
-                                <div className=" d-flex align-items-center">
-                                  <InputGroup className="" size="sm">
-                                    <Form.Control
-                                      type="number"
-                                      min={1}
-                                      sm="9"
-                                      className={(customvalidated === true) ? 'border-danger' : null}
-                                      onChange={(e) => onVariantChange(e)}
-                                      name={'mrp'}
-                                      value={variantarray.mrp}
-
-                                    />
-                                  </InputGroup>
-
-                                </div>
-                              </td>
-                              <td className="p-0 text-center">
-                                <div className=" d-flex align-items-center">
-                                  <InputGroup className="" size="sm">
-                                    <Form.Control
-                                      type="number"
-                                      sm="9"
-                                      min={1}
-                                      className={(customvalidated === true) ? 'border-danger' : null}
-                                      onChange={(e) => onVariantChange(e)}
-                                      name={'sale_price'}
-                                      value={variantarray.sale_price}
-                                    />
-                                  </InputGroup>
-
-                                </div>
-                              </td>
-                              <td className="p-0 text-center">
-                                <div className=" d-flex align-items-center">
-                                  <InputGroup className="" size="sm">
-                                    <Form.Control
-                                      type="number"
-                                      sm="9"
-                                      min={1}
-                                      onChange={(e) => onVariantChange(e)}
-                                      name={'discount'}
-                                      value={variantarray.discount}
-                                    />
-                                  </InputGroup>
-
-                                </div>
-                              </td>
-                              <td className="p-0 text-center">
-                                <div className="">
-                                  <Form.Check
-                                    onChange={(e) => onVariantChange(e)}
-                                    name={'special_offer'}
-                                    value={variantarray.special_offer}
-                                  />
-                                </div>
-                              </td>
-                              <td className="p-0 text-center">
-                                <div className="">
-                                  <Form.Check
-                                    onChange={(e) => onVariantChange(e)}
-                                    name={'featured_product'}
-                                    value={variantarray.featured_product}
-                                  />
-                                </div>
-                              </td>
-                              <td className="p-0 text-center">
-                                <div className="manufacture_date" >
-                                  <InputGroup className="" size="sm">
-                                    <Form.Control
-                                      type="date"
-                                      sm="9"
-                                      className={(customvalidated === true) ? 'border-danger' : null}
-                                      onChange={(e) => onVariantChange(e)}
-                                      name={'manufacturing_date'}
-                                      value={moment(variantarray.manufacturing_date).format('YYYY-MM-DD')}
-                                    />
-                                  </InputGroup>
-
-                                </div>
-                              </td>
-                              <td className="p-0 text-center">
-                                <div className="manufacture_date" >
-                                  <InputGroup className="" size="sm">
-                                    <Form.Control
-                                      type="date"
-                                      sm="9"
-                                      className={(customvalidated === true) ? 'border-danger' : null}
-                                      onChange={(e) => onVariantChange(e)}
-                                      name={'expire_date'}
-                                      value={moment(variantarray.expire_date).format('YYYY-MM-DD')}
-                                    />
-                                  </InputGroup>
-
-                                </div>
-                              </td>
-                              <td className="p-0 text-center">
-                                <div className="manufacture_date">
-                                  <InputGroup className="" size="sm">
-                                    <Form.Control
-                                      multiple
-                                      type="file"
-                                      sm="9"
-                                      className={(customvalidated === true) ? 'border-danger' : null}
-                                      onChange={imguploadchange}
-                                      name={'product_img'}
-
-                                    />
-                                  </InputGroup>
-
-                                </div>
-                              </td>
-                              <td className="p-0">
-                                <div className="manufacture_date">
-                                  <InputGroup className="" size="sm">
-                                    <Form.Control
-                                      name={'quantity'}
-                                      type="number"
-                                      value={variantarray.quantity}
-                                      sm="9"
-                                      min={'1'}
-                                      className={(customvalidated === true) ? 'border-danger' : null}
-                                      onChange={(e) => onVariantChange(e)}
-                                      onKeyPress={event => {
-                                        if (event.key === "Enter") {
-                                        onVariantaddclick();
-                                        }
-                                      }
-                                      }
-                                    />
-                                  </InputGroup>
-                                </div>
-                              </td>
-                              <td className="p-0">
-                                <div className=" d-flex align-items-center">
-                                  <Button variant="outline-success" className="addcategoryicon"
-                                    // type="submit"
-                                    onClick={() => onVariantaddclick(variantarray.id)}
-                                    size="sm">
-                                    +
-                                  </Button>
-                                </div>
-                              </td>
-                            </tr>
-
-                            {
-                              vdata === '' || vdata === null || vdata === undefined ?
-                                null
-                                : (vdata || []).map((variantdata, i) => {
-                                
-                                  return (
-                                    variantdata.is_delete === '1' ? null :
-                                    <tr >
-                                      <td className="p-0 text-center ">
-                                        {variantdata.unit === 'pcs' ? 'color' : variantdata.unit === 'gms' ? 'weight' : variantdata.unit === 'ml' ? 'volume' : null}
-                                      </td>
-                                      <td className="p-0 text-center ">
-                                        {variantdata.colors}
-                                      </td>
-                                      <td className="p-0 text-center ">
-                                        {(variantdata.unit === 'gms' ? variantdata.unit_quantity : variantdata.unit === 'ml' ? variantdata.unit_quantity : variantdata.unit === 'pcs' ? variantdata.unit_quantity : null)}
-                                      </td>
-                                      <td className="p-0 text-center ">
-                                        {(variantdata.unit === 'pcs' ? variantdata.size : null)}
-                                      </td>
-                                      <td className="p-0 text-center ">
-                                        {variantdata.product_price}
-                                      </td>
-                                      <td className="p-0 text-center ">
-                                        {variantdata.mrp}
-                                      </td>
-                                      <td className="p-0 text-center ">
-                                        {variantdata.sale_price}
-                                      </td>
-                                      <td className="p-0 text-center ">
-                                        {variantdata.discount}
-                                      </td>
-                                      <td className="p-0 text-center ">
-                                        {variantdata.special_offer}
-                                      </td>
-                                      <td className="p-0 text-center ">
-                                        {variantdata.featured_product}
-                                      </td>
-                                      <td className="p-0 text-center ">
-                                        {moment(variantdata.manufacturing_date).format('YYYY-MM-DD')}
-                                      </td>
-                                      <td className="p-0 text-center ">
-                                        {moment(variantdata.expire_date).format('YYYY-MM-DD')}
-                                      </td>
-                                      <td className="p-0 text-center">
-                                        <Carousel indicators={false} controls={false}>
-                                          {(variantdata.product_img || []).map((data) => {
-                                            return (
-                                              <Carousel.Item interval={1000}>
-                                                <img src={data} alt='apnaorganic' width={50} />
-                                              </Carousel.Item>
-                                            )
-                                          })}
-                                        </Carousel>
-                                      </td>
-                                      <td className="p-0 text-center">
-                                        {variantdata.quantity}
-                                      </td>
-                                      <td className="p-0 text-center">
-                                        <Button variant="text-danger" className="addcategoryicon text-danger"
-                                          onClick={(id) => VariantRemoveClick(variantdata.id, variantdata.product_id)} size="sm">
-                                          &times;
-                                        </Button>
-                                        <Button variant="text-danger" className="addcategoryicon text-danger"
-                                          onClick={(id) => VariantEditClick(variantdata.id, variantdata.product_id)} size="sm">
-                                          <MdOutlineEdit />
-                                        </Button>
-                                      </td>
-                                    </tr>
-                                        
-                                  )
-                                })
-                            }
-                          </tbody>
-                        </Table> */}
                         <div className="col-12">
                           <Table bordered className="align-middle my-2">
                             <thead className="align-middle">
@@ -2748,7 +2492,7 @@ function Product() {
                                   </div>
                                 </td>
                                 <td className="p-0 text-center">
-                                  <div className="manufacture_date">
+                                  {/* <div className="manufacture_date">
                                     <InputGroup className="" size="sm">
                                       <Form.Control
                                         multiple
@@ -2759,11 +2503,19 @@ function Product() {
                                             ? "border-danger"
                                             : null
                                         }
-                                        onChange={imguploadchange}
-                                        name={"product_img"}
+                                        onChange={(e) =>
+                                          imguploadchange(
+                                            e,
+                                            variantarray.product_id,
+                                            variantarray.id,
+                                            vdata[0].vendor_id,
+                                            vdata[0].product_title_name
+                                          )
+                                        }
+                                        name={"img_64"}
                                       />
                                     </InputGroup>
-                                  </div>
+                                  </div> */}
                                 </td>
                                 <td className="p-0">
                                   <div className="manufacture_date">
@@ -2813,115 +2565,180 @@ function Product() {
                                 : (vdata || []).map((variantdata, i) => {
                                     return variantdata.is_delete ===
                                       "0" ? null : (
-                                      <tr>
-                                        <td className="p-0 text-center ">
-                                          {variantdata.unit === "pcs"
-                                            ? "color"
-                                            : variantdata.unit === "piece"
-                                            ? "piece"
-                                            : variantdata.unit === "gms"
-                                            ? "weight"
-                                            : variantdata.unit === "l"
-                                            ? "volume"
-                                            : null}
-                                        </td>
-                                        <td className="p-0 text-center ">
-                                          {variantdata.colors}
-                                        </td>
-                                        <td className="p-0 text-center ">
-                                          {variantdata.unit === "gms"
-                                            ? variantdata.unit_quantity
-                                            : variantdata.unit === "l"
-                                            ? variantdata.unit_quantity
-                                            : variantdata.unit === "piece"
-                                            ? variantdata.unit_quantity
-                                            : null}
-                                        </td>
-                                        <td className="p-0 text-center ">
-                                          {variantdata.unit === "pcs"
-                                            ? variantdata.size
-                                            : null}
-                                        </td>
-                                        <td className="p-0 text-center ">
-                                          {variantdata.product_price}
-                                        </td>
-                                        <td className="p-0 text-center ">
-                                          {variantdata.mrp}
-                                        </td>
-                                        <td className="p-0 text-center ">
-                                          {variantdata.sale_price}
-                                        </td>
-                                        <td className="p-0 text-center ">
-                                          {variantdata.discount}
-                                        </td>
-                                        <td className="p-0 text-center ">
-                                          {variantdata.special_offer}
-                                        </td>
-                                        <td className="p-0 text-center ">
-                                          {variantdata.featured_product}
-                                        </td>
-                                        <td className="p-0 text-center ">
-                                          {moment(
-                                            variantdata.manufacturing_date
-                                          ).format("YYYY-MM-DD")}
-                                        </td>
-                                        <td className="p-0 text-center ">
-                                          {moment(
-                                            variantdata.expire_date
-                                          ).format("YYYY-MM-DD")}
-                                        </td>
-                                        <td className="p-0 text-center">
-                                          <Carousel
-                                            indicators={false}
-                                            controls={false}
-                                          >
-                                            {(
-                                              variantdata.product_img || []
-                                            ).map((data) => {
+                                      <>
+                                        <tr>
+                                          <td className="p-0 text-center ">
+                                            {variantdata.unit === "pcs"
+                                              ? "color"
+                                              : variantdata.unit === "piece"
+                                              ? "piece"
+                                              : variantdata.unit === "gms"
+                                              ? "weight"
+                                              : variantdata.unit === "l"
+                                              ? "volume"
+                                              : null}
+                                          </td>
+                                          <td className="p-0 text-center ">
+                                            {variantdata.colors}
+                                          </td>
+                                          <td className="p-0 text-center ">
+                                            {variantdata.unit === "gms"
+                                              ? variantdata.unit_quantity
+                                              : variantdata.unit === "l"
+                                              ? variantdata.unit_quantity
+                                              : variantdata.unit === "piece"
+                                              ? variantdata.unit_quantity
+                                              : null}
+                                          </td>
+                                          <td className="p-0 text-center ">
+                                            {variantdata.unit === "pcs"
+                                              ? variantdata.size
+                                              : null}
+                                          </td>
+                                          <td className="p-0 text-center ">
+                                            {variantdata.product_price}
+                                          </td>
+                                          <td className="p-0 text-center ">
+                                            {variantdata.mrp}
+                                          </td>
+                                          <td className="p-0 text-center ">
+                                            {variantdata.sale_price}
+                                          </td>
+                                          <td className="p-0 text-center ">
+                                            {variantdata.discount}
+                                          </td>
+                                          <td className="p-0 text-center ">
+                                            {variantdata.special_offer}
+                                          </td>
+                                          <td className="p-0 text-center ">
+                                            {variantdata.featured_product}
+                                          </td>
+                                          <td className="p-0 text-center ">
+                                            {moment(
+                                              variantdata.manufacturing_date
+                                            ).format("YYYY-MM-DD")}
+                                          </td>
+                                          <td className="p-0 text-center ">
+                                            {moment(
+                                              variantdata.expire_date
+                                            ).format("YYYY-MM-DD")}
+                                          </td>
+                                          <td className="p-0 text-center">
+                                  <div className="manufacture_date">
+                                    <InputGroup className="" size="sm">
+                                      <Form.Control
+                                        multiple
+                                        type="file"
+                                        sm="9"
+                                        className={
+                                          customvalidated === true
+                                            ? "border-danger"
+                                            : null
+                                        }
+                                        onChange={(e) =>
+                                          imguploadchange(
+                                            e,
+                                            vdata[0].product_id,
+                                            vdata[0].id,
+                                            vdata[0].vendor_id,
+                                            vdata[0].product_title_name
+                                          )
+                                        }
+                                        name={"img_64"}
+                                      />
+                                    </InputGroup>
+                                  </div>
+                                </td>
+                                          {/* <td className="p-0 text-center">
+                                            <Carousel
+                                              indicators={false}
+                                              controls={false}
+                                            >
+                                              {(
+                                                variantdata.product_img || []
+                                              ).map((data) => {
+                                                return (
+                                                  <Carousel.Item
+                                                    interval={1000}
+                                                  >
+                                                    <img
+                                                      src={data}
+                                                      alt="apnaorganic"
+                                                      width={50}
+                                                    />
+                                                  </Carousel.Item>
+                                                );
+                                              })}
+                                            </Carousel>
+                                          </td> */}
+                                          <td className="p-0 text-center">
+                                            {variantdata.quantity}
+                                          </td>
+                                          <td className="p-0 text-center">
+                                            <Button
+                                              variant="text-danger"
+                                              className="addcategoryicon text-danger"
+                                              onClick={(id) =>
+                                                VariantRemoveClick(
+                                                  variantdata.id,
+                                                  variantdata.product_id
+                                                )
+                                              }
+                                              size="sm"
+                                            >
+                                              &times;
+                                            </Button>
+                                            <Button
+                                              variant="text-danger"
+                                              className="addcategoryicon text-danger"
+                                              onClick={(id) =>
+                                                VariantEditClick(
+                                                  variantdata.id,
+                                                  variantdata.product_id
+                                                )
+                                              }
+                                              size="sm"
+                                            >
+                                              <MdOutlineEdit />
+                                            </Button>
+                                          </td>
+                                        </tr>
+                                        {newImageUrls ? (
+                                          <tr className="img_preview_boxx">
+                                            {newImageUrls.map((imgg, i) => {
                                               return (
-                                                <Carousel.Item interval={1000}>
-                                                  <img
-                                                    src={data}
-                                                    alt="apnaorganic"
-                                                    width={50}
-                                                  />
-                                                </Carousel.Item>
-                                              );
-                                            })}
-                                          </Carousel>
-                                        </td>
-                                        <td className="p-0 text-center">
-                                          {variantdata.quantity}
-                                        </td>
-                                        <td className="p-0 text-center">
-                                          <Button
-                                            variant="text-danger"
-                                            className="addcategoryicon text-danger"
-                                            onClick={(id) =>
-                                              VariantRemoveClick(
-                                                variantdata.id,
-                                                variantdata.product_id
-                                              )
-                                            }
-                                            size="sm"
-                                          >
-                                            &times;
-                                          </Button>
-                                          <Button
-                                            variant="text-danger"
-                                            className="addcategoryicon text-danger"
-                                            onClick={(id) =>
-                                              VariantEditClick(
-                                                variantdata.id,
-                                                variantdata.product_id
-                                              )
-                                            }
-                                            size="sm"
-                                          >
-                                            <MdOutlineEdit />
-                                          </Button>
-                                        </td>
-                                      </tr>
+                                                <>
+                                              <td className="">
+                                                <div className="imgprivew_box">
+                                                <img
+                                                  src={imgg}
+                                                  key={i}
+                                                  alt="apna_organic"
+                                                  width={80}
+                                                  height={100}
+                                                />
+                                                <span className='cross_icon' onClick={()=>onImgRemove()}>x</span>
+                                                </div>
+                                               
+                                                </td>
+                                                <td className="">
+                                                <div className="imgprivew_box">
+                                                <img
+                                                  src={'https://i2.wp.com/asvs.in/wp-content/uploads/2017/08/dummy.png?fit=399%2C275&ssl=1'}
+                                                  key={i}
+                                                  alt="apna_organic"
+                                                  width={80}
+                                                  height={100}
+                                                />
+                                                <span className='plus_icon' onClick={()=>onImgAdd()}>+</span>
+                                                </div>
+                                                </td>
+                                                </>
+                                               );
+                                            })} 
+                                          </tr>
+                                        ) : null} 
+                                      </>
                                     );
                                   })}
                             </tbody>
