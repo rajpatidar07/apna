@@ -2,12 +2,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import logo from "../../images/logo.png";
 import Accordion from "react-bootstrap/Accordion";
-import { FaBeer } from "react-icons/fa";
-import { MdOutlineDashboard } from "react-icons/md";
-import { BiShoppingBag, BiTransfer, BiCategory } from "react-icons/bi";
+import { FaBeer,FaBloggerB } from "react-icons/fa";
+import { MdOutlineDashboard,MdOutlineMarkEmailUnread,MdOutlineRateReview } from "react-icons/md";
+import { BiShoppingBag, BiTransfer, BiCategory,BiNotepad } from "react-icons/bi";
 import { BsBox, BsShopWindow } from "react-icons/bs";
-import { TbFileInvoice } from "react-icons/tb";
-import { RiCustomerService2Line, RiAdminLine } from "react-icons/ri";
+import { TbFileInvoice,TbTruckDelivery } from "react-icons/tb";
+import { RiCustomerService2Line, RiAdminLine,RiCoupon3Line } from "react-icons/ri";
 import { AiOutlineSetting } from "react-icons/ai";
 
 function AdminSidebar() {
@@ -108,7 +108,7 @@ function AdminSidebar() {
         <Accordion.Item eventKey="5">
           <Accordion>
             <Link to="/add_blog" className="nav-link nav_heading">
-              <BsShopWindow /> Blogs
+              <BiNotepad/> Blogs
             </Link>
           </Accordion>
         </Accordion.Item>
@@ -196,20 +196,20 @@ function AdminSidebar() {
         <Accordion.Item eventKey="9">
           <Accordion>
             <Link to="/coupon" className="nav-link nav_heading">
-              <TbFileInvoice /> Coupons
+              <RiCoupon3Line/> Coupons
             </Link>
           </Accordion>
         </Accordion.Item>
         <Accordion.Item eventKey="10">
           <Accordion>
             <Link to="/review" className="nav-link nav_heading">
-              <TbFileInvoice /> Review
+              <MdOutlineRateReview /> Review
             </Link>
           </Accordion>
         </Accordion.Item><Accordion.Item eventKey="11">
           <Accordion>
             <Link to="/delivery" className="nav-link nav_heading">
-              <TbFileInvoice /> Delivery
+              <TbTruckDelivery /> Delivery
             </Link>
           </Accordion>
         </Accordion.Item>
@@ -229,6 +229,14 @@ function AdminSidebar() {
             </Link>
           </Accordion>
         </Accordion.Item>
+        <Accordion.Item eventKey="13">
+        <Accordion>
+          {" "}
+          <Link to="/email_send" className="nav-link nav_heading">
+            <MdOutlineMarkEmailUnread/> Send Email
+          </Link>
+        </Accordion>
+      </Accordion.Item>
         <Accordion.Item eventKey="14">
           <Accordion>
             <Link to="/add_admin" className="nav-link nav_heading">

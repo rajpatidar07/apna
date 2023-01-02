@@ -30,6 +30,7 @@ import InvoiceList from "./invoice/invoices";
 import Complaint from "./complaint/complaint";
 import Transactions from "./transactions/transactions";
 import TranDetail from "./transactions/transactions_detail";
+
 import Banner from "./setting/banner_manager";
 import Coupon from "./coupon/coupon";
 import Home from "./setting/home_manager";
@@ -46,6 +47,7 @@ import ContentManager from "./setting/content_manager";
 import CustomerReport from "./report/customer";
 import StoreReport from "./report/store";
 import BlogList from "./blog/add_blog";
+import EmailSend from "./email_send/email_send";
 function AdminLayout() {
   // const location = useLocation();
   console.log("-------" + window.location.pathname);
@@ -108,6 +110,8 @@ function AdminLayout() {
                   <Route path="/content_manager" element={<ContentManager />} />
                   <Route path="/customerreport" element={<CustomerReport />} />
                   <Route path="/storereport" element={<StoreReport />} />
+                  <Route path="/email_send" element={<EmailSend/>} />
+                  
                 </Routes>
               </div>
             </div>
