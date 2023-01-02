@@ -11,7 +11,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 let categoryArray = [];
-const Email_send = () => {
+const EmailSend = () => {
   const formRef = useRef();
 
   const [validated, setValidated] = useState(false);
@@ -47,6 +47,7 @@ const Email_send = () => {
       selector:  (row) => (
         <div>
             <Form.Group className="mb-3 aos_input" controlId="formBasicEmail">
+
    <Form.Select aria-label="Default select example">
       <option>Status</option>
       <option value="1">Send</option>
@@ -246,4 +247,4 @@ const Email_send = () => {
   );
 };
 
-export default Email_send;
+export default EmailSend;
