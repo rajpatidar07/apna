@@ -25,7 +25,7 @@ import axios from "axios";
 import { Button } from "react-bootstrap";
 import { GiCancel } from "react-icons/gi";
 import moment from "moment/moment";
-import { decode as base64_decode, encode as base64_encode } from "base-64";
+
 let categoryArray = [];
 let encoded;
 let newImageUrls = [];
