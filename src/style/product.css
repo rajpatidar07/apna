@@ -153,6 +153,9 @@
     top: 33px;
     cursor: pointer;
 }
+.manufacture_date .view_product_box{
+  cursor: pointer;
+}
 /* end variant and image */
 /* Complaint */
 .complaintdescbox {
