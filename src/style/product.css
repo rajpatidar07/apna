@@ -119,6 +119,41 @@
   background: rgb(89 193 88 / 20%);
 }
 
+
+/* variant and image */
+.img_preview_boxx{
+  /* display: flex;
+  gap: 10px;
+  align-items: center; */
+}
+.img_preview_boxx .imgprivew_box{
+  position: relative;
+}
+.img_preview_boxx .imgprivew_box .cross_icon{
+  position: absolute;
+    font-size: 25px;
+    border: 1px solid #198754;
+    border-radius: 50%;
+    padding: 0 8px;
+    background: #fff;
+    color: #198754;
+    right: -7px;
+    top: -5px;
+    cursor: pointer;
+}
+.img_preview_boxx .imgprivew_box .plus_icon{
+  position: absolute;
+    font-size: 25px;
+    border: 1px solid #198754;
+    border-radius: 50%;
+    padding: 0 8px;
+    background: #fff;
+    color: #198754;
+    right: 38px;
+    top: 33px;
+    cursor: pointer;
+}
+/* end variant and image */
 /* Complaint */
 .complaintdescbox {
   padding: 10px 0;

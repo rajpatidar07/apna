@@ -173,8 +173,8 @@ const AddBlog = (e,id) => {
       )
       .then((response) => {
         let data=response.data
-        setShow(false)
-        setapicall(true)
+        setShow(false);
+        setapicall(true);
         // setAdminId();
         
       });
@@ -185,7 +185,7 @@ const AddBlog = (e,id) => {
   }
 };
 
-
+console.log("kkkkkkkkkkk_______________________kkkkkkkk"+admid)
 const UpdateBlog = (show) => {
 
   const formData = new FormData();
@@ -226,6 +226,7 @@ const hideAlert = () =>{
 setapicall(true)
 setAlert(false);
 } 
+console.log("newwwwwwwwww consoleeeeeeee"+id)
     const columns = [
       {
         name: "Admin_id",

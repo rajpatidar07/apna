@@ -127,9 +127,12 @@ const OrderDetail = () => {
 
 {(productorder || []).map(orderdata=>{
                   
-                orderdata.gst=="null"? (orderdata.gst="0"):Number(orderdata.gst)
-                  orderdata.sgst=="null"? (orderdata.sgst="0"):Number(orderdata.sgst)
-                  orderdata.cgst=="null"? (orderdata.cgst="0"):Number(orderdata.cgst)
+                orderdata.gst=="null" ||orderdata.gst=="undefined"||orderdata.gst==""? (orderdata.gst="0"):Number(orderdata.gst)
+                  orderdata.sgst=="null"||orderdata.sgst=="undefined"||orderdata.sgst==""? (orderdata.sgst="0"):Number(orderdata.sgst)
+                  orderdata.cgst=="null"||orderdata.cgst=="undefined"||orderdata.cgst==""? (orderdata.cgst="0"):Number(orderdata.cgst)
+                  orderdata.mrp=="undefined"||orderdata.mrp=="null"||orderdata.mrp==""?(orderdata.mrp="0"):Number(orderdata.mrp)
+
+                
                  
                    console.log("-------"+orderdata.sgst)
 
