@@ -275,7 +275,7 @@ for(let i=0 ; i < arr.length; i++){
       cell: (row) => 
       
       (
-        <>
+        <div>
         <img
           height="90px"
           width="75px"
@@ -289,7 +289,7 @@ for(let i=0 ; i < arr.length; i++){
           }}
           onClick={() => handleClick()}
         />
-        </>
+        </div>
       ),
     },
     {

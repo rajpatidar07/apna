@@ -7,8 +7,8 @@ import "sweetalert/dist/sweetalert.css";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import Iconbutton from "../common/iconbutton";
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 let categoryArray = [];
 const EmailSend = () => {
@@ -36,7 +36,7 @@ const EmailSend = () => {
       selector: (row) => row.user_type,
       sortable: true,
     },
-  
+
     {
       name: "Title",
       selector: (row) => row.title,
@@ -44,22 +44,25 @@ const EmailSend = () => {
     },
     {
       name: "Status",
-      selector:  (row) => (
+      selector: (row) => row.status,
+      sortable: true,
+    },
+    {
+      name: "Change Status",
+      selector: (row) => (
         <div>
-            <Form.Group className="mb-3 aos_input" controlId="formBasicEmail">
-
-   <Form.Select aria-label="Default select example">
-      <option>Status</option>
-      <option value="1">Send</option>
-      <option value="2">Hold</option>
-
-   </Form.Select>
-</Form.Group>
+          <Form.Group className="mb-3 aos_input" controlId="formBasicEmail">
+            <Form.Select aria-label="Default select example">
+              <option>Status</option>
+              <option value="1">Send</option>
+              <option value="2">Hold</option>
+            </Form.Select>
+          </Form.Group>
         </div>
       ),
       sortable: true,
     },
-    
+
     {
       name: "ACTION",
       center: true,
@@ -75,21 +78,22 @@ const EmailSend = () => {
     },
   ];
   const data = [
-      {
-        id: 1,
-        email_type: "Order",
-        user_type:"Admin",
-        title:"Your Order Shipped",
-      stock:"$23",
-      },
-      {
-        id: 1,
-        sku: "#de250",
-        pname: "leaves lettuce green",
-        status:"$230",
-      stock:"$23",
-      }, 
-      ]
+    {
+      id: 1,
+      email_type: "Order",
+      user_type: "Admin",
+      title: "Your Order Shipped",
+      status: "Hold",
+    },
+    {
+      id: 1,
+      email_type: "Order",
+      user_type: "Admin",
+      title: "Your Order Shipped",
+      status: "Hold",
+  
+    },
+  ];
 
   return (
     <div>
@@ -119,7 +123,7 @@ const EmailSend = () => {
               <option>Cart</option>
               <option>Wishlistd</option>
               <option>Regestion</option>
-              </Form.Select>
+            </Form.Select>
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
             <Form.Select
@@ -224,12 +228,11 @@ const EmailSend = () => {
                 </Form.Group>
               </div>
               <div sm="12" className="mt-3">
-                  <CKEditor
-                    editor={ClassicEditor}
-                    data="<p>Hello from CKEditor 5!</p>"
-                    />
-                    </div>
-            
+                <CKEditor
+                  editor={ClassicEditor}
+                  data="<p>Hello from CKEditor 5!</p>"
+                />
+              </div>
             </div>
           </Modal.Body>
           <Modal.Footer>
@@ -237,7 +240,6 @@ const EmailSend = () => {
             <Iconbutton
               // type={"submit"}
               btntext={"Add Email"}
-              
               btnclass={"button main_button "}
             />
           </Modal.Footer>
