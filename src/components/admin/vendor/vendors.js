@@ -63,7 +63,13 @@ const VendorsList = () => {
    
     const OnSearchChange = (e) => {
       setsearchData({ ...searchdata, [e.target.name]: e.target.value })
+       if(searchdata.owner_name){
+        setapicall(true);
+       
+       }
+     
     }
+   
     const onSearchClick = () =>{
       axios
       .post(`${process.env.REACT_APP_BASEURL}/vendor_list`,{
@@ -494,9 +500,9 @@ console.log("-------done"+response.data)
               name='status'
               value={searchdata.status}
             >
-              <option>-Status-</option>
+              <option value={""}>-Status-</option>
                 
-              <option value=""> Status</option>
+        
               <option value="pending"> Pending</option>
               {/* <option value="approved">Approved</option> */}
               <option value="blocked">Blocked</option>
@@ -511,7 +517,7 @@ console.log("-------done"+response.data)
               name='store_type'
               value={searchdata.store_type}
             >
-              <option>-Store Type-</option>
+              <option value={""}>-Store Type-</option>
               <option value="shoese">shoese</option>
               <option value="Cloths">Cloths</option>
               <option value="Food">Food</option>

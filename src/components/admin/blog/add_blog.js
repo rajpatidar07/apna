@@ -17,7 +17,7 @@ import { data } from "jquery";
 let categoryArray=[];
 const BlogList = () => {
   const formRef = useRef();
-  const[apicall,setapicall]=useState([]);
+  const[apicall,setapicall]=useState(false);
   const [validated, setValidated] = useState(false);
   const [show, setShow] = useState("");
   const [Alert, setAlert] = useState(false);
@@ -58,11 +58,17 @@ const[ productTagSearch,setProductTagSearch]=useState("")
   // }
   const OnCtegorySearch = (e) => {
      setCategorySearch(e.target.value )
-    categoryArray.push(categorySearch)
+   
     // console.log("searchblog.category"+e.target.value)
     // console.log("hiiiiiiiiiiiiii"+JSON.stringify(categoryArray))
 
    
+  }
+  const onRecentSearch=(e)=>{
+    setRecent(e.target.value)
+    if(recent){
+      setapicall(true)
+    }
   }
   const onSearchClick = () =>{
 
@@ -71,7 +77,7 @@ const[ productTagSearch,setProductTagSearch]=useState("")
       id:"",
       for_:"admin",
       recent:recent,
-      category:categoryArray,
+      category:[categorySearch],
       product_tag:productTagSearch
     })
     .then((response) => {
@@ -324,7 +330,7 @@ console.log("newwwwwwwwww consoleeeeeeee"+id)
       <div className="row page_searchbox">
        
           <div className="col-md-3 col-sm-6 aos_input">
-            <input type={"text"} placeholder={"Search by recent"} onChange={(e)=>{setRecent(e.target.value)}}
+            <input type={"text"} placeholder={"Search by Days"} onChange={onRecentSearch}
               name='recent'
               className={'adminsideinput'}/>
           </div>
