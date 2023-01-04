@@ -148,22 +148,37 @@ const VendorsList = () => {
                 : "badge bg-dark"
             }
           >
-            {row.status}
+            {row.status==="pending"
+            ?"Pending"
+            :row.status==="active"
+            ?"Active"
+            :row.status==="blocked"
+            ?"Blocked"
+            : row.status === "in progress"
+            ?"In Progress"
+            :"return"
+            }
           </span>
         ),
         sortable: true,
-        center: true,
+       
       },
       {
-        name: "Change",
+        name: "Change Status",
         selector: (row) => (
           <Form.Group className="" controlId="formBasicEmail">
             <Form.Select
               size="sm"
-              aria-label="Default select example"
+              aria-label="Search By status"
               onChange={(e) => handleStatusChnage(e, row.id)}
               name="status"
             >
+                 <option
+                value=""
+                selected={row.status === "" ? true : false}
+              >
+                Status
+              </option>
               <option
                 value="pending"
                 selected={row.status === "pending" ? true : false}
@@ -293,10 +308,11 @@ const VendorsList = () => {
   }
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
+
   const handleStatusChnage = (e, id) => {
     setchangstatus(e.target.value);
     axios
-      .put("${process.env.REACT_APP_BASEURL}/vendor_status_change", {
+      .put(`${process.env.REACT_APP_BASEURL}/vendor_status_change`, {
         status_change: e.target.value,
         id: `${id}`,
       })
@@ -479,9 +495,12 @@ console.log("-------done"+response.data)
               value={searchdata.status}
             >
               <option>-Status-</option>
+                
+              <option value=""> Status</option>
               <option value="pending"> Pending</option>
-              <option value="approved">Approved</option>
+              {/* <option value="approved">Approved</option> */}
               <option value="blocked">Blocked</option>
+              <option value="in progress">In Progress</option>
             </Form.Select>
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
