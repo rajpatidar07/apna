@@ -17,14 +17,14 @@ import { data } from "jquery";
 let categoryArray=[];
 const BlogList = () => {
   const formRef = useRef();
-  const[apicall,setapicall]=useState([]);
+  const[apicall,setapicall]=useState(false);
   const [validated, setValidated] = useState(false);
   const [show, setShow] = useState("");
   const [Alert, setAlert] = useState(false);
   const [file, setFile] = useState();
   const [fileName, setFileName] = useState("");
   const [image,setImage]=useState();
-  
+  const [DocuImgarray, setDocuImgArray] = useState([]);
   const[id,setId]=useState('');
   const[blog,setBlog]=useState([]);
   const
@@ -38,26 +38,37 @@ const BlogList = () => {
     publish_date: ""
 }); 
 const [searchdata, setsearchData] = useState([]);
-const [searchblog, setsearchBlog] = useState({
-  id:"",
-  for_:"admin",
-  recent:"",
-  category:"",
-  product_tag:""
-  })
-console.log("kkkkkkk"+JSON.stringify(searchblog))
+// const [searchblog, setsearchBlog] = useState({
+//   id:"",
+//   for_:"admin",
+//   recent:"",
+//   category:"",
+//   product_tag:""
+//   })
 
-  const OnSearchChange = (e) => {
-    setsearchBlog({ ...searchblog, [e.target.name]: e.target.value })
+const[ recent,setRecent]=useState("") 
+const[ categorySearch,setCategorySearch]=useState("") 
+const[ productTagSearch,setProductTagSearch]=useState("") 
+
+// console.log("kkkkkkk"+JSON.stringify(searchblog))
+
+  // const OnSearchChange = (e) => {
+  //   setsearchBlog({ ...searchblog, [e.target.name]: e.target.value })
+   
+  // }
+  const OnCtegorySearch = (e) => {
+     setCategorySearch(e.target.value )
+   
+    // console.log("searchblog.category"+e.target.value)
+    // console.log("hiiiiiiiiiiiiii"+JSON.stringify(categoryArray))
+
    
   }
-  const OnCtegorySearch = (e) => {
-    setsearchBlog({ ...searchblog, category: e.target.value })
-    categoryArray.push(e.target.value )
-    console.log("searchblog.category"+e.target.value)
-    console.log("hiiiiiiiiiiiiii"+JSON.stringify(categoryArray))
-
-   
+  const onRecentSearch=(e)=>{
+    setRecent(e.target.value)
+    if(recent){
+      setapicall(true)
+    }
   }
   const onSearchClick = () =>{
 
@@ -65,15 +76,16 @@ console.log("kkkkkkk"+JSON.stringify(searchblog))
     .post(`${process.env.REACT_APP_BASEURL}/blogs`, {
       id:"",
       for_:"admin",
-      recent:`${searchblog.recent}`,
-      category:categoryArray,
-      product_tag:`${searchblog.product_tag}`
+      recent:recent,
+      category:[categorySearch],
+      product_tag:productTagSearch
     })
     .then((response) => {
       let data=response.data
     console.log("search----------   " + JSON.stringify(response.data));
       setBlog(response.data); 
-      setsearchBlog('')
+      // setsearchBlog('')
+      categoryArray=[]
       setapicall(false);
     })
     .catch(function(error) {
@@ -141,6 +153,8 @@ const handleShow=(e,id)=>{
     let data= response.data;
     setBlog(response.data);
     // console.log("ALL DATA"+JSON.stringify(response.data))
+    // setDocuImgArray(JSON.parse(response.data[0].multiple_document_upload))
+
     setaddBlog(response.data)
     setsearchData(data)
       setapicall(false);
@@ -220,7 +234,7 @@ const handleAlert = (id) =>{
 const hideAlert = () =>{
   console.log("--id"+id)
   axios.put(`${process.env.REACT_APP_BASEURL}/delete_blog`,{
-    is_delete:0,
+    is_delete:'0',
     id:`${id}`
 });
 setapicall(true)
@@ -240,21 +254,45 @@ console.log("newwwwwwwwww consoleeeeeeee"+id)
       },
       {
         name: "Logo",
+        width: "250px",
         center: true,
-        cell: (row) => (
+        cell: (row) => 
+        
+        (
+          <>
           <img
-            width={"100%"}
-            alt={row.title}
-            src={row.image}
+            height="90px"
+            width="75px"
+            alt={row.owner_name}
+            src={`${process.env.REACT_APP_BASEURL}/`+(row.image).replace("public","")}
             style={{
-              borderRadius: 15,
+              borderRadius: 10,
               paddingTop: 10,
               paddingBottom: 10,
               textAlign: "right",
             }}
+            onClick={() => handleClick()}
           />
+          </>
         ),
       },
+      // {
+      //   name: "Logo",
+      //   center: true,
+      //   cell: (row) => (
+      //     <img
+      //       width={"100%"}
+      //       alt={row.title}
+      //       src={row.image}
+      //       style={{
+      //         borderRadius: 15,
+      //         paddingTop: 10,
+      //         paddingBottom: 10,
+      //         textAlign: "right",
+      //       }}
+      //     />
+      //   ),
+      // },
       {
         name: "Title",
         selector: (row) => row.title,
@@ -307,7 +345,11 @@ console.log("newwwwwwwwww consoleeeeeeee"+id)
   index === self.findIndex((t) => (
     t.product_tag == thing.product_tag
   )))
-
+  const handleClick = () => {};
+  let logo = `${process.env.REACT_APP_BASEURL}/${addblog.image}`
+  let docsdata = `${process.env.REACT_APP_BASEURL}/${DocuImgarray}`
+  var Newlogo = logo.replace("/public", "");
+  // var imgdata =docsdata.replace("/public", "");
     // console.log("dataaSHOWWWWWWWWWWWWW"+JSON.stringify(searchdata))
   return (
     <div>
@@ -318,9 +360,9 @@ console.log("newwwwwwwwww consoleeeeeeee"+id)
       <div className="row page_searchbox">
        
           <div className="col-md-3 col-sm-6 aos_input">
-            <input type={"text"} placeholder={"Search by recent"} onChange={(e) => OnSearchChange(e)}
+            <input type={"text"} placeholder={"Search by Days"} onChange={onRecentSearch}
               name='recent'
-              value={searchblog.recent} className={'adminsideinput'}/>
+              className={'adminsideinput'}/>
           </div>
            
           <div className="col-md-3 col-sm-6 aos_input">
@@ -328,12 +370,12 @@ console.log("newwwwwwwwww consoleeeeeeee"+id)
             <Form.Select
               aria-label="Search by Category"
               className="adminselectbox"
-              onChange={(e) => OnCtegorySearch(e)}
+              onChange={OnCtegorySearch}
               // value={searchblog.category}
               name='category'
               
             > 
-            <option>Select Category</option>
+            <option value={""}>Select Category</option>
             {result1.map((searchData)=>{
           return(
             <>
@@ -350,9 +392,9 @@ console.log("newwwwwwwwww consoleeeeeeee"+id)
               name='product_tag'
               // value={searchblog.product_tag}
 
-              onChange={(e) =>OnSearchChange(e)}
+              onChange={(e) =>{setProductTagSearch(e.target.value)}}
             >
-              <option>Select Product Tag</option>
+              <option  value={""}>Select Product Tag</option>
             {result2.map((searchData)=>{
           return(
             <>
@@ -474,7 +516,7 @@ console.log("newwwwwwwwww consoleeeeeeee"+id)
                   <Form.Label>Product_Tag</Form.Label>
                   <Form.Control
                     onChange={(e) => handleFormChange(e)}
-                    value={addblog.productTag}
+                    value={addblog.product_tag}
                     
                     type="text"
                     placeholder="Add Tag"
@@ -516,7 +558,7 @@ console.log("newwwwwwwwww consoleeeeeeee"+id)
                   <Form.Control
                     // onChange={(e) => saveFile(e)}
                     onChange={(e) => ImgFormChange(e)}
-                    
+                    src={Newlogo}
                     type="file"
                     placeholder="Shop_logo"
                     name={"image"}

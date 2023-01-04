@@ -380,3 +380,13 @@ code {
     padding: 14px !important;
   }
 }
+
+.spanText{
+  white-space: nowrap; 
+  width:100px; 
+  overflow: hidden;
+   text-overflow:ellipsis ellipsis ; 
+
+  display:block;
+ 
+}
