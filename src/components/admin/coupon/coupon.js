@@ -50,32 +50,36 @@ const Coupon = () => {
       "status":""
    });
 
-
-  const handleAlert=(id,is_active)=> {
+  const handleAlert = (id) =>{
     setAlert(true);
-    setisActive(is_active)
-    setCId(id)
-    
-  }
-  const hideAlert =()=> {
-    setAlert(false);
-    console.log("no");
-  }
-  const showAlert =()=> {
-    setAlert(true);
-     axios.put(`${process.env.REACT_APP_BASEURL}/coupons_delete`,
-    {
-         id:cid,
-         is_active:'0'
-    }) .then((response) => {
-      let data= response.data;
+      // setisActive(is_active)
+      setCId(id)
+  console.log("idddddddd"+id)
+} 
+const hideAlert = () =>{
+  // console.log("--id"+id)
+  axios.put(`${process.env.REACT_APP_BASEURL}/coupons_delete`,{
+           id:`${cid}`,
+           is_active:0
+      });
+setapicall(true)
+setAlert(false);
+} 
+  // const showAlert =()=> {
+  //   setAlert(true);
+  //    axios.put(`${process.env.REACT_APP_BASEURL}/coupons_delete`,
+  //   {
+  //        id:cid,
+  //        is_active:'0'
+  //   }) .then((response) => {
+  //     let data= response.data;
       
-      setcoupondata(data);
-      setsearchCoupon(data);
-      setAlert(false);
-      setDltapicall(true) 
-    })
-  }
+  //     setcoupondata(data);
+  //     setsearchCoupon(data);
+  //     setAlert(false);
+  //     setDltapicall(true) 
+  //   })
+  // }
   const handleClose = () => {
     formRef.current.reset();
     // setcoupondata('')
@@ -91,7 +95,9 @@ const Coupon = () => {
         axios
           .get(`${process.env.REACT_APP_BASEURL}/coupon?coupon_id=${e}`)
           .then((response) => {
-            let data= response.data[0];
+            // let data= response.data[0];
+            let data = response.data.filter(item=>item.is_active==='1');
+
             setaddcoupondata(data);
           })
       } catch (err) {}
@@ -107,6 +113,7 @@ const Coupon = () => {
           .get(`${process.env.REACT_APP_BASEURL}/coupon?coupon_id=all`)
           .then((response) => {
             let data = response.data;
+
             setcoupondata(data)
             setaddcoupondata(data);
             setsearchCoupon(data);
@@ -242,8 +249,12 @@ const Coupon = () => {
       center: true,
       selector: (row) => (
         <div className={"actioncolimn"}>
-          <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.id)} />
-          <BsTrash className=" p-0 m-0 editiconn text-danger" onClick={handleAlert.bind(this,row.id,row.is_active)} />
+          <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.id,row.image,row.status,row.percentage,row.minimum_amount,row.end_date,row.start_date,
+            row.product_type,row.code,row.campaign_name)} />
+          <BsTrash
+              className=" p-0 m-0 editiconn text-danger"
+              onClick={handleAlert.bind(this,row.id)}
+            />
         </div>
       ),
     },
@@ -267,7 +278,7 @@ const Coupon = () => {
     })
   }
   useEffect(() => {
-    setcoupondata(coupondata)
+    setcoupondata(coupondata);
   }, [])
   const handleFormChange = (e) => {
     setaddcoupondata({
@@ -453,15 +464,6 @@ const Coupon = () => {
                     </Form.Control.Feedback>
                   </Form.Group>
                 </div>
-                <div className="col-md-6 aos_input">
-                <Form.Label>Status</Form.Label>
-            <Form.Select aria-label="Search by category" onChange={(e)=>handleFormChange(e)} name='status' value={addcoupondata.status} className="adminselectbox mt-0 ">
-              <option>Status</option>
-              <option value="active">active</option>
-              <option value="expired">expired</option>
-              <option value="pending">pending</option>
-            </Form.Select>
-          </div>
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicPercent">
                     <Form.Label>Status</Form.Label>
@@ -530,7 +532,7 @@ const Coupon = () => {
           show={Alert}
           title="Product Name"
           text="Are you Sure you want to delete"
-          onConfirm={showAlert}
+          onConfirm={hideAlert}
           showCancelButton={true}
           onCancel={hideAlert}
         />

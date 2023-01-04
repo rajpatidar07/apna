@@ -336,12 +336,16 @@ const VendorsList = () => {
   // social media link
   const oncustomheadChange = (e) => {
     setheaderval(e.target.value);
-    setAddCustom((AddCustom) =>{ return {...AddCustom,  name : e.target.value}});
+    // setAddCustom((AddCustom) =>{ return {...AddCustom,  e.target.value : e.target.value}});
   };
+  console.log("checkkkk"+JSON.stringify(AddCustom))
   const oncustomdescChange = (e) => {
     setdescval(e.target.value);
-    setAddCustom((AddCustom) =>{ return {...AddCustom,  link : e.target.value}});
+    let addrr = headerval + ':' + e.target.value;
+    setAddCustom((AddCustom) =>{ return {...AddCustom, addrr}});
   };
+  console.log("--------uuuuuuuuuuuuuuuuuuuu-------"+JSON.stringify(AddCustom))
+
   const handleAddClick = (e) => {
     if (headerval !== '' && descval !== '') {
       setcustomarray(customarray => [...customarray, AddCustom]);
@@ -404,7 +408,8 @@ const VendorsList = () => {
     formData.append("filename", fileDocName);
     formData.append("document_name",x);
     formData.append("status",addvendordata.status);
-    formData.append("social_media_links", socialname);
+    formData.append("social_media_links",[{socialname}])
+
       axios
       .post(`${process.env.REACT_APP_BASEURL}/vendor_register`,formData)
       .then((response) => {
@@ -853,7 +858,7 @@ console.log("-------done"+response.data)
                     value={addtag}
                     placeholder="document_name"
                     name={"document_name"}
-                    onKeyPress={(event) => {
+                    onClick={(event) => {
                       if (event.key === "Enter") {
                       onDocuAddclick();
                       }
@@ -914,6 +919,7 @@ console.log("-------done"+response.data)
                                 sm="9"
                                 min={'1'}
                                 onChange={oncustomheadChange}
+                                
                                 name={'header'}
                                 className={(customvalidated === true) ? 'border-danger' : null}
                               />

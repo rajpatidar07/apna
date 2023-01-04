@@ -8,7 +8,7 @@ import { useState} from "react";
 import { useEffect } from "react";
 import "../../../style/order.css";
 import axios from "axios";
-// import TransactionJson from "../json/transaction"
+//import TransactionJson from "../json/transaction"
 function Transactions() {
   const [transectiondata,setTransectionData]=useState([]);
   const [SearchTransection, setSearchTransection] = useState({
@@ -26,11 +26,10 @@ function Transactions() {
             let data = response.data;
             setTransectionData(data);
             console.log("transection-------------------"+JSON.stringify(data))
-            // setapicall(false);
+            //setapicall(false);
           });
       } catch (err) {}
     }
-
     getTransactions();
   }, []);
   const TransectionSearch=()=>{
@@ -57,11 +56,11 @@ function Transactions() {
       selector: (row) => <Link to="/transactions_detail">{row.id}</Link>,
       sortable: true,
     },
-    {
-      name: "Transactions id",
-      selector: (row) => <Link to="/transactions_detail">{row.transaction_id}</Link>,
-      sortable: true,
-    },
+    // {
+    //   name: "Transactions id",
+    //   selector: (row) => <Link to="/transactions_detail">{row.transaction_id}</Link>,
+    //   sortable: true,
+    // },
     {
       name: "Order Id",
       selector: (row) => row.order_id,
@@ -130,7 +129,7 @@ function Transactions() {
 
   return (
     <div className="App">
-      <h2>Orders</h2>
+      <h2>Transactions</h2>
       <div className="card mt-3 px-3 ">
         <div className="product_page_searchbox bg-gray my-4">
           <div className="row">
@@ -145,6 +144,7 @@ function Transactions() {
                 aria-label="Search by status"
                 className="adminselectbox" name={"status"} onChange={(e) =>  TranSearch(e)}  value={SearchTransection.status}
               >
+                <option>Select Status</option>
                 <option value="0">Status</option>
                 <option value="1">Processing</option>
                 <option value="2">Success</option>
@@ -157,6 +157,7 @@ function Transactions() {
                 aria-label="Search by method"
                 className="adminselectbox" name={"method"} onChange={(e) =>  TranSearch(e)}  value={SearchTransection.method}
               >
+                <option>Select Pyament Mode</option>
                 <option value="0">Pyament Method</option>
                 <option value="1">Card</option>
                 <option value="2">UPI</option>
