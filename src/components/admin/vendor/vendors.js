@@ -23,6 +23,7 @@ const VendorsList = () => {
   const [fileDoc, setFileDoc] = useState();
   const [fileDocName, setFileDocName] = useState("");
   const [call, setCall] = useState(false);
+  const [scall, setsCall] = useState(false);
 
  const [fileName, setFileName] = useState("");
   const
@@ -50,10 +51,7 @@ const VendorsList = () => {
   const [headerval, setheaderval] = useState('');
   const [descval, setdescval] = useState('');
   const [customarray, setcustomarray] = useState([]);
-  const [AddCustom, setAddCustom] = useState({
-    name:[],
-    link:[]
-  });
+  const [AddCustom, setAddCustom] = useState([]);
   const [customvalidated, setcustomValidated] = useState(false);
   const [searchdata, setsearchData] = useState({
     status:"",
@@ -98,7 +96,7 @@ const VendorsList = () => {
             height="90px"
             width="75px"
             alt={row.owner_name}
-            src={`${process.env.REACT_APP_BASEURL}/`+(row.shop_logo).replace("public","")}
+            src={(row.shop_logo).replace("public","")}
             style={{
               borderRadius: 10,
               paddingTop: 10,
@@ -132,6 +130,7 @@ const VendorsList = () => {
         sortable: true,
         center: true,
       },
+     
       {
         name: "Status",
         selector: (row) => (
@@ -220,6 +219,7 @@ const VendorsList = () => {
         .then((response) => {
           setvendordata(response.data);
           setapicall(false);
+          // console.log("gggggggggggggggggggggggg"+JSON.stringify(response.data))
         })
         .catch(function(error) {
           console.log(error);
@@ -296,7 +296,7 @@ const VendorsList = () => {
   const handleStatusChnage = (e, id) => {
     setchangstatus(e.target.value);
     axios
-      .put("${process.env.REACT_APP_BASEURL}/vendor_status_change", {
+      .put(`${process.env.REACT_APP_BASEURL}/vendor_status_change`, {
         status_change: e.target.value,
         id: `${id}`,
       })
@@ -332,32 +332,45 @@ const VendorsList = () => {
   //     };
   //   });
   };
-
+     let returnarr=[];
   // social media link
   const oncustomheadChange = (e) => {
     setheaderval(e.target.value);
     // setAddCustom((AddCustom) =>{ return {...AddCustom,  e.target.value : e.target.value}});
   };
   console.log("checkkkk"+JSON.stringify(AddCustom))
+
+
+
   const oncustomdescChange = (e) => {
     setdescval(e.target.value);
-    let addrr = headerval + ':' + e.target.value;
-    setAddCustom((AddCustom) =>{ return {...AddCustom, addrr}});
   };
-  console.log("--------uuuuuuuuuuuuuuuuuuuu-------"+JSON.stringify(AddCustom))
+  console.log("--------uuuuuuu-------"+JSON.stringify(AddCustom))
+
+  // const handleAClick = () => {
+useEffect(()=>{
+
+  if (headerval !== '' && descval !== '') {
+    setcustomarray(customarray => [...customarray, AddCustom]);
+    setheaderval('');
+    setdescval('');
+    setAddCustom('')
+    // setcustomValidated(false);
+    setsCall(false)
+    // console.log("--------hello-------"+JSON.stringify(customarray))
+  }
+ 
+},[scall])
+
+  // }
 
   const handleAddClick = (e) => {
-    if (headerval !== '' && descval !== '') {
-      setcustomarray(customarray => [...customarray, AddCustom]);
-      setheaderval('');
-      setdescval('');
-      setAddCustom('')
-      setcustomValidated(false);
-    }
-    else {
-      setcustomValidated(true);
-    }
+    let returnedTarget = Object.assign({},{[headerval]:descval});  
+  setAddCustom(...AddCustom,returnedTarget);
+  setsCall(true)
   }
+  console.log("--------customarray-------"+JSON.stringify(customarray))
+
 
   const handleRemoveClick = (e) => {
     setcustomarray(customarray.filter(item => item !== e));
@@ -389,8 +402,10 @@ const VendorsList = () => {
   const formData = new FormData();
   let x = [addvendordata.document_name]
   let socialname =  addvendordata.testjson
-  console.log("socialname----------"+JSON.stringify(socialname));
+ let socialname_new=JSON.stringify(socialname)
   console.log("socialname----------"+socialname);
+  console.log("socialname----------"+socialname_new);
+
 
 
     formData.append("image", file);
@@ -404,11 +419,11 @@ const VendorsList = () => {
     formData.append("geolocation",addvendordata.geolocation);
     formData.append("store_type",addvendordata.store_type);
     formData.append("availability", addvendordata.availability);
-    formData.append("image",fileDoc);
+    // formData.append("image",fileDoc);
     formData.append("filename", fileDocName);
     formData.append("document_name",x);
     formData.append("status",addvendordata.status);
-    formData.append("social_media_links",[{socialname}])
+    formData.append("social_media_links",socialname_new)
 
       axios
       .post(`${process.env.REACT_APP_BASEURL}/vendor_register`,formData)
@@ -429,6 +444,13 @@ console.log("-------done"+response.data)
   let x = [addvendordata.document_name]
     e.preventDefault();
     const formData = new FormData();
+
+    let socialname =  addvendordata.testjson
+    let socialname_new=JSON.stringify(socialname)
+     console.log("se----------"+socialname);
+     console.log("seAAAAAAAAAAAAAaaa----------"+socialname_new);
+
+
     formData.append("id",addvendordata.id)
     formData.append("image", file);
     formData.append("filename", fileName);
@@ -441,15 +463,17 @@ console.log("-------done"+response.data)
     formData.append("geolocation",addvendordata.geolocation);
     formData.append("store_type",addvendordata.store_type);
     formData.append("availability", addvendordata.availability);
-    formData.append("image",fileDoc);
+    // formData.append("image",fileDoc);
     formData.append("filename", fileDocName);
     formData.append("document_name",x);
     formData.append("status",addvendordata.status);
+    formData.append("social_media_links",socialname_new)
     axios
     .put(`${process.env.REACT_APP_BASEURL}/vendor_update`,formData)
     .then((response) => {
+      let data=response.data
     // console.log("formupdate----------   " + JSON.stringify(response.data));
-      
+      // setvendordata(data)
       setapicall(true);
     setShow(false);
 
@@ -949,17 +973,25 @@ console.log("-------done"+response.data)
                             <Button variant="outline-success" className="addcategoryicon"
                               onClick={() => handleAddClick()} size="sm">
                               +
-                            </Button>
+                            </Button> 
                           </td>
                         </tr>
                         {
                         ((customarray) || []).map((variantdata, i) => {
+                          let v =JSON.stringify(variantdata);
+                          console.log("v__________________"+v)
+                          let st = v.split(':');
+                         let pro = st[0].replace(/[{}]/g, "");
+                         let link = st[1].replace(/[{}]/g, "");
+            
+                         
+
                           return (
                             <tr className="">
                               <td className=" text-center">
                                 <InputGroup className="">
                                   <Form.Control
-                                    value={variantdata.name}
+                                    value={JSON.parse(pro)}
                                     type="text"
                                     sm="9"
                                     min={'1'}
@@ -974,7 +1006,7 @@ console.log("-------done"+response.data)
                                 <InputGroup className="">
                                   <Form.Control
                                     required
-                                    value={variantdata.link}
+                                    value={JSON.parse(link)}
                                     name={'custom_input_desc'}
                                     type="text"
                                     sm="9"

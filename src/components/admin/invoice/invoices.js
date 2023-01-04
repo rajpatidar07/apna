@@ -69,10 +69,6 @@ const InvoiceList = () => {
         "search":`${SearchInvo.search}`,
         "from_date":`${SearchInvo.from_date}`,
         "to_date":`${SearchInvo.to_date}`
-        // "category_name":`${SearchCat.category_name}`,
-        // "category_type":`${SearchCat.category_type}`,
-        // "level":`${SearchCat.level}`
-
     }) .then ((response) => {
       setInvoice(response.data);
       setSearchInvo('')
@@ -245,15 +241,19 @@ const InvoiceList = () => {
       <div className="card mt-3 p-3 ">
         <div className="row pb-3">
           <div className="col-md-3 col-sm-6 aos_input ">
-            <input className="adminsideinput" type={"text"} placeholder={"Search by Vendor_Id"} value={SearchInvo.search} name={"search"} onChange={(e) => onValueChange(e)} />
+            <input className="adminsideinput" type={"text"} placeholder="Search by Vendor_Id" value={SearchInvo.search} name={"search"} onChange={(e) => onValueChange(e)} />
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
-          <input className="adminsideinput" type={"date"} placeholder={"Search by Invoice Date"} value={SearchInvo.from_date} name={"from_date"} onChange={(e) => onDateChange(e)} />
+            <input type={"date"} placeholder={"Search by Order Date"} onChange={(e)=>onDateChange(e)}
+              value={SearchInvo.from_date} name={'from_date'} className={'adminsideinput'}/>
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
-          <input type={"date"} className="adminsideinput" placeholder={"Search by Order Date"} value={SearchInvo.to_date} name={"to_date"} onChange={(e) => onDateChange(e)} />
+            <input type={"date"} placeholder={"Search by Order End_Date"} onChange={(e)=>onDateChange(e)}
+              value={SearchInvo.end_date} name={'end_date'} className={'adminsideinput'}/>
           </div>
-
+          <div className="col-md-3 col-sm-6 aos_input">
+            <button className="button main_button w-100" onClick={()=>SearchInvoices()}>Search</button>
+          </div>
           {/* <div className="col-md-3 col-sm-6 aos_input">
             <MainButton
               btntext={"Search"}

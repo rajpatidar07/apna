@@ -95,8 +95,8 @@ setAlert(false);
         axios
           .get(`${process.env.REACT_APP_BASEURL}/coupon?coupon_id=${e}`)
           .then((response) => {
-            // let data= response.data[0];
-            let data = response.data.filter(item=>item.is_active==='1');
+            let data= response.data[0];
+            // let data = response.data.filter(item=>item.is_active==='1');
 
             setaddcoupondata(data);
           })
@@ -115,6 +115,8 @@ setAlert(false);
             let data = response.data;
 
             setcoupondata(data)
+            console.log("tfggcvvvvvvvvvvvvvvvvv"+JSON.stringify(data))
+
             setaddcoupondata(data);
             setsearchCoupon(data);
             setapicall(false);
@@ -249,8 +251,7 @@ setAlert(false);
       center: true,
       selector: (row) => (
         <div className={"actioncolimn"}>
-          <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.id,row.image,row.status,row.percentage,row.minimum_amount,row.end_date,row.start_date,
-            row.product_type,row.code,row.campaign_name)} />
+          <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.id)} />
           <BsTrash
               className=" p-0 m-0 editiconn text-danger"
               onClick={handleAlert.bind(this,row.id)}
@@ -464,6 +465,7 @@ setAlert(false);
                     </Form.Control.Feedback>
                   </Form.Group>
                 </div>
+
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicPercent">
                     <Form.Label>Status</Form.Label>

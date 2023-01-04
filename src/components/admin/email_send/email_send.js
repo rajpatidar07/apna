@@ -13,30 +13,66 @@ import { useEffect } from "react";
 import axios from "axios";
 import { SendExclamationFill } from "react-bootstrap-icons";
 
-let categoryArray = [];
+
 const EmailSend = () => {
+
   const formRef = useRef();
 
   const [validated, setValidated] = useState(false);
   const [show, setShow] = useState(false);
 
   const handleShow = (e, id) => {
-    // console.log("gggggggggggggg"+e)
+    console.log("----------"+e)
+    // console.log("IDD----"+id)
 
-    if (e === "add") {
+    
+    if (e === 'add') {
       setShow(e);
     }
+
+
+    if (e !== 'add') {
+      try {
+              axios
+                .get(`${process.env.REACT_APP_BASEURL}/email_template_get?id=${e}`)
+                .then((response) => {
+                    // console.log("single Data"+ JSON.stringify(response.data))
+                    setEmaildata(response.data[0])
+                
+                })
+            } catch (err) {}
+           
+    }
+    setShow(e);
   };
 
 
+
+
+
+
+  const handleClose=()=>{
+     formRef.current.reset();
+   
+     setValidated(false)
+    setShow(false)
+   
+  }
+
+
+
+
   const [emaildata, setEmaildata] = useState({});
-  const [userType,setUsertype]=useState("")
-  const [emailType,setEmailtype]=useState("")
-  const [addStatus,setaddStatus]=useState("")
-  const [emailTitle,setEmailTitle]=useState("")
-  const [textMessage,setTextMessage]=useState("")
-  const [testEmail,setTestEmail]=useState("")
+ 
   const[emailText,setEmailText]=useState("")
+  const [getEmaildata,setGetEmaildata]=useState([])
+  const [apicall,setapicall]=useState(false)
+  const[getemailtype,setGetEmailtype]=useState("")
+  const[getusertype,setGetUserType]=useState("")
+  const[getemailStatus,setGetEmailStatus]=useState("")
+  const [changstatus, setchangstatus] = useState('');
+ 
+
 
 
   const columns = [
@@ -47,33 +83,50 @@ const EmailSend = () => {
     },
     {
       name: "User Type",
-      selector: (row) => row.user_type,
+      selector: (row) => row.type,
       sortable: true,
     },
 
     {
       name: "Title",
-      selector: (row) => row.title,
+      selector: (row) => row.email_name,
       sortable: true,
     },
     {
       name: "Status",
-      selector: (row) => row.status,
+      selector: (row) => (
+        <span
+          className={
+            row.status === "active"
+              ? "badge bg-danger"
+              : row.status === "pending"
+                ? "badge bg-success"
+                : row.status === "hold"
+                ? "badge bg-warning"
+               : "badge bg-dark"
+          }
+        >
+          {row.status === "pending"
+              ? "Pending"
+              : row.status === "active"
+                ? "Active"
+                : row.status === "hold"
+                ? "Hold"
+             : "No status"}
+        </span>
+      ),
       sortable: true,
     },
     {
       name: "Change Status",
       selector: (row) => (
-        <div>
-          <Form.Group className="mb-3 aos_input" controlId="formBasicEmail">
-            <Form.Select aria-label="Default select example">
-              <option>Status</option>
-              <option value="1">Send</option>
-              <option value="2">Hold</option>
-            </Form.Select>
-          </Form.Group>
-        </div>
-      ),
+        <Form.Select aria-label="Search By status" size="sm" className="w-100"  onChange={(e)=>onStatusChange(e,row.id)} name='status' >
+          <option value="pending" selected={row.status === 'pending' ? true : false}>Pending</option>
+          <option value="active"  selected={row.status === 'active' ? true : false}>Active</option>
+          <option value="hold"  selected={row.status === 'hold' ? true : false}>Hold</option>
+    
+        </Form.Select>
+      ),      
       sortable: true,
     },
 
@@ -82,66 +135,160 @@ const EmailSend = () => {
       center: true,
       selector: (row) => (
         <div className={"actioncolimn"}>
-          <BiEdit className=" p-0 m-0  editiconn text-secondary" />
+          <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.id)} />
           <BsTrash
             className=" p-0 m-0 editiconn text-danger"
-            // onClick={handleAlert.bind(this,row.id)}
+            onClick={deleteEmail.bind(this, row.id)}
           />
         </div>
       ),
     },
   ];
-  const data = [
-    {
-      id: 1,
-      email_type: "Order",
-      user_type: "Admin",
-      title: "Your Order Shipped",
-      status: "Hold",
-    },
-    {
-      id: 1,
-      email_type: "Order",
-      user_type: "Admin",
-      title: "Your Order Shipped",
-      status: "Hold",
-  
-    },
-  ];
+ 
 
   const EmailTextHandler=(event, editor)=>{
    setEmailText(editor.getData())
    console.log({ event, editor, emailText});
    setEmaildata({...emaildata,
-    email_text:emailText})
+    email_text:emailText,
+  })
 
    
   }
 
+  const valueHandler=(e)=>{
+  setEmaildata({ ...emaildata,[e.target.name]:e.target.value})
+
+  }
   const EmailSubmitHandler= (e)=>{
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
+     
+      setValidated(true);
+      setapicall(true);
+    }
+
+  else{
+    
   e.preventDefault()
-   const sendData= axios.post( `${process.env.REACT_APP_BASEURL}/add_email_template`,{
-   type:userType,
-   email_type:emailType,
-   email_name:"",
-   email_text:emailText,
-   text_msg:textMessage,
-   test_email:testEmail,
-   status:addStatus
-   
- }).then((response)=>{
-    setEmaildata(response.data)
- }).catch(function (error) {
-  console.log(error);
-})
- 
- useEffect(() => {
-  sendData();
+
+  axios.post( `${process.env.REACT_APP_BASEURL}/add_email_template`,{
+  type:emaildata.type,
+  email_type:emaildata.email_type,
+  email_name:emaildata.email_name,
+  email_text:emailText,
+  text_msg:emaildata.text_msg,
+  test_email:emaildata.test_email,
+  status:emaildata.status
   
-}, []);
-   
-console.log(" -----"+emaildata)
+}).then((response)=>{
+   console.log(response)
+  
+}).catch(function (error) {
+ console.log(error);
+})
+
+ formRef.current.reset();
+setValidated(false);
+setapicall(true);
+
+ setShow(false)
+
+   }
+
+
   }
+const UpdateEmailHandler =(e, show)=>{
+
+  e.preventDefault()
+  axios.put(`${process.env.REACT_APP_BASEURL}/update_email_template`,{
+    id:emaildata.id,
+    type:emaildata.type,
+    email_type:emaildata.email_type,
+    email_name:emaildata.email_name,
+    email_text:emailText,
+    text_msg:emaildata.text_msg,
+    test_email:emaildata.test_email,
+    status:emaildata.status
+  }).then((response) => {
+  console.log("idddllllllllllllllllllllllllllllllll------"+JSON.stringify(response.data.message))
+ 
+});
+
+formRef.current.reset();
+setValidated(false);
+setapicall(true);
+
+ setShow(false)
+
+}
+
+       
+  const fetchEmailData=()=>{
+     axios.post(`${process.env.REACT_APP_BASEURL}/email_template_list`,
+     {
+      "type":getusertype,
+      "email_type":getemailtype,
+      "status":getemailStatus
+     }
+     ).then((response) => {
+          //  console.log('emailData-------'+JSON.stringify(response.data))
+          
+          let data = response.data.filter(item=>item.is_deleted===1);
+         
+     
+           setGetEmaildata(data)
+          setapicall(false)
+  
+
+     }).catch(function (error) {
+       console.log(error);
+     });
+ 
+   }
+ 
+ 
+
+   
+   const onStatusChange = (e,id) => {
+ 
+    setchangstatus("ssssssssss"+e.target.value)
+    axios.put(`${process.env.REACT_APP_BASEURL}/email_template_status`, {
+      status:e.target.value,
+      id:`${id}`
+      }).then((response) => {
+      setapicall(true)
+    }).catch(function (error) {
+      console.log(error);
+    });
+  }
+
+  const deleteEmail =(id)=>{
+    // console.log("id---"+id)
+    axios.post(`${process.env.REACT_APP_BASEURL}/email_template_remove`, {
+      is_deleted:0,
+      id:`${id}`
+      }).then((response) => {
+      setapicall(true)
+    }).catch(function (error) {
+      console.log(error);
+    });
+   }
+   
+
+  useEffect(() => {
+    fetchEmailData()
+    
+  }, [apicall,changstatus]);
+
+const SearchHandler=()=>{
+ setapicall(true)
+ fetchEmailData()
+}
+
+console.log("my single data--"+JSON.stringify(emaildata))
   return (
     <div>
       <h2>Send Email</h2>
@@ -153,8 +300,9 @@ console.log(" -----"+emaildata)
             <Form.Select
               aria-label="Email Type"
               className="adminselectbox"
-              // value={searchblog.category}
+            
               name="category"
+              onChange={(e)=>{setGetEmailtype(e.target.value)}}
             >
               <option value={''}>Email Type</option>
               <option value={'order'}>Order</option>
@@ -172,12 +320,13 @@ console.log(" -----"+emaildata)
               <option value={'regestion'}>Regestion</option>
               </Form.Select>
           </div>
+
           <div className="col-md-3 col-sm-6 aos_input">
             <Form.Select
               aria-label="Search by Store Type"
               className="adminselectbox"
               name="User Type"
-           
+              onChange={(e)=>{setGetUserType(e.target.value)}}
             >
               <option value={''}>User Type</option>
               <option value={'admin'}>Admin</option>
@@ -185,16 +334,24 @@ console.log(" -----"+emaildata)
               <option value={'user'}>User</option>
             </Form.Select>
           </div>
-          <div className="col-md-3 col-sm-6 aos_input">
-            <input
-              type={"text"}
-              placeholder={"Search by Email"}
-              className={"adminsideinput"}
-            />
-          </div>
 
           <div className="col-md-3 col-sm-6 aos_input">
-            <button className="button main_button w-100">Search</button>
+            <Form.Select
+              aria-label="Search by Store Type"
+              className="adminselectbox"
+              name="Status"
+              onChange={(e)=>{setGetEmailStatus(e.target.value)}}
+            >
+              <option value={''}>Status</option>
+                    <option value={'hold'}>Hold</option>
+                    <option  value={'active'}>Active</option>
+                    <option  value={'pending'}>Pending</option>
+            </Form.Select>
+          </div>
+        
+
+          <div className="col-md-3 col-sm-6 aos_input">
+            <button className="button main_button w-100" onClick={SearchHandler}>Search</button>
           </div>
         </div>
 
@@ -206,22 +363,23 @@ console.log(" -----"+emaildata)
             Add Email
           </button>
         </div>
+
         <DataTable
           columns={columns}
           className="main_data_table"
-          data={data}
+          data={getEmaildata}
           pagination
           highlightOnHover
           pointerOnHover
         />
       </div>
-      <Modal size="lg" show={show}>
+      <Modal size="lg" show={show} onHide={handleClose}>
         <Form
           className=""
           noValidate
           validated={validated}
           ref={formRef}
-          onSubmit={""}
+          onSubmit={(show === 'add' ? (e) => EmailSubmitHandler(e) : (show) =>UpdateEmailHandler(show))}
         >
           <Modal.Header closeButton>
             <Modal.Title>
@@ -236,7 +394,7 @@ console.log(" -----"+emaildata)
                   controlId="validationCustom06"
                 >
                   <Form.Label>Email Type</Form.Label>
-                  <Form.Select size="sm" aria-label="" name={""} onChange={(e)=>{setEmailtype(e.target.value)}}>
+                  <Form.Select size="sm" aria-label="" value={emaildata.email_type} name={"email_type"} onChange={(e)=>{valueHandler(e)}} required>
                     
                   <option value={''}>Email Type</option>
               <option value={'order'}>Order</option>
@@ -264,8 +422,10 @@ console.log(" -----"+emaildata)
                   controlId="validationCustom06"
                 >
                   <Form.Label>User Type</Form.Label>
-                  <Form.Select size="sm" aria-label="" name={""}
-                     onChange={(e)=>{setUsertype(e.target.value)}}
+                  <Form.Select size="sm" aria-label=""
+                  name={"type"} onChange={(e)=>{valueHandler(e)}}
+                  value={emaildata.type}
+                     required
                   >
                   <option value={''}>User Type</option>
                  <option value={'admin'}>Admin</option>
@@ -283,7 +443,8 @@ console.log(" -----"+emaildata)
                   controlId="validationCustom06"
                 >
                   <Form.Label>Status</Form.Label>
-                  <Form.Select size="sm" aria-label="" name={""} onChange={(e)=>{setaddStatus(e.target.value)}}>
+                  <Form.Select size="sm" aria-label="" value={emaildata.status}  name={"status"} onChange={(e)=>{valueHandler(e)}} required>
+                  <option value={''}>Status</option>
                     <option value={'hold'}>Hold</option>
                     <option  value={'active'}>Active</option>
                     <option  value={'pending'}>Pending</option>
@@ -302,7 +463,10 @@ console.log(" -----"+emaildata)
               type={"text"}
               placeholder={"Email Title"}
               className={"adminsideinput"}
-              onChange={(e)=>{setEmailTitle(e.target.value)}}
+             
+              value={emaildata.email_name}
+              name={"email_name"} onChange={(e)=>{valueHandler(e)}}
+              required
             />
 
             
@@ -313,7 +477,9 @@ console.log(" -----"+emaildata)
               type={"text"}
               placeholder={"Text Message"}
               className={"adminsideinput"}
-              onChange={(e)=>{setTextMessage(e.target.value)}}
+              value={emaildata.text_msg}
+              name={"text_msg"} onChange={(e)=>{valueHandler(e)}}
+              required
             />
 
             
@@ -324,7 +490,9 @@ console.log(" -----"+emaildata)
               type={"text"}
               placeholder={"Test Email "}
               className={"adminsideinput"}
-              onChange={(e)=>{setTestEmail(e.target.value)}}
+              value={emaildata.test_email}
+              name={"test_email"} onChange={(e)=>{valueHandler(e)}}
+              required
             />
 
             
@@ -334,19 +502,21 @@ console.log(" -----"+emaildata)
               <div sm="12" className="mt-3">
                   <CKEditor
                     editor={ClassicEditor}
-                    data="<p>Hello from CKEditor 5!</p>"
+                    data={emaildata.email_text}
                     onChange={EmailTextHandler}
+                    name={"email_text"}
+                    required
                     />
                     </div>
             
             </div>
           </Modal.Body>
           <Modal.Footer>
-            <button className="button main_outline_button">Cancel</button>
+            <button className="button main_outline_button" onClick={handleClose}>Cancel</button>
             <Iconbutton
-              // type={"submit"}
-              btntext={"Add Email"}
-              onClick={EmailSubmitHandler}
+               type={'submit'}
+              btntext={(show === 'add' ? "Add Email" : "Update Email")}
+            
               btnclass={"button main_button "}
             />
           </Modal.Footer>

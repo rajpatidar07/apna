@@ -20,8 +20,12 @@ function Transactions() {
  
     function getTransactions() {
       try {
-        axios
-          .get(`${process.env.REACT_APP_BASEURL}/transaction_details?id=1`)
+        axios.post(`${process.env.REACT_APP_BASEURL}/transaction_list`,{
+          "order_id":"",
+          "method":"",
+          "status":""
+  
+    })
           .then((response) => {
             let data = response.data;
             setTransectionData(data);
