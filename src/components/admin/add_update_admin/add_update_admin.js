@@ -167,6 +167,7 @@ function Admin() {
       formRef.current.reset();
       setValidated(false);
       setapicall(true);
+      handleClose();
     }
   }
 

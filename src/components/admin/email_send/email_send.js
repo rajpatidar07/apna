@@ -56,6 +56,7 @@ const EmailSend = () => {
    
      setValidated(false)
     setShow(false)
+    
    
   }
 
@@ -93,16 +94,22 @@ const EmailSend = () => {
       sortable: true,
     },
     {
+      name: "Email Text",
+      selector: (row) => ( <div  className="spanText" > <span dangerouslySetInnerHTML={{ __html: row.email_text }}></span></div> ),
+      sortable: true,
+    },
+
+    {
       name: "Status",
       selector: (row) => (
         <span
           className={
             row.status === "active"
-              ? "badge bg-danger"
+              ? "badge bg-success"
               : row.status === "pending"
-                ? "badge bg-success"
+                ? "badge bg-primary"
                 : row.status === "hold"
-                ? "badge bg-warning"
+                ? "badge bg-danger"
                : "badge bg-dark"
           }
         >
@@ -148,6 +155,7 @@ const EmailSend = () => {
 
   const EmailTextHandler=(event, editor)=>{
    setEmailText(editor.getData())
+  //  setEmailText(editor.setData(emaildata.email_text))
    console.log({ event, editor, emailText});
    setEmaildata({...emaildata,
     email_text:emailText,
@@ -289,6 +297,7 @@ const SearchHandler=()=>{
 }
 
 console.log("my single data--"+JSON.stringify(emaildata))
+console.log("emaildata.email_text--"+emaildata.email_text)
   return (
     <div>
       <h2>Send Email</h2>
@@ -502,10 +511,14 @@ console.log("my single data--"+JSON.stringify(emaildata))
               <div sm="12" className="mt-3">
                   <CKEditor
                     editor={ClassicEditor}
-                    data={emaildata.email_text}
+                    // data={emaildata.email_text}
+                    data="<p> this is new email</p>"
                     onChange={EmailTextHandler}
                     name={"email_text"}
+                    
+                
                     required
+                    
                     />
                     </div>
             

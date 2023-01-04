@@ -61,7 +61,13 @@ const VendorsList = () => {
    
     const OnSearchChange = (e) => {
       setsearchData({ ...searchdata, [e.target.name]: e.target.value })
+       if(searchdata.owner_name){
+        setapicall(true);
+       
+       }
+     
     }
+   
     const onSearchClick = () =>{
       axios
       .post(`${process.env.REACT_APP_BASEURL}/vendor_list`,{
@@ -147,22 +153,37 @@ const VendorsList = () => {
                 : "badge bg-dark"
             }
           >
-            {row.status}
+            {row.status==="pending"
+            ?"Pending"
+            :row.status==="active"
+            ?"Active"
+            :row.status==="blocked"
+            ?"Blocked"
+            : row.status === "in progress"
+            ?"In Progress"
+            :"return"
+            }
           </span>
         ),
         sortable: true,
-        center: true,
+       
       },
       {
-        name: "Change",
+        name: "Change Status",
         selector: (row) => (
           <Form.Group className="" controlId="formBasicEmail">
             <Form.Select
               size="sm"
-              aria-label="Default select example"
+              aria-label="Search By status"
               onChange={(e) => handleStatusChnage(e, row.id)}
               name="status"
             >
+                 <option
+                value=""
+                selected={row.status === "" ? true : false}
+              >
+                Status
+              </option>
               <option
                 value="pending"
                 selected={row.status === "pending" ? true : false}
@@ -293,6 +314,7 @@ const VendorsList = () => {
   }
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
+
   const handleStatusChnage = (e, id) => {
     setchangstatus(e.target.value);
     axios
@@ -507,10 +529,13 @@ console.log("-------done"+response.data)
               name='status'
               value={searchdata.status}
             >
-              <option>-Status-</option>
+              <option value={""}>-Status-</option>
+                
+        
               <option value="pending"> Pending</option>
-              <option value="approved">Approved</option>
+              {/* <option value="approved">Approved</option> */}
               <option value="blocked">Blocked</option>
+              <option value="in progress">In Progress</option>
             </Form.Select>
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
@@ -521,7 +546,7 @@ console.log("-------done"+response.data)
               name='store_type'
               value={searchdata.store_type}
             >
-              <option>-Store Type-</option>
+              <option value={""}>-Store Type-</option>
               <option value="shoese">shoese</option>
               <option value="Cloths">Cloths</option>
               <option value="Food">Food</option>
