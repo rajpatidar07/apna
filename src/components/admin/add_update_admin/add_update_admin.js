@@ -33,7 +33,9 @@ function Admin() {
     setValidated(false)
     setShow(false);
   }
+  
   const handleShow = (e) => {
+    console.log("----------"+e)
     if (e === 'add') {
       setShow(e);
     }

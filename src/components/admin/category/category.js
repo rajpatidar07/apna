@@ -137,7 +137,6 @@ for(let i=0 ; i < arr.length; i++){
       setnewName(name)
       setCid(e)
       setParentid(parent_id)
-  console.log("dddddddddddddd"+parent_id)
 
       setAllparentid(all_parent_id)
       setlevel(level)
@@ -158,7 +157,6 @@ for(let i=0 ; i < arr.length; i++){
 
   const categoryFormChange = (e, id) => {
     setIndVal(e.target.value);
-    console.log("uuuuuuuuuuu"+indVal)
     setScategory({ ...scategory, [e.target.name]: e.target.value});
   };
      let parentidddata=[];
