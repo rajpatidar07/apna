@@ -43,6 +43,10 @@ function Product() {
     childcategory:"",
     gcategory:""
   });
+  const [categoryeditparent,setCategoryEditparent] = useState('')
+  const [categoryeditsubparent,setCategoryEditSubparent] = useState('')
+  const [categoryeditchildparent,setCategoryEditChildparent] = useState('')
+
   const [level, setlevel] = useState("");
   const [pdata, setpdata] = useState([]);
   const [proddata, setproddata] = useState([]);
@@ -95,6 +99,8 @@ function Product() {
     parent_category: "",
     wholesale_sales_tax: "0",
     gst: "0",
+    cgst: "0",
+    sgst: "0",
     retails_sales_tax: "0",
     value_added_tax: "0",
     manufacturers_sales_tax: "0",
@@ -107,7 +113,7 @@ function Product() {
     is_active: "0",
     vendor_id: "",
     shop: "",
-    rating: "0",
+    show_product_rating: "0",
   });
   const mainformRef = useRef();
   const formRef = useRef();
@@ -118,6 +124,7 @@ function Product() {
   });
 const [newImageUrls,setnewImageUrls] = useState([])
 const [variantremove,setVariantRemove] = useState([])
+const [editbutton , setEditButton]= useState(false)
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
   };
@@ -425,26 +432,10 @@ const [variantremove,setVariantRemove] = useState([])
     } catch (err) {}
   },[scategory,indVal])
   // modal
+  const [editparentCategory,seteditparentCategory] = useState('');
   const handleShow = (e) => {
-    if (e === "add") {
-      setmodalshow(e);
-      try {
-        axios
-          .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
-          .then((response) => {
-            let cgory = response.data;
-            
-            // console.log("---ppppp" + specificValues);
-            if (indVal === 0) {
-              setCategory(cgory);
-            setSubCategory('');
-              setlevel(0);
-            }
-          });
-      } catch (err) {}
-
-      // vendor
-
+       // vendor
+    const getVendorData =()=>{
       try {
         axios
           .get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
@@ -457,23 +448,91 @@ const [variantremove,setVariantRemove] = useState([])
             setVendorId(result)
           });
       } catch (err) {}
+    }
+          getVendorData();
 
       // end vendor api
+// category data
+          const getCategorydata = () =>{
+            try {
+              axios
+                .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
+                .then((response) => {
+                  let cgory = response.data;
+                  
+                  if (indVal === 0) {
+                    setCategory(cgory);
+                   setSubCategory('');
+                    setlevel(0);
+                  }
+                });
+            } catch (err) {}
+      
+          }
+          getCategorydata();
+          // end category data
+    if (e === "add") {
+      setmodalshow(e);
     } else {
       axios
         .get(`${process.env.REACT_APP_BASEURL}/product_details?id=${e}`)
         .then((response) => {
-          let data = response.data[0];
-          // setproductdata(data)
-          // let customdatra = JSON.parse(response.data[0].add_custom_input)
-          // setcustomarray(customdatra)
-          // console.log("---[0]"+JSON.stringify(response.data[0]))
+          let data = response.data;
           if (data != undefined || data != "" || data != null) {
             setproductdata(data);
+            
+// categoryedit api
+
+const arr = data.parent_category.split(',');
+// let arrdata = arr.substring(0, arr.length-2);
+// if(CategoryEditdata.level > 1){
+for(let i=0 ; i < arr.length; i++){
+axios
+.get(`${process.env.REACT_APP_BASEURL}/category_details?id=${arr[i]}`)
+.then((response) => {
+let data = response.data[0];
+// seteditparentCategory(data.category_name)
+console.log("---firsr"+data.category_name)
+if(i === 0 ){
+axios
+.get(`${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`)
+.then((response) => {
+setSubCategory(response.data)
+});
+// setCategoryEditparent(data.category_name);
+seteditparentCategory(data.category_name)
+
+console.log("---second"+data.category_name)
+
+}
+else if(i === 1 ){
+axios
+.get(`${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`)
+.then((response) => {
+       setchildCategory(response.data)
+});
+setCategoryEditparent(data.category_name);
+// setCategoryEditSubparent(data.category_name);
+}
+else if(i === 2){
+setCategoryEditSubparent(data.category_name);
+// setCategoryEditChildparent(data.category_name);
+}
+})
+}
+// end category edit api
+
+
+            // const [parentcate, ...rest] = data.parent_category.split(",")
+            // seteditparentCategory(parentcate)
+            // let i = rest.replace(",", " ")
+            // setIndVal(rest)
+            // console.log("----p"+i)
+            // console.log("----p"+rest)
+
           }
-          let customdatra = JSON.parse(response.data[0].add_custom_input);
+          let customdatra = JSON.parse(response.data.add_custom_input);
           setcustomarray(customdatra);
-          console.log("---[0]" + JSON.stringify(response.data[0]));
         })
         .catch(function (error) {
           console.log(error);
@@ -540,6 +599,7 @@ const  getProductVariant = (id) =>{
     setValidated(false);
     setmodalshow(false);
   };
+            // console.log("---ppppp" + JSON.stringify(productdata));
 
   // seotag
   let tagname;
@@ -594,7 +654,7 @@ const  getProductVariant = (id) =>{
   ) => {
     for (let i = 0; i < e.target.files.length; i++) {
       let coverimg;
-      if(newImageUrls[0]='' && i===0){
+      if(newImageUrls.length === 0 && i===0){
         coverimg = 'cover'
       }
       else{
@@ -645,6 +705,7 @@ const  getProductVariant = (id) =>{
       console.log(error);
     });};
 const onImgView = (id, productid) =>{
+  setEditButton(false)
   axios
       .get(`${process.env.REACT_APP_BASEURL}/product_images_get_singal_veriant?product_id=${productid}&product_verient_id=${id}`)
       .then((response) => {
@@ -656,6 +717,24 @@ const onImgView = (id, productid) =>{
         console.log(error);
       });
 }
+const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
+  axios
+  .put(
+    `${process.env.REACT_APP_BASEURL}/change_porduct_cover_image`,
+    {
+    "product_image_id":`${imgid}`,
+    "product_id":`${productid}`,
+    "product_verient_id":`${productvariantid}`
+  }
+  )
+  .then((response) => {
+    onImgView(productvariantid,productid)
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
   const onVariantChange = (e) => {
     setvariantarray({
       ...variantarray,
@@ -664,24 +743,25 @@ const onImgView = (id, productid) =>{
   };
   let discountt= variantarray.mrp * variantarray.discount/100;
   let product_price = variantarray.mrp - discountt;
+  let saleprice =(product_price) 
+  + 
+  (
+    (product_price*(productdata.gst/100) )
+  +
+  (product_price*(productdata.wholesale_sales_tax/100))
+  +
+  (product_price*(productdata.retails_sales_tax/100))
+  +
+(product_price*(productdata.value_added_tax/100))
++
+(product_price*(productdata.manufacturers_sales_tax/100))
+)
   useEffect(() => {
     setvariantarray({
       ...variantarray,
       product_status:"pending",
-      product_price: product_price,
-      sale_price:(product_price) 
-      + 
-      (
-        (product_price*(productdata.gst/100) )
-      +
-      (product_price*(productdata.wholesale_sales_tax/100))
-      +
-      (product_price*(productdata.retails_sales_tax/100))
-      +
-    (product_price*(productdata.value_added_tax/100))
-    +
-    (product_price*(productdata.manufacturers_sales_tax/100))
-    )
+      product_price: `${product_price}`,
+      sale_price:`${saleprice}`
     });
   }, [variantarray.mrp,variantarray.discount,productdata]);
   const handleInputcheckboxChange = (e) => {
@@ -709,10 +789,8 @@ const onImgView = (id, productid) =>{
           variantarray
         )
         .then((response) => {
-          // setvariantarray(response.data)
-          // setvariantapicall(true)
           getProductVariant(productid)
-          // setvarietyShow(false);
+          formRef.reset();
         })
         .catch(function (error) {
           console.log(error);
@@ -918,7 +996,6 @@ const onImgView = (id, productid) =>{
   const handleClick = () => {};
   const navigate = useNavigate();
  
-console.log("---variant"+JSON.stringify(variantarray))
   return (
     <div className="App productlist_maindiv">
       <h2>Products</h2>
@@ -1122,12 +1199,12 @@ console.log("---variant"+JSON.stringify(variantarray))
                         </Form.Label>
                         <Form.Select
                              onChange={handleVendorNameChange}
-                             value={
-                              productdata.store_name === null ||
-                              productdata.store_name === undefined
-                                ? ""
-                                : productdata.store_name
-                            }
+                            //  value={
+                            //   productdata.store_name === null ||
+                            //   productdata.store_name === undefined
+                            //     ? ""
+                            //     : productdata.store_name
+                            // }
                         aria-label="store_name"
                         className="adminselectbox"
                         required
@@ -1137,7 +1214,7 @@ console.log("---variant"+JSON.stringify(variantarray))
                             <option
                               value={[cdata.id,cdata.shop_name]}
                               key={i}
-                              // selected={CategoryEditparent === cdata.category_name ? true :false }
+                              selected={(productdata.vendor_id,productdata.store_name)===(cdata.id,cdata.shop_name)}
                             >
                               {cdata.shop_name}
                               {""}
@@ -1146,14 +1223,6 @@ console.log("---variant"+JSON.stringify(variantarray))
                         })}
                       </Form.Select>
                         <Col sm="12">
-                          {/* <Form.Control
-                            type="text"
-                            placeholder=" Store Name"
-                            required
-                            onChange={(e) => handleInputFieldChange(e)}
-                            name={"store_name"}
-                            value={productdata.store_name}
-                          /> */}
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill storename
                           </Form.Control.Feedback>
@@ -1235,12 +1304,12 @@ console.log("---variant"+JSON.stringify(variantarray))
                         aria-label="Parent Category"
                         className="adminselectbox"
                         required
-                        value={
-                          productdata.parent_category === null ||
-                          productdata.parent_category === undefined
-                            ? ""
-                            : productdata.parent_category
-                        }
+                        // value={
+                        //   productdata.parent_category === null ||
+                        //   productdata.parent_category === undefined
+                        //     ? ""
+                        //     : productdata.parent_category
+                        // }
                       >
                         {category.map((cdata, i) => {
                           return (
@@ -1248,7 +1317,7 @@ console.log("---variant"+JSON.stringify(variantarray))
                               value={cdata.id}
                               name='parent_category'
                               key={i}
-                              // selected={CategoryEditparent === cdata.category_name ? true :false }
+                              selected={editparentCategory == cdata.id ? true :false }
                             >
                               {cdata.category_name}
                               {""}
@@ -1283,7 +1352,7 @@ console.log("---variant"+JSON.stringify(variantarray))
                               <option
                                 value={cdata.id}
                                 key={i}
-                                //  selected={CategoryEditSubparent === cdata.category_name ? true :false }
+                                 selected={categoryeditparent === cdata.category_name ? true :false }
                               >
                                 {cdata.category_name}{" "}
                               </option>
@@ -1317,7 +1386,7 @@ console.log("---variant"+JSON.stringify(variantarray))
                               <option
                                 value={cdata.id}
                                 key={i}
-                                //  selected={CategoryEditChildparent === cdata.category_name ? true :false }
+                                 selected={categoryeditsubparent === cdata.category_name ? true :false }
                               >
                                 {cdata.category_name}{" "}
                               </option>
@@ -1353,7 +1422,7 @@ console.log("---variant"+JSON.stringify(variantarray))
                               <option
                                 value={cdata.id}
                                 key={i}
-                                //  selected={CategoryEditChildparent === cdata.category_name ? true :false }
+                                 selected={categoryeditchildparent === cdata.category_name ? true :false }
                               >
                                 {cdata.category_name}{" "}
                               </option>
@@ -1685,6 +1754,7 @@ console.log("---variant"+JSON.stringify(variantarray))
                                           <InputGroup className="" size="sm">
                                             <Form.Control
                                               type="number"
+                                              step={'any'}
                                               min={1}
                                               sm="9"
                                               className={
@@ -1722,6 +1792,7 @@ console.log("---variant"+JSON.stringify(variantarray))
                                           <InputGroup className="" size="sm">
                                             <Form.Control
                                               min={1}
+                                              step={'any'}
                                               type="number"
                                               sm="9"
                                               className={
@@ -1745,6 +1816,7 @@ console.log("---variant"+JSON.stringify(variantarray))
                                           <InputGroup className="" size="sm">
                                             <Form.Control
                                               type="number"
+                                              step={'any'}
                                               sm="9"
                                               min={1}
                                               className={
@@ -2193,7 +2265,9 @@ console.log("---variant"+JSON.stringify(variantarray))
           onHide={() => handlevarietyClose()}
           dialogClassName="addproductmainmodal"
         >
-          <Form ref={formRef} validated={validated}>
+          <Form ref={formRef} validated={validated} onSubmit={() =>
+                                        onVariantaddclick(variantarray.id,variantarray.product_id)
+                                      }>
             <Modal.Header closeButton>
               <Modal.Title>Add Variety</Modal.Title>
             </Modal.Header>
@@ -2366,6 +2440,7 @@ console.log("---variant"+JSON.stringify(variantarray))
                                     <InputGroup className="" size="sm">
                                       <Form.Control
                                         type="number"
+                                        step={"any"}
                                         min={1}
                                         sm="9"
                                         className={
@@ -2399,6 +2474,7 @@ console.log("---variant"+JSON.stringify(variantarray))
                                     <InputGroup className="" size="sm">
                                       <Form.Control
                                         min={1}
+                                      step={0.01}
                                         type="number"
                                         sm="9"
                                         className={
@@ -2417,6 +2493,7 @@ console.log("---variant"+JSON.stringify(variantarray))
                                   <div className=" d-flex align-items-center">
                                     <InputGroup className="" size="sm">
                                       <Form.Control
+                                      step={0.01}
                                         type="number"
                                         sm="9"
                                         min={1}
@@ -2550,10 +2627,10 @@ console.log("---variant"+JSON.stringify(variantarray))
                                     <Button
                                       variant="outline-success"
                                       className="addcategoryicon"
-                                      // type="submit"
-                                      onClick={() =>
-                                        onVariantaddclick(variantarray.id,variantarray.product_id)
-                                      }
+                                      type="submit"
+                                      // onClick={() =>
+                                      //   onVariantaddclick(variantarray.id,variantarray.product_id)
+                                      // }
                                       size="sm"
                                     >
                                       +
@@ -2657,8 +2734,9 @@ console.log("---variant"+JSON.stringify(variantarray))
                                                   variantdata.product_id)} className={'view_product_box my-2 text-primary'}>View Image</p>
                                             </div>
                                           </td>
-                                          <td className="p-0 text-center">
+                                          <td className="p-0 text-center manufacture_date">
                                             {variantdata.quantity}
+                                            <p onClick={()=>setEditButton(true)} className={'view_product_box my-2 text-primary'}>Edit Image</p>
                                           </td>
                                           <td className="p-0 text-center">
                                             <Button
@@ -2698,6 +2776,9 @@ console.log("---variant"+JSON.stringify(variantarray))
                                                
                                                   <td className="">
                                                     <div className="imgprivew_box">
+                                                      {imgg.image_position === 'cover' ? 
+                                                    <p className="cover_img">Cover</p> : null   
+                                                    }
                                                       <img
                                                         src={imgg.product_image_path}
                                                         key={i}
@@ -2705,6 +2786,15 @@ console.log("---variant"+JSON.stringify(variantarray))
                                                         width={80}
                                                         height={100}
                                                       />
+                                                      {editbutton === true ?
+                                                      <span
+                                                      className="cross_icon" 
+                                                      onClick={(id)=>onImgCoverEditClick(imgg.product_image_id,
+                                                        imgg.product_id,
+                                                        imgg.product_verient_id
+                                                        )}>
+                                                          -
+                                                      </span> :
                                                       <span
                                                         className="cross_icon"
                                                         onClick={() =>
@@ -2719,6 +2809,7 @@ console.log("---variant"+JSON.stringify(variantarray))
                                                       >
                                                         x
                                                       </span>
+                                            }
                                                     </div>
                                                   </td>
                                                  
