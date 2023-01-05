@@ -156,6 +156,13 @@
 .manufacture_date .view_product_box{
   cursor: pointer;
 }
+.imgprivew_div .imgprivew_box .img_add_button{
+  cursor: pointer;
+    position: absolute;
+    top: 30px;
+    opacity: 0;
+    z-index: 1;
+}
 /* end variant and image */
 /* Complaint */
 .complaintdescbox {

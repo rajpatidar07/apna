@@ -58,7 +58,7 @@ function Product() {
   const [modalshow, setmodalshow] = useState(false);
   const [seoarray, setseoArray] = useState([]);
   const [variantarray, setvariantarray] = useState({
-    product_status: "pending",
+    product_status: "",
     product_id: "",
     unit: "",
     colors: "",
@@ -93,7 +93,11 @@ function Product() {
     product_type: "",
     category: "",
     parent_category: "",
-    wholesale_sales_tax: "",
+    wholesale_sales_tax: "0",
+    gst: "0",
+    retails_sales_tax: "0",
+    value_added_tax: "0",
+    manufacturers_sales_tax: "0",
     manufacturing_date: "",
     expire_date: "",
     seo_tag: "",
@@ -113,6 +117,7 @@ function Product() {
     product_status: "",
   });
 const [newImageUrls,setnewImageUrls] = useState([])
+const [variantremove,setVariantRemove] = useState([])
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
   };
@@ -172,39 +177,7 @@ const [newImageUrls,setnewImageUrls] = useState([])
     setproductid(id[1]);
     setAlert(true);
   };
-  const hideAlert = () => {
-    // product delete
-    axios
-      .put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
-        varient_id: `${variantid}`,
-        product_id: `${productid}`,
-        is_delete: ["0"],
-      })
-      .then((response) => {
-        console.log("---delete" + JSON.stringify(response.data));
-        setapicall(true);
-        // setpdata(response.data)
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-
-    // variety delete
-    axios
-      .put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
-        id: `${variantid}`,
-        product_id: `${productid}`,
-        is_delete: "0",
-      })
-      .then((response) => {
-        setvariantapicall(true);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-
-    setAlert(false);
-  };
+ 
 
   //  json
   var varietyy = VariationJson;
@@ -511,37 +484,39 @@ const [newImageUrls,setnewImageUrls] = useState([])
   useEffect(() => {
     handleShow();
   }, []);
-
+const  getProductVariant = (id) =>{
+  axios
+  .post(
+    `${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`,
+    {
+      product_search: {
+        search: "",
+        category: "",
+        is_delete: ["1"],
+        price_from: "",
+        price_to: "",
+        colors: [],
+        size: [],
+        parent_category: [],
+        product_type: [],
+        product_id: [`${id}`],
+      },
+    }
+  )
+  .then((response) => {
+    setvdata(response.data.results);
+    setvariantarray({
+      ...variantarray,
+      product_id: id,
+    });
+    setvariantapicall(false);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
   const handlevarietyShow = (id) => {
-    axios
-      .post(
-        `${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`,
-        {
-          product_search: {
-            search: "",
-            category: "",
-            is_delete: ["1"],
-            price_from: "",
-            price_to: "",
-            colors: [],
-            size: [],
-            parent_category: [],
-            product_type: [],
-            product_id: [`${id}`],
-          },
-        }
-      )
-      .then((response) => {
-        setvdata(response.data.results);
-        setvariantarray({
-          ...variantarray,
-          product_id: id,
-        });
-        setvariantapicall(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    getProductVariant(id);
     // image show
 
     axios
@@ -550,10 +525,6 @@ const [newImageUrls,setnewImageUrls] = useState([])
       )
       .then((response) => {
         console.log("-----response" + JSON.stringify(response.data));
-        // setvariantarray({
-        //   ...variantarray,
-        //   product_id: id,
-        // });
         setvariantapicall(false);
       })
       .catch(function (error) {
@@ -605,9 +576,9 @@ const [newImageUrls,setnewImageUrls] = useState([])
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
-      // const { type, name, size } = file;
+      const {  name } = file;
       fileReader.addEventListener("load", () => {
-        resolve(fileReader.result);
+        resolve({name: name,base64:fileReader.result});
       });
       fileReader.readAsDataURL(file);
       fileReader.onerror = (error) => {
@@ -620,19 +591,24 @@ const [newImageUrls,setnewImageUrls] = useState([])
     product_id,
     id,
     vendor_id,
-    product_title_name
   ) => {
     for (let i = 0; i < e.target.files.length; i++) {
-      newImageUrls.push(URL.createObjectURL(e.target.files[i]));
+      let coverimg;
+      if(newImageUrls[0]='' && i===0){
+        coverimg = 'cover'
+      }
+      else{
+        coverimg = `cover${i}`
+      }
       encoded = await convertToBase64(e.target.files[i]);
-      const [first, ...rest] = encoded.split(",");
+      const [first, ...rest] = encoded.base64.split(",");
       const productimg = rest.join("-");
       let imar = {
         product_id: `${product_id}`,
         product_verient_id: `${id}`,
         vendor_id: `${vendor_id}`,
-        product_image_name: `${product_title_name}${i}${id}`,
-        image_position: `${i}`,
+        product_image_name: `${encoded.name}${i}${id}`,
+        image_position: coverimg,
         img_64: productimg,
       };
       ImgObj.push(imar);
@@ -641,15 +617,33 @@ const [newImageUrls,setnewImageUrls] = useState([])
     axios
       .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
       .then((response) => {
-        console.log("------changeediteddd---" + JSON.stringify(response.data));
+        onImgView(id,product_id);
       })
       .catch(function (error) {
         console.log(error);
       });
   };
 
-  const onImgRemove = () => {};
-  const onImgAdd = () => {};
+  const onImgRemove = (
+    id,
+    name,
+    vendor_id,
+    product_id,
+    product_verient_id
+    ) => {
+       axios
+    .put(`${process.env.REACT_APP_BASEURL}/product_image_delete`,{
+      "product_image_id":`${id}`,
+      "product_image_name": `${name}`,
+      "vendor_id": `${vendor_id}`
+    }
+    )
+    .then((response) => {
+      onImgView(product_verient_id,product_id);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });};
 const onImgView = (id, productid) =>{
   axios
       .get(`${process.env.REACT_APP_BASEURL}/product_images_get_singal_veriant?product_id=${productid}&product_verient_id=${id}`)
@@ -663,12 +657,33 @@ const onImgView = (id, productid) =>{
       });
 }
   const onVariantChange = (e) => {
-    console.log("-----vairant"+JSON.stringify(variantarray))
     setvariantarray({
       ...variantarray,
       [e.target.name]: e.target.value,
     });
   };
+  let discountt= variantarray.mrp * variantarray.discount/100;
+  let product_price = variantarray.mrp - discountt;
+  useEffect(() => {
+    setvariantarray({
+      ...variantarray,
+      product_status:"pending",
+      product_price: product_price,
+      sale_price:(product_price) 
+      + 
+      (
+        (product_price*(productdata.gst/100) )
+      +
+      (product_price*(productdata.wholesale_sales_tax/100))
+      +
+      (product_price*(productdata.retails_sales_tax/100))
+      +
+    (product_price*(productdata.value_added_tax/100))
+    +
+    (product_price*(productdata.manufacturers_sales_tax/100))
+    )
+    });
+  }, [variantarray.mrp,variantarray.discount,productdata]);
   const handleInputcheckboxChange = (e) => {
     const target = e.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
@@ -685,7 +700,7 @@ const onImgView = (id, productid) =>{
     });
   };
 
-  const onVariantaddclick = (id) => {
+  const onVariantaddclick = (id,productid) => {
     // id.preventDefault();
     if (id === "" || id === undefined || id === null) {
       axios
@@ -696,10 +711,8 @@ const onImgView = (id, productid) =>{
         .then((response) => {
           // setvariantarray(response.data)
           // setvariantapicall(true)
-          setvarietyShow(false);
-          console.log(
-            "------changeediteddd---" + JSON.stringify(response.data)
-          );
+          getProductVariant(productid)
+          // setvarietyShow(false);
         })
         .catch(function (error) {
           console.log(error);
@@ -713,10 +726,9 @@ const onImgView = (id, productid) =>{
         .then((response) => {
           // setvariantarray(response.data)
           // setvariantapicall(true)
-          setvarietyShow(false);
-          console.log(
-            "------changeediteddd---" + JSON.stringify(response.data)
-          );
+          getProductVariant(productid)
+          // setvarietyShow(false);
+         
         })
         .catch(function (error) {
           console.log(error);
@@ -739,6 +751,29 @@ const onImgView = (id, productid) =>{
   };
   const VariantRemoveClick = (id, productid) => {
     setAlert(true);
+    setVariantRemove((variantremove) =>{  
+      return{...variantremove,  id : id, productid:productid }});
+  };
+  const hideAlert = () => {
+    // product delete
+    axios
+      .put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
+        id: variantremove.id,
+        product_id: variantremove.productid,
+        is_delete: ["0"],
+      })
+      .then((response) => {
+        console.log("---delete" + JSON.stringify(response.data));
+        getProductVariant(variantremove.productid);
+        setapicall(true);
+        // setpdata(response.data)
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    // variety delete
+    setAlert(false);
   };
   const VariantEditClick = (id, productid) => {
     axios
@@ -747,14 +782,11 @@ const onImgView = (id, productid) =>{
       )
       .then((response) => {
         setvariantarray(response.data[0]);
-        console.log("------edit" + JSON.stringify(response.data[0]));
+        
       })
       .catch(function (error) {
         console.log(error);
       });
-    // console.log("-----singlevariant"+JSON.stringify(response.data))
-    // setdata1(e)
-    // setvariantmainarray(variantmainarray.filter(item => item !== e));
   };
   useEffect(() => {
     setproductdata({
@@ -886,7 +918,7 @@ const onImgView = (id, productid) =>{
   const handleClick = () => {};
   const navigate = useNavigate();
  
-
+console.log("---variant"+JSON.stringify(variantarray))
   return (
     <div className="App productlist_maindiv">
       <h2>Products</h2>
@@ -1701,13 +1733,14 @@ const onImgView = (id, productid) =>{
                                                 onVariantChange(e)
                                               }
                                               name={"product_price"}
-                                              value={variantarray.mrp -variantarray.mrp * variantarray.discount/100}
+                                              value={product_price}
                                             />
                                           </InputGroup>
                                         </div>
                                       </td>
                                       
                                       <td className="p-0 text-center">
+                                        
                                         <div className=" d-flex align-items-center">
                                           <InputGroup className="" size="sm">
                                             <Form.Control
@@ -1724,18 +1757,18 @@ const onImgView = (id, productid) =>{
                                               }
                                               name={"sale_price"}
                                               value={
-                                                (variantarray.mrp - variantarray.mrp * variantarray.discount/100) 
+                                                (product_price) 
                                                 + 
                                                 (
-                                              //     ((variantarray.mrp -variantarray.mrp * variantarray.discount/100)*productdata.gst/100 )
-                                              //   +
-                                              //   ((variantarray.mrp -variantarray.mrp * variantarray.discount/100)*productdata.wholesale_sales_tax/100)
-                                              //   +
-                                              //   ((variantarray.mrp -variantarray.mrp * variantarray.discount/100)*productdata.retails_sales_tax/100)
-                                              //   +
-                                              // ((variantarray.mrp -variantarray.mrp * variantarray.discount/100)*productdata.value_added_tax/100)
-                                              // +
-                                              ((variantarray.mrp -variantarray.mrp * variantarray.discount/100)*productdata.manufacturers_sales_tax/100)
+                                                  (product_price*productdata.gst/100 )
+                                                +
+                                                (product_price*productdata.wholesale_sales_tax/100)
+                                                +
+                                                (product_price*productdata.retails_sales_tax/100)
+                                                +
+                                              (product_price*productdata.value_added_tax/100)
+                                              +
+                                              (product_price*productdata.manufacturers_sales_tax/100)
                                               )
                                             }
                                             />
@@ -2181,10 +2214,10 @@ const onImgView = (id, productid) =>{
                                 <th>Color</th>
                                 <th>Weight</th>
                                 <th>Size</th>
-                                <th>Price</th>
                                 <th>Mrp</th>
-                                <th>Sale Price</th>
                                 <th>Discount</th>
+                                <th>Price</th>
+                                <th>Sale Price</th>
                                 <th>Special Offer</th>
                                 <th>Featured Product</th>
                                 <th className="manufacture_date">Mdate</th>
@@ -2327,25 +2360,7 @@ const onImgView = (id, productid) =>{
                                     </InputGroup>
                                   </div>
                                 </td>
-                                <td className="p-0 text-center">
-                                  <div className=" d-flex align-items-center">
-                                    <InputGroup className="" size="sm">
-                                      <Form.Control
-                                        min={1}
-                                        type="number"
-                                        sm="9"
-                                        className={
-                                          customvalidated === true
-                                            ? "border-danger"
-                                            : null
-                                        }
-                                        onChange={(e) => onVariantChange(e)}
-                                        name={"product_price"}
-                                        value={variantarray.product_price}
-                                      />
-                                    </InputGroup>
-                                  </div>
-                                </td>
+                              
                                 <td className="p-0 text-center">
                                   <div className=" d-flex align-items-center">
                                     <InputGroup className="" size="sm">
@@ -2372,14 +2387,28 @@ const onImgView = (id, productid) =>{
                                         type="number"
                                         sm="9"
                                         min={1}
+                                        onChange={(e) => onVariantChange(e)}
+                                        name={"discount"}
+                                        value={variantarray.discount}
+                                      />
+                                    </InputGroup>
+                                  </div>
+                                </td>
+                                <td className="p-0 text-center">
+                                  <div className=" d-flex align-items-center">
+                                    <InputGroup className="" size="sm">
+                                      <Form.Control
+                                        min={1}
+                                        type="number"
+                                        sm="9"
                                         className={
                                           customvalidated === true
                                             ? "border-danger"
                                             : null
                                         }
                                         onChange={(e) => onVariantChange(e)}
-                                        name={"sale_price"}
-                                        value={variantarray.sale_price}
+                                        name={"product_price"}
+                                        value={variantarray.product_price}
                                       />
                                     </InputGroup>
                                   </div>
@@ -2391,13 +2420,31 @@ const onImgView = (id, productid) =>{
                                         type="number"
                                         sm="9"
                                         min={1}
+                                        className={
+                                          customvalidated === true
+                                            ? "border-danger"
+                                            : null
+                                        }
                                         onChange={(e) => onVariantChange(e)}
-                                        name={"discount"}
-                                        value={variantarray.discount}
+                                        name={"sale_price"}
+                                        value={vdata[0] === '' ? (product_price) 
+                                          + 
+                                          (
+                                            (product_price*vdata[0].gst/100 )
+                                          +
+                                          (product_price*vdata[0].wholesale_sales_tax/100)
+                                          +
+                                          (product_price*vdata[0].retails_sales_tax/100)
+                                          +
+                                        (product_price*vdata[0].value_added_tax/100)
+                                        +
+                                        (product_price*vdata[0].manufacturers_sales_tax/100)
+                                        ) : null}
                                       />
                                     </InputGroup>
                                   </div>
                                 </td>
+                                
                                 <td className="p-0 text-center">
                                   <div className="">
                                     <Form.Check
@@ -2473,30 +2520,6 @@ const onImgView = (id, productid) =>{
                                   </div>
                                 </td>
                                 <td className="p-0 text-center">
-                                  {/* <div className="manufacture_date">
-                                    <InputGroup className="" size="sm">
-                                      <Form.Control
-                                        multiple
-                                        type="file"
-                                        sm="9"
-                                        className={
-                                          customvalidated === true
-                                            ? "border-danger"
-                                            : null
-                                        }
-                                        onChange={(e) =>
-                                          imguploadchange(
-                                            e,
-                                            variantarray.product_id,
-                                            variantarray.id,
-                                            vdata[0].vendor_id,
-                                            vdata[0].product_title_name
-                                          )
-                                        }
-                                        name={"img_64"}
-                                      />
-                                    </InputGroup>
-                                  </div> */}
                                 </td>
                                 <td className="p-0">
                                   <div className="manufacture_date">
@@ -2529,7 +2552,7 @@ const onImgView = (id, productid) =>{
                                       className="addcategoryicon"
                                       // type="submit"
                                       onClick={() =>
-                                        onVariantaddclick(variantarray.id)
+                                        onVariantaddclick(variantarray.id,variantarray.product_id)
                                       }
                                       size="sm"
                                     >
@@ -2577,16 +2600,16 @@ const onImgView = (id, productid) =>{
                                               : null}
                                           </td>
                                           <td className="p-0 text-center ">
-                                            {variantdata.product_price}
-                                          </td>
-                                          <td className="p-0 text-center ">
                                             {variantdata.mrp}
                                           </td>
                                           <td className="p-0 text-center ">
-                                            {variantdata.sale_price}
+                                            {variantdata.product_price}
                                           </td>
                                           <td className="p-0 text-center ">
                                             {variantdata.discount}
+                                          </td>
+                                          <td className="p-0 text-center ">
+                                            {variantdata.sale_price}
                                           </td>
                                           <td className="p-0 text-center ">
                                             {variantdata.special_offer}
@@ -2625,39 +2648,15 @@ const onImgView = (id, productid) =>{
                                                       vdata[0].product_id,
                                                       vdata[0].id,
                                                       vdata[0].vendor_id,
-                                                      vdata[0]
-                                                        .product_title_name
                                                     )
                                                   }
                                                   name={"img_64"}
                                                 />
                                               </InputGroup>
                                               <p onClick={(id)=>onImgView(variantdata.id,
-                                                  variantdata.product_id)} className={'view_product_box'}>View Image</p>
+                                                  variantdata.product_id)} className={'view_product_box my-2 text-primary'}>View Image</p>
                                             </div>
                                           </td>
-                                          {/* <td className="p-0 text-center">
-                                            <Carousel
-                                              indicators={false}
-                                              controls={false}
-                                            >
-                                              {(
-                                                variantdata.product_img || []
-                                              ).map((data) => {
-                                                return (
-                                                  <Carousel.Item
-                                                    interval={1000}
-                                                  >
-                                                    <img
-                                                      src={data}
-                                                      alt="apnaorganic"
-                                                      width={50}
-                                                    />
-                                                  </Carousel.Item>
-                                                );
-                                              })}
-                                            </Carousel>
-                                          </td> */}
                                           <td className="p-0 text-center">
                                             {variantdata.quantity}
                                           </td>
@@ -2693,12 +2692,14 @@ const onImgView = (id, productid) =>{
                                         {newImageUrls ? (
                                           <tr className="img_preview_boxx">
                                             {newImageUrls.map((imgg, i) => {
+                                              
                                               return (
-                                                <>
+                                                `${variantdata.id}` === imgg.product_verient_id ?
+                                               
                                                   <td className="">
                                                     <div className="imgprivew_box">
                                                       <img
-                                                        src={imgg}
+                                                        src={imgg.product_image_path}
                                                         key={i}
                                                         alt="apna_organic"
                                                         width={80}
@@ -2707,14 +2708,26 @@ const onImgView = (id, productid) =>{
                                                       <span
                                                         className="cross_icon"
                                                         onClick={() =>
-                                                          onImgRemove()
+                                                          onImgRemove(
+                                                            imgg.product_image_id,
+                                                            imgg.product_image_name,
+                                                            imgg.vendor_id,
+                                                            imgg.product_id,
+                                                            imgg.product_verient_id
+                                                          )
                                                         }
                                                       >
                                                         x
                                                       </span>
                                                     </div>
                                                   </td>
-                                                  <td className="">
+                                                 
+                                                
+                                                 : null
+                                              );
+                                             
+                                            })}
+                                             <td className="imgprivew_div">
                                                     <div className="imgprivew_box">
                                                       <img
                                                         src={
@@ -2725,19 +2738,31 @@ const onImgView = (id, productid) =>{
                                                         width={80}
                                                         height={100}
                                                       />
+                                                       <Form.Control
+                                                  multiple
+                                                  type="file"
+                                                  sm="9"
+                                                  className={
+                                                   'img_add_button'
+                                                  }
+                                                  onChange={(e) =>
+                                                    imguploadchange(
+                                                      e,
+                                                      variantdata.product_id,
+                                                      variantdata.id,
+                                                     variantdata.vendor_id,
+                                                    )
+                                                  }
+                                                  name={"img_64"}
+                                                />
                                                       <span
                                                         className="plus_icon"
-                                                        onClick={() =>
-                                                          onImgAdd()
-                                                        }
                                                       >
+                                                       
                                                         +
                                                       </span>
                                                     </div>
                                                   </td>
-                                                </>
-                                              );
-                                            })}
                                           </tr>
                                         ) : null}
                                       </>
