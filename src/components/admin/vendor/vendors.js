@@ -441,7 +441,7 @@ useEffect(()=>{
     formData.append("geolocation",addvendordata.geolocation);
     formData.append("store_type",addvendordata.store_type);
     formData.append("availability", addvendordata.availability);
-    // formData.append("image",fileDoc);
+    formData.append("image",fileDoc);
     formData.append("filename", fileDocName);
     formData.append("document_name",x);
     formData.append("status",addvendordata.status);
