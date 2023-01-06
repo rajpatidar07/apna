@@ -532,9 +532,11 @@ const  getProductVariant = (id) =>{
       });
     setvarietyShow(true);
   };
+
   const handlevarietyClose = () => {
     setvarietyShow(false);
   };
+
   const handleClose = () => {
     mainformRef.current.reset();
     setValidated(false);
@@ -586,6 +588,7 @@ const  getProductVariant = (id) =>{
       };
     });
   };
+  
   const imguploadchange = async (
     e,
     product_id,
@@ -644,6 +647,7 @@ const  getProductVariant = (id) =>{
     .catch(function (error) {
       console.log(error);
     });};
+    
 const onImgView = (id, productid) =>{
   axios
       .get(`${process.env.REACT_APP_BASEURL}/product_images_get_singal_veriant?product_id=${productid}&product_verient_id=${id}`)
@@ -656,6 +660,8 @@ const onImgView = (id, productid) =>{
         console.log(error);
       });
 }
+
+// image end-------------------------------------------
   const onVariantChange = (e) => {
     setvariantarray({
       ...variantarray,
@@ -2689,6 +2695,7 @@ console.log("---variant"+JSON.stringify(variantarray))
                                             </Button>
                                           </td>
                                         </tr>
+
                                         {newImageUrls ? (
                                           <tr className="img_preview_boxx">
                                             {newImageUrls.map((imgg, i) => {
