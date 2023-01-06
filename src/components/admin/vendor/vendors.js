@@ -290,6 +290,7 @@ const VendorsList = () => {
     // e.preventDefault()
     setValidated(false);
     setaddtag('');
+    setaddvendordata("")
     setDocnameArray('');
     setapicall(true)
     setShow(false);
@@ -378,6 +379,7 @@ const handleDocsShow=(id)=>{
 const handleDocsClose=()=>{
    formRef.current.reset();
   setDocsShow(false)
+  setapicall(true)
   
 }
 
@@ -398,7 +400,7 @@ const handleDocsClose=()=>{
   };
 
   const imguploadchange =  async(e) => {
-    e.preventDefault()
+    // e.preventDefault()
     console.log("Out id--"+vendorID)
     for (let i = 0; i < e.target.files.length; i++) {
      
@@ -423,6 +425,7 @@ const handleDocsClose=()=>{
       ImgObj.push(imar);
     }
     // image
+    // console.log("image lenth-----"+newImageUrls.length)
     if(newImageUrls.length<=5){
       axios
       .post(`${process.env.REACT_APP_BASEURL}/vendor_documents_upload`, ImgObj)
@@ -1259,11 +1262,12 @@ console.log("-------done"+response.data)
                 >
                   <Form.Label>Documents Upload </Form.Label>
                   <Form.Control
-                    onChange={(e) => imguploadchange(e)}
-                    multiple
+                    
+                    multiple={true}
                     type="file"
                     placeholder="multiple document upload"
                     name={"img_64"}
+                    onChange={(e) => imguploadchange(e)}
                   />
                 
 
@@ -1271,9 +1275,10 @@ console.log("-------done"+response.data)
               </div>
               </div>
               <Table >
-                 <tbody>
+                 <tbody>   {  console.log("image lenth-----"+newImageUrls.length)}
                            {newImageUrls? (
-                                          <tr>
+
+                                          <tr className="d-flex flex-wrap">
                                             {newImageUrls.map((imgg, i) => {
                                               
                                               return (
@@ -1316,7 +1321,7 @@ console.log("-------done"+response.data)
             <Modal.Footer>
               <button
                 className="button main_outline_button"
-                onClick={() => handleDocsClose()}
+                onClick={ handleDocsClose}
               >
                 Cancel
               </button>

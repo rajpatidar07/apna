@@ -12,6 +12,8 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useEffect } from "react";
 import axios from "axios";
 import { SendExclamationFill } from "react-bootstrap-icons";
+import EmailType from "../json/EmailType";
+import EmailStatus from "../json/EmailStatus";
 
 
 const EmailSend = () => {
@@ -52,9 +54,9 @@ const EmailSend = () => {
 
 
   const handleClose=()=>{
-     formRef.current.reset();
-   
-     setValidated(false)
+    //  formRef.current.reset();
+    setEmaildata("")
+    //  setValidated(false)
     setShow(false)
     
    
@@ -327,21 +329,13 @@ const SearchHandler=()=>{
             
               name="category"
               onChange={(e)=>{setGetEmailtype(e.target.value)}}
-            >
-              <option value={''}>Email Type</option>
-              <option value={'order'}>Order</option>
-              <option value={'cancelled'}>Cancelled</option>
-              <option value={'delivery'}>Delivery</option>
-              <option value={'offer'}>Offer</option>
-              <option value={'invoice'}>Inoive</option>
-              <option value={'product'}>Product</option>
-              <option value={'password'}>Password</option>
-              <option value={'payment'}>Payment</option>
-              <option value={'stock'}>Stock</option>
-              <option value={'sale'}>Sale</option>
-              <option value={'cart'}>Cart</option>
-              <option value={'wishlisted'}>Wishlisted</option>
-              <option value={'regestion'}>Regestion</option>
+            >  <option value={''}>Email Type</option>
+              {EmailType.EmailType.map((item)=>{
+                return(  <option value={item}>{item}</option>)
+              })}
+            
+            
+       
               </Form.Select>
           </div>
 
@@ -367,9 +361,10 @@ const SearchHandler=()=>{
               onChange={(e)=>{setGetEmailStatus(e.target.value)}}
             >
               <option value={''}>Status</option>
-                    <option value={'hold'}>Hold</option>
-                    <option  value={'active'}>Active</option>
-                    <option  value={'pending'}>Pending</option>
+              {EmailStatus.EmailStatus.map((item)=>{return(
+                  <option value={item}>{item}</option>
+              )})}
+                   
             </Form.Select>
           </div>
         
@@ -421,19 +416,10 @@ const SearchHandler=()=>{
                   <Form.Select size="sm" aria-label="" value={emaildata.email_type} name={"email_type"} onChange={(e)=>{valueHandler(e)}} required>
                     
                   <option value={''}>Email Type</option>
-              <option value={'order'}>Order</option>
-              <option value={'cancelled'}>Cancelled</option>
-              <option value={'delivery'}>Delivery</option>
-              <option value={'offer'}>Offer</option>
-              <option value={'invoice'}>Inoive</option>
-              <option value={'product'}>Product</option>
-              <option value={'password'}>Password</option>
-              <option value={'payment'}>Payment</option>
-              <option value={'stock'}>Stock</option>
-              <option value={'sale'}>Sale</option>
-              <option value={'cart'}>Cart</option>
-              <option value={'wishlisted'}>Wishlisted</option>
-              <option value={'regestion'}>Regestion</option>
+                  {EmailType.EmailType.map((item)=>{return(
+                  <option value={item}>{item}</option>
+                  )})}
+  
                   </Form.Select>
                   <Form.Control.Feedback type="invalid" className="h6">
                     Please fill
@@ -469,9 +455,9 @@ const SearchHandler=()=>{
                   <Form.Label>Status</Form.Label>
                   <Form.Select size="sm" aria-label="" value={emaildata.status}  name={"status"} onChange={(e)=>{valueHandler(e)}} required>
                   <option value={''}>Status</option>
-                    <option value={'hold'}>Hold</option>
-                    <option  value={'active'}>Active</option>
-                    <option  value={'pending'}>Pending</option>
+                  {EmailStatus.EmailStatus.map((item)=>{return(
+                  <option value={item}>{item}</option>
+              )})}
                     
                   </Form.Select>
                 
