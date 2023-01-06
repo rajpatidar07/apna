@@ -55,8 +55,9 @@ const EmailSend = () => {
 
   const handleClose=()=>{
     //  formRef.current.reset();
-    setEmaildata("")
-    //  setValidated(false)
+    setEmaildata({})
+    setEmailText("")
+   setValidated(false)
     setShow(false)
     
    
@@ -229,7 +230,7 @@ const UpdateEmailHandler =(e, show)=>{
     test_email:emaildata.test_email,
     status:emaildata.status
   }).then((response) => {
-  console.log("idddllllllllllllllllllllllllllllllll------"+JSON.stringify(response.data.message))
+  // console.log("idddllllllllllllllllllllllllllllllll------"+JSON.stringify(response.data.message))
  
 });
 
@@ -392,7 +393,7 @@ const SearchHandler=()=>{
           pointerOnHover
         />
       </div>
-      <Modal size="lg" show={show} onHide={handleClose}>
+      <Modal size="lg" show={show} onHide={()=>handleClose()}>
         <Form
           className=""
           noValidate
@@ -512,8 +513,8 @@ const SearchHandler=()=>{
               <div sm="12" className="mt-3">
                   <CKEditor
                     editor={ClassicEditor}
-                    // data={emaildata.email_text}
-                    data="<p>Hi Rajaram Patidar</p>"
+                    //  data={emaildata.email_text}
+                      data="<p>Hi Rajaram Patidar</p>"
                     onChange={EmailTextHandler}
                     name={"email_text"}
                     
@@ -526,7 +527,7 @@ const SearchHandler=()=>{
             </div>
           </Modal.Body>
           <Modal.Footer>
-            <button className="button main_outline_button" onClick={handleClose}>Cancel</button>
+            <button className="button main_outline_button" onClick={()=>handleClose()}>Cancel</button>
             <Iconbutton
                type={'submit'}
               btntext={(show === 'add' ? "Add Email" : "Update Email")}

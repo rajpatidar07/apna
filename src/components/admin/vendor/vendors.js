@@ -111,7 +111,7 @@ const VendorsList = () => {
             height="90px"
             width="75px"
             alt={row.owner_name}
-            src={(row.shop_logo).replace("public","")}
+            src={(row.shop_logo).replace("public","")?(row.shop_logo).replace("public",""):"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"}
             style={{
               borderRadius: 10,
               paddingTop: 10,
