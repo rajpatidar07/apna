@@ -53,7 +53,7 @@ const columns = [
         height="90px"
         width="75px"
         alt={row.title}
-        src={`${process.env.REACT_APP_BASEURL}/`+(row.image).replace("public","")}
+        src={(row.image).replace("public","")}
         style={{
           borderRadius: 10,
           paddingTop: 10,
@@ -179,7 +179,7 @@ console.log("banner"+JSON.stringify(banner))
   const handleFormChange = (e) => {
     setAddBanner({...addBanner,[e.target.name]: e.target.value,
     });
-    // console.log("dataaaaaaaaaaaaaaaaaaaaaaa"+JSON.stringify(addblog))
+    console.log("dataaaaaaaaaaaaaaaaaaaaaaa"+JSON.stringify(addBanner))
   };
   const handleClose = () => {
     formRef.current.reset();
@@ -219,7 +219,7 @@ console.log("banner"+JSON.stringify(banner))
     }
   };
   const UpdateBanner= (show) => {
-    console.log("---------------------show"+addBanner.banner_id)
+    // console.log("---------------------show"+addBanner.banner_id)
 
     const formData = new FormData();
     formData.append("image",file);
@@ -352,7 +352,7 @@ console.log("banner"+JSON.stringify(banner))
               <div className="col-md-4">
               <Form.Label>Banner_location</Form.Label>
               <Form.Select
-              aria-label="Search by Category"
+              aria-label="Search by location"
               className="mb-3 aos_input"
               controlId="validationCustom01"
               onChange={(e) => handleFormChange(e)}
@@ -362,13 +362,13 @@ console.log("banner"+JSON.stringify(banner))
             > 
               
             <option>Select location</option>
-             <option value="">home_page_left_side(1)</option>
-             <option value="">home_page_right_side(1)</option>
-             <option value="">home_page_right_side(2)</option>
-             <option value="">home_page_right_side(3)</option>
-             <option value="">home_page_right_side(4)</option>
+             <option value="home_page_left_side(1)">home_page_left_side(1)</option>
+             <option value="home_page_right_side(1)">home_page_right_side(1)</option>
+             <option value="home_page_right_side(2)">home_page_right_side(2)</option>
+             <option value="home_page_right_side(3)">home_page_right_side(3)</option>
+             <option value="home_page_right_side(4)">home_page_right_side(4)</option>
 
-             <option value="">top_product_banner</option>
+             <option value="top_product_banner">top_product_banner</option>
              
 
 
