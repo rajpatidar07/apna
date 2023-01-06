@@ -170,7 +170,6 @@ for(let i=0 ; i < arr.length; i++){
       parentidddata.push(scategory.child_category)
     }
   
-  console.log("---iddddd"+parentidddata)
   useEffect(() => {
     function getUser() {
       try {
