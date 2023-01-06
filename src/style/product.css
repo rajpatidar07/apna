@@ -163,6 +163,16 @@
     opacity: 0;
     z-index: 1;
 }
+.img_preview_boxx .imgprivew_box .cover_img{
+  background: green;
+  color: #fff;
+  border: 1px solid #fff;
+  border-top-right-radius: 37px;
+  max-width: 53px;
+  width: 100%;
+  padding: 0;
+  position: absolute;
+}
 /* end variant and image */
 /* Complaint */
 .complaintdescbox {

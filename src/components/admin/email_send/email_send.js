@@ -65,7 +65,7 @@ const EmailSend = () => {
 
   const [emaildata, setEmaildata] = useState({});
  
-  const[emailText,setEmailText]=useState("")
+  const[emailText,setEmailText]=useState('')
   const [getEmaildata,setGetEmaildata]=useState([])
   const [apicall,setapicall]=useState(false)
   const[getemailtype,setGetEmailtype]=useState("")
