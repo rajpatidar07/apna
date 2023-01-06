@@ -30,6 +30,7 @@ function Admin() {
   const handleClose = () => {
     formRef.current.reset();
     // setadmindata('')
+    setaddadmindata("")
     setValidated(false)
     setShow(false);
   }

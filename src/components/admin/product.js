@@ -721,10 +721,6 @@ const onImgView = (id, productid) =>{
         console.log(error);
       });
 }
-<<<<<<< HEAD
-
-// image end-------------------------------------------
-=======
 const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
   axios
   .put(
@@ -743,7 +739,6 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
   });
 }
 
->>>>>>> 8179d24424b8c862738d262d25f4e43d9a1f712a
   const onVariantChange = (e) => {
     setvariantarray({
       ...variantarray,
