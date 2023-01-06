@@ -159,9 +159,15 @@ const EmailSend = () => {
    setEmailText(editor.getData())
   //  setEmailText(editor.setData(emaildata.email_text))
    console.log({ event, editor, emailText});
-   setEmaildata({...emaildata,
-    email_text:emailText,
+   let newTemp;
+   if((editor.getData()) != undefined){
+     newTemp = (editor.getData()).replaceAll(/"/g, '\'');
+    console.log("newTemp -"+newTemp)
+  }
+  setEmaildata({...emaildata,
+    email_text:newTemp,
   })
+   
 
    
   }
@@ -188,7 +194,7 @@ const EmailSend = () => {
   type:emaildata.type,
   email_type:emaildata.email_type,
   email_name:emaildata.email_name,
-  email_text:emailText,
+  email_text:emaildata.email_text,
   text_msg:emaildata.text_msg,
   test_email:emaildata.test_email,
   status:emaildata.status
@@ -298,8 +304,17 @@ const SearchHandler=()=>{
  fetchEmailData()
 }
 
-console.log("my single data--"+JSON.stringify(emaildata))
-console.log("emaildata.email_text--"+emaildata.email_text)
+// console.log("my single data--"+JSON.stringify(emaildata))
+// let newTemp = emaildata.email_text.replace(/"/g, '\'');
+
+
+// console.log("emaildata.email_text--"+emaildata.email_text)
+// if((emaildata.email_text) != undefined){
+//   let newTemp = (emaildata.email_text).replaceAll(/"/g, '\'');
+//   console.log("newTemp -"+newTemp)
+// }
+
+
   return (
     <div>
       <h2>Send Email</h2>
@@ -498,7 +513,7 @@ console.log("emaildata.email_text--"+emaildata.email_text)
                   <CKEditor
                     editor={ClassicEditor}
                     // data={emaildata.email_text}
-                    data="<p> this is new email</p>"
+                    data="<p>Hi Rajaram Patidar</p>"
                     onChange={EmailTextHandler}
                     name={"email_text"}
                     
