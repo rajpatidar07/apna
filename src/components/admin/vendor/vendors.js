@@ -56,7 +56,7 @@ let docuarr;
   const [apicall, setapicall] = useState(false);
   const [addtag, setaddtag] = useState();
   const [Docnamearray, setDocnameArray] = useState([]);
-  const [DocuImgarray, setDocuImgArray] = useState([]);
+
   const [headerval, setheaderval] = useState('');
   const [descval, setdescval] = useState('');
   const [customarray, setcustomarray] = useState([]);
@@ -247,10 +247,10 @@ let docuarr;
               className=" p-0 m-0  editiconn text-secondary"
               onClick={handleShow.bind(this, row.id)}
             />
-            <BsTrash
+            {/* <BsTrash
               className=" p-0 m-0 editiconn text-danger"
               onClick={handleAlert}
-            />
+            /> */}
           </div>
         ),
       },
@@ -296,7 +296,7 @@ let docuarr;
     setShow(false);
   };
 
- 
+
   const handleShow = (e) => {
     if (e === "add") {
       setShow(e);
@@ -308,15 +308,22 @@ let docuarr;
     .get(`${process.env.REACT_APP_BASEURL}/vendors?id=${e}`,addvendordata)
     .then((response) => {
       setaddvendordata(response.data[0]);
-       setFile(response.data[0].shop_logo);
-      // setFileName(response.data[0].name);
+
+       setFile("");
+       setFileName("");
+
       setcustomarray(response.data[0].social_media_links)
-     setDocuImgArray(JSON.parse(response.data[0].document_name))
-      docuarr = response.data[0].document_name.split(',')
-      
-     console.log("clcikeddd"+docuarr);
+      let strCopy = (response.data[0].document_name).split(",");
+
+     setDocnameArray(strCopy)
      
-     console.log("(response.data[0].document_name)"+typeof(response.data[0].document_name));
+      // docuarr =response.data[0].document_name;
+      
+     console.log("clcikeddd______------"+response.data[0].document_name);
+     console.log("clcikedd____________------"+typeof response.data[0].document_name);
+
+     
+     console.log("(response.data)_______________________________"+JSON.stringify(response.data[0]));
      
 
     //  let i = JSON.parse(response.data[0].social_media_links);
@@ -502,14 +509,14 @@ const onImgView = (vendorID) =>{
     setheaderval(e.target.value);
     // setAddCustom((AddCustom) =>{ return {...AddCustom,  e.target.value : e.target.value}});
   };
-  console.log("checkkkk"+JSON.stringify(AddCustom))
+  // console.log("checkkkk"+JSON.stringify(AddCustom))
 
 
 
   const oncustomdescChange = (e) => {
     setdescval(e.target.value);
   };
-  console.log("--------uuuuuuu-------"+JSON.stringify(AddCustom))
+  // console.log("--------uuuuuuu-------"+JSON.stringify(AddCustom))
 
   // const handleAClick = () => {
 useEffect(()=>{
@@ -533,7 +540,7 @@ useEffect(()=>{
   setAddCustom(...AddCustom,returnedTarget);
   setsCall(true)
   }
-  console.log("--------customarray-------"+JSON.stringify(customarray))
+  // console.log("--------customarray-------"+JSON.stringify(customarray))
 
 
   const handleRemoveClick = (e) => {
@@ -563,13 +570,17 @@ useEffect(()=>{
       setValidated(true);
     } else {
       e.preventDefault();
-
+ console.log("arrruyau------"+addvendordata.document_name)
   const formData = new FormData();
   let x = [addvendordata.document_name]
   let socialname =  addvendordata.testjson
  let socialname_new=JSON.stringify(socialname)
-  console.log("socialname----------"+socialname);
-  console.log("socialname----------"+socialname_new);
+
+  // console.log("socialname----------"+socialname);
+  // console.log("socialname----------"+socialname_new);
+
+  console.log(" before  xx-----------  ---"+x)
+  console.log(" before  file Name  ---"+fileName)
 
 
 
@@ -595,7 +606,7 @@ useEffect(()=>{
       .then((response) => {
     setapicall(true);
     setShow(false);
-console.log("-------done"+response.data)
+// console.log("-------done"+response.data)
       })
       .catch(function(error) {
         console.log(error);
@@ -608,15 +619,17 @@ console.log("-------done"+response.data)
   const UpdateVendorClick = (e) => {
 
   let x = [addvendordata.document_name]
-  console.log("update doc"+ x)
+  // console.log("update doc"+ x)
     e.preventDefault();
     const formData = new FormData();
 
     let socialname =  addvendordata.testjson
     let socialname_new=JSON.stringify(socialname)
-     console.log("se----------"+socialname);
-     console.log("seAAAAAAAAAAAAAaaa----------"+socialname_new);
+    //  console.log("se----------"+socialname);
+    //  console.log("seAAAAAAAAAAAAAaaa----------"+socialname_new);
 
+    console.log(" after bfile  ---"+file)
+    console.log(" after file Name  ---"+fileName)
 
     formData.append("id",addvendordata.id)
     formData.append("image", file);
@@ -636,7 +649,7 @@ console.log("-------done"+response.data)
     formData.append("status",addvendordata.status);
     formData.append("social_media_links",socialname_new)
   
-    console.log("formdata----"+ JSON.stringify(formData))
+    // console.log("formdata----"+ JSON.stringify(formData))
     axios
     .put(`${process.env.REACT_APP_BASEURL}/vendor_update`,formData)
     .then((response) => {
@@ -1067,11 +1080,15 @@ console.log("-------done"+response.data)
                             +
                           </Button>
                           </InputGroup>
-                          {console.log("ddddd--"+Docnamearray)}
+                          {
+                            console.log("ddddd--"+Docnamearray)
+                          }
+                        
+
                           {Docnamearray === undefined || Docnamearray === null || Docnamearray === '' ? null :
                     <div className="d-flex align-items-center tagselectbox mt-2" >
                                               
-                          {/* { docuarr.map((seotags, i) => {
+                          { Docnamearray.map((seotags, i) => {
                           return (
                             <>
                              
@@ -1087,7 +1104,7 @@ console.log("-------done"+response.data)
                             </>
                           )
                          })}
-                         */}
+                        
                       </div>
                       }
                   <Form.Control.Feedback type="invalid" className="h6">
