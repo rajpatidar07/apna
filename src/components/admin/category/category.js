@@ -71,7 +71,7 @@ const [apicall, setapicall] = useState(false);
   "level":""
 
  });
-console.log("kkkkkkk"+JSON.stringify(SearchCat))
+
 const saveFile = (e) => {
 setFile(e.target.files[0]);
  setFileName(e.target.files[0].name);
@@ -277,7 +277,7 @@ for(let i=0 ; i < arr.length; i++){
           height="90px"
           width="75px"
           alt={row.category_name}
-          src={`${process.env.REACT_APP_BASEURL}/`+(row.image).replace("public","")}
+          src={row.image?row.image:"https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"}
           style={{
             borderRadius: 10,
             paddingTop: 10,
