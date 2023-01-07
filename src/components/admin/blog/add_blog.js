@@ -37,6 +37,7 @@ const BlogList = () => {
     product_tag: "",
     publish_date: ""
 }); 
+console.log("======================"+JSON.stringify(addblog))
 const [searchdata, setsearchData] = useState([]);
 // const [searchblog, setsearchBlog] = useState({
 //   id:"",
@@ -264,14 +265,14 @@ console.log("newwwwwwwwww consoleeeeeeee"+id)
             height="90px"
             width="75px"
             alt={row.owner_name}
-            src={`${process.env.REACT_APP_BASEURL}/`+(row.image).replace("public","")}
+            src={(row.image)}
             style={{
               borderRadius: 10,
               paddingTop: 10,
               paddingBottom: 10,
               textAlign: "right",
             }}
-            onClick={() => handleClick()}
+            // onClick={() => handleClick()}
           />
           </>
         ),
@@ -346,9 +347,9 @@ console.log("newwwwwwwwww consoleeeeeeee"+id)
     t.product_tag == thing.product_tag
   )))
   const handleClick = () => {};
-  let logo = `${process.env.REACT_APP_BASEURL}/${addblog.image}`
-  let docsdata = `${process.env.REACT_APP_BASEURL}/${DocuImgarray}`
-  var Newlogo = logo.replace("/public", "");
+  // let logo = `${process.env.REACT_APP_BASEURL}/${addblog.image}`
+  // let docsdata = `${process.env.REACT_APP_BASEURL}/${DocuImgarray}`
+  // var Newlogo = logo.replace("/public", "");
   // var imgdata =docsdata.replace("/public", "");
     // console.log("dataaSHOWWWWWWWWWWWWW"+JSON.stringify(searchdata))
   return (
@@ -502,7 +503,7 @@ console.log("newwwwwwwwww consoleeeeeeee"+id)
               <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicStartDate">
                     <Form.Label>Publish Date</Form.Label>
-                    <Form.Control  name='publish_date'  type="date" value={addblog.publishDate} onChange={(e) => handleFormChange(e)} placeholder="Coupon Start Date" />
+                    <Form.Control  name='publish_date'  type="date" value={addblog.publish_date} onChange={(e) => handleFormChange(e)} placeholder="Coupon Start Date" />
                     <Form.Control.Feedback type="invalid" className="h6">
                       Please fill date
                     </Form.Control.Feedback>
@@ -558,7 +559,7 @@ console.log("newwwwwwwwww consoleeeeeeee"+id)
                   <Form.Control
                     // onChange={(e) => saveFile(e)}
                     onChange={(e) => ImgFormChange(e)}
-                    src={Newlogo}
+                    src={addblog.image}
                     type="file"
                     placeholder="Shop_logo"
                     name={"image"}

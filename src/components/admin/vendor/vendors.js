@@ -15,8 +15,10 @@ import { Badge, Button, InputGroup, Table } from "react-bootstrap";
 import { GiCancel } from "react-icons/gi";
 const VendorsList = () => {
   const formRef = useRef();
+   const [newImageUrls,setnewImageUrls] = useState([])
   const [validated, setValidated] = useState(false);
   const [show, setShow] = useState("");
+  const [docsshow, setDocsShow] = useState(false);
   const [Alert, setAlert] = useState(false);
   const [vendordata, setvendordata] = useState([]);
   const [file, setFile] = useState();
@@ -43,6 +45,13 @@ const VendorsList = () => {
   availability:"",
   social_media_links:[]
     });
+
+
+
+    let encoded;
+    let ImgObj = [];
+
+
   const [changstatus, setchangstatus] = useState("");
   const [apicall, setapicall] = useState(false);
   const [addtag, setaddtag] = useState();
@@ -216,6 +225,20 @@ const VendorsList = () => {
       },
   
       {
+        name: "Add Docs",
+        selector: (row) => (
+          
+          <Button
+            size="sm"
+             onClick={handleDocsShow.bind(this, row.id)}
+          >
+            Add Docs
+          </Button>
+          // : null
+        ),
+        sortable: true,
+      },
+      {
         name: "ACTION",
         center: true,
         selector: (row) => (
@@ -332,28 +355,133 @@ const VendorsList = () => {
 
 
   
-  const docsImageUrls = [];
-  const newImageUrls = [];
+
+  
+
   const ImgFormChange = (e) => {
     setFile(e.target.files[0]);
  setFileName(e.target.files[0].name);
   };
-  const DocsFormChange = (e) => {
-    setFileDoc(e.target.files[0])
-    setFileDocName(e.target.files[0].name);
-  //   [e.target.files].forEach((image) =>
-  //     newImageUrls.push(image)
-  //   );
-  //   [e.target.files.name].forEach((image) =>
-  //   docsImageUrls.push((image))
-  // );
-  //   setaddvendordata((addvendordata) => {
-  //     return { ...addvendordata, 
-  //       multiple_document_upload: newImageUrls,
-  //       MultipleDocs : docsImageUrls
-  //     };
-  //   });
+
+
+
+
+  //img code start-----------------------------------------------------------------------------------------------
+
+  const [vendorID ,setVendorId]=useState("")
+const handleDocsShow=(id)=>{
+  console.log("id- in show----------"+id)
+  setVendorId(id)
+  setDocsShow(true)
+  onImgView(id);
+}
+const handleDocsClose=()=>{
+   formRef.current.reset();
+  setDocsShow(false)
+  
+}
+
+
+
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      const {  name } = file;
+      fileReader.addEventListener("load", () => {
+        resolve({name: name,base64:fileReader.result});
+      });
+      fileReader.readAsDataURL(file);
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
   };
+
+  const imguploadchange =  async(e) => {
+    e.preventDefault()
+    console.log("Out id--"+vendorID)
+    for (let i = 0; i < e.target.files.length; i++) {
+     
+      
+      encoded = await convertToBase64(e.target.files[i]);
+
+     
+
+      const [first, ...rest] = encoded.base64.split(",");
+      const [nameimg, ext] = encoded.name.split(".");
+  
+
+      const vendorimg = rest.join("-");
+      let imar = {
+      
+        vendor_id: `${vendorID}`,
+        documents_name: `${encoded.name}${i}${vendorID}`,
+        documents_position: `position${i}`,
+        type_of_file:`${ext}`,
+        img_64: vendorimg,
+      };
+      ImgObj.push(imar);
+    }
+    // image
+    if(newImageUrls.length<=5){
+      axios
+      .post(`${process.env.REACT_APP_BASEURL}/vendor_documents_upload`, ImgObj)
+      .then((response) => {
+        onImgView(vendorID)
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    }
+    else{
+      alert("Cannot upload more than 6 image")
+    }
+    
+  };
+
+
+
+  const onImgRemove = (
+    id,
+    vendor_id,
+ 
+    ) => {
+       axios
+    .put(`${process.env.REACT_APP_BASEURL}/vendor_document_delete`,{
+      "vendor_doc_id":`${id}`,
+      "vendor_id": `${vendor_id}`
+    }
+    )
+    .then((response) => {
+       onImgView(vendor_id);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });};
+
+
+
+
+const onImgView = (vendorID) =>{
+  axios
+      .get(`${process.env.REACT_APP_BASEURL}/vendor_documents_get?vendor_id=${vendorID}`)
+      .then((response) => {
+      //  console.log("response--------------------"+JSON.stringify(response.data))
+       setnewImageUrls(response.data)
+    //  console.log("new img length------"+((response.data.length)))
+
+      
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+}
+
+
+
+
+  //img code end-------------------------------------------------------------------------------------------------
+
      let returnarr=[];
   // social media link
   const oncustomheadChange = (e) => {
@@ -1084,32 +1212,7 @@ console.log("-------done"+response.data)
                 </Form.Group>
               </div>
 
-              <div className="col-md-6">
-                <Form.Group
-                  className="mb-3 aos_input"
-                  controlId="validationCustom09"
-                >
-                  <Form.Label>Gumasta</Form.Label>
-                  <Form.Control
-                    onChange={(e) => DocsFormChange(e)}
-                    multiple
-                    type="file"
-                    placeholder="multiple_document_upload"
-                    name={"multiple_document_upload"}
-                  />
-                  {/* {
-                  (DocuImgarray).map((imgdata)=> {
-                    return( */}
-                      <img src={imgdata} width={'50px'}/>
-                    {/* )
-                  })
-                 } */}
-
-                  <Form.Control.Feedback type="invalid" className="h6">
-                    Please upload Img
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </div>
+              
               
             </div>
           </Modal.Body>
@@ -1129,6 +1232,103 @@ console.log("-------done"+response.data)
           </Modal.Footer>
         </Form>
       </Modal>
+
+
+
+
+     //
+{/*   Add Docs model */}
+
+
+          <Modal
+          size="lg"
+          show={docsshow}
+          onHide={ handleDocsClose}
+          
+        >
+          <Form ref={formRef}>
+            <Modal.Header closeButton>
+              <Modal.Title>Add Images and Documents</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <div className="row ">
+            <div className="col-md-6">
+                <Form.Group
+                  className="mb-3 aos_input"
+                  controlId="validationCustom09"
+                >
+                  <Form.Label>Documents Upload </Form.Label>
+                  <Form.Control
+                    onChange={(e) => imguploadchange(e)}
+                    multiple
+                    type="file"
+                    placeholder="multiple document upload"
+                    name={"img_64"}
+                  />
+                
+
+                </Form.Group>
+              </div>
+              </div>
+              <Table >
+                 <tbody>
+                           {newImageUrls? (
+                                          <tr>
+                                            {newImageUrls.map((imgg, i) => {
+                                              
+                                              return (
+                                         
+                                               
+                                                  <td className="imgprivew_box">
+                                                  
+                                                      <img
+                                                        src={imgg.documents_path}
+                                                        key={i}
+                                                        alt="apna_organic"
+                                                        width={80}
+                                                        height={100}
+                                                      />
+                                                      <span
+                                                        className="cross_icon"
+                                                        onClick={() =>
+                                                          onImgRemove(
+                                                            imgg.vendor_doc_id,
+                                                            imgg.vendor_id,
+                                                          )
+                                                        }
+                                                      >
+                                                        X
+                                                      </span>
+                                                  
+                                                  </td>
+                                                 
+                                                
+                                                
+                                              );
+                                             
+                                            })}
+                                         
+                                          </tr>
+                                        ) : null} 
+                                        </tbody>
+                                        </Table>
+            </Modal.Body>
+            <Modal.Footer>
+              <button
+                className="button main_outline_button"
+                onClick={() => handleDocsClose()}
+              >
+                Cancel
+              </button>
+           
+            </Modal.Footer>
+          </Form>
+        </Modal>
+
+
+
+
+{/* /End add docs model/ */}
     </div>
   );
 };
