@@ -29,7 +29,7 @@ function Admin() {
    });
   const handleClose = () => {
     formRef.current.reset();
-    // setadmindata('')
+   
     setaddadmindata("")
     setValidated(false)
     setShow(false);
@@ -229,6 +229,7 @@ function Admin() {
         </div>
 
         {/* datatable */}
+        
         <Modal
           show={show}
           onHide={() => handleClose()}
