@@ -106,7 +106,7 @@ const VendorsList = () => {
         cell: (row) => 
         
         (
-          <>
+          <div>
           <img
             height="90px"
             width="75px"
@@ -120,7 +120,7 @@ const VendorsList = () => {
             }}
             onClick={() => handleClick()}
           />
-          </>
+          </div>
         ),
       },
       {
@@ -1051,7 +1051,7 @@ console.log("-------done"+response.data)
                                                
                           { Docnamearray.map((seotags, i) => {
                           return (
-                            <>
+                            <div>
                         <Badge className="tagselecttitle mb-0" bg="success" >
                         {seotags === null || seotags === undefined ? '' : seotags
                         }
@@ -1061,7 +1061,7 @@ console.log("-------done"+response.data)
                             onClick={() => DocuRemoveClick(seotags)}
                           />
                         </Badge>
-                            </>
+                            </div>
                           )
                          })}
                         
