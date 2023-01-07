@@ -54,16 +54,17 @@ const Coupon = () => {
     setAlert(true);
       // setisActive(is_active)
       setCId(id)
-  console.log("idddddddd"+id)
+  
 } 
 const hideAlert = () =>{
-  // console.log("--id"+id)
   axios.put(`${process.env.REACT_APP_BASEURL}/coupons_delete`,{
            id:`${cid}`,
            is_active:0
-      });
-setapicall(true)
-setAlert(false);
+      }).then((response) => {
+        setapicall(true)
+        setAlert(false);
+          });
+
 } 
   // const showAlert =()=> {
   //   setAlert(true);
@@ -96,8 +97,7 @@ setAlert(false);
           .get(`${process.env.REACT_APP_BASEURL}/coupon?coupon_id=${e}`)
           .then((response) => {
             let data= response.data[0];
-            // let data = response.data.filter(item=>item.is_active==='1');
-
+            // let data = response.data[0].filter(item=>item.is_active===1);
             setaddcoupondata(data);
           })
       } catch (err) {}
@@ -112,11 +112,10 @@ setAlert(false);
         axios
           .get(`${process.env.REACT_APP_BASEURL}/coupon?coupon_id=all`)
           .then((response) => {
-            let data = response.data;
-
+            // let data = response.data;
+            let data = response.data.filter(item=> item.is_active === 1);
             setcoupondata(data)
             console.log("tfggcvvvvvvvvvvvvvvvvv"+JSON.stringify(data))
-
             setaddcoupondata(data);
             setsearchCoupon(data);
             setapicall(false);
@@ -229,7 +228,7 @@ setAlert(false);
           // width="75px"
           alt={'apna_organic'}
           src={
-            `${process.env.REACT_APP_BASEURL}/${row.image}`
+            row.image? row.image : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
           }
           style={{
             padding: 10,
@@ -355,8 +354,6 @@ setAlert(false);
   setShow("");
   };
 
-  let couponlogo = `${process.env.REACT_APP_BASEURL}/${addcoupondata.image}`
-  var Newcouponlogo = couponlogo.replace("/public", "");
  
   let a = [];
   return (
@@ -499,7 +496,7 @@ setAlert(false);
                     <Form.Label>Coupon Image</Form.Label>
                     <Form.Control type="file" placeholder="Coupon Image" onChange={(e)=>ImgFormChange(e)} name='image'/>
                     {addcoupondata.image ? 
-                    <img src={Newcouponlogo} width={'90px'} /> : null}
+                    <img src={addcoupondata.image} width={'90px'} /> : null}
                   </Form.Group>
                 </div>
               </div>
