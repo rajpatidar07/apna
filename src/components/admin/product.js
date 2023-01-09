@@ -26,6 +26,7 @@ import { Button } from "react-bootstrap";
 import { GiCancel } from "react-icons/gi";
 import moment from "moment/moment";
 import demo from "../../images/demo.jpg";
+import BrandJson from "./json/BrandJson";
 let categoryArray = [];
 let encoded;
 // let newImageUrls = [];
@@ -571,17 +572,17 @@ const  getProductVariant = (id) =>{
     getProductVariant(id);
     // image show
 
-    axios
-      .get(
-        `${process.env.REACT_APP_BASEURL}/product_images_get?product_id=${id}&product_verient_id=11`
-      )
-      .then((response) => {
-        console.log("-----response" + JSON.stringify(response.data));
-        setvariantapicall(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    // axios
+    //   .get(
+    //     `${process.env.REACT_APP_BASEURL}/product_images_get?product_id=${id}&product_verient_id=11`
+    //   )
+    //   .then((response) => {
+    //     console.log("-----response" + JSON.stringify(response.data));
+    //     setvariantapicall(false);
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //   });
     setvarietyShow(true);
   };
 
@@ -779,7 +780,8 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
 
   const onVariantaddclick = (id,productid) => {
     // id.preventDefault();
-    if (id === "" || id === undefined || id === null) {
+    console.log("-id"+id)
+    if (id == "" || id == undefined || id == null) {
       axios
         .post(
           `${process.env.REACT_APP_BASEURL}/products_varient_add`,
@@ -787,7 +789,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
         )
         .then((response) => {
           getProductVariant(productid)
-          formRef.reset();
+          // formRef.reset();
         })
         .catch(function (error) {
           console.log(error);
@@ -1188,10 +1190,12 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                             }
                           >
                             <option value={""}>Select Brand</option>
-                            <option value="puma">Puma</option>
-                            <option value="mamaearth">Mamaearth</option>
-                            <option value="adidas">Adidas</option>
-                            <option value="sketchers">Sketchers</option>
+                            {BrandJson.BrandJson.map((item)=>{return(
+                            <>
+                            <option value={item}>{item}</option>
+                            </>)})}
+                           
+                           
                           </Form.Select>
                         </Col>
                       </Form.Group>
@@ -1744,7 +1748,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                           <InputGroup className="" size="sm">
                                             <Form.Control
                                               value={
-                                                variantarray.unit === "color"
+                                                variantarray.unit === "pcs"
                                                   ? variantarray.size
                                                   : ""
                                               }
@@ -2699,7 +2703,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                             {variantdata.discount}
                                           </td>
                                           <td className="p-0 text-center ">
-                                            {variantdata.sale_price}
+                                            {(variantdata.sale_price).toFixed(2)}
                                           </td>
                                           <td className="p-0 text-center ">
                                             {variantdata.special_offer}
