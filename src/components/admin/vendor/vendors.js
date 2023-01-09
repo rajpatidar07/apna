@@ -283,7 +283,6 @@ let docuarr;
         [e.target.name]: e.target.value,
         
       });
-      console.log("dataa"+JSON.stringify(addvendordata))
     };
   const handleClose = () => {
     formRef.current.reset();
@@ -316,22 +315,6 @@ let docuarr;
       let strCopy = (response.data[0].document_name).split(",");
 
      setDocnameArray(strCopy)
-     
-      // docuarr =response.data[0].document_name;
-      
-     console.log("clcikeddd______------"+response.data[0].document_name);
-     console.log("clcikedd____________------"+typeof response.data[0].document_name);
-
-     
-     console.log("(response.data)_______________________________"+JSON.stringify(response.data[0]));
-     
-
-    //  let i = JSON.parse(response.data[0].social_media_links);
-    // console.log("---iiiii"+ typeof i)
-
-    // console.log("---docname"+ JSON.stringify(i[0]))
-    // console.log("---docname"+ (response.data[0].social_media_links))
-
       setapicall(false);
     })
     .catch(function(error) {
@@ -345,8 +328,6 @@ let docuarr;
     setaddtag(e.target.value);
   };
   const onDocuAddclick = (e) => {
-    
-    // e.preventDefault();
     setDocnameArray(Docnamearray => [...Docnamearray, addtag]);
      setaddtag('');
   
@@ -1317,7 +1298,7 @@ useEffect(()=>{
               </div>
               </div>
               <Table >
-                 <tbody>   {  console.log("image lenth-----"+newImageUrls.length)}
+                 <tbody>  
                            {newImageUrls? (
 
                                           <tr className="d-flex flex-wrap">
