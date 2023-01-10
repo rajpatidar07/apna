@@ -264,7 +264,7 @@ console.log("newwwwwwwwww consoleeeeeeee"+id)
             height="90px"
             width="75px"
             alt={row.owner_name}
-            src={`${process.env.REACT_APP_BASEURL}/`+(row.image).replace("public","")}
+            src={row.image}
             style={{
               borderRadius: 10,
               paddingTop: 10,
