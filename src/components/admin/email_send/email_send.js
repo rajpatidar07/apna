@@ -7,8 +7,8 @@ import "sweetalert/dist/sweetalert.css";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import Iconbutton from "../common/iconbutton";
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import {CKEditor} from 'ckeditor4-react'
+// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useEffect } from "react";
 import axios from "axios";
 import { SendExclamationFill } from "react-bootstrap-icons";
@@ -46,6 +46,7 @@ const EmailSend = () => {
            
     }
     setShow(e);
+ 
   };
 
 
@@ -55,7 +56,7 @@ const EmailSend = () => {
 
   const handleClose=()=>{
     //  formRef.current.reset();
-    //  setEmaildata({})
+      setEmaildata({})
    
    setValidated(false)
     setShow(false)
@@ -154,20 +155,24 @@ const EmailSend = () => {
       ),
     },
   ];
- 
 
-  const EmailTextHandler=(event, editor)=>{
-   setEmailText(editor.getData())
-  //  setEmailText(editor.setData(emaildata.email_text))
-   console.log({ event, editor, emailText});
-   let newTemp;
-   if((editor.getData()) != undefined){
-     newTemp = (editor.getData()).replaceAll(/"/g, '\'');
-    console.log("newTemp -"+newTemp)
-  }
-  setEmaildata({...emaildata,
-    email_text:newTemp,
-  })
+  const EmailTextHandler=(e)=>{
+
+console.log("textEditor value"+ e.editor.getData())
+
+   setEmailText(e.editor.getData())
+  
+  
+    //  console.log("datatatat"+emaildata.email_text)
+  // //  console.log({ event, editor, emailText});
+  //  let newTemp;
+  //  if((editor.getData()) != undefined){
+  //    newTemp = (editor.getData()).replaceAll(/"/g, '\'');
+  //   console.log("newTemp -"+newTemp)
+  // }
+  // setEmaildata({...emaildata,
+  //   email_text:,
+  // })
    
 
    
@@ -512,11 +517,11 @@ const SearchHandler=()=>{
             
               <div sm="12" className="mt-3">
                   <CKEditor
-                    editor={ClassicEditor}
+                    // editor={"classic"}
                        data={emaildata.email_text}
                       // value={emaildata.email_text}
-                       value="<p>Hi Rajaram Patidar</p>"
-                    onChange={EmailTextHandler}
+                      //  value="<p>Hi Rajaram Patidar</p>"
+                    onChange={(e)=>EmailTextHandler(e)}
                     name={"email_text"}
                     
                 

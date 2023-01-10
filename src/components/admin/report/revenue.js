@@ -35,6 +35,7 @@ const RevenueReport = () => {
 
   const [fromDate, setFromDate]=useState(moment().format("YYYY-MM-DD"));
   const [toDate,setToDate]=useState(moment().format("YYYY-MM-DD"))
+  const[prevDate,setPrevDate]=useState(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'))
   const [apicall,setapicall]=useState(false)
   const [tabledate, setTabledata]=useState([]) 
    const [RevenueError,setRevenueError]=useState("")
@@ -536,52 +537,84 @@ const optionss = {
         let value = e.target.value;
         console.log("---------------------------------------------"+value);
         if(value==1){
-          setFromDate(moment().format("YYYY-MM-DD"))
+          let preday=moment().format("YYYY-MM-DD")
+          setFromDate(preday)
           console.log("From date"+e.target.value)
           console.log("today")
           setToDate(moment().format("YYYY-MM-DD"))
-       
-
+          setPrevDate(moment(preday).subtract(1, 'days').startOf('days').format("YYYY-MM-DD"))
+          console.log("previous day"+ prevDate)
+           
         }
 
         if(value==2){
-          setFromDate(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'));
-          console.log("From date"+e.target.value);
+          let yesterday=moment().subtract(1, 'days').startOf('days').format("YYYY-MM-DD");
+          console.log("yesterday--"+yesterday)
+          setFromDate(yesterday);
+          // console.log("From date"+e.target.value);
          
           setToDate( moment().format("YYYY-MM-DD"));
-          console.log("yesterday--"+moment().subtract(1, 'day').startOf('day').format('YYYY-MM-DD'));
+          // console.log("yesterday--"+moment().subtract(1, 'day').startOf('day').format('YYYY-MM-DD'));
+          setPrevDate(moment(yesterday).subtract(1, 'days').startOf('days').format('YYYY-MM-DD'))
+          console.log("previous yesterday"+ prevDate)
 
         }
        if(value==3){
-           let from= moment().subtract(1, 'weeks').startOf('weeks').format('YYYY-MM-DD')
-          setFromDate(from);
+           let week= moment().subtract(1, 'weeks').startOf('weeks').format('YYYY-MM-DD')
+          setFromDate(week);
         
           console.log("From date"+e.target.value)
           
           setToDate( moment().format("YYYY-MM-DD")  );
-           console.log("ffff"+from)
-           console.log(" pre from date++++++++++ "+ moment(from).subtract(1, 'weeks').startOf('weeks').format('YYYY-MM-DD'))
+          setPrevDate(moment(week).subtract(1, 'weeks').startOf('weeks').format('YYYY-MM-DD'))
+           console.log(" previous week"+prevDate )
 
-          // console.log("last week"+moment().subtract(1, 'week').startOf('week').format('YYYY-MM-DD'))
+
        
        }
 
        if(value==4){
        
-       let mmm=moment().subtract(30, 'days').startOf('days').format('YYYY-MM-DD')
-        setFromDate(mmm);
+       let month=moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD')
+        setFromDate(month);
         console.log("From last month"+e.target.value)
-        setToDate(  moment().format("YYYY-MM-DD")    );
+        setToDate(  moment().format("YYYY-MM-DD")   );
         // setToDate("2022-12-14");
-        console.log("from monthhh"+mmm)
-        console.log(" pre from month++++++++++ "+ moment(mmm).subtract(30, 'days').startOf('days').format('YYYY-MM-DD'))
+        setPrevDate(moment(month).subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
+        console.log("previou month-"+prevDate)
         
      }
      if(value==5){
-      setFromDate(moment().subtract(6, 'month').startOf('month').format('YYYY-MM-DD') );
+      
+      let sixMonth=moment().subtract(6, 'month').startOf('month').format('YYYY-MM-DD')
+      setFromDate(sixMonth );
       console.log("From last 6 month"+e.target.value)
       setToDate( moment().format("YYYY-MM-DD") );
+      setPrevDate(moment(sixMonth).subtract(6, 'month').startOf('month').format('YYYY-MM-DD'))
+      console.log("previou 6 month-"+prevDate)
+        
    }
+
+   if(value==8){
+      
+    let ThisWeek=moment().subtract(7, 'days').startOf('days').format('YYYY-MM-DD')
+    setFromDate(ThisWeek);
+    console.log("From last 6 month"+e.target.value)
+    setToDate( moment().format("YYYY-MM-DD") );
+    setPrevDate(moment(ThisWeek).subtract(7, 'days').startOf('days').format('YYYY-MM-DD'))
+    console.log("previou 6 month-"+prevDate)
+      
+ }
+ if(value==9){
+      
+  let ThisMonth=moment().subtract(30, 'days').startOf('days').format('YYYY-MM-DD')
+  setFromDate(ThisMonth);
+  console.log("From last 6 month"+e.target.value)
+  setToDate( moment().format("YYYY-MM-DD") );
+  setPrevDate(moment(ThisMonth).subtract(30, 'days').startOf('days').format('YYYY-MM-DD'))
+  console.log("previou 6 month-"+prevDate)
+    
+}
 
    fetchData()
       }
@@ -590,6 +623,8 @@ const optionss = {
       const fetchData=()=>{
         console.log( "from_date------------------------------------"+fromDate)
         console.log( "to_date---------------------------------------"+toDate)
+        console.log( "Previous ---------------------------------------"+prevDate)
+      
         console.log( "brand----"+brandName)
         console.log( "locations by name----"+location)
 
@@ -601,6 +636,7 @@ const optionss = {
          {
            "from_date":fromDate,
               "to_date":toDate,
+
               "vendors_id":vendorId,
               "categorys":categoryId,
               "user_locations":location,
@@ -858,7 +894,9 @@ const SearchHandler=(e)=>{
               <option >Search by category</option>
               <option name="today" value={1}>Today</option>
               <option name="yesterday" value={2}>yesterday</option>
+              <option name="this_week" value={8}>this  week</option>
               <option name="last_week" value={3}>Last week</option>
+              <option name="this_week" value={9}>This  month</option>
               <option name="last_month" value={4}>last month</option>
               <option name="last_6_month" value={5}>last 6  month</option>
               {/* <option name="custom_month" value="6">custom month</option> */}
