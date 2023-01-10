@@ -60,10 +60,6 @@ const[ productTagSearch,setProductTagSearch]=useState("")
   const OnCtegorySearch = (e) => {
      setCategorySearch(e.target.value )
    
-    // console.log("searchblog.category"+e.target.value)
-    // console.log("hiiiiiiiiiiiiii"+JSON.stringify(categoryArray))
-
-   
   }
   const onRecentSearch=(e)=>{
     setRecent(e.target.value)
@@ -174,6 +170,7 @@ const AddBlog = (e,id) => {
   if (form.checkValidity() === true) {
     e.preventDefault();
     const formData = new FormData();
+    
     formData.append("image",file);
     formData.append("filename", fileName);
     formData.append("admin_id",admid);
