@@ -1019,7 +1019,7 @@ console.log("----taxes"+JSON.stringify(variantmainarray))
       });
     e.preventDefault();
      mainformRef.current.reset();
-     setpdata('');
+    //  setpdata('');
     setValidated(false);
      handleClose();
   };
