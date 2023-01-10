@@ -579,12 +579,18 @@ for(let i=0 ; i < arr.length; i++){
                       name={"category_type"}
                     >
                        <option selected= {CategoryEditdata.category_type='' ?true :false} value="">Search by category type</option>
+                       <option selected= {CategoryEditdata.category_type='Cloths' ?true :false} value="Cloths">Cloths</option>
+                       <option selected= {CategoryEditdata.category_type='Food' ?true :false} value="Food">Food</option>
+                       <option selected= {CategoryEditdata.category_type='Beauty & Personal care' ?true :false} value="Beauty & Personal care">Beauty & Personal care</option>
+                       <option selected= {CategoryEditdata.category_type='Mobiles' ?true :false} value="Mobiles">Mobiles</option>
+                       <option selected= {CategoryEditdata.category_type='Two wheelers' ?true :false} value="Two wheelers">Two wheelers</option>
+                       <option selected= {CategoryEditdata.category_type='Home Applience' ?true :false} value="Home Applience">Home Applience</option>
                       <option selected= {CategoryEditdata.category_type='Grocery' ?true :false} value="Grocery">Grocery</option>
                       <option selected= {CategoryEditdata.category_type='Health' ?true :false} value="Health">Health</option>
                       <option selected= {CategoryEditdata.category_type='Fashion' ?true :false} value="Fashion">Fashion</option>
                       <option selected= {CategoryEditdata.category_type='Electronic' ?true :false} value="Electronic">Electronic</option>
-                      <option selected= {CategoryEditdata.category_type='Sports & Accessor' ?true :false} value="Sports & Accessor">
-                        Sports & Accessor
+                      <option selected= {CategoryEditdata.category_type='Sports & Accessories' ?true :false} value="Sports & Accessories">
+                        Sports & Accessories
                       </option>
                     </Form.Select>
                     <Form.Control.Feedback type="invalid" className="h6">
