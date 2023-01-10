@@ -528,6 +528,7 @@ const optionss = {
       
       
 
+   
 
       const TimeChange = (e)=>{
         setFilterchange(e.target.value)
@@ -539,6 +540,8 @@ const optionss = {
           console.log("From date"+e.target.value)
           console.log("today")
           setToDate(moment().format("YYYY-MM-DD"))
+       
+
         }
 
         if(value==2){
@@ -550,23 +553,28 @@ const optionss = {
 
         }
        if(value==3){
-          setFromDate( moment().subtract(1, 'weeks').startOf('weeks').format('YYYY-MM-DD')  );
+           let from= moment().subtract(1, 'weeks').startOf('weeks').format('YYYY-MM-DD')
+          setFromDate(from);
         
           console.log("From date"+e.target.value)
           
           setToDate( moment().format("YYYY-MM-DD")  );
+           console.log("ffff"+from)
+           console.log(" pre from date++++++++++ "+ moment(from).subtract(1, 'weeks').startOf('weeks').format('YYYY-MM-DD'))
+
           // console.log("last week"+moment().subtract(1, 'week').startOf('week').format('YYYY-MM-DD'))
        
        }
 
        if(value==4){
        
-
-        setFromDate(moment().subtract(1, 'months').startOf('months').format('YYYY-MM-DD'));
+       let mmm=moment().subtract(30, 'days').startOf('days').format('YYYY-MM-DD')
+        setFromDate(mmm);
         console.log("From last month"+e.target.value)
         setToDate(  moment().format("YYYY-MM-DD")    );
         // setToDate("2022-12-14");
-  
+        console.log("from monthhh"+mmm)
+        console.log(" pre from month++++++++++ "+ moment(mmm).subtract(30, 'days').startOf('days').format('YYYY-MM-DD'))
         
      }
      if(value==5){
@@ -580,8 +588,8 @@ const optionss = {
 
       
       const fetchData=()=>{
-        console.log( "from_date---"+fromDate)
-        console.log( "to_date----"+toDate)
+        console.log( "from_date------------------------------------"+fromDate)
+        console.log( "to_date---------------------------------------"+toDate)
         console.log( "brand----"+brandName)
         console.log( "locations by name----"+location)
 

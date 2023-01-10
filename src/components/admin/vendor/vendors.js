@@ -111,7 +111,7 @@ let docuarr;
             height="90px"
             width="75px"
             alt={row.owner_name}
-            src={(row.shop_logo).replace("public","")?(row.shop_logo).replace("public",""):"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"}
+             src={(row.shop_logo)?(row.shop_logo):"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"}
             style={{
               borderRadius: 10,
               paddingTop: 10,
@@ -283,7 +283,6 @@ let docuarr;
         [e.target.name]: e.target.value,
         
       });
-      console.log("dataa"+JSON.stringify(addvendordata))
     };
   const handleClose = () => {
     formRef.current.reset();
@@ -316,22 +315,6 @@ let docuarr;
       let strCopy = (response.data[0].document_name).split(",");
 
      setDocnameArray(strCopy)
-     
-      // docuarr =response.data[0].document_name;
-      
-     console.log("clcikeddd______------"+response.data[0].document_name);
-     console.log("clcikedd____________------"+typeof response.data[0].document_name);
-
-     
-     console.log("(response.data)_______________________________"+JSON.stringify(response.data[0]));
-     
-
-    //  let i = JSON.parse(response.data[0].social_media_links);
-    // console.log("---iiiii"+ typeof i)
-
-    // console.log("---docname"+ JSON.stringify(i[0]))
-    // console.log("---docname"+ (response.data[0].social_media_links))
-
       setapicall(false);
     })
     .catch(function(error) {
@@ -345,8 +328,6 @@ let docuarr;
     setaddtag(e.target.value);
   };
   const onDocuAddclick = (e) => {
-    
-    // e.preventDefault();
     setDocnameArray(Docnamearray => [...Docnamearray, addtag]);
      setaddtag('');
   
@@ -389,15 +370,15 @@ let docuarr;
 
   const [vendorID ,setVendorId]=useState("")
 const handleDocsShow=(id)=>{
-  console.log("id- in show----------"+id)
+  // console.log("id- in show----------"+id)
   setVendorId(id)
   setDocsShow(true)
   onImgView(id);
 }
-const handleDocsClose=()=>{
-   formRef.current.reset();
+const handleDocsClose=(e)=>{
+  e.preventDefault()
   setDocsShow(false)
-  setapicall(true)
+ 
   
 }
 
@@ -421,10 +402,12 @@ const handleDocsClose=()=>{
     // e.preventDefault()
     console.log("Out id--"+vendorID)
     for (let i = 0; i < e.target.files.length; i++) {
+    console.log("i   -- "+i)
      
       
       encoded = await convertToBase64(e.target.files[i]);
 
+    console.log("encoded--"+encoded)
      
 
       const [first, ...rest] = encoded.base64.split(",");
@@ -445,6 +428,8 @@ const handleDocsClose=()=>{
     // image
     // console.log("image lenth-----"+newImageUrls.length)
     if(newImageUrls.length<=5){
+      console.log("ImgObj --  "+JSON.stringify(ImgObj));
+      console.log("newImageUrls.length --  "+newImageUrls.length);
       axios
       .post(`${process.env.REACT_APP_BASEURL}/vendor_documents_upload`, ImgObj)
       .then((response) => {
@@ -1285,11 +1270,11 @@ useEffect(()=>{
           <Modal
           size="lg"
           show={docsshow}
-          onHide={ handleDocsClose}
+          onHide={ (e)=>{ handleDocsClose(e)}}
           
         >
           <Form ref={formRef}>
-            <Modal.Header closeButton>
+            <Modal.Header >
               <Modal.Title>Add Images and Documents</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -1301,8 +1286,7 @@ useEffect(()=>{
                 >
                   <Form.Label>Documents Upload </Form.Label>
                   <Form.Control
-                    
-                    multiple={true}
+                    multiple
                     type="file"
                     placeholder="multiple document upload"
                     name={"img_64"}
@@ -1314,7 +1298,7 @@ useEffect(()=>{
               </div>
               </div>
               <Table >
-                 <tbody>   {  console.log("image lenth-----"+newImageUrls.length)}
+                 <tbody>  
                            {newImageUrls? (
 
                                           <tr className="d-flex flex-wrap">
@@ -1360,7 +1344,7 @@ useEffect(()=>{
             <Modal.Footer>
               <button
                 className="button main_outline_button"
-                onClick={ handleDocsClose}
+                onClick={(e)=> handleDocsClose(e)}
               >
                 Cancel
               </button>

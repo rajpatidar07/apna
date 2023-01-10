@@ -17,6 +17,7 @@ import { data } from "jquery";
 let categoryArray=[];
 const BlogList = () => {
   const formRef = useRef();
+  const [changstatus, setchangstatus] = useState('');
   const[apicall,setapicall]=useState(false);
   const [validated, setValidated] = useState(false);
   const [show, setShow] = useState("");
@@ -26,6 +27,8 @@ const BlogList = () => {
   const [image,setImage]=useState();
   const [DocuImgarray, setDocuImgArray] = useState([]);
   const[id,setId]=useState('');
+  const[status,setStatus]=useState('')
+
   const[blog,setBlog]=useState([]);
   const
    [addblog, setaddBlog] = useState({
@@ -262,7 +265,7 @@ console.log("newwwwwwwwww consoleeeeeeee"+id)
             height="90px"
             width="75px"
             alt={row.owner_name}
-            src={(row.image)}
+            src={row.image}
             style={{
               borderRadius: 10,
               paddingTop: 10,
@@ -319,6 +322,28 @@ console.log("newwwwwwwwww consoleeeeeeee"+id)
         center: true,
       },
       {
+        name: "Status",
+        selector: (row) => (
+         
+          <Badge  bg= {row.status === "approved"
+          ?"success":row.status === "pending" ? "warning": row.status=== "published"?"info" :null}>{row.status}</Badge>
+        ),
+        sortable: true,
+        width: "120px",
+        // center: true,
+      },
+      {
+        name: "Change Status",
+        selector: (row) => (
+          <Form.Select aria-label="Search by delivery" size="sm" className="w-100" onChange={(e)=>onStatusChange(e,row.id,row.status)} name='status' >
+            <option value="pending" selected={row.status === 'pending' ? true : false}>Pending</option>
+            <option value="published"  selected={row.status === 'published' ? true : false}>Published</option>
+            <option value="approved" selected={row.status === 'approved' ? true : false}>Approved  </option>
+          </Form.Select>
+        ),      
+        sortable: true,
+      },
+      {
         name: "ACTION",
         center: true,
         selector: (row) => (
@@ -349,6 +374,24 @@ console.log("newwwwwwwwww consoleeeeeeee"+id)
   // var Newlogo = logo.replace("/public", "");
   // var imgdata =docsdata.replace("/public", "");
     // console.log("dataaSHOWWWWWWWWWWWWW"+JSON.stringify(searchdata))
+
+    const onStatusChange = (e,id) => {
+      // e.prevantDefault();
+      setchangstatus(e.target.value)
+      axios.put(`${process.env.REACT_APP_BASEURL}/update_blog_status`, {
+      status:e.target.value,
+      
+      "id":`${id}`
+        }).then((response) => {
+          let data=response.data
+          setStatus(data)
+        setapicall(true)
+      }).catch(function (error) {
+        console.log(error);
+      });
+    } 
+    console.log("kkkkkkkkkkkkkkkkkk"+JSON.stringify(status))
+
   return (
     <div>
       <h2>Blog List</h2>

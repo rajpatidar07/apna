@@ -26,6 +26,7 @@ import { Button } from "react-bootstrap";
 import { GiCancel } from "react-icons/gi";
 import moment from "moment/moment";
 import demo from "../../images/demo.jpg";
+import BrandJson from "./json/BrandJson";
 let categoryArray = [];
 let encoded;
 // let newImageUrls = [];
@@ -67,8 +68,8 @@ function Product() {
     product_id: "",
     unit: "",
     colors: "",
-    unit_quantity: "",
-    size: "",
+    unit_quantity: null,
+    size: null,
     product_price: "",
     mrp: "",
     sale_price: "",
@@ -111,7 +112,7 @@ function Product() {
     variety: false,
     product_description: "",
     other_introduction: "",
-    is_active: "0",
+    // is_active: "0",
     vendor_id: "",
     shop: "",
     show_product_rating: "0",
@@ -126,6 +127,15 @@ function Product() {
 const [newImageUrls,setnewImageUrls] = useState([])
 const [variantremove,setVariantRemove] = useState([])
 const [editbutton , setEditButton]= useState(false)
+const [taxdata,settaxdata] = useState({
+  wholesale_sales_tax: "0",
+  gst: "0",
+  cgst: "0",
+  sgst: "0",
+  retails_sales_tax: "0",
+  value_added_tax: "0",
+  manufacturers_sales_tax: "0",
+})
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
   };
@@ -180,6 +190,12 @@ const [editbutton , setEditButton]= useState(false)
   //
   let filtered;
   const handleAlert = (id) => {
+    setVariantRemove({...variantremove, 
+      id:id[0],
+     productid:id[1]
+     })
+
+
     setvariantid(id[0]);
     setproductid(id[1]);
     setAlert(true);
@@ -204,7 +220,7 @@ const [editbutton , setEditButton]= useState(false)
           // height="90px"
           // width="75px"
           alt={"apna_organic"}
-          src={row.all_images? row.all_images:"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"}
+          src={row.all_images? row.all_images:"https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"}
           style={{
             padding: 10,
             textAlign: "right",
@@ -226,7 +242,7 @@ const [editbutton , setEditButton]= useState(false)
             <b>
               {row.product_title_name}
               <br />
-              SKU: {row.product_id} <br />
+              Product ID: {row.product_id} <br />
               <div
                 dangerouslySetInnerHTML={{ __html: pdata.product_description }}
                 className="editor"
@@ -557,6 +573,7 @@ const  getProductVariant = (id) =>{
   )
   .then((response) => {
     setvdata(response.data.results);
+    settaxdata(response.data.results[0])
     setvariantarray({
       ...variantarray,
       product_id: id,
@@ -571,17 +588,17 @@ const  getProductVariant = (id) =>{
     getProductVariant(id);
     // image show
 
-    axios
-      .get(
-        `${process.env.REACT_APP_BASEURL}/product_images_get?product_id=${id}&product_verient_id=11`
-      )
-      .then((response) => {
-        console.log("-----response" + JSON.stringify(response.data));
-        setvariantapicall(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    // axios
+    //   .get(
+    //     `${process.env.REACT_APP_BASEURL}/product_images_get?product_id=${id}&product_verient_id=11`
+    //   )
+    //   .then((response) => {
+    //     console.log("-----response" + JSON.stringify(response.data));
+    //     setvariantapicall(false);
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //   });
     setvarietyShow(true);
   };
 
@@ -591,6 +608,7 @@ const  getProductVariant = (id) =>{
 
   const handleClose = () => {
     mainformRef.current.reset();
+    // setproductdata("")
     setValidated(false);
     setmodalshow(false);
   };
@@ -650,6 +668,7 @@ const  getProductVariant = (id) =>{
   ) => {
     for (let i = 0; i < e.target.files.length; i++) {
       let coverimg;
+      
       if(newImageUrls.length === 0 && i===0){
         coverimg = 'cover'
       }
@@ -673,6 +692,7 @@ const  getProductVariant = (id) =>{
     axios
       .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
       .then((response) => {
+        ImgObj=[]
         onImgView(id,product_id);
       })
       .catch(function (error) {
@@ -743,16 +763,19 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
   let saleprice =(product_price) 
   + 
   (
-    (product_price*(productdata.gst/100) )
+    (product_price*(taxdata.gst/100) )
   +
-  (product_price*(productdata.wholesale_sales_tax/100))
+  (product_price*(taxdata.wholesale_sales_tax/100))
   +
-  (product_price*(productdata.retails_sales_tax/100))
+  (product_price*(taxdata.retails_sales_tax/100))
   +
-(product_price*(productdata.value_added_tax/100))
+(product_price*(taxdata.value_added_tax/100))
 +
-(product_price*(productdata.manufacturers_sales_tax/100))
+(product_price*(taxdata.manufacturers_sales_tax/100))
 )
+console.log("----taxes"+JSON.stringify(variantmainarray))
+
+
   useEffect(() => {
     setvariantarray({
       ...variantarray,
@@ -760,7 +783,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
       product_price: `${product_price}`,
       sale_price:`${saleprice}`
     });
-  }, [variantarray.mrp,variantarray.discount,productdata]);
+  }, [variantarray.mrp,variantarray.discount,taxdata]);
   const handleInputcheckboxChange = (e) => {
     const target = e.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
@@ -779,7 +802,8 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
 
   const onVariantaddclick = (id,productid) => {
     // id.preventDefault();
-    if (id === "" || id === undefined || id === null) {
+    console.log("-id"+id)
+    if (id == "" || id == undefined || id == null) {
       axios
         .post(
           `${process.env.REACT_APP_BASEURL}/products_varient_add`,
@@ -787,7 +811,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
         )
         .then((response) => {
           getProductVariant(productid)
-          formRef.reset();
+          // formRef.reset();
         })
         .catch(function (error) {
           console.log(error);
@@ -830,6 +854,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
       return{...variantremove,  id : id, productid:productid }});
   };
   const hideAlert = () => {
+   
     // product delete
     axios
       .put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
@@ -912,6 +937,10 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
       ...productdata,
       [e.target.name]: e.target.value,
     });
+    settaxdata({
+      ...taxdata,
+      [e.target.name]: e.target.value,
+    })
   };
   const handleVendorNameChange = (e) => {
     let arr = e.target.value.split(',')
@@ -989,10 +1018,10 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
         setapicall(true);
       });
     e.preventDefault();
-    // mainformRef.current.reset();
-    // setpdata('');
+     mainformRef.current.reset();
+    //  setpdata('');
     setValidated(false);
-    // handleClose();
+     handleClose();
   };
   const handleUpdateProduct = (e) => {
     // productdataa.push(productdata)
@@ -1188,10 +1217,12 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                             }
                           >
                             <option value={""}>Select Brand</option>
-                            <option value="puma">Puma</option>
-                            <option value="mamaearth">Mamaearth</option>
-                            <option value="adidas">Adidas</option>
-                            <option value="sketchers">Sketchers</option>
+                            {BrandJson.BrandJson.map((item)=>{return(
+                            <>
+                            <option value={item}>{item}</option>
+                            </>)})}
+                           
+                           
                           </Form.Select>
                         </Col>
                       </Form.Group>
@@ -1744,7 +1775,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                           <InputGroup className="" size="sm">
                                             <Form.Control
                                               value={
-                                                variantarray.unit === "color"
+                                                variantarray.unit === "pcs"
                                                   ? variantarray.size
                                                   : ""
                                               }
@@ -1843,7 +1874,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                               }
                                               name={"sale_price"}
                                               value={
-                                                (product_price) 
+                                                ((product_price) 
                                                 + 
                                                 (
                                                   (product_price*productdata.gst/100 )
@@ -1855,7 +1886,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                               (product_price*productdata.value_added_tax/100)
                                               +
                                               (product_price*productdata.manufacturers_sales_tax/100)
-                                              )
+                                              )).toFixed(2)
                                             }
                                             />
                                           </InputGroup>
@@ -1980,6 +2011,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
 
                                     {(variantmainarray || []).map(
                                       (variantdata, i) => {
+                                       console.log(variantdata.special_offer)
                                         return (
                                           <tr>
                                             <td className="p-0 text-center ">
@@ -2019,13 +2051,13 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                             </td>
                                             
                                             <td className="p-0 text-center ">
-                                              {variantdata.sale_price}
+                                              {saleprice}
                                             </td>
                                             <td className="p-0 text-center ">
-                                              {variantdata.special_offer}
+                                              {`${variantdata.special_offer}`}
                                             </td>
                                             <td className="p-0 text-center ">
-                                              {variantdata.featured_product}
+                                              {`${variantdata.featured_product}`}
                                             </td>
                                             <td className="p-0 text-center ">
                                               {variantdata.manufacturing_date}
@@ -2037,14 +2069,6 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                               {variantdata.quantity}
                                             </td>
                                             <td className="p-0 text-center">
-                                              {/* <Button variant="text-danger" className="addcategoryicon text-danger"
-                        onClick={(id) => VariantRemoveClick(variantdata.id)} size="sm">
-                        &times;
-                      </Button>
-                      <Button variant="text-danger" className="addcategoryicon text-danger"
-                        onClick={(id) => VariantEditClick(variantdata.id)} size="sm">
-                        <MdOutlineEdit />
-                      </Button> */}
                                             </td>
                                           </tr>
                                         );
@@ -2463,7 +2487,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                         }
                                         onChange={(e) => onVariantChange(e)}
                                         name={"mrp"}
-                                        value={variantarray.mrp}
+                                        value={Number(variantarray.mrp).toFixed(2)}
                                       />
                                     </InputGroup>
                                   </div>
@@ -2497,7 +2521,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                         }
                                         onChange={(e) => onVariantChange(e)}
                                         name={"product_price"}
-                                        value={variantarray.product_price}
+                                        value={Number(variantarray.product_price).toFixed(2)}
                                       />
                                     </InputGroup>
                                   </div>
@@ -2517,19 +2541,21 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                         }
                                         onChange={(e) => onVariantChange(e)}
                                         name={"sale_price"}
-                                        value={vdata[0] === '' ? (product_price) 
-                                          + 
-                                          (
-                                            (product_price*vdata[0].gst/100 )
-                                          +
-                                          (product_price*vdata[0].wholesale_sales_tax/100)
-                                          +
-                                          (product_price*vdata[0].retails_sales_tax/100)
-                                          +
-                                        (product_price*vdata[0].value_added_tax/100)
-                                        +
-                                        (product_price*vdata[0].manufacturers_sales_tax/100)
-                                        ) : null}
+                                        value={Number(variantarray.sale_price).toFixed(2)}
+                                      //     vdata[0] === '' ? (product_price) 
+                                      //     + 
+                                      //     (
+                                      //       (product_price*vdata[0].gst/100 )
+                                      //     +
+                                      //     (product_price*vdata[0].wholesale_sales_tax/100)
+                                      //     +
+                                      //     (product_price*vdata[0].retails_sales_tax/100)
+                                      //     +
+                                      //   (product_price*vdata[0].value_added_tax/100)
+                                      //   +
+                                      //   (product_price*vdata[0].manufacturers_sales_tax/100)
+                                      //   ) : null
+                                      // }
                                       />
                                     </InputGroup>
                                   </div>
@@ -2690,16 +2716,17 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                               : null}
                                           </td>
                                           <td className="p-0 text-center ">
-                                            {variantdata.mrp}
+                                            {Number(variantdata.mrp).toFixed(2)}
                                           </td>
                                           <td className="p-0 text-center ">
-                                            {variantdata.product_price}
+                                            {Number(variantdata.discount).toFixed(2)}
                                           </td>
                                           <td className="p-0 text-center ">
-                                            {variantdata.discount}
+                                            {Number(variantdata.product_price).toFixed(2)}
                                           </td>
+                                         
                                           <td className="p-0 text-center ">
-                                            {variantdata.sale_price}
+                                            {(variantdata.sale_price).toFixed(2)}
                                           </td>
                                           <td className="p-0 text-center ">
                                             {variantdata.special_offer}
@@ -2780,7 +2807,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                             </Button>
                                           </td>
                                         </tr>
-
+                                         {console.log("img lenth---"+newImageUrls.length)}
                                         {newImageUrls ? (
                                           <tr className="img_preview_boxx">
                                             {newImageUrls.map((imgg, i) => {
