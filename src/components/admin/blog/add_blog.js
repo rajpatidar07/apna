@@ -20,6 +20,7 @@ const BlogList = () => {
   const [changstatus, setchangstatus] = useState('');
   const[apicall,setapicall]=useState(false);
   const [validated, setValidated] = useState(false);
+  
   const [show, setShow] = useState("");
   const [Alert, setAlert] = useState(false);
   const [file, setFile] = useState();
@@ -241,6 +242,9 @@ const hideAlert = () =>{
 setapicall(true)
 setAlert(false);
 } 
+const closeAlert=()=>{
+  return false;
+}
 console.log("newwwwwwwwww consoleeeeeeee"+id)
     const columns = [
       {

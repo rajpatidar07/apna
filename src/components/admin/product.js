@@ -852,6 +852,7 @@ console.log("----taxes"+JSON.stringify(variantmainarray))
     setAlert(true);
     setVariantRemove((variantremove) =>{  
       return{...variantremove,  id : id, productid:productid }});
+      console.log("dfjghhhhhhhhhhhhhhhhhhhh"+variantremove)
   };
   const hideAlert = () => {
    
@@ -1092,6 +1093,7 @@ console.log("----taxes"+JSON.stringify(variantmainarray))
 
           <div className="col-md-3 col-sm-6 aos_input">
             <MainButton
+
               btntext={"Search"}
               btnclass={"button main_button w-100"}
             />
@@ -2005,6 +2007,7 @@ console.log("----taxes"+JSON.stringify(variantmainarray))
                                           >
                                             +
                                           </Button>
+                                         
                                         </div>
                                       </td>
                                     </tr>
@@ -2070,6 +2073,34 @@ console.log("----taxes"+JSON.stringify(variantmainarray))
                                             </td>
                                             <td className="p-0 text-center">
                                             </td>
+                                            <td className="p-0 text-center">
+                                            <Button
+                                              variant="text-danger"
+                                              className="addcategoryicon text-danger"
+                                              onClick={(id) =>
+                                                VariantRemoveClick(
+                                                  variantdata.id,
+                                                  variantdata.product_id
+                                                )
+                                              }
+                                              size="sm"
+                                            >
+                                              &times;
+                                            </Button>
+                                            {/* <Button
+                                              variant="text-danger"
+                                              className="addcategoryicon text-danger"
+                                              onClick={(id) =>
+                                                VariantEditClick(
+                                                  variantdata.id,
+                                                  variantdata.product_id
+                                                )
+                                              }
+                                              size="sm"
+                                            >
+                                              <MdOutlineEdit />
+                                            </Button> */}
+                                          </td>
                                           </tr>
                                         );
                                       }
@@ -2940,7 +2971,7 @@ console.log("----taxes"+JSON.stringify(variantmainarray))
           text="Are you Sure you want to delete"
           onConfirm={hideAlert}
           showCancelButton={true}
-          onCancel={hideAlert}
+          // onCancel={hideAlert}
         />
       </div>
     </div>

@@ -1060,8 +1060,12 @@ const Addproduct = (props) => {
                           sm="9 d-flex align-items-end"
                         >
                           {pdata.featured_product === true ?
-                            <Form.Check className="mx-0" value={pdata.featured_product ? true : false} name='featured_product' onChange={handleInputcheckboxChange} checked /> : <Form.Check className="mx-2" value={pdata.featured_product ? true : false} name='featured_product' onChange={handleInputcheckboxChange} />
+                            <Form.Check className="mx-0" value={pdata.featured_product ? true : false}
+                             name='featured_product' onChange={handleInputcheckboxChange} checked /> :
+                           <Form.Check className="mx-2" value={pdata.featured_product ? true : false} 
+                           name='featured_product' onChange={handleInputcheckboxChange} />
                           }
+                          
                           Featured Product
                         </Form.Label>
                       </Form.Group>
@@ -1092,6 +1096,7 @@ const Addproduct = (props) => {
                           onClick={() => ontagaddclick()} size="sm">
                           +
                         </Button>
+                        
                       </InputGroup>
 
                     </div>
@@ -1194,6 +1199,7 @@ const Addproduct = (props) => {
                             onClick={() => handleAddClick()} size="sm">
                             +
                           </Button>
+                        
                         </td>
                       </tr>
                       {(pdata.add_custom_input || []).map((variantdata, i) => {
@@ -1575,7 +1581,7 @@ const Addproduct = (props) => {
                                   <td className="p-0 text-center">
                                     <Button variant="text-danger" className="addcategoryicon text-danger"
                                       onClick={() => VariantRemoveClick(variantdata)} size="sm">
-                                      &times;
+                                      x
                                     </Button>
                                     <Button variant="text-danger" className="addcategoryicon text-danger"
                                       onClick={() => VariantEditClick(variantdata)} size="sm">
