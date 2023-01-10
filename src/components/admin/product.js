@@ -190,6 +190,12 @@ const [taxdata,settaxdata] = useState({
   //
   let filtered;
   const handleAlert = (id) => {
+    setVariantRemove({...variantremove, 
+      id:id[0],
+     productid:id[1]
+     })
+
+
     setvariantid(id[0]);
     setproductid(id[1]);
     setAlert(true);
@@ -236,7 +242,7 @@ const [taxdata,settaxdata] = useState({
             <b>
               {row.product_title_name}
               <br />
-              SKU: {row.product_id} <br />
+              Product ID: {row.product_id} <br />
               <div
                 dangerouslySetInnerHTML={{ __html: pdata.product_description }}
                 className="editor"
@@ -602,6 +608,7 @@ const  getProductVariant = (id) =>{
 
   const handleClose = () => {
     mainformRef.current.reset();
+    // setproductdata("")
     setValidated(false);
     setmodalshow(false);
   };
@@ -661,6 +668,7 @@ const  getProductVariant = (id) =>{
   ) => {
     for (let i = 0; i < e.target.files.length; i++) {
       let coverimg;
+      
       if(newImageUrls.length === 0 && i===0){
         coverimg = 'cover'
       }
@@ -684,6 +692,7 @@ const  getProductVariant = (id) =>{
     axios
       .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
       .then((response) => {
+        ImgObj=[]
         onImgView(id,product_id);
       })
       .catch(function (error) {
@@ -1008,10 +1017,10 @@ console.log("----taxes"+JSON.stringify(variantmainarray))
         setapicall(true);
       });
     e.preventDefault();
-    // mainformRef.current.reset();
-    // setpdata('');
+     mainformRef.current.reset();
+     setpdata('');
     setValidated(false);
-    // handleClose();
+     handleClose();
   };
   const handleUpdateProduct = (e) => {
     // productdataa.push(productdata)
@@ -2797,7 +2806,7 @@ console.log("----taxes"+JSON.stringify(variantmainarray))
                                             </Button>
                                           </td>
                                         </tr>
-
+                                         {console.log("img lenth---"+newImageUrls.length)}
                                         {newImageUrls ? (
                                           <tr className="img_preview_boxx">
                                             {newImageUrls.map((imgg, i) => {
