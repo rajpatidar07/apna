@@ -111,7 +111,7 @@ function Product() {
     variety: false,
     product_description: "",
     other_introduction: "",
-    is_active: "0",
+    // is_active: "0",
     vendor_id: "",
     shop: "",
     show_product_rating: "0",
@@ -189,6 +189,10 @@ const [taxdata,settaxdata] = useState({
   //
   let filtered;
   const handleAlert = (id) => {
+    setVariantRemove({...variantremove, 
+      id:id[0],
+     productid:id[1]
+     })
     setvariantid(id[0]);
     setproductid(id[1]);
     setAlert(true);
@@ -843,6 +847,7 @@ console.log("----taxes"+JSON.stringify(variantmainarray))
       return{...variantremove,  id : id, productid:productid }});
   };
   const hideAlert = () => {
+   
     // product delete
     axios
       .put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
