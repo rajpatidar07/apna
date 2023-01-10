@@ -17,8 +17,10 @@ import { data } from "jquery";
 let categoryArray=[];
 const BlogList = () => {
   const formRef = useRef();
+  const [changstatus, setchangstatus] = useState('');
   const[apicall,setapicall]=useState(false);
   const [validated, setValidated] = useState(false);
+  
   const [show, setShow] = useState("");
   const [Alert, setAlert] = useState(false);
   const [file, setFile] = useState();
@@ -26,6 +28,8 @@ const BlogList = () => {
   const [image,setImage]=useState();
   const [DocuImgarray, setDocuImgArray] = useState([]);
   const[id,setId]=useState('');
+  const[status,setStatus]=useState('')
+
   const[blog,setBlog]=useState([]);
   const
    [addblog, setaddBlog] = useState({
@@ -37,6 +41,7 @@ const BlogList = () => {
     product_tag: "",
     publish_date: ""
 }); 
+console.log("======================"+JSON.stringify(addblog))
 const [searchdata, setsearchData] = useState([]);
 // const [searchblog, setsearchBlog] = useState({
 //   id:"",
@@ -58,10 +63,6 @@ const[ productTagSearch,setProductTagSearch]=useState("")
   // }
   const OnCtegorySearch = (e) => {
      setCategorySearch(e.target.value )
-   
-    // console.log("searchblog.category"+e.target.value)
-    // console.log("hiiiiiiiiiiiiii"+JSON.stringify(categoryArray))
-
    
   }
   const onRecentSearch=(e)=>{
@@ -173,6 +174,7 @@ const AddBlog = (e,id) => {
   if (form.checkValidity() === true) {
     e.preventDefault();
     const formData = new FormData();
+    
     formData.append("image",file);
     formData.append("filename", fileName);
     formData.append("admin_id",admid);
@@ -240,6 +242,9 @@ const hideAlert = () =>{
 setapicall(true)
 setAlert(false);
 } 
+const closeAlert=()=>{
+  return false;
+}
 console.log("newwwwwwwwww consoleeeeeeee"+id)
     const columns = [
       {
@@ -271,7 +276,7 @@ console.log("newwwwwwwwww consoleeeeeeee"+id)
               paddingBottom: 10,
               textAlign: "right",
             }}
-            onClick={() => handleClick()}
+            // onClick={() => handleClick()}
           />
           </>
         ),
@@ -321,6 +326,28 @@ console.log("newwwwwwwwww consoleeeeeeee"+id)
         center: true,
       },
       {
+        name: "Status",
+        selector: (row) => (
+         
+          <Badge  bg= {row.status === "approved"
+          ?"success":row.status === "pending" ? "warning": row.status=== "published"?"info" :null}>{row.status}</Badge>
+        ),
+        sortable: true,
+        width: "120px",
+        // center: true,
+      },
+      {
+        name: "Change Status",
+        selector: (row) => (
+          <Form.Select aria-label="Search by delivery" size="sm" className="w-100" onChange={(e)=>onStatusChange(e,row.id,row.status)} name='status' >
+            <option value="pending" selected={row.status === 'pending' ? true : false}>Pending</option>
+            <option value="published"  selected={row.status === 'published' ? true : false}>Published</option>
+            <option value="approved" selected={row.status === 'approved' ? true : false}>Approved  </option>
+          </Form.Select>
+        ),      
+        sortable: true,
+      },
+      {
         name: "ACTION",
         center: true,
         selector: (row) => (
@@ -346,11 +373,29 @@ console.log("newwwwwwwwww consoleeeeeeee"+id)
     t.product_tag == thing.product_tag
   )))
   const handleClick = () => {};
-  let logo = `${process.env.REACT_APP_BASEURL}/${addblog.image}`
-  let docsdata = `${process.env.REACT_APP_BASEURL}/${DocuImgarray}`
-  var Newlogo = logo.replace("/public", "");
+  // let logo = `${process.env.REACT_APP_BASEURL}/${addblog.image}`
+  // let docsdata = `${process.env.REACT_APP_BASEURL}/${DocuImgarray}`
+  // var Newlogo = logo.replace("/public", "");
   // var imgdata =docsdata.replace("/public", "");
     // console.log("dataaSHOWWWWWWWWWWWWW"+JSON.stringify(searchdata))
+
+    const onStatusChange = (e,id) => {
+      // e.prevantDefault();
+      setchangstatus(e.target.value)
+      axios.put(`${process.env.REACT_APP_BASEURL}/update_blog_status`, {
+      status:e.target.value,
+      
+      "id":`${id}`
+        }).then((response) => {
+          let data=response.data
+          setStatus(data)
+        setapicall(true)
+      }).catch(function (error) {
+        console.log(error);
+      });
+    } 
+    console.log("kkkkkkkkkkkkkkkkkk"+JSON.stringify(status))
+
   return (
     <div>
       <h2>Blog List</h2>
@@ -502,7 +547,7 @@ console.log("newwwwwwwwww consoleeeeeeee"+id)
               <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicStartDate">
                     <Form.Label>Publish Date</Form.Label>
-                    <Form.Control  name='publish_date'  type="date" value={addblog.publishDate} onChange={(e) => handleFormChange(e)} placeholder="Coupon Start Date" />
+                    <Form.Control  name='publish_date'  type="date" value={addblog.publish_date} onChange={(e) => handleFormChange(e)} placeholder="Coupon Start Date" />
                     <Form.Control.Feedback type="invalid" className="h6">
                       Please fill date
                     </Form.Control.Feedback>
@@ -558,7 +603,7 @@ console.log("newwwwwwwwww consoleeeeeeee"+id)
                   <Form.Control
                     // onChange={(e) => saveFile(e)}
                     onChange={(e) => ImgFormChange(e)}
-                    src={Newlogo}
+                    src={addblog.image}
                     type="file"
                     placeholder="Shop_logo"
                     name={"image"}
