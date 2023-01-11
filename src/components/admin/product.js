@@ -1220,9 +1220,9 @@ console.log("----taxes"+JSON.stringify(variantmainarray))
                           >
                             <option value={""}>Select Brand</option>
                             {BrandJson.BrandJson.map((item)=>{return(
-                            <>
+                           
                             <option value={item}>{item}</option>
-                            </>)})}
+                           )})}
                            
                            
                           </Form.Select>

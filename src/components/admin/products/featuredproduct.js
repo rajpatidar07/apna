@@ -8,27 +8,54 @@ import 'sweetalert/dist/sweetalert.css';
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import axios from "axios";
-
 const Featuredproduct = () => {
+const [featuredProductData,setFeatureProductData]=useState([]);
+
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
- 
+ const [apicall,setapicall]=useState(false);
   const [fdata, setfdata] = useState([]);
 
   const handleClick = () => {};
   useEffect(() => {
-    axios.post("${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50", {
-      "product_search": {
-        "search": "",
-        "featured_product": 1
+  
+      try {
+        axios
+          .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=500&user_id=61`,{
+            "product_search":{
+              "search":"",
+              "price_from":"",
+              "price_to":"",
+              "is_fetured_product": ["1"],
+              "fetured_type": ["promotion"]
+              }
+          })
+          .then((response) => {
+            let data=response.data.result;
+            // let data = response.data.filter(item=> item.is_active === 1);
+            setFeatureProductData(response.data.results)
+            // setaddcoupondata(data);
+            // setsearchCoupon(data);
+            setapicall(false);
+          });
+      } catch (err) {}
+  
+  }, [apicall]);
+  console.log("ffffffffffffffffffffffffff"+JSON.stringify(featuredProductData))
 
-      }}).then((response) => {
-      setfdata(response.data)
-    }).catch(function (error) {
-      console.log(error);
-    });
-  }, []);
+  // useEffect(() => {
+  //   axios.post("${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50", {
+  //     "product_search": {
+  //       "search": "",
+  //       "featured_product": 1
+
+  //     }}).then((response) => {
+  //     setfdata(response.data)
+  //   }).catch(function (error) {
+  //     console.log(error);
+  //   });
+  // }, []);
   const columns = [
     {
       name: "ID",
