@@ -119,7 +119,16 @@
   background: rgb(89 193 88 / 20%);
 }
 
+.actioncolimn .feature_product_dropdown_box{
+position: relative;
+}
 
+.actioncolimn .feature_product_dropdown_box .feature_product_select{
+  position: absolute;
+  z-index: 1;
+  top: 2px;
+  opacity: 0;
+  }
 /* variant and image */
 .img_preview_boxx{
   /* display: flex;

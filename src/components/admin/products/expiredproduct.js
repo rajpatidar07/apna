@@ -36,6 +36,9 @@ useEffect(() => {
     "product_search": {
       "search": `${searchdata.product_title_name}`,
       "category": `${searchdata.category}`,
+      "price_from": "",
+      "price_to": "",
+      "id":"asc",
       "manufacturing_date":`${searchdata.manufacturing_date}`,
       // "expire_date":`${currentdate}`
     }}).then((response) => {
