@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef,Fragment } from "react";
 import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import Form from "react-bootstrap/Form";
@@ -18,21 +18,36 @@ import EmailStatus from "../json/EmailStatus";
 
 const EmailSend = () => {
 
+
+  const [emaildata, setEmaildata] = useState({
+    email_type:"",
+    email_text:"",
+    type:"",
+    status:"",
+    test_email:"",
+    email_name:"",
+    text_msg:""
+
+  });
+ 
+  const[emailText,setEmailText]=useState('')
+  const [getEmaildata,setGetEmaildata]=useState([])
+  const [apicall,setapicall]=useState(false)
+  const[getemailtype,setGetEmailtype]=useState("")
+  const[getusertype,setGetUserType]=useState("")
+  const[getemailStatus,setGetEmailStatus]=useState("")
+  const [changstatus, setchangstatus] = useState('');
+ 
   const formRef = useRef();
 
   const [validated, setValidated] = useState(false);
   const [show, setShow] = useState(false);
 
-  const handleShow = (e, id) => {
+  const handleShow = (e) => {
     console.log("----------"+e)
-    // console.log("IDD----"+id)
-
-    
     if (e === 'add') {
       setShow(e);
     }
-
-
     if (e !== 'add') {
       try {
               axios
@@ -40,19 +55,22 @@ const EmailSend = () => {
                 .then((response) => {
                      console.log("single Data"+ JSON.stringify(response.data))
                     setEmaildata(response.data[0])
+    console.log(" update data------"+response.data[0].email_text)
+
+                    setEmailText(response.data[0].email_text)
                 
                 })
             } catch (err) {}
            
     }
+    
     setShow(e);
- 
   };
 
 
 
-
-
+  
+  
 
   const handleClose=()=>{
     //  formRef.current.reset();
@@ -67,44 +85,41 @@ const EmailSend = () => {
 
 
 
-  const [emaildata, setEmaildata] = useState({});
- 
-  const[emailText,setEmailText]=useState('')
-  const [getEmaildata,setGetEmaildata]=useState([])
-  const [apicall,setapicall]=useState(false)
-  const[getemailtype,setGetEmailtype]=useState("")
-  const[getusertype,setGetUserType]=useState("")
-  const[getemailStatus,setGetEmailStatus]=useState("")
-  const [changstatus, setchangstatus] = useState('');
- 
 
-
-
+// console.log(" get data-----"+JSON.stringify (emaildata))
   const columns = [
     {
       name: "Email Type",
+      width: "130px",
       selector: (row) => row.email_type,
       sortable: true,
     },
     {
       name: "User Type",
+      width: "120px",
       selector: (row) => row.type,
       sortable: true,
     },
 
     {
       name: "Title",
+       width: "100px",
+
       selector: (row) => row.email_name,
       sortable: true,
     },
     {
       name: "Email Text",
+      width: "500px",
+    
       selector: (row) => ( <div  className="spanText" > <span dangerouslySetInnerHTML={{ __html: row.email_text }}></span></div> ),
       sortable: true,
     },
 
     {
       name: "Status",
+    
+
       selector: (row) => (
         <span
           className={
@@ -146,7 +161,7 @@ const EmailSend = () => {
       center: true,
       selector: (row) => (
         <div className={"actioncolimn"}>
-          <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={()=>handleShow(row.id)} />
+          <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.id)} />
           <BsTrash
             className=" p-0 m-0 editiconn text-danger"
             onClick={deleteEmail.bind(this, row.id)}
@@ -158,30 +173,26 @@ const EmailSend = () => {
 
   const EmailTextHandler=(e)=>{
 
-console.log("textEditor value"+ e.editor.getData())
-
-   setEmailText(e.editor.getData())
-  
-  
-    //  console.log("datatatat"+emaildata.email_text)
+// console.log("textEditor value"+ e.editor.getData())
+  //    console.log("datatatat"+emaildata.email_text)
   // //  console.log({ event, editor, emailText});
-  //  let newTemp;
-  //  if((editor.getData()) != undefined){
-  //    newTemp = (editor.getData()).replaceAll(/"/g, '\'');
-  //   console.log("newTemp -"+newTemp)
-  // }
+   let newTemp;
+   if((e.editor.getData()) != undefined){
+     newTemp = (e.editor.getData()).replaceAll(/"/g, '\'');
+  }
+   setEmailText(newTemp)
   // setEmaildata({...emaildata,
-  //   email_text:,
+  //   email_text:newTemp
   // })
-   
-
-   
   }
 
   const valueHandler=(e)=>{
-  setEmaildata({ ...emaildata,[e.target.name]:e.target.value})
 
+  setEmaildata({ ...emaildata,[e.target.name]:e.target.value})
+  
   }
+  // console.log("data- before-----"+JSON.stringify(emaildata))
+
   const EmailSubmitHandler= (e)=>{
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
@@ -195,12 +206,12 @@ console.log("textEditor value"+ e.editor.getData())
   else{
     
   e.preventDefault()
-
+    // console.log("data------"+JSON.stringify(emaildata))
   axios.post( `${process.env.REACT_APP_BASEURL}/add_email_template`,{
   type:emaildata.type,
   email_type:emaildata.email_type,
   email_name:emaildata.email_name,
-  email_text:emaildata.email_text,
+  email_text:emailText,
   text_msg:emaildata.text_msg,
   test_email:emaildata.test_email,
   status:emaildata.status
@@ -222,9 +233,12 @@ setapicall(true);
 
 
   }
-const UpdateEmailHandler =(e, show)=>{
+ 
 
-  e.preventDefault()
+const UpdateEmailHandler =(e)=>{
+console.log(" email iddd"+emaildata.id)
+
+  e.preventDefault();
   axios.put(`${process.env.REACT_APP_BASEURL}/update_email_template`,{
     id:emaildata.id,
     type:emaildata.type,
@@ -518,8 +532,9 @@ const SearchHandler=()=>{
               <div sm="12" className="mt-3">
                   <CKEditor
                     // editor={"classic"}
-                       data={emaildata.email_text}
-                      // value={emaildata.email_text}
+                      //  data={ <div dangerouslySetInnerHTML={{ __html: emailText }} className='editor'></div>}
+                      // value={<div dangerouslySetInnerHTML={{ __html: emailText }} className='editor'></div>}
+                      data={`<p>${emailText}</p>`}
                       //  value="<p>Hi Rajaram Patidar</p>"
                     onChange={(e)=>EmailTextHandler(e)}
                     name={"email_text"}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, {Fragment, useEffect, useState, useRef } from "react";
 import Col from "react-bootstrap/Col";
 import Input from "./common/input";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
@@ -1288,9 +1288,9 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                           >
                             <option value={""}>Select Brand</option>
                             {BrandJson.BrandJson.map((item)=>{return(
-                            <>
+                           
                             <option value={item}>{item}</option>
-                            </>)})}
+                           )})}
                            
                            
                           </Form.Select>
