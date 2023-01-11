@@ -25,6 +25,7 @@ import axios from "axios";
 import { Button } from "react-bootstrap";
 import { GiCancel } from "react-icons/gi";
 import moment from "moment/moment";
+import demo from "../../images/demo.jpg";
 let categoryArray = [];
 let encoded;
 // let newImageUrls = [];
@@ -129,7 +130,6 @@ const [editbutton , setEditButton]= useState(false)
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
   };
   const onProductStatusChange = (e,id,productid) =>{
-    console.log("--statuys"+e+id+productid)
     axios
       .put(`${process.env.REACT_APP_BASEURL}/product_status_update`, {
           "id":`${id}`,
@@ -189,7 +189,7 @@ const [editbutton , setEditButton]= useState(false)
   //  json
   var varietyy = VariationJson;
   var categorytype = CategoryJson;
-  const prodata = (id) => {
+  const OnProductNameClick = (id) => {
     localStorage.setItem("variantid", id[0]);
     localStorage.setItem("productid", id[1]);
     navigate("/productdetail");
@@ -204,7 +204,7 @@ const [editbutton , setEditButton]= useState(false)
           // height="90px"
           // width="75px"
           alt={"apna_organic"}
-          src={row.all_images}
+          src={row.all_images? row.all_images:"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"}
           style={{
             padding: 10,
             textAlign: "right",
@@ -221,7 +221,7 @@ const [editbutton , setEditButton]= useState(false)
         <div>
           <p
             className="mb-1"
-            onClick={prodata.bind(this, [row.id, row.product_id])}
+            onClick={OnProductNameClick.bind(this, [row.id, row.product_id])}
           >
             <b>
               {row.product_title_name}
@@ -481,29 +481,22 @@ const [editbutton , setEditButton]= useState(false)
           if (data != undefined || data != "" || data != null) {
             setproductdata(data);
             
-// categoryedit api
+// categoryedit 
 
 const arr = data.parent_category.split(',');
-// let arrdata = arr.substring(0, arr.length-2);
-// if(CategoryEditdata.level > 1){
 for(let i=0 ; i < arr.length; i++){
 axios
 .get(`${process.env.REACT_APP_BASEURL}/category_details?id=${arr[i]}`)
 .then((response) => {
 let data = response.data[0];
-// seteditparentCategory(data.category_name)
-console.log("---firsr"+data.category_name)
 if(i === 0 ){
 axios
 .get(`${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`)
 .then((response) => {
 setSubCategory(response.data)
 });
-// setCategoryEditparent(data.category_name);
 seteditparentCategory(data.category_name)
-
-console.log("---second"+data.category_name)
-
+// console.log("---first"+data.category_name)
 }
 else if(i === 1 ){
 axios
@@ -512,24 +505,24 @@ axios
        setchildCategory(response.data)
 });
 setCategoryEditparent(data.category_name);
-// setCategoryEditSubparent(data.category_name);
+// console.log("---second"+data.category_name)
 }
 else if(i === 2){
+  axios
+.get(`${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`)
+.then((response) => {
+  setgrandcCategory(response.data)
+});
 setCategoryEditSubparent(data.category_name);
-// setCategoryEditChildparent(data.category_name);
+// console.log("---third"+data.category_name)
+}
+else if(i===3){
+  setCategoryEditChildparent(data.category_name);
+  // console.log("---fourth"+data.category_name) 
 }
 })
 }
 // end category edit api
-
-
-            // const [parentcate, ...rest] = data.parent_category.split(",")
-            // seteditparentCategory(parentcate)
-            // let i = rest.replace(",", " ")
-            // setIndVal(rest)
-            // console.log("----p"+i)
-            // console.log("----p"+rest)
-
           }
           let customdatra = JSON.parse(response.data.add_custom_input);
           setcustomarray(customdatra);
@@ -932,38 +925,56 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
   };
   const handledescription = (event, editor) => {
     setdata1(editor.getData());
-    console.log({ event, editor, data1 });
+    let productdesc;
+    if((editor.getData()) != undefined){
+      productdesc = (editor.getData()).replaceAll(/"/g, '\'');
+   }
     setproductdata({
       ...productdata,
-      product_description: data1,
+      product_description: productdesc,
     });
   };
 
   const OtherDescription = (event, editor) => {
     setotherintro(editor.getData());
     console.log({ event, editor, otherintro });
-    console.log(otherintro);
+    let otherinstrction;
+    if((editor.getData()) != undefined){
+      otherinstrction = (editor.getData()).replaceAll(/"/g, '\'');
+   }
     setproductdata({
       ...productdata,
-      other_introduction: otherintro,
+      other_introduction: otherinstrction,
     });
   };
   //  const createMarkup = () => {
   //     return { __html: pdata.product_description };
   //   }
+  let productdataa = [];
+
   const handleSaveDraft = (e) => {
+    setvariantarray({
+      ...variantarray,
+      product_status:"draft",
+    });
+    productdataa.push(productdata);
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
       setValidated(false);
       e.preventDefault();
-      console.log("finallstart---" + JSON.stringify(productdataa));
+    }
+    else{
+      axios
+      .post(`${process.env.REACT_APP_BASEURL}/products`, productdataa)
+      .then((response) => {
+        console.log("finall---" + JSON.stringify(response.data));
+        setapicall(true);
+      });
     }
   };
 
-  let productdataa = [];
   const handleAddProduct = (e) => {
     productdataa.push(productdata);
-
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
       e.stopPropagation();
@@ -999,7 +1010,6 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
 
   const handleClick = () => {};
   const navigate = useNavigate();
- 
   return (
     <div className="App productlist_maindiv">
       <h2>Products</h2>
@@ -1321,7 +1331,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                               value={cdata.id}
                               name='parent_category'
                               key={i}
-                              selected={editparentCategory == cdata.id ? true :false }
+                              selected={editparentCategory == cdata.category_name ? true :false }
                             >
                               {cdata.category_name}
                               {""}
@@ -1657,11 +1667,11 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                                     <option
                                                       value={
                                                         vari === "weight"
-                                                          ? "gm"
+                                                          ? "gms"
                                                           : vari === "volume"
-                                                          ? "l"
+                                                          ? "ml"
                                                           : vari === "piece"
-                                                          ? "pcs"
+                                                          ? "piece"
                                                           : vari === "color"
                                                           ? "pcs"
                                                           : null
@@ -1989,7 +1999,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                                 ? variantdata.unit_quantity
                                                 : variantdata.unit === "ml"
                                                 ? variantdata.unit_quantity
-                                                : variantdata.unit === "pcs"
+                                                : variantdata.unit === "piece"
                                                 ? variantdata.unit_quantity
                                                 : null}
                                             </td>
@@ -2269,9 +2279,8 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
           onHide={() => handlevarietyClose()}
           dialogClassName="addproductmainmodal"
         >
-          <Form ref={formRef} validated={validated} onSubmit={() =>
-                                        onVariantaddclick(variantarray.id,variantarray.product_id)
-                                      }>
+          <Form ref={formRef} validated={validated} 
+        >
             <Modal.Header closeButton>
               <Modal.Title>Add Variety</Modal.Title>
             </Modal.Header>
@@ -2327,7 +2336,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                               ? "color"
                                               : variantarray.unit === "gms"
                                               ? "weight"
-                                              : variantarray.unit === "l"
+                                              : variantarray.unit === "ml"
                                               ? "volume"
                                               : variantarray.unit === "piece"
                                               ? "piece"
@@ -2338,7 +2347,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                             ? "color"
                                             : variantarray.unit === "gms"
                                             ? "weight"
-                                            : variantarray.unit === "l"
+                                            : variantarray.unit === "ml"
                                             ? "volume"
                                             : variantarray.unit === "piece"
                                             ? "piece"
@@ -2354,7 +2363,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                                     : vari === "weight"
                                                     ? "gms"
                                                     : vari === "volume"
-                                                    ? "l"
+                                                    ? "ml"
                                                     : vari === "piece"
                                                     ? "piece"
                                                     : null
@@ -2399,7 +2408,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                             ? variantarray.unit_quantity
                                             : variantarray.unit === "ml"
                                             ? variantarray.unit_quantity
-                                            : variantarray.unit === "pcs"
+                                            : variantarray.unit === "piece"
                                             ? variantarray.unit_quantity
                                             : null
                                         }
@@ -2631,10 +2640,10 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                     <Button
                                       variant="outline-success"
                                       className="addcategoryicon"
-                                      type="submit"
-                                      // onClick={() =>
-                                      //   onVariantaddclick(variantarray.id,variantarray.product_id)
-                                      // }
+                                      // type="submit"
+                                      onClick={() =>
+                                        onVariantaddclick(variantarray.id,variantarray.product_id)
+                                      }
                                       size="sm"
                                     >
                                       +
@@ -2659,7 +2668,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                               ? "piece"
                                               : variantdata.unit === "gms"
                                               ? "weight"
-                                              : variantdata.unit === "l"
+                                              : variantdata.unit === "ml"
                                               ? "volume"
                                               : null}
                                           </td>
@@ -2669,7 +2678,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                           <td className="p-0 text-center ">
                                             {variantdata.unit === "gms"
                                               ? variantdata.unit_quantity
-                                              : variantdata.unit === "l"
+                                              : variantdata.unit === "ml"
                                               ? variantdata.unit_quantity
                                               : variantdata.unit === "piece"
                                               ? variantdata.unit_quantity
