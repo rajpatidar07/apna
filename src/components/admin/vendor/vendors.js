@@ -1075,7 +1075,7 @@ useEffect(()=>{
                                               
                           { Docnamearray.map((seotags, i) => {
                           return (
-                            <>
+                            <div>
                              
                         <Badge className="tagselecttitle mb-0" bg="success" >
                         {seotags === null || seotags === undefined ? '' : seotags
