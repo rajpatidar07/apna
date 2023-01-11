@@ -7,8 +7,12 @@ import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 import axios from "axios";
 const Featuredproduct = () => {
+  let userid= localStorage.getItem("userid")
+console.log("userIDDDDDDDDDDDDDDdd"+userid)
 const [featuredProductData,setFeatureProductData]=useState([]);
 
   const handleAlert = () => setAlert(true);
@@ -16,19 +20,22 @@ const [featuredProductData,setFeatureProductData]=useState([]);
   const [Alert, setAlert] = useState(false);
  const [apicall,setapicall]=useState(false);
   const [fdata, setfdata] = useState([]);
+  const [show, setShow] = useState(false);
 
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   const handleClick = () => {};
   useEffect(() => {
   
       try {
         axios
-          .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=500&user_id=61`,{
+          .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=500&user_id=${userid}`,{
             "product_search":{
               "search":"",
               "price_from":"",
               "price_to":"",
               "is_fetured_product": ["1"],
-              "fetured_type": ["promotion"]
+              "fetured_type": ["product_promotion"]
               }
           })
           .then((response) => {
@@ -43,48 +50,37 @@ const [featuredProductData,setFeatureProductData]=useState([]);
   
   }, [apicall]);
   console.log("ffffffffffffffffffffffffff"+JSON.stringify(featuredProductData))
-
-  // useEffect(() => {
-  //   axios.post("${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50", {
-  //     "product_search": {
-  //       "search": "",
-  //       "featured_product": 1
-
-  //     }}).then((response) => {
-  //     setfdata(response.data)
-  //   }).catch(function (error) {
-  //     console.log(error);
-  //   });
-  // }, []);
   const columns = [
     {
       name: "ID",
       selector: (row) => (
-        <p>
-          {row.id}
-        </p>
+        row.id
       ),
       sortable: true,
       width: "80px",
       center: true,
+      style: {
+        paddingLeft: 0,
+      }
     },
     {
-      name: "#",
+      name: "Image",
       width: "100px",
       center: true,
       cell: (row) => (
+        
         <img
-          height="90px"
-          width="75px"
-          alt={row.name}
+          // height="90px"
+          // width="75px"
+          alt={'apna_organic'}
           src={
-            "https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg"
+            row.image? row.image : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
           }
           style={{
-            borderRadius: 10,
-            paddingTop: 10,
-            paddingBottom: 10,
+            padding: 10,
             textAlign: "right",
+            maxHeight: "100px",
+            maxWidth: "100px"
           }}
           onClick={handleClick}
         />
@@ -169,13 +165,13 @@ const [featuredProductData,setFeatureProductData]=useState([]);
       center: true,
       selector: (row) => (
         <div className={"actioncolimn"}>
-         <BiEdit className=" p-0 m-0  editiconn text-secondary" />
+         <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.id)} />
           <BsTrash className=" p-0 m-0 editiconn text-danger"  onClick={handleAlert} />
         </div>
       ),
     },
   ];
- 
+//  const UpdateFeturse
   return (
     <div>
       <h2>Featured Products</h2>
@@ -203,13 +199,25 @@ const [featuredProductData,setFeatureProductData]=useState([]);
       </div>
 
       {/* upload */}
-
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Featured Product</Modal.Title>
+        </Modal.Header>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+           Update 
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       {/* datatable */}
    
       <DataTable
         columns={columns}
-        data={fdata.results}
+        data={featuredProductData}
         pagination
         highlightOnHover
         pointerOnHover
