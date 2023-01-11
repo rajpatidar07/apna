@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState ,useRef} from "react";
 import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
@@ -9,8 +9,11 @@ import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import Iconbutton from "../common/iconbutton";
+
 import axios from "axios";
 const Featuredproduct = () => {
+  const formRef = useRef();
   let userid= localStorage.getItem("userid")
 console.log("userIDDDDDDDDDDDDDDdd"+userid)
 const [featuredProductData,setFeatureProductData]=useState([]);
@@ -35,13 +38,14 @@ const [featuredProductData,setFeatureProductData]=useState([]);
               "price_from":"",
               "price_to":"",
               "is_fetured_product": ["1"],
-              "fetured_type": ["product_promotion"]
+              "fetured_type": [""]
               }
           })
           .then((response) => {
             let data=response.data.result;
             // let data = response.data.filter(item=> item.is_active === 1);
             setFeatureProductData(response.data.results)
+            setfdata(response.data.results)
             // setaddcoupondata(data);
             // setsearchCoupon(data);
             setapicall(false);
@@ -53,6 +57,18 @@ const [featuredProductData,setFeatureProductData]=useState([]);
   const columns = [
     {
       name: "ID",
+      selector: (row) => (
+        row.fetured_product_id
+      ),
+      sortable: true,
+      width: "80px",
+      center: true,
+      style: {
+        paddingLeft: 0,
+      }
+    },
+    {
+      name: "Product ID",
       selector: (row) => (
         row.id
       ),
@@ -165,12 +181,34 @@ const [featuredProductData,setFeatureProductData]=useState([]);
       center: true,
       selector: (row) => (
         <div className={"actioncolimn"}>
-         <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.id)} />
+         <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.fetured_product_id)} />
           <BsTrash className=" p-0 m-0 editiconn text-danger"  onClick={handleAlert} />
         </div>
       ),
     },
   ];
+  const handleFormChange = (e) => {
+    setfdata({...fdata,[e.target.name]: e.target.value})
+      console.log("dataaaaaaaaaaaaaaaaaaaaaaa"+JSON.stringify(e.target.value))
+    };
+    
+
+  const UpdateFeaturedProduct = () => {
+    
+    axios.put(`${process.env.REACT_APP_BASEURL}/update_fetured_product`,{
+      id:13,
+      start_date:fdata.start_date,
+      end_date:fdata.end_date
+    }).then((response) => {
+      let data=response.data.results;
+    // console.log("idddllllllllllllllllllllllllllllllll------"+JSON.stringify(addadmindata))
+  });
+  formRef.current.reset();
+ 
+  setapicall(true);
+  
+}
+
 //  const UpdateFeturse
   return (
     <div>
@@ -199,18 +237,58 @@ const [featuredProductData,setFeatureProductData]=useState([]);
       </div>
 
       {/* upload */}
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Featured Product</Modal.Title>
-        </Modal.Header>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-           Update 
-          </Button>
-        </Modal.Footer>
+     
+      <Modal size="lg" show={show} onHide={() => handleClose()}>
+        <Form
+          className=""
+         
+          ref={formRef}
+         
+          
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>
+              {show === "add" ? "Add New Blog " : " Update Blog "}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="row p-3 m-0">
+              <div className="col-md-6">
+                  <Form.Group className="mb-3 aos_input" controlId="formBasicStartDate">
+                    <Form.Label>Manufacturing Date</Form.Label>
+                    <Form.Control  name='start_date' value={fdata.start_date} onChange={(e) => handleFormChange(e)}  type="date" placeholder="Coupon Start Date" />
+                  </Form.Group>
+                </div> 
+                <div className="col-md-6">
+                  <Form.Group className="mb-3 aos_input" controlId="formBasicStartDate">
+                    <Form.Label>Expire Date</Form.Label>
+                    <Form.Control  name='end_date' value={fdata.end_date} onChange={(e) => handleFormChange(e)}   type="date" placeholder="Coupon Start Date" />
+                  </Form.Group>
+                </div> 
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <button
+              className="button main_outline_button"
+              onClick={() => handleClose()}
+            >
+              Cancel
+            </button>
+            <button
+              className="button main_outline_button"
+              onClick={() => UpdateFeaturedProduct()}
+            >
+              Update
+            </button>
+            {/* <Iconbutton
+              type={"submit"}
+                 
+              // btntext={show === "add" ? "Add Blog" : "Update Blog"}
+              // onClick={(show === 'add' ? AddVendorClick : UpdateVendorClick(show))}
+              btnclass={"button main_button "}
+            /> */}
+          </Modal.Footer>
+        </Form>
       </Modal>
 
       {/* datatable */}

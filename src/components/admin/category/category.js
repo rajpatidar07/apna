@@ -471,17 +471,19 @@ for(let i=0 ; i < arr.length; i++){
                     </p> : null}
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
-            <Form.Select
-              aria-label="Search by category type"
+
+          <Form.Select
+              aria-label="Search by status"
               className="adminselectbox"
+              name="level"
               onChange={(e) => onValueChange(e)}
-              name="category_type"
-                // placeholder={"Search by category type"}
-                value={SearchCat.category_type}
+              value={SearchCat.category_type}
+              
             >
-              <option>Search by category type</option>
+          <option>Search by category</option>
+
               {result1.map((lvl,i)=>{
-                return( <option value={lvl.category_type} key={i}>{lvl.category_type}</option>)
+                return(<option value={lvl.category_type} key={i}>{lvl.category_type}</option>)
               })}
             </Form.Select>
           </div>
