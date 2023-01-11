@@ -7,8 +7,8 @@ import "sweetalert/dist/sweetalert.css";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import Iconbutton from "../common/iconbutton";
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import {CKEditor} from 'ckeditor4-react'
+// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useEffect } from "react";
 import axios from "axios";
 import { SendExclamationFill } from "react-bootstrap-icons";
@@ -38,7 +38,7 @@ const EmailSend = () => {
               axios
                 .get(`${process.env.REACT_APP_BASEURL}/email_template_get?id=${e}`)
                 .then((response) => {
-                    // console.log("single Data"+ JSON.stringify(response.data))
+                     console.log("single Data"+ JSON.stringify(response.data))
                     setEmaildata(response.data[0])
                 
                 })
@@ -46,6 +46,7 @@ const EmailSend = () => {
            
     }
     setShow(e);
+ 
   };
 
 
@@ -55,8 +56,8 @@ const EmailSend = () => {
 
   const handleClose=()=>{
     //  formRef.current.reset();
-    setEmaildata({})
-    setEmailText("")
+      setEmaildata({})
+   
    setValidated(false)
     setShow(false)
     
@@ -145,7 +146,7 @@ const EmailSend = () => {
       center: true,
       selector: (row) => (
         <div className={"actioncolimn"}>
-          <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.id)} />
+          <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={()=>handleShow(row.id)} />
           <BsTrash
             className=" p-0 m-0 editiconn text-danger"
             onClick={deleteEmail.bind(this, row.id)}
@@ -154,20 +155,24 @@ const EmailSend = () => {
       ),
     },
   ];
- 
 
-  const EmailTextHandler=(event, editor)=>{
-   setEmailText(editor.getData())
-  //  setEmailText(editor.setData(emaildata.email_text))
-   console.log({ event, editor, emailText});
-   let newTemp;
-   if((editor.getData()) != undefined){
-     newTemp = (editor.getData()).replaceAll(/"/g, '\'');
-    console.log("newTemp -"+newTemp)
-  }
-  setEmaildata({...emaildata,
-    email_text:newTemp,
-  })
+  const EmailTextHandler=(e)=>{
+
+console.log("textEditor value"+ e.editor.getData())
+
+   setEmailText(e.editor.getData())
+  
+  
+    //  console.log("datatatat"+emaildata.email_text)
+  // //  console.log({ event, editor, emailText});
+  //  let newTemp;
+  //  if((editor.getData()) != undefined){
+  //    newTemp = (editor.getData()).replaceAll(/"/g, '\'');
+  //   console.log("newTemp -"+newTemp)
+  // }
+  // setEmaildata({...emaildata,
+  //   email_text:,
+  // })
    
 
    
@@ -512,10 +517,11 @@ const SearchHandler=()=>{
             
               <div sm="12" className="mt-3">
                   <CKEditor
-                    editor={ClassicEditor}
-                    //  data={emaildata.email_text}
-                      data="<p>Hi Rajaram Patidar</p>"
-                    onChange={EmailTextHandler}
+                    // editor={"classic"}
+                       data={emaildata.email_text}
+                      // value={emaildata.email_text}
+                      //  value="<p>Hi Rajaram Patidar</p>"
+                    onChange={(e)=>EmailTextHandler(e)}
                     name={"email_text"}
                     
                 

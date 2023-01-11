@@ -67,28 +67,44 @@ function Product() {
     {
       name: "Items",
       selector: (row) => (
-        <p className="m-0"><b>Product:</b> {row.product_id}<br/>
+        <p className="m-0"><b>Product ID:</b> {row.product_id}<br/>
         <b>Quantity:</b> {row.quantity}</p>
       ),
       sortable: true,
     },
     {
       name: "price",
-      selector: (row) => row.price,
+      selector: (row) => (
+        <p className="m-0"><b>MRP :</b>₹ {row.mrp} ({row.discount}%) <br/>
+        <b>Product Price:</b>₹ {Number(row.taxable_value).toFixed(2)} <br/>
+        <b>Sale Price:</b> ₹ {Number(row.sale_price).toFixed(2)}
+        </p>
+      ),
       sortable: true,
     },
     {
       name: "Tax",
       selector: (row) => (
         <p className="m-0">
-          <b>GST:</b> {row.gst}<br/>
-          <b>CGST:</b> {row.cgst}<br/>
-          <b>SGST:</b> {row.sgst}<br/>
+          <b>GST %:</b> {row.gst}<br/>
+          <b>CGST %:</b> {row.cgst}<br/>
+          <b>SGST %:</b> {row.sgst}<br/>
         </p>
       ),
       sortable: true,
     },
   
+    {
+      name: "Total Ammount",
+      selector: (row) => (
+        <p className="m-0">
+          <b>Sale Price X Quantity</b><br/>
+          ₹{(Number(row.sale_price)* Number(row.quantity)).toFixed(2)}<br/>
+     
+        </p>
+      ),
+      sortable: true,
+    },
     {
       name: "Order Date",
       selector: (row) => moment(row.created_on).format('YYYY-MM-DD'),
@@ -151,19 +167,9 @@ function Product() {
         </Form.Select>
       ),      
       sortable: true,
-    },
+    }
   
-    {
-      name: "Invoice",  
-      selector: (row) => (
-        row.status==="packed" ?
-        <Link to="/invoice">
-          <h3 className="m-0 text-primary">
-          <FaFileInvoiceDollar className="text-primary" />
-          </h3>
-        </Link>: null
-      ),
-    },
+ 
   ];
   
  

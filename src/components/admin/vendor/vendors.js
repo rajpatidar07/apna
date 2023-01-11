@@ -56,7 +56,7 @@ let docuarr;
   const [apicall, setapicall] = useState(false);
   const [addtag, setaddtag] = useState();
   const [Docnamearray, setDocnameArray] = useState([]);
-  const [DocuImgarray, setDocuImgArray] = useState([]);
+
   const [headerval, setheaderval] = useState('');
   const [descval, setdescval] = useState('');
   const [customarray, setcustomarray] = useState([]);
@@ -111,7 +111,7 @@ let docuarr;
             height="90px"
             width="75px"
             alt={row.owner_name}
-            src={(row.shop_logo).replace("public","")?(row.shop_logo).replace("public",""):"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"}
+             src={(row.shop_logo)?(row.shop_logo):"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"}
             style={{
               borderRadius: 10,
               paddingTop: 10,
@@ -247,10 +247,10 @@ let docuarr;
               className=" p-0 m-0  editiconn text-secondary"
               onClick={handleShow.bind(this, row.id)}
             />
-            <BsTrash
+            {/* <BsTrash
               className=" p-0 m-0 editiconn text-danger"
               onClick={handleAlert}
-            />
+            /> */}
           </div>
         ),
       },
@@ -283,7 +283,6 @@ let docuarr;
         [e.target.name]: e.target.value,
         
       });
-      console.log("dataa"+JSON.stringify(addvendordata))
     };
   const handleClose = () => {
     formRef.current.reset();
@@ -296,7 +295,7 @@ let docuarr;
     setShow(false);
   };
 
- 
+
   const handleShow = (e) => {
     if (e === "add") {
       setShow(e);
@@ -308,23 +307,14 @@ let docuarr;
     .get(`${process.env.REACT_APP_BASEURL}/vendors?id=${e}`,addvendordata)
     .then((response) => {
       setaddvendordata(response.data[0]);
-       setFile(response.data[0].shop_logo);
-      // setFileName(response.data[0].name);
+
+       setFile("");
+       setFileName("");
+
       setcustomarray(response.data[0].social_media_links)
-     setDocuImgArray(JSON.parse(response.data[0].document_name))
-      docuarr = response.data[0].document_name.split(',')
-      
-     console.log("clcikeddd"+docuarr);
-     
-     console.log("(response.data[0].document_name)"+typeof(response.data[0].document_name));
-     
+      let strCopy = (response.data[0].document_name).split(",");
 
-    //  let i = JSON.parse(response.data[0].social_media_links);
-    // console.log("---iiiii"+ typeof i)
-
-    // console.log("---docname"+ JSON.stringify(i[0]))
-    // console.log("---docname"+ (response.data[0].social_media_links))
-
+     setDocnameArray(strCopy)
       setapicall(false);
     })
     .catch(function(error) {
@@ -338,8 +328,6 @@ let docuarr;
     setaddtag(e.target.value);
   };
   const onDocuAddclick = (e) => {
-    
-    // e.preventDefault();
     setDocnameArray(Docnamearray => [...Docnamearray, addtag]);
      setaddtag('');
   
@@ -382,15 +370,15 @@ let docuarr;
 
   const [vendorID ,setVendorId]=useState("")
 const handleDocsShow=(id)=>{
-  console.log("id- in show----------"+id)
+  // console.log("id- in show----------"+id)
   setVendorId(id)
   setDocsShow(true)
   onImgView(id);
 }
-const handleDocsClose=()=>{
-   formRef.current.reset();
+const handleDocsClose=(e)=>{
+  e.preventDefault()
   setDocsShow(false)
-  setapicall(true)
+ 
   
 }
 
@@ -414,10 +402,12 @@ const handleDocsClose=()=>{
     // e.preventDefault()
     console.log("Out id--"+vendorID)
     for (let i = 0; i < e.target.files.length; i++) {
+    console.log("i   -- "+i)
      
       
       encoded = await convertToBase64(e.target.files[i]);
 
+    console.log("encoded--"+encoded)
      
 
       const [first, ...rest] = encoded.base64.split(",");
@@ -438,6 +428,8 @@ const handleDocsClose=()=>{
     // image
     // console.log("image lenth-----"+newImageUrls.length)
     if(newImageUrls.length<=5){
+      console.log("ImgObj --  "+JSON.stringify(ImgObj));
+      console.log("newImageUrls.length --  "+newImageUrls.length);
       axios
       .post(`${process.env.REACT_APP_BASEURL}/vendor_documents_upload`, ImgObj)
       .then((response) => {
@@ -502,14 +494,14 @@ const onImgView = (vendorID) =>{
     setheaderval(e.target.value);
     // setAddCustom((AddCustom) =>{ return {...AddCustom,  e.target.value : e.target.value}});
   };
-  console.log("checkkkk"+JSON.stringify(AddCustom))
+  // console.log("checkkkk"+JSON.stringify(AddCustom))
 
 
 
   const oncustomdescChange = (e) => {
     setdescval(e.target.value);
   };
-  console.log("--------uuuuuuu-------"+JSON.stringify(AddCustom))
+  // console.log("--------uuuuuuu-------"+JSON.stringify(AddCustom))
 
   // const handleAClick = () => {
 useEffect(()=>{
@@ -533,7 +525,7 @@ useEffect(()=>{
   setAddCustom(...AddCustom,returnedTarget);
   setsCall(true)
   }
-  console.log("--------customarray-------"+JSON.stringify(customarray))
+  // console.log("--------customarray-------"+JSON.stringify(customarray))
 
 
   const handleRemoveClick = (e) => {
@@ -563,13 +555,17 @@ useEffect(()=>{
       setValidated(true);
     } else {
       e.preventDefault();
-
+ console.log("arrruyau------"+addvendordata.document_name)
   const formData = new FormData();
   let x = [addvendordata.document_name]
   let socialname =  addvendordata.testjson
  let socialname_new=JSON.stringify(socialname)
-  console.log("socialname----------"+socialname);
-  console.log("socialname----------"+socialname_new);
+
+  // console.log("socialname----------"+socialname);
+  // console.log("socialname----------"+socialname_new);
+
+  console.log(" before  xx-----------  ---"+x)
+  console.log(" before  file Name  ---"+fileName)
 
 
 
@@ -595,7 +591,7 @@ useEffect(()=>{
       .then((response) => {
     setapicall(true);
     setShow(false);
-console.log("-------done"+response.data)
+// console.log("-------done"+response.data)
       })
       .catch(function(error) {
         console.log(error);
@@ -608,15 +604,17 @@ console.log("-------done"+response.data)
   const UpdateVendorClick = (e) => {
 
   let x = [addvendordata.document_name]
-  console.log("update doc"+ x)
+  // console.log("update doc"+ x)
     e.preventDefault();
     const formData = new FormData();
 
     let socialname =  addvendordata.testjson
     let socialname_new=JSON.stringify(socialname)
-     console.log("se----------"+socialname);
-     console.log("seAAAAAAAAAAAAAaaa----------"+socialname_new);
+    //  console.log("se----------"+socialname);
+    //  console.log("seAAAAAAAAAAAAAaaa----------"+socialname_new);
 
+    console.log(" after bfile  ---"+file)
+    console.log(" after file Name  ---"+fileName)
 
     formData.append("id",addvendordata.id)
     formData.append("image", file);
@@ -636,7 +634,7 @@ console.log("-------done"+response.data)
     formData.append("status",addvendordata.status);
     formData.append("social_media_links",socialname_new)
   
-    console.log("formdata----"+ JSON.stringify(formData))
+    // console.log("formdata----"+ JSON.stringify(formData))
     axios
     .put(`${process.env.REACT_APP_BASEURL}/vendor_update`,formData)
     .then((response) => {
@@ -1067,11 +1065,15 @@ console.log("-------done"+response.data)
                             +
                           </Button>
                           </InputGroup>
-                          {console.log("ddddd--"+Docnamearray)}
+                          {
+                            console.log("ddddd--"+Docnamearray)
+                          }
+                        
+
                           {Docnamearray === undefined || Docnamearray === null || Docnamearray === '' ? null :
                     <div className="d-flex align-items-center tagselectbox mt-2" >
                                               
-                          {/* { docuarr.map((seotags, i) => {
+                          { Docnamearray.map((seotags, i) => {
                           return (
                             <>
                              
@@ -1087,7 +1089,7 @@ console.log("-------done"+response.data)
                             </div>
                           )
                          })}
-                         */}
+                        
                       </div>
                       }
                   <Form.Control.Feedback type="invalid" className="h6">
@@ -1268,11 +1270,11 @@ console.log("-------done"+response.data)
           <Modal
           size="lg"
           show={docsshow}
-          onHide={ handleDocsClose}
+          onHide={ (e)=>{ handleDocsClose(e)}}
           
         >
           <Form ref={formRef}>
-            <Modal.Header closeButton>
+            <Modal.Header >
               <Modal.Title>Add Images and Documents</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -1284,8 +1286,7 @@ console.log("-------done"+response.data)
                 >
                   <Form.Label>Documents Upload </Form.Label>
                   <Form.Control
-                    
-                    multiple={true}
+                    multiple
                     type="file"
                     placeholder="multiple document upload"
                     name={"img_64"}
@@ -1297,7 +1298,7 @@ console.log("-------done"+response.data)
               </div>
               </div>
               <Table >
-                 <tbody>   {  console.log("image lenth-----"+newImageUrls.length)}
+                 <tbody>  
                            {newImageUrls? (
 
                                           <tr className="d-flex flex-wrap">
@@ -1343,7 +1344,7 @@ console.log("-------done"+response.data)
             <Modal.Footer>
               <button
                 className="button main_outline_button"
-                onClick={ handleDocsClose}
+                onClick={(e)=> handleDocsClose(e)}
               >
                 Cancel
               </button>

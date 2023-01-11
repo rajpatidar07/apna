@@ -134,22 +134,22 @@ const OrderDetail = () => {
 
                 
                  
-                   console.log("-------"+orderdata.sgst)
-                   let countAllText=Number(orderdata.gst)+Number(orderdata.cgst)+Number(orderdata.sgst);
-                  let discont=(orderdata.mrp)*10/100
-                   let product_price= Number(orderdata.mrp)-discont;
-                   let tax= product_price*(countAllText)/100;
-                   let sale_price=(product_price+tax)
-                   let total_price=(sale_price *orderdata.quantity)
+                  //  console.log("-------"+orderdata.sgst)
+                    let countAllText=Number(orderdata.gst)+Number(orderdata.cgst)+Number(orderdata.sgst)+Number(orderdata.wholesale_sales_tax)+Number(orderdata.manufacturers_sales_tax)+Number(orderdata.retails_sales_tax)+Number(orderdata.value_added_tax);
+                   let discont=(orderdata.mrp)*(orderdata.discount)/100
+                    // let product_price= Number(orderdata.mrp)-discont;
+                   let tax= Number(orderdata.product_price)*(countAllText)/100;
+                  //  let sale_price=(product_price+tax)
+                    let total_price=(orderdata.sale_price *orderdata.quantity)
                     total += Number(total_price);
-                    sub_total += Number(sale_price)
+                    sub_total += Number(orderdata.sale_price)
                     total_tax += Number(tax)
                    return(
 
               <div className="d-flex justify-content-between mb-3 align-items-center">
 
                 <div className="product_img d-flex">
-                  <img src="" alt="apnaorganic"/>
+                  <img src={(orderdata.all_images)?(orderdata.all_images):"https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"} alt="apnaorganic"/>
                   <div className="product_name_detial ps-3">
                     <h6>{orderdata.product_title_name}</h6>
                     <p>color:{orderdata.colors}</p>
@@ -157,20 +157,20 @@ const OrderDetail = () => {
                   </div>
                 </div>
 
-                <div className="product_price"> MRP-{orderdata.mrp}₹ (10% )
-                    <br/> Discount- {discont.toFixed(2)}₹
-                     <br/>Product Price- {product_price.toFixed(2)}₹ 
+                <div className="product_price"> MRP-{orderdata.mrp}₹ ({Number(orderdata.discount)}% )
+                    <br/> Discount- {Number(discont).toFixed(2)}₹
+                     <br/>Product Price- ₹{Number(orderdata.product_price).toFixed(2)} 
                     </div>
 
-                    <div className="product_quantity">Taxable Price- <br/>{product_price}₹
+                    <div className="product_quantity">Taxable Price- <br/>{Number(orderdata.product_price).toFixed(2)}₹
                            
                            <br/> Tax -{ tax.toFixed(2)}₹
                     </div>
 
-                    <div className="product_quantity">Sale Price-<br/>{ sale_price.toFixed(2)}₹</div>
+                    <div className="product_quantity">Sale Price-<br/>{ Number(orderdata.sale_price).toFixed(2)}₹</div>
                   
                 <div className="product_quantity">QTY-{orderdata.quantity}</div>
-                <div className="total_amount"> Total Price- <br/>{total_price.toFixed(2)}₹</div>
+                <div className="total_amount"> Total Price- <br/>{(Number(orderdata.sale_price)*Number(orderdata.quantity)).toFixed(2)}₹</div>
                
               </div>
               )
@@ -196,7 +196,7 @@ const OrderDetail = () => {
               <div className="payment_summary_total d-flex justify-content-between align-items-center">
                 <div className="Subtotal">
                   <p>
-                    Subtotal<span>({order.total_quantity} items)</span>
+                    Subtotal<span>({order.total_quantity} items)(Include all Taxes)</span>
                   </p>
                 </div>
                 <div className="">{sub_total.toFixed(2)}₹</div>
@@ -207,20 +207,27 @@ const OrderDetail = () => {
                 </div>
                 <div className="">{order.shipping_charges}₹</div>
               </div>
+
               <div className="payment_summary_total d-flex justify-content-between align-items-center">
                 <div className="Subtotal">
-                  <p>Tax</p>
+                  <p> Discont Coupon Ammount </p>
+                </div>
+                <div className="">{Number(order.discount_coupon_value)}₹</div>
+              </div>
+              <div className="payment_summary_total d-flex justify-content-between align-items-center">
+                <div className="Subtotal">
+                  <p> Total Tax</p>
                 </div>
                 <div className="">{total_tax.toFixed(2)}₹</div>
               </div>
               <div className="payment_summary_total d-flex justify-content-between align-items-center">
                 <div className="Subtotal">
                   <p>
-                    <strong>Total paid by customer</strong>
+                    <strong>Total paid by customer ( SubTotal - Coupon Discount)</strong>
                   </p>
                 </div>
                 <div className="">
-                  <strong>{total.toFixed(2)}₹</strong>
+                  <strong>{Number(order.total_amount).toFixed(2)}₹</strong>
                 </div>
               </div>
             </div>
