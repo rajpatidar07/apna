@@ -30,12 +30,15 @@ const RevenueReport = () => {
   
  
   const [filterchange,setFilterchange] = useState('')
+  const[previousStateChange,setpreviousStateChange] =useState(' ')
 
   const [getRevenue, setGetRevenue]= useState([])
 
   const [fromDate, setFromDate]=useState(moment().format("YYYY-MM-DD"));
   const [toDate,setToDate]=useState(moment().format("YYYY-MM-DD"))
-  const[prevDate,setPrevDate]=useState(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'))
+  const[prevFromdate,setprevFromdate]=useState(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'))
+  const[prevTodate,setprevTodate]=useState(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'))
+
   const [apicall,setapicall]=useState(false)
   const [tabledate, setTabledata]=useState([]) 
    const [RevenueError,setRevenueError]=useState("")
@@ -535,85 +538,97 @@ const optionss = {
         setFilterchange(e.target.value)
 
         let value = e.target.value;
-        console.log("---------------------------------------------"+value);
+        //today---------------------------------------------------------------------------
         if(value==1){
-          let preday=moment().format("YYYY-MM-DD")
-          setFromDate(preday)
-          console.log("From date"+e.target.value)
-          console.log("today")
+          let frommDate=moment().format("YYYY-MM-DD")
+          setFromDate(frommDate)
+          // console.log("From date"+e.target.value)
+          // console.log("today")
           setToDate(moment().format("YYYY-MM-DD"))
-          setPrevDate(moment(preday).subtract(1, 'days').startOf('days').format("YYYY-MM-DD"))
-          console.log("previous day"+ prevDate)
-           
+          let previousTodate=moment(frommDate).subtract(1, 'days').startOf('days').format("YYYY-MM-DD")
+          setprevTodate(previousTodate)
+          setprevFromdate(previousTodate)
+          // console.log("previous day"+ prevDate)
+          setpreviousStateChange(1)
         }
-
+            //yesterday------------------------------------------------------------------------
         if(value==2){
-          let yesterday=moment().subtract(1, 'days').startOf('days').format("YYYY-MM-DD");
-          console.log("yesterday--"+yesterday)
+          let yesterday=moment().subtract(1, 'days').startOf('days').format("YYYY-MM-DD")
+          
           setFromDate(yesterday);
-          // console.log("From date"+e.target.value);
-         
           setToDate( moment().format("YYYY-MM-DD"));
-          // console.log("yesterday--"+moment().subtract(1, 'day').startOf('day').format('YYYY-MM-DD'));
-          setPrevDate(moment(yesterday).subtract(1, 'days').startOf('days').format('YYYY-MM-DD'))
-          console.log("previous yesterday"+ prevDate)
+         
+          let previousTodatee=moment(yesterday).subtract(1, 'days').startOf('days').format("YYYY-MM-DD")
+          setprevTodate(previousTodatee)
+          setprevFromdate(moment(previousTodatee).subtract(1, 'days').startOf('days').format("YYYY-MM-DD"))
+          setpreviousStateChange(2)
 
         }
+        //last week---------------------------------------------------------------
        if(value==3){
-           let week= moment().subtract(1, 'weeks').startOf('weeks').format('YYYY-MM-DD')
-          setFromDate(week);
+           let lastweek= moment().subtract(1, 'weeks').startOf('weeks').format('YYYY-MM-DD')
+          setFromDate(lastweek);
         
-          console.log("From date"+e.target.value)
-          
-          setToDate( moment().format("YYYY-MM-DD")  );
-          setPrevDate(moment(week).subtract(1, 'weeks').startOf('weeks').format('YYYY-MM-DD'))
-           console.log(" previous week"+prevDate )
-
+          setToDate(moment().subtract(1,'weeks').endOf('weeks').format('YYYY-MM-DD'));
+          let previouslastweek=moment(lastweek).subtract(1,'days').endOf('days').format('YYYY-MM-DD')
+           setprevTodate(previouslastweek)
+           setprevFromdate(moment(previouslastweek).subtract(1,'weeks').endOf('weeks').format('YYYY-MM-DD'))
+           setpreviousStateChange(3)
 
        
        }
-
+             //last month---------------------------------------------------------------
        if(value==4){
        
        let month=moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD')
         setFromDate(month);
-        console.log("From last month"+e.target.value)
-        setToDate(  moment().format("YYYY-MM-DD")   );
-        // setToDate("2022-12-14");
-        setPrevDate(moment(month).subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
-        console.log("previou month-"+prevDate)
-        
+        let lastMonth=moment().subtract(1, 'month').endOf('month').format('YYYY-MM-DD')
+        setToDate(lastMonth);
+        let previouslastmont=moment(lastMonth).subtract(1, 'days').startOf('days').format('YYYY-MM-DD')
+        setprevTodate(previouslastmont);
+        setprevFromdate(moment(previouslastmont).subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
+        // setPrevDate(moment(month).subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
+        // console.log("previou month-"+prevDate)
+        setpreviousStateChange(4)
      }
+    //  last six month---------------------------------------------------------
      if(value==5){
       
       let sixMonth=moment().subtract(6, 'month').startOf('month').format('YYYY-MM-DD')
       setFromDate(sixMonth );
-      console.log("From last 6 month"+e.target.value)
-      setToDate( moment().format("YYYY-MM-DD") );
-      setPrevDate(moment(sixMonth).subtract(6, 'month').startOf('month').format('YYYY-MM-DD'))
-      console.log("previou 6 month-"+prevDate)
-        
+      setToDate(moment().format("YYYY-MM-DD") );
+      let lastsixMonth=moment(sixMonth).subtract(1, 'month').startOf('month').format('YYYY-MM-DD')
+      setprevTodate(lastsixMonth);
+      setprevFromdate(moment(lastsixMonth).subtract(5, 'month').startOf('month').format('YYYY-MM-DD'))
+      // setPrevDate(moment(sixMonth).subtract(6, 'month').startOf('month').format('YYYY-MM-DD'))
+      // console.log("previou 6 month-"+prevDate)
+      setpreviousStateChange(5)
    }
 
+   //this week-----------------------------------------------------------------------
    if(value==8){
       
-    let ThisWeek=moment().subtract(7, 'days').startOf('days').format('YYYY-MM-DD')
+    let ThisWeek=moment().startOf('weeks').format('YYYY-MM-DD')
     setFromDate(ThisWeek);
-    console.log("From last 6 month"+e.target.value)
+    // console.log("From last 6 month"+ThisWeek)
     setToDate( moment().format("YYYY-MM-DD") );
-    setPrevDate(moment(ThisWeek).subtract(7, 'days').startOf('days').format('YYYY-MM-DD'))
-    console.log("previou 6 month-"+prevDate)
+    let previousthisweek=moment(ThisWeek).subtract(1,'days').endOf('days').format('YYYY-MM-DD')
+    setprevTodate(previousthisweek)
+    setprevFromdate(moment(previousthisweek).subtract(1,'weeks').endOf('weeks').format('YYYY-MM-DD'))
+    // setPrevDate(moment(ThisWeek).subtract(1, 'weeks').endOf('weeks').format('YYYY-MM-DD'))
+    setpreviousStateChange(8)
       
  }
  if(value==9){
       
-  let ThisMonth=moment().subtract(30, 'days').startOf('days').format('YYYY-MM-DD')
+  let ThisMonth=moment().startOf('month').format('YYYY-MM-DD')
   setFromDate(ThisMonth);
-  console.log("From last 6 month"+e.target.value)
+  // console.log("From last 6 month"+ThisMonth)
   setToDate( moment().format("YYYY-MM-DD") );
-  setPrevDate(moment(ThisMonth).subtract(30, 'days').startOf('days').format('YYYY-MM-DD'))
-  console.log("previou 6 month-"+prevDate)
-    
+  let previousthismont=moment(ThisMonth).subtract(1, 'days').startOf('days').format('YYYY-MM-DD')
+  setprevTodate(previousthismont);
+  setprevFromdate(moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
+  setpreviousStateChange(9)
 }
 
    fetchData()
@@ -623,8 +638,9 @@ const optionss = {
       const fetchData=()=>{
         console.log( "from_date------------------------------------"+fromDate)
         console.log( "to_date---------------------------------------"+toDate)
-        console.log( "Previous ---------------------------------------"+prevDate)
-      
+        console.log( "Previous  Todate---------------------------------------"+prevTodate)
+        console.log( "Previous fromdate---------------------------------------"+prevFromdate)
+        // console.log("previous fromDate-"+moment(prevDate).startOf('weeks').format('YYYY-MM-DD'))
         console.log( "brand----"+brandName)
         console.log( "locations by name----"+location)
 
@@ -636,7 +652,8 @@ const optionss = {
          {
            "from_date":fromDate,
               "to_date":toDate,
-
+              "prev_from_date":prevFromdate,
+              "prev_to_date":prevTodate,
               "vendors_id":vendorId,
               "categorys":categoryId,
               "user_locations":location,
@@ -659,6 +676,7 @@ const optionss = {
 
 
               setRevenueError('')
+              console.log("data=="+JSON.stringify(response.data[0]))
                setGetRevenue(response.data[0])
               setTabledata(response.data[0].ravenue_date_data)
              
@@ -677,7 +695,7 @@ const optionss = {
 
        const VenderData= async()=>{
           let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
-           console.log("vendor----"+JSON.stringify(result.data))
+          //  console.log("vendor----"+JSON.stringify(result.data))
           if(result.data){
             setVenderList(result.data)
           }
@@ -1025,15 +1043,17 @@ const SearchHandler=(e)=>{
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                  { (RevenueError)=="no_data"||(getRevenue.gross_total_amount)==null||(getRevenue.gross_total_amount)==undefined||(getRevenue.gross_total_amount)==""? <h3>No Record</h3>:  <h3>{getRevenue.gross_total_amount}</h3> }  
+                  { (RevenueError)=="no_data"||(getRevenue.gross_total_amount)==null||(getRevenue.gross_total_amount)==undefined||(getRevenue.gross_total_amount)==""? <h3>₹0</h3>:  <h3>₹{getRevenue.gross_total_amount}</h3> }  
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
                      <p className="mb-0 h5">0%</p>
                     </div>
                     </div>
                     <div>
-                        <h5>Previous Year:</h5>
-                        <p className="h5">$0.00</p>
+                        {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous This week :</h5>:(previousStateChange==9)?<h5>Previous This Month :</h5>:<h5>Today :</h5>}
+                        
+                        { (RevenueError)=="no_data"||(getRevenue.prev_gross_total_amount)==null||(getRevenue.prev_gross_total_amount)==undefined||(getRevenue.prev_gross_total_amount)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{getRevenue.prev_gross_total_amount} </p>} 
+                        
                     </div>
                   </div>
                 </div>
@@ -1043,7 +1063,7 @@ const SearchHandler=(e)=>{
             </div>
             {/* end */}
             {/* Refund */}
-            <div className="card p-2 col-2 rounded-0 shadow-none">
+            {/* <div className="card p-2 col-2 rounded-0 shadow-none">
               <div className=" d-flex mt-0 align-items-center">
                 <HiOutlineReceiptRefund className="text-success h1 mx-2" />
                 <h5 className="text-success">Discount Ammount </h5>
@@ -1060,14 +1080,14 @@ const SearchHandler=(e)=>{
                     </div>
                     <div>
                         <h5>Previous Year:</h5>
-                        <p className="h5">$0.00</p>
+                    { (RevenueError)=="no_data"||(getRevenue.prev_gross_total_amount)==null||(getRevenue.prev_gross_total_amount)==undefined||(getRevenue.prev_gross_total_amount)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{getRevenue.prev_gross_total_amount} </p>} 
                     </div>
                   </div>
                 </div>
 
                 
               </div>
-            </div>
+            </div> */}
 {/* refund end */}
 {/* coupon */}
 <div className="card p-2 col-2 rounded-0 shadow-none">
@@ -1079,15 +1099,15 @@ const SearchHandler=(e)=>{
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                  { (RevenueError)=="no_data"||(getRevenue.return_total)==null||(getRevenue.return_total)==undefined||(getRevenue.return_total)==""? <h3>No Record</h3>:  <h3>{getRevenue.return_total}</h3> }  
+                  { (RevenueError)=="no_data"||(getRevenue.return_total)==null||(getRevenue.return_total)==undefined||(getRevenue.return_total)==""? <h3>₹0</h3>:  <h3>₹{getRevenue.return_total}</h3> }  
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
                      <p className="mb-0 h5">0%</p>
                     </div>
                     </div>
                     <div>
-                        <h5>Previous Year:</h5>
-                        <p className="h5">$0.00</p>
+                    {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous This week :</h5>:(previousStateChange==9)?<h5>Previous This Month :</h5>:<h5>Today :</h5>}
+                        { (RevenueError)=="no_data"||(getRevenue.prev_return_total)==null||(getRevenue.prev_return_total)==undefined||(getRevenue.prev_return_total)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{getRevenue.prev_return_total} </p>} 
                     </div>
                   </div>
                 </div>
@@ -1106,15 +1126,15 @@ const SearchHandler=(e)=>{
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                  { (RevenueError)=="no_data"||(getRevenue.total_gst)==null||(getRevenue.total_gst)==undefined||(getRevenue.total_gst)==""? <h3>No Record</h3>:  <h3>{getRevenue.total_gst}</h3> }  
+                  { (RevenueError)=="no_data"||(getRevenue.total_gst)==null||(getRevenue.total_gst)==undefined||(getRevenue.total_gst)==""? <h3>₹0</h3>:  <h3>₹{getRevenue.total_gst}</h3> }  
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
                      <p className="mb-0 h5">0%</p>
                     </div>
                     </div>
                     <div>
-                        <h5>Previous Year:</h5>
-                        <p className="h5">$0.00</p>
+                    {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous This week :</h5>:(previousStateChange==9)?<h5>Previous This Month :</h5>:<h5>Today :</h5>}
+                        { (RevenueError)=="no_data"||(getRevenue.prev_total_gst)==null||(getRevenue.prev_total_gst)==undefined||(getRevenue.prev_total_gst)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{getRevenue.prev_total_gst} </p>} 
                     </div>
                   </div>
                 </div>
@@ -1133,15 +1153,15 @@ const SearchHandler=(e)=>{
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                  { (RevenueError)=="no_data"||(getRevenue.total_shipping_charges)==null||(getRevenue.total_shipping_charges)==undefined||(getRevenue.total_shipping_charges)==""? <h3>No Record</h3>:  <h3>{getRevenue.total_shipping_charges}</h3> }  
+                  { (RevenueError)=="no_data"||(getRevenue.total_shipping_charges)==null||(getRevenue.total_shipping_charges)==undefined||(getRevenue.total_shipping_charges)==""? <h3>₹0</h3>:  <h3>{getRevenue.total_shipping_charges}</h3> }  
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
                      <p className="mb-0 h5">0%</p>
                     </div>
                     </div>
                     <div>
-                        <h5>Previous Year:</h5>
-                        <p className="h5">$0.00</p>
+                    {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous This week :</h5>:(previousStateChange==9)?<h5>Previous This Month :</h5>:<h5>Today :</h5>}
+                        { (RevenueError)=="no_data"||(getRevenue.prev_total_shipping_charges)==null||(getRevenue.prev_total_shipping_charges)==undefined||(getRevenue.prev_total_shipping_charges)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{getRevenue.prev_total_shipping_charges} </p>} 
                     </div>
                   </div>
                 </div>
