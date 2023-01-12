@@ -896,6 +896,28 @@ const SearchHandler=(e)=>{
   
   }
 
+//-------------gross amount comparission---------------------------
+  var getgrossAmmount=Number(getRevenue.gross_total_amount)
+  var getPreviousGrossAmmount=Number(getRevenue.prev_gross_total_amount)
+  var resultAmmount=(((getgrossAmmount-getPreviousGrossAmmount)/getPreviousGrossAmmount)*100).toFixed(2)
+  resultAmmount!="Infinity"?console.log():resultAmmount=0
+  //-----------------------return total comparission--------------------------------------------------------
+  var Getreturntotal=Number(getRevenue.return_total)
+  var getPreviousreturnTotal=Number(getRevenue.prev_return_total)
+  var resultReturn=(((Getreturntotal-getPreviousreturnTotal)/getPreviousreturnTotal)*100).toFixed(2)
+  resultReturn!="Infinity"?console.log():resultReturn=0
+  //--------------------total gst------------------------------------------
+
+  var GetTotalGST=Number(getRevenue.total_gst)
+  var getPreviousTotalGST=Number(getRevenue.prev_total_gst)
+  var resultGST=(((GetTotalGST-getPreviousTotalGST)/getPreviousTotalGST)*100).toFixed(2)
+  resultGST!="Infinity"?console.log():resultGST=0
+   //--------------------total shipping------------------------------------------
+
+   var GetTotalSHipping=Number(getRevenue.total_shipping_charges)
+   var getPreviousTotalShipping=Number(getRevenue.prev_total_shipping_charges)
+   var resultShipping=(((GetTotalSHipping-getPreviousTotalShipping)/getPreviousTotalShipping)*100).toFixed(2)
+   resultShipping!="Infinity"?console.log():resultShipping=0
     return (
         <div>
               <h2>Revenue Report</h2>
@@ -1046,11 +1068,14 @@ const SearchHandler=(e)=>{
                   { (RevenueError)=="no_data"||(getRevenue.gross_total_amount)==null||(getRevenue.gross_total_amount)==undefined||(getRevenue.gross_total_amount)==""? <h3>₹0</h3>:  <h3>₹{getRevenue.gross_total_amount}</h3> }  
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
-                     <p className="mb-0 h5">0%</p>
+
+                     {(resultAmmount>0)?<p className="mb-0 h5" style={{color:"green"}}> {resultAmmount}%</p>:(resultAmmount<0)?<p className="mb-0 h5" style={{color:"red"}}> {resultAmmount}%</p>:(resultAmmount==0)?<p className="mb-0 h5" style={{color:"blue"}}> {resultAmmount}%</p>:(resultAmmount=="NaN")?<p className="mb-0 h5" style={{color:"grey"}}> 0%</p>:<p className="mb-0 h5" style={{color:"brown"}}> {resultAmmount}%</p>}
+                    
+                    
                     </div>
                     </div>
                     <div>
-                        {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous This week :</h5>:(previousStateChange==9)?<h5>Previous This Month :</h5>:<h5>Today :</h5>}
+                        {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous  week :</h5>:(previousStateChange==9)?<h5>Previous  Month :</h5>:<h5>Today :</h5>}
                         
                         { (RevenueError)=="no_data"||(getRevenue.prev_gross_total_amount)==null||(getRevenue.prev_gross_total_amount)==undefined||(getRevenue.prev_gross_total_amount)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{getRevenue.prev_gross_total_amount} </p>} 
                         
@@ -1102,11 +1127,15 @@ const SearchHandler=(e)=>{
                   { (RevenueError)=="no_data"||(getRevenue.return_total)==null||(getRevenue.return_total)==undefined||(getRevenue.return_total)==""? <h3>₹0</h3>:  <h3>₹{getRevenue.return_total}</h3> }  
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
-                     <p className="mb-0 h5">0%</p>
+
+                    
+                     {(resultReturn>0)?<p className="mb-0 h5" style={{color:"green"}}> {resultReturn}%</p>:(resultReturn<0)?<p className="mb-0 h5" style={{color:"red"}}> {resultReturn}%</p>:(resultReturn==0)?<p className="mb-0 h5" style={{color:"blue"}}> {resultReturn}%</p>:(resultReturn=="NaN")?<p className="mb-0 h5" style={{color:"grey"}}> 0%</p>:<p className="mb-0 h5" style={{color:"brown"}}> {resultReturn}%</p>}
+                    
+
                     </div>
                     </div>
                     <div>
-                    {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous This week :</h5>:(previousStateChange==9)?<h5>Previous This Month :</h5>:<h5>Today :</h5>}
+                    {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous  week :</h5>:(previousStateChange==9)?<h5>Previous  Month :</h5>:<h5>Today :</h5>}
                         { (RevenueError)=="no_data"||(getRevenue.prev_return_total)==null||(getRevenue.prev_return_total)==undefined||(getRevenue.prev_return_total)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{getRevenue.prev_return_total} </p>} 
                     </div>
                   </div>
@@ -1129,11 +1158,15 @@ const SearchHandler=(e)=>{
                   { (RevenueError)=="no_data"||(getRevenue.total_gst)==null||(getRevenue.total_gst)==undefined||(getRevenue.total_gst)==""? <h3>₹0</h3>:  <h3>₹{getRevenue.total_gst}</h3> }  
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
-                     <p className="mb-0 h5">0%</p>
+
+                                        
+                     {(resultGST>0)?<p className="mb-0 h5" style={{color:"green"}}> {resultGST}%</p>:(resultGST<0)?<p className="mb-0 h5" style={{color:"red"}}> {resultGST}%</p>:(resultGST==0)?<p className="mb-0 h5" style={{color:"blue"}}> {resultGST}%</p>:(resultGST=="NaN")?<p className="mb-0 h5" style={{color:"grey"}}> 0%</p>:<p className="mb-0 h5" style={{color:"brown"}}> {resultGST}%</p>}
+                   
+
                     </div>
                     </div>
                     <div>
-                    {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous This week :</h5>:(previousStateChange==9)?<h5>Previous This Month :</h5>:<h5>Today :</h5>}
+                    {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous  week :</h5>:(previousStateChange==9)?<h5>Previous  Month :</h5>:<h5>Today :</h5>}
                         { (RevenueError)=="no_data"||(getRevenue.prev_total_gst)==null||(getRevenue.prev_total_gst)==undefined||(getRevenue.prev_total_gst)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{getRevenue.prev_total_gst} </p>} 
                     </div>
                   </div>
@@ -1156,11 +1189,14 @@ const SearchHandler=(e)=>{
                   { (RevenueError)=="no_data"||(getRevenue.total_shipping_charges)==null||(getRevenue.total_shipping_charges)==undefined||(getRevenue.total_shipping_charges)==""? <h3>₹0</h3>:  <h3>{getRevenue.total_shipping_charges}</h3> }  
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
-                     <p className="mb-0 h5">0%</p>
+
+                      {(resultShipping>0)?<p className="mb-0 h5" style={{color:"green"}}> {resultShipping}%</p>:(resultShipping<0)?<p className="mb-0 h5" style={{color:"red"}}> {resultShipping}%</p>:(resultShipping==0)?<p className="mb-0 h5" style={{color:"blue"}}> {resultShipping}%</p>:(resultShipping=="NaN")?<p className="mb-0 h5" style={{color:"grey"}}> 0%</p>:<p className="mb-0 h5" style={{color:"brown"}}> {resultShipping}%</p>}
+                    
+
                     </div>
                     </div>
                     <div>
-                    {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous This week :</h5>:(previousStateChange==9)?<h5>Previous This Month :</h5>:<h5>Today :</h5>}
+                    {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous  week :</h5>:(previousStateChange==9)?<h5>Previous  Month :</h5>:<h5>Today :</h5>}
                         { (RevenueError)=="no_data"||(getRevenue.prev_total_shipping_charges)==null||(getRevenue.prev_total_shipping_charges)==undefined||(getRevenue.prev_total_shipping_charges)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{getRevenue.prev_total_shipping_charges} </p>} 
                     </div>
                   </div>

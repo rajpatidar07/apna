@@ -422,7 +422,7 @@ const SearchHandler=()=>{
         >
           <Modal.Header closeButton>
             <Modal.Title>
-              {show === "add" ? "Add New Blog " : " Update Blog"}
+              {show === "add" ? "Add New Email " : " Update Email"}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>

@@ -34,6 +34,13 @@ const ProductReport = () => {
 
   const [fromDate, setFromDate]=useState(moment().format("YYYY-MM-DD"));
   const [toDate,setToDate]=useState(moment().format("YYYY-MM-DD"))
+
+  const [PrevProductreport, setPrevProductreport] = useState([])
+
+ const[previousStateChange,setpreviousStateChange] =useState(' ')
+  const[prevFromdate,setprevFromdate]=useState(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'))
+  const[prevTodate,setprevTodate]=useState(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'))
+
   const [apicall,setapicall]=useState(false)
   // const [ProductSearch,setProductSearch]=useState("")
   const [ProductError,setProductError]=useState("")
@@ -55,47 +62,98 @@ const ProductReport = () => {
 
     let value = e.target.value;
     console.log("---------------------------------------------"+value);
+    //today---------------------------------------------------------------------------
     if(value==1){
-      setFromDate(moment().format("YYYY-MM-DD"))
-      console.log("From date"+e.target.value)
-      console.log("today")
+      let frommDate=moment().format("YYYY-MM-DD")
+      setFromDate(frommDate)
+      // console.log("From date"+e.target.value)
+      // console.log("today")
       setToDate(moment().format("YYYY-MM-DD"))
+      let previousTodate=moment(frommDate).subtract(1, 'days').startOf('days').format("YYYY-MM-DD")
+      setprevTodate(previousTodate)
+      setprevFromdate(previousTodate)
+      // console.log("previous day"+ prevDate)
+      setpreviousStateChange(1)
     }
-
+        //yesterday------------------------------------------------------------------------
     if(value==2){
-      setFromDate(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'));
-      console.log("From date"+e.target.value);
-     
+      let yesterday=moment().subtract(1, 'days').startOf('days').format("YYYY-MM-DD")
+      
+      setFromDate(yesterday);
       setToDate( moment().format("YYYY-MM-DD"));
-      console.log("yesterday--"+moment().subtract(1, 'day').startOf('day').format('YYYY-MM-DD'));
+     
+      let previousTodatee=moment(yesterday).subtract(1, 'days').startOf('days').format("YYYY-MM-DD")
+      setprevTodate(previousTodatee)
+      setprevFromdate(moment(previousTodatee).subtract(1, 'days').startOf('days').format("YYYY-MM-DD"))
+      setpreviousStateChange(2)
 
     }
-   if(value===3){
-      setFromDate( moment().subtract(1, 'weeks').startOf('weeks').format('YYYY-MM-DD')  );
+    //last week---------------------------------------------------------------
+   if(value==3){
+       let lastweek= moment().subtract(1, 'weeks').startOf('weeks').format('YYYY-MM-DD')
+      setFromDate(lastweek);
     
-      console.log("From date"+e.target.value)
-      
-      setToDate( moment().format("YYYY-MM-DD")  );
-      // console.log("last week"+moment().subtract(1, 'week').startOf('week').format('YYYY-MM-DD'))
+      setToDate(moment().subtract(1,'weeks').endOf('weeks').format('YYYY-MM-DD'));
+      let previouslastweek=moment(lastweek).subtract(1,'days').endOf('days').format('YYYY-MM-DD')
+       setprevTodate(previouslastweek)
+       setprevFromdate(moment(previouslastweek).subtract(1,'weeks').endOf('weeks').format('YYYY-MM-DD'))
+       setpreviousStateChange(3)
+
    
    }
-
+         //last month---------------------------------------------------------------
    if(value==4){
    
-
-    setFromDate(moment().subtract(1, 'months').startOf('months').format('YYYY-MM-DD'));
-    console.log("From last month"+e.target.value)
-    setToDate(  moment().format("YYYY-MM-DD")    );
-    // setToDate("2022-12-14");
-
-    
+   let month=moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD')
+    setFromDate(month);
+    let lastMonth=moment().subtract(1, 'month').endOf('month').format('YYYY-MM-DD')
+    setToDate(lastMonth);
+    let previouslastmont=moment(lastMonth).subtract(1, 'days').startOf('days').format('YYYY-MM-DD')
+    setprevTodate(previouslastmont);
+    setprevFromdate(moment(previouslastmont).subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
+    // setPrevDate(moment(month).subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
+    // console.log("previou month-"+prevDate)
+    setpreviousStateChange(4)
  }
+//  last six month---------------------------------------------------------
  if(value==5){
-  setFromDate(moment().subtract(6, 'month').startOf('month').format('YYYY-MM-DD') );
-  console.log("From last 6 month"+e.target.value)
-  setToDate( moment().format("YYYY-MM-DD") );
+  
+  let sixMonth=moment().subtract(6, 'month').startOf('month').format('YYYY-MM-DD')
+  setFromDate(sixMonth );
+  setToDate(moment().format("YYYY-MM-DD") );
+  let lastsixMonth=moment(sixMonth).subtract(1, 'month').startOf('month').format('YYYY-MM-DD')
+  setprevTodate(lastsixMonth);
+  setprevFromdate(moment(lastsixMonth).subtract(5, 'month').startOf('month').format('YYYY-MM-DD'))
+  // setPrevDate(moment(sixMonth).subtract(6, 'month').startOf('month').format('YYYY-MM-DD'))
+  // console.log("previou 6 month-"+prevDate)
+  setpreviousStateChange(5)
 }
 
+//this week-----------------------------------------------------------------------
+if(value==8){
+  
+let ThisWeek=moment().startOf('weeks').format('YYYY-MM-DD')
+setFromDate(ThisWeek);
+// console.log("From last 6 month"+ThisWeek)
+setToDate( moment().format("YYYY-MM-DD") );
+let previousthisweek=moment(ThisWeek).subtract(1,'days').endOf('days').format('YYYY-MM-DD')
+setprevTodate(previousthisweek)
+setprevFromdate(moment(previousthisweek).subtract(1,'weeks').endOf('weeks').format('YYYY-MM-DD'))
+// setPrevDate(moment(ThisWeek).subtract(1, 'weeks').endOf('weeks').format('YYYY-MM-DD'))
+setpreviousStateChange(8)
+  
+}
+if(value==9){
+  
+let ThisMonth=moment().startOf('month').format('YYYY-MM-DD')
+setFromDate(ThisMonth);
+// console.log("From last 6 month"+ThisMonth)
+setToDate( moment().format("YYYY-MM-DD") );
+let previousthismont=moment(ThisMonth).subtract(1, 'days').startOf('days').format('YYYY-MM-DD')
+setprevTodate(previousthismont);
+setprevFromdate(moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
+setpreviousStateChange(9)
+}
 fetchData()
 
   }
@@ -105,6 +163,8 @@ fetchData()
   const fetchData=()=>{
     console.log( "from_date---"+fromDate)
     console.log( "to_date---"+toDate)
+    console.log( "Previous  Todate---------------------------------------"+prevTodate)
+    console.log( "Previous fromdate---------------------------------------"+prevFromdate)
    
 
     axios.post(`${process.env.REACT_APP_BASEURL}/products_report`
@@ -112,16 +172,19 @@ fetchData()
     {
       "from_date":fromDate,
       "to_date":toDate,
+      "prev_from_date":prevFromdate,
+      "prev_to_date":prevTodate,
       vendors_id:vendorId,
       categorys:categoryId,
       user_locations:location,
       brand:brandName
   }
     ).then((response) => {
-        //  console.log('product data-all---'+JSON.stringify(response.data))
-        //  console.log('product data [0] [0]--'+JSON.stringify(response.data[0][0]))
-        // console.log('Product data'+JSON.stringify(response.data[1]))
-        console.log('Product Error=======---------'+JSON.stringify(response.data.message))
+          console.log('product data-all---'+JSON.stringify(response.data))
+         console.log('product data --'+JSON.stringify(response.data[0][0]))
+        console.log('Product  previous data'+JSON.stringify(response.data[1]))
+        console.log("Order table  data----"+ JSON.stringify(response.data[2]))
+        // console.log('Product Error=======---------'+JSON.stringify(response.data.message))
 
 
 
@@ -129,7 +192,7 @@ fetchData()
           setProductError(response.data.message)
           setGetProduct([0])
           setGetTableProduct([0])
-        
+          setPrevProductreport([0])
    
         }
         else{
@@ -137,7 +200,8 @@ fetchData()
 
           setProductError('')
           setGetProduct(response.data[0][0])
-          setGetTableProduct(response.data[1])
+          setPrevProductreport(response.data[1][0])
+          setGetTableProduct(response.data[2])
           setapicall(false)
        
         }
@@ -153,7 +217,7 @@ fetchData()
 
   const VenderData= async()=>{
     let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
-     console.log("vendor----"+JSON.stringify(result.data))
+    //  console.log("vendor----"+JSON.stringify(result.data))
     if(result.data){
       setVenderList(result.data)
     }
@@ -174,7 +238,7 @@ fetchData()
 const BrandData= async()=>{
 let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/brand_list`)
 
- console.log("Brand data-----"+ JSON.stringify(result.data))
+//  console.log("Brand data-----"+ JSON.stringify(result.data))
 if(result.data){
   setBrand(result.data)
 }
@@ -489,6 +553,36 @@ function handleDownloadExcel() {
     
    
 
+// // //-------------Item sold---------------------------
+var getProductCount=Number(getProduct.product_count)
+
+var getPreviousProductCount=Number(PrevProductreport.prev_order_count)
+
+var resultCount=(((getProductCount-getPreviousProductCount)/getPreviousProductCount)*100).toFixed(2)
+
+resultCount!="Infinity"?console.log():resultCount=0
+
+// // //-----------------------Net sales--------------------------------------------------------
+var getNetSold=Number(getProduct.net_sales)
+
+var getPreviousgetNetSold=Number(PrevProductreport.prev_net_sales)
+
+var resultNetSold=(((getNetSold-getPreviousgetNetSold)/getPreviousgetNetSold)*100).toFixed(2)
+
+resultNetSold!="Infinity"?console.log():resultNetSold=0
+
+// // //-----------------------order count---------------------------------------
+var getorderCount=Number(getProduct.order_count)
+
+var getPreviousorderCount=Number(PrevProductreport.prev_order_count)
+
+var resultOrderCount=(((getorderCount-getPreviousorderCount)/getPreviousorderCount)*100).toFixed(2)
+
+resultOrderCount!="Infinity"?console.log():resultOrderCount=0
+
+
+
+
 
 
   return (
@@ -507,11 +601,13 @@ function handleDownloadExcel() {
               <option>Search by category</option>
               <option name="today" value={1}>Today</option>
               <option name="yesterday" value={2}>yesterday</option>
+              <option name="this_week" value={8}>this  week</option>
               <option name="last_week" value={3}>Last week</option>
+              <option name="this_week" value={9}>This  month</option>
               <option name="last_month" value={4}>last month</option>
               <option name="last_6_month" value={5}>last 6  month</option>
-              {/* <option value="6">custom month</option> */}
-              <option value="7">custom date</option>
+              {/* <option name="custom_month" value="6">custom month</option> */}
+              <option name="custom_date" value="7">custom date</option>
 
             </Form.Select>
           </div>
@@ -619,18 +715,21 @@ function handleDownloadExcel() {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
                       <h3>
-                      {console.log("Product error----"+ProductError)}
+                      {/* {console.log("Product error----"+ProductError)} */}
                   {console.log(" Product count---===="+getProduct.product_count)}
-                        { (ProductError)=="No_Data"||(getProduct.product_count)==null||(getProduct.product_count)==undefined||(getProduct.product_count)==""? <h3>No Record</h3>:  <h3>{getProduct.product_count}</h3> }  
+                        { (ProductError)=="No_Data"||(getProduct.product_count)==null||(getProduct.product_count)==undefined||(getProduct.product_count)==""? <h3> ₹0</h3>:  <h3>₹{getProduct.product_count}</h3> }  
                         </h3>
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
-                        <p className="mb-0 h5">0%</p>
+                      
+                        {(resultCount>0)?<p className="mb-0 h5" style={{color:"green"}}> {resultCount}%</p>:(resultCount<0)?<p className="mb-0 h5" style={{color:"red"}}> {resultCount}%</p>:(resultCount==0)?<p className="mb-0 h5" style={{color:"blue"}}> {resultCount}%</p>:(resultCount=="NaN")?<p className="mb-0 h5" style={{color:"grey"}}> 0%</p>:<p className="mb-0 h5" style={{color:"brown"}}> {resultCount}%</p>}
                       </div>
                     </div>
                     <div>
-                      <h5>Previous Year:</h5>
-                      <p className="h5">$0.00</p>
+                    {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous  week :</h5>:(previousStateChange==9)?<h5>Previous  Month :</h5>:<h5>Today :</h5>}
+                        
+                        {  (ProductError)=="no_data"||(PrevProductreport.prev_product_count)==null||(PrevProductreport.prev_product_count)==undefined||(PrevProductreport.prev_product_count)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{PrevProductreport.prev_product_count} </p>} 
+
                     </div>
                   </div>
                 </div>
@@ -647,16 +746,19 @@ function handleDownloadExcel() {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                    { (ProductError)=="No_Data"||(getProduct.net_sales)==null||(getProduct.net_sales)==undefined||(getProduct.net_sales)==""? <h3>No Record</h3>:  <h3>{getProduct.net_sales}</h3> }  
+                    { (ProductError)=="No_Data"||(getProduct.net_sales)==null||(getProduct.net_sales)==undefined||(getProduct.net_sales)==""? <h3>₹0</h3>:  <h3>₹{getProduct.net_sales}</h3> }  
                      
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
-                        <p className="mb-0 h5">0%</p>
+
+                        {(resultNetSold>0)?<p className="mb-0 h5" style={{color:"green"}}> {resultNetSold}%</p>:(resultNetSold<0)?<p className="mb-0 h5" style={{color:"red"}}> {resultNetSold}%</p>:(resultNetSold==0)?<p className="mb-0 h5" style={{color:"blue"}}> {resultNetSold}%</p>:(resultNetSold=="NaN")?<p className="mb-0 h5" style={{color:"grey"}}> 0%</p>:<p className="mb-0 h5" style={{color:"brown"}}> {resultNetSold}%</p>}
+
                       </div>
                     </div>
                     <div>
-                      <h5>Previous Year:</h5>
-                      <p className="h5">$0.00</p>
+                    {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous  week :</h5>:(previousStateChange==9)?<h5>Previous  Month :</h5>:<h5>Today :</h5>}
+                        
+                        {  (ProductError)=="no_data"||(PrevProductreport.prev_net_sales)==null||(PrevProductreport.prev_net_sales)==undefined||(PrevProductreport.prev_net_sales)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{PrevProductreport.prev_net_sales} </p>} 
                     </div>
                   </div>
                 </div>
@@ -674,15 +776,18 @@ function handleDownloadExcel() {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
                      
-                      { (ProductError)=="No_Data"||(getProduct.order_count)==null||(getProduct.order_count)==undefined||(getProduct.order_count)==""? <h3>No Record</h3>:  <h3>{getProduct.order_count}</h3> }  
+                      { (ProductError)=="No_Data"||(getProduct.order_count)==null||(getProduct.order_count)==undefined||(getProduct.order_count)==""? <h3>₹0</h3>:  <h3>₹{getProduct.order_count}</h3> }  
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
-                        <p className="mb-0 h5">0%</p>
+
+                        {(resultOrderCount>0)?<p className="mb-0 h5" style={{color:"green"}}> {resultOrderCount}%</p>:(resultOrderCount<0)?<p className="mb-0 h5" style={{color:"red"}}> {resultOrderCount}%</p>:(resultOrderCount==0)?<p className="mb-0 h5" style={{color:"blue"}}> {resultOrderCount}%</p>:(resultOrderCount=="NaN")?<p className="mb-0 h5" style={{color:"grey"}}> 0%</p>:<p className="mb-0 h5" style={{color:"brown"}}> {resultOrderCount}%</p>}
+
                       </div>
                     </div>
                     <div>
-                      <h5>Previous Year:</h5>
-                      <p className="h5">$0.00</p>
+                    {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous  week :</h5>:(previousStateChange==9)?<h5>Previous  Month :</h5>:<h5>Today :</h5>}
+                        
+                        {  (ProductError)=="no_data"||(PrevProductreport.prev_order_count)==null||(PrevProductreport.prev_order_count)==undefined||(PrevProductreport.prev_order_count)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{PrevProductreport.prev_order_count} </p>} 
                     </div>
                   </div>
                 </div>
