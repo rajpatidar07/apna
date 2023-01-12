@@ -9,12 +9,28 @@ import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
 import axios from "axios";
 import Modal from 'react-bootstrap/Modal';
+import moment from "moment";
 
 const Offerproduct = () => {
   const formRef = useRef();
   let userid= localStorage.getItem("userid")
 const [featuredProductData,setFeatureProductData]=useState([]);
+const currentdate = moment().format('YYYY-MM-DD')
+const [searchdata, setsearchData] = useState({
+  product_title_name: "",
+  category: "",
+  manufacturing_date:"",
 
+})
+
+const OnSearchChange = (e) => {
+  setsearchData({ ...searchdata, [e.target.name]: e.target.value })
+}
+
+const OnDateChange = (e) => {
+  let mdate = moment(e.target.value).format('YYYY-MM-DD')
+  setsearchData({ ...searchdata,manufacturing_date: mdate })
+}
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
@@ -26,12 +42,11 @@ const [featuredProductData,setFeatureProductData]=useState([]);
   const handleShow = () => setShow(true);
   const handleClick = () => {};
   useEffect(() => {
-  
       try {
         axios
           .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=500&user_id=${userid}`,{
             "product_search":{
-              "search":"",
+              "search":`${searchdata.product_title_name}`,
               "price_from":"",
               "price_to":"",
               "id":"",
@@ -39,7 +54,8 @@ const [featuredProductData,setFeatureProductData]=useState([]);
               "sale_price":"",
               "short_by_updated_on":"",
               "is_fetured_product": ["1"],
-              "fetured_type": ["featured_offer"]
+              "fetured_type": ["special_offer"],
+              "manufacturing_date":[`${searchdata.manufacturing_date}`]
               }
           })
           .then((response) => {
@@ -53,8 +69,7 @@ const [featuredProductData,setFeatureProductData]=useState([]);
           });
       } catch (err) {}
   
-  }, [apicall]);
-  console.log("ffffffffffffffffffffffffff"+JSON.stringify(featuredProductData))
+  }, [apicall,searchdata]);
   const columns = [
     {
       name: "ID",
@@ -190,12 +205,10 @@ const [featuredProductData,setFeatureProductData]=useState([]);
   ];
   const handleFormChange = (e) => {
     setfdata({...fdata,[e.target.name]: e.target.value})
-      console.log("dataaaaaaaaaaaaaaaaaaaaaaa"+JSON.stringify(e.target.value))
     };
     
 
   const UpdateFeaturedProduct = () => {
-    
     axios.put(`${process.env.REACT_APP_BASEURL}/update_fetured_product`,{
       id:13,
       start_date:fdata.start_date,
@@ -215,25 +228,25 @@ const [featuredProductData,setFeatureProductData]=useState([]);
 
   {/* search bar */}
   <div className="card mt-3 p-3 ">
-       <div className="row pb-3">
-      <div className="col-md-3 col-sm-6 aos_input">
-        <Input type={"text"} plchldr={"Search by product name"} />
+  <div className="row pb-3">
+          <div className="col-md-3 col-sm-6 aos_input">
+            <input onChange={OnSearchChange} name='product_title_name'
+              value={searchdata.product_title_name}
+              className={'adminsideinput'} type={"text"} placeholder={"Search by product name"} />
+          </div>
+          
+          <div className="col-md-3 col-sm-6 aos_input value={}">
+            <input type={"date"} onChange={OnDateChange} name='manufacturing_date'
+              value={searchdata.manufacturing_date}
+              className={'adminsideinput'} placeholder={"Search by product name"} />
+          </div>
+          {/* <div className="col-md-3 col-sm-6 aos_input">
+            <MainButton
+              btntext={"Search"}
+              btnclass={"button main_button w-100"}
+            />
+          </div> */}
         </div>
-        {/* <div className="col-md-3 col-sm-6 aos_input">
-        <Form.Select aria-label="Search by category" className="adminselectbox" placeholder="Search by category">
-        <option>Search by category</option>
-          <option value="1">Food</option>
-          <option value="2">Fish & Meat</option>
-          <option value="3">Baby Care</option>
-        </Form.Select>
-        </div> */}
-        <div className="col-md-3 col-sm-6 aos_input">
-        <Input type={"date"} plchldr={"Search by product name"} />
-        </div>
-        <div className="col-md-3 col-sm-6 aos_input">
-        <MainButton btntext={"Search"} btnclass={'button main_button w-100'} />
-        </div>
-      </div>
 
       {/* upload */}
      

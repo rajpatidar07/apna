@@ -56,7 +56,6 @@ const [featuredProductData,setFeatureProductData]=useState([]);
       } catch (err) {}
   
   }, [apicall]);
-  console.log("ffffffffffffffffffffffffff"+JSON.stringify(featuredProductData))
   const columns = [
     {
       name: "ID",
@@ -192,12 +191,10 @@ const [featuredProductData,setFeatureProductData]=useState([]);
   ];
   const handleFormChange = (e) => {
     setfdata({...fdata,[e.target.name]: e.target.value})
-      console.log("dataaaaaaaaaaaaaaaaaaaaaaa"+JSON.stringify(e.target.value))
     };
     
 
   const UpdateFeaturedProduct = () => {
-    
     axios.put(`${process.env.REACT_APP_BASEURL}/update_fetured_product`,{
       id:13,
       start_date:fdata.start_date,
@@ -221,7 +218,7 @@ const [featuredProductData,setFeatureProductData]=useState([]);
        <div className="card mt-3 p-3 ">
        <div className="row pb-3">
       <div className="col-md-3 col-sm-6 aos_input">
-        <Input type={"text"} plchldr={"Search by product name"} />
+        <input type={"text"} placeholder={"Search by product name"} className={'adminsideinput'}/>
         </div>
         {/* <div className="col-md-3 col-sm-6 aos_input">
         <Form.Select aria-label="Search by category" className="adminselectbox" placeholder="Search by category">
@@ -232,7 +229,7 @@ const [featuredProductData,setFeatureProductData]=useState([]);
         </Form.Select>
         </div> */}
         <div className="col-md-3 col-sm-6 aos_input">
-        <Input type={"date"} plchldr={"Search by product name"} />
+        <input type={"date"} placeholder={"Search by product name"} className={'adminsideinput'}/>
         </div>
         <div className="col-md-3 col-sm-6 aos_input">
         <MainButton btntext={"Search"} btnclass={'button main_button w-100'} />
