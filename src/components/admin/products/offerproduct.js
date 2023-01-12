@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
@@ -8,60 +8,96 @@ import { BiEdit } from "react-icons/bi";
 import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
 import axios from "axios";
+import Modal from 'react-bootstrap/Modal';
+
 const Offerproduct = () => {
+  const formRef = useRef();
+  let userid= localStorage.getItem("userid")
+const [featuredProductData,setFeatureProductData]=useState([]);
+
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
-  const [odata, setodata] = useState([]);
+ const [apicall,setapicall]=useState(false);
+  const [fdata, setfdata] = useState([]);
+  const [show, setShow] = useState(false);
 
-const handleClick = () => {};
-useEffect(() => {
-  axios.post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`, {
-    product_search: {
-      search: "",
-      price_from: "",
-      price_to: "",
-      id:"asc",
-      product_title_name:"",
-      sale_price:"",
-      featured_product:["1"],
-      fetured_type:  ["special_offer"]
-
-    }}).then((response) => {
-    setodata(response.data)
-  }).catch(function (error) {
-    console.log(error);
-  });
-}, []);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const handleClick = () => {};
+  useEffect(() => {
+  
+      try {
+        axios
+          .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=500&user_id=${userid}`,{
+            "product_search":{
+              "search":"",
+              "price_from":"",
+              "price_to":"",
+              "id":"",
+              "product_title_name":"asc",
+              "sale_price":"",
+              "short_by_updated_on":"",
+              "is_fetured_product": ["1"],
+              "fetured_type": ["featured_offer"]
+              }
+          })
+          .then((response) => {
+            let data=response.data.result;
+            // let data = response.data.filter(item=> item.is_active === 1);
+            setFeatureProductData(response.data.results)
+            setfdata(response.data.results)
+            // setaddcoupondata(data);
+            // setsearchCoupon(data);
+            setapicall(false);
+          });
+      } catch (err) {}
+  
+  }, [apicall]);
+  console.log("ffffffffffffffffffffffffff"+JSON.stringify(featuredProductData))
   const columns = [
     {
-      name: "Sku",
+      name: "ID",
       selector: (row) => (
-        <p>
-          {row.product_id}
-        </p>
+        row.fetured_product_id
       ),
       sortable: true,
-      width: "100px",
+      width: "80px",
       center: true,
+      style: {
+        paddingLeft: 0,
+      }
     },
     {
-      name: "#",
-      width: "150px",
+      name: "Product ID",
+      selector: (row) => (
+        row.id
+      ),
+      sortable: true,
+      width: "80px",
+      center: true,
+      style: {
+        paddingLeft: 0,
+      }
+    },
+    {
+      name: "Image",
+      width: "100px",
       center: true,
       cell: (row) => (
+        
         <img
-          height="90px"
-          width="70px"
-          alt={row.product_title_name}
-          src={row.all_images ? row.all_images :"https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
-    
+          // height="90px"
+          // width="75px"
+          alt={'apna_organic'}
+          src={
+            row.image? row.image : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
           }
           style={{
-            borderRadius: 10,
-            paddingTop: 10,
-            paddingBottom: 10,
+            padding: 10,
             textAlign: "right",
+            maxHeight: "100px",
+            maxWidth: "100px"
           }}
           onClick={handleClick}
         />
@@ -71,13 +107,13 @@ useEffect(() => {
       name: "Product Name",
       selector: (row) => row.product_title_name,
       sortable: true,
-      width: "250px",
+      width: "170px",
     },
     {
       name: "Category",
       selector: (row) => row.category,
       sortable: true,
-      width: "200px",
+      width: "130px",
     },
     {
       name: "Price",
@@ -92,10 +128,33 @@ useEffect(() => {
     },
   
     {
+      name: "Stock",
+      selector: (row) => row.quantity,
+      sortable: true,
+      width: "100px",
+      center: true,
+      style: {
+        paddingRight: "32px",
+        paddingLeft: "0px",
+      },
+    },
+  
+    {
+      name: "Discount",
+      selector: (row) => row.discount,
+      sortable: true,
+      width: "130px",
+      center: true,
+      style: {
+        paddingRight: "32px",
+        paddingLeft: "0px",
+      },
+    },
+    {
       name: "From Date",
       selector: (row) => row.manufacturing_date,
       sortable: true,
-      width: "150px",
+      width: "130px",
       center: true,
       style: {
         paddingRight: "32px",
@@ -106,7 +165,7 @@ useEffect(() => {
       name: "To Date",
       selector: (row) => row.expire_date,
       sortable: true,
-      width: "120px",
+      width: "130px",
       center: true,
       style: {
         paddingRight: "32px",
@@ -115,7 +174,7 @@ useEffect(() => {
     },
     {
       name: "Action",
-      width: "90px",
+      width: "100px",
       style: {
         paddingRight: "12px",
         paddingLeft: "0px",
@@ -123,32 +182,51 @@ useEffect(() => {
       center: true,
       selector: (row) => (
         <div className={"actioncolimn"}>
-         <BiEdit className=" p-0 m-0  editiconn text-secondary" />
+         <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.fetured_product_id)} />
           <BsTrash className=" p-0 m-0 editiconn text-danger"  onClick={handleAlert} />
         </div>
       ),
     },
-   
   ];
+  const handleFormChange = (e) => {
+    setfdata({...fdata,[e.target.name]: e.target.value})
+      console.log("dataaaaaaaaaaaaaaaaaaaaaaa"+JSON.stringify(e.target.value))
+    };
+    
+
+  const UpdateFeaturedProduct = () => {
+    
+    axios.put(`${process.env.REACT_APP_BASEURL}/update_fetured_product`,{
+      id:13,
+      start_date:fdata.start_date,
+      end_date:fdata.end_date
+    }).then((response) => {
+      let data=response.data.results;
+    // console.log("idddllllllllllllllllllllllllllllllll------"+JSON.stringify(addadmindata))
+  });
+  formRef.current.reset();
  
+  setapicall(true);
+  
+}
     return (
         <div>
              <h2>Offer Products</h2>
 
   {/* search bar */}
   <div className="card mt-3 p-3 ">
-  <div className="row pb-3">
+       <div className="row pb-3">
       <div className="col-md-3 col-sm-6 aos_input">
         <Input type={"text"} plchldr={"Search by product name"} />
         </div>
-        <div className="col-md-3 col-sm-6 aos_input">
+        {/* <div className="col-md-3 col-sm-6 aos_input">
         <Form.Select aria-label="Search by category" className="adminselectbox" placeholder="Search by category">
         <option>Search by category</option>
           <option value="1">Food</option>
           <option value="2">Fish & Meat</option>
           <option value="3">Baby Care</option>
         </Form.Select>
-        </div>
+        </div> */}
         <div className="col-md-3 col-sm-6 aos_input">
         <Input type={"date"} plchldr={"Search by product name"} />
         </div>
@@ -157,20 +235,72 @@ useEffect(() => {
         </div>
       </div>
 
-
       {/* upload */}
+     
+      <Modal size="lg" show={show} onHide={() => handleClose()}>
+        <Form
+          className=""
+         
+          ref={formRef}
+         
+          
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>
+              {show === "add" ? "Add New Blog " : " Update Blog "}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="row p-3 m-0">
+              <div className="col-md-6">
+                  <Form.Group className="mb-3 aos_input" controlId="formBasicStartDate">
+                    <Form.Label>Manufacturing Date</Form.Label>
+                    <Form.Control  name='start_date' value={fdata.start_date} onChange={(e) => handleFormChange(e)}  type="date" placeholder="Coupon Start Date" />
+                  </Form.Group>
+                </div> 
+                <div className="col-md-6">
+                  <Form.Group className="mb-3 aos_input" controlId="formBasicStartDate">
+                    <Form.Label>Expire Date</Form.Label>
+                    <Form.Control  name='end_date' value={fdata.end_date} onChange={(e) => handleFormChange(e)}   type="date" placeholder="Coupon Start Date" />
+                  </Form.Group>
+                </div> 
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <button
+              className="button main_outline_button"
+              onClick={() => handleClose()}
+            >
+              Cancel
+            </button>
+            <button
+              className="button main_outline_button"
+              onClick={() => UpdateFeaturedProduct()}
+            >
+              Update
+            </button>
+            {/* <Iconbutton
+              type={"submit"}
+                 
+              // btntext={show === "add" ? "Add Blog" : "Update Blog"}
+              // onClick={(show === 'add' ? AddVendorClick : UpdateVendorClick(show))}
+              btnclass={"button main_button "}
+            /> */}
+          </Modal.Footer>
+        </Form>
+      </Modal>
 
       {/* datatable */}
    
       <DataTable
         columns={columns}
-        data={odata.results}
+        data={featuredProductData}
         pagination
         highlightOnHover
         pointerOnHover
-        className={"table_body offerproduct_table"}
+        className={"table_body featuredproduct_table"}
       />
-          <SweetAlert
+      <SweetAlert
           show={Alert}
           title="Product Name"
           text="Are you Sure you want to remove"

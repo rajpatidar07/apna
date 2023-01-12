@@ -33,6 +33,7 @@ const onSearchClick = () =>{
         "price_from": "",
         "price_to": "",
         "id":"asc",
+        "short_by_updated_on":"",
         "category": `${searchdata.category}`,
         "quantity": 50
 
