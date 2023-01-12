@@ -14,6 +14,7 @@ import CategoryJson from "./json/categorytype";
 import Table from "react-bootstrap/Table";
 import Carousel from "react-bootstrap/Carousel";
 import { AiOutlinePlus, AiOutlineCloudUpload } from "react-icons/ai";
+import {FaEllipsisV} from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
@@ -27,6 +28,9 @@ import { GiCancel } from "react-icons/gi";
 import moment from "moment/moment";
 import demo from "../../images/demo.jpg";
 import BrandJson from "./json/BrandJson";
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+
 let categoryArray = [];
 let encoded;
 // let newImageUrls = [];
@@ -168,6 +172,9 @@ const [taxdata,settaxdata] = useState({
             search: `${searchdata.product_title_name}`,
             price_from: "",
             price_to: "",
+            id:"asc",
+            product_title_name:"",
+            sale_price:"",
             category: categoryArray,
             product_status: [`${searchdata.product_status}`],
             is_delete: ["1"],
@@ -194,14 +201,50 @@ const [taxdata,settaxdata] = useState({
       id:id[0],
      productid:id[1]
      })
-
-
     setvariantid(id[0]);
     setproductid(id[1]);
     setAlert(true);
   };
- 
+//  feature product 
+const [featureshow, setfeatureShow] = useState(false);
+const [featuredata, setfeaturedata] = useState({
+  start_date:"",
+  end_date:"",
+  product_id:"",
+  fetured_type:"",
+});
+const [productname, setproductname] = useState('');
 
+  const featureModalClose = () => setfeatureShow(false);
+  const featureModalShow = () => setfeatureShow(true);
+const OnProductOfferClick = (e,productid,productname) =>{
+  setfeaturedata({...featuredata, 
+    product_id:`${productid}`,
+    fetured_type:e.target.value,
+  })
+  setproductname(productname)
+  setfeatureShow(true)
+}
+const OnFeatureDateChaneg = (e)=>{
+  setfeaturedata({...featuredata, 
+    [e.target.name]:e.target.value
+  })
+}
+console.log("-----fe"+JSON.stringify(featuredata))
+const AddProductFeatureClick = (e) =>{
+  e.preventDefault();
+axios
+.post(`${process.env.REACT_APP_BASEURL}/add_fetured_product`,featuredata)
+.then((response) => {
+  console.log("---update" + JSON.stringify(response.data));
+  setapicall(true);
+  setfeatureShow(false)
+})
+.catch(function (error) {
+  console.log(error);
+});
+}
+// end feature product
   //  json
   var varietyy = VariationJson;
   var categorytype = CategoryJson;
@@ -258,11 +301,11 @@ const [taxdata,settaxdata] = useState({
       name: "Category",
       selector: (row) => row.category,
       sortable: true,
-      width: "160px",
+      width: "90px",
     },
     {
-      name: "Price",
-      selector: (row) => row.product_price,
+      name: "Mrp",
+      selector: (row) => (row.mrp).toFixed(2),
       sortable: true,
       width: "100px",
       center: true,
@@ -272,8 +315,31 @@ const [taxdata,settaxdata] = useState({
       },
     },
     {
+      name: "Dis(%)",
+      selector: (row) => row.discount+'%',
+      sortable: true,
+      width: "130px",
+      center: true,
+      style: {
+        paddingRight: "32px",
+        paddingLeft: "0px",
+      },
+    },
+    {
+      name: "Price",
+      selector: (row) => (row.product_price).toFixed(2),
+      sortable: true,
+      width: "100px",
+      center: true,
+      style: {
+        paddingRight: "32px",
+        paddingLeft: "0px",
+      },
+    },
+    
+    {
       name: "Gst",
-      selector: (row) => row.gst,
+      selector: (row) => row.gst+'%',
       sortable: true,
       width: "90px",
       center: true,
@@ -281,10 +347,9 @@ const [taxdata,settaxdata] = useState({
         paddingLeft: "0px",
       },
     },
-
     {
-      name: "Stock",
-      selector: (row) => row.quantity,
+      name: "SP",
+      selector: (row) => (row.sale_price).toFixed(2),
       sortable: true,
       width: "100px",
       center: true,
@@ -293,12 +358,11 @@ const [taxdata,settaxdata] = useState({
         paddingLeft: "0px",
       },
     },
-
     {
-      name: "Discount",
-      selector: (row) => row.discount,
+      name: "Qty",
+      selector: (row) => row.quantity,
       sortable: true,
-      width: "130px",
+      width: "100px",
       center: true,
       style: {
         paddingRight: "32px",
@@ -312,7 +376,7 @@ const [taxdata,settaxdata] = useState({
           className={
             row.product_status === 'pending'
               ? "badge bg-success"
-              : row.product_status === 'expired'
+              : row.product_status === 'active'
               ? "badge bg-danger" :row.product_status === 'special_offer' ?
               "badge bg-info" : row.product_status === 'featured_offer'?
                "badge bg-warning" :row.product_status === 'promotional'?
@@ -322,8 +386,8 @@ const [taxdata,settaxdata] = useState({
         >
           {row.product_status === 'pending'
             ? "Pending"
-            : row.product_status === 'expired'
-            ? "Expired":
+            : row.product_status === 'active'
+            ? "Active":
             row.product_status === 'special_offer' ?
             "Special Offer" :
             row.product_status === 'featured_offer' ?
@@ -349,10 +413,10 @@ const [taxdata,settaxdata] = useState({
           <option selected={row.product_status === "" ? true : false} value="">Select</option>
           <option selected={row.product_status === "pending" ? true : false} value="pending">Pending</option>
           <option selected={row.product_status === "draft" ? true : false} value="draft">Draft</option>
-          <option selected={row.product_status === "expired" ? true : false} value="expired">Expired</option>
-          <option selected={row.product_status === "special_offer" ? true : false} value="special_offer">Special Offer</option>
-          <option selected={row.product_status === "featured_offer" ? true : false} value="featured_offer">Featured Offer </option>
-          <option selected={row.product_status === "promotional" ? true : false} value="promotional">Promotional </option>
+          <option selected={row.product_status === "active" ? true : false} value="active">Active</option>
+          <option value="special_offer" onClick={(special_offer)=>OnProductOfferClick(special_offer)}>Special Offer</option>
+          <option  value="featured_offer" onClick={(featured_offer)=>OnProductOfferClick(featured_offer)}>Featured Offer </option>
+          <option value="promotional" onClick={(promotional)=>OnProductOfferClick(promotional)}>Promotional </option>
         </Form.Select>
       ),
       sortable: true,
@@ -381,6 +445,23 @@ const [taxdata,settaxdata] = useState({
       center: true,
       selector: (row) => (
         <div className={"actioncolimn"}>
+          <div className="feature_product_dropdown_box">
+          <Form.Select
+          aria-label="Search by delivery"
+          size="sm"
+          className="w-100 feature_product_select"
+          onChange={(e)=>OnProductOfferClick(e,row.product_id,row.product_title_name)}
+        >
+          <option value="">Select</option>
+          <option value="special_offer">Special Offer</option>
+          <option  value="featured_offer" >Featured Offer </option>
+          <option value="promotional" >Promotional </option>
+        </Form.Select>
+          <FaEllipsisV className="feature_product_ellipsis"/>
+
+          
+          </div>
+         
           <BiEdit
             className=" p-0 m-0  editiconn text-secondary"
             onClick={handleShow.bind(this, row.product_id)}
@@ -560,9 +641,12 @@ const  getProductVariant = (id) =>{
       product_search: {
         search: "",
         category: "",
-        is_delete: ["1"],
         price_from: "",
         price_to: "",
+        id:"asc",
+      product_title_name:"",
+      sale_price:"",
+        is_delete: ["1"],
         colors: [],
         size: [],
         parent_category: [],
@@ -773,7 +857,6 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
 +
 (product_price*(taxdata.manufacturers_sales_tax/100))
 )
-console.log("----taxes"+JSON.stringify(variantmainarray))
 
 
   useEffect(() => {
@@ -799,7 +882,6 @@ console.log("----taxes"+JSON.stringify(variantmainarray))
       [e.target.name]: e.target.value,
     });
   };
-
   const onVariantaddclick = (id,productid) => {
     // id.preventDefault();
     console.log("-id"+id)
@@ -852,7 +934,6 @@ console.log("----taxes"+JSON.stringify(variantmainarray))
     setAlert(true);
     setVariantRemove((variantremove) =>{  
       return{...variantremove,  id : id, productid:productid }});
-      console.log("dfjghhhhhhhhhhhhhhhhhhhh"+variantremove)
   };
   const hideAlert = () => {
    
@@ -1057,20 +1138,7 @@ console.log("----taxes"+JSON.stringify(variantmainarray))
               className={"adminsideinput"}
             />
           </div>
-          {/* <div className="col-md-3 col-sm-6 aos_input">
-            <Form.Select
-              aria-label="Search by category"
-              className="adminselectbox"
-              placeholder="Search by category"
-              onChange={OnCategorySearchChange}
-              name="category"
-            >
-              <option>Search by category</option>
-              <option value="1">Food</option>
-              <option value="2">Fish & Meat</option>
-              <option value="3">Baby Care</option>
-            </Form.Select>
-          </div> */}
+          
           <div className="col-md-3 col-sm-6 aos_input">
             <Form.Select
               aria-label="Search by status"
@@ -1605,6 +1673,7 @@ console.log("----taxes"+JSON.stringify(variantmainarray))
                             className="inputlabelheading"
                             sm="12 d-flex align-itmes-center"
                           >
+                              {productdata.variety === false ?
                             <Form.Check
                               type="radio"
                               aria-label="radio 1"
@@ -1612,10 +1681,17 @@ console.log("----taxes"+JSON.stringify(variantmainarray))
                               onChange={handleVarietyChange}
                               name="variety"
                               value={false}
-                              checked={
-                                productdata.variety === false ? true : false
-                              }
                             />
+                            :
+                            <Form.Check
+                              type="radio"
+                              aria-label="radio 1"
+                              className="mx-2"
+                              onChange={handleVarietyChange}
+                              name="variety"
+                              value={false}
+                            />
+                              }
                             Single Product
                           </Form.Label>
                         </Form.Group>
@@ -1627,17 +1703,24 @@ console.log("----taxes"+JSON.stringify(variantmainarray))
                             className="inputlabelheading"
                             sm="12 d-flex align-itmes-center"
                           >
+                            {productdata.variety === true ?
                             <Form.Check
                               type="radio"
                               aria-label="radio 2"
                               className="mx-2"
                               onChange={handleVarietyChange}
                               name="variety"
-                              checked={
-                                productdata.variety === true ? true : false
-                              }
                               value={true}
                             />
+                            :
+                            <Form.Check
+                              type="radio"
+                              aria-label="radio 2"
+                              className="mx-2"
+                              onChange={handleVarietyChange}
+                              name="variety"
+                              value={true}
+                            />}
                             Multiple Variety
                           </Form.Label>
                         </Form.Group>
@@ -2973,6 +3056,92 @@ console.log("----taxes"+JSON.stringify(variantmainarray))
           showCancelButton={true}
           // onCancel={hideAlert}
         />
+
+        {/* feature product modal */}
+
+        <Modal show={featureshow} onHide={featureModalClose}>
+        <Form className="" novalidate validated={validated} ref={formRef} onSubmit={(e) => AddProductFeatureClick(e)} >
+
+        <Modal.Header closeButton>
+          <Modal.Title>Add Offer Product</Modal.Title>
+        </Modal.Header>
+
+<Modal.Body className="p-3">
+  <div className="d-flex justify-content-center align-items-center p-0 m-0">
+    <div className="">
+      <div className="">
+        <div className="row px-3">
+          <div className="col-12">
+            <Form.Group className="mb-3" controlId="formPlaintextName">
+              <Form.Label className="" column sm="12">
+                Product Name
+              </Form.Label>
+              <Form.Control type="text" placeholder="Name"  value={productname} name={'productname'} required />
+              
+            </Form.Group>
+          </div>
+          <div className="col-12">
+            <Form.Group className="mb-3" controlId="formPlaintextName">
+              <Form.Label className="" column sm="12">
+                Product Id
+              </Form.Label>
+              <Form.Control type="text" placeholder="Name"  value={featuredata.product_id} name={'product_id'} required />
+            </Form.Group>
+          </div>
+          <div className="col-12">
+            <Form.Group className="mb-3" controlId="formPlaintextName">
+              <Form.Label className="" column sm="12">
+                Offer Type
+              </Form.Label>
+              <Form.Control type="text" placeholder="Name"  value={featuredata.fetured_type} name={'fetured_type'} required />
+            </Form.Group>
+          </div>
+          <div className="col-12">
+            <Form.Group className="mb-3" controlId="formPlaintextName">
+              <Form.Label className="" column sm="12">
+                Start Date
+              </Form.Label>
+              <Form.Control type="date" placeholder="Name" onChange={(e) => OnFeatureDateChaneg(e)} value={featuredata.start_date} name={'start_date'} required />
+              <Form.Control.Feedback type="invalid" className="h6">
+                Please fill start date
+              </Form.Control.Feedback>
+            </Form.Group>
+          </div>
+          <div className="col-12">
+            <Form.Group className="mb-3" controlId="formPlaintextName">
+              <Form.Label className="" column sm="12">
+                End Date
+              </Form.Label>
+              <Form.Control type="date" placeholder="Name" onChange={(e) => OnFeatureDateChaneg(e)} value={featuredata.end_date} name={'end_date'} required />
+              <Form.Control.Feedback type="invalid" className="h6">
+                Please fill end date
+              </Form.Control.Feedback>
+            </Form.Group>
+          </div>
+         
+        </div>
+      </div>
+    </div>
+
+  </div>
+</Modal.Body>
+<Modal.Footer className="">
+  <button className='button main_outline_button' onClick={() => featureModalClose()}>Cancel</button>
+  <Iconbutton
+    type={'submit'}
+    btntext={"Save" }
+    btnclass={"button main_button "}
+  />
+</Modal.Footer>
+</Form>
+        
+
+        
+
+        
+        </Modal>
+
+      {/* end feature product modal */}
       </div>
     </div>
   );

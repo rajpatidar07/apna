@@ -10,8 +10,9 @@ import { BiEdit } from "react-icons/bi";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Iconbutton from "../common/iconbutton";
-
+import moment from "moment";
 import axios from "axios";
+import Feedback from "react-bootstrap/esm/Feedback";
 const Featuredproduct = () => {
   const formRef = useRef();
   let userid= localStorage.getItem("userid")
@@ -20,12 +21,20 @@ const [featuredProductData,setFeatureProductData]=useState([]);
 
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
+  const[msg,setMsg]=useState([]);
   const [Alert, setAlert] = useState(false);
  const [apicall,setapicall]=useState(false);
   const [fdata, setfdata] = useState([]);
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState("");
+  const [validated, setValidated] = useState(false);
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+   
+    setValidated(false);
+    
+  };
+
+
   const handleShow = () => setShow(true);
   const handleClick = () => {};
   useEffect(() => {
@@ -45,18 +54,16 @@ const [featuredProductData,setFeatureProductData]=useState([]);
             let data=response.data.result;
             // let data = response.data.filter(item=> item.is_active === 1);
             setFeatureProductData(response.data.results)
-            setfdata(response.data.results)
-            // setaddcoupondata(data);
-            // setsearchCoupon(data);
+         
             setapicall(false);
           });
       } catch (err) {}
   
   }, [apicall]);
-  console.log("ffffffffffffffffffffffffff"+JSON.stringify(featuredProductData))
+  console.log("ffffffffffffffff"+JSON.stringify(featuredProductData))
   const columns = [
     {
-      name: "ID",
+      name: "FeturedProductiId",
       selector: (row) => (
         row.fetured_product_id
       ),
@@ -192,20 +199,40 @@ const [featuredProductData,setFeatureProductData]=useState([]);
       console.log("dataaaaaaaaaaaaaaaaaaaaaaa"+JSON.stringify(e.target.value))
     };
     
-
-  const UpdateFeaturedProduct = () => {
-    
+    useEffect(() => {
+  
+      try {
+        axios
+          .get(`${process.env.REACT_APP_BASEURL}/get_singal_fetured_product?id=2`)
+          .then((response) => {
+            let data=response.data.result;
+            // let data = response.data.filter(item=> item.is_active === 1);
+            setfdata(response.data)
+            setapicall(false);
+          });
+      } catch (err) {}
+  
+  }, [apicall]);
+  console.log("BHAVNAAAAAAAAAAAA"+JSON.stringify(fdata))
+  const UpdateFeaturedProduct = (show) => {
+   
     axios.put(`${process.env.REACT_APP_BASEURL}/update_fetured_product`,{
-      id:13,
+      id:2,
       start_date:fdata.start_date,
       end_date:fdata.end_date
     }).then((response) => {
       let data=response.data.results;
-    // console.log("idddllllllllllllllllllllllllllllllll------"+JSON.stringify(addadmindata))
+      setValidated(false);
+       setapicall(true);
+       setShow(false)
+
+
+    console.log("idddlllllllllll------"+JSON.stringify(fdata.fetured_product_id))
   });
   formRef.current.reset();
+  setValidated(false);
+  show.preventDefault();
  
-  setapicall(true);
   
 }
 
@@ -241,14 +268,12 @@ const [featuredProductData,setFeatureProductData]=useState([]);
       <Modal size="lg" show={show} onHide={() => handleClose()}>
         <Form
           className=""
-         
           ref={formRef}
-         
-          
+          validated={validated}
         >
           <Modal.Header closeButton>
             <Modal.Title>
-              {show === "add" ? "Add New Blog " : " Update Blog "}
+              
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -256,13 +281,16 @@ const [featuredProductData,setFeatureProductData]=useState([]);
               <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicStartDate">
                     <Form.Label>Manufacturing Date</Form.Label>
-                    <Form.Control  name='start_date' value={fdata.start_date} onChange={(e) => handleFormChange(e)}  type="date" placeholder="Coupon Start Date" />
+                    <Form.Control  name='start_date'   value={moment(fdata.start_date).format('YYYY-MM-DD')} onChange={(e) => handleFormChange(e)}  type="date" placeholder="Coupon Start Date" />
+                    <Form.Control.Feedback type="invalid" className="h6">
+                    Only current select current date or next date
+                  </Form.Control.Feedback>
                   </Form.Group>
                 </div> 
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicStartDate">
                     <Form.Label>Expire Date</Form.Label>
-                    <Form.Control  name='end_date' value={fdata.end_date} onChange={(e) => handleFormChange(e)}   type="date" placeholder="Coupon Start Date" />
+                    <Form.Control  name='end_date' value={moment(fdata.end_date).format('YYYY-MM-DD')} onChange={(e) => handleFormChange(e)}   type="date" placeholder="Coupon Start Date" />
                   </Form.Group>
                 </div> 
             </div>
@@ -276,7 +304,7 @@ const [featuredProductData,setFeatureProductData]=useState([]);
             </button>
             <button
               className="button main_outline_button"
-              onClick={() => UpdateFeaturedProduct()}
+              onClick={(fetured_product_id) => UpdateFeaturedProduct(fetured_product_id)}
             >
               Update
             </button>

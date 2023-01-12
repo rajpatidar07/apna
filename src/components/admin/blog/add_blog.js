@@ -50,17 +50,10 @@ const [searchdata, setsearchData] = useState([]);
 //   category:"",
 //   product_tag:""
 //   })
-
 const[ recent,setRecent]=useState("") 
 const[ categorySearch,setCategorySearch]=useState("") 
 const[ productTagSearch,setProductTagSearch]=useState("") 
 
-// console.log("kkkkkkk"+JSON.stringify(searchblog))
-
-  // const OnSearchChange = (e) => {
-  //   setsearchBlog({ ...searchblog, [e.target.name]: e.target.value })
-   
-  // }
   const OnCtegorySearch = (e) => {
      setCategorySearch(e.target.value )
    
@@ -242,9 +235,7 @@ const hideAlert = () =>{
 setapicall(true)
 setAlert(false);
 } 
-const closeAlert=()=>{
-  return false;
-}
+
 console.log("newwwwwwwwww consoleeeeeeee"+id)
     const columns = [
       {

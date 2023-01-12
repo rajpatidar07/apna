@@ -327,22 +327,40 @@ for(let i=0 ; i < arr.length; i++){
     {
       name: "Status",
       selector: (row) => (
-        <Badge
-          bg={
-            row.is_active === 0
-              ? "success"
-              : row.is_active === 1
-              ? "danger"
-              : null
-          }
-        >
-          {row.is_active === 0 ? "active" : "inactive"}
-        </Badge>
+       
+        <span  className={
+          row.is_active === "0"
+            ? "badge bg-success"
+            : row.is_active === "1"
+            ? " badge bg-danger"
+            : null
+        }>
+         {row.is_active === "0" ? "active" : "inactive"}
+        </span>
       ),
       sortable: true,
       width: "105px",
       // center: true,
     },
+    // {
+    //   name: "Status",
+    //   selector: (row) => (
+    //     <Badge
+    //       bg={
+    //         row.is_active === "0"
+    //           ? "bg-success"
+    //           : row.is_active === "1"
+    //           ? "bg-danger"
+    //           : null
+    //       }
+    //     >
+    //       {row.is_active === "0" ? "active" : "inactive"}
+    //     </Badge>
+    //   ),
+    //   sortable: true,
+    //   width: "105px",
+    //   // center: true,
+    // },
     {
       name: "Action",
       width: "200px",
@@ -395,7 +413,7 @@ for(let i=0 ; i < arr.length; i++){
         });
       formRef.current.reset();
       setValidated(false);
-      setData("");
+      
       
     }
   };
@@ -418,7 +436,7 @@ for(let i=0 ; i < arr.length; i++){
   });
   formRef.current.reset();
   setValidated(false);
-  show.preventDefault();
+  // show.preventDefault();
   };
   const onValueChange=(e)=>{
     setSearchCat({ ...SearchCat, [e.target.name]: e.target.value });
@@ -471,22 +489,22 @@ for(let i=0 ; i < arr.length; i++){
                     </p> : null}
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
-
-          <Form.Select
+            <Form.Select
               aria-label="Search by status"
               className="adminselectbox"
-              name="level"
+              name="category_type"
               onChange={(e) => onValueChange(e)}
               value={SearchCat.category_type}
-              
             >
-          <option>Search by category</option>
-
+              <option>Search by category</option>
               {result1.map((lvl,i)=>{
-                return(<option value={lvl.category_type} key={i}>{lvl.category_type}</option>)
-              })}
+                return( 
+                <option value={lvl.category_type} key={i}>{lvl.category_type}</option>
+                )
+              })} 
             </Form.Select>
           </div>
+
           <div className="col-md-3 col-sm-6 aos_input">
             <Form.Select
               aria-label="Search by status"
@@ -751,7 +769,7 @@ for(let i=0 ; i < arr.length; i++){
             </Modal.Body>
             <Modal.Footer className="addproductfooter">
               <Iconbutton
-                btntext={"X Cancel"}
+                btntext={"Cancel"}
                 onClick={() => handleClose()}
                 btnclass={"button main_outline_button adminmainbutton px-2"}
               />

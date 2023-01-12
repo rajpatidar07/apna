@@ -161,7 +161,6 @@ function Admin() {
         }
       )
       .then((response) => {
-        console.log("adminnnnnnnnnnnnnn----------   " + JSON.stringify(addadmindata));
       });
      
      
@@ -176,7 +175,6 @@ function Admin() {
     e.preventDefault()
     axios.put(`${process.env.REACT_APP_BASEURL}/update_admin`,
     addadmindata).then((response) => {
-    console.log("idddllllllllllllllllllllllllllllllll------"+JSON.stringify(addadmindata))
   });
   formRef.current.reset();
   setValidated(false);

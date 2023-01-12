@@ -16,10 +16,16 @@ const Offerproduct = () => {
 
 const handleClick = () => {};
 useEffect(() => {
-  axios.post("${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50", {
-    "product_search": {
-      "search": "",
-      "special_product": 1
+  axios.post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`, {
+    product_search: {
+      search: "",
+      price_from: "",
+      price_to: "",
+      id:"asc",
+      product_title_name:"",
+      sale_price:"",
+      featured_product:["1"],
+      fetured_type:  ["special_offer"]
 
     }}).then((response) => {
     setodata(response.data)
@@ -32,7 +38,7 @@ useEffect(() => {
       name: "Sku",
       selector: (row) => (
         <p>
-          {row.id}
+          {row.product_id}
         </p>
       ),
       sortable: true,
@@ -48,8 +54,8 @@ useEffect(() => {
           height="90px"
           width="70px"
           alt={row.product_title_name}
-          src={
-            "https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg"
+          src={row.all_images ? row.all_images :"https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
+    
           }
           style={{
             borderRadius: 10,
