@@ -166,15 +166,16 @@ const [taxdata,settaxdata] = useState({
     const first='';
     axios
       .post(
-        `${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`,
+        `${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=500`,
         {
           product_search: {
             search: `${searchdata.product_title_name}`,
             price_from: "",
             price_to: "",
-            id:"asc",
+            id:"",
             product_title_name:"",
             sale_price:"",
+            short_by_updated_on:"",
             category: categoryArray,
             product_status: [`${searchdata.product_status}`],
             is_delete: ["1"],
@@ -230,7 +231,6 @@ const OnFeatureDateChaneg = (e)=>{
     [e.target.name]:e.target.value
   })
 }
-console.log("-----fe"+JSON.stringify(featuredata))
 const AddProductFeatureClick = (e) =>{
   e.preventDefault();
 axios
@@ -414,9 +414,6 @@ axios
           <option selected={row.product_status === "pending" ? true : false} value="pending">Pending</option>
           <option selected={row.product_status === "draft" ? true : false} value="draft">Draft</option>
           <option selected={row.product_status === "active" ? true : false} value="active">Active</option>
-          <option value="special_offer" onClick={(special_offer)=>OnProductOfferClick(special_offer)}>Special Offer</option>
-          <option  value="featured_offer" onClick={(featured_offer)=>OnProductOfferClick(featured_offer)}>Featured Offer </option>
-          <option value="promotional" onClick={(promotional)=>OnProductOfferClick(promotional)}>Promotional </option>
         </Form.Select>
       ),
       sortable: true,

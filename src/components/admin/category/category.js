@@ -401,7 +401,7 @@ for(let i=0 ; i < arr.length; i++){
   };
 
   const UpdateCategoryClick = (show) => {
-    console.log("---show"+CategoryEditdata.id)
+    console.log("---show"+CategoryEditdata.id + indVal+level+allparentid+newName+type)
     const formData = new FormData();
     formData.append("id", CategoryEditdata.id);
     formData.append("image", file);
@@ -418,7 +418,7 @@ for(let i=0 ; i < arr.length; i++){
   });
   formRef.current.reset();
   setValidated(false);
-  show.preventDefault();
+  // show.preventDefault();
   };
   const onValueChange=(e)=>{
     setSearchCat({ ...SearchCat, [e.target.name]: e.target.value });
