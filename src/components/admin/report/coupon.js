@@ -50,7 +50,7 @@ const CouponReport = () => {
     setFilterchange(e.target.value)
 
     let value = e.target.value;
-    console.log("---------------------------------------------"+value);
+    // console.log("---------------------------------------------"+value);
     if(value==1){
       let frommDate=moment().format("YYYY-MM-DD")
       setFromDate(frommDate)
@@ -165,8 +165,10 @@ fetchData();
                   brand:brandName
             }
             ).then((response) => {
-                console.log('Coupon orders'+JSON.stringify(response.data[0]))
-                console.log('All  Coupon '+JSON.stringify(response.data[1]))
+                console.log('Coupon orders-----'+JSON.stringify(response.data[0]))
+                console.log('Coupon ordersprevious-----'+JSON.stringify(response.data[1]))
+
+                console.log('All  Coupon--- '+JSON.stringify(response.data[2]))
 
                 // console.log('Error-----'+JSON.stringify(response.data))
                
@@ -183,7 +185,7 @@ fetchData();
                     setCouponError('')
                     setapicall(false)
                     setGetCoupon(response.data[0])
-                  setTabledata(response.data[1])
+                  setTabledata(response.data[2])
                   }
              
             }).catch(function (error) {
@@ -420,7 +422,7 @@ const brandHandler=(e)=>{
 
 
 
-//  console.log("$$$$$$------"+JSON.stringify(brandName[0]))
+
 const options2 = [
   venderList.map((item)=>(
     { value: `${item.id}` ,label:`${item.shop_name}` }
@@ -441,7 +443,7 @@ const options2 = [
   
   }
 
-console.log("$$$$$$------"+JSON.stringify(vendorId[0]))
+// console.log("$$$$$$------"+JSON.stringify(vendorId[0]))
 
  
 const options3 = [
@@ -489,7 +491,44 @@ SearchArray=[]
  })
  setLocation(SearchArray)
 
-}    
+}   
+
+
+
+
+
+   // // //-------------Item sold---------------------------
+// var getProductCount=Number(getProduct.product_count)
+
+// var getPreviousProductCount=Number(PrevProductreport.prev_order_count)
+
+// var resultCount=(((getProductCount-getPreviousProductCount)/getPreviousProductCount)*100).toFixed(2)
+
+// resultCount!="Infinity"?console.log():resultCount=0
+
+// // // //-----------------------Net sales--------------------------------------------------------
+// var getNetSold=Number(getProduct.net_sales)
+
+// var getPreviousgetNetSold=Number(PrevProductreport.prev_net_sales)
+
+// var resultNetSold=(((getNetSold-getPreviousgetNetSold)/getPreviousgetNetSold)*100).toFixed(2)
+
+// resultNetSold!="Infinity"?console.log():resultNetSold=0
+
+// // // //-----------------------order count---------------------------------------
+// var getorderCount=Number(getProduct.order_count)
+
+// var getPreviousorderCount=Number(PrevProductreport.prev_order_count)
+
+// var resultOrderCount=(((getorderCount-getPreviousorderCount)/getPreviousorderCount)*100).toFixed(2)
+
+// resultOrderCount!="Infinity"?console.log():resultOrderCount=0
+
+
+
+
+
+
     return (
         <div>
             <h2>Coupon Report</h2>
@@ -506,7 +545,9 @@ SearchArray=[]
               <option >Search by category</option>
               <option name="today" value={1}>Today</option>
               <option name="yesterday" value={2}>yesterday</option>
+              <option name="this_week" value={8}>this  week</option>
               <option name="last_week" value={3}>Last week</option>
+              <option name="this_week" value={9}>This  month</option>
               <option name="last_month" value={4}>last month</option>
               <option name="last_6_month" value={5}>last 6  month</option>
               {/* <option name="custom_month" value="6">custom month</option> */}
@@ -619,8 +660,8 @@ SearchArray=[]
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                  {console.log("********"+couponError)}
-                  {console.log(" order===="+getCoupon.orders_count)}
+                  {/* {console.log("********"+couponError)}
+                  {console.log(" order===="+getCoupon.orders_count)} */}
                   {(couponError)=="no_data"||(getCoupon.orders_count)==null || (getCoupon.orders_count)==undefined?<h3>No Record</h3>: <h3>{getCoupon.orders_count}</h3>}
 
                     <div className="d-flex align-items-center justify-content-center">
@@ -650,8 +691,8 @@ SearchArray=[]
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
                 
-                           {console.log("********"+couponError)}
-                           {console.log(" Ammount===="+getCoupon.discount_amount)}
+                           {/* {console.log("********"+couponError)}
+                           {console.log(" Ammount===="+getCoupon.discount_amount)} */}
                         {(couponError)=="no_data"||(getCoupon.discount_amount)==null || (getCoupon.discount_amount)==undefined || (getCoupon.discount_amount)==""?<h3>No Record</h3>: <h3>{getCoupon.discount_amount}</h3>}
                 
                     <div className="d-flex align-items-center justify-content-center">
