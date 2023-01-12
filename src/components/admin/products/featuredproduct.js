@@ -13,7 +13,7 @@ import Iconbutton from "../common/iconbutton";
 import moment from "moment";
 import axios from "axios";
 import Feedback from "react-bootstrap/esm/Feedback";
-const Featuredproduct = () => {
+const Featuredproduct = (fid) => {
   const formRef = useRef();
   let userid= localStorage.getItem("userid")
 const [featuredProductData,setFeatureProductData]=useState([]);
@@ -26,7 +26,14 @@ const [featuredProductData,setFeatureProductData]=useState([]);
   const [fdata, setfdata] = useState([]);
   const [show, setShow] = useState("");
   const [validated, setValidated] = useState(false);
+const [id,setId]=useState();
+const [pendingdata, setpendingdata] = useState([]);
+const [searchdata, setsearchData] = useState({
+  product_title_name: "",
+  category: "",
+  manufacturing_date:"",
 
+})
   const handleClose = () => {
    
     setValidated(false);
@@ -34,7 +41,24 @@ const [featuredProductData,setFeatureProductData]=useState([]);
   };
 
 
-  const handleShow = () => setShow(true);
+  const handleShow = (id) =>{ 
+    try {
+      axios
+        .get(`${process.env.REACT_APP_BASEURL}/get_singal_fetured_product?id=${id}`)
+        .then((response) => {
+          let data=response.data[0];
+          // let data = response.data.filter(item=> item.is_active === 1);
+          setfdata(data)
+          setId(data.id)
+          console.log("----------------------"+JSON.stringify(data.id))
+
+          setapicall(false);
+        });
+    } catch (err) {}
+    
+    
+    
+    setShow(true)};
   const handleClick = () => {};
   useEffect(() => {
   
@@ -57,13 +81,13 @@ const [featuredProductData,setFeatureProductData]=useState([]);
             let data=response.data.result;
             // let data = response.data.filter(item=> item.is_active === 1);
             setFeatureProductData(response.data.results)
-         
+            // setfdata(response.data.results)
+            // setId('');
             setapicall(false);
           });
       } catch (err) {}
   
   }, [apicall]);
-  console.log("ffffffffffffffff"+JSON.stringify(featuredProductData))
   const columns = [
     {
       name: "FeturedProductiId",
@@ -80,7 +104,7 @@ const [featuredProductData,setFeatureProductData]=useState([]);
     {
       name: "Product ID",
       selector: (row) => (
-        row.id
+        row.product_id
       ),
       sortable: true,
       width: "80px",
@@ -160,8 +184,8 @@ const [featuredProductData,setFeatureProductData]=useState([]);
       },
     },
     {
-      name: "From Date",
-      selector: (row) => row.manufacturing_date,
+      name: "Start Date",
+      selector: (row) => row.created_at,
       sortable: true,
       width: "130px",
       center: true,
@@ -171,8 +195,8 @@ const [featuredProductData,setFeatureProductData]=useState([]);
       },
     },
     {
-      name: "To Date",
-      selector: (row) => row.expire_date,
+      name: "End Date",
+      selector: (row) => row.updated_at,
       sortable: true,
       width: "130px",
       center: true,
@@ -201,36 +225,20 @@ const [featuredProductData,setFeatureProductData]=useState([]);
     setfdata({...fdata,[e.target.name]: e.target.value})
       console.log("dataaaaaaaaaaaaaaaaaaaaaaa"+JSON.stringify(e.target.value))
     };
-    
-    useEffect(() => {
-  
-      try {
-        axios
-          .get(`${process.env.REACT_APP_BASEURL}/get_singal_fetured_product?id=2`)
-          .then((response) => {
-            let data=response.data.result;
-            // let data = response.data.filter(item=> item.is_active === 1);
-            setfdata(response.data)
-            setapicall(false);
-          });
-      } catch (err) {}
-  
-  }, [apicall]);
-  console.log("BHAVNAAAAAAAAAAAA"+JSON.stringify(fdata))
+
+  // console.log("SHOWWWWWWWWWWWWWWWWWWWWWWWWWWWW"+JSON.stringify(fdata.id))
+
   const UpdateFeaturedProduct = (show) => {
    
     axios.put(`${process.env.REACT_APP_BASEURL}/update_fetured_product`,{
-      id:2,
+      id:id,
       start_date:fdata.start_date,
       end_date:fdata.end_date
     }).then((response) => {
-      let data=response.data.results;
+      let data=response.data;
       setValidated(false);
        setapicall(true);
        setShow(false)
-
-
-    console.log("idddlllllllllll------"+JSON.stringify(fdata.fetured_product_id))
   });
   formRef.current.reset();
   setValidated(false);
@@ -238,6 +246,34 @@ const [featuredProductData,setFeatureProductData]=useState([]);
  
   
 }
+const OnSearchChange = (e) => {
+  setsearchData({ ...searchdata, [e.target.name]: e.target.value })
+}
+
+const OnDateChange = (e) => {
+  let mdate = moment(e.target.value).format('YYYY-MM-DD')
+  setsearchData({ ...searchdata,manufacturing_date: mdate })
+}
+
+useEffect(() => {
+  axios.post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`, {
+    "product_search": {
+      "search":`${searchdata.product_title_name}`,
+"price_from":"",
+"price_to":"",
+"id":"",
+"product_title_name":"asc",
+"sale_price":"",
+"short_by_updated_on":"",
+"product_status":["pending"],
+"manufacturing_date":[`${searchdata.manufacturing_date}`]
+    }}).then((response) => {
+      setpendingdata(response.data)
+      setapicall(false)
+  }).catch(function (error) {
+    console.log(error);
+  });
+}, [searchdata,apicall]);
 
 //  const UpdateFeturse
   return (
@@ -248,7 +284,7 @@ const [featuredProductData,setFeatureProductData]=useState([]);
        <div className="card mt-3 p-3 ">
        <div className="row pb-3">
       <div className="col-md-3 col-sm-6 aos_input">
-        <Input type={"text"} plchldr={"Search by product name"} />
+        <input type={"text"} onChange={OnSearchChange}  value={searchdata.product_title_name} name='product_title_name' placeholder={"Search by product name"} className={"adminsideinput"} />
         </div>
         {/* <div className="col-md-3 col-sm-6 aos_input">
         <Form.Select aria-label="Search by category" className="adminselectbox" placeholder="Search by category">
@@ -257,9 +293,9 @@ const [featuredProductData,setFeatureProductData]=useState([]);
           <option value="2">Fish & Meat</option>
           <option value="3">Baby Care</option>
         </Form.Select>
-        </div> */}
+        </div> */} 
         <div className="col-md-3 col-sm-6 aos_input">
-        <Input type={"date"} plchldr={"Search by product name"} />
+        <input type={"date"} onChange={OnDateChange} name='manufacturing_date'  value={searchdata.manufacturing_date} placeholder={"Search by product name"} className={"adminsideinput"} />
         </div>
         <div className="col-md-3 col-sm-6 aos_input">
         <MainButton btntext={"Search"} btnclass={'button main_button w-100'} />
@@ -282,6 +318,7 @@ const [featuredProductData,setFeatureProductData]=useState([]);
           <Modal.Body>
             <div className="row p-3 m-0">
               <div className="col-md-6">
+              
                   <Form.Group className="mb-3 aos_input" controlId="formBasicStartDate">
                     <Form.Label>Manufacturing Date</Form.Label>
                     <Form.Control  name='start_date'   value={moment(fdata.start_date).format('YYYY-MM-DD')} onChange={(e) => handleFormChange(e)}  type="date" placeholder="Coupon Start Date" />
@@ -307,7 +344,7 @@ const [featuredProductData,setFeatureProductData]=useState([]);
             </button>
             <button
               className="button main_outline_button"
-              onClick={(fetured_product_id) => UpdateFeaturedProduct(fetured_product_id)}
+              onClick={(id) => UpdateFeaturedProduct(id)}
             >
               Update
             </button>
