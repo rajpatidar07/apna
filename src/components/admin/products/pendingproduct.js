@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../common/input";
 import { ImCross } from "react-icons/im";
 import { BsCheckLg } from "react-icons/bs";
@@ -8,15 +8,55 @@ import Form from "react-bootstrap/Form";
 import Iconbutton from "../common/iconbutton";
 import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
+import axios from "axios";
+import moment from "moment";
 
 const Pendingproduct = () => {
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
+  const [apicall, setapicall] = useState(false);
+  const [pendingdata, setpendingdata] = useState([]);
+  const currentdate = moment().format('YYYY-MM-DD')
+const [searchdata, setsearchData] = useState({
+  product_title_name: "",
+  category: "",
+  manufacturing_date:"",
+
+})
+
+const OnSearchChange = (e) => {
+  setsearchData({ ...searchdata, [e.target.name]: e.target.value })
+}
+
+const OnDateChange = (e) => {
+  let mdate = moment(e.target.value).format('YYYY-MM-DD')
+  setsearchData({ ...searchdata,manufacturing_date: mdate })
+}
+
+  useEffect(() => {
+    axios.post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`, {
+      "product_search": {
+        "search":`${searchdata.product_title_name}`,
+"price_from":"",
+"price_to":"",
+"id":"",
+"product_title_name":"asc",
+"sale_price":"",
+"short_by_updated_on":"",
+"product_status":["pending"],
+"manufacturing_date":[`${searchdata.manufacturing_date}`]
+      }}).then((response) => {
+        setpendingdata(response.data)
+        setapicall(false)
+    }).catch(function (error) {
+      console.log(error);
+    });
+  }, [searchdata,apicall]);
   const columns = [
     {
       name: "Sku",
-      selector: (row) => <p>{row.sku}</p>,
+      selector: (row) => <p>{row.id}</p>,
       sortable: true,
       width: "100px",
       center: true,
@@ -29,9 +69,9 @@ const Pendingproduct = () => {
         <img
           height="90px"
           width="70px"
-          alt={row.name}
+          alt={row.product_title_name}
           src={
-            "https://images.pexels.com/photos/12547195/pexels-photo-12547195.jpeg?cs=srgb&dl=pexels-fidan-nazim-qizi-12547195.jpg&fm=jpg"
+         row.all_images ? row.all_images : "https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
           }
           style={{
             borderRadius: 10,
@@ -45,31 +85,52 @@ const Pendingproduct = () => {
     },
     {
       name: "Product Name",
-      selector: (row) => row.pname,
+      selector: (row) => row.product_title_name,
       sortable: true,
-      width: "290px",
+      width: "200px",
     },
     {
       name: "Category",
       selector: (row) => row.category,
       sortable: true,
-      width: "200px",
+      width: "100px",
     },
     {
-      name: "Price",
-      selector: (row) => row.price,
+      name: "Mrp",
+      selector: (row) => (row.mrp),
       sortable: true,
-      width: "140px",
+      width: "90px",
       center: true,
       style: {
         paddingRight: "32px",
         paddingLeft: "0px",
       },
     },
-
     {
-      name: "Date",
-      selector: (row) => row.date,
+      name: "Dis(%)",
+      selector: (row) => (row.discount),
+      sortable: true,
+      width: "90px",
+      center: true,
+      style: {
+        paddingRight: "32px",
+        paddingLeft: "0px",
+      },
+    },
+    {
+      name: "Price",
+      selector: (row) => (row.product_price),
+      sortable: true,
+      width: "90px",
+      center: true,
+      style: {
+        paddingRight: "32px",
+        paddingLeft: "0px",
+      },
+    },
+    {
+      name: "Gst(%)",
+      selector: (row) => row.gst,
       sortable: true,
       width: "150px",
       center: true,
@@ -79,73 +140,61 @@ const Pendingproduct = () => {
       },
     },
     {
-      name: "Action",
-      width: "120px",
+      name: "SP",
+      selector: (row) => (row.sale_price),
+      sortable: true,
+      width: "140px",
+      center: true,
       style: {
-        paddingRight: "12px",
+        paddingRight: "32px",
         paddingLeft: "0px",
       },
+    }, 
+    {
+      name: "Mdate",
+      selector: (row) => (row.manufacturing_date),
+      sortable: true,
+      width: "90px",
+      center: true,
+      style: {
+        paddingRight: "32px",
+        paddingLeft: "0px",
+      },
+    }, 
+    {
+      name: "Change Status",
       selector: (row) => (
-        <div>
-          <Iconbutton
-            onClick={handleAlert}
-            btntext={"Approve"}
-            btnclass={"btn-sm text-light btn mb-1 bg-success w-100"}
-            Iconname={<BsCheckLg className="mx-1" />}
-          />
-          <Iconbutton
-            onClick={handleAlert}
-            btntext={"Reject"}
-            btnclass={"btn-sm text-light btn bg-danger w-100"}
-            Iconname={<ImCross className="mx-1" />}
-          />
-        </div>
+        <Form.Select
+          aria-label="Search by delivery"
+          size="sm"
+          className="w-100"
+          onChange={(e)=>onProductStatusChange(e,row.id,row.product_id)}
+        >
+          <option selected={row.product_status === "" ? true : false} value="">Select</option>
+          <option selected={row.product_status === "pending" ? true : false} value="pending">Pending</option>
+          <option selected={row.product_status === "draft" ? true : false} value="draft">Draft</option>
+          <option selected={row.product_status === "active" ? true : false} value="active">Active</option>
+        </Form.Select>
       ),
+      sortable: true,
     },
   ];
-
-  const data = [
-    {
-      id: 1,
-      sku: "9AF4FE",
-      pname: (
-        <div className="productdescbox">
-          <b>
-            <p className="mb-0">Green Leaf Lettuce</p>
-          </b>
-
-          <p className="productdesc">
-            {" "}
-            {`The root vegetables include beets, carrots, radishes, sweet potatoes,
-            and turnips`}
-          </p>
-        </div>
-      ),
-      category: (
-        <p className="productdesc">Fruits & Vegetable Fruits & Vegetable</p>
-      ),
-      price: "$14",
-      date: "2022-01-05",
-    },
-    {
-      id: 2,
-      sku: "9AF4FE",
-      pname: (
-        <div className="productdescbox">
-          <b>
-            <p className="mb-0">Green Leaf Lettuce</p>
-          </b>
-          <p className="productdesc">
-            {" "}
-            The root vegetables include beets, and turnips
-          </p>
-        </div>
-      ),
-      category: "Fruits & Vegetable",
-      price: "$14",
-      date: "2022-01-05",
-    },
-  ];
+  const onProductStatusChange = (e,id,productid) =>{
+    console.log("---e"+e.target.value+id+productid)
+    axios
+      .put(`${process.env.REACT_APP_BASEURL}/product_status_update`, {
+          "id":`${id}`,
+          "product_id":`${productid}`,
+          "product_status":e.target.value
+      })
+      .then((response) => {
+        setapicall(true);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+ 
   const handleClick = () => { };
   return (
     <div>
@@ -155,29 +204,22 @@ const Pendingproduct = () => {
       <div className="card mt-3 p-3 ">
         <div className="row pb-3">
           <div className="col-md-3 col-sm-6 aos_input">
-            <Input type={"text"} plchldr={"Search by product name"} />
+            <input onChange={OnSearchChange} name='product_title_name'
+              value={searchdata.product_title_name}
+              className={'adminsideinput'} type={"text"} placeholder={"Search by product name"} />
           </div>
-          <div className="col-md-3 col-sm-6 aos_input">
-            <Form.Select
-              aria-label="Search by category"
-              className="adminselectbox"
-              placeholder="Search by category"
-            >
-              <option>Search by category</option>
-              <option value="1">Food</option>
-              <option value="2">Fish & Meat</option>
-              <option value="3">Baby Care</option>
-            </Form.Select>
+          
+          <div className="col-md-3 col-sm-6 aos_input value={}">
+            <input type={"date"} onChange={OnDateChange} name='manufacturing_date'
+              value={searchdata.manufacturing_date}
+              className={'adminsideinput'} placeholder={"Search by product name"} />
           </div>
-          <div className="col-md-3 col-sm-6 aos_input">
-            <Input type={"date"} plchldr={"Search by product name"} />
-          </div>
-          <div className="col-md-3 col-sm-6 aos_input">
+          {/* <div className="col-md-3 col-sm-6 aos_input">
             <MainButton
               btntext={"Search"}
               btnclass={"button main_button w-100"}
             />
-          </div>
+          </div> */}
         </div>
 
         {/* upload */}
@@ -186,7 +228,7 @@ const Pendingproduct = () => {
 
         <DataTable
           columns={columns}
-          data={data}
+          data={pendingdata.results}
           pagination
           highlightOnHover
           pointerOnHover

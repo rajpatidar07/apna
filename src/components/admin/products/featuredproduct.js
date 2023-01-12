@@ -16,7 +16,6 @@ import Feedback from "react-bootstrap/esm/Feedback";
 const Featuredproduct = () => {
   const formRef = useRef();
   let userid= localStorage.getItem("userid")
-console.log("userIDDDDDDDDDDDDDDdd"+userid)
 const [featuredProductData,setFeatureProductData]=useState([]);
 
   const handleAlert = () => setAlert(true);
@@ -46,8 +45,12 @@ const [featuredProductData,setFeatureProductData]=useState([]);
               "search":"",
               "price_from":"",
               "price_to":"",
+              "id":"",
+              "product_title_name":"asc",
+              "sale_price":"",
+              "short_by_updated_on":"",
               "is_fetured_product": ["1"],
-              "fetured_type": [""]
+              "fetured_type": ["featured_offer"]
               }
           })
           .then((response) => {
@@ -247,14 +250,14 @@ const [featuredProductData,setFeatureProductData]=useState([]);
       <div className="col-md-3 col-sm-6 aos_input">
         <Input type={"text"} plchldr={"Search by product name"} />
         </div>
-        <div className="col-md-3 col-sm-6 aos_input">
+        {/* <div className="col-md-3 col-sm-6 aos_input">
         <Form.Select aria-label="Search by category" className="adminselectbox" placeholder="Search by category">
         <option>Search by category</option>
           <option value="1">Food</option>
           <option value="2">Fish & Meat</option>
           <option value="3">Baby Care</option>
         </Form.Select>
-        </div>
+        </div> */}
         <div className="col-md-3 col-sm-6 aos_input">
         <Input type={"date"} plchldr={"Search by product name"} />
         </div>
