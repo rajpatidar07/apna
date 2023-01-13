@@ -14,6 +14,7 @@ import axios from "axios";
 import { SendExclamationFill } from "react-bootstrap-icons";
 import EmailType from "../json/EmailType";
 import EmailStatus from "../json/EmailStatus";
+import { Alert } from "bootstrap";
 
 
 const EmailSend = () => {
@@ -55,6 +56,7 @@ const EmailSend = () => {
                 .then((response) => {
                     //  console.log("single Data"+ JSON.stringify(response.data))
                     setEmaildata(response.data[0])
+                 
     // console.log(" update data------"+response.data[0].email_text)
 
                     setEmailText(response.data[0].email_text)
@@ -173,24 +175,19 @@ const EmailSend = () => {
 
   const EmailTextHandler=(e)=>{
 
-// console.log("textEditor value"+ e.editor.getData())
-  //    console.log("datatatat"+emaildata.email_text)
-  // //  console.log({ event, editor, emailText});
    let newTemp;
    if((e.editor.getData()) != undefined){
      newTemp = (e.editor.getData()).replaceAll(/"/g, '\'');
   }
    setEmailText(newTemp)
-  // setEmaildata({...emaildata,
-  //   email_text:newTemp
-  // })
-  CKEditor.instances.editor.insertHtml(emailText)
-   e.editor.setData(emailText)
 
-  
-
+  //  setEmailText(e.editor. setEditorData(emailText)) 
+  //  let updateTemp=e.editor.setData(emailText)
+  //  setEmailText(updateTemp)
 
   }
+
+
 
   const valueHandler=(e)=>{
 
@@ -538,11 +535,11 @@ console.log("data from database---------"+emailText)
               <div sm="12" className="mt-3">
                   <CKEditor
                     // editor={"classic"}
- 
+                     data={emailText}
                     //  value="<p>hjhjjhj</p>"
                     onChange={(e)=>EmailTextHandler(e)}
                     name={"email_text"}
-                    
+                   
                 
                     required
                     
