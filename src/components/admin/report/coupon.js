@@ -26,8 +26,9 @@ const CouponReport = () => {
 
   const [fromDate, setFromDate]=useState(moment().format("YYYY-MM-DD"));
   const [toDate,setToDate]=useState(moment().format("YYYY-MM-DD"))
-  const[previousStateChange,setpreviousStateChange] =useState(' ')
 
+  const[previousStateChange,setpreviousStateChange] =useState(' ')
+  const [PrevCouponreport, setPrevCouponreport] = useState([])
   const[prevFromdate,setprevFromdate]=useState(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'))
   const[prevTodate,setprevTodate]=useState(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'))
 
@@ -170,7 +171,7 @@ fetchData();
 
                 console.log('All  Coupon--- '+JSON.stringify(response.data[2]))
 
-                // console.log('Error-----'+JSON.stringify(response.data))
+                console.log('Error-----'+JSON.stringify(response.data))
                
 
                   if(response.data.message=="no_data"){
@@ -179,13 +180,15 @@ fetchData();
                    
                      setGetCoupon([0])
                      setTabledata([0])
+                     setPrevCouponreport([0])
 
                   }
                   else{
                     setCouponError('')
                     setapicall(false)
                     setGetCoupon(response.data[0])
-                  setTabledata(response.data[2])
+                    setPrevCouponreport(response.data[1])
+                    setTabledata(response.data[2])
                   }
              
             }).catch(function (error) {
@@ -497,23 +500,23 @@ SearchArray=[]
 
 
 
-   // // //-------------Item sold---------------------------
-// var getProductCount=Number(getProduct.product_count)
+   // // //-------------Discount Ammount---------------------------
+var getDiscountAmmount=Number(getCoupon.discount_amount)
 
-// var getPreviousProductCount=Number(PrevProductreport.prev_order_count)
+var getPreviousDiscountAmmount=Number(PrevCouponreport.prev_discount_amount)
 
-// var resultCount=(((getProductCount-getPreviousProductCount)/getPreviousProductCount)*100).toFixed(2)
+var resultAmmount=(((getDiscountAmmount-getPreviousDiscountAmmount)/getPreviousDiscountAmmount)*100).toFixed(2)
 
-// resultCount!="Infinity"?console.log():resultCount=0
+resultAmmount!="Infinity"?console.log():resultAmmount=0
 
-// // // //-----------------------Net sales--------------------------------------------------------
-// var getNetSold=Number(getProduct.net_sales)
+// // // //----------------------Discount Order--------------------------------------------------------
+var getDiscountOrder=Number(getCoupon.orders_count)
 
-// var getPreviousgetNetSold=Number(PrevProductreport.prev_net_sales)
+var getPreviousDiscountOrder=Number(PrevCouponreport.prev_orders_count)
 
-// var resultNetSold=(((getNetSold-getPreviousgetNetSold)/getPreviousgetNetSold)*100).toFixed(2)
+var resultOrder=(((getDiscountOrder-getPreviousDiscountOrder)/getPreviousDiscountOrder)*100).toFixed(2)
 
-// resultNetSold!="Infinity"?console.log():resultNetSold=0
+resultOrder!="Infinity"?console.log():resultOrder=0
 
 // // // //-----------------------order count---------------------------------------
 // var getorderCount=Number(getProduct.order_count)
@@ -662,16 +665,19 @@ SearchArray=[]
                   <div className="d-flex align-items-baseline justify-content-between">
                   {/* {console.log("********"+couponError)}
                   {console.log(" order===="+getCoupon.orders_count)} */}
-                  {(couponError)=="no_data"||(getCoupon.orders_count)==null || (getCoupon.orders_count)==undefined?<h3>No Record</h3>: <h3>{getCoupon.orders_count}</h3>}
+                  {(couponError)=="no_data"||(getCoupon.orders_count)==null || (getCoupon.orders_count)==undefined?<h3>0</h3>: <h3>{getCoupon.orders_count}</h3>}
 
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
-                     <p className="mb-0 h5">0%</p>
+                         
+                     {(resultOrder>0)?<p className="mb-0 h5" style={{color:"green"}}> {resultOrder}%</p>:(resultOrder<0)?<p className="mb-0 h5" style={{color:"red"}}> {resultOrder}%</p>:(resultOrder==0)?<p className="mb-0 h5" style={{color:"blue"}}> {resultOrder}%</p>:(resultOrder=="NaN")?<p className="mb-0 h5" style={{color:"grey"}}> 0%</p>:<p className="mb-0 h5" style={{color:"brown"}}> {resultOrder}%</p>}
+
                     </div>
                     </div>
                     <div>
-                        <h5>Previous Year:</h5>
-                        <p className="h5">$0.00</p>
+                    {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous  week :</h5>:(previousStateChange==9)?<h5>Previous  Month :</h5>:<h5>Today :</h5>}
+                        
+                        {  (couponError)=="no_data"||(PrevCouponreport.prev_orders_count)==null||(PrevCouponreport.prev_orders_count)==undefined||(PrevCouponreport.prev_orders_count)==""? <p className="h5"> 0</p>:  <p className="h5">{PrevCouponreport.prev_orders_count} </p>} 
                     </div>
                   </div>
                 </div>
@@ -693,16 +699,17 @@ SearchArray=[]
                 
                            {/* {console.log("********"+couponError)}
                            {console.log(" Ammount===="+getCoupon.discount_amount)} */}
-                        {(couponError)=="no_data"||(getCoupon.discount_amount)==null || (getCoupon.discount_amount)==undefined || (getCoupon.discount_amount)==""?<h3>No Record</h3>: <h3>{getCoupon.discount_amount}</h3>}
+                        {(couponError)=="no_data"||(getCoupon.discount_amount)==null || (getCoupon.discount_amount)==undefined || (getCoupon.discount_amount)==""?<h3>₹0</h3>: <h3>{(getCoupon.discount_amount).toFixed(2)}</h3>}
                 
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
-                     <p className="mb-0 h5">0%</p>
+                     {(resultAmmount>0)?<p className="mb-0 h5" style={{color:"green"}}> {resultAmmount}%</p>:(resultAmmount<0)?<p className="mb-0 h5" style={{color:"red"}}> {resultAmmount}%</p>:(resultAmmount==0)?<p className="mb-0 h5" style={{color:"blue"}}> {resultAmmount}%</p>:(resultAmmount=="NaN")?<p className="mb-0 h5" style={{color:"grey"}}> 0%</p>:<p className="mb-0 h5" style={{color:"brown"}}> {resultAmmount}%</p>}
                     </div>
                     </div>
                     <div>
-                        <h5>Previous Year:</h5>
-                        <p className="h5">$0.00</p>
+                    {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous  week :</h5>:(previousStateChange==9)?<h5>Previous  Month :</h5>:<h5>Today :</h5>}
+                        
+                        {  (couponError)=="no_data"||(PrevCouponreport.prev_discount_amount)==null||(PrevCouponreport.prev_discount_amount)==undefined||(PrevCouponreport.prev_discount_amount)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{(PrevCouponreport.prev_discount_amount).toFixed(2)} </p>} 
                     </div>
                   </div>
                 </div>
@@ -717,7 +724,11 @@ SearchArray=[]
 {/*  */}
 
 {/* graph */}
-<HighchartsReact highcharts={Highcharts} options={options}  />
+
+{(getCoupon.discount_amount!=undefined)||(getCoupon.orders_count!=undefined)?   <HighchartsReact highcharts={Highcharts} options={options} />:null}
+
+
+
 
 {/*  */}
 
