@@ -1,20 +1,18 @@
-import React, { useState, useRef ,Fragment} from "react";
+import React, { useState, useRef} from "react";
 import { AiFillEdit, AiOutlinePlus } from "react-icons/ai";
 import DataTable from "react-data-table-component";
-import { BsTrash } from "react-icons/bs";
 import Modal from "react-bootstrap/Modal";
 import Iconbutton from "../common/iconbutton";
-import SweetAlert from 'sweetalert-react';
+// import SweetAlert from 'sweetalert-react';
 import Form from "react-bootstrap/Form";
 import MainButton from "../common/button";
 import { useEffect } from "react";
 import axios from "axios";
-import { data } from "jquery";
+
 function Admin() {
 
   // const handleAlert = () => setAlert(true);
   // const hideAlert = () => setAlert(false);
-  const [Alert, setAlert] = useState(false);
   const [apicall, setapicall] = useState(false);
   const [show, setShow] = useState('');
   const [validated, setValidated] = useState(false);
