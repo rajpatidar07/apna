@@ -690,7 +690,7 @@ resultNetSales!="Infinity"?console.log():resultNetSales=0
                     <div>
                     {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous  week :</h5>:(previousStateChange==9)?<h5>Previous  Month :</h5>:<h5>Today :</h5>}
                         
-                        { (OrderError)=="no_data"||(Prevordersreport.prev_order_count)==null||(Prevordersreport.prev_order_count)==undefined||(Prevordersreport.prev_order_count)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{Prevordersreport.prev_order_count} </p>} 
+                        { (OrderError)=="no_data"||(Prevordersreport.prev_order_count)==null||(Prevordersreport.prev_order_count)==undefined||(Prevordersreport.prev_order_count)==""? <p className="h5"> 0</p>:  <p className="h5">{Prevordersreport.prev_order_count} </p>} 
 
                       
                     </div>
@@ -722,7 +722,7 @@ resultNetSales!="Infinity"?console.log():resultNetSales=0
                     <div>
                     {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous  week :</h5>:(previousStateChange==9)?<h5>Previous  Month :</h5>:<h5>Today :</h5>}
                         
-                        { (OrderError)=="no_data"||(Prevordersreport.prev_avg_order_value)==null||(Prevordersreport.prev_avg_order_value)==undefined||(Prevordersreport.prev_avg_order_value)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{Prevordersreport.prev_avg_order_value} </p>} 
+                        { (OrderError)=="no_data"||(Prevordersreport.prev_avg_order_value)==null||(Prevordersreport.prev_avg_order_value)==undefined||(Prevordersreport.prev_avg_order_value)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{(Prevordersreport.prev_avg_order_value).toFixed(2)} </p>} 
                     </div>
                   </div>
                 </div>
@@ -741,7 +741,7 @@ resultNetSales!="Infinity"?console.log():resultNetSales=0
                     <div className="d-flex align-items-baseline justify-content-between">
                  
               
-                    {(OrderError)=="No_Data"||(ordersreport.avg_item_per_order)==null || (ordersreport.avg_item_per_order)==undefined  || (ordersreport.avg_item_per_order)==""?<h3>0</h3>: <h3>{ordersreport.avg_item_per_order}</h3>}
+                    {(OrderError)=="No_Data"||(ordersreport.avg_item_per_order)==null || (ordersreport.avg_item_per_order)==undefined  || (ordersreport.avg_item_per_order)==""?<h3>0</h3>: <h3>{(ordersreport.avg_item_per_order).toFixed(2)}</h3>}
 
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
@@ -752,7 +752,7 @@ resultNetSales!="Infinity"?console.log():resultNetSales=0
                     <div>
                     {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous  week :</h5>:(previousStateChange==9)?<h5>Previous  Month :</h5>:<h5>Today :</h5>}
                         
-                        { (OrderError)=="no_data"||(Prevordersreport.prev_avg_item_per_order)==null||(Prevordersreport.prev_avg_item_per_order)==undefined||(Prevordersreport.prev_avg_item_per_order)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{Prevordersreport.prev_avg_item_per_order} </p>} 
+                        { (OrderError)=="no_data"||(Prevordersreport.prev_avg_item_per_order)==null||(Prevordersreport.prev_avg_item_per_order)==undefined||(Prevordersreport.prev_avg_item_per_order)==""? <p className="h5"> 0</p>:  <p className="h5">{(Prevordersreport.prev_avg_item_per_order).toFixed(2)} </p>} 
                     </div>
                   </div>
                 </div>
@@ -773,7 +773,7 @@ resultNetSales!="Infinity"?console.log():resultNetSales=0
                     <div className="d-flex align-items-baseline justify-content-between">
                     {console.log("********"+OrderError)}
                   {console.log(" Net Revenue===="+ordersreport.net_sales)}
-                    {(OrderError)=="No_Data"||(ordersreport.net_sales)==null || (ordersreport.net_sales)==undefined  || (ordersreport.net_sales)==""?<h3>No Record</h3>: <h3>{ordersreport.net_sales}</h3>}
+                    {(OrderError)=="No_Data"||(ordersreport.net_sales)==null || (ordersreport.net_sales)==undefined  || (ordersreport.net_sales)==""?<h3>₹0</h3>: <h3>{(ordersreport.net_sales).toFixed(2)}</h3>}
                
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
@@ -785,7 +785,7 @@ resultNetSales!="Infinity"?console.log():resultNetSales=0
                     <div>
                     {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous  week :</h5>:(previousStateChange==9)?<h5>Previous  Month :</h5>:<h5>Today :</h5>}
                         
-                        { (OrderError)=="no_data"||(Prevordersreport.prev_net_sales)==null||(Prevordersreport.prev_net_sales)==undefined||(Prevordersreport.prev_net_sales)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{Prevordersreport.prev_net_sales} </p>} 
+                        { (OrderError)=="no_data"||(Prevordersreport.prev_net_sales)==null||(Prevordersreport.prev_net_sales)==undefined||(Prevordersreport.prev_net_sales)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{(Prevordersreport.prev_net_sales).toFixed(2)} </p>} 
                     </div>
                   </div>
                 </div>

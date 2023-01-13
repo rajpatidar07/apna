@@ -31,6 +31,10 @@ const TaxesReport = () => {
   const [TaxesError,setTaxesError]=useState("")
   const [fromDate, setFromDate]=useState(moment().format("YYYY-MM-DD"));
   const [toDate,setToDate]=useState(moment().format("YYYY-MM-DD"))
+  const[previousStateChange,setpreviousStateChange] =useState(' ')
+  const [PrevTaxesreport, setPrevTaxesreport] = useState([])
+  const[prevFromdate,setprevFromdate]=useState(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'))
+  const[prevTodate,setprevTodate]=useState(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'))
   const [venderList,setVenderList]=useState([])
   const[vendorId,setVendorId]=useState("")
   const[category,setCategory]=useState([])
@@ -40,10 +44,16 @@ const TaxesReport = () => {
   const[location,setLocation]=useState([])
 
   const fetchData=()=>{
+    console.log( "from_date---"+fromDate)
+    console.log( "to_date----"+toDate)
+    console.log( "Previous  Todate---------------------------------------"+prevTodate)
+    console.log( "Previous fromdate---------------------------------------"+prevFromdate)
     axios.post(`${process.env.REACT_APP_BASEURL}/taxes_report`, 
     {
       from_date:fromDate,
       to_date:toDate,
+      "prev_from_date":prevFromdate,
+      "prev_to_date":prevTodate,
       vendors_id:vendorId,
       categorys:categoryId,
       user_locations:location,
@@ -51,7 +61,8 @@ const TaxesReport = () => {
     }).then((response) => {
      
        console.log("Order data----"+ JSON.stringify(response.data[0]))
-       console.log("Order Table data---"+ JSON.stringify(response.data[1]))
+       console.log("Order Table data---"+ JSON.stringify(response.data[2]))
+       console.log("Order previous data---"+ JSON.stringify(response.data[1][0]))
        console.log('Error-----'+JSON.stringify(response.data))
 
 
@@ -66,7 +77,8 @@ const TaxesReport = () => {
         setTaxesError("")
         
         setTaxesreport(response.data[0][0])
-        setTaxesTable(response.data[1])
+        setTaxesTable(response.data[2])
+        setPrevTaxesreport(response.data[1][0])
         setapicall(false)
       }
 
@@ -77,7 +89,7 @@ const TaxesReport = () => {
 
    const VenderData= async()=>{
     let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
-     console.log("vendor----"+JSON.stringify(result.data))
+    //  console.log("vendor----"+JSON.stringify(result.data))
     if(result.data){
       setVenderList(result.data)
     }
@@ -98,7 +110,7 @@ const TaxesReport = () => {
 const BrandData= async()=>{
 let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/brand_list`)
 
- console.log("Brand data-----"+ JSON.stringify(result.data))
+//  console.log("Brand data-----"+ JSON.stringify(result.data))
 if(result.data){
   setBrand(result.data)
 }
@@ -126,46 +138,96 @@ if(result.data){
   const TimeChange = (e)=>{
     setFilterchange(e.target.value)
     let value = e.target.value;
-    console.log("---------------------------------------------"+value);
     if(value==1){
-      setFromDate(moment().format("YYYY-MM-DD"))
-      console.log("From date"+e.target.value)
-      console.log("today")
+      let frommDate=moment().format("YYYY-MM-DD")
+      setFromDate(frommDate)
+      // console.log("From date"+e.target.value)
+      // console.log("today")
       setToDate(moment().format("YYYY-MM-DD"))
+      let previousTodate=moment(frommDate).subtract(1, 'days').startOf('days').format("YYYY-MM-DD")
+      setprevTodate(previousTodate)
+      setprevFromdate(previousTodate)
+      // console.log("previous day"+ prevDate)
+      setpreviousStateChange(1)
     }
-
+        //yesterday------------------------------------------------------------------------
     if(value==2){
-      setFromDate(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'));
-      console.log("From date"+e.target.value);
-     
+      let yesterday=moment().subtract(1, 'days').startOf('days').format("YYYY-MM-DD")
+      
+      setFromDate(yesterday);
       setToDate( moment().format("YYYY-MM-DD"));
-      console.log("yesterday--"+moment().subtract(1, 'day').startOf('day').format('YYYY-MM-DD'));
+     
+      let previousTodatee=moment(yesterday).subtract(1, 'days').startOf('days').format("YYYY-MM-DD")
+      setprevTodate(previousTodatee)
+      setprevFromdate(moment(previousTodatee).subtract(1, 'days').startOf('days').format("YYYY-MM-DD"))
+      setpreviousStateChange(2)
 
     }
+    //last week---------------------------------------------------------------
    if(value==3){
-      setFromDate( moment().subtract(1, 'weeks').startOf('weeks').format('YYYY-MM-DD')  );
+       let lastweek= moment().subtract(1, 'weeks').startOf('weeks').format('YYYY-MM-DD')
+      setFromDate(lastweek);
     
-      console.log("From date"+e.target.value)
-      
-      setToDate( moment().format("YYYY-MM-DD")  );
-      // console.log("last week"+moment().subtract(1, 'week').startOf('week').format('YYYY-MM-DD'))
+      setToDate(moment().subtract(1,'weeks').endOf('weeks').format('YYYY-MM-DD'));
+      let previouslastweek=moment(lastweek).subtract(1,'days').endOf('days').format('YYYY-MM-DD')
+       setprevTodate(previouslastweek)
+       setprevFromdate(moment(previouslastweek).subtract(1,'weeks').endOf('weeks').format('YYYY-MM-DD'))
+       setpreviousStateChange(3)
+
    
    }
-
+         //last month---------------------------------------------------------------
    if(value==4){
    
-
-    setFromDate(moment().subtract(1, 'months').startOf('months').format('YYYY-MM-DD'));
-    console.log("From last month"+e.target.value)
-    setToDate(  moment().format("YYYY-MM-DD")    );
-    // setToDate("2022-12-14");
-
-    
+   let month=moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD')
+    setFromDate(month);
+    let lastMonth=moment().subtract(1, 'month').endOf('month').format('YYYY-MM-DD')
+    setToDate(lastMonth);
+    let previouslastmont=moment(lastMonth).subtract(1, 'days').startOf('days').format('YYYY-MM-DD')
+    setprevTodate(previouslastmont);
+    setprevFromdate(moment(previouslastmont).subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
+    // setPrevDate(moment(month).subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
+    // console.log("previou month-"+prevDate)
+    setpreviousStateChange(4)
  }
+//  last six month---------------------------------------------------------
  if(value==5){
-  setFromDate(moment().subtract(6, 'month').startOf('month').format('YYYY-MM-DD') );
-  console.log("From last 6 month"+e.target.value)
-  setToDate( moment().format("YYYY-MM-DD") );
+  
+  let sixMonth=moment().subtract(6, 'month').startOf('month').format('YYYY-MM-DD')
+  setFromDate(sixMonth );
+  setToDate(moment().format("YYYY-MM-DD") );
+  let lastsixMonth=moment(sixMonth).subtract(1, 'month').startOf('month').format('YYYY-MM-DD')
+  setprevTodate(lastsixMonth);
+  setprevFromdate(moment(lastsixMonth).subtract(5, 'month').startOf('month').format('YYYY-MM-DD'))
+  // setPrevDate(moment(sixMonth).subtract(6, 'month').startOf('month').format('YYYY-MM-DD'))
+  // console.log("previou 6 month-"+prevDate)
+  setpreviousStateChange(5)
+}
+
+//this week-----------------------------------------------------------------------
+if(value==8){
+  
+let ThisWeek=moment().startOf('weeks').format('YYYY-MM-DD')
+setFromDate(ThisWeek);
+// console.log("From last 6 month"+ThisWeek)
+setToDate( moment().format("YYYY-MM-DD") );
+let previousthisweek=moment(ThisWeek).subtract(1,'days').endOf('days').format('YYYY-MM-DD')
+setprevTodate(previousthisweek)
+setprevFromdate(moment(previousthisweek).subtract(1,'weeks').endOf('weeks').format('YYYY-MM-DD'))
+// setPrevDate(moment(ThisWeek).subtract(1, 'weeks').endOf('weeks').format('YYYY-MM-DD'))
+setpreviousStateChange(8)
+  
+}
+if(value==9){
+  
+let ThisMonth=moment().startOf('month').format('YYYY-MM-DD')
+setFromDate(ThisMonth);
+// console.log("From last 6 month"+ThisMonth)
+setToDate( moment().format("YYYY-MM-DD") );
+let previousthismont=moment(ThisMonth).subtract(1, 'days').startOf('days').format('YYYY-MM-DD')
+setprevTodate(previousthismont);
+setprevFromdate(moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
+setpreviousStateChange(9)
 }
 
 
@@ -417,6 +479,30 @@ function handleDownloadExcel() {
    
   ];
 
+
+
+
+
+
+ 
+   // // //-------------Order tax---------------------------
+var getOrderTax=Number(Taxesreport.order_tax)
+
+var getPreviousOrderTax=Number(PrevTaxesreport.prev_order_tax)
+
+var resultOrderTax=(((getOrderTax-getPreviousOrderTax)/getPreviousOrderTax)*100).toFixed(2)
+
+resultOrderTax!="Infinity"?console.log():resultOrderTax=0
+
+
+   // // //-------------Order count---------------------------
+   var getOrderCount=Number(Taxesreport.order_count)
+
+   var getPreviousOrderCount=Number(PrevTaxesreport.prev_order_count)
+   
+   var resultOrderCount=(((getOrderCount-getPreviousOrderCount)/getPreviousOrderCount)*100).toFixed(2)
+   
+   resultOrderCount!="Infinity"?console.log():resultOrderCount=0
     return (
         <div>
          <h2>Taxes Report</h2>
@@ -431,9 +517,11 @@ function handleDownloadExcel() {
               onChange={TimeChange}
             >
              <option >Search by category</option>
-              <option name="today" value={1}>Today</option>
+             <option name="today" value={1}>Today</option>
               <option name="yesterday" value={2}>yesterday</option>
+              <option name="this_week" value={8}>this  week</option>
               <option name="last_week" value={3}>Last week</option>
+              <option name="this_week" value={9}>This  month</option>
               <option name="last_month" value={4}>last month</option>
               <option name="last_6_month" value={5}>last 6  month</option>
               {/* <option name="custom_month" value="6">custom month</option> */}
@@ -549,15 +637,18 @@ function handleDownloadExcel() {
                   <div className="d-flex align-items-baseline justify-content-between">
                  {console.log("taxxxxx"+TaxesError)}
                 { console.log("ordder count-------"+Taxesreport.order_tax)}
-                  {(TaxesError)=="No_Data"||(Taxesreport.order_tax)==null || (Taxesreport.order_tax)==undefined  || (Taxesreport.order_tax)==""?<h3>No Record</h3>: <h3>{Taxesreport.order_tax}</h3>}
+                  {(TaxesError)=="No_Data"||(Taxesreport.order_tax)==null || (Taxesreport.order_tax)==undefined  || (Taxesreport.order_tax)==""?<h3>₹0</h3>: <h3>{Taxesreport.order_tax}</h3>}
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
-                     <p className="mb-0 h5">0%</p>
+
+                     {(resultOrderTax>0)?<p className="mb-0 h5" style={{color:"green"}}> {resultOrderTax}%</p>:(resultOrderTax<0)?<p className="mb-0 h5" style={{color:"red"}}> {resultOrderTax}%</p>:(resultOrderTax==0)?<p className="mb-0 h5" style={{color:"blue"}}> {resultOrderTax}%</p>:(resultOrderTax=="NaN")?<p className="mb-0 h5" style={{color:"grey"}}> 0%</p>:<p className="mb-0 h5" style={{color:"brown"}}> {resultOrderTax}%</p>}
+                   
                     </div>
                     </div>
                     <div>
-                        <h5>Previous Year:</h5>
-                        <p className="h5">$0.00</p>
+                    {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous  week :</h5>:(previousStateChange==9)?<h5>Previous  Month :</h5>:<h5>Today :</h5>}
+                        
+                        {  (TaxesError)=="no_data"||(PrevTaxesreport.prev_order_tax)==null||(PrevTaxesreport.prev_order_tax)==undefined||(PrevTaxesreport.prev_order_tax)==""? <p className="h5">₹0</p>:  <p className="h5">₹{(PrevTaxesreport.prev_order_tax).toFixed(2)} </p>} 
                     </div>
                   </div>
                 </div>
@@ -582,16 +673,19 @@ function handleDownloadExcel() {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                  {(TaxesError)=="No_Data"||(Taxesreport.order_count)==null || (Taxesreport.order_count)==undefined  || (Taxesreport.order_count)==""?<h3>No Record</h3>: <h3>{Taxesreport.order_count}</h3>}
+                  {(TaxesError)=="No_Data"||(Taxesreport.order_count)==null || (Taxesreport.order_count)==undefined  || (Taxesreport.order_count)==""?<h3>₹0</h3>: <h3>₹{Taxesreport.order_count}</h3>}
 
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
-                     <p className="mb-0 h5">0%</p>
+
+                     {(resultOrderCount>0)?<p className="mb-0 h5" style={{color:"green"}}> {resultOrderCount}%</p>:(resultOrderCount<0)?<p className="mb-0 h5" style={{color:"red"}}> {resultOrderCount}%</p>:(resultOrderCount==0)?<p className="mb-0 h5" style={{color:"blue"}}> {resultOrderCount}%</p>:(resultOrderCount=="NaN")?<p className="mb-0 h5" style={{color:"grey"}}> 0%</p>:<p className="mb-0 h5" style={{color:"brown"}}> {resultOrderCount}%</p>}
+
                     </div>
                     </div>
                     <div>
-                        <h5>Previous Year:</h5>
-                        <p className="h5">$0.00</p>
+                    {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous  week :</h5>:(previousStateChange==9)?<h5>Previous  Month :</h5>:<h5>Today :</h5>}
+                        
+                        {  (TaxesError)=="no_data"||(PrevTaxesreport.prev_order_count)==null||(PrevTaxesreport.prev_order_count)==undefined||(PrevTaxesreport.prev_order_count)==""? <p className="h5"> 0</p>:  <p className="h5">{(PrevTaxesreport.prev_order_count)} </p>} 
                     </div>
                   </div>
                 </div>
