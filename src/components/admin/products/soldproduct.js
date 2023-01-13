@@ -26,25 +26,30 @@ const OnSearchChange = (e) => {
 const onSearchClick = () =>{
   
 }
+
   useEffect(() => {
-    axios.post("${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50", {
+    axios.post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`,{
       "product_search": {
         "search": `${searchdata.product_title_name}`,
         "price_from": "",
         "price_to": "",
         "id":"asc",
         "short_by_updated_on":"",
-        "category": `${searchdata.category}`,
-        "quantity": 50
+        "product_title_name":"asc",
+        "sale_price":"",
+        "category":`${searchdata.category}`,
+        "quantity":0
 
       }}).then((response) => {
+        let data=response.data
+      // let data = response.data.filter(item=>item.quantity===0);
       setsolddata(response.data)
       console.log("---sold"+JSON.stringify(solddata))
     }).catch(function (error) {
       console.log(error);
     });
   }, [searchdata]);
-
+console.log("+++++++++++++++++++++"+solddata)
   const columns = [
     {
       name: "Sku",

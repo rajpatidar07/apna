@@ -223,13 +223,9 @@ const [searchdata, setsearchData] = useState({
   ];
   const handleFormChange = (e) => {
     setfdata({...fdata,[e.target.name]: e.target.value})
-      console.log("dataaaaaaaaaaaaaaaaaaaaaaa"+JSON.stringify(e.target.value))
     };
 
-  // console.log("SHOWWWWWWWWWWWWWWWWWWWWWWWWWWWW"+JSON.stringify(fdata.id))
-
-  const UpdateFeaturedProduct = (show) => {
-   
+  const UpdateFeaturedProduct = () => {
     axios.put(`${process.env.REACT_APP_BASEURL}/update_fetured_product`,{
       id:id,
       start_date:fdata.start_date,
@@ -274,7 +270,7 @@ useEffect(() => {
     console.log(error);
   });
 }, [searchdata,apicall]);
-
+console.log("============="+JSON.stringify(searchdata))
 //  const UpdateFeturse
   return (
     <div>
@@ -284,7 +280,8 @@ useEffect(() => {
        <div className="card mt-3 p-3 ">
        <div className="row pb-3">
       <div className="col-md-3 col-sm-6 aos_input">
-        <input type={"text"} onChange={OnSearchChange}  value={searchdata.product_title_name} name='product_title_name' placeholder={"Search by product name"} className={"adminsideinput"} />
+        <input type={"text"}  onChange={OnSearchChange} name='product_title_name'
+              value={searchdata.product_title_name} placeholder={"Search by product name"} className={'adminsideinput'}/>
         </div>
         {/* <div className="col-md-3 col-sm-6 aos_input">
         <Form.Select aria-label="Search by category" className="adminselectbox" placeholder="Search by category">
@@ -295,11 +292,12 @@ useEffect(() => {
         </Form.Select>
         </div> */} 
         <div className="col-md-3 col-sm-6 aos_input">
-        <input type={"date"} onChange={OnDateChange} name='manufacturing_date'  value={searchdata.manufacturing_date} placeholder={"Search by product name"} className={"adminsideinput"} />
+        <input type={"date"} onChange={OnDateChange} name='manufacturing_date'
+              value={searchdata.manufacturing_date} placeholder={"Search by product name"} className={'adminsideinput'}/>
         </div>
-        <div className="col-md-3 col-sm-6 aos_input">
+        {/* <div className="col-md-3 col-sm-6 aos_input">
         <MainButton btntext={"Search"} btnclass={'button main_button w-100'} />
-        </div>
+        </div> */}
       </div>
 
       {/* upload */}
