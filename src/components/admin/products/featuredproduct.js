@@ -27,19 +27,17 @@ const [featuredProductData,setFeatureProductData]=useState([]);
   const [show, setShow] = useState("");
   const [validated, setValidated] = useState(false);
 const [id,setId]=useState();
-const [pendingdata, setpendingdata] = useState([]);
 const [searchdata, setsearchData] = useState({
   product_title_name: "",
   category: "",
   manufacturing_date:"",
 
 })
-  const handleClose = () => {
-   
-    setValidated(false);
-    
-  };
-
+const handleClose = () => {
+  formRef.current.reset();
+  setValidated(false);
+  setShow(false);
+};
 
   const handleShow = (id) =>{ 
     try {
@@ -184,8 +182,8 @@ const [searchdata, setsearchData] = useState({
       },
     },
     {
-      name: "Start Date",
-      selector: (row) => row.created_at,
+      name: "StartDate",
+      selector: (row) => moment(row.manufacturing_date).format('DD-MM-YYYY'),
       sortable: true,
       width: "130px",
       center: true,
@@ -196,7 +194,7 @@ const [searchdata, setsearchData] = useState({
     },
     {
       name: "End Date",
-      selector: (row) => row.updated_at,
+      selector: (row) => row.expire_date,
       sortable: true,
       width: "130px",
       center: true,
@@ -245,32 +243,37 @@ const [searchdata, setsearchData] = useState({
 const OnSearchChange = (e) => {
   setsearchData({ ...searchdata, [e.target.name]: e.target.value })
 }
-
 const OnDateChange = (e) => {
   let mdate = moment(e.target.value).format('YYYY-MM-DD')
   setsearchData({ ...searchdata,manufacturing_date: mdate })
+  console.log("DATE0000000000000"+mdate);
 }
-
+const onSearchClick = () =>{
+  
+}
 useEffect(() => {
-  axios.post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`, {
+  axios.post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`,{
     "product_search": {
-      "search":`${searchdata.product_title_name}`,
-"price_from":"",
-"price_to":"",
-"id":"",
-"product_title_name":"asc",
-"sale_price":"",
-"short_by_updated_on":"",
-"product_status":["pending"],
-"manufacturing_date":[`${searchdata.manufacturing_date}`]
+      "search": `${searchdata.product_title_name}`,
+      "price_from": "",
+      "price_to": "",
+      "id":"asc",
+      "short_by_updated_on":"",
+      "product_title_name":"asc",
+      "sale_price":"",
+      "category":`${searchdata.category}`,
+      "quantity":0
+
     }}).then((response) => {
-      setpendingdata(response.data)
-      setapicall(false)
+      let data=response.data
+    // let data = response.data.filter(item=>item.quantity===0);
+    setFeatureProductData(response.data)
+    console.log("--featuredProductData"+JSON.stringify(featuredProductData));
   }).catch(function (error) {
     console.log(error);
   });
-}, [searchdata,apicall]);
-console.log("============="+JSON.stringify(searchdata))
+}, [searchdata]);
+
 //  const UpdateFeturse
   return (
     <div>
@@ -291,10 +294,11 @@ console.log("============="+JSON.stringify(searchdata))
           <option value="3">Baby Care</option>
         </Form.Select>
         </div> */} 
-        <div className="col-md-3 col-sm-6 aos_input">
-        <input type={"date"} onChange={OnDateChange} name='manufacturing_date'
-              value={searchdata.manufacturing_date} placeholder={"Search by product name"} className={'adminsideinput'}/>
-        </div>
+       <div className="col-md-3 col-sm-6 aos_input value={}">
+            <input type={"date"} onChange={OnDateChange} name='manufacturing_date'
+              value={searchdata.manufacturing_date}
+              className={'adminsideinput'} placeholder={"Search by date"} />
+          </div>
         {/* <div className="col-md-3 col-sm-6 aos_input">
         <MainButton btntext={"Search"} btnclass={'button main_button w-100'} />
         </div> */}
@@ -310,7 +314,7 @@ console.log("============="+JSON.stringify(searchdata))
         >
           <Modal.Header closeButton>
             <Modal.Title>
-              
+              Featured Product
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -328,7 +332,7 @@ console.log("============="+JSON.stringify(searchdata))
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicStartDate">
                     <Form.Label>Expire Date</Form.Label>
-                    <Form.Control  name='end_date' value={moment(fdata.end_date).format('YYYY-MM-DD')} onChange={(e) => handleFormChange(e)}   type="date" placeholder="Coupon Start Date" />
+                    <Form.Control  name='end_date' value={moment(fdata.end_date).format('YYYY-MM-DD')} onChange={(e) => handleFormChange(e)}  type="date" placeholder="Coupon Start Date" />
                   </Form.Group>
                 </div> 
             </div>
@@ -361,7 +365,7 @@ console.log("============="+JSON.stringify(searchdata))
    
       <DataTable
         columns={columns}
-        data={featuredProductData}
+        data={featuredProductData.results}
         pagination
         highlightOnHover
         pointerOnHover

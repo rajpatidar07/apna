@@ -8,16 +8,15 @@ import moment from "moment/moment";
 import {
     BsCashCoin
   } from "react-icons/bs";
-import { HiOutlineReceiptRefund,HiOutlineGift } from "react-icons/hi";
+import {HiOutlineGift } from "react-icons/hi";
 import {AiOutlineArrowRight}  from "react-icons/ai";
-import {GiTakeMyMoney,GiPayMoney}  from "react-icons/gi";
+import {GiPayMoney}  from "react-icons/gi";
 import {MdOutlineLocalShipping}  from "react-icons/md";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import ApexCharts from 'apexcharts'
-import ReactApexChart from "react-apexcharts";
+
 import Select from 'react-select'
 import jsPDF from "jspdf";
 import "jspdf-autotable";

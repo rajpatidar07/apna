@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect,Fragment } from "react";
+import React, { useState, useRef, useEffect} from "react";
 import Input from "../common/input";
 import { AiOutlinePlus } from "react-icons/ai";
 // import fetch from 'node-fetch';
@@ -13,7 +13,6 @@ import Iconbutton from "../common/iconbutton";
 import { Badge } from "react-bootstrap";
 import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
-import InputGroup from 'react-bootstrap/InputGroup';
 import axios from "axios";
 
 const CategoryList = () => {

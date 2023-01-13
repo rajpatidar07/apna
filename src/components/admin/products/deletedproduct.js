@@ -29,18 +29,21 @@ const onSearchClick = () =>{
   
 }
   useEffect(() => {
-    axios.post("${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50", {
+    axios.post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`, {
       "product_search": {
         "search": `${searchdata.product_title_name}`,
         "category": `${searchdata.category}`,
         "price_from": "",
         "price_to": "",
         "id":"asc",
-        "is_delete": "0"
+        "short_by_updated_on":"",
+        "product_title_name":"asc",
+        "sale_price":"",
+        "is_delete": 0
 
       }}).then((response) => {
       setdeletedata(response.data)
-      console.log("---sold"+JSON.stringify(deletedata))
+      console.log("---ggggggggggggggggggsold"+JSON.stringify(deletedata))
     }).catch(function (error) {
       console.log(error);
     });
@@ -142,7 +145,7 @@ const onSearchClick = () =>{
               value={searchdata.product_title_name}
               className={'adminsideinput'}/>
         </div>
-        <div className="col-md-3 col-sm-6 aos_input">
+        {/* <div className="col-md-3 col-sm-6 aos_input">
         <Form.Select aria-label="Search by category" className="adminselectbox" placeholder="Search by category" onChange={OnSearchChange}
               name='category'
               value={searchdata.category}>
@@ -151,9 +154,10 @@ const onSearchClick = () =>{
           <option value="2">Fish & Meat</option>
           <option value="3">Baby Care</option>
         </Form.Select>
-        </div>
+        </div> */}
         <div className="col-md-3 col-sm-6 aos_input">
-        <input type={"date"} placeholder={"Search by product name"} />
+        <input type={"date"} 
+              value={"searchdata.manufacturing_date"} placeholder={"Search by product name"} className={'adminsideinput'}/>
         </div>
         <div className="col-md-3 col-sm-6 aos_input">
         <MainButton btntext={"Search"} btnclass={'button main_button w-100'} />

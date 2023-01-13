@@ -7,7 +7,7 @@ import html2canvas from 'html2canvas';
 
 const Invoice = () => {
     let invoice_no=localStorage.getItem("invoice_no")
-    let invoiceid=localStorage.getItem("invoiceid")
+    // let invoiceid=localStorage.getItem("invoiceid")
     const[invoicedetails,setInvoiceDetails]=useState([]);
     const[pdetails,setpDetails]=useState([]);
 

@@ -108,7 +108,7 @@ console.log("-----"+searchdata.manufacturing_date)
           // width="75px"
           alt={'apna_organic'}
           src={
-            row.image? row.image : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
+            row.image? row.image :"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
           }
           style={{
             padding: 10,

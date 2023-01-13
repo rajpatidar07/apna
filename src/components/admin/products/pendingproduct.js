@@ -32,6 +32,7 @@ const OnSearchChange = (e) => {
 const OnDateChange = (e) => {
   let mdate = moment(e.target.value).format('YYYY-MM-DD')
   setsearchData({ ...searchdata,manufacturing_date: mdate })
+  console.log("DATE0000000000000"+mdate);
 }
 
   useEffect(() => {
@@ -212,7 +213,7 @@ const OnDateChange = (e) => {
           <div className="col-md-3 col-sm-6 aos_input value={}">
             <input type={"date"} onChange={OnDateChange} name='manufacturing_date'
               value={searchdata.manufacturing_date}
-              className={'adminsideinput'} placeholder={"Search by product name"} />
+              className={'adminsideinput'} placeholder={"Search by Date"} />
           </div>
           {/* <div className="col-md-3 col-sm-6 aos_input">
             <MainButton

@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useRef ,Fragment} from "react";
-import Input from "../common/input";
+import React, { useEffect, useState, useRef} from "react";
 import {
   AiOutlinePlus,
 } from "react-icons/ai";
@@ -41,7 +40,7 @@ const Coupon = () => {
   const [apicall, setapicall] = useState(false);
   const [dltapicall, setDltapicall] = useState(false);
   const [cid, setCId] = useState(false);
-  const [isActive, setisActive] = useState(false);
+ 
   // const [scoupon, setScoupon] = useState([]);
   const [searchcoupon, setsearchCoupon] = useState([]);
   const [SearchCoup, setSearchCoup] = useState({

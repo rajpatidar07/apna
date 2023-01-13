@@ -1,5 +1,4 @@
-import React, { useState, useRef,Fragment } from "react";
-import Input from "../common/input";
+import React, { useState, useRef} from "react";
 import DataTable from "react-data-table-component";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
@@ -11,7 +10,7 @@ import {CKEditor} from 'ckeditor4-react'
 // import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useEffect } from "react";
 import axios from "axios";
-import { SendExclamationFill } from "react-bootstrap-icons";
+
 import EmailType from "../json/EmailType";
 import EmailStatus from "../json/EmailStatus";
 

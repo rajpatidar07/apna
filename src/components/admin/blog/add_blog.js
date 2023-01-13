@@ -1,19 +1,16 @@
-import React, { useState, useRef ,Fragment} from "react";
+import React, { useState, useRef } from "react";
 import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
-import logo from "../../../images/logo.png";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import { useEffect } from "react";
 import Iconbutton from "../common/iconbutton";
 import axios from "axios";
 import { Badge, Button, InputGroup } from "react-bootstrap";
-import { GiCancel } from "react-icons/gi";
-import { data } from "jquery";
 let categoryArray=[];
 const BlogList = () => {
   const formRef = useRef();
