@@ -30,6 +30,12 @@ const onSearchClick = () =>{
     axios.post("${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50", {
       "product_search": {
         "search": `${searchdata.product_title_name}`,
+        "price_from": "",
+        "price_to": "",
+        "id":"asc",
+        "short_by_updated_on":"",
+        "product_title_name":"asc",
+        "sale_price":"",
         "category": `${searchdata.category}`,
         "quantity": 50
 

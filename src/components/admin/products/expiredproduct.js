@@ -32,10 +32,16 @@ const OnDateChange = (e) => {
   setsearchData({ ...searchdata,manufacturing_date: mdate })
 }
 useEffect(() => {
-  axios.post("${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50", {
+  axios.post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`, {
     "product_search": {
       "search": `${searchdata.product_title_name}`,
       "category": `${searchdata.category}`,
+      "price_from": "",
+      "price_to": "",
+      "id":"asc",
+      "product_title_name":"asc",
+      "sale_price":"",
+      " short_by_updated_on":"",
       "manufacturing_date":`${searchdata.manufacturing_date}`,
       // "expire_date":`${currentdate}`
     }}).then((response) => {
@@ -152,16 +158,7 @@ useEffect(() => {
               value={searchdata.product_title_name}
               className={'adminsideinput'}/>
           </div>
-          <div className="col-md-3 col-sm-6 aos_input">
-            <Form.Select aria-label="Search by category" className="adminselectbox" placeholder="Search by category" onChange={OnSearchChange}
-              name='category'
-              value={searchdata.category}>
-              <option>Search by category</option>
-              <option value="1">Food</option>
-              <option value="2">Fish & Meat</option>
-              <option value="3">Baby Care</option>
-            </Form.Select>
-          </div>
+          
           <div className="col-md-3 col-sm-6 aos_input">
             <input type={"date"} placeholder={"Search by product name"}  onChange={OnDateChange} name='manufacturing_date'
               value={searchdata.manufacturing_date}

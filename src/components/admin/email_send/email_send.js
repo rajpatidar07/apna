@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef,Fragment } from "react";
 import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import Form from "react-bootstrap/Form";
@@ -422,7 +422,7 @@ const SearchHandler=()=>{
         >
           <Modal.Header closeButton>
             <Modal.Title>
-              {show === "add" ? "Add New Blog " : " Update Blog"}
+              {show === "add" ? "Add New Email " : " Update Email"}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>

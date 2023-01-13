@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect,Fragment } from "react";
 import Input from "../common/input";
 import { AiOutlinePlus } from "react-icons/ai";
 // import fetch from 'node-fetch';
@@ -401,7 +401,7 @@ for(let i=0 ; i < arr.length; i++){
   };
 
   const UpdateCategoryClick = (show) => {
-    console.log("---show"+CategoryEditdata.id)
+    console.log("---show"+CategoryEditdata.id + indVal+level+allparentid+newName+type)
     const formData = new FormData();
     formData.append("id", CategoryEditdata.id);
     formData.append("image", file);
@@ -418,7 +418,7 @@ for(let i=0 ; i < arr.length; i++){
   });
   formRef.current.reset();
   setValidated(false);
-  show.preventDefault();
+  // show.preventDefault();
   };
   const onValueChange=(e)=>{
     setSearchCat({ ...SearchCat, [e.target.name]: e.target.value });
@@ -471,17 +471,19 @@ for(let i=0 ; i < arr.length; i++){
                     </p> : null}
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
-            <Form.Select
-              aria-label="Search by category type"
+
+          <Form.Select
+              aria-label="Search by status"
               className="adminselectbox"
+              name="level"
               onChange={(e) => onValueChange(e)}
-              name="category_type"
-                // placeholder={"Search by category type"}
-                value={SearchCat.category_type}
+              value={SearchCat.category_type}
+              
             >
-              <option>Search by category type</option>
+          <option>Search by category</option>
+
               {result1.map((lvl,i)=>{
-                return( <option value={lvl.category_type} key={i}>{lvl.category_type}</option>)
+                return(<option value={lvl.category_type} key={i}>{lvl.category_type}</option>)
               })}
             </Form.Select>
           </div>

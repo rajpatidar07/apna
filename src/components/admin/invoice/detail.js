@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { useState,useEffect } from "react";
+import { useState,useEffect} from "react";
 import jsPDF from "jspdf";
 import html2canvas from 'html2canvas';
 
