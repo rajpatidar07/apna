@@ -8,16 +8,15 @@ import moment from "moment/moment";
 import {
     BsCashCoin
   } from "react-icons/bs";
-import { HiOutlineReceiptRefund,HiOutlineGift } from "react-icons/hi";
+import {HiOutlineGift } from "react-icons/hi";
 import {AiOutlineArrowRight}  from "react-icons/ai";
-import {GiTakeMyMoney,GiPayMoney}  from "react-icons/gi";
+import {GiPayMoney}  from "react-icons/gi";
 import {MdOutlineLocalShipping}  from "react-icons/md";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import ApexCharts from 'apexcharts'
-import ReactApexChart from "react-apexcharts";
+
 import Select from 'react-select'
 import jsPDF from "jspdf";
 import "jspdf-autotable";
@@ -1065,7 +1064,7 @@ const SearchHandler=(e)=>{
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                  { (RevenueError)=="no_data"||(getRevenue.gross_total_amount)==null||(getRevenue.gross_total_amount)==undefined||(getRevenue.gross_total_amount)==""? <h3>₹0</h3>:  <h3>₹{getRevenue.gross_total_amount}</h3> }  
+                  { (RevenueError)=="no_data"||(getRevenue.gross_total_amount)==null||(getRevenue.gross_total_amount)==undefined||(getRevenue.gross_total_amount)==""? <h3>₹0</h3>:  <h3>₹{(getRevenue.gross_total_amount).toFixed(2)}</h3> }  
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
 
@@ -1077,7 +1076,7 @@ const SearchHandler=(e)=>{
                     <div>
                         {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous  week :</h5>:(previousStateChange==9)?<h5>Previous  Month :</h5>:<h5>Today :</h5>}
                         
-                        { (RevenueError)=="no_data"||(getRevenue.prev_gross_total_amount)==null||(getRevenue.prev_gross_total_amount)==undefined||(getRevenue.prev_gross_total_amount)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{getRevenue.prev_gross_total_amount} </p>} 
+                        { (RevenueError)=="no_data"||(getRevenue.prev_gross_total_amount)==null||(getRevenue.prev_gross_total_amount)==undefined||(getRevenue.prev_gross_total_amount)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{(getRevenue.prev_gross_total_amount).toFixed(2)} </p>} 
                         
                     </div>
                   </div>
@@ -1124,7 +1123,7 @@ const SearchHandler=(e)=>{
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                  { (RevenueError)=="no_data"||(getRevenue.return_total)==null||(getRevenue.return_total)==undefined||(getRevenue.return_total)==""? <h3>₹0</h3>:  <h3>₹{getRevenue.return_total}</h3> }  
+                  { (RevenueError)=="no_data"||(getRevenue.return_total)==null||(getRevenue.return_total)==undefined||(getRevenue.return_total)==""? <h3>₹0</h3>:  <h3>₹{(getRevenue.return_total).toFixed(2)}</h3> }  
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
 
@@ -1136,7 +1135,7 @@ const SearchHandler=(e)=>{
                     </div>
                     <div>
                     {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous  week :</h5>:(previousStateChange==9)?<h5>Previous  Month :</h5>:<h5>Today :</h5>}
-                        { (RevenueError)=="no_data"||(getRevenue.prev_return_total)==null||(getRevenue.prev_return_total)==undefined||(getRevenue.prev_return_total)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{getRevenue.prev_return_total} </p>} 
+                        { (RevenueError)=="no_data"||(getRevenue.prev_return_total)==null||(getRevenue.prev_return_total)==undefined||(getRevenue.prev_return_total)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{(getRevenue.prev_return_total).toFixed(2)} </p>} 
                     </div>
                   </div>
                 </div>
@@ -1155,7 +1154,7 @@ const SearchHandler=(e)=>{
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                  { (RevenueError)=="no_data"||(getRevenue.total_gst)==null||(getRevenue.total_gst)==undefined||(getRevenue.total_gst)==""? <h3>₹0</h3>:  <h3>₹{getRevenue.total_gst}</h3> }  
+                  { (RevenueError)=="no_data"||(getRevenue.total_gst)==null||(getRevenue.total_gst)==undefined||(getRevenue.total_gst)==""? <h3>₹0</h3>:  <h3>₹{(getRevenue.total_gst).toFixed(2)}</h3> }  
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
 
@@ -1167,7 +1166,7 @@ const SearchHandler=(e)=>{
                     </div>
                     <div>
                     {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous  week :</h5>:(previousStateChange==9)?<h5>Previous  Month :</h5>:<h5>Today :</h5>}
-                        { (RevenueError)=="no_data"||(getRevenue.prev_total_gst)==null||(getRevenue.prev_total_gst)==undefined||(getRevenue.prev_total_gst)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{getRevenue.prev_total_gst} </p>} 
+                        { (RevenueError)=="no_data"||(getRevenue.prev_total_gst)==null||(getRevenue.prev_total_gst)==undefined||(getRevenue.prev_total_gst)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{(getRevenue.prev_total_gst).toFixed(2)} </p>} 
                     </div>
                   </div>
                 </div>
@@ -1186,7 +1185,7 @@ const SearchHandler=(e)=>{
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                  { (RevenueError)=="no_data"||(getRevenue.total_shipping_charges)==null||(getRevenue.total_shipping_charges)==undefined||(getRevenue.total_shipping_charges)==""? <h3>₹0</h3>:  <h3>{getRevenue.total_shipping_charges}</h3> }  
+                  { (RevenueError)=="no_data"||(getRevenue.total_shipping_charges)==null||(getRevenue.total_shipping_charges)==undefined||(getRevenue.total_shipping_charges)==""? <h3>₹0</h3>:  <h3>{(getRevenue.total_shipping_charges).toFixed(2)}</h3> }  
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
 
@@ -1197,7 +1196,7 @@ const SearchHandler=(e)=>{
                     </div>
                     <div>
                     {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous  week :</h5>:(previousStateChange==9)?<h5>Previous  Month :</h5>:<h5>Today :</h5>}
-                        { (RevenueError)=="no_data"||(getRevenue.prev_total_shipping_charges)==null||(getRevenue.prev_total_shipping_charges)==undefined||(getRevenue.prev_total_shipping_charges)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{getRevenue.prev_total_shipping_charges} </p>} 
+                        { (RevenueError)=="no_data"||(getRevenue.prev_total_shipping_charges)==null||(getRevenue.prev_total_shipping_charges)==undefined||(getRevenue.prev_total_shipping_charges)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{(getRevenue.prev_total_shipping_charges).toFixed(2)} </p>} 
                     </div>
                   </div>
                 </div>

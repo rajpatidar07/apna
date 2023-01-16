@@ -1,5 +1,4 @@
-import React, { useState, useRef,Fragment } from "react";
-import Input from "../common/input";
+import React, { useState, useRef} from "react";
 import DataTable from "react-data-table-component";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
@@ -11,9 +10,10 @@ import {CKEditor} from 'ckeditor4-react'
 // import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useEffect } from "react";
 import axios from "axios";
-import { SendExclamationFill } from "react-bootstrap-icons";
+
 import EmailType from "../json/EmailType";
 import EmailStatus from "../json/EmailStatus";
+import { Alert } from "bootstrap";
 
 
 const EmailSend = () => {
@@ -53,9 +53,10 @@ const EmailSend = () => {
               axios
                 .get(`${process.env.REACT_APP_BASEURL}/email_template_get?id=${e}`)
                 .then((response) => {
-                     console.log("single Data"+ JSON.stringify(response.data))
+                    //  console.log("single Data"+ JSON.stringify(response.data))
                     setEmaildata(response.data[0])
-    console.log(" update data------"+response.data[0].email_text)
+                 
+    // console.log(" update data------"+response.data[0].email_text)
 
                     setEmailText(response.data[0].email_text)
                 
@@ -173,18 +174,19 @@ const EmailSend = () => {
 
   const EmailTextHandler=(e)=>{
 
-// console.log("textEditor value"+ e.editor.getData())
-  //    console.log("datatatat"+emaildata.email_text)
-  // //  console.log({ event, editor, emailText});
    let newTemp;
    if((e.editor.getData()) != undefined){
      newTemp = (e.editor.getData()).replaceAll(/"/g, '\'');
   }
    setEmailText(newTemp)
-  // setEmaildata({...emaildata,
-  //   email_text:newTemp
-  // })
+
+  //  setEmailText(e.editor. setEditorData(emailText)) 
+  //  let updateTemp=e.editor.setData(emailText)
+  //  setEmailText(updateTemp)
+
   }
+
+
 
   const valueHandler=(e)=>{
 
@@ -303,7 +305,7 @@ setapicall(true);
 
   const deleteEmail =(id)=>{
     // console.log("id---"+id)
-    axios.post(`${process.env.REACT_APP_BASEURL}/email_template_remove`, {
+    axios.put(`${process.env.REACT_APP_BASEURL}/email_template_remove`, {
       is_deleted:0,
       id:`${id}`
       }).then((response) => {
@@ -334,7 +336,7 @@ const SearchHandler=()=>{
 //   console.log("newTemp -"+newTemp)
 // }
 
-
+console.log("data from database---------"+emailText)
   return (
     <div>
       <h2>Send Email</h2>
@@ -532,13 +534,11 @@ const SearchHandler=()=>{
               <div sm="12" className="mt-3">
                   <CKEditor
                     // editor={"classic"}
-                      //  data={ <div dangerouslySetInnerHTML={{ __html: emailText }} className='editor'></div>}
-                      // value={<div dangerouslySetInnerHTML={{ __html: emailText }} className='editor'></div>}
-                      data={`<p>${emailText}</p>`}
-                      //  value="<p>Hi Rajaram Patidar</p>"
+                     data={emailText}
+                    //  value="<p>hjhjjhj</p>"
                     onChange={(e)=>EmailTextHandler(e)}
                     name={"email_text"}
-                    
+                   
                 
                     required
                     

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState ,useRef} from "react";
 import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
@@ -7,46 +7,101 @@ import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
+import { Modal } from "react-bootstrap";
+import Button from "react-bootstrap";
+import Iconbutton from "../common/iconbutton";
 import axios from "axios";
 const Soldproduct = () => {
+  const formRef = useRef();
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
 const handleClick = () => {};
+const [show, setShow] = useState("");
+const[id,setId]=useState('');
+const[productData,setProductData]=useState([]);
 const [solddata, setsolddata] = useState([]);
+const[apicall,setapicall]=useState([]);
 const [searchdata, setsearchData] = useState({
   product_title_name: "",
   category: "",
 
 })
 
+
+const handleClose = () => {
+  formRef.current.reset();
+  setShow(false);
+}; 
+
+const handleShow = (id,product_id) =>{ 
+  try {
+    axios.post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=4`,{
+      "product_search":{
+      "search":"",
+      "price_from":"",
+      "price_to":"",
+      "latest_first":"asc",
+      "product_title_name":"",
+      "sale_price":"",
+      "short_by_updated_on":"",
+      "product_id": [`${product_id}`],
+      "id": [`${id}`]
+      
+    }
+      })
+      .then((response) => {
+        let data=response.data.results;
+        // let data = response.data.filter(item=> item.is_active === 1);
+        setProductData(response.data.results)
+        setId(data.id)
+        console.log("-----------******************-----------"+JSON.stringify(data.id))
+
+        setapicall(false);
+      });
+  } catch (err) {}
+  
+  
+  
+  setShow(true)};
+
+// const pid=localStorage.getItem("productid");
+// console.log("pidddddddddd"+pid)
 const OnSearchChange = (e) => {
   setsearchData({ ...searchdata, [e.target.name]: e.target.value })
 }
 const onSearchClick = () =>{
   
 }
+console.log("---productDataAAAAAAAAAAAAAAAAAaa"+JSON.stringify(productData))
+
+const OnInputChange = (e) => {
+  setProductData({ ...productData, [e.target.name]: e.target.value })
+  console.log("-----==========="+e.target.value);
+}
   useEffect(() => {
-    axios.post("${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50", {
+    axios.post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`,{
       "product_search": {
         "search": `${searchdata.product_title_name}`,
         "price_from": "",
         "price_to": "",
-        "id":"asc",
+        "latest_first":"asc",
         "short_by_updated_on":"",
         "product_title_name":"asc",
         "sale_price":"",
-        "category": `${searchdata.category}`,
-        "quantity": 50
+        "category":`${searchdata.category}`,
+        "quantity":0
 
       }}).then((response) => {
+        let data=response.data
+      // let data = response.data.filter(item=>item.quantity==='0');
       setsolddata(response.data)
       console.log("---sold"+JSON.stringify(solddata))
     }).catch(function (error) {
       console.log(error);
     });
   }, [searchdata]);
-
+console.log("+++++++++++++++++++++"+JSON.stringify(solddata))
   const columns = [
     {
       name: "Sku",
@@ -114,17 +169,18 @@ const onSearchClick = () =>{
       center: true,
       selector: (row) => (
         <div className={"actioncolimn"}>
-          <BiEdit className=" p-0 m-0  editiconn text-secondary" />
+          <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.id,row.product_id)} />
             <BsTrash className=" p-0 m-0 editiconn text-danger"  onClick={handleAlert} />
         </div>
       ),
     },
   ];
   
+// }
 
     return (
         <div>
-             <h2>Sold Products</h2>
+         <h2>Sold Products</h2>
 
 {/* search bar */}
 <div className="card mt-3 p-3">
@@ -134,16 +190,30 @@ const onSearchClick = () =>{
               value={searchdata.product_title_name}
               className={'adminsideinput'}/>
         </div>
-        <div className="col-md-3 col-sm-6 aos_input">
-        <Form.Select aria-label="Search by category" className="adminselectbox" placeholder="Search by category"  onChange={OnSearchChange}
-              name='category'
-              value={searchdata.category}>
-        <option>Search by category</option>
-          <option value="1">Food</option>
+        {/* <div className="col-md-3 col-sm-6">
+              <Form.Select
+                aria-label="Search by product type"
+                className="adminselectbox" name={"product_type"} onChange={(e) =>  OnChange(e)}  value={productData.product_type}
+              >
+                <option>Select Product Type</option>
+                <option>{productData.product_type}</option>
+                {/* <option value="1">Processing</option>
+                <option value="2">Success</option>
+                <option value="3">Failed</option>
+                <option value="4">Refund</option> 
+              </Form.Select>
+            </div> */}
+        {/* <div className="col-md-3 col-sm-6 aos_input">
+        <Form.Select aria-label="Search by category" className="adminselectbox" placeholder="Search by category"  onChange={OnChange}
+              name='product_type'
+              >
+        <option>Search By Product Type</option>
+        <option value={productData.product_type}>{productData.product_type}</option>
+          {/* <option value="1">Food</option>
           <option value="2">Fish & Meat</option>
-          <option value="3">Baby Care</option>
+          <option value="3">Baby Care</option> 
         </Form.Select>
-        </div>
+        </div> */}
 
         <div className="col-md-3 col-sm-6 aos_input">
         <MainButton btntext={"Search"} btnclass={'button main_button w-100'} onClick={onSearchClick}/>
@@ -152,7 +222,60 @@ const onSearchClick = () =>{
     
 
       {/* upload */}
-
+      <Modal size="lg" show={show} onHide={() => handleClose()}>
+        <Form
+          className=""
+          ref={formRef}
+          onSubmit={""}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>
+              Sold Product
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="row p-3 m-0">
+              <div className="col-md-6">
+                <Form.Group
+                  className="mb-3 aos_input"
+                  controlId="validationCustom01"
+                >
+                  <Form.Label>Product Name</Form.Label>
+                  <Form.Control
+                    // onChange={(e) => handleFormChange(e)}
+                    // value={addblog.title}
+                    
+                    type="text"
+                    placeholder="Add Title"
+                    name={"product_title_name"}
+                  />
+                </Form.Group>
+              </div>
+              
+              <div className="col-md-3 col-sm-6 aos_input">
+                <label>Quantity</label>
+              <input type={"number"} placeholder={"Select quantity"} onChange={OnInputChange} name='quantity'
+              value={productData.quantity}
+              className={'adminsideinput'}/>
+        </div>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <button
+              className="button main_outline_button"
+              onClick={() => handleClose()}
+            >
+              Cancel
+            </button>
+            <button
+              className="button main_outline_button"
+              // onClick={() => handleClose()}
+            >
+              Update
+            </button>
+          </Modal.Footer>
+        </Form>
+      </Modal>
      
       {/* datatable */}
    

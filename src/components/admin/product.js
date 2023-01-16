@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect, useState, useRef } from "react";
+import React, {useEffect, useState, useRef } from "react";
 import Col from "react-bootstrap/Col";
 import Input from "./common/input";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
@@ -12,7 +12,6 @@ import InputGroup from "react-bootstrap/InputGroup";
 import VariationJson from "./json/variation";
 import CategoryJson from "./json/categorytype";
 import Table from "react-bootstrap/Table";
-import Carousel from "react-bootstrap/Carousel";
 import { AiOutlinePlus, AiOutlineCloudUpload } from "react-icons/ai";
 import {FaEllipsisV} from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -26,10 +25,8 @@ import axios from "axios";
 import { Button } from "react-bootstrap";
 import { GiCancel } from "react-icons/gi";
 import moment from "moment/moment";
-import demo from "../../images/demo.jpg";
 import BrandJson from "./json/BrandJson";
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
+
 
 let categoryArray = [];
 let encoded;
@@ -172,7 +169,7 @@ const [taxdata,settaxdata] = useState({
             search: `${searchdata.product_title_name}`,
             price_from: "",
             price_to: "",
-            id:"",
+            latest_first:"",
             product_title_name:"",
             sale_price:"",
             short_by_updated_on:"",
@@ -196,6 +193,7 @@ const [taxdata,settaxdata] = useState({
       });
   }, [apicall, searchdata, Alert]);
   //
+  console.log("ddddddddddddddddddDDDDDDDDDDDDD"+JSON.stringify(pdata))
   let filtered;
   const handleAlert = (id) => {
     setVariantRemove({...variantremove, 
@@ -640,9 +638,10 @@ const  getProductVariant = (id) =>{
         category: "",
         price_from: "",
         price_to: "",
-        id:"asc",
-      product_title_name:"",
-      sale_price:"",
+        id:"",
+        product_title_name:"",
+        sale_price:"",
+        short_by_updated_on:"",
         is_delete: ["1"],
         colors: [],
         size: [],

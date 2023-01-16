@@ -63,6 +63,7 @@ const Productdetail = () => {
     other_introduction: "",
     is_active: "0",
   });
+  console.log("88888888888888888888"+productalldata)
   const [variantmainarray, setvariantmainarray] = useState([]);
   const [customvalidated, setcustomValidated] = useState(false);
   const formRef = useRef();

@@ -51,7 +51,7 @@ const ProductReport = () => {
   const [brand,setBrand]=useState([])
   const[brandName,setBrandName]=useState([])
   const[location,setLocation]=useState([])
-
+ 
 
 
 
@@ -487,6 +487,7 @@ function handleDownloadExcel() {
       ))
     ]
     
+    
      let  vendorArray=[];
     
      const VendorHandler=(e)=>{
@@ -717,7 +718,7 @@ resultOrderCount!="Infinity"?console.log():resultOrderCount=0
                       <h3>
                       {/* {console.log("Product error----"+ProductError)} */}
                   {console.log(" Product count---===="+getProduct.product_count)}
-                        { (ProductError)=="No_Data"||(getProduct.product_count)==null||(getProduct.product_count)==undefined||(getProduct.product_count)==""? <h3> ₹0</h3>:  <h3>₹{getProduct.product_count}</h3> }  
+                        { (ProductError)=="No_Data"||(getProduct.product_count)==null||(getProduct.product_count)==undefined||(getProduct.product_count)==""? <h3> 0</h3>:  <h3>{getProduct.product_count}</h3> }  
                         </h3>
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
@@ -728,7 +729,7 @@ resultOrderCount!="Infinity"?console.log():resultOrderCount=0
                     <div>
                     {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous  week :</h5>:(previousStateChange==9)?<h5>Previous  Month :</h5>:<h5>Today :</h5>}
                         
-                        {  (ProductError)=="no_data"||(PrevProductreport.prev_product_count)==null||(PrevProductreport.prev_product_count)==undefined||(PrevProductreport.prev_product_count)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{PrevProductreport.prev_product_count} </p>} 
+                        {  (ProductError)=="no_data"||(PrevProductreport.prev_product_count)==null||(PrevProductreport.prev_product_count)==undefined||(PrevProductreport.prev_product_count)==""? <p className="h5"> 0</p>:  <p className="h5">{PrevProductreport.prev_product_count} </p>} 
 
                     </div>
                   </div>
@@ -746,7 +747,7 @@ resultOrderCount!="Infinity"?console.log():resultOrderCount=0
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                    { (ProductError)=="No_Data"||(getProduct.net_sales)==null||(getProduct.net_sales)==undefined||(getProduct.net_sales)==""? <h3>₹0</h3>:  <h3>₹{getProduct.net_sales}</h3> }  
+                    { (ProductError)=="No_Data"||(getProduct.net_sales)==null||(getProduct.net_sales)==undefined||(getProduct.net_sales)==""? <h3>₹0</h3>:  <h3>₹{(getProduct.net_sales).toFixed(2)}</h3> }  
                      
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
@@ -758,7 +759,7 @@ resultOrderCount!="Infinity"?console.log():resultOrderCount=0
                     <div>
                     {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous  week :</h5>:(previousStateChange==9)?<h5>Previous  Month :</h5>:<h5>Today :</h5>}
                         
-                        {  (ProductError)=="no_data"||(PrevProductreport.prev_net_sales)==null||(PrevProductreport.prev_net_sales)==undefined||(PrevProductreport.prev_net_sales)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{PrevProductreport.prev_net_sales} </p>} 
+                        {  (ProductError)=="no_data"||(PrevProductreport.prev_net_sales)==null||(PrevProductreport.prev_net_sales)==undefined||(PrevProductreport.prev_net_sales)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{(PrevProductreport.prev_net_sales).toFixed(2)} </p>} 
                     </div>
                   </div>
                 </div>
@@ -776,7 +777,7 @@ resultOrderCount!="Infinity"?console.log():resultOrderCount=0
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
                      
-                      { (ProductError)=="No_Data"||(getProduct.order_count)==null||(getProduct.order_count)==undefined||(getProduct.order_count)==""? <h3>₹0</h3>:  <h3>₹{getProduct.order_count}</h3> }  
+                      { (ProductError)=="No_Data"||(getProduct.order_count)==null||(getProduct.order_count)==undefined||(getProduct.order_count)==""? <h3>0</h3>:  <h3>{getProduct.order_count}</h3> }  
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
 
@@ -787,7 +788,7 @@ resultOrderCount!="Infinity"?console.log():resultOrderCount=0
                     <div>
                     {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous  week :</h5>:(previousStateChange==9)?<h5>Previous  Month :</h5>:<h5>Today :</h5>}
                         
-                        {  (ProductError)=="no_data"||(PrevProductreport.prev_order_count)==null||(PrevProductreport.prev_order_count)==undefined||(PrevProductreport.prev_order_count)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{PrevProductreport.prev_order_count} </p>} 
+                        {  (ProductError)=="no_data"||(PrevProductreport.prev_order_count)==null||(PrevProductreport.prev_order_count)==undefined||(PrevProductreport.prev_order_count)==""? <p className="h5"> 0</p>:  <p className="h5">{PrevProductreport.prev_order_count} </p>} 
                     </div>
                   </div>
                 </div>

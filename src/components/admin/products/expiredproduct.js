@@ -15,14 +15,14 @@ const Expiredproduct = () => {
   const [Alert, setAlert] = useState(false);
   const [expiredata, setexpiredata] = useState([]);
   const currentdate = moment().format('YYYY-MM-DD')
-  console.log("---date"+currentdate)
+  // console.log("---date"+currentdate)
 const [searchdata, setsearchData] = useState({
   product_title_name: "",
   category: "",
   manufacturing_date:"",
 
 })
-
+//console.log("RRRRRRRRRRRRRRRRRRR"+JSON.stringify(expiredata));
 const OnSearchChange = (e) => {
   setsearchData({ ...searchdata, [e.target.name]: e.target.value })
 }
@@ -30,25 +30,30 @@ const OnSearchChange = (e) => {
 const OnDateChange = (e) => {
   let mdate = moment(e.target.value).format('DD-MM-YYYY')
   setsearchData({ ...searchdata,manufacturing_date: mdate })
+  //console.log("DATE999999999999999"+mdate)
 }
 useEffect(() => {
   axios.post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`, {
     "product_search": {
-      "search": `${searchdata.product_title_name}`,
-      "category": `${searchdata.category}`,
+      "search":`${searchdata.product_title_name}`,
+      "category":`${searchdata.category}`,
       "price_from": "",
       "price_to": "",
-      "id":"asc",
-      "product_title_name":"asc",
+      "latest_first":"asc",
+      "product_title_name":"",
       "sale_price":"",
-      " short_by_updated_on":"",
+      "short_by_updated_on":"",
       "manufacturing_date":`${searchdata.manufacturing_date}`,
-      // "expire_date":`${currentdate}`
+      "expire_date":`${currentdate}`
     }}).then((response) => {
-      setexpiredata(response.data)
+      let data = response.data.results
+      let data1 = data.filter(item=>moment(item.expire_date).isSame(currentdate));
+      setexpiredata(data1)
   }).catch(function (error) {
     console.log(error);
   });
+  console.log("oooo"+JSON.stringify(expiredata))
+
 }, [searchdata]);
   const columns = [
     {

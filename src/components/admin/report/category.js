@@ -17,45 +17,75 @@ import Select from 'react-select'
 import axios from "axios";
 import { useEffect } from "react";
 
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import { downloadExcel } from "react-export-table-to-excel";
+
 const CategoryReport = () => {
   
   const [filterchange,setFilterchange] = useState('')
   const [Categoryreport, setCategoryreport] = useState([])
+  const [tableCategory, setGetTableCategory]= useState([])
   const [apicall,setapicall]=useState(false)
   const [CategoryError,setCategoryError]=useState("")
+
+  const [PrevCategoryreport, setPrevCategoryreport] = useState([])
+
+ const[previousStateChange,setpreviousStateChange] =useState(' ')
+  const[prevFromdate,setprevFromdate]=useState(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'))
+  const[prevTodate,setprevTodate]=useState(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'))
  const [fromDate, setFromDate]=useState(moment().format("YYYY-MM-DD"));
   const [toDate,setToDate]=useState(moment().format("YYYY-MM-DD"))
+  const [venderList,setVenderList]=useState([])
+  const [brand,setBrand]=useState([])
  const[category,setCategory]=useState([])
   const[categoryId,setCategoryId]=useState("")
-
+  const[vendorId,setVendorId]=useState("")
+  const[brandName,setBrandName]=useState([])
+  const[location,setLocation]=useState([])
 
 
   const fetchData=()=>{
+    console.log( "from_date---"+fromDate)
+    console.log( "to_date---"+toDate)
+    console.log( "Previous  Todate---------------------------------------"+prevTodate)
+    console.log( "Previous fromdate---------------------------------------"+prevFromdate)
     axios.post(`${process.env.REACT_APP_BASEURL}/categories_report`, 
     {
       from_date:fromDate,
       to_date:toDate,
-      parent_category:categoryId
+      "prev_from_date":prevFromdate,
+      "prev_to_date":prevTodate,
+      parent_category:categoryId,
+      vendors_id:vendorId,
+ 
+      user_locations:location,
+       brand:brandName
   
     }).then((response) => {
      
        console.log("Category data Report ----"+ JSON.stringify(response.data[0]))
+       console.log("Category Previous data ----"+ JSON.stringify(response.data[1]))
+       console.log("Category table data ----"+ JSON.stringify(response.data[2]))
      
-       console.log('Error-----'+JSON.stringify(response.data))
+      //  console.log('Error-----'+JSON.stringify(response.data))
 
 
-       if(response.data.message=="No_Data"){
+       if(response.data.message=="no_data"){
 
         setCategoryError(response.data.message)
-        setCategoryreport()
+        setCategoryreport([0])
+        setGetTableCategory([0])
+        setPrevCategoryreport([0])
 
 
       }
       else{
         setCategoryError("")
         
-        setCategoryreport(response.data[0])
-      
+        setCategoryreport(response.data[0][0])
+        setPrevCategoryreport(response.data[1][0])
+        setGetTableCategory(response.data[2])
         setapicall(false)
       }
 
@@ -64,7 +94,26 @@ const CategoryReport = () => {
     });
    }
 
+   const VenderData= async()=>{
+    let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
+    //  console.log("vendor----"+JSON.stringify(result.data))
+    if(result.data){
+      setVenderList(result.data)
+    }
+    
+ }
 
+
+ 
+const BrandData= async()=>{
+  let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/brand_list`)
+  
+  //  console.log("Brand data-----"+ JSON.stringify(result.data))
+  if(result.data){
+    setBrand(result.data)
+  }
+  
+  }
 
    const CategoryData= async()=>{
     let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
@@ -78,7 +127,8 @@ const CategoryReport = () => {
 
   useEffect(() => {
     fetchData()
-  
+    VenderData();
+    BrandData();  
     CategoryData();
    
  }, [apicall]);
@@ -89,46 +139,98 @@ const CategoryReport = () => {
     setFilterchange(e.target.value)
     let value = e.target.value;
     console.log("---------------------------------------------"+value);
-    if(value==1){
-      setFromDate(moment().format("YYYY-MM-DD"))
-      console.log("From date"+e.target.value)
-      console.log("today")
-      setToDate(moment().format("YYYY-MM-DD"))
-    }
-
-    if(value==2){
-      setFromDate(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'));
-      console.log("From date"+e.target.value);
-     
-      setToDate( moment().format("YYYY-MM-DD"));
-      console.log("yesterday--"+moment().subtract(1, 'day').startOf('day').format('YYYY-MM-DD'));
-
-    }
-   if(value==3){
-      setFromDate( moment().subtract(1, 'weeks').startOf('weeks').format('YYYY-MM-DD')  );
-    
-      console.log("From date"+e.target.value)
+      //today---------------------------------------------------------------------------
+      if(value==1){
+        let frommDate=moment().format("YYYY-MM-DD")
+        setFromDate(frommDate)
+        // console.log("From date"+e.target.value)
+        // console.log("today")
+        setToDate(moment().format("YYYY-MM-DD"))
+        let previousTodate=moment(frommDate).subtract(1, 'days').startOf('days').format("YYYY-MM-DD")
+        setprevTodate(previousTodate)
+        setprevFromdate(previousTodate)
+        // console.log("previous day"+ prevDate)
+        setpreviousStateChange(1)
+      }
+          //yesterday------------------------------------------------------------------------
+      if(value==2){
+        let yesterday=moment().subtract(1, 'days').startOf('days').format("YYYY-MM-DD")
+        
+        setFromDate(yesterday);
+        setToDate( moment().format("YYYY-MM-DD"));
+       
+        let previousTodatee=moment(yesterday).subtract(1, 'days').startOf('days').format("YYYY-MM-DD")
+        setprevTodate(previousTodatee)
+        setprevFromdate(moment(previousTodatee).subtract(1, 'days').startOf('days').format("YYYY-MM-DD"))
+        setpreviousStateChange(2)
+  
+      }
+      //last week---------------------------------------------------------------
+     if(value==3){
+         let lastweek= moment().subtract(1, 'weeks').startOf('weeks').format('YYYY-MM-DD')
+        setFromDate(lastweek);
       
-      setToDate( moment().format("YYYY-MM-DD")  );
-      // console.log("last week"+moment().subtract(1, 'week').startOf('week').format('YYYY-MM-DD'))
-   
+        setToDate(moment().subtract(1,'weeks').endOf('weeks').format('YYYY-MM-DD'));
+        let previouslastweek=moment(lastweek).subtract(1,'days').endOf('days').format('YYYY-MM-DD')
+         setprevTodate(previouslastweek)
+         setprevFromdate(moment(previouslastweek).subtract(1,'weeks').endOf('weeks').format('YYYY-MM-DD'))
+         setpreviousStateChange(3)
+  
+     
+     }
+           //last month---------------------------------------------------------------
+     if(value==4){
+     
+     let month=moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD')
+      setFromDate(month);
+      let lastMonth=moment().subtract(1, 'month').endOf('month').format('YYYY-MM-DD')
+      setToDate(lastMonth);
+      let previouslastmont=moment(lastMonth).subtract(1, 'days').startOf('days').format('YYYY-MM-DD')
+      setprevTodate(previouslastmont);
+      setprevFromdate(moment(previouslastmont).subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
+      // setPrevDate(moment(month).subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
+      // console.log("previou month-"+prevDate)
+      setpreviousStateChange(4)
    }
-
-   if(value==4){
-   
-
-    setFromDate(moment().subtract(1, 'months').startOf('months').format('YYYY-MM-DD'));
-    console.log("From last month"+e.target.value)
-    setToDate(  moment().format("YYYY-MM-DD")    );
-    // setToDate("2022-12-14");
-
+  //  last six month---------------------------------------------------------
+   if(value==5){
     
- }
- if(value==5){
-  setFromDate(moment().subtract(6, 'month').startOf('month').format('YYYY-MM-DD') );
-  console.log("From last 6 month"+e.target.value)
+    let sixMonth=moment().subtract(6, 'month').startOf('month').format('YYYY-MM-DD')
+    setFromDate(sixMonth );
+    setToDate(moment().format("YYYY-MM-DD") );
+    let lastsixMonth=moment(sixMonth).subtract(1, 'month').startOf('month').format('YYYY-MM-DD')
+    setprevTodate(lastsixMonth);
+    setprevFromdate(moment(lastsixMonth).subtract(5, 'month').startOf('month').format('YYYY-MM-DD'))
+    // setPrevDate(moment(sixMonth).subtract(6, 'month').startOf('month').format('YYYY-MM-DD'))
+    // console.log("previou 6 month-"+prevDate)
+    setpreviousStateChange(5)
+  }
+  
+  //this week-----------------------------------------------------------------------
+  if(value==8){
+    
+  let ThisWeek=moment().startOf('weeks').format('YYYY-MM-DD')
+  setFromDate(ThisWeek);
+  // console.log("From last 6 month"+ThisWeek)
   setToDate( moment().format("YYYY-MM-DD") );
-}
+  let previousthisweek=moment(ThisWeek).subtract(1,'days').endOf('days').format('YYYY-MM-DD')
+  setprevTodate(previousthisweek)
+  setprevFromdate(moment(previousthisweek).subtract(1,'weeks').endOf('weeks').format('YYYY-MM-DD'))
+  // setPrevDate(moment(ThisWeek).subtract(1, 'weeks').endOf('weeks').format('YYYY-MM-DD'))
+  setpreviousStateChange(8)
+    
+  }
+  if(value==9){
+    
+  let ThisMonth=moment().startOf('month').format('YYYY-MM-DD')
+  setFromDate(ThisMonth);
+  // console.log("From last 6 month"+ThisMonth)
+  setToDate( moment().format("YYYY-MM-DD") );
+  let previousthismont=moment(ThisMonth).subtract(1, 'days').startOf('days').format('YYYY-MM-DD')
+  setprevTodate(previousthismont);
+  setprevFromdate(moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
+  setpreviousStateChange(9)
+  }
 
 
 fetchData()
@@ -146,8 +248,60 @@ fetchData()
         
 
 
- 
-           const options3 = [
+
+
+
+
+
+
+           const options1 = [
+            brand.map((item)=>(
+              { value: `${item.brand}` ,label:`${item.brand}` }
+            ))
+          ]
+          
+          let  arrr=[];
+          
+          const brandHandler=(e)=>{
+          
+           arrr=[]
+            e.map((item)=>{
+             
+            arrr.push(item.value)
+            
+            })
+            setBrandName(arrr)
+           
+           }
+          
+          
+          
+          //  console.log("$$$$$$------"+JSON.stringify(brandName[0]))
+          const options2 = [
+            venderList.map((item)=>(
+              { value: `${item.id}` ,label:`${item.shop_name}` }
+            ))
+          ]
+          
+          
+           let  vendorArray=[];
+          
+           const VendorHandler=(e)=>{
+          
+            vendorArray=[]
+             e.map((item)=>{
+              
+             vendorArray.push(item.value)
+             
+             })
+             setVendorId(vendorArray)
+            
+            }
+          
+          // console.log("$$$$$$------"+JSON.stringify(vendorId[0]))
+          
+           
+          const options3 = [
             category.map((item)=>(
               { value: `${item.id}` ,label:`${item.category_name}` }
             ))
@@ -167,6 +321,32 @@ fetchData()
             setCategoryId(CategoryArray)
            
            }
+          
+          
+          
+          
+            
+           const options4 = [
+          
+            { value: "indore" ,label:"Indore" },
+            { value: "bhopal" ,label:"Bhopal" },
+            { value: "dhar" ,label:"Dhar" },
+            { value: "khandwa" ,label:"Khandwa" },
+            { value: "khargone" ,label:"Khargone" },
+          
+          ]
+          var  SearchArray=[]
+          const SearchHandler=(e)=>{
+          
+          SearchArray=[]
+           e.map((item)=>{
+            
+            SearchArray.push(item.value)
+           
+           })
+           setLocation(SearchArray)
+          
+          }
 
 
 
@@ -224,35 +404,30 @@ fetchData()
           
             {
               name: "Category",
-              selector: (row) => row.category,
+              selector: (row) => (row.cat_name==null)?"No Record":row.cat_name,
               sortable: true,
               width: "260px",
             },
             {
               name: "Item Sold",
-              selector: (row) => row.isold,
+              selector: (row) => (row.product_count==null)?"No Record":row.product_count,
               sortable: true,
               center: true,
             },
             {
               name: "Net Revenue",
-              selector: (row) => row.net,
+              selector: (row) => (row.total_sales==null)?"No Record":row.total_sales,
               sortable: true,
               
             },
         
             {
               name: "Orders",
-              selector: (row) => row.order,
+              selector: (row) => (row.order_count==null)?"No Record":row.order_count,
               sortable: true,
               
             },
-            {
-              name: "Products",
-              selector: (row) => row.product,
-              sortable: true,
-             
-            },
+      
            
           ];
         
@@ -348,7 +523,102 @@ fetchData()
           //   },
           // ];
           
-          
+                  //----------------------------------------------------------------- pdf----------------------------------------------------->
+  const exportPDF = () => {
+    const unit = "pt";
+    const size = "A4"; // Use A1, A2, A3 or A4
+    const orientation = "portrait"; // portrait or landscape
+
+    const marginLeft = 40;
+
+
+    const doc = new jsPDF(orientation, unit, size);
+
+    doc.setFontSize(15);
+
+    const title = "Category Report";
+    const headers = [[ "Category","Item sold", "Net Revenue", "Orders"]];
+
+    const data =tableCategory.map(elt=> [elt.cat_name, elt.product_count, elt.total_sales,elt.order_count]);
+
+    let content = {
+      startY: 50,
+      head: headers,
+      body: data,
+      blankrows:"No Record"
+    };
+
+    // doc.text(headers, backgroundColor, "pink");
+    doc.text(title, marginLeft, 40);
+    doc.autoTable(content);
+    doc.save("Category Report.pdf")
+
+  }
+
+  //-------------------------------------------- end pdf----------------------------------------------------------------->
+
+
+
+
+
+
+//  //----------------------------------------------------+++=++++++ excel--------------------------------------------------->
+ const header = ["Category","Item sold", "Orders","Net Revenue"];
+
+function handleDownloadExcel() {
+  downloadExcel({
+    fileName: "Category Report -> downloadExcel method",
+    sheet: "Category Report",
+    tablePayload: {
+       header,
+      // accept two different data structures
+      body: tableCategory ,
+      blankrows:"No Record"
+    },
+  });
+}
+
+
+
+
+
+
+// // // //-------------Item sold product ammount---------------------------
+var getSoldProductAmmount=Number(Categoryreport.total_sold_product_amount)
+
+var getPreviousSoldProductAmmount=Number(PrevCategoryreport.prev_total_sold_product_amount)
+
+var resultProductAmmount=(((getSoldProductAmmount-getPreviousSoldProductAmmount)/getPreviousSoldProductAmmount)*100).toFixed(2)
+
+resultProductAmmount!="Infinity"?console.log():resultProductAmmount=0
+
+// // // //----------------------sold product count--------------------------------------------------------
+var getSoldProductCount=Number(Categoryreport.total_sold_product_count)
+
+var getPreviousSoldProductCount=Number(PrevCategoryreport.prev_total_sold_product_count)
+
+var resultProductCount=(((getSoldProductCount-getPreviousSoldProductCount)/getPreviousSoldProductCount)*100).toFixed(2)
+
+resultProductCount!="Infinity"?console.log():resultProductCount=0
+
+// // // //-----------------------order count---------------------------------------
+var getSoldorder=Number(Categoryreport.order_count)
+
+var getPreviousSoldorder=Number(PrevCategoryreport.prev_order_count)
+
+var resultorder=(((getSoldorder-getPreviousSoldorder)/getPreviousSoldorder)*100).toFixed(2)
+
+resultorder!="Infinity"?console.log():resultorder=0
+
+
+
+
+
+
+
+
+
+
   return (
     <div>
       <h2>Category Report</h2>
@@ -363,9 +633,11 @@ fetchData()
               onChange={TimeChange}
             >
              <option >Search by category</option>
-              <option name="today" value={1}>Today</option>
+             <option name="today" value={1}>Today</option>
               <option name="yesterday" value={2}>yesterday</option>
+              <option name="this_week" value={8}>this  week</option>
               <option name="last_week" value={3}>Last week</option>
+              <option name="this_week" value={9}>This  month</option>
               <option name="last_month" value={4}>last month</option>
               <option name="last_6_month" value={5}>last 6  month</option>
               {/* <option name="custom_month" value="6">custom month</option> */}
@@ -377,12 +649,55 @@ fetchData()
             <Select
       
               className=" basic-multi-select"
+              placeholder="Search by Vendor"
+              onChange={VendorHandler}
+             
+              classNamePrefix="select"
+              isMulti  
+              options={options2[0]} 
+            />
+            
+            </div>
+
+
+            <div className="col-md-3 col-sm-6 aos_input">
+            <Select
+      
+              className=" basic-multi-select"
+              placeholder="Search by Brand"
+              onChange={brandHandler}
+             
+              classNamePrefix="select"
+              isMulti  
+              options={options1[0]} 
+            />
+         
+            </div>
+
+            <div className="col-md-3 col-sm-6 aos_input">
+            <Select
+      
+              className=" basic-multi-select"
               placeholder="Search by Category"
               onChange={categoryHandler}
              
               classNamePrefix="select"
               isMulti  
               options={options3[0]} 
+            />
+         
+            </div>
+
+            <div className="col-md-3 col-sm-6 mt-3 aos_input">
+            <Select
+      
+              className=" basic-multi-select"
+              placeholder="Search by Location"
+              onChange={SearchHandler}
+             
+              classNamePrefix="select"
+              isMulti  
+              options={options4} 
             />
          
             </div>
@@ -410,9 +725,8 @@ fetchData()
 
         <div className="col-md-auto col-sm-6 aos_input">
         <DropdownButton id="dropdown-variant-success" title="Download" variant="button main_button">
-      <Dropdown.Item href="#/action-1">Excel</Dropdown.Item>
-      <Dropdown.Item href="#/action-2">Pdf</Dropdown.Item>
-      <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+        <Dropdown.Item onClick={handleDownloadExcel}>Excel</Dropdown.Item>
+             <Dropdown.Item onClick={()=>exportPDF()}>Pdf</Dropdown.Item>
     </DropdownButton>
         </div>
       </div>
@@ -436,16 +750,21 @@ fetchData()
                     <div className="d-flex align-items-baseline justify-content-between">
                     {console.log("roroororo---"+CategoryError)}
                     {console.log("dataaaa-"+Categoryreport.total_sold_product_count)}
-                    {(CategoryError)=="No_Data"||(Categoryreport.total_sold_product_count)==null || (Categoryreport.total_sold_product_count)==undefined  || (Categoryreport.total_sold_product_count)==""?<h3>No Record</h3>: <h3>{Categoryreport.total_sold_product_count}</h3>}
+                    {(CategoryError)=="no_data"||(Categoryreport.total_sold_product_count)==null || (Categoryreport.total_sold_product_count)==undefined  || (Categoryreport.total_sold_product_count)==""?<h3>0</h3>: <h3>{Categoryreport.total_sold_product_count}</h3>}
 
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
-                        <p className="mb-0 h5">0%</p>
+
+                        {(resultProductCount>0)?<p className="mb-0 h5" style={{color:"green"}}> {resultProductCount}%</p>:(resultProductCount<0)?<p className="mb-0 h5" style={{color:"red"}}> {resultProductCount}%</p>:(resultProductCount==0)?<p className="mb-0 h5" style={{color:"blue"}}> {resultProductCount}%</p>:(resultProductCount=="NaN")?<p className="mb-0 h5" style={{color:"grey"}}> 0%</p>:<p className="mb-0 h5" style={{color:"brown"}}> {resultProductCount}%</p>}
+
+
                       </div>
                     </div>
                     <div>
-                      <h5>Previous Year:</h5>
-                      <p className="h5">$0.00</p>
+                    {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous  week :</h5>:(previousStateChange==9)?<h5>Previous  Month :</h5>:<h5>Today :</h5>}
+                        
+                        {  (CategoryError)=="no_data"||(PrevCategoryreport.prev_total_sold_product_count)==null||(PrevCategoryreport.prev_total_sold_product_count)==undefined||(PrevCategoryreport.prev_total_sold_product_count)==""? <p className="h5"> 0</p>:  <p className="h5">{PrevCategoryreport.prev_total_sold_product_count} </p>} 
+
                     </div>
                   </div>
                 </div>
@@ -462,15 +781,16 @@ fetchData()
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                    {(CategoryError)=="No_Data"||(Categoryreport.total_sold_product_amount)==null || (Categoryreport.total_sold_product_amount)==undefined  || (Categoryreport.total_sold_product_amount)==""?<h3>No Record</h3>: <h3>{Categoryreport.total_sold_product_amount}</h3>}
+                    {(CategoryError)=="no_data"||(Categoryreport.total_sold_product_amount)==null || (Categoryreport.total_sold_product_amount)==undefined  || (Categoryreport.total_sold_product_amount)==""?<h3>₹0</h3>: <h3>₹{(Categoryreport.total_sold_product_amount).toFixed(2)}</h3>}
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
-                        <p className="mb-0 h5">0%</p>
+                        {(resultProductAmmount>0)?<p className="mb-0 h5" style={{color:"green"}}> {resultProductAmmount}%</p>:(resultProductAmmount<0)?<p className="mb-0 h5" style={{color:"red"}}> {resultProductAmmount}%</p>:(resultProductAmmount==0)?<p className="mb-0 h5" style={{color:"blue"}}> {resultProductAmmount}%</p>:(resultProductAmmount=="NaN")?<p className="mb-0 h5" style={{color:"grey"}}> 0%</p>:<p className="mb-0 h5" style={{color:"brown"}}> {resultProductAmmount}%</p>}
                       </div>
                     </div>
                     <div>
-                      <h5>Previous Year:</h5>
-                      <p className="h5">$0.00</p>
+                    {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous  week :</h5>:(previousStateChange==9)?<h5>Previous  Month :</h5>:<h5>Today :</h5>}
+                        
+                        {  (CategoryError)=="no_data"||(PrevCategoryreport.prev_total_sold_product_amount)==null||(PrevCategoryreport.prev_total_sold_product_amount)==undefined||(PrevCategoryreport.prev_total_sold_product_amount)==""? <p className="h5"> ₹0</p>:  <p className="h5">₹{(PrevCategoryreport.prev_total_sold_product_amount).toFixed(2)} </p>} 
                     </div>
                   </div>
                 </div>
@@ -487,16 +807,19 @@ fetchData()
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                    {(CategoryError)=="No_Data"||(Categoryreport.order_count)==null || (Categoryreport.order_count)==undefined  || (Categoryreport.order_count)==""?<h3>No Record</h3>: <h3>{Categoryreport.order_count}</h3>}
+                    {(CategoryError)=="no_data"||(Categoryreport.order_count)==null || (Categoryreport.order_count)==undefined  || (Categoryreport.order_count)==""?<h3>0</h3>: <h3>{Categoryreport.order_count}</h3>}
 
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
-                        <p className="mb-0 h5">0%</p>
+
+                        {(resultorder>0)?<p className="mb-0 h5" style={{color:"green"}}> {resultorder}%</p>:(resultorder<0)?<p className="mb-0 h5" style={{color:"red"}}> {resultorder}%</p>:(resultorder==0)?<p className="mb-0 h5" style={{color:"blue"}}> {resultorder}%</p>:(resultorder=="NaN")?<p className="mb-0 h5" style={{color:"grey"}}> 0%</p>:<p className="mb-0 h5" style={{color:"brown"}}> {resultorder}%</p>}
+
                       </div>
                     </div>
                     <div>
-                      <h5>Previous Year:</h5>
-                      <p className="h5">$0.00</p>
+                    {(previousStateChange==1)?<h5>Today :</h5>:(previousStateChange==2)?<h5>Previous Yesterday :</h5>:(previousStateChange==3)?<h5>Previous Last week :</h5>:(previousStateChange==4)?<h5>Previous Last Month :</h5>:(previousStateChange==5)?<h5>Previous Last 6 Months:</h5>:(previousStateChange==8)?<h5>Previous  week :</h5>:(previousStateChange==9)?<h5>Previous  Month :</h5>:<h5>Today :</h5>}
+                        
+                        {  (CategoryError)=="no_data"||(PrevCategoryreport.prev_order_count)==null||(PrevCategoryreport.prev_order_count)==undefined||(PrevCategoryreport.prev_order_count)==""? <p className="h5"> 0</p>:  <p className="h5">{PrevCategoryreport.prev_order_count} </p>} 
                     </div>
                   </div>
                 </div>
@@ -518,7 +841,7 @@ fetchData()
 
         <DataTable
           columns={columns}
-          // data={data}
+           data={tableCategory}
           pagination
           highlightOnHover
           pointerOnHover
