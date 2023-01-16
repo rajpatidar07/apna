@@ -43,7 +43,7 @@ const handleShow = (id,product_id) =>{
         // let data = response.data.filter(item=> item.is_active === 1);
         setProductData(data[0])
         setId(data.id)
-        console.log("-----------******************-----------"+JSON.stringify(data.id))
+        // console.log("-----------******************-----------"+JSON.stringify(data.id))
 
         setapicall(false);
       });
@@ -78,7 +78,7 @@ const OnQuntityChange = (e) => {
         "search": `${searchdata.product_title_name}`,
         "price_from": "",
         "price_to": "",
-        "latest_first":"asc",
+        "latest_first":"",
         "short_by_updated_on":"",
         "product_title_name":"asc",
         "sale_price":"",
@@ -125,7 +125,7 @@ console.log("+++++++++++++++++++++"+JSON.stringify(solddata))
           width="70px"
           alt={row.product_title_name}
           src={
-            ""
+            row.image? row.image : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
           }
           style={{
             borderRadius: 10,
@@ -191,24 +191,22 @@ const OnProductQutUpdate=(e,product_id)=>{
   .put(
     `${process.env.REACT_APP_BASEURL}/products_varient_update`,
     {
-      "id":`${id}`,
-        "product_id": `${product_id}`,
-        "unit": productData.unit,
-        "colors": productData.colors,
-        "size": productData.size,
-        "product_price": productData.product_price,
-        "mrp": productData.mrp,
-        "sale_price": productData.sale_price,
-        "discount": productData.discount,
-        "special_offer": true,
-        "featured_product": true,
-        "manufacturing_date": productData.manufacturing_date,
-        "expire_date": productData.expire_date,
-        "quantity": "200",
-        "unit_quantity": productData.unit_quantity,
-        "product_status": productData.product_status
-    }
-  )
+      product_status: productData.product_status,
+      product_id: productData.product_id,
+      unit: productData.unit,
+      colors: productData.colors,
+      unit_quantity: productData.unit_quantity,
+      size: productData.size,
+      product_price: productData.product_price,
+      mrp: productData.mrp,
+      sale_price: productData.sale_price,
+      discount: productData.discount,
+      special_offer: productData.special_offer,
+      featured_product: productData.featured_product,
+      manufacturing_date:productData.manufacturing_date,
+      expire_date: productData.expire_date,
+      quantity: quantity,
+    })
   .then((response) => {
     let data=response.data;
     setapicall(true);
@@ -264,7 +262,7 @@ const OnProductQutUpdate=(e,product_id)=>{
         <Form
           className=""
           ref={formRef}
-          onSubmit={OnProductQutUpdate}
+          
         >
           <Modal.Header closeButton>
             <Modal.Title>
@@ -307,7 +305,7 @@ const OnProductQutUpdate=(e,product_id)=>{
             </button>
             <button
               className="button main_outline_button"
-              type="submit"
+              onClick={(e)=>OnProductQutUpdate(e)}              
               // onClick={() => handleClose()}
             >
               Update

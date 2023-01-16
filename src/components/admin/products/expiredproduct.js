@@ -22,6 +22,7 @@ const [searchdata, setsearchData] = useState({
   manufacturing_date:"",
 
 })
+console.log("......................."+expiredata)
 //console.log("RRRRRRRRRRRRRRRRRRR"+JSON.stringify(expiredata));
 const OnSearchChange = (e) => {
   setsearchData({ ...searchdata, [e.target.name]: e.target.value })
@@ -39,7 +40,7 @@ useEffect(() => {
       "category":`${searchdata.category}`,
       "price_from": "",
       "price_to": "",
-      "latest_first":"asc",
+      "latest_first":"",
       "product_title_name":"",
       "sale_price":"",
       "short_by_updated_on":"",
@@ -49,9 +50,7 @@ useEffect(() => {
       let data = response.data.results
       let data1 = data.filter(item=>moment(item.expire_date).isSame(currentdate));
       setexpiredata(data1)
-  }).catch(function (error) {
-    console.log(error);
-  });
+  })
   console.log("oooo"+JSON.stringify(expiredata))
 
 }, [searchdata]);
@@ -170,7 +169,7 @@ useEffect(() => {
               className={'adminsideinput'}/>
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
-            <MainButton btntext={"Search"} btnclass={'button main_button w-100'} />
+            <MainButton btntext={"Search"} btnclass={'button main_button w-100'}/>
           </div>
         </div>
 
