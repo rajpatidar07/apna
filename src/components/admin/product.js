@@ -55,8 +55,12 @@ function Product() {
   const [proddata, setproddata] = useState([]);
   const [variantid, setvariantid] = useState("");
   const [productid, setproductid] = useState("");
+
   const [Alert, setAlert] = useState(false);
+  const[ProductAlert,setProductAlert]=useState(false)
+
   const [apicall, setapicall] = useState(false);
+
   const [variantapicall, setvariantapicall] = useState(false);
   const [varietyshow, setvarietyShow] = useState(false);
   const [addtag, setaddtag] = useState();
@@ -193,16 +197,19 @@ const [taxdata,settaxdata] = useState({
       });
   }, [apicall, searchdata, Alert]);
   //
-  console.log("ddddddddddddddddddDDDDDDDDDDDDD"+JSON.stringify(pdata))
+  // console.log("ddddddddddddddddddDDDDDDDDDDDDD"+JSON.stringify(pdata))
   let filtered;
   const handleAlert = (id) => {
+    setAlert(true);
+  
     setVariantRemove({...variantremove, 
       id:id[0],
      productid:id[1]
      })
     setvariantid(id[0]);
     setproductid(id[1]);
-    setAlert(true);
+  
+
   };
 //  feature product 
 const [featureshow, setfeatureShow] = useState(false);
@@ -631,14 +638,14 @@ else if(i===3){
 const  getProductVariant = (id) =>{
   axios
   .post(
-    `${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`,
+    `${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=500`,
     {
       product_search: {
         search: "",
         category: "",
         price_from: "",
         price_to: "",
-        id:"",
+        latest_first:"",
         product_title_name:"",
         sale_price:"",
         short_by_updated_on:"",
@@ -682,17 +689,31 @@ const  getProductVariant = (id) =>{
     setvarietyShow(true);
   };
 
-  const handlevarietyClose = () => {
+  const handlevarietyClose = (e) => {
+  
+   
+    e.preventDefault()
+   
+    setValidated(false);
+  
     setvarietyShow(false);
+    mainformRef.current.reset();
   };
 
+  
+
+
   const handleClose = () => {
+    
     mainformRef.current.reset();
-    // setproductdata("")
+    //  setproductdata({})
     setValidated(false);
     setmodalshow(false);
+    // console.log("---product data------------" + JSON.stringify(productdata));
+    // console.log("end Here-------------------")
+
   };
-            // console.log("---ppppp" + JSON.stringify(productdata));
+           
 
   // seotag
   let tagname;
@@ -927,10 +948,12 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
     // }
   };
   const VariantRemoveClick = (id, productid) => {
+
     setAlert(true);
     setVariantRemove((variantremove) =>{  
       return{...variantremove,  id : id, productid:productid }});
   };
+
   const hideAlert = () => {
    
     // product delete
@@ -944,6 +967,31 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
         console.log("---delete" + JSON.stringify(response.data));
         getProductVariant(variantremove.productid);
         setapicall(true);
+        setpdata(response.data)
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    // variety delete
+     setAlert(false);
+  };
+
+
+
+  const deleteProductAlert = () => {
+   
+    // product delete
+    axios
+      .put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
+        id: variantremove.id,
+        product_id: variantremove.productid,
+        is_delete: ["0"],
+      })
+      .then((response) => {
+        console.log("---delete" + JSON.stringify(response.data));
+        // getProductVariant(variantremove.productid);
+        setapicall(true);
         // setpdata(response.data)
       })
       .catch(function (error) {
@@ -951,8 +999,17 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
       });
 
     // variety delete
-    setAlert(false);
+     setAlert(false);
   };
+
+  const closeAlert=()=>{
+    setAlert(false);
+  }
+
+const closeProductAlert=()=>{
+  setProductAlert(false)
+}
+
   const VariantEditClick = (id, productid) => {
     axios
       .get(
@@ -1099,6 +1156,8 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
      mainformRef.current.reset();
     //  setpdata('');
     setValidated(false);
+    setProductAlert(true)
+
      handleClose();
   };
   const handleUpdateProduct = (e) => {
@@ -1108,6 +1167,8 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
       .put(`${process.env.REACT_APP_BASEURL}/products_update`, productdata)
       .then((response) => {
         setapicall(true);
+
+      
         setmodalshow(false);
       })
       .catch(function (error) {
@@ -2406,16 +2467,18 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
             </Modal.Footer>
           </Form>
         </Modal>
+
         {/* variety */}
         <Modal
           size="lg"
           show={varietyshow}
-          onHide={() => handlevarietyClose()}
+          onHide={ handlevarietyClose}
+          
           dialogClassName="addproductmainmodal"
         >
           <Form ref={formRef} validated={validated} 
         >
-            <Modal.Header closeButton>
+            <Modal.Header >
               <Modal.Title>Add Variety</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -3022,16 +3085,11 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
             <Modal.Footer>
               <button
                 className="button main_outline_button"
-                onClick={() => handlevarietyClose()}
+                onClick={handlevarietyClose}
               >
                 Cancel
               </button>
-              <button
-                className="button main_button"
-                onClick={(e) => handlevarietyClose(e)}
-              >
-                Save
-              </button>
+              
             </Modal.Footer>
           </Form>
         </Modal>
@@ -3044,14 +3102,37 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
           pointerOnHover
           className={"table_body product_table"}
         />
+
         <SweetAlert
           show={Alert}
           title="Product Name"
           text="Are you Sure you want to delete"
           onConfirm={hideAlert}
           showCancelButton={true}
-          // onCancel={hideAlert}
+          onCancel={closeAlert}
         />
+
+
+           <SweetAlert
+          show={Alert}
+          title="Product Name"
+          text="Are you Sure you want to delete"
+          onConfirm={deleteProductAlert}
+          showCancelButton={true}
+          onCancel={closeAlert}
+        />
+
+        <SweetAlert
+          show={ProductAlert}
+          title="Added Successfully "
+          text="One product Added"
+           onConfirm={closeProductAlert}
+      
+        />
+
+
+
+
 
         {/* feature product modal */}
 
