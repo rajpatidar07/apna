@@ -109,7 +109,7 @@ const onSearchClick = () =>{
   
     {
       name: "Date",
-      selector: (row) => row.date,
+      selector: (row) => row.manufacturing_date,
       sortable: true,
       width: "150px",
       center: true,
