@@ -35,11 +35,11 @@ const onSearchClick = () =>{
         "category": `${searchdata.category}`,
         "price_from": "",
         "price_to": "",
-        "id":"asc",
+        "latest_first":"",
         "short_by_updated_on":"",
-        "product_title_name":"asc",
+        "product_title_name":"",
         "sale_price":"",
-        "is_delete": 0
+        "is_delete": ["0"]
 
       }}).then((response) => {
       setdeletedata(response.data)

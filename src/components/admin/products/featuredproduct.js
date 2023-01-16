@@ -67,7 +67,7 @@ const handleClose = () => {
               "search":"",
               "price_from":"",
               "price_to":"",
-              "id":"",
+              "latest_first":"",
               "product_title_name":"asc",
               "sale_price":"",
               "short_by_updated_on":"",
