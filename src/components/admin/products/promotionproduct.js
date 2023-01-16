@@ -227,7 +227,7 @@ console.log("-----"+searchdata.manufacturing_date)
 
     return (
         <div>
-              <h2>Promotional Products</h2>
+  <h2>Promotional Products</h2>
 
 {/* search bar */}
 <div className="card mt-3 p-3 ">

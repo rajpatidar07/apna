@@ -17,7 +17,7 @@ const Soldproduct = () => {
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
 const handleClick = () => {};
-const [show, setShow] = useState("");
+const [show, setShow] = useState(false);
 const[id,setId]=useState('');
 const[productData,setProductData]=useState([]);
 const [solddata, setsolddata] = useState([]);
@@ -27,7 +27,7 @@ const [searchdata, setsearchData] = useState({
   category: "",
 
 })
-
+const[quantity,setQuantity]=useState([]);
 
 const handleClose = () => {
   formRef.current.reset();
@@ -36,24 +36,12 @@ const handleClose = () => {
 
 const handleShow = (id,product_id) =>{ 
   try {
-    axios.post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=4`,{
-      "product_search":{
-      "search":"",
-      "price_from":"",
-      "price_to":"",
-      "latest_first":"asc",
-      "product_title_name":"",
-      "sale_price":"",
-      "short_by_updated_on":"",
-      "product_id": [`${product_id}`],
-      "id": [`${id}`]
-      
-    }
-      })
+    axios.get(`${process.env.REACT_APP_BASEURL}/products_pricing?id=${id}&product_id=${product_id}`
+      )
       .then((response) => {
-        let data=response.data.results;
+        let data=response.data;
         // let data = response.data.filter(item=> item.is_active === 1);
-        setProductData(response.data.results)
+        setProductData(data[0])
         setId(data.id)
         console.log("-----------******************-----------"+JSON.stringify(data.id))
 
@@ -63,7 +51,8 @@ const handleShow = (id,product_id) =>{
   
   
   
-  setShow(true)};
+  setShow(true)
+};
 
 // const pid=localStorage.getItem("productid");
 // console.log("pidddddddddd"+pid)
@@ -73,11 +62,15 @@ const OnSearchChange = (e) => {
 const onSearchClick = () =>{
   
 }
-console.log("---productDataAAAAAAAAAAAAAAAAAaa"+JSON.stringify(productData))
 
 const OnInputChange = (e) => {
   setProductData({ ...productData, [e.target.name]: e.target.value })
-  console.log("-----==========="+e.target.value);
+  // console.log("-----==========="+e.target.value);
+}
+
+const OnQuntityChange = (e) => {
+  setQuantity(e.target.value)
+  console.log("-----======QQQQQQQQQQQQQQQQ====="+e.target.value);
 }
   useEffect(() => {
     axios.post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`,{
@@ -90,17 +83,25 @@ const OnInputChange = (e) => {
         "product_title_name":"asc",
         "sale_price":"",
         "category":`${searchdata.category}`,
-        "quantity":0
+        "quantity":["10"]
 
       }}).then((response) => {
         let data=response.data
+        if(data.length = 0){
+      setsolddata([0])
+
+        }
+        else{
+          setsolddata(response.data)
+
+        }
       // let data = response.data.filter(item=>item.quantity==='0');
-      setsolddata(response.data)
+      setapicall(false)
       console.log("---sold"+JSON.stringify(solddata))
     }).catch(function (error) {
       console.log(error);
     });
-  }, [searchdata]);
+  }, [searchdata,apicall]);
 console.log("+++++++++++++++++++++"+JSON.stringify(solddata))
   const columns = [
     {
@@ -149,6 +150,12 @@ console.log("+++++++++++++++++++++"+JSON.stringify(solddata))
       width: "200px",
     },
     {
+      name: "Quantity",
+      selector: (row) => row.quantity,
+      sortable: true,
+      width: "200px",
+    },
+    {
       name: "Price",
       selector: (row) => row.product_price,
       sortable: true,
@@ -175,8 +182,39 @@ console.log("+++++++++++++++++++++"+JSON.stringify(solddata))
       ),
     },
   ];
+console.log("---productDataAAAAAAAAAAAAAAAAAaa"+JSON.stringify(productData))
   
 // }
+const OnProductQutUpdate=(e,product_id)=>{
+  e.prevantDefault();
+  axios
+  .put(
+    `${process.env.REACT_APP_BASEURL}/products_varient_update`,
+    {
+      "id":`${id}`,
+        "product_id": `${product_id}`,
+        "unit": productData.unit,
+        "colors": productData.colors,
+        "size": productData.size,
+        "product_price": productData.product_price,
+        "mrp": productData.mrp,
+        "sale_price": productData.sale_price,
+        "discount": productData.discount,
+        "special_offer": true,
+        "featured_product": true,
+        "manufacturing_date": productData.manufacturing_date,
+        "expire_date": productData.expire_date,
+        "quantity": "200",
+        "unit_quantity": productData.unit_quantity,
+        "product_status": productData.product_status
+    }
+  )
+  .then((response) => {
+    let data=response.data;
+    setapicall(true);
+    setShow(false);
+  })
+}
 
     return (
         <div>
@@ -226,7 +264,7 @@ console.log("+++++++++++++++++++++"+JSON.stringify(solddata))
         <Form
           className=""
           ref={formRef}
-          onSubmit={""}
+          onSubmit={OnProductQutUpdate}
         >
           <Modal.Header closeButton>
             <Modal.Title>
@@ -242,8 +280,8 @@ console.log("+++++++++++++++++++++"+JSON.stringify(solddata))
                 >
                   <Form.Label>Product Name</Form.Label>
                   <Form.Control
-                    // onChange={(e) => handleFormChange(e)}
-                    // value={addblog.title}
+                    onChange={ OnInputChange}
+                    value={productData.product_title_name}
                     
                     type="text"
                     placeholder="Add Title"
@@ -254,8 +292,8 @@ console.log("+++++++++++++++++++++"+JSON.stringify(solddata))
               
               <div className="col-md-3 col-sm-6 aos_input">
                 <label>Quantity</label>
-              <input type={"number"} placeholder={"Select quantity"} onChange={OnInputChange} name='quantity'
-              value={productData.quantity}
+              <input type={"number"} placeholder={"Select quantity"} onChange={OnQuntityChange} name='quantity'
+              value={quantity}
               className={'adminsideinput'}/>
         </div>
             </div>
@@ -269,6 +307,7 @@ console.log("+++++++++++++++++++++"+JSON.stringify(solddata))
             </button>
             <button
               className="button main_outline_button"
+              type="submit"
               // onClick={() => handleClose()}
             >
               Update

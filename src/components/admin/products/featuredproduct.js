@@ -214,7 +214,7 @@ const handleClose = () => {
       selector: (row) => (
         <div className={"actioncolimn"}>
          <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.fetured_product_id)} />
-          <BsTrash className=" p-0 m-0 editiconn text-danger"  onClick={handleAlert} />
+          <BsTrash className=" p-0 m-0 editiconn text-danger"  onClick={handleAlert}/>
         </div>
       ),
     },
