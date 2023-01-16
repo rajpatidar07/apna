@@ -41,13 +41,14 @@ const handleClose = () => {
   const handleShow = (id) =>{ 
     try {
       axios
-        .get(`${process.env.REACT_APP_BASEURL}/get_singal_fetured_product?id=${id}`)
+        .post(`${process.env.REACT_APP_BASEURL}/get_singal_fetured_product`,{
+          "product_id":`${id}`, "fetured_type":"featured_offer"
+        })
         .then((response) => {
-          let data=response.data[0];
+          let data=response.data;
           // let data = response.data.filter(item=> item.is_active === 1);
-          setfdata(data)
-          setId(data.id)
-          console.log("----------------------"+JSON.stringify(data.id))
+          // setfdata(data)
+          // setId(data.id)
 
           setapicall(false);
         });
@@ -58,26 +59,26 @@ const handleClose = () => {
     setShow(true)};
   const handleClick = () => {};
   useEffect(() => {
-  
       try {
         axios
-          .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=500&user_id=${userid}`,{
-            "product_search":{
+          .post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=500`,{
+            
+              "product_search":{
               "search":"",
-              "price_from":"",
-              "price_to":"",
-              "latest_first":"",
-              "product_title_name":"asc",
-              "sale_price":"",
-              "short_by_updated_on":"",
-              "is_fetured_product": ["1"],
-              "fetured_type": ["featured_offer"]
+                            "price_from":"",
+                            "price_to":"",
+                            "latest_first":"",
+                            "product_title_name":"",
+                            "sale_price":"",
+                            "short_by_updated_on":"",
+              "is_featured": ["1"]
               }
+              
           })
           .then((response) => {
-            let data=response.data.result;
+            let data=response.data;
             // let data = response.data.filter(item=> item.is_active === 1);
-            setFeatureProductData(response.data.results)
+            setFeatureProductData(response.data)
             // setfdata(response.data.results)
             // setId('');
             setapicall(false);
@@ -87,10 +88,9 @@ const handleClose = () => {
   }, [apicall]);
   const columns = [
     {
-      name: "FeturedProductiId",
+      name: "Id",
       selector: (row) => (
-        row.fetured_product_id
-      ),
+        row.id),
       sortable: true,
       width: "80px",
       center: true,
@@ -104,7 +104,7 @@ const handleClose = () => {
         row.product_id
       ),
       sortable: true,
-      width: "80px",
+      width: "150px",
       center: true,
       style: {
         paddingLeft: 0,
@@ -182,7 +182,7 @@ const handleClose = () => {
     },
     {
       name: "StartDate",
-      selector: (row) => moment(row.manufacturing_date).format('DD-MM-YYYY'),
+      selector: (row) => (row.featured_date),
       sortable: true,
       width: "130px",
       center: true,
@@ -193,7 +193,7 @@ const handleClose = () => {
     },
     {
       name: "End Date",
-      selector: (row) => row.expire_date,
+      selector: (row) => row.featured_date,
       sortable: true,
       width: "130px",
       center: true,
@@ -212,7 +212,7 @@ const handleClose = () => {
       center: true,
       selector: (row) => (
         <div className={"actioncolimn"}>
-         <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.fetured_product_id)} />
+         <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.product_id)} />
           <BsTrash className=" p-0 m-0 editiconn text-danger"  onClick={handleAlert}/>
         </div>
       ),
