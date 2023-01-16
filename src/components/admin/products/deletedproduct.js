@@ -43,7 +43,6 @@ const onSearchClick = () =>{
 
       }}).then((response) => {
       setdeletedata(response.data)
-      console.log("---ggggggggggggggggggsold"+JSON.stringify(deletedata))
     }).catch(function (error) {
       console.log(error);
     });
@@ -126,12 +125,51 @@ const onSearchClick = () =>{
         paddingLeft: "0px",
       },
       selector: (row) => (
-        <Iconbutton onClick={handleAlert} btntext={'Restore'} btnclass={'button bg-warning'} Iconname={<MdOutlineRestore className="mx-1"/>}/>
+        <Iconbutton onClick={(e)=>OnProductRestore(e,row.id,row.product_id)} btntext={'Restore'} btnclass={'button bg-warning'} Iconname={<MdOutlineRestore className="mx-1"/>}/>
       ),
     },
   ];
   
-  
+  const OnProductRestore= (e,id,productid) =>{
+    axios
+    .get(
+      `${process.env.REACT_APP_BASEURL}/products_pricing?id=${id}&product_id=${productid}`
+    )
+    .then((response) => {
+      let data = response.data
+    //   axios
+    // .put(
+    //   `${process.env.REACT_APP_BASEURL}/products_varient_update`,{
+    //     "id": id,
+    //     "product_id": productid,
+    //     "unit": data.unit,
+    //     "colors": data.colors,
+    //     "size": data.size,
+    //     "product_price": data.product_price,
+    //     "mrp": data.mrp,
+    //     "sale_price": data.sale_price,
+    //     "discount":data.discount,
+    //     "special_offer": data.special_offer,
+    //     "featured_product": data.featured_product,
+    //     "manufacturing_date": data.manufacturing_date,
+    //     "expire_date": data.expire_date,
+    //     "quantity": data.quantity,
+    //     "unit_quantity": data.unit_quantity,
+    //     "product_status": "1"
+    //   }
+    // )
+    // .then((response) => {
+    //   let data = response.data
+      
+    // })
+    // .catch(function (error) {
+    //   console.log(error);
+    // });
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
   const handleClick = () => {};
   return (
     <div>
