@@ -31,7 +31,6 @@ const [searchdata, setsearchData] = useState({
   product_title_name: "",
   category: "",
   manufacturing_date:"",
-
 })
 const handleClose = () => {
   formRef.current.reset();
@@ -214,7 +213,7 @@ const handleClose = () => {
       selector: (row) => (
         <div className={"actioncolimn"}>
          <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.fetured_product_id)} />
-          <BsTrash className=" p-0 m-0 editiconn text-danger"  onClick={handleAlert} />
+          <BsTrash className=" p-0 m-0 editiconn text-danger"  onClick={handleAlert}/>
         </div>
       ),
     },
@@ -262,7 +261,8 @@ useEffect(() => {
       "product_title_name":"asc",
       "sale_price":"",
       "category":`${searchdata.category}`,
-      "quantity":0
+      "quantity":0,
+      "manufacturing_date":[`${searchdata.manufacturing_date}`]
 
     }}).then((response) => {
       let data=response.data

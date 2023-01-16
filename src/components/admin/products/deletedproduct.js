@@ -71,7 +71,7 @@ const onSearchClick = () =>{
           width="70px"
           alt={row.product_title_name}
           src={
-            ""
+            row.image? row.image : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
           }
           style={{
             borderRadius: 10,
@@ -109,7 +109,7 @@ const onSearchClick = () =>{
   
     {
       name: "Date",
-      selector: (row) => row.date,
+      selector: (row) => row.manufacturing_date,
       sortable: true,
       width: "150px",
       center: true,
@@ -157,7 +157,7 @@ const onSearchClick = () =>{
         </div> */}
         <div className="col-md-3 col-sm-6 aos_input">
         <input type={"date"} 
-              value={"searchdata.manufacturing_date"} placeholder={"Search by product name"} className={'adminsideinput'}/>
+              value={searchdata.manufacturing_date} placeholder={"Search by date"} className={'adminsideinput'}/>
         </div>
         <div className="col-md-3 col-sm-6 aos_input">
         <MainButton btntext={"Search"} btnclass={'button main_button w-100'} />
