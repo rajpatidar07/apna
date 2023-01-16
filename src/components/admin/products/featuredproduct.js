@@ -13,20 +13,20 @@ import Iconbutton from "../common/iconbutton";
 import moment from "moment";
 import axios from "axios";
 import Feedback from "react-bootstrap/esm/Feedback";
-const Featuredproduct = (fid) => {
+const Featuredproduct = () => {
   const formRef = useRef();
   let userid= localStorage.getItem("userid")
 const [featuredProductData,setFeatureProductData]=useState([]);
 
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
-  const[msg,setMsg]=useState([]);
+
   const [Alert, setAlert] = useState(false);
  const [apicall,setapicall]=useState(false);
   const [fdata, setfdata] = useState([]);
   const [show, setShow] = useState("");
   const [validated, setValidated] = useState(false);
-const [id,setId]=useState();
+const [id,setId]=useState("");
 const [searchdata, setsearchData] = useState({
   product_title_name: "",
   category: "",
@@ -37,8 +37,8 @@ const handleClose = () => {
   setValidated(false);
   setShow(false);
 };
-
-  const handleShow = (id) =>{ 
+// console.log("proidddddddddddd"+proid)
+  const handleShow = (id,product_id) =>{ 
     try {
       axios
         .post(`${process.env.REACT_APP_BASEURL}/get_singal_fetured_product`,{
@@ -58,6 +58,8 @@ const handleClose = () => {
     
     setShow(true)};
   const handleClick = () => {};
+// console.log("kkkkkkkkk"+product_id)
+
   useEffect(() => {
       try {
         axios
@@ -86,6 +88,8 @@ const handleClose = () => {
       } catch (err) {}
   
   }, [apicall]);
+  // console.log("gggggggggggggg"+JSON.stringify(featuredProductData))
+
   const columns = [
     {
       name: "Id",
@@ -268,7 +272,7 @@ useEffect(() => {
       let data=response.data
     // let data = response.data.filter(item=>item.quantity===0);
     setFeatureProductData(response.data)
-    console.log("--featuredProductData"+JSON.stringify(featuredProductData));
+    // console.log("--featuredProductData"+JSON.stringify(featuredProductData));
   }).catch(function (error) {
     console.log(error);
   });
@@ -322,7 +326,7 @@ useEffect(() => {
               <div className="col-md-6">
               
                   <Form.Group className="mb-3 aos_input" controlId="formBasicStartDate">
-                    <Form.Label>Manufacturing Date</Form.Label>
+                    <Form.Label>Start Date</Form.Label>
                     <Form.Control  name='start_date'   value={moment(fdata.start_date).format('YYYY-MM-DD')} onChange={(e) => handleFormChange(e)}  type="date" placeholder="Coupon Start Date" />
                     <Form.Control.Feedback type="invalid" className="h6">
                     Only current select current date or next date
@@ -331,7 +335,7 @@ useEffect(() => {
                 </div> 
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicStartDate">
-                    <Form.Label>Expire Date</Form.Label>
+                    <Form.Label>End Date</Form.Label>
                     <Form.Control  name='end_date' value={moment(fdata.end_date).format('YYYY-MM-DD')} onChange={(e) => handleFormChange(e)}  type="date" placeholder="Coupon Start Date" />
                   </Form.Group>
                 </div> 
@@ -346,7 +350,7 @@ useEffect(() => {
             </button>
             <button
               className="button main_outline_button"
-              onClick={(id) => UpdateFeaturedProduct(id)}
+              onClick={(product_id) => UpdateFeaturedProduct(product_id)}
             >
               Update
             </button>
