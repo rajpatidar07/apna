@@ -126,7 +126,7 @@ function Product() {
       selector: (row) => (
         <span
           className={
-            row.status === "pending"
+            row.status === "placed"
               ? "badge bg-warning"
               : row.status === "delivered"
                 ? "badge bg-success"
@@ -139,8 +139,8 @@ function Product() {
                       : "badge bg-dark"
           }
         >
-          {row.status === "pending"
-              ? "pending"
+          {row.status === "placed"
+              ? "placed"
               : row.status === "delivered"
                 ? "delivered"
                 : row.status === "packed"
