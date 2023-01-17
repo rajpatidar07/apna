@@ -128,6 +128,8 @@ function Product() {
           className={
             row.status === "placed"
               ? "badge bg-warning"
+              : row.status === "pending"
+              ? "badge bg-secondary"
               : row.status === "delivered"
                 ? "badge bg-success"
                 : row.status === "packed"
@@ -149,7 +151,9 @@ function Product() {
                     ? "cancelled"
                     : row.status === "approved"
                       ? "approved"
-                      : "return"}
+                      :
+                      row.status === "pending"
+                      ? "pending": "return"}
         </span>
       ),
       sortable: true,
@@ -158,6 +162,7 @@ function Product() {
       name: "Change Status",
       selector: (row) => (
         <Form.Select aria-label="Search by delivery" size="sm" className="w-100" onChange={(e)=>onStatusChange(e,row.order_id)} name='status' >
+          <option value="placed" selected={row.status === 'placed' ? true : false}>Placed</option>
           <option value="pending" selected={row.status === 'pending' ? true : false}>Pending</option>
           <option value="delivered"  selected={row.status === 'delivered' ? true : false}>Delivered</option>
           <option value="packed"  selected={row.status === 'packed' ? true : false}>Packed</option>
