@@ -130,11 +130,13 @@ function Product() {
               ? "badge bg-warning"
               : row.status === "pending"
               ? "badge bg-secondary"
+              : row.status === "shipped"
+              ? "badge bg-primary"
               : row.status === "delivered"
                 ? "badge bg-success"
                 : row.status === "packed"
                   ? "badge bg-primary"
-                  : row.status === "cancelled"
+                  : row.status === "cancel"
                     ? "badge bg-danger"
                     : row.status === "approved"
                       ? "badge bg-info"
@@ -145,10 +147,12 @@ function Product() {
               ? "placed"
               : row.status === "delivered"
                 ? "delivered"
+                : row.status === "shipped"
+                ? "shipped"
                 : row.status === "packed"
                   ? "packed"
-                  : row.status === "cancelled"
-                    ? "cancelled"
+                  : row.status === "cancel"
+                    ? "cancel"
                     : row.status === "approved"
                       ? "approved"
                       :
@@ -164,6 +168,7 @@ function Product() {
         <Form.Select aria-label="Search by delivery" size="sm" className="w-100" onChange={(e)=>onStatusChange(e,row.order_id)} name='status' >
           <option value="placed" selected={row.status === 'placed' ? true : false}>Placed</option>
           <option value="pending" selected={row.status === 'pending' ? true : false}>Pending</option>
+          <option value="shipped" selected={row.status === 'shipped' ? true : false}>Shipped</option>
           <option value="delivered"  selected={row.status === 'delivered' ? true : false}>Delivered</option>
           <option value="packed"  selected={row.status === 'packed' ? true : false}>Packed</option>
           <option value="cancel" selected={row.status === 'cancel' ? true : false}>Cancel</option>
