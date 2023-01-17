@@ -196,6 +196,7 @@ const StockReport = () => {
   const [getTableStock, setGetTableStock]= useState([])
   const [apicall,setapicall]=useState(false)
   const [StockStatus,setStockStatus]=useState("")
+ 
   
 
   const TimeChange = (e)=>{
@@ -230,9 +231,20 @@ const StockReport = () => {
       "values":StockStatus
     }
      ).then((response) => {
-          //  console.log('stock data-all---'+JSON.stringify(response.data))
+           console.log('stock data-all---'+JSON.stringify(response.data))
+           console.log('stok Error---'+JSON.stringify(response.data))
+            
+
+           if(response.data.message=="No_Data"){
+             
+                setGetTableStock([])
+
+           }
+           else{
+        
+            setGetTableStock(response.data)
+           }
          
-          setGetTableStock(response.data)
          
      }).catch(function (error) {
        console.log(error);

@@ -710,7 +710,7 @@ resultNetSales!="Infinity"?console.log():resultNetSales=0
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
           
-                    {(OrderError)=="No_Data"||(ordersreport.avg_order_value)==null || (ordersreport.avg_order_value)==undefined  || (ordersreport.avg_order_value)==""?<h3>0</h3>: <h3>{(ordersreport.avg_order_value).toFixed(2)}</h3>}
+                    {(OrderError)=="No_Data"||(ordersreport.avg_order_value)==null || (ordersreport.avg_order_value)==undefined  || (ordersreport.avg_order_value)==""?<h3>0</h3>: <h3>₹{(ordersreport.avg_order_value).toFixed(2)}</h3>}
                       
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
@@ -773,7 +773,7 @@ resultNetSales!="Infinity"?console.log():resultNetSales=0
                     <div className="d-flex align-items-baseline justify-content-between">
                     {console.log("********"+OrderError)}
                   {console.log(" Net Revenue===="+ordersreport.net_sales)}
-                    {(OrderError)=="No_Data"||(ordersreport.net_sales)==null || (ordersreport.net_sales)==undefined  || (ordersreport.net_sales)==""?<h3>₹0</h3>: <h3>{(ordersreport.net_sales).toFixed(2)}</h3>}
+                    {(OrderError)=="No_Data"||(ordersreport.net_sales)==null || (ordersreport.net_sales)==undefined  || (ordersreport.net_sales)==""?<h3>₹0</h3>: <h3>₹{(ordersreport.net_sales).toFixed(2)}</h3>}
                
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />

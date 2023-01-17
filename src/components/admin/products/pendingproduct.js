@@ -38,10 +38,10 @@ const OnDateChange = (e) => {
   useEffect(() => {
     axios.post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`, {
       "product_search": {
-        "search":`${searchdata.product_title_name}`,
+      "search":`${searchdata.product_title_name}`,
 "price_from":"",
 "price_to":"",
-"id":"",
+"latest_first":"",
 "product_title_name":"asc",
 "sale_price":"",
 "short_by_updated_on":"",

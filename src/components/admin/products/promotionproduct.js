@@ -50,7 +50,7 @@ console.log("-----"+searchdata.manufacturing_date)
               "search":`${searchdata.product_title_name}`,
               "price_from":"",
               "price_to":"",
-              "id":"",
+              "latest_first":"",
               "product_title_name":"asc",
               "sale_price":"",
               "short_by_updated_on":"",
@@ -227,7 +227,7 @@ console.log("-----"+searchdata.manufacturing_date)
 
     return (
         <div>
-              <h2>Promotional Products</h2>
+  <h2>Promotional Products</h2>
 
 {/* search bar */}
 <div className="card mt-3 p-3 ">

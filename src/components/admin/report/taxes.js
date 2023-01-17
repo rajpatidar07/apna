@@ -637,7 +637,7 @@ resultOrderTax!="Infinity"?console.log():resultOrderTax=0
                   <div className="d-flex align-items-baseline justify-content-between">
                  {console.log("taxxxxx"+TaxesError)}
                 { console.log("ordder count-------"+Taxesreport.order_tax)}
-                  {(TaxesError)=="No_Data"||(Taxesreport.order_tax)==null || (Taxesreport.order_tax)==undefined  || (Taxesreport.order_tax)==""?<h3>₹0</h3>: <h3>{Taxesreport.order_tax}</h3>}
+                  {(TaxesError)=="No_Data"||(Taxesreport.order_tax)==null || (Taxesreport.order_tax)==undefined  || (Taxesreport.order_tax)==""?<h3>₹0</h3>: <h3>₹{Taxesreport.order_tax}</h3>}
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
 
@@ -673,7 +673,7 @@ resultOrderTax!="Infinity"?console.log():resultOrderTax=0
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                  {(TaxesError)=="No_Data"||(Taxesreport.order_count)==null || (Taxesreport.order_count)==undefined  || (Taxesreport.order_count)==""?<h3>₹0</h3>: <h3>₹{Taxesreport.order_count}</h3>}
+                  {(TaxesError)=="No_Data"||(Taxesreport.order_count)==null || (Taxesreport.order_count)==undefined  || (Taxesreport.order_count)==""?<h3>0</h3>: <h3>{Taxesreport.order_count}</h3>}
 
                     <div className="d-flex align-items-center justify-content-center">
                      <AiOutlineArrowRight className="h5 mb-0 mx-2"/>
