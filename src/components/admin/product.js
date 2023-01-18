@@ -70,23 +70,26 @@ function Product() {
   const [customvalidated, setcustomValidated] = useState(false);
   const [modalshow, setmodalshow] = useState(false);
   const [seoarray, setseoArray] = useState([]);
-  const [variantarray, setvariantarray] = useState({
+
+
+  var veriantData={
     product_status: "",
     product_id: "",
     unit: "",
     colors: "",
-    unit_quantity: null,
-    size: null,
+    unit_quantity: "",
+    size: "",
     product_price: "",
     mrp: "",
     sale_price: "",
-    discount: "",
+    discount: "0",
     special_offer: false,
     featured_product: false,
     manufacturing_date: "",
     expire_date: "",
     quantity: "",
-  });
+  }
+  const [variantarray, setvariantarray] = useState(veriantData);
   const [variantmainarray, setvariantmainarray] = useState([]);
   const [data1, setdata1] = useState("");
   const [otherintro, setotherintro] = useState("");
@@ -98,32 +101,34 @@ function Product() {
     description: [],
   });
   const [vdata, setvdata] = useState([]);
-  const [productdata, setproductdata] = useState({
-    add_custom_input: [],
-    product_title_name: "",
-    product_slug: "",
-    store_name: "",
-    product_type: "",
-    category: "",
-    parent_category: "",
-    wholesale_sales_tax: "0",
-    gst: "0",
-    cgst: "0",
-    sgst: "0",
-    retails_sales_tax: "0",
-    value_added_tax: "0",
-    manufacturers_sales_tax: "0",
-    manufacturing_date: "",
-    expire_date: "",
-    seo_tag: "",
-    variety: false,
-    product_description: "",
-    other_introduction: "",
-    // is_active: "0",
-    vendor_id: "",
-    shop: "",
-    show_product_rating: "0",
-  });
+
+  var data =   {
+     add_custom_input: [],
+  product_title_name: "",
+  product_slug: "",
+  store_name: "",
+  product_type: "",
+  category: "",
+  parent_category: "",
+  wholesale_sales_tax: "0",
+  gst: "0",
+  cgst: "0",
+  sgst: "0",
+  retails_sales_tax: "0",
+  value_added_tax: "0",
+  manufacturers_sales_tax: "0",
+  manufacturing_date: "",
+  expire_date: "",
+  seo_tag: "",
+  variety: false,
+  product_description: "",
+  other_introduction: "",
+  // is_active: "0",
+  vendor_id: "",
+  shop: "",
+  show_product_rating: "0",
+  }
+  const [productdata, setproductdata] = useState(data);
   const mainformRef = useRef();
   const formRef = useRef();
   const [searchdata, setsearchData] = useState({
@@ -144,9 +149,12 @@ const [taxdata,settaxdata] = useState({
   manufacturers_sales_tax: "0",
 })
 const[productID,setproductID]=useState("")
+
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
   };
+
+  
   const onProductStatusChange = (e,id,productid) =>{
     axios
       .put(`${process.env.REACT_APP_BASEURL}/product_status_update`, {
@@ -167,40 +175,45 @@ const[productID,setproductID]=useState("")
     categoryArray.push(e.target.value);
   };
 
+  
+  const  fetchdata=()=>{
+  axios
+  .post(
+    `${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=500`,
+    {
+      product_search: {
+        search: `${searchdata.product_title_name}`,
+        price_from: "",
+        price_to: "",
+        latest_first:"",
+        product_title_name:"",
+        sale_price:"",
+        short_by_updated_on:"",
+        category: categoryArray,
+        product_status: [`${searchdata.product_status}`],
+        is_delete: ["1"],
+        colors: [],
+        size: [],
+        parent_category: [],
+        product_type: [],
+      },
+    }
+  )
+  .then((response) => {
+    setpdata(response.data);
+    
+    setapicall(false);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
 
   useEffect(() => {
     const first='';
-    axios
-      .post(
-        `${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=500`,
-        {
-          product_search: {
-            search: `${searchdata.product_title_name}`,
-            price_from: "",
-            price_to: "",
-            latest_first:"",
-            product_title_name:"",
-            sale_price:"",
-            short_by_updated_on:"",
-            category: categoryArray,
-            product_status: [`${searchdata.product_status}`],
-            is_delete: ["1"],
-            colors: [],
-            size: [],
-            parent_category: [],
-            product_type: [],
-          },
-        }
-      )
-      .then((response) => {
-        setpdata(response.data);
-        
-        setapicall(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }, [apicall, searchdata, Alert ]);
+    fetchdata()
+  
+  }, [apicall,  Alert ]);
   //
   // console.log("ddddddddddddddddddDDDDDDDDDDDDD"+JSON.stringify(pdata))
   let filtered;
@@ -538,6 +551,7 @@ axios
   },[scategory,indVal])
   // modal
   const [editparentCategory,seteditparentCategory] = useState('');
+  
   const handleShow = (e) => {
        // vendor
     const getVendorData =()=>{
@@ -712,55 +726,13 @@ const  getProductVariant = (id) =>{
 
   const handleClose = () => {
 
-     mainformRef.current.reset();
-    setproductdata({
-      add_custom_input: [],
-      product_title_name: "",
-      product_slug: "",
-      store_name: "",
-      product_type: "",
-      category: "",
-      parent_category:"",
-      wholesale_sales_tax: "0",
-      gst: "0",
-      cgst: "0",
-      sgst: "0",
-      retails_sales_tax: "0",
-      value_added_tax: "0",
-      manufacturers_sales_tax: "0",
-      manufacturing_date: "",
-      expire_date: "",
-      seo_tag: "",
-      variety: false,
-      product_description:"",
-      other_introduction:"",
-      // is_active: "0",
-      vendor_id: "",
-      shop: "",
-      show_product_rating: "0",
-    });
-     
+    mainformRef.current.reset();
+    setproductdata(data);
     setcustomarray([])
 
-    setvariantarray({
-      product_status: "",
-      product_id: "",
-      unit: "",
-      colors: "",
-      unit_quantity: "",
-      size:"",
-      product_price: "",
-      mrp: "",
-      sale_price: "",
-      discount: "",
-      special_offer: false,
-      featured_product: false,
-      manufacturing_date: "",
-      expire_date: "",
-      quantity: "",
-    });
+    setvariantarray(veriantData);
     setvariantmainarray([])
-
+   
      setValidated(false);
     setmodalshow(false);
     // console.log("---product data------------" + JSON.stringify(productdata));
@@ -974,7 +946,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
             product_price: "",
             mrp: "",
             sale_price: "",
-            discount: "",
+            discount: "0",
             special_offer: false,
             featured_product: false,
             manufacturing_date: "",
@@ -1010,7 +982,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
             product_price: "",
             mrp: "",
             sale_price: "",
-            discount: "",
+            discount: "0",
             special_offer: false,
             featured_product: false,
             manufacturing_date: "",
@@ -1182,9 +1154,12 @@ const closeProductAlert=()=>{
 
     });
   };
+
+
   const handledescription = (event, editor) => {
     setdata1(editor.getData());
     console.log({ event, editor, data1 });
+
 
     let productdesc;
     if((editor.getData()) != undefined){
@@ -1194,6 +1169,9 @@ const closeProductAlert=()=>{
       ...productdata,
       product_description: productdesc,
     });
+
+
+    
   };
 
   const OtherDescription = (event, editor) => {
@@ -1275,6 +1253,23 @@ const closeProductAlert=()=>{
 
   const handleClick = () => {};
   const navigate = useNavigate();
+
+
+
+  const submitHandler=()=>{
+       
+    setapicall(true)
+   
+   }
+
+   const OnReset =()=>{
+   setsearchData({product_title_name:"",
+                   product_status:""
+                  })
+                  // fetchdata()
+     setapicall(true)
+   
+}
   return (
     <div className="App productlist_maindiv">
       <h2>Products</h2>
@@ -1290,6 +1285,7 @@ const closeProductAlert=()=>{
               name="product_title_name"
               value={searchdata.product_title_name}
               className={"adminsideinput"}
+         
             />
           </div>
           
@@ -1306,10 +1302,12 @@ const closeProductAlert=()=>{
               <option  value="">Select</option>
           <option   value="pending">Pending</option>
           <option value="draft">Draft</option>
-          <option  value="expired">Expired</option>
+          <option value="approved ">Approved </option>
+          {/* <option value="active">Active</option> */}
+          {/* <option  value="expired">Expired</option>
           <option  value="special_offer">Special Offer</option>
           <option   value="featured_offer">Featured Offer </option>
-          <option  value="promotional">Promotional </option>
+          <option  value="promotional">Promotional </option> */}
             </Form.Select>
           </div>
 
@@ -1317,9 +1315,21 @@ const closeProductAlert=()=>{
             <MainButton
 
               btntext={"Search"}
-              btnclass={"button main_button w-100"}
+              btnclass={"button main_button w-50"}
+              onClick={submitHandler}
             />
           </div>
+
+          <div className="col-md-3 col-sm-6 aos_input">
+            <MainButton
+
+              btntext={"Reset"}
+              btnclass={"button main_button w-50"}
+              type="reset" onClick={OnReset}
+            />
+          </div>
+
+        
         </div>
 
         {/* upload */}
@@ -1405,7 +1415,7 @@ const closeProductAlert=()=>{
                       </Form.Group>
                       <Form.Group
                         className="mx-3"
-                        controlId="validationCustom02"
+                        controlId="validationProductName"
                       >
                         <Form.Label className="inputlabelheading" sm="12">
                           Product Slug<span className="text-danger">* </span>
@@ -1417,21 +1427,23 @@ const closeProductAlert=()=>{
                             onChange={(e) => handleInputFieldChange(e)}
                             name={"product_slug"}
                             value={productdata.product_slug}
+                            required
                           />
                         </Col>
                       </Form.Group>
                       <Form.Group
                         className="mx-3"
-                        controlId="validationCustomBrand"
+                        controlId="validationProductslug"
                       >
                         <Form.Label className="inputlabelheading" sm="12">
-                          Product Brand
+                          Product Brand <span className="text-danger">* </span>
                         </Form.Label>
                         <Col sm="12">
                           <Form.Select
                             aria-label="Product Type"
                             className="adminselectbox"
                             name="brand"
+                            required
                             onChange={(e) => handleInputFieldChange(e)}
                             value={
                               productdata.brand === null ||
@@ -1457,7 +1469,7 @@ const closeProductAlert=()=>{
                         <Form.Label className="inputlabelheading" sm="12">
                           Store Name
                           <span className="text-danger">
-                            *{" "}
+                            *
                             <Form.Control.Feedback
                               type="invalid"
                               className="h6"
@@ -1468,16 +1480,11 @@ const closeProductAlert=()=>{
                         </Form.Label>
                         <Form.Select
                              onChange={handleVendorNameChange}
-                            //  value={
-                            //   productdata.store_name === null ||
-                            //   productdata.store_name === undefined
-                            //     ? ""
-                            //     : productdata.store_name
-                            // }
+                        
                         aria-label="store_name"
                         className="adminselectbox"
                         required
-                      >
+                      > <option value={""}> Select Store Name</option>
                         {vendorid.map((cdata, i) => {
                           return (
                             <option
@@ -1503,19 +1510,20 @@ const closeProductAlert=()=>{
                         className="mx-3"
                         controlId="validationCustom04"
                       >
+
                         <Form.Label className="inputlabelheading" sm="12">
-                          Product Description
+                          Product Description 
                         </Form.Label>
                         <Col sm="12">
                           <CKEditor
                             editor={ClassicEditor}
                             data={productdata.product_description}
-                            onChange={handledescription}
+                            onChange={ handledescription}
                             name={"product_description"}
-                            // value={productdata.product_description}
+                           
                           />
                         </Col>
-                        {/* <div dangerouslySetInnerHTML={createMarkup()} className='editor'></div> */}
+                     
                       </Form.Group>
                     </div>
                   </div>
@@ -1524,6 +1532,7 @@ const closeProductAlert=()=>{
                 <div className="my-3 inputsection_box">
                   <h5 className="m-0">Category Info</h5>
                   <div className="productvariety">
+
                     <Form.Group className="mx-3" controlId="validationCustom05">
                       <Form.Label className="inputlabelheading" sm="12">
                         Product Type<span className="text-danger">* </span>
@@ -1547,10 +1556,7 @@ const closeProductAlert=()=>{
                           {categorytype.categorytype.map((data) => {
                             return <option value={data}>{data}</option>;
                           })}
-                          {/* <option value="Foods">foods</option>
-                          <option value="electronic">Electronic</option>
-                          <option value="Health Care">Health Care</option>
-                          <option value="Books">Books</option> */}
+                        
                         </Form.Select>
                         <Form.Control.Feedback type="invalid" className="h6">
                           Please select producttype
@@ -1561,25 +1567,19 @@ const closeProductAlert=()=>{
                     {/* category select */}
                     <Form.Group
                       className=" aos_input"
-                      controlId="formBasicParentCategory"
+                      controlId="validationCustom06"
                     >
                       <Form.Label className="inputlabelheading" sm="12">
-                        Parent Category
+                        Parent Category <span className="text-danger">* </span>
                       </Form.Label>
                       <Form.Select
                         onChange={(e, id) => categoryFormChange(e, id)}
-                        // onChange={(e) => handleInputFieldChange(e)}
+                    
                         name={"parent_category"}
                         aria-label="Parent Category"
                         className="adminselectbox"
                         required
-                        // value={
-                        //   productdata.parent_category === null ||
-                        //   productdata.parent_category === undefined
-                        //     ? ""
-                        //     : productdata.parent_category
-                        // }
-                      >
+                      ><option value={""}>Select category Type</option>
                         {category.map((cdata, i) => {
                           return (
                             <option
@@ -1588,16 +1588,17 @@ const closeProductAlert=()=>{
                               key={i}
                               selected={editparentCategory == cdata.category_name ? true :false }
                             >
-                              {cdata.category_name}
-                              {""}
-                            </option>
+                              {cdata.category_name} {""}</option>
+
                           );
                         })}
                       </Form.Select>
                       <Form.Control.Feedback type="invalid" className="h6">
-                        Please fill category
-                      </Form.Control.Feedback>
+                          Please select Category
+                        </Form.Control.Feedback>
                     </Form.Group>
+
+
                     {subCategory === "" ||
                     subCategory === null ||
                     subCategory === undefined ? null : (
@@ -1773,21 +1774,28 @@ const closeProductAlert=()=>{
                     </Form.Group>
                     <Form.Group className="mx-3" controlId="validationCustom11">
                       <Form.Label className="inputlabelheading" sm="12">
-                        Gst
+                        Gst<span className="text-danger">* </span>
                       </Form.Label>
                       <Col sm="12">
                         <Form.Control
                           type="number"
-                          min={0}
+                         
+                          min={1}
                           placeholder="Gst"
-                          required
+                          className={
+                            customvalidated === true
+                              ? "border-danger"
+                              : null
+                          }
+                       
                           name="gst"
                           value={productdata.gst}
                           onChange={(e) => handleInputFieldChange(e)}
+                          required
                         />
-                        <Form.Control.Feedback type="invalid">
+                        {/* <Form.Control.Feedback type="invalid">
                           Please choose a gst
-                        </Form.Control.Feedback>
+                        </Form.Control.Feedback> */}
                       </Col>
                     </Form.Group>
                     <Form.Group className="mx-3" controlId="validationCustom11">
@@ -1893,23 +1901,23 @@ const closeProductAlert=()=>{
                                 >
                                   <thead className="align-middle">
                                     <tr>
-                                      <th>Variety</th>
+                                      <th>Variety<span className="text-danger">* </span></th>
                                       <th>Color</th>
                                       <th>Weight</th>
                                       <th>Size</th>
-                                      <th>Mrp</th>
+                                      <th>Mrp <span className="text-danger">* </span></th>
                                       <th>Discount</th>
                                       <th>Price</th>
                                       <th>Sale Price</th>
                                       <th>Special Offer</th>
                                       <th>Featured Product</th>
                                       <th className="manufacture_date">
-                                        Mdate
+                                        Mdate <span className="text-danger">* </span>
                                       </th>
                                       <th className="manufacture_date">
-                                        Edate
+                                        Edate <span className="text-danger">* </span>
                                       </th>
-                                      <th className="">Qty</th>
+                                      <th className="">Qty <span className="text-danger">* </span></th>
                                     </tr>
                                   </thead>
                                   <tbody>
@@ -1924,6 +1932,7 @@ const closeProductAlert=()=>{
                                               onChange={(e) =>
                                                 onVariantChange(e)
                                               }
+                                              required
                                               className={
                                                 customvalidated === true
                                                   ? "border-danger"
@@ -2038,19 +2047,22 @@ const closeProductAlert=()=>{
                                           <InputGroup className="" size="sm">
                                             <Form.Control
                                               type="number"
-                                              step={'any'}
+                                              
                                               min={1}
+                                          
                                               sm="9"
                                               className={
                                                 customvalidated === true
                                                   ? "border-danger"
                                                   : null
                                               }
+                                            
+                                              name="mrp"
+                                              value={variantarray.mrp}
                                               onChange={(e) =>
                                                 onVariantChange(e)
                                               }
-                                              name={"mrp"}
-                                              value={variantarray.mrp}
+                                            required
                                             />
                                           </InputGroup>
                                         </div>
@@ -2061,7 +2073,7 @@ const closeProductAlert=()=>{
                                             <Form.Control
                                               type="number"
                                               sm="9"
-                                              min={1}
+                                              min={0}
                                               onChange={(e) =>
                                                 onVariantChange(e)
                                               }
@@ -2089,6 +2101,7 @@ const closeProductAlert=()=>{
                                               }
                                               name={"product_price"}
                                               value={product_price}
+                                              required
                                             />
                                           </InputGroup>
                                         </div>
@@ -2172,6 +2185,7 @@ const closeProductAlert=()=>{
                                             <Form.Control
                                               type="date"
                                               sm="9"
+                                              required
                                               className={
                                                 customvalidated === true
                                                   ? "border-danger"
@@ -2194,6 +2208,7 @@ const closeProductAlert=()=>{
                                             <Form.Control
                                               type="date"
                                               sm="9"
+                                              requ
                                               className={
                                                 customvalidated === true
                                                   ? "border-danger"
@@ -2217,6 +2232,7 @@ const closeProductAlert=()=>{
                                               value={variantarray.quantity}
                                               sm="9"
                                               min={"1"}
+                                              required
                                               className={
                                                 customvalidated === true
                                                   ? "border-danger"
@@ -2260,7 +2276,7 @@ const closeProductAlert=()=>{
                                                 ? "weight"
                                                 : variantdata.unit === "ml"
                                                 ? "volume"
-                                                : null}
+                                                : ""}
                                             </td>
                                             <td className="p-0 text-center ">
                                               {variantdata.colors}
@@ -2272,12 +2288,12 @@ const closeProductAlert=()=>{
                                                 ? variantdata.unit_quantity
                                                 : variantdata.unit === "piece"
                                                 ? variantdata.unit_quantity
-                                                : null}
+                                                : ""}
                                             </td>
                                             <td className="p-0 text-center ">
                                               {variantdata.unit === "pcs"
                                                 ? variantdata.size
-                                                : null}
+                                                : ""}
                                             </td>
                                             <td className="p-0 text-center ">
                                               {variantdata.mrp}
@@ -2387,16 +2403,20 @@ const closeProductAlert=()=>{
                       <div className="d-flex align-items-center tagselectbox mt-2">
                         {/* {(seoarray || []).map((seotags, i) => {
                           return ( */}
-                        <Badge className="tagselecttitle mb-0" bg="success">
+                          {productdata.seo_tag == ""? "":  
+                           <Badge className="tagselecttitle mb-0" bg="success">
                           {productdata.seo_tag === null ||
                           productdata.seo_tag === undefined
                             ? ""
                             : productdata.seo_tag}
-                          <GiCancel
+                          {/* <GiCancel
                             className=" mx-0 ms-1 btncancel"
-                            onClick={() => tagRemoveClick(proddata.seo_tag)}
-                          />
+                            onClick={() => tagRemoveClick(productdata.seo_tag)}
+                          /> */}
                         </Badge>
+
+                          }
+                     
 
                         {/* )
 
@@ -2659,7 +2679,7 @@ const closeProductAlert=()=>{
                                                     ? "ml"
                                                     : vari === "piece"
                                                     ? "piece"
-                                                    : null
+                                                    : ""
                                                 }
                                                 key={i}
                                               >
@@ -2703,7 +2723,7 @@ const closeProductAlert=()=>{
                                             ? variantarray.unit_quantity
                                             : variantarray.unit === "piece"
                                             ? variantarray.unit_quantity
-                                            : null
+                                            : ""
                                         }
                                         type="text"
                                         sm="9"
@@ -2965,7 +2985,7 @@ const closeProductAlert=()=>{
                                               ? "weight"
                                               : variantdata.unit === "ml"
                                               ? "volume"
-                                              : null}
+                                              : ""}
                                           </td>
                                           <td className="p-0 text-center ">
                                             {variantdata.colors}
@@ -2977,12 +2997,12 @@ const closeProductAlert=()=>{
                                               ? variantdata.unit_quantity
                                               : variantdata.unit === "piece"
                                               ? variantdata.unit_quantity
-                                              : null}
+                                              : ""}
                                           </td>
                                           <td className="p-0 text-center ">
                                             {variantdata.unit === "pcs"
                                               ? variantdata.size
-                                              : null}
+                                              : ""}
                                           </td>
                                           <td className="p-0 text-center ">
                                             {Number(variantdata.mrp).toFixed(2)}
