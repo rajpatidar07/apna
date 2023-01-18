@@ -14,8 +14,15 @@ import moment from "moment";
 import axios from "axios";
 import Feedback from "react-bootstrap/esm/Feedback";
 const Featuredproduct = () => {
+
+  var d={
+    "date_time":"YYYY-MM-DD"
+  },
+  featured_date = new Date( d.date_time ),
+  s = featured_date.toLocaleDateString()
+  
   const formRef = useRef();
-  let userid= localStorage.getItem("userid")
+
 const [featuredProductData,setFeatureProductData]=useState([]);
 
   const handleAlert = () => setAlert(true);
@@ -24,13 +31,14 @@ const [featuredProductData,setFeatureProductData]=useState([]);
   const [Alert, setAlert] = useState(false);
  const [apicall,setapicall]=useState(false);
   const [fdata, setfdata] = useState([]);
+  const[featuredData,setFeaturetData]=useState([]);
   const [show, setShow] = useState("");
   const [validated, setValidated] = useState(false);
 const [id,setId]=useState("");
 const [searchdata, setsearchData] = useState({
   product_title_name: "",
   category: "",
-  manufacturing_date:"",
+  start_date:"",
 })
 const handleClose = () => {
   formRef.current.reset();
@@ -42,10 +50,14 @@ const handleClose = () => {
     try {
       axios
         .post(`${process.env.REACT_APP_BASEURL}/get_singal_fetured_product`,{
-          "product_id":`${id}`, "fetured_type":"featured_offer"
+          "product_id":`${id}`,
+          "fetured_type":"featured_offer"
         })
+    console.log("hdghsjdhsd"+JSON.stringify(id))
+
         .then((response) => {
-          let data=response.data;
+          let data=response.data[0];
+          setFeaturetData(data)
           // let data = response.data.filter(item=> item.is_active === 1);
           // setfdata(data)
           // setId(data.id)
@@ -53,29 +65,27 @@ const handleClose = () => {
           setapicall(false);
         });
     } catch (err) {}
-    
-    
-    
     setShow(true)};
+    console.log("AAAAAAAAAAAAAAAAAAAAAa"+JSON.stringify(featuredData))
   const handleClick = () => {};
 // console.log("kkkkkkkkk"+product_id)
 
   useEffect(() => {
       try {
         axios
-          .post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=500`,{
-            
+          .post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`,{
               "product_search":{
-              "search":"",
-                            "price_from":"",
-                            "price_to":"",
-                            "latest_first":"",
-                            "product_title_name":"",
-                            "sale_price":"",
-                            "short_by_updated_on":"",
+              "search":`${searchdata.product_title_name}`,
+              "price_from":"",
+              "price_to":"",
+              "latest_first":"",
+              "product_title_name":"",
+              "sale_price":"",
+              "short_by_updated_on":"",
+              "category":`${searchdata.category}`,
+              "manufacturing_date":[`${searchdata.start_date}`],
               "is_featured": ["1"]
-              }
-              
+              }  
           })
           .then((response) => {
             let data=response.data;
@@ -88,7 +98,7 @@ const handleClose = () => {
       } catch (err) {}
   
   }, [apicall]);
-  // console.log("gggggggggggggg"+JSON.stringify(featuredProductData))
+  console.log("gggggggggggggg"+JSON.stringify(featuredProductData))
 
   const columns = [
     {
@@ -197,7 +207,7 @@ const handleClose = () => {
     },
     {
       name: "End Date",
-      selector: (row) => row.featured_date,
+      selector: (row) => (row.featured_date),
       sortable: true,
       width: "130px",
       center: true,
@@ -216,26 +226,28 @@ const handleClose = () => {
       center: true,
       selector: (row) => (
         <div className={"actioncolimn"}>
-         <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.product_id)} />
+         <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.id)} />
           <BsTrash className=" p-0 m-0 editiconn text-danger"  onClick={handleAlert}/>
         </div>
       ),
     },
   ];
   const handleFormChange = (e) => {
-    setfdata({...fdata,[e.target.name]: e.target.value})
+    setFeaturetData({...featuredData,[e.target.name]: e.target.value})
     };
+    console.log("dguuuuuuu"+JSON.stringify(featuredData))
 
-  const UpdateFeaturedProduct = () => {
+  const UpdateFeaturedProduct = (id) => {
     axios.put(`${process.env.REACT_APP_BASEURL}/update_fetured_product`,{
       id:id,
-      start_date:fdata.start_date,
-      end_date:fdata.end_date
+      start_date:featuredData.start_date,
+      end_date:featuredData.end_date
     }).then((response) => {
       let data=response.data;
       setValidated(false);
        setapicall(true);
        setShow(false)
+      //  setFeaturetData('')
   });
   formRef.current.reset();
   setValidated(false);
@@ -249,34 +261,11 @@ const OnSearchChange = (e) => {
 const OnDateChange = (e) => {
   let mdate = moment(e.target.value).format('YYYY-MM-DD')
   setsearchData({ ...searchdata,manufacturing_date: mdate })
-  console.log("DATE0000000000000"+mdate);
 }
 const onSearchClick = () =>{
   
 }
-useEffect(() => {
-  axios.post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`,{
-    "product_search": {
-      "search": `${searchdata.product_title_name}`,
-      "price_from": "",
-      "price_to": "",
-      "id":"asc",
-      "short_by_updated_on":"",
-      "product_title_name":"asc",
-      "sale_price":"",
-      "category":`${searchdata.category}`,
-      "quantity":0,
-      "manufacturing_date":[`${searchdata.manufacturing_date}`]
-
-    }}).then((response) => {
-      let data=response.data
-    // let data = response.data.filter(item=>item.quantity===0);
-    setFeatureProductData(response.data)
-    // console.log("--featuredProductData"+JSON.stringify(featuredProductData));
-  }).catch(function (error) {
-    console.log(error);
-  });
-}, [searchdata]);
+console.log("DATE0000000000000"+JSON.stringify(featuredData));
 
 //  const UpdateFeturse
   return (
@@ -300,7 +289,7 @@ useEffect(() => {
         </div> */} 
        <div className="col-md-3 col-sm-6 aos_input value={}">
             <input type={"date"} onChange={OnDateChange} name='manufacturing_date'
-              value={searchdata.manufacturing_date}
+              value={searchdata.start_date}
               className={'adminsideinput'} placeholder={"Search by date"} />
           </div>
         {/* <div className="col-md-3 col-sm-6 aos_input">
@@ -327,16 +316,13 @@ useEffect(() => {
               
                   <Form.Group className="mb-3 aos_input" controlId="formBasicStartDate">
                     <Form.Label>Start Date</Form.Label>
-                    <Form.Control  name='start_date'   value={moment(fdata.start_date).format('YYYY-MM-DD')} onChange={(e) => handleFormChange(e)}  type="date" placeholder="Coupon Start Date" />
-                    <Form.Control.Feedback type="invalid" className="h6">
-                    Only current select current date or next date
-                  </Form.Control.Feedback>
+                    <Form.Control  name='start_date'   value={featuredData.start_date} onChange={(e) => handleFormChange(e)}  type="date" placeholder="Coupon Start Date" />
                   </Form.Group>
                 </div> 
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicStartDate">
                     <Form.Label>End Date</Form.Label>
-                    <Form.Control  name='end_date' value={moment(fdata.end_date).format('YYYY-MM-DD')} onChange={(e) => handleFormChange(e)}  type="date" placeholder="Coupon Start Date" />
+                    <Form.Control  name='end_date' value={featuredData.end_date} onChange={(e) => handleFormChange(e)}  type="date" placeholder="Coupon Start Date" />
                   </Form.Group>
                 </div> 
             </div>
@@ -350,7 +336,7 @@ useEffect(() => {
             </button>
             <button
               className="button main_outline_button"
-              onClick={(product_id) => UpdateFeaturedProduct(product_id)}
+              onClick={()=>UpdateFeaturedProduct(featuredData.id)}
             >
               Update
             </button>

@@ -581,6 +581,7 @@ const EmailSend = () => {
           </Modal.Body>
           <Modal.Footer>
             <button
+              type={"button"}
               className="button main_outline_button"
               onClick={() => handleClose()}
             >

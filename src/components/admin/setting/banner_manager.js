@@ -147,6 +147,10 @@ function Banner() {
     setapicall(true);
     setAlert(false);
   };
+  const CancelAlert = () => {
+    setAlert(false);
+  };
+
   console.log("helooooooooooo" + bannerId);
   const handleShow = (e, banner_id) => {
     // console.log("gggggggggggggg"+e)
@@ -290,7 +294,7 @@ function Banner() {
           text="Are you Sure you want to delete"
           onConfirm={hideAlert}
           showCancelButton={true}
-          onCancel={hideAlert}
+          onCancel={CancelAlert}
         />
       </div>
       <Modal size="lg" show={show} onHide={() => handleClose()}>
@@ -317,7 +321,7 @@ function Banner() {
                 >
                   <Form.Label>Title</Form.Label>
                   <Form.Control
-                    onChange={(e) => handleFormChange(e)}
+                    required
                     value={addBanner.title}
                     type="text"
                     placeholder="Add Title"
@@ -335,7 +339,7 @@ function Banner() {
                 >
                   <Form.Label>Banner_url</Form.Label>
                   <Form.Control
-                    onChange={(e) => handleFormChange(e)}
+                    required
                     value={addBanner.banner_url}
                     type="text"
                     placeholder="Enter url"
@@ -353,7 +357,7 @@ function Banner() {
                 >
                   <Form.Label>Size</Form.Label>
                   <Form.Control
-                    onChange={(e) => handleFormChange(e)}
+                    required
                     value={addBanner.size}
                     type="text"
                     placeholder="Add Size"
@@ -400,7 +404,7 @@ function Banner() {
                 >
                   <Form.Label>Banner_location</Form.Label>
                   <Form.Control
-                    onChange={(e) => handleFormChange(e)}
+required
                     value={addBanner.banner_location}
                     
                     type="text"
@@ -445,7 +449,7 @@ function Banner() {
                     rows={3}
                     placeholder="write here..."
                     name={"description"}
-                    onChange={(e) => handleFormChange(e)}
+                    required
                     value={addBanner.description}
                   />
                   <Form.Control.Feedback type="invalid" className="h6">
@@ -457,6 +461,7 @@ function Banner() {
           </Modal.Body>
           <Modal.Footer>
             <button
+              type={"button "}
               className="button main_outline_button"
               onClick={() => handleClose()}
             >

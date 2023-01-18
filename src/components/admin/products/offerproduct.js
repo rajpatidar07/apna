@@ -44,7 +44,7 @@ const OnDateChange = (e) => {
   useEffect(() => {
       try {
         axios
-          .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=500&user_id=${userid}`,{
+          .post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`,{
             "product_search":{
               "search":`${searchdata.product_title_name}`,
               "price_from":"",
@@ -53,8 +53,7 @@ const OnDateChange = (e) => {
               "product_title_name":"asc",
               "sale_price":"",
               "short_by_updated_on":"",
-              "is_fetured_product": ["1"],
-              "fetured_type": ["special_offer"],
+              "is_special_offer": ["1"],
               "manufacturing_date":[`${searchdata.manufacturing_date}`]
               }
           })
@@ -70,6 +69,7 @@ const OnDateChange = (e) => {
       } catch (err) {}
   
   }, [apicall,searchdata]);
+  console.log("777777777777777"+JSON.stringify(featuredProductData))
   const columns = [
     {
       name: "ID",
@@ -167,7 +167,7 @@ const OnDateChange = (e) => {
     },
     {
       name: "From Date",
-      selector: (row) => row.manufacturing_date,
+      selector: (row) => row.special_offer_date,
       sortable: true,
       width: "130px",
       center: true,
@@ -178,7 +178,7 @@ const OnDateChange = (e) => {
     },
     {
       name: "To Date",
-      selector: (row) => row.expire_date,
+      selector: (row) => row.special_offer_date,
       sortable: true,
       width: "130px",
       center: true,

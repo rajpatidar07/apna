@@ -45,17 +45,16 @@ console.log("-----"+searchdata.manufacturing_date)
   
       try {
         axios
-          .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=500&user_id=${userid}`,{
+          .post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`,{
             "product_search":{
               "search":`${searchdata.product_title_name}`,
               "price_from":"",
               "price_to":"",
               "latest_first":"",
-              "product_title_name":"asc",
+              "product_title_name":"",
               "sale_price":"",
               "short_by_updated_on":"",
-              "is_fetured_product": ["1"],
-              "fetured_type": ["promotional"],
+              "is_promotional": ["1"],
               "manufacturing_date":[`${searchdata.manufacturing_date}`]
               }
           })
@@ -71,6 +70,7 @@ console.log("-----"+searchdata.manufacturing_date)
       } catch (err) {}
   
   }, [apicall,searchdata]);
+console.log("---------"+JSON.stringify(featuredProductData))
  
   const columns = [
     {
@@ -169,7 +169,7 @@ console.log("-----"+searchdata.manufacturing_date)
     },
     {
       name: "From Date",
-      selector: (row) => row.manufacturing_date,
+      selector: (row) => row.promotional_date,
       sortable: true,
       width: "130px",
       center: true,
@@ -180,7 +180,7 @@ console.log("-----"+searchdata.manufacturing_date)
     },
     {
       name: "To Date",
-      selector: (row) => row.expire_date,
+      selector: (row) => row.promotional_date,
       sortable: true,
       width: "130px",
       center: true,
@@ -199,7 +199,7 @@ console.log("-----"+searchdata.manufacturing_date)
       center: true,
       selector: (row) => (
         <div className={"actioncolimn"}>
-         <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.fetured_product_id)} />
+         <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.id)} />
           <BsTrash className=" p-0 m-0 editiconn text-danger"  onClick={handleAlert} />
         </div>
       ),
@@ -212,7 +212,7 @@ console.log("-----"+searchdata.manufacturing_date)
   const UpdateFeaturedProduct = () => {
     
     axios.put(`${process.env.REACT_APP_BASEURL}/update_fetured_product`,{
-      id:13,
+      id:fdata.id,
       start_date:fdata.start_date,
       end_date:fdata.end_date
     }).then((response) => {
@@ -263,20 +263,20 @@ console.log("-----"+searchdata.manufacturing_date)
         >
           <Modal.Header closeButton>
             <Modal.Title>
-              {show === "add" ? "Add New Blog " : " Update Blog "}
+              {/* {show === "add" ? "Add New Blog " : " Update Blog "} */}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <div className="row p-3 m-0">
               <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicStartDate">
-                    <Form.Label>Manufacturing Date</Form.Label>
+                    <Form.Label>Start Date</Form.Label>
                     <Form.Control  name='start_date' value={fdata.start_date} onChange={(e) => handleFormChange(e)}  type="date" placeholder="Coupon Start Date" />
                   </Form.Group>
                 </div> 
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicStartDate">
-                    <Form.Label>Expire Date</Form.Label>
+                    <Form.Label>End Date</Form.Label>
                     <Form.Control  name='end_date' value={fdata.end_date} onChange={(e) => handleFormChange(e)}   type="date" placeholder="Coupon Start Date" />
                   </Form.Group>
                 </div> 
@@ -291,7 +291,7 @@ console.log("-----"+searchdata.manufacturing_date)
             </button>
             <button
               className="button main_outline_button"
-              onClick={() => UpdateFeaturedProduct()}
+              onClick={(id) => UpdateFeaturedProduct(id)}
             >
               Update
             </button>

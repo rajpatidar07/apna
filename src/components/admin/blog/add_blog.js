@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import Iconbutton from "../common/iconbutton";
 import axios from "axios";
 import { Badge, Button, InputGroup } from "react-bootstrap";
+import moment from "moment";
 let categoryArray = [];
 
 const BlogList = () => {
@@ -101,6 +102,7 @@ const BlogList = () => {
     setValidated(false);
     setShow(false);
   };
+
   const handleShow = (e, id) => {
     // console.log("gggggggggggggg"+e)
 
@@ -316,7 +318,7 @@ const BlogList = () => {
     },
     {
       name: "Publish_date",
-      selector: (row) => row.publish_date,
+      selector: (row) => moment(row.publish_date).format("YYYY-MM-DD"),
       sortable: true,
       center: true,
     },
@@ -434,6 +436,10 @@ const BlogList = () => {
   };
   console.log("kkkkkkkkkkkkkkkkkk" + JSON.stringify(status));
 
+  let date = moment();
+  let currentDate = date.format("YYYY-MM-DD");
+  console.log(currentDate);
+  
   return (
     <div>
       <h2>Blog List</h2>
@@ -553,6 +559,7 @@ const BlogList = () => {
                   <Form.Label>Title</Form.Label>
                   <Form.Control
                     onChange={(e) => handleFormChange(e)}
+                    required
                     value={addblog.title}
                     type="text"
                     placeholder="Add Title"
@@ -573,6 +580,7 @@ const BlogList = () => {
                     size="sm"
                     aria-label="Default select example"
                     onChange={(e) => handleFormChange(e)}
+                    required
                     value={addblog.category}
                     name={"category"}
                   >
@@ -594,10 +602,12 @@ const BlogList = () => {
                   <Form.Label>Publish Date</Form.Label>
                   <Form.Control
                     name="publish_date"
+                    min={currentDate}
                     type="date"
-                    value={addblog.publish_date}
+                    value={moment(addblog.publish_date).format("YYYY-MM-DD")}
                     onChange={(e) => handleFormChange(e)}
-                    placeholder="Coupon Start Date"
+                    required
+                    placeholder="Blog Date"
                   />
                   <Form.Control.Feedback type="invalid" className="h6">
                     Please fill date
@@ -612,6 +622,7 @@ const BlogList = () => {
                   <Form.Label>Product_Tag</Form.Label>
                   <Form.Control
                     onChange={(e) => handleFormChange(e)}
+                    required
                     value={addblog.product_tag}
                     type="text"
                     placeholder="Add Tag"
@@ -635,6 +646,7 @@ const BlogList = () => {
                     placeholder="write your blog..."
                     name={"description"}
                     onChange={(e) => handleFormChange(e)}
+                    required
                     value={addblog.description}
                   />
                   <Form.Control.Feedback type="invalid" className="h6">
@@ -667,12 +679,19 @@ const BlogList = () => {
             </div>
           </Modal.Body>
           <Modal.Footer>
-            <button
+            {/* <button
               className="button main_outline_button"
               onClick={() => handleClose()}
             >
               Cancel
-            </button>
+            </button> */}
+            <Iconbutton
+              type={"button"}
+              btntext={"Cancel"}
+              onClick={() => handleClose()}
+              btnclass={"button main_outline_button "}
+              // Iconname={<GiCancel /> }
+            />
             <Iconbutton
               type={"submit"}
               btntext={show === "add" ? "Add Blog" : "Update Blog"}

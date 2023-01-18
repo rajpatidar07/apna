@@ -5,6 +5,7 @@ import "./login.css";
 import MainButton from "../common/button";
 import Logo from "../../../images/logo.png";
 import axios from "axios";
+
 const Login = () => {
   const navigate = useNavigate();
   const [admindata, setAdminData] = useState([]);
@@ -12,7 +13,9 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   // const [validated, setValidated] = useState(false);
-  const [error, setError] = useState(true);
+  // const [error, setError] = useState(true);
+  const [Emailerror, setEmailError] = useState(true);
+  const [Passworderror, setPasswordError] = useState(true);
   const onValueChange = (e, id) => {
     setEmail(e.target.value);
   };
@@ -32,7 +35,9 @@ const Login = () => {
     if (form.checkValidity() === false) {
       e.preventDefault();
       e.stopPropagation();
-      setError(false);
+      // setError(false);
+      setEmailError(false);
+      setPasswordError(false);
     } else {
       console.log("elseeeeeee");
 
@@ -42,10 +47,14 @@ const Login = () => {
           admin_password: password,
         })
         .then((response) => {
-          if (response) {
-            LoginCheck();
+          console.log(response);
+          if (response.data === "email not found") {
+            // setError(false);
+            setEmailError(false);
+          } else if (response.data === "password not matched") {
+            setPasswordError(false);
           } else {
-            setError(false);
+            LoginCheck();
           }
         });
     }
@@ -93,7 +102,7 @@ const Login = () => {
                             value={email}
                             placeholder="Email Address"
                           />
-                          {error === false ? (
+                          {Emailerror === false ? (
                             <p className="mt-1 ms-2 text-danger" type="invalid">
                               Please Enter Your Email
                             </p>
@@ -113,7 +122,7 @@ const Login = () => {
                             value={password}
                             placeholder="Password"
                           />
-                          {error === false ? (
+                          {Passworderror === false ? (
                             <p className="mt-1 ms-2 text-danger" type="invalid">
                               Please Enter Your Password
                             </p>

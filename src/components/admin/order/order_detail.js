@@ -95,12 +95,14 @@ const OrderDetail = () => {
                       // value={changstatuss}
                       >
                      <option>Select Order Status</option>
+                     <option value="placed" selected={order.status === 'placed' ? true:false}>Placed</option>
+                     <option value="shipped" selected={order.status === 'shipped' ? true:false}>Shipped</option>
                      <option value="delivered" selected={order.status === 'delivered' ? true:false}>Delivered</option>
                    <option value="pending" selected={order.status === 'pending' ? true:false}>Pending</option>
                    <option value="approved" selected={order.status === 'approved' ? true:false}>Approved</option>
                    <option value="packed" selected= {order.status === 'packed' ? true:false}>Packed</option>
                    <option value="return" selected= {order.status === 'return' ? true:false}>Return</option>
-                   <option value="cancel" selected= {order.status === 'cancel' ? true:false}>Cancelled</option>
+                   <option value="cancel" selected= {order.status === 'cancel' ? true:false}>Cancel</option>
          </Form.Select>
        
                  
