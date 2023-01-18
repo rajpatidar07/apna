@@ -243,6 +243,7 @@ const OnFeatureDateChaneg = (e)=>{
     [e.target.name]:e.target.value
   })
 }
+console.log("dataaaaaaaaaaattaaaaaaaa"+JSON.stringify(featuredata))
 const AddProductFeatureClick = (e) =>{
   e.preventDefault();
 axios
