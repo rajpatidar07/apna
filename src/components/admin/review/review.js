@@ -105,7 +105,7 @@ const Review = () => {
         .then((response) => {
           setShow(false);
           setapicall(true);
-          setUpdateAlert(true)
+          setUpdateAlert(true);
         })
         .catch(function (error) {
           console.log(error);
@@ -398,17 +398,17 @@ const Review = () => {
         />
         <SweetAlert
           show={Alert}
-          title="Product Name"
+          title="Review"
           text="Are you Sure you want to delete"
           onConfirm={hideAlert}
           showCancelButton={true}
           onCancel={hideAlert}
         />
-           <SweetAlert
-        show={UpdateAlert}
-        title="Update Review Successfully "
-        onConfirm={closeUpdateAlert}
-      />
+        <SweetAlert
+          show={UpdateAlert}
+          title="Update Review Successfully "
+          onConfirm={closeUpdateAlert}
+        />
       </div>
     </div>
   );

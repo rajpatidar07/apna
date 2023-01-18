@@ -523,8 +523,7 @@ const BlogList = () => {
         />
         <SweetAlert
           show={Alert}
-          title="Demo"
-          text="SweetAlert in React"
+          text="Are you Sure you want to delete"
           onConfirm={hideAlert}
           showCancelButton={true}
           onCancel={hideAlert}

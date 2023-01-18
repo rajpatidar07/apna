@@ -680,7 +680,7 @@ const Coupon = () => {
         />
         <SweetAlert
           show={Alert}
-          title="Product Name"
+          title="Coupan"
           text="Are you Sure you want to delete"
           onConfirm={hideAlert}
           showCancelButton={true}

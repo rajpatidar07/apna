@@ -323,7 +323,7 @@ const Complaint = () => {
         />
         <SweetAlert
           show={Alert}
-          title="Product Name"
+          title="Complaint  "
           text="Are you Sure you want to delete"
           onConfirm={hideAlert}
           showCancelButton={true}
