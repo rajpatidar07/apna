@@ -54,11 +54,12 @@ const InvoiceList = () => {
   const onValueChange = (e) => {
     setSearchInvo({ ...SearchInvo, [e.target.name]: e.target.value });
   };
-
+  console.log("---ss" + JSON.stringify(SearchInvo));
   const onDateChange = (e) => {
+    let mdate = moment(e.target.value).format("YYYY-MM-DD");
     setSearchInvo({
       ...SearchInvo,
-      [e.target.name]: moment(e.target.value).format("DD-MM-YYYY"),
+      [e.target.name]: mdate,
     });
   };
   const SearchInvoices = () => {
@@ -213,8 +214,9 @@ const InvoiceList = () => {
     // },
   ];
   const [filterText, setFilterText] = React.useState("");
-  const [resetPaginationToggle, setResetPaginationToggle] =
-    React.useState(false);
+  const [resetPaginationToggle, setResetPaginationToggle] = React.useState(
+    false
+  );
   const subHeaderComponent = useMemo(() => {
     const handleClear = () => {
       if (filterText) {
@@ -266,11 +268,11 @@ const InvoiceList = () => {
           <div className="col-md-3 col-sm-6 aos_input">
             <input
               type={"date"}
-              max={SearchInvo.from_date}
+              max={currentDate}
               placeholder={"Search by Order End_Date"}
               onChange={(e) => onDateChange(e)}
-              value={SearchInvo.end_date}
-              name={"end_date"}
+              value={SearchInvo.to_date}
+              name={"to_date"}
               className={"adminsideinput"}
             />
           </div>

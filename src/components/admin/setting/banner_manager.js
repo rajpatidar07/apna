@@ -173,9 +173,7 @@ function Banner() {
               setBanner(data);
               setAddBanner(response.data[0]);
               setBannerId(banner_id);
-              setImgArray(
-                JSON.parse(response.data[0].multiple_document_upload)
-              );
+              setImgArray(response.data[0].image);
             });
         } catch (err) {}
       }
@@ -203,7 +201,7 @@ function Banner() {
   };
   const handleFormChange = (e) => {
     setAddBanner({ ...addBanner, [e.target.name]: e.target.value });
-    console.log("dataaaaaaaaaaaaaaaaaaaaaaa" + JSON.stringify(addBanner));
+    console.log("dataaaaaaaaaaaaaaaaaaaaaaa" + addBanner);
   };
   const handleClose = () => {
     formRef.current.reset();
@@ -461,7 +459,7 @@ required
           </Modal.Body>
           <Modal.Footer>
             <button
-              type={"button "}
+              type="button"
               className="button main_outline_button"
               onClick={() => handleClose()}
             >
