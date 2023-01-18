@@ -15,12 +15,8 @@ import axios from "axios";
 import Feedback from "react-bootstrap/esm/Feedback";
 const Featuredproduct = () => {
 
-  var d={
-    "date_time":"YYYY-MM-DD"
-  },
-  featured_date = new Date( d.date_time ),
-  s = featured_date.toLocaleDateString()
-  
+  const currentdate = moment().format('YYYY-MM-DD')
+
   const formRef = useRef();
 
 const [featuredProductData,setFeatureProductData]=useState([]);
@@ -30,7 +26,6 @@ const [featuredProductData,setFeatureProductData]=useState([]);
 
   const [Alert, setAlert] = useState(false);
  const [apicall,setapicall]=useState(false);
-  const [fdata, setfdata] = useState([]);
   const[featuredData,setFeaturetData]=useState([]);
   const [show, setShow] = useState("");
   const [validated, setValidated] = useState(false);
@@ -46,72 +41,49 @@ const handleClose = () => {
   setShow(false);
 };
 // console.log("proidddddddddddd"+proid)
-  const handleShow = (id,product_id) =>{ 
+  const handleShow = (product_id) =>{ 
+
     try {
-      axios
-        .post(`${process.env.REACT_APP_BASEURL}/get_singal_fetured_product`,{
-          "product_id":`${id}`,
-          "fetured_type":"featured_offer"
-        })
-    console.log("hdghsjdhsd"+JSON.stringify(id))
-
+      axios.post(`${process.env.REACT_APP_BASEURL}/featured_list`,{
+                  "product_id":product_id, 
+                  "fetured_type":"featured_offer", 
+                  "start_date":"",
+                  "end_date":""
+                  })
         .then((response) => {
-          let data=response.data[0];
-          setFeaturetData(data)
-          // let data = response.data.filter(item=> item.is_active === 1);
-          // setfdata(data)
-          // setId(data.id)
-
+          setId(response.data[0].id)
+          setFeaturetData({ ...featuredData, start_date: response.data[0].start_date,
+     
+          end_date:response.data[0].end_date
+          })
           setapicall(false);
         });
     } catch (err) {}
     setShow(true)};
-    console.log("AAAAAAAAAAAAAAAAAAAAAa"+JSON.stringify(featuredData))
   const handleClick = () => {};
 // console.log("kkkkkkkkk"+product_id)
+console.log("-----------------AAAAAAAAAAa"+JSON.stringify(featuredData))
 
   useEffect(() => {
-      try {
-        axios
-          .post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`,{
-              "product_search":{
-              "search":`${searchdata.product_title_name}`,
-              "price_from":"",
-              "price_to":"",
-              "latest_first":"",
-              "product_title_name":"",
-              "sale_price":"",
-              "short_by_updated_on":"",
-              "category":`${searchdata.category}`,
-              "manufacturing_date":[`${searchdata.start_date}`],
-              "is_featured": ["1"]
-              }  
-          })
-          .then((response) => {
-            let data=response.data;
-            // let data = response.data.filter(item=> item.is_active === 1);
-            setFeatureProductData(response.data)
-            // setfdata(response.data.results)
-            // setId('');
-            setapicall(false);
-          });
-      } catch (err) {}
-  
-  }, [apicall]);
+     
+    try {
+      axios.post(`${process.env.REACT_APP_BASEURL}/featured_list`,{
+                  "product_id":"", 
+                  "fetured_type":"featured_offer", 
+                  "start_date":`${searchdata.start_date}`,
+                  "end_date":""
+                  })
+        .then((response) => {
+
+          setFeatureProductData(response.data)
+          setapicall(false);
+        });
+    } catch (err) {}
+          },
+     [apicall,searchdata]);
   console.log("gggggggggggggg"+JSON.stringify(featuredProductData))
 
   const columns = [
-    {
-      name: "Id",
-      selector: (row) => (
-        row.id),
-      sortable: true,
-      width: "80px",
-      center: true,
-      style: {
-        paddingLeft: 0,
-      }
-    },
     {
       name: "Product ID",
       selector: (row) => (
@@ -148,20 +120,8 @@ const handleClose = () => {
       ),
     },
     {
-      name: "Product Name",
-      selector: (row) => row.product_title_name,
-      sortable: true,
-      width: "170px",
-    },
-    {
-      name: "Category",
-      selector: (row) => row.category,
-      sortable: true,
-      width: "130px",
-    },
-    {
-      name: "Price",
-      selector: (row) => row.product_price,
+      name: "Fetured_type",
+      selector: (row) => row.fetured_type,
       sortable: true,
       width: "100px",
       center: true,
@@ -170,33 +130,41 @@ const handleClose = () => {
         paddingLeft: "0px",
       },
     },
-  
     {
-      name: "Stock",
-      selector: (row) => row.quantity,
+      name: "Status",
+      selector: (row) => (
+        <span
+          className={
+            row.status === 'pending'
+              ? "badge bg-success"
+              : row.status === 'active'
+              ? "badge bg-danger" :row.status === 'special_offer' ?
+              "badge bg-info" : row.status === 'featured_offer'?
+               "badge bg-warning" :row.status === 'promotional'?
+               "badge bg-primary" : row.status === 'draft'?
+               "badge bg-secondary":null
+          }
+        >
+          {row.status === 'pending'
+            ? "Pending"
+            : row.status === 'active'
+            ? "Active":
+            row.status === 'special_offer' ?
+            "Special Offer" :
+            row.status === 'featured_offer' ?
+            "Featured Offer":
+            row.status === 'promotional' ?
+             "Promotional"
+            : "Draft"}
+        </span>
+      ),
       sortable: true,
-      width: "100px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
-    },
-  
-    {
-      name: "Discount",
-      selector: (row) => row.discount,
-      sortable: true,
-      width: "130px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
+      width: "115px",
+      // center: true,
     },
     {
-      name: "StartDate",
-      selector: (row) => (row.featured_date),
+      name: "Start Date",
+      selector: (row) =>moment(row.start_date).format("DD-MM-YYYY"),
       sortable: true,
       width: "130px",
       center: true,
@@ -207,7 +175,7 @@ const handleClose = () => {
     },
     {
       name: "End Date",
-      selector: (row) => (row.featured_date),
+      selector: (row) => moment(row.end_date).format("DD-MM-YYYY"),
       sortable: true,
       width: "130px",
       center: true,
@@ -226,7 +194,7 @@ const handleClose = () => {
       center: true,
       selector: (row) => (
         <div className={"actioncolimn"}>
-         <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.id)} />
+         <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.product_id)} />
           <BsTrash className=" p-0 m-0 editiconn text-danger"  onClick={handleAlert}/>
         </div>
       ),
@@ -237,30 +205,31 @@ const handleClose = () => {
     };
     console.log("dguuuuuuu"+JSON.stringify(featuredData))
 
-  const UpdateFeaturedProduct = (id) => {
+  const UpdateFeaturedProduct = (e) => {
+    e.preventDefault();
     axios.put(`${process.env.REACT_APP_BASEURL}/update_fetured_product`,{
       id:id,
       start_date:featuredData.start_date,
       end_date:featuredData.end_date
     }).then((response) => {
       let data=response.data;
+      console.log("UPDATE==========="+JSON.stringify(response.data))
       setValidated(false);
+      // setFeaturetData(response.data[0])
        setapicall(true);
        setShow(false)
       //  setFeaturetData('')
   });
   formRef.current.reset();
   setValidated(false);
-  show.preventDefault();
- 
-  
 }
+// console.log("hhjjjjjjjjjjjjj0"+JSON.stringify(featuredProductData))
 const OnSearchChange = (e) => {
   setsearchData({ ...searchdata, [e.target.name]: e.target.value })
 }
 const OnDateChange = (e) => {
   let mdate = moment(e.target.value).format('YYYY-MM-DD')
-  setsearchData({ ...searchdata,manufacturing_date: mdate })
+  setsearchData({ ...searchdata,start_date: mdate })
 }
 const onSearchClick = () =>{
   
@@ -275,18 +244,21 @@ console.log("DATE0000000000000"+JSON.stringify(featuredData));
        {/* search bar */}
        <div className="card mt-3 p-3 ">
        <div className="row pb-3">
-      <div className="col-md-3 col-sm-6 aos_input">
+      {/* <div className="col-md-3 col-sm-6 aos_input">
         <input type={"text"}  onChange={OnSearchChange} name='product_title_name'
-              value={searchdata.product_title_name} placeholder={"Search by product name"} className={'adminsideinput'}/>
-        </div>
-        {/* <div className="col-md-3 col-sm-6 aos_input">
-        <Form.Select aria-label="Search by category" className="adminselectbox" placeholder="Search by category">
-        <option>Search by category</option>
-          <option value="1">Food</option>
-          <option value="2">Fish & Meat</option>
-          <option value="3">Baby Care</option>
+              value={searchdata.status} placeholder={"Search by status"} className={'adminsideinput'}/>
+        </div> */}
+       <div className="col-md-3 col-sm-6 aos_input">
+        <Form.Select aria-label="Search by category" value={searchdata.status} className="adminselectbox" placeholder="Search by status">
+        <option>Search by status</option>
+          <option value="active">Active</option>
+          <option value="inactive">InActive</option>
+          <option value="expired">Expired</option>
+          <option value="pending">Pending</option>
+
+
         </Form.Select>
-        </div> */} 
+        </div> 
        <div className="col-md-3 col-sm-6 aos_input value={}">
             <input type={"date"} onChange={OnDateChange} name='manufacturing_date'
               value={searchdata.start_date}
@@ -336,7 +308,7 @@ console.log("DATE0000000000000"+JSON.stringify(featuredData));
             </button>
             <button
               className="button main_outline_button"
-              onClick={()=>UpdateFeaturedProduct(featuredData.id)}
+              onClick={UpdateFeaturedProduct}
             >
               Update
             </button>
@@ -355,7 +327,7 @@ console.log("DATE0000000000000"+JSON.stringify(featuredData));
    
       <DataTable
         columns={columns}
-        data={featuredProductData.results}
+        data={featuredProductData}
         pagination
         highlightOnHover
         pointerOnHover

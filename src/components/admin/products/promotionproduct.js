@@ -13,14 +13,16 @@ import moment from "moment";
 const Promotionproduct = () => {
   const formRef = useRef();
   let userid= localStorage.getItem("userid")
-const [featuredProductData,setFeatureProductData]=useState([]);
+const [promotionProductData,setpromotionProductData]=useState([]);
 
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
  const [apicall,setapicall]=useState(false);
-  const [fdata, setfdata] = useState([]);
   const [show, setShow] = useState(false);
+  const[featuredData,setFeaturetData]=useState([]);
+  const [id,setId]=useState("");
+
   const currentdate = moment().format('YYYY-MM-DD')
 const [searchdata, setsearchData] = useState({
   product_title_name: "",
@@ -35,196 +37,190 @@ const OnSearchChange = (e) => {
 
 const OnDateChange = (e) => {
   let mdate = moment(e.target.value).format('YYYY-MM-DD')
-  setsearchData({ ...searchdata,manufacturing_date: mdate })
+  setsearchData({ ...searchdata,start_date: mdate })
 }
-console.log("-----"+searchdata.manufacturing_date)
+console.log("-----"+searchdata.start_date)
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  // const handleShow = () => setShow(true);
   const handleClick = () => {};
-  useEffect(() => {
-  
+ 
+// console.log("---------"+JSON.stringify(featuredProductData))
+ 
+const columns = [
+  {
+    name: "Product ID",
+    selector: (row) => (
+      row.product_id
+    ),
+    sortable: true,
+    width: "150px",
+    center: true,
+    style: {
+      paddingLeft: 0,
+    }
+  },
+  {
+    name: "Image",
+    width: "100px",
+    center: true,
+    cell: (row) => (
+      
+      <img
+        // height="90px"
+        // width="75px"
+        alt={'apna_organic'}
+        src={
+          row.image? row.image : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
+        }
+        style={{
+          padding: 10,
+          textAlign: "right",
+          maxHeight: "100px",
+          maxWidth: "100px"
+        }}
+        onClick={handleClick}
+      />
+    ),
+  },
+  {
+    name: "Fetured_type",
+    selector: (row) => row.fetured_type,
+    sortable: true,
+    width: "100px",
+    center: true,
+    style: {
+      paddingRight: "32px",
+      paddingLeft: "0px",
+    },
+  },
+  {
+    name: "Status",
+    selector: (row) => (
+      <span
+        className={
+          row.status === 'pending'
+            ? "badge bg-success"
+            : row.status === 'active'
+            ? "badge bg-danger" :row.status === 'special_offer' ?
+            "badge bg-info" : row.status === 'featured_offer'?
+             "badge bg-warning" :row.status === 'promotional'?
+             "badge bg-primary" : row.status === 'draft'?
+             "badge bg-secondary":null
+        }
+      >
+        {row.status === 'pending'
+          ? "Pending"
+          : row.status === 'active'
+          ? "Active":
+          row.status === 'special_offer' ?
+          "Special Offer" :
+          row.status === 'featured_offer' ?
+          "Featured Offer":
+          row.status === 'promotional' ?
+           "Promotional"
+          : "Draft"}
+      </span>
+    ),
+    sortable: true,
+    width: "115px",
+    // center: true,
+  },
+  {
+    name: "Start Date",
+    selector: (row) =>moment(row.start_date).format("DD-MM-YYYY"),
+    sortable: true,
+    width: "130px",
+    center: true,
+    style: {
+      paddingRight: "32px",
+      paddingLeft: "0px",
+    },
+  },
+  {
+    name: "End Date",
+    selector: (row) => moment(row.end_date).format("DD-MM-YYYY"),
+    sortable: true,
+    width: "130px",
+    center: true,
+    style: {
+      paddingRight: "32px",
+      paddingLeft: "0px",
+    },
+  },
+  {
+    name: "Action",
+    width: "100px",
+    style: {
+      paddingRight: "12px",
+      paddingLeft: "0px",
+    },
+    center: true,
+    selector: (row) => (
+      <div className={"actioncolimn"}>
+       <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.product_id)} />
+        <BsTrash className=" p-0 m-0 editiconn text-danger"  onClick={handleAlert}/>
+      </div>
+    ),
+  },
+];
+const handleFormChange = (e) => {
+  setFeaturetData({...featuredData,[e.target.name]: e.target.value})
+  };
+    const handleShow = (product_id) =>{ 
+
       try {
-        axios
-          .post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`,{
-            "product_search":{
-              "search":`${searchdata.product_title_name}`,
-              "price_from":"",
-              "price_to":"",
-              "latest_first":"",
-              "product_title_name":"",
-              "sale_price":"",
-              "short_by_updated_on":"",
-              "is_promotional": ["1"],
-              "manufacturing_date":[`${searchdata.manufacturing_date}`]
-              }
-          })
+        axios.post(`${process.env.REACT_APP_BASEURL}/featured_list`,{
+                    "product_id":product_id, 
+                    "fetured_type":"promotional", 
+                    "start_date":"",
+                    "end_date":""
+                    })
           .then((response) => {
-            let data=response.data.result;
-            // let data = response.data.filter(item=> item.is_active === 1);
-            setFeatureProductData(response.data.results)
-            setfdata(response.data.results)
-            // setaddcoupondata(data);
-            // setsearchCoupon(data);
+            setId(response.data[0].id)
+            setFeaturetData({ ...featuredData, start_date: response.data[0].start_date,
+       
+            end_date:response.data[0].end_date
+            })
             setapicall(false);
           });
       } catch (err) {}
-  
-  }, [apicall,searchdata]);
-console.log("---------"+JSON.stringify(featuredProductData))
- 
-  const columns = [
-    {
-      name: "ID",
-      selector: (row) => (
-        row.fetured_product_id
-      ),
-      sortable: true,
-      width: "80px",
-      center: true,
-      style: {
-        paddingLeft: 0,
-      }
-    },
-    {
-      name: "Product ID",
-      selector: (row) => (
-        row.id
-      ),
-      sortable: true,
-      width: "80px",
-      center: true,
-      style: {
-        paddingLeft: 0,
-      }
-    },
-    {
-      name: "Image",
-      width: "100px",
-      center: true,
-      cell: (row) => (
-        
-        <img
-          // height="90px"
-          // width="75px"
-          alt={'apna_organic'}
-          src={
-            row.image? row.image :"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
-          }
-          style={{
-            padding: 10,
-            textAlign: "right",
-            maxHeight: "100px",
-            maxWidth: "100px"
-          }}
-          onClick={handleClick}
-        />
-      ),
-    },
-    {
-      name: "Product Name",
-      selector: (row) => row.product_title_name,
-      sortable: true,
-      width: "170px",
-    },
-    {
-      name: "Category",
-      selector: (row) => row.category,
-      sortable: true,
-      width: "130px",
-    },
-    {
-      name: "Price",
-      selector: (row) => row.product_price,
-      sortable: true,
-      width: "100px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
-    },
-  
-    {
-      name: "Stock",
-      selector: (row) => row.quantity,
-      sortable: true,
-      width: "100px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
-    },
-  
-    {
-      name: "Discount",
-      selector: (row) => row.discount,
-      sortable: true,
-      width: "130px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
-    },
-    {
-      name: "From Date",
-      selector: (row) => row.promotional_date,
-      sortable: true,
-      width: "130px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
-    },
-    {
-      name: "To Date",
-      selector: (row) => row.promotional_date,
-      sortable: true,
-      width: "130px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
-    },
-    {
-      name: "Action",
-      width: "100px",
-      style: {
-        paddingRight: "12px",
-        paddingLeft: "0px",
-      },
-      center: true,
-      selector: (row) => (
-        <div className={"actioncolimn"}>
-         <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.id)} />
-          <BsTrash className=" p-0 m-0 editiconn text-danger"  onClick={handleAlert} />
-        </div>
-      ),
-    },
-  ];
-  const handleFormChange = (e) => {
-    setfdata({...fdata,[e.target.name]: e.target.value})
-    };
+      setShow(true)};
 
-  const UpdateFeaturedProduct = () => {
+
+    useEffect(() => {
+      try {
+        axios.post(`${process.env.REACT_APP_BASEURL}/featured_list`,{
+                    "product_id":"", 
+                    "fetured_type":"promotional", 
+                    "start_date":"",
+                    "end_date":""
+                    })
+          .then((response) => {
+  
+            setpromotionProductData(response.data)
+            setapicall(false);
+          });
+      } catch (err) {}
+            },
+       [apicall,searchdata]);
+       const UpdatePromotionProduct = (e) => {
+        e.preventDefault();
+        axios.put(`${process.env.REACT_APP_BASEURL}/update_fetured_product`,{
+          id:id,
+          start_date:featuredData.start_date,
+          end_date:featuredData.end_date
+        }).then((response) => {
+          let data=response.data;
+          console.log("UPDATE==========="+JSON.stringify(response.data))
+           setapicall(true);
+           setShow(false)
+      });
+      formRef.current.reset();
+      // setValidated(false);
     
-    axios.put(`${process.env.REACT_APP_BASEURL}/update_fetured_product`,{
-      id:fdata.id,
-      start_date:fdata.start_date,
-      end_date:fdata.end_date
-    }).then((response) => {
-      let data=response.data.results;
-    // console.log("idddllllllllllllllllllllllllllllllll------"+JSON.stringify(addadmindata))
-  });
-  formRef.current.reset();
- 
-  setapicall(true);
-  
-}
-
+     
+      
+    }
     return (
         <div>
   <h2>Promotional Products</h2>
@@ -240,7 +236,7 @@ console.log("---------"+JSON.stringify(featuredProductData))
           
           <div className="col-md-3 col-sm-6 aos_input value={}">
             <input type={"date"} onChange={OnDateChange} name='manufacturing_date'
-              value={searchdata.manufacturing_date}
+              value={searchdata.start_date}
               className={'adminsideinput'} placeholder={"Search by product name"} />
           </div>
           {/* <div className="col-md-3 col-sm-6 aos_input">
@@ -271,13 +267,13 @@ console.log("---------"+JSON.stringify(featuredProductData))
               <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicStartDate">
                     <Form.Label>Start Date</Form.Label>
-                    <Form.Control  name='start_date' value={fdata.start_date} onChange={(e) => handleFormChange(e)}  type="date" placeholder="Coupon Start Date" />
+                    <Form.Control  name='start_date' value={featuredData.start_date} onChange={(e) => handleFormChange(e)}  type="date" placeholder="Coupon Start Date" />
                   </Form.Group>
                 </div> 
                 <div className="col-md-6">
                   <Form.Group className="mb-3 aos_input" controlId="formBasicStartDate">
                     <Form.Label>End Date</Form.Label>
-                    <Form.Control  name='end_date' value={fdata.end_date} onChange={(e) => handleFormChange(e)}   type="date" placeholder="Coupon Start Date" />
+                    <Form.Control  name='end_date' value={featuredData.end_date} onChange={(e) => handleFormChange(e)}   type="date" placeholder="Coupon Start Date" />
                   </Form.Group>
                 </div> 
             </div>
@@ -291,7 +287,7 @@ console.log("---------"+JSON.stringify(featuredProductData))
             </button>
             <button
               className="button main_outline_button"
-              onClick={(id) => UpdateFeaturedProduct(id)}
+              onClick={UpdatePromotionProduct}
             >
               Update
             </button>
@@ -310,7 +306,7 @@ console.log("---------"+JSON.stringify(featuredProductData))
    
       <DataTable
         columns={columns}
-        data={featuredProductData}
+        data={promotionProductData}
         pagination
         highlightOnHover
         pointerOnHover
