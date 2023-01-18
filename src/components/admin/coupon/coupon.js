@@ -59,6 +59,7 @@ const Coupon = () => {
   const closeUpdateAlert = () => {
     setUpdateAlert(false);
   };
+
   const hideAlert = () => {
     axios
       .put(`${process.env.REACT_APP_BASEURL}/coupons_delete`, {
@@ -69,6 +70,9 @@ const Coupon = () => {
         setapicall(true);
         setAlert(false);
       });
+  };
+  const CancelAlert = () => {
+    setAlert(false);
   };
   // const showAlert =()=> {
   //   setAlert(true);
@@ -383,6 +387,9 @@ const Coupon = () => {
   };
 
   let a = [];
+  let date = moment();
+  let currentDate = date.format("YYYY-MM-DD");
+  console.log(currentDate);
   return (
     <div>
       <h2>Coupons</h2>
@@ -598,6 +605,7 @@ const Coupon = () => {
                     <Form.Control
                       onChange={(e) => handleFormChange(e)}
                       name="start_date"
+                      min={currentDate}
                       value={moment(addcoupondata.start_date).format(
                         "YYYY-MM-DD"
                       )}
@@ -619,6 +627,9 @@ const Coupon = () => {
                     <Form.Control
                       onChange={(e) => handleFormChange(e)}
                       name="end_date"
+                      min={moment(addcoupondata.start_date).format(
+                        "YYYY-MM-DD"
+                      )}
                       value={moment(addcoupondata.end_date).format(
                         "YYYY-MM-DD"
                       )}
@@ -680,11 +691,11 @@ const Coupon = () => {
         />
         <SweetAlert
           show={Alert}
-          title="Coupan"
+          title="Coupoan"
           text="Are you Sure you want to delete"
           onConfirm={hideAlert}
           showCancelButton={true}
-          onCancel={hideAlert}
+          onCancel={CancelAlert}
         />
         <SweetAlert
           show={AddAlert}
@@ -693,7 +704,7 @@ const Coupon = () => {
         />
         <SweetAlert
           show={UpdateAlert}
-          title="Update Coupan Successfully "
+          title="Updated Coupan Successfully "
           onConfirm={closeUpdateAlert}
         />
       </div>
