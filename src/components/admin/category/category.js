@@ -482,10 +482,10 @@ for(let i=0 ; i < arr.length; i++){
         <div className=" row">
           <div className="col-md-3 col-sm-6 aos_input">
             <input  required type="text" className="adminsideinput"  placeholder={"Search by category name"} value={SearchCat.category_name} name={"category_name"} onChange={(e) => onValueChange(e)} />
-            {searchvalidated === true? 
+            {/* {searchvalidated === true? 
             <p className="mt-1 ms-2 text-danger" type="invalid">
                       Please fill this field
-                    </p> : null}
+                    </p> : null} */}
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
             <Form.Select
@@ -493,7 +493,7 @@ for(let i=0 ; i < arr.length; i++){
               className="adminselectbox"
               name="category_type"
               onChange={(e) => onValueChange(e)}
-              value={SearchCat.category_type}
+               value={SearchCat.category_type}
             >
               <option>Search by category</option>
               {result1.map((lvl,i)=>{

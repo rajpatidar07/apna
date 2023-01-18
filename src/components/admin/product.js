@@ -1298,8 +1298,7 @@ const closeProductAlert=()=>{
               name="product_status"
               value={searchdata.product_status}
             >
-              <option>Search by status</option>
-              <option  value="">Select</option>
+              <option value="">Search by status</option>
           <option   value="pending">Pending</option>
           <option value="draft">Draft</option>
           <option value="approved ">Approved </option>
