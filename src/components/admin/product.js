@@ -79,7 +79,7 @@ function Product() {
     product_price: "",
     mrp: "",
     sale_price: "",
-    discount: "",
+    discount: "0",
     special_offer: false,
     featured_product: false,
     manufacturing_date: "",
@@ -97,7 +97,8 @@ function Product() {
     description: [],
   });
   const [vdata, setvdata] = useState([]);
-  const [productdata, setproductdata] = useState({
+
+  var data = {
     add_custom_input: [],
     product_title_name: "",
     product_slug: "",
@@ -122,7 +123,8 @@ function Product() {
     vendor_id: "",
     shop: "",
     show_product_rating: "0",
-  });
+  };
+  const [productdata, setproductdata] = useState(data);
   const mainformRef = useRef();
   const formRef = useRef();
   const [searchdata, setsearchData] = useState({
@@ -233,6 +235,7 @@ function Product() {
   const OnFeatureDateChaneg = (e) => {
     setfeaturedata({ ...featuredata, [e.target.name]: e.target.value });
   };
+  console.log("dataaaaaaaaaaattaaaaaaaa" + JSON.stringify(featuredata));
   const AddProductFeatureClick = (e) => {
     e.preventDefault();
     axios
@@ -457,6 +460,7 @@ function Product() {
           Add Variety
         </Button>
         // : null
+        /*: null*/
        /*: null*/),
       sortable: true,
     },
@@ -552,6 +556,7 @@ function Product() {
   }, [scategory, indVal]);
   // modal
   const [editparentCategory, seteditparentCategory] = useState("");
+
   const handleShow = (e) => {
     // vendor
     const getVendorData = () => {
@@ -727,33 +732,7 @@ function Product() {
 
   const handleClose = () => {
     mainformRef.current.reset();
-    setproductdata({
-      add_custom_input: [],
-      product_title_name: "",
-      product_slug: "",
-      store_name: "",
-      product_type: "",
-      category: "",
-      parent_category: "",
-      wholesale_sales_tax: "0",
-      gst: "0",
-      cgst: "0",
-      sgst: "0",
-      retails_sales_tax: "0",
-      value_added_tax: "0",
-      manufacturers_sales_tax: "0",
-      manufacturing_date: "",
-      expire_date: "",
-      seo_tag: "",
-      variety: false,
-      product_description: "",
-      other_introduction: "",
-      // is_active: "0",
-      vendor_id: "",
-      shop: "",
-      show_product_rating: "0",
-    });
-
+    setproductdata(data);
     setcustomarray([]);
 
     setvariantarray({
@@ -965,7 +944,7 @@ function Product() {
             product_price: "",
             mrp: "",
             sale_price: "",
-            discount: "",
+            discount: "0",
             special_offer: false,
             featured_product: false,
             manufacturing_date: "",
@@ -1001,7 +980,7 @@ function Product() {
             product_price: "",
             mrp: "",
             sale_price: "",
-            discount: "",
+            discount: "0",
             special_offer: false,
             featured_product: false,
             manufacturing_date: "",
@@ -1166,10 +1145,14 @@ function Product() {
       shop: arr[1],
     });
   };
+
   const handledescription = (event, editor) => {
     setdata1(editor.getData());
     console.log({ event, editor, data1 });
 
+    if (editor.getData().length == 0) {
+      alert("please this field");
+    }
     let productdesc;
     if (editor.getData() != undefined) {
       productdesc = editor.getData().replaceAll(/"/g, "'");
@@ -1386,7 +1369,7 @@ function Product() {
                       </Form.Group>
                       <Form.Group
                         className="mx-3"
-                        controlId="validationCustom02"
+                        controlId="validationProductName"
                       >
                         <Form.Label className="inputlabelheading" sm="12">
                           Product Slug<span className="text-danger">* </span>
@@ -1398,21 +1381,23 @@ function Product() {
                             onChange={(e) => handleInputFieldChange(e)}
                             name={"product_slug"}
                             value={productdata.product_slug}
+                            required
                           />
                         </Col>
                       </Form.Group>
                       <Form.Group
                         className="mx-3"
-                        controlId="validationCustomBrand"
+                        controlId="validationProductslug"
                       >
                         <Form.Label className="inputlabelheading" sm="12">
-                          Product Brand
+                          Product Brand <span className="text-danger">* </span>
                         </Form.Label>
                         <Col sm="12">
                           <Form.Select
                             aria-label="Product Type"
                             className="adminselectbox"
                             name="brand"
+                            required
                             onChange={(e) => handleInputFieldChange(e)}
                             value={
                               productdata.brand === null ||
@@ -1435,7 +1420,7 @@ function Product() {
                         <Form.Label className="inputlabelheading" sm="12">
                           Store Name
                           <span className="text-danger">
-                            *{" "}
+                            *
                             <Form.Control.Feedback
                               type="invalid"
                               className="h6"
@@ -1446,16 +1431,12 @@ function Product() {
                         </Form.Label>
                         <Form.Select
                           onChange={handleVendorNameChange}
-                          //  value={
-                          //   productdata.store_name === null ||
-                          //   productdata.store_name === undefined
-                          //     ? ""
-                          //     : productdata.store_name
-                          // }
                           aria-label="store_name"
                           className="adminselectbox"
                           required
                         >
+                          {" "}
+                          <option value={""}> Select Store Name</option>
                           {vendorid.map((cdata, i) => {
                             return (
                               <option
@@ -1494,10 +1475,8 @@ function Product() {
                             data={productdata.product_description}
                             onChange={handledescription}
                             name={"product_description"}
-                            // value={productdata.product_description}
                           />
                         </Col>
-                        {/* <div dangerouslySetInnerHTML={createMarkup()} className='editor'></div> */}
                       </Form.Group>
                     </div>
                   </div>
@@ -1529,10 +1508,6 @@ function Product() {
                           {categorytype.categorytype.map((data) => {
                             return <option value={data}>{data}</option>;
                           })}
-                          {/* <option value="Foods">foods</option>
-                          <option value="electronic">Electronic</option>
-                          <option value="Health Care">Health Care</option>
-                          <option value="Books">Books</option> */}
                         </Form.Select>
                         <Form.Control.Feedback type="invalid" className="h6">
                           Please select producttype
@@ -1543,25 +1518,19 @@ function Product() {
                     {/* category select */}
                     <Form.Group
                       className=" aos_input"
-                      controlId="formBasicParentCategory"
+                      controlId="validationCustom06"
                     >
                       <Form.Label className="inputlabelheading" sm="12">
-                        Parent Category
+                        Parent Category <span className="text-danger">* </span>
                       </Form.Label>
                       <Form.Select
                         onChange={(e, id) => categoryFormChange(e, id)}
-                        // onChange={(e) => handleInputFieldChange(e)}
                         name={"parent_category"}
                         aria-label="Parent Category"
                         className="adminselectbox"
                         required
-                        // value={
-                        //   productdata.parent_category === null ||
-                        //   productdata.parent_category === undefined
-                        //     ? ""
-                        //     : productdata.parent_category
-                        // }
                       >
+                        <option value={""}>Select category Type</option>
                         {category.map((cdata, i) => {
                           return (
                             <option
@@ -1574,16 +1543,16 @@ function Product() {
                                   : false
                               }
                             >
-                              {cdata.category_name}
-                              {""}
+                              {cdata.category_name} {""}
                             </option>
                           );
                         })}
                       </Form.Select>
                       <Form.Control.Feedback type="invalid" className="h6">
-                        Please fill category
+                        Please select Category
                       </Form.Control.Feedback>
                     </Form.Group>
+
                     {subCategory === "" ||
                     subCategory === null ||
                     subCategory === undefined ? null : (
@@ -1772,21 +1741,24 @@ function Product() {
                     </Form.Group>
                     <Form.Group className="mx-3" controlId="validationCustom11">
                       <Form.Label className="inputlabelheading" sm="12">
-                        Gst
+                        Gst<span className="text-danger">* </span>
                       </Form.Label>
                       <Col sm="12">
                         <Form.Control
                           type="number"
-                          min={0}
+                          min={1}
                           placeholder="Gst"
-                          required
+                          className={
+                            customvalidated === true ? "border-danger" : null
+                          }
                           name="gst"
                           value={productdata.gst}
                           onChange={(e) => handleInputFieldChange(e)}
+                          required
                         />
-                        <Form.Control.Feedback type="invalid">
+                        {/* <Form.Control.Feedback type="invalid">
                           Please choose a gst
-                        </Form.Control.Feedback>
+                        </Form.Control.Feedback> */}
                       </Col>
                     </Form.Group>
                     <Form.Group className="mx-3" controlId="validationCustom11">
@@ -1893,23 +1865,34 @@ function Product() {
                                 >
                                   <thead className="align-middle">
                                     <tr>
-                                      <th>Variety</th>
+                                      <th>
+                                        Variety
+                                        <span className="text-danger">* </span>
+                                      </th>
                                       <th>Color</th>
                                       <th>Weight</th>
                                       <th>Size</th>
-                                      <th>Mrp</th>
+                                      <th>
+                                        Mrp{" "}
+                                        <span className="text-danger">* </span>
+                                      </th>
                                       <th>Discount</th>
                                       <th>Price</th>
                                       <th>Sale Price</th>
                                       <th>Special Offer</th>
                                       <th>Featured Product</th>
                                       <th className="manufacture_date">
-                                        Mdate
+                                        Mdate{" "}
+                                        <span className="text-danger">* </span>
                                       </th>
                                       <th className="manufacture_date">
-                                        Edate
+                                        Edate{" "}
+                                        <span className="text-danger">* </span>
                                       </th>
-                                      <th className="">Qty</th>
+                                      <th className="">
+                                        Qty{" "}
+                                        <span className="text-danger">* </span>
+                                      </th>
                                     </tr>
                                   </thead>
                                   <tbody>
@@ -1924,6 +1907,7 @@ function Product() {
                                               onChange={(e) =>
                                                 onVariantChange(e)
                                               }
+                                              required
                                               className={
                                                 customvalidated === true
                                                   ? "border-danger"
@@ -2038,7 +2022,6 @@ function Product() {
                                           <InputGroup className="" size="sm">
                                             <Form.Control
                                               type="number"
-                                              step={"any"}
                                               min={1}
                                               sm="9"
                                               className={
@@ -2046,11 +2029,12 @@ function Product() {
                                                   ? "border-danger"
                                                   : null
                                               }
+                                              name="mrp"
+                                              value={variantarray.mrp}
                                               onChange={(e) =>
                                                 onVariantChange(e)
                                               }
-                                              name={"mrp"}
-                                              value={variantarray.mrp}
+                                              required
                                             />
                                           </InputGroup>
                                         </div>
@@ -2061,7 +2045,7 @@ function Product() {
                                             <Form.Control
                                               type="number"
                                               sm="9"
-                                              min={1}
+                                              min={0}
                                               onChange={(e) =>
                                                 onVariantChange(e)
                                               }
@@ -2089,6 +2073,7 @@ function Product() {
                                               }
                                               name={"product_price"}
                                               value={product_price}
+                                              required
                                             />
                                           </InputGroup>
                                         </div>
@@ -2178,6 +2163,7 @@ function Product() {
                                             <Form.Control
                                               type="date"
                                               sm="9"
+                                              required
                                               className={
                                                 customvalidated === true
                                                   ? "border-danger"
@@ -2200,6 +2186,7 @@ function Product() {
                                             <Form.Control
                                               type="date"
                                               sm="9"
+                                              requ
                                               className={
                                                 customvalidated === true
                                                   ? "border-danger"
@@ -2223,6 +2210,7 @@ function Product() {
                                               value={variantarray.quantity}
                                               sm="9"
                                               min={"1"}
+                                              required
                                               className={
                                                 customvalidated === true
                                                   ? "border-danger"
@@ -2391,16 +2379,20 @@ function Product() {
                       <div className="d-flex align-items-center tagselectbox mt-2">
                         {/* {(seoarray || []).map((seotags, i) => {
                           return ( */}
-                        <Badge className="tagselecttitle mb-0" bg="success">
-                          {productdata.seo_tag === null ||
-                          productdata.seo_tag === undefined
-                            ? ""
-                            : productdata.seo_tag}
-                          <GiCancel
+                        {productdata.seo_tag == "" ? (
+                          ""
+                        ) : (
+                          <Badge className="tagselecttitle mb-0" bg="success">
+                            {productdata.seo_tag === null ||
+                            productdata.seo_tag === undefined
+                              ? ""
+                              : productdata.seo_tag}
+                            {/* <GiCancel
                             className=" mx-0 ms-1 btncancel"
-                            onClick={() => tagRemoveClick(proddata.seo_tag)}
-                          />
-                        </Badge>
+                            onClick={() => tagRemoveClick(productdata.seo_tag)}
+                          /> */}
+                          </Badge>
+                        )}
 
                         {/* )
 

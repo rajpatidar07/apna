@@ -48,13 +48,13 @@ const Login = () => {
         .then((response) => {
   
 
-          if(response){
+          if(response.data==='check_credintials'){
+            setError(false);
            
-            LoginCheck();
 
           }
           else{
-            setError(false);
+            LoginCheck();
           }
         });
    }
