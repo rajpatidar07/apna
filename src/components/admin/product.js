@@ -70,13 +70,15 @@ function Product() {
   const [customvalidated, setcustomValidated] = useState(false);
   const [modalshow, setmodalshow] = useState(false);
   const [seoarray, setseoArray] = useState([]);
-  const [variantarray, setvariantarray] = useState({
+
+
+  var veriantData={
     product_status: "",
     product_id: "",
     unit: "",
     colors: "",
-    unit_quantity: null,
-    size: null,
+    unit_quantity: "",
+    size: "",
     product_price: "",
     mrp: "",
     sale_price: "",
@@ -86,7 +88,8 @@ function Product() {
     manufacturing_date: "",
     expire_date: "",
     quantity: "",
-  });
+  }
+  const [variantarray, setvariantarray] = useState(veriantData);
   const [variantmainarray, setvariantmainarray] = useState([]);
   const [data1, setdata1] = useState("");
   const [otherintro, setotherintro] = useState("");
@@ -146,9 +149,12 @@ const [taxdata,settaxdata] = useState({
   manufacturers_sales_tax: "0",
 })
 const[productID,setproductID]=useState("")
+
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
   };
+
+  
   const onProductStatusChange = (e,id,productid) =>{
     axios
       .put(`${process.env.REACT_APP_BASEURL}/product_status_update`, {
@@ -169,40 +175,45 @@ const[productID,setproductID]=useState("")
     categoryArray.push(e.target.value);
   };
 
+  
+  const  fetchdata=()=>{
+  axios
+  .post(
+    `${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=500`,
+    {
+      product_search: {
+        search: `${searchdata.product_title_name}`,
+        price_from: "",
+        price_to: "",
+        latest_first:"",
+        product_title_name:"",
+        sale_price:"",
+        short_by_updated_on:"",
+        category: categoryArray,
+        product_status: [`${searchdata.product_status}`],
+        is_delete: ["1"],
+        colors: [],
+        size: [],
+        parent_category: [],
+        product_type: [],
+      },
+    }
+  )
+  .then((response) => {
+    setpdata(response.data);
+    
+    setapicall(false);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
 
   useEffect(() => {
     const first='';
-    axios
-      .post(
-        `${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=500`,
-        {
-          product_search: {
-            search: `${searchdata.product_title_name}`,
-            price_from: "",
-            price_to: "",
-            latest_first:"",
-            product_title_name:"",
-            sale_price:"",
-            short_by_updated_on:"",
-            category: categoryArray,
-            product_status: [`${searchdata.product_status}`],
-            is_delete: ["1"],
-            colors: [],
-            size: [],
-            parent_category: [],
-            product_type: [],
-          },
-        }
-      )
-      .then((response) => {
-        setpdata(response.data);
-        
-        setapicall(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }, [apicall, searchdata, Alert ]);
+    fetchdata()
+  
+  }, [apicall,  Alert ]);
   //
   // console.log("ddddddddddddddddddDDDDDDDDDDDDD"+JSON.stringify(pdata))
   let filtered;
@@ -719,23 +730,7 @@ const  getProductVariant = (id) =>{
     setproductdata(data);
     setcustomarray([])
 
-    setvariantarray({
-      product_status: "",
-      product_id: "",
-      unit: "",
-      colors: "",
-      unit_quantity: "",
-      size:"",
-      product_price: "",
-      mrp: "",
-      sale_price: "",
-      discount: "",
-      special_offer: false,
-      featured_product: false,
-      manufacturing_date: "",
-      expire_date: "",
-      quantity: "",
-    });
+    setvariantarray(veriantData);
     setvariantmainarray([])
    
      setValidated(false);
@@ -1165,9 +1160,7 @@ const closeProductAlert=()=>{
     setdata1(editor.getData());
     console.log({ event, editor, data1 });
 
-     if(editor.getData().length==0){
-     alert("please this field")
-     }
+
     let productdesc;
     if((editor.getData()) != undefined){
       productdesc = (editor.getData()).replaceAll(/"/g, '\'');
@@ -1260,6 +1253,23 @@ const closeProductAlert=()=>{
 
   const handleClick = () => {};
   const navigate = useNavigate();
+
+
+
+  const submitHandler=()=>{
+       
+    setapicall(true)
+   
+   }
+
+   const OnReset =()=>{
+   setsearchData({product_title_name:"",
+                   product_status:""
+                  })
+                  // fetchdata()
+     setapicall(true)
+   
+}
   return (
     <div className="App productlist_maindiv">
       <h2>Products</h2>
@@ -1292,10 +1302,12 @@ const closeProductAlert=()=>{
               <option  value="">Select</option>
           <option   value="pending">Pending</option>
           <option value="draft">Draft</option>
-          <option  value="expired">Expired</option>
+          <option value="approved ">Approved </option>
+          {/* <option value="active">Active</option> */}
+          {/* <option  value="expired">Expired</option>
           <option  value="special_offer">Special Offer</option>
           <option   value="featured_offer">Featured Offer </option>
-          <option  value="promotional">Promotional </option>
+          <option  value="promotional">Promotional </option> */}
             </Form.Select>
           </div>
 
@@ -1303,9 +1315,21 @@ const closeProductAlert=()=>{
             <MainButton
 
               btntext={"Search"}
-              btnclass={"button main_button w-100"}
+              btnclass={"button main_button w-50"}
+              onClick={submitHandler}
             />
           </div>
+
+          <div className="col-md-3 col-sm-6 aos_input">
+            <MainButton
+
+              btntext={"Reset"}
+              btnclass={"button main_button w-50"}
+              type="reset" onClick={OnReset}
+            />
+          </div>
+
+        
         </div>
 
         {/* upload */}
@@ -2252,7 +2276,7 @@ const closeProductAlert=()=>{
                                                 ? "weight"
                                                 : variantdata.unit === "ml"
                                                 ? "volume"
-                                                : null}
+                                                : ""}
                                             </td>
                                             <td className="p-0 text-center ">
                                               {variantdata.colors}
@@ -2264,12 +2288,12 @@ const closeProductAlert=()=>{
                                                 ? variantdata.unit_quantity
                                                 : variantdata.unit === "piece"
                                                 ? variantdata.unit_quantity
-                                                : null}
+                                                : ""}
                                             </td>
                                             <td className="p-0 text-center ">
                                               {variantdata.unit === "pcs"
                                                 ? variantdata.size
-                                                : null}
+                                                : ""}
                                             </td>
                                             <td className="p-0 text-center ">
                                               {variantdata.mrp}
@@ -2655,7 +2679,7 @@ const closeProductAlert=()=>{
                                                     ? "ml"
                                                     : vari === "piece"
                                                     ? "piece"
-                                                    : null
+                                                    : ""
                                                 }
                                                 key={i}
                                               >
@@ -2699,7 +2723,7 @@ const closeProductAlert=()=>{
                                             ? variantarray.unit_quantity
                                             : variantarray.unit === "piece"
                                             ? variantarray.unit_quantity
-                                            : null
+                                            : ""
                                         }
                                         type="text"
                                         sm="9"
@@ -2961,7 +2985,7 @@ const closeProductAlert=()=>{
                                               ? "weight"
                                               : variantdata.unit === "ml"
                                               ? "volume"
-                                              : null}
+                                              : ""}
                                           </td>
                                           <td className="p-0 text-center ">
                                             {variantdata.colors}
@@ -2973,12 +2997,12 @@ const closeProductAlert=()=>{
                                               ? variantdata.unit_quantity
                                               : variantdata.unit === "piece"
                                               ? variantdata.unit_quantity
-                                              : null}
+                                              : ""}
                                           </td>
                                           <td className="p-0 text-center ">
                                             {variantdata.unit === "pcs"
                                               ? variantdata.size
-                                              : null}
+                                              : ""}
                                           </td>
                                           <td className="p-0 text-center ">
                                             {Number(variantdata.mrp).toFixed(2)}
