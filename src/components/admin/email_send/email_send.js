@@ -601,7 +601,7 @@ const EmailSend = () => {
       />
       <SweetAlert
         show={UpdateAlert}
-        title="Update Email Successfully "
+        title="Updated Email Successfully "
         onConfirm={closeUpdateAlert}
       />
     </div>

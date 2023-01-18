@@ -444,7 +444,7 @@ function Admin() {
       />
       <SweetAlert
         show={UpdateAlert}
-        title="Update Admin Successfully "
+        title="Updated Admin Successfully "
         onConfirm={closeUpdateAlert}
       />
     </div>

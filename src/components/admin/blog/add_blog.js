@@ -523,6 +523,7 @@ const BlogList = () => {
         />
         <SweetAlert
           show={Alert}
+          title="Blog"
           text="Are you Sure you want to delete"
           onConfirm={hideAlert}
           showCancelButton={true}
@@ -689,7 +690,7 @@ const BlogList = () => {
       />
       <SweetAlert
         show={UpdateAlert}
-        title="Update Blog Successfully "
+        title="Updated Blog Successfully "
         onConfirm={closeUpdateAlert}
       />
     </div>

@@ -1297,7 +1297,7 @@ const VendorsList = () => {
           </Modal.Footer>
         </Form>
       </Modal>
-      
+
       <SweetAlert
         show={AddAlert}
         title="Added Vender Successfully "
@@ -1305,7 +1305,7 @@ const VendorsList = () => {
       />
       <SweetAlert
         show={UpdateAlert}
-        title="Update Vender Successfully "
+        title="Updated Vender Successfully "
         onConfirm={closeUpdateAlert}
       />
 

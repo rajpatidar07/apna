@@ -465,7 +465,7 @@ const Complaint = () => {
       </div>
       <SweetAlert
         show={UpdateAlert}
-        title="Update Complaint Successfully "
+        title="Updated Complaint Successfully "
         onConfirm={closeUpdateAlert}
       />
     </div>

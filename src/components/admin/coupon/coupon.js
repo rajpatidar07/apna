@@ -693,7 +693,7 @@ const Coupon = () => {
         />
         <SweetAlert
           show={UpdateAlert}
-          title="Update Coupan Successfully "
+          title="Updated Coupan Successfully "
           onConfirm={closeUpdateAlert}
         />
       </div>
