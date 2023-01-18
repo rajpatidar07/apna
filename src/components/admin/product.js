@@ -57,6 +57,8 @@ function Product() {
   const [productid, setproductid] = useState("");
 
   const [Alert, setAlert] = useState(false);
+  const [VerityAlert, setVerityAlert] = useState(false);
+
   const[ProductAlert,setProductAlert]=useState(false)
 
   const [apicall, setapicall] = useState(false);
@@ -141,6 +143,7 @@ const [taxdata,settaxdata] = useState({
   value_added_tax: "0",
   manufacturers_sales_tax: "0",
 })
+const[productID,setproductID]=useState("")
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
   };
@@ -152,7 +155,7 @@ const [taxdata,settaxdata] = useState({
           "product_status":e.target.value
       })
       .then((response) => {
-        console.log("---update" + JSON.stringify(response.data));
+        // console.log("---update" + (response.data));
         setapicall(true);
       })
       .catch(function (error) {
@@ -163,6 +166,8 @@ const [taxdata,settaxdata] = useState({
     setsearchData({ ...searchdata, category: e.target.value });
     categoryArray.push(e.target.value);
   };
+
+
   useEffect(() => {
     const first='';
     axios
@@ -195,7 +200,7 @@ const [taxdata,settaxdata] = useState({
       .catch(function (error) {
         console.log(error);
       });
-  }, [apicall, searchdata, Alert]);
+  }, [apicall, searchdata, Alert ]);
   //
   // console.log("ddddddddddddddddddDDDDDDDDDDDDD"+JSON.stringify(pdata))
   let filtered;
@@ -242,7 +247,7 @@ const AddProductFeatureClick = (e) =>{
 axios
 .post(`${process.env.REACT_APP_BASEURL}/add_fetured_product`,featuredata)
 .then((response) => {
-  console.log("---update" + JSON.stringify(response.data));
+  // console.log("---update" + JSON.stringify(response.data));
   setapicall(true);
   setfeatureShow(false)
 })
@@ -637,6 +642,7 @@ else if(i===3){
     handleShow();
   }, []);
 const  getProductVariant = (id) =>{
+  console.log("id-----"+id)
   axios
   .post(
     `${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=500`,
@@ -651,21 +657,18 @@ const  getProductVariant = (id) =>{
         sale_price:"",
         short_by_updated_on:"",
         is_delete: ["1"],
-        colors: [],
-        size: [],
-        parent_category: [],
-        product_type: [],
         product_id: [`${id}`],
       },
     }
   )
   .then((response) => {
+    // console.log("response.data.results)"+JSON.stringify(response.data.results))
     setvdata(response.data.results);
     settaxdata(response.data.results[0])
-    setvariantarray({
-      ...variantarray,
-      product_id: id,
-    });
+    // setvariantarray({
+    //   ...variantarray,
+    //   product_id: id,
+    // });
     setvariantapicall(false);
   })
   .catch(function (error) {
@@ -674,6 +677,11 @@ const  getProductVariant = (id) =>{
 }
   const handlevarietyShow = (id) => {
     getProductVariant(id);
+     setvariantarray({
+      ...variantarray,
+      product_id: id,
+    });
+    setproductID(id)
     // image show
 
     // axios
@@ -691,8 +699,6 @@ const  getProductVariant = (id) =>{
   };
 
   const handlevarietyClose = (e) => {
-  
-   
     e.preventDefault()
    
     setValidated(false);
@@ -705,13 +711,61 @@ const  getProductVariant = (id) =>{
 
 
   const handleClose = () => {
-    
-    mainformRef.current.reset();
-    //  setproductdata({})
-    setValidated(false);
+
+     mainformRef.current.reset();
+    setproductdata({
+      add_custom_input: [],
+      product_title_name: "",
+      product_slug: "",
+      store_name: "",
+      product_type: "",
+      category: "",
+      parent_category:"",
+      wholesale_sales_tax: "0",
+      gst: "0",
+      cgst: "0",
+      sgst: "0",
+      retails_sales_tax: "0",
+      value_added_tax: "0",
+      manufacturers_sales_tax: "0",
+      manufacturing_date: "",
+      expire_date: "",
+      seo_tag: "",
+      variety: false,
+      product_description:"",
+      other_introduction:"",
+      // is_active: "0",
+      vendor_id: "",
+      shop: "",
+      show_product_rating: "0",
+    });
+     
+    setcustomarray([])
+
+    setvariantarray({
+      product_status: "",
+      product_id: "",
+      unit: "",
+      colors: "",
+      unit_quantity: "",
+      size:"",
+      product_price: "",
+      mrp: "",
+      sale_price: "",
+      discount: "",
+      special_offer: false,
+      featured_product: false,
+      manufacturing_date: "",
+      expire_date: "",
+      quantity: "",
+    });
+    setvariantmainarray([])
+
+     setValidated(false);
     setmodalshow(false);
     // console.log("---product data------------" + JSON.stringify(productdata));
-    // console.log("end Here-------------------")
+
+    //  console.log("end Here-------------------")
 
   };
            
@@ -768,6 +822,8 @@ const  getProductVariant = (id) =>{
     id,
     vendor_id,
   ) => {
+
+    console.log("imagnewImageUrlse"+newImageUrls.length)
     for (let i = 0; i < e.target.files.length; i++) {
       let coverimg;
       
@@ -902,7 +958,6 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
   };
   const onVariantaddclick = (id,productid) => {
     // id.preventDefault();
-    console.log("-id"+id)
     if (id == "" || id == undefined || id == null) {
       axios
         .post(
@@ -910,7 +965,24 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
           variantarray
         )
         .then((response) => {
-          getProductVariant(productid)
+          setvariantarray({
+            product_status: "",
+            unit: "",
+            colors: "",
+            unit_quantity: "",
+            size:"",
+            product_price: "",
+            mrp: "",
+            sale_price: "",
+            discount: "",
+            special_offer: false,
+            featured_product: false,
+            manufacturing_date: "",
+            expire_date: "",
+            quantity: "",
+            product_id:productID
+          });
+          getProductVariant(productID)
           // formRef.reset();
         })
         .catch(function (error) {
@@ -925,9 +997,31 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
         .then((response) => {
           // setvariantarray(response.data)
           // setvariantapicall(true)
-          getProductVariant(productid)
+
           // setvarietyShow(false);
-         
+          // setvariantarray([])
+       
+       setvariantarray({
+            product_status: "",
+            unit:"",
+            colors: "",
+            unit_quantity: "",
+            size:"",
+            product_price: "",
+            mrp: "",
+            sale_price: "",
+            discount: "",
+            special_offer: false,
+            featured_product: false,
+            manufacturing_date: "",
+            expire_date: "",
+            quantity: "",
+            product_id:productID
+          });
+          // VariantEditClick(id,productid) 
+            //  setvarietyShow(false);
+                  getProductVariant(productID)
+        
         })
         .catch(function (error) {
           console.log(error);
@@ -950,7 +1044,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
   };
   const VariantRemoveClick = (id, productid) => {
 
-    setAlert(true);
+    setVerityAlert(true);
     setVariantRemove((variantremove) =>{  
       return{...variantremove,  id : id, productid:productid }});
   };
@@ -965,17 +1059,17 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
         is_delete: ["0"],
       })
       .then((response) => {
-        console.log("---delete" + JSON.stringify(response.data));
         getProductVariant(variantremove.productid);
-        setapicall(true);
-        setpdata(response.data)
+        // setapicall(true);
+        // getProductVariant(productid);
+      //  setpdata(response.data)
       })
       .catch(function (error) {
         console.log(error);
       });
 
     // variety delete
-     setAlert(false);
+    setVerityAlert(false);
   };
 
 
@@ -990,7 +1084,6 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
         is_delete: ["0"],
       })
       .then((response) => {
-        console.log("---delete" + JSON.stringify(response.data));
         // getProductVariant(variantremove.productid);
         setapicall(true);
         // setpdata(response.data)
@@ -1005,6 +1098,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
 
   const closeAlert=()=>{
     setAlert(false);
+    setVerityAlert(false);
   }
 
 const closeProductAlert=()=>{
@@ -1090,6 +1184,8 @@ const closeProductAlert=()=>{
   };
   const handledescription = (event, editor) => {
     setdata1(editor.getData());
+    console.log({ event, editor, data1 });
+
     let productdesc;
     if((editor.getData()) != undefined){
       productdesc = (editor.getData()).replaceAll(/"/g, '\'');
@@ -1848,7 +1944,7 @@ const closeProductAlert=()=>{
                                                           ? "piece"
                                                           : vari === "color"
                                                           ? "pcs"
-                                                          : null
+                                                          : ""
                                                       }
                                                       key={i}
                                                     >
@@ -1896,7 +1992,7 @@ const closeProductAlert=()=>{
                                                   : variantarray.unit ===
                                                     "piece"
                                                   ? variantarray.unit_quantity
-                                                  : null
+                                                  : ""
                                               }
                                               type="number"
                                               sm="9"
@@ -2155,7 +2251,6 @@ const closeProductAlert=()=>{
 
                                     {(variantmainarray || []).map(
                                       (variantdata, i) => {
-                                       console.log(variantdata.special_offer)
                                         return (
                                           <tr>
                                             <td className="p-0 text-center ">
@@ -2630,7 +2725,7 @@ const closeProductAlert=()=>{
                                         value={
                                           variantarray.unit === "pcs"
                                             ? variantarray.size
-                                            : null
+                                            : " "
                                         }
                                         type="text"
                                         sm="9"
@@ -2661,7 +2756,7 @@ const closeProductAlert=()=>{
                                         }
                                         onChange={(e) => onVariantChange(e)}
                                         name={"mrp"}
-                                        value={Number(variantarray.mrp).toFixed(2)}
+                                        value={Number(variantarray.mrp)}
                                       />
                                     </InputGroup>
                                   </div>
@@ -2695,7 +2790,7 @@ const closeProductAlert=()=>{
                                         }
                                         onChange={(e) => onVariantChange(e)}
                                         name={"product_price"}
-                                        value={Number(variantarray.product_price).toFixed(2)}
+                                        value={Number(variantarray.product_price)}
                                       />
                                     </InputGroup>
                                   </div>
@@ -2715,7 +2810,7 @@ const closeProductAlert=()=>{
                                         }
                                         onChange={(e) => onVariantChange(e)}
                                         name={"sale_price"}
-                                        value={Number(variantarray.sale_price).toFixed(2)}
+                                        value={Number(variantarray.sale_price)}
                                       //     vdata[0] === '' ? (product_price) 
                                       //     + 
                                       //     (
@@ -2862,7 +2957,7 @@ const closeProductAlert=()=>{
                                       <>
                                         <tr>
                                           <td className="p-0 text-center ">
-                                            {variantdata.unit === "pcs"
+                                          {variantdata.unit === "pcs"
                                               ? "color"
                                               : variantdata.unit === "piece"
                                               ? "piece"
@@ -2981,7 +3076,6 @@ const closeProductAlert=()=>{
                                             </Button>
                                           </td>
                                         </tr>
-                                         {console.log("img lenth---"+newImageUrls.length)}
                                         {newImageUrls ? (
                                           <tr className="img_preview_boxx">
                                             {newImageUrls.map((imgg, i) => {
@@ -3105,7 +3199,7 @@ const closeProductAlert=()=>{
         />
 
         <SweetAlert
-          show={Alert}
+          show={VerityAlert}
           title="Product Name"
           text="Are you Sure you want to delete"
           onConfirm={hideAlert}
@@ -3126,7 +3220,7 @@ const closeProductAlert=()=>{
         <SweetAlert
           show={ProductAlert}
           title="Added Successfully "
-          text="One product Added"
+          text=" Product Added"
            onConfirm={closeProductAlert}
       
         />
