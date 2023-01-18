@@ -821,16 +821,8 @@ const  getProductVariant = (id) =>{
     id,
     vendor_id,
   ) => {
-    
-    // axios
-    //   .get(`${process.env.REACT_APP_BASEURL}/product_images_get_singal_veriant?product_id=${product_id}&product_verient_id=${id}`)
-    //   .then((response) => {
-    //     setnewImageUrls(response.data)
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
-    console.log("imagnewImageUrlse-----"+newImageUrls.length)
+
+    console.log("imagnewImageUrlse"+newImageUrls.length)
     for (let i = 0; i < e.target.files.length; i++) {
       let coverimg;
       
