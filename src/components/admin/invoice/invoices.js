@@ -1,4 +1,4 @@
-import React, { useState,useMemo,useEffect} from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Input from "../common/input";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
@@ -12,31 +12,28 @@ import moment from "moment";
 import { Navigate, useNavigate } from "react-router-dom";
 
 const InvoiceList = () => {
-
-
   const navigate = useNavigate();
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
-  const[invoice,setInvoice]=useState([]);
+  const [invoice, setInvoice] = useState([]);
   // const[invoiceno,setInvoiceNo]=useState([]);
   // const [invoiceid,setInvoiceId]=useState([]);
   // const [invoiceprice,setInvoicePrice]=useState([]);
   const [SearchInvo, setSearchInvo] = useState({
-    "search":"",
-    "from_date":"",
-    "to_date":""
-    });
+    search: "",
+    from_date: "",
+    to_date: "",
+  });
 
-
-    const InvoiceCheck= (id) =>{
-       localStorage.setItem("invoiceid",id[1])
-      localStorage.setItem("invoice_no",id[0]);
-      if(id[0] == undefined || id[0] == '' || id[0]==null){
-
-      }else{
-      navigate('/invoice_detail');}
+  const InvoiceCheck = (id) => {
+    localStorage.setItem("invoiceid", id[1]);
+    localStorage.setItem("invoice_no", id[0]);
+    if (id[0] == undefined || id[0] == "" || id[0] == null) {
+    } else {
+      navigate("/invoice_detail");
     }
+  };
 
   useEffect(() => {
     function getInvoiceList() {
@@ -47,49 +44,51 @@ const InvoiceList = () => {
             let data = response.data;
             setInvoice(data);
             // InvoiceCheck();
-          })
+          });
       } catch (err) {}
     }
 
     getInvoiceList();
   }, []);
 
-  const onValueChange=(e)=>{
+  const onValueChange = (e) => {
     setSearchInvo({ ...SearchInvo, [e.target.name]: e.target.value });
-   
-  }
-  
-  const onDateChange=(e)=>{
-    setSearchInvo({ ...SearchInvo, [e.target.name]: moment(e.target.value).format('DD-MM-YYYY')});
-   
-  }
-  const SearchInvoices=()=>{
-    {
-      axios.post(`${process.env.REACT_APP_BASEURL}/invoice_search`,{
-        "search":`${SearchInvo.search}`,
-        "from_date":`${SearchInvo.from_date}`,
-        "to_date":`${SearchInvo.to_date}`
-    }) .then ((response) => {
-      setInvoice(response.data);
-      setSearchInvo('')
-     
+  };
 
-      })
+  const onDateChange = (e) => {
+    setSearchInvo({
+      ...SearchInvo,
+      [e.target.name]: moment(e.target.value).format("DD-MM-YYYY"),
+    });
+  };
+  const SearchInvoices = () => {
+    {
+      axios
+        .post(`${process.env.REACT_APP_BASEURL}/invoice_search`, {
+          search: `${SearchInvo.search}`,
+          from_date: `${SearchInvo.from_date}`,
+          to_date: `${SearchInvo.to_date}`,
+        })
+        .then((response) => {
+          setInvoice(response.data);
+          setSearchInvo("");
+        });
     }
-   
-  }
+  };
   const columns = [
     {
       name: "Id",
-      selector: (row) => (
-          row.id
-      ),
+      selector: (row) => row.id,
       sortable: true,
       width: "75px",
     },
     {
       name: "Invoice Number",
-      selector: (row) =><p onClick={InvoiceCheck.bind(this,[row.invoice_no,row.id]) }>{row.invoice_no}</p>,
+      selector: (row) => (
+        <p onClick={InvoiceCheck.bind(this, [row.invoice_no, row.id])}>
+          {row.invoice_no}
+        </p>
+      ),
       sortable: true,
       width: "150px",
       center: true,
@@ -100,7 +99,7 @@ const InvoiceList = () => {
     },
     {
       name: "Invoice Date",
-      selector: (row) =>row.invoice_date,
+      selector: (row) => moment(row.invoice_date).format("YYYY-MM-DD"),
       sortable: true,
       width: "150px",
       center: true,
@@ -109,10 +108,10 @@ const InvoiceList = () => {
         paddingLeft: "0px",
       },
     },
-   
+
     {
       name: "Order Date",
-      selector: (row) => row.order_date,
+      selector: (row) => moment(row.order_date).format("YYYY-MM-DD"),
       sortable: true,
       width: "140px",
       center: true,
@@ -161,7 +160,8 @@ const InvoiceList = () => {
       style: {
         paddingLeft: "0px",
       },
-    }, {
+    },
+    {
       name: "Taxable Value",
       selector: (row) => row.taxable_value,
       sortable: true,
@@ -213,26 +213,28 @@ const InvoiceList = () => {
     // },
   ];
   const [filterText, setFilterText] = React.useState("");
-  const [resetPaginationToggle, setResetPaginationToggle] = React.useState(
-    false
-  );
+  const [resetPaginationToggle, setResetPaginationToggle] =
+    React.useState(false);
   const subHeaderComponent = useMemo(() => {
     const handleClear = () => {
       if (filterText) {
         setResetPaginationToggle(!resetPaginationToggle);
         setFilterText("");
       }
-    }
-      return (
-        <FilterComponent
-          onFilter={e => setFilterText(e.target.value)}
-          onClear={handleClear}
-          filterText={filterText}
-        />
-        
-      );
-    }, [filterText, resetPaginationToggle]);
-    // 
+    };
+    return (
+      <FilterComponent
+        onFilter={(e) => setFilterText(e.target.value)}
+        onClear={handleClear}
+        filterText={filterText}
+      />
+    );
+  }, [filterText, resetPaginationToggle]);
+  //
+
+  let date = moment();
+  let currentDate = date.format("YYYY-MM-DD");
+  console.log(currentDate);
   return (
     <div className="App productlist_maindiv">
       <h2>Invoice</h2>
@@ -241,18 +243,44 @@ const InvoiceList = () => {
       <div className="card mt-3 p-3 ">
         <div className="row pb-3">
           <div className="col-md-3 col-sm-6 aos_input ">
-            <input className="adminsideinput" type={"text"} placeholder="Search by Vendor_Id" value={SearchInvo.search} name={"search"} onChange={(e) => onValueChange(e)} />
+            <input
+              className="adminsideinput"
+              type={"text"}
+              placeholder="Search by Vendor_Id"
+              value={SearchInvo.search}
+              name={"search"}
+              onChange={(e) => onValueChange(e)}
+            />
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
-            <input type={"date"} placeholder={"Search by Order Date"} onChange={(e)=>onDateChange(e)}
-              value={SearchInvo.from_date} name={'from_date'} className={'adminsideinput'}/>
+            <input
+              type={"date"}
+              max={currentDate}
+              placeholder={"Search by Order Date"}
+              onChange={(e) => onDateChange(e)}
+              value={SearchInvo.from_date}
+              name={"from_date"}
+              className={"adminsideinput"}
+            />
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
-            <input type={"date"} placeholder={"Search by Order End_Date"} onChange={(e)=>onDateChange(e)}
-              value={SearchInvo.end_date} name={'end_date'} className={'adminsideinput'}/>
+            <input
+              type={"date"}
+              max={SearchInvo.from_date}
+              placeholder={"Search by Order End_Date"}
+              onChange={(e) => onDateChange(e)}
+              value={SearchInvo.end_date}
+              name={"end_date"}
+              className={"adminsideinput"}
+            />
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
-            <button className="button main_button w-100" onClick={()=>SearchInvoices()}>Search</button>
+            <button
+              className="button main_button w-100"
+              onClick={() => SearchInvoices()}
+            >
+              Search
+            </button>
           </div>
           {/* <div className="col-md-3 col-sm-6 aos_input">
             <MainButton
@@ -265,7 +293,6 @@ const InvoiceList = () => {
 
         {/* upload */}
 
-
         {/* datatable */}
 
         <DataTable
@@ -276,7 +303,7 @@ const InvoiceList = () => {
           pointerOnHover
           className={"table_body invoic_table"}
           subHeader
-              subHeaderComponent={subHeaderComponent}
+          subHeaderComponent={subHeaderComponent}
         />
         {/* <SweetAlert
           show={Alert}

@@ -583,6 +583,7 @@ const EmailSend = () => {
           </Modal.Body>
           <Modal.Footer>
             <button
+              type={"button"}
               className="button main_outline_button"
               onClick={() => handleClose()}
             >
@@ -603,7 +604,7 @@ const EmailSend = () => {
       />
       <SweetAlert
         show={UpdateAlert}
-        title="Update Email Successfully "
+        title="Updated Email Successfully "
         onConfirm={closeUpdateAlert}
       />
     </div>
