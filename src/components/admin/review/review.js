@@ -406,7 +406,7 @@ const Review = () => {
         />
         <SweetAlert
           show={UpdateAlert}
-          title="Update Review Successfully "
+          title="Updated Review Successfully "
           onConfirm={closeUpdateAlert}
         />
       </div>

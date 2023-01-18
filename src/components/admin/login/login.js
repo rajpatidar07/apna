@@ -1,74 +1,74 @@
-import React, { Fragment,useState,useEffect} from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "./login.css";
 import MainButton from "../common/button";
 import Logo from "../../../images/logo.png";
 import axios from "axios";
+
 const Login = () => {
-  const navigate=useNavigate();
-  const[admindata,setAdminData]=useState([])
-  const[id,setId]=useState();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+  const [admindata, setAdminData] = useState([]);
+  const [id, setId] = useState();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   // const [validated, setValidated] = useState(false);
-  const [error,setError]=useState(true);
-  const onValueChange = (e,id) => {
+  // const [error, setError] = useState(true);
+  const [Emailerror, setEmailError] = useState(true);
+  const [Passworderror, setPasswordError] = useState(true);
+  const onValueChange = (e, id) => {
     setEmail(e.target.value);
-  
   };
-  const onPasswordChange=(e,id)=>{
-    setPassword(e.target.value );
- 
-  }
-  console.log("id free-----"+id)
+  const onPasswordChange = (e, id) => {
+    setPassword(e.target.value);
+  };
+  console.log("id free-----" + id);
 
-  const LoginCheck = () =>{
-    localStorage.setItem("loginid",email);
-    localStorage.setItem("password",password);
-    localStorage.setItem("adminid",id)
-    navigate('/') 
-  }
-   const handleSubmit = ((e) => {
+  const LoginCheck = () => {
+    localStorage.setItem("loginid", email);
+    localStorage.setItem("password", password);
+    localStorage.setItem("adminid", id);
+    navigate("/");
+  };
+  const handleSubmit = (e) => {
     const form = e.currentTarget;
-    if (form.checkValidity() === false ) {
+    if (form.checkValidity() === false) {
       e.preventDefault();
-    e.stopPropagation();
-    setError(false);
-    }
-   else{
-  console.log("elseeeeeee")
+      e.stopPropagation();
+      // setError(false);
+      setEmailError(false);
+      setPasswordError(false);
+    } else {
+      console.log("elseeeeeee");
 
-    axios.post(`${process.env.REACT_APP_BASEURL}/admin_login`,
-        {
-        admin_email:email,
-        admin_password:password,
-        }
-        )
+      axios
+        .post(`${process.env.REACT_APP_BASEURL}/admin_login`, {
+          admin_email: email,
+          admin_password: password,
+        })
         .then((response) => {
-  
-
-          if(response.data==='check_credintials'){
-            setError(false);
-           
-
-          }
-          else{
+          console.log(response);
+          if (response.data === "email not found") {
+            // setError(false);
+            setEmailError(false);
+          } else if (response.data === "password not matched") {
+            setPasswordError(false);
+          } else {
             LoginCheck();
           }
         });
-   }
+    }
     e.preventDefault();
-  });
+  };
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_BASEURL}/admin?id=1`
-    ).then ((response) => {
-   let data=response.data[0]
-   setId(data.id);
-   setAdminData(data);
-    })
-  },[]);
-
+    axios
+      .get(`${process.env.REACT_APP_BASEURL}/admin?id=1`)
+      .then((response) => {
+        let data = response.data[0];
+        setId(data.id);
+        setAdminData(data);
+      });
+  }, []);
 
   return (
     <Fragment>
@@ -78,7 +78,7 @@ const Login = () => {
             <div className="col-xl-4 col-lg-6 m-auto">
               <div className="heading_logo text-center">
                 <div className="logo">
-                  <img src={Logo} alt={'apnaorganic'}/>
+                  <img src={Logo} alt={"apnaorganic"} />
                 </div>
                 <div className="heading_line">
                   <h3>Sell On Apna Organic</h3>
@@ -89,23 +89,24 @@ const Login = () => {
                   <div className="log-in-title">
                     <h4>Log In Your Account</h4>
                   </div>
- <div className="input-box">
-                    <form className="row g-4"  onSubmit={handleSubmit}>
+                  <div className="input-box">
+                    <form className="row g-4" onSubmit={handleSubmit}>
                       <div className="col-12">
                         <div className="form-floating theme-form-floating log-in-form">
                           <input
-                          required
-                          onChange={(e,id) => onValueChange(e,id)}
+                            required
+                            onChange={(e, id) => onValueChange(e, id)}
                             type="email"
                             className="form-control"
                             name={"admin_email"}
                             value={email}
                             placeholder="Email Address"
                           />
-                          {error===false ?
-                           <p className="mt-1 ms-2 text-danger" type="invalid">
-                      Please Enter Your Email
-                    </p>:null}
+                          {Emailerror === false ? (
+                            <p className="mt-1 ms-2 text-danger" type="invalid">
+                              Please Enter Your Email
+                            </p>
+                          ) : null}
                           <label htmlFor="email">Email Address</label>
                         </div>
                       </div>
@@ -113,18 +114,19 @@ const Login = () => {
                       <div className="col-12">
                         <div className="form-floating theme-form-floating log-in-form">
                           <input
-                          required
-                          onChange={(e,id) =>onPasswordChange(e,id)}
+                            required
+                            onChange={(e, id) => onPasswordChange(e, id)}
                             type="password"
                             className="form-control"
-                        name={"admin_password"}
+                            name={"admin_password"}
                             value={password}
                             placeholder="Password"
                           />
-                          {error===false ?
+                          {Passworderror === false ? (
                             <p className="mt-1 ms-2 text-danger" type="invalid">
-                      Please Enter Your Password
-                    </p>:null}
+                              Please Enter Your Password
+                            </p>
+                          ) : null}
                           <label htmlFor="password">Password</label>
                         </div>
                       </div>
