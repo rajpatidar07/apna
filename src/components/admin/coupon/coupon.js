@@ -64,7 +64,7 @@ const Coupon = () => {
     axios
       .put(`${process.env.REACT_APP_BASEURL}/coupons_delete`, {
         id: `${cid}`,
-        is_active: 0,
+        is_active: "0",
       })
       .then((response) => {
         setapicall(true);
@@ -290,7 +290,8 @@ const Coupon = () => {
         status: `${SearchCoup.status}`,
       })
       .then((response) => {
-        setcoupondata(response.data);
+        let data = response.data.filter((item) => (item.is_active = 1));
+        setcoupondata(data);
         setSearchCoup("");
       });
   };
@@ -341,7 +342,7 @@ const Coupon = () => {
           setShow(false);
           setAddAlert(true);
         })
-        .catch(function (error) {
+        .catch(function(error) {
           console.log(error);
         });
       formRef.current.reset();
@@ -377,7 +378,7 @@ const Coupon = () => {
         setapicall(true);
         setUpdateAlert(true);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
     formRef.current.reset();
@@ -687,7 +688,7 @@ const Coupon = () => {
           pagination
           highlightOnHover
           pointerOnHover
-          className={"table_body coupan_table"}
+          className={"table_body coupon_table"}
         />
         <SweetAlert
           show={Alert}
@@ -699,7 +700,7 @@ const Coupon = () => {
         />
         <SweetAlert
           show={AddAlert}
-          title="Added Coupan Successfully "
+          title="Added Coupon Successfully "
           onConfirm={closeAddAlert}
         />
         <SweetAlert
