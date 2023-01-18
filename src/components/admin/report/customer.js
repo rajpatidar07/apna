@@ -291,13 +291,6 @@ function handleDownloadExcel() {
     
         setUser("")
          setapicall(true)
-     
-        
-         
-          
-     
-        
-       
        
     }
 

@@ -201,6 +201,10 @@ const Expiredproduct = () => {
   const onSearchClick = () => {
     setapicall(true);
   };
+  const OnReset = () => {
+    setsearchData({ product_title_name: "", manufacturing_date: "" });
+    setapicall(true);
+  };
   return (
     <div>
       <h2>Expired Products</h2>
@@ -222,8 +226,8 @@ const Expiredproduct = () => {
           <div className="col-md-3 col-sm-6 aos_input">
             <input
               type={"date"}
-              maxDate={moment().format("YYYY-MM-DD")}
-              placeholder={"Search by product name"}
+              max={moment().format("YYYY-MM-DD")}
+              placeholder={"Search by manufacturing date"}
               onChange={OnDateChange}
               name="manufacturing_date"
               value={searchdata.manufacturing_date}
@@ -235,6 +239,14 @@ const Expiredproduct = () => {
               onClick={onSearchClick}
               btntext={"Search"}
               btnclass={"button main_button w-100"}
+            />
+          </div>
+          <div className="col-md-3 col-sm-6 aos_input">
+            <MainButton
+              btntext={"Reset"}
+              btnclass={"button main_button w-100"}
+              type="reset"
+              onClick={OnReset}
             />
           </div>
         </div>
