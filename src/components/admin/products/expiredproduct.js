@@ -3,67 +3,64 @@ import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
-import SweetAlert from 'sweetalert-react';
-import 'sweetalert/dist/sweetalert.css';
+import SweetAlert from "sweetalert-react";
+import "sweetalert/dist/sweetalert.css";
 import axios from "axios";
 import moment from "moment";
 
-
 const Expiredproduct = () => {
-  const handleClick = () => { };
+  const handleClick = () => {};
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
+  const [apicall, setapicall] = useState(false);
+
   const [expiredata, setexpiredata] = useState([]);
-  const currentdate = moment().format('YYYY-MM-DD')
+  const currentdate = moment().format("YYYY-MM-DD");
   // console.log("---date"+currentdate)
-const [searchdata, setsearchData] = useState({
-  product_title_name: "",
-  category: "",
-  manufacturing_date:"",
+  const [searchdata, setsearchData] = useState({
+    product_title_name: "",
+    category: "",
+    manufacturing_date: "",
+  });
+  const OnSearchChange = (e) => {
+    setsearchData({ ...searchdata, [e.target.name]: e.target.value });
+  };
 
-})
-console.log("......................."+expiredata)
-//console.log("RRRRRRRRRRRRRRRRRRR"+JSON.stringify(expiredata));
-const OnSearchChange = (e) => {
-  setsearchData({ ...searchdata, [e.target.name]: e.target.value })
-}
-
-const OnDateChange = (e) => {
-  let mdate = moment(e.target.value).format('DD-MM-YYYY')
-  setsearchData({ ...searchdata,manufacturing_date: mdate })
-  //console.log("DATE999999999999999"+mdate)
-}
-useEffect(() => {
-  axios.post(`${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`, {
-    "product_search": {
-      "search":`${searchdata.product_title_name}`,
-      "category":`${searchdata.category}`,
-      "price_from": "",
-      "price_to": "",
-      "latest_first":"",
-      "product_title_name":"",
-      "sale_price":"",
-      "short_by_updated_on":"",
-      "manufacturing_date":`${searchdata.manufacturing_date}`,
-      "expire_date":`${currentdate}`
-    }}).then((response) => {
-      let data = response.data.results
-      let data1 = data.filter(item=>moment(item.expire_date).isSame(currentdate));
-      setexpiredata(data1)
-  })
-  console.log("oooo"+JSON.stringify(expiredata))
-
-}, [searchdata]);
+  const OnDateChange = (e) => {
+    let mdate = moment(e.target.value).format("YYYY-MM-DD");
+    setsearchData({ ...searchdata, manufacturing_date: mdate });
+  };
+  useEffect(() => {
+    axios
+      .post(
+        `${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`,
+        {
+          product_search: {
+            search: `${searchdata.product_title_name}`,
+            category: `${searchdata.category}`,
+            price_from: "",
+            price_to: "",
+            latest_first: "",
+            product_title_name: "",
+            sale_price: "",
+            short_by_updated_on: "",
+            manufacturing_date: [`${searchdata.manufacturing_date}`],
+            expire_date: [`${currentdate}`],
+          },
+        }
+      )
+      .then((response) => {
+        let data = response.data.results;
+        setexpiredata(data);
+        setapicall(false);
+      });
+  }, [apicall]);
   const columns = [
     {
-      name: "Sku",
-      selector: (row) => (
-        <p>
-          {row.id}
-        </p>
-      ),
+      name: "Id",
+      selector: (row) => <p>{row.id}</p>,
       sortable: true,
-      width: "100px",
+      width: "70px",
       center: true,
     },
     {
@@ -72,17 +69,19 @@ useEffect(() => {
       center: true,
       cell: (row) => (
         <img
-          height="90px"
-          width="70px"
-          alt={row.product_title_name}
+          // height="90px"
+          // width="75px"
+          alt={"apna_organic"}
           src={
-            ""
+            row.all_images
+              ? row.all_images
+              : "https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
           }
           style={{
-            borderRadius: 10,
-            paddingTop: 10,
-            paddingBottom: 10,
+            padding: 10,
             textAlign: "right",
+            maxHeight: "100px",
+            maxWidth: "100px",
           }}
           onClick={handleClick}
         />
@@ -92,19 +91,41 @@ useEffect(() => {
       name: "Product Name",
       selector: (row) => row.product_title_name,
       sortable: true,
-      width: "250px",
+      width: "200px",
     },
     {
       name: "Category",
       selector: (row) => row.category,
       sortable: true,
-      width: "170px",
+      width: "100px",
+    },
+    {
+      name: "Mrp",
+      selector: (row) => row.mrp.toFixed(2),
+      sortable: true,
+      width: "100px",
+      center: true,
+      style: {
+        paddingRight: "32px",
+        paddingLeft: "0px",
+      },
+    },
+    {
+      name: "Dis(%)",
+      selector: (row) => row.discount + "%",
+      sortable: true,
+      width: "130px",
+      center: true,
+      style: {
+        paddingRight: "32px",
+        paddingLeft: "0px",
+      },
     },
     {
       name: "Price",
-      selector: (row) => row.product_price,
+      selector: (row) => row.product_price.toFixed(2),
       sortable: true,
-      width: "120px",
+      width: "100px",
       center: true,
       style: {
         paddingRight: "32px",
@@ -113,7 +134,37 @@ useEffect(() => {
     },
 
     {
-      name: "Stock",
+      name: "Tax",
+      selector: (row) =>
+        Number(row.gst) +
+        Number(row.cgst) +
+        Number(row.sgst) +
+        Number(row.wholesale_sales_tax) +
+        Number(row.retails_sales_tax) +
+        Number(row.manufacturers_sales_tax) +
+        Number(row.value_added_tax) +
+        "%",
+      sortable: true,
+      width: "90px",
+      center: true,
+      style: {
+        paddingLeft: "0px",
+      },
+    },
+    {
+      name: "SP",
+      selector: (row) => row.sale_price.toFixed(2),
+      sortable: true,
+      width: "100px",
+      center: true,
+      style: {
+        paddingRight: "32px",
+        paddingLeft: "0px",
+      },
+    },
+
+    {
+      name: "Qty",
       selector: (row) => row.quantity,
       sortable: true,
       width: "120px",
@@ -125,8 +176,8 @@ useEffect(() => {
     },
 
     {
-      name: "Manufacture Date",
-      selector: (row) => moment(row.manufacturing_date).format('DD-MM-YYYY'),
+      name: "MDate",
+      selector: (row) => moment(row.manufacturing_date).format("DD-MM-YYYY"),
       sortable: true,
       width: "150px",
       center: true,
@@ -136,8 +187,8 @@ useEffect(() => {
       },
     },
     {
-      name: "Expire Date",
-      selector: (row) =>  moment(row.expire_date).format('DD-MM-YYYY'),
+      name: "EDate",
+      selector: (row) => moment(row.expire_date).format("DD-MM-YYYY"),
       sortable: true,
       width: "150px",
       center: true,
@@ -146,10 +197,10 @@ useEffect(() => {
         paddingLeft: "0px",
       },
     },
-
   ];
-
-  
+  const onSearchClick = () => {
+    setapicall(true);
+  };
   return (
     <div>
       <h2>Expired Products</h2>
@@ -158,29 +209,43 @@ useEffect(() => {
       <div className="card mt-3 p-3 ">
         <div className="row pb-3">
           <div className="col-md-3 col-sm-6 aos_input">
-            <input type={"text"} placeholder={"Search by product name"} onChange={OnSearchChange} name='product_title_name'
+            <input
+              type={"text"}
+              placeholder={"Search by product name"}
+              onChange={OnSearchChange}
+              name="product_title_name"
               value={searchdata.product_title_name}
-              className={'adminsideinput'}/>
+              className={"adminsideinput"}
+            />
           </div>
-          
+
           <div className="col-md-3 col-sm-6 aos_input">
-            <input type={"date"} placeholder={"Search by product name"}  onChange={OnDateChange} name='manufacturing_date'
+            <input
+              type={"date"}
+              maxDate={moment().format("YYYY-MM-DD")}
+              placeholder={"Search by product name"}
+              onChange={OnDateChange}
+              name="manufacturing_date"
               value={searchdata.manufacturing_date}
-              className={'adminsideinput'}/>
+              className={"adminsideinput"}
+            />
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
-            <MainButton btntext={"Search"} btnclass={'button main_button w-100'}/>
+            <MainButton
+              onClick={onSearchClick}
+              btntext={"Search"}
+              btnclass={"button main_button w-100"}
+            />
           </div>
         </div>
 
         {/* upload */}
 
-
         {/* datatable */}
 
         <DataTable
           columns={columns}
-          data={expiredata.results}
+          data={expiredata}
           pagination
           highlightOnHover
           pointerOnHover

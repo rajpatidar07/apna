@@ -48,16 +48,14 @@ function Product() {
   const [categoryeditparent, setCategoryEditparent] = useState("");
   const [categoryeditsubparent, setCategoryEditSubparent] = useState("");
   const [categoryeditchildparent, setCategoryEditChildparent] = useState("");
-
   const [level, setlevel] = useState("");
   const [pdata, setpdata] = useState([]);
   const [proddata, setproddata] = useState([]);
   const [variantid, setvariantid] = useState("");
   const [productid, setproductid] = useState("");
-
   const [Alert, setAlert] = useState(false);
   const [VerityAlert, setVerityAlert] = useState(false);
-
+  const [ProductDraftAlert, setProductDraftAlert] = useState(false);
   const [ProductAlert, setProductAlert] = useState(false);
 
   const [apicall, setapicall] = useState(false);
@@ -235,7 +233,7 @@ function Product() {
   const OnFeatureDateChaneg = (e) => {
     setfeaturedata({ ...featuredata, [e.target.name]: e.target.value });
   };
-  console.log("dataaaaaaaaaaattaaaaaaaa" + JSON.stringify(featuredata));
+  // console.log("dataaaaaaaaaaattaaaaaaaa" + JSON.stringify(featuredata));
   const AddProductFeatureClick = (e) => {
     e.preventDefault();
     axios
@@ -385,7 +383,7 @@ function Product() {
           className={
             row.product_status === "pending"
               ? "badge bg-success"
-              : row.product_status === "active"
+              : row.product_status === "approved"
               ? "badge bg-danger"
               : row.product_status === "special_offer"
               ? "badge bg-info"
@@ -400,7 +398,7 @@ function Product() {
         >
           {row.product_status === "pending"
             ? "Pending"
-            : row.product_status === "active"
+            : row.product_status === "approved"
             ? "Active"
             : row.product_status === "special_offer"
             ? "Special Offer"
@@ -440,10 +438,10 @@ function Product() {
             Draft
           </option>
           <option
-            selected={row.product_status === "active" ? true : false}
-            value="active"
+            selected={row.product_status === "approved" ? true : false}
+            value="approved"
           >
-            Active
+            Approved
           </option>
         </Form.Select>
       ),
@@ -460,6 +458,23 @@ function Product() {
           Add Variety
         </Button>
         // : null
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
         /*: null*/
        /*: null*/),
       sortable: true,
@@ -665,7 +680,6 @@ function Product() {
     handleShow();
   }, []);
   const getProductVariant = (id) => {
-    console.log("id-----" + id);
     axios
       .post(
         `${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=500`,
@@ -952,7 +966,8 @@ function Product() {
             quantity: "",
             product_id: productID,
           });
-          getProductVariant(productID);
+          setProductAlert(true);
+          // getProductVariant(productID);
           // formRef.reset();
         })
         .catch(function(error) {
@@ -1068,6 +1083,8 @@ function Product() {
 
   const closeProductAlert = () => {
     setProductAlert(false);
+    setProductDraftAlert(false);
+    getProductVariant(productID);
   };
 
   const VariantEditClick = (id, productid) => {
@@ -1194,6 +1211,8 @@ function Product() {
       axios
         .post(`${process.env.REACT_APP_BASEURL}/products`, productdataa)
         .then((response) => {
+          setProductDraftAlert(true);
+
           console.log("finall---" + JSON.stringify(response.data));
           setapicall(true);
         });
@@ -3029,9 +3048,9 @@ function Product() {
                                                   onChange={(e) =>
                                                     imguploadchange(
                                                       e,
-                                                      vdata[0].product_id,
-                                                      vdata[0].id,
-                                                      vdata[0].vendor_id
+                                                      variantdata.product_id,
+                                                      variantdata.id,
+                                                      variantdata.vendor_id
                                                     )
                                                   }
                                                   name={"img_64"}
@@ -3236,6 +3255,13 @@ function Product() {
           show={ProductAlert}
           title="Added Successfully "
           text=" Product Added"
+          onConfirm={closeProductAlert}
+        />
+
+        <SweetAlert
+          show={ProductDraftAlert}
+          title="Added Successfully "
+          text=" Product Added To Draft"
           onConfirm={closeProductAlert}
         />
 
