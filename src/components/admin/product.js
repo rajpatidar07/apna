@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Col from "react-bootstrap/Col";
 import Input from "./common/input";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
@@ -13,7 +13,7 @@ import VariationJson from "./json/variation";
 import CategoryJson from "./json/categorytype";
 import Table from "react-bootstrap/Table";
 import { AiOutlinePlus, AiOutlineCloudUpload } from "react-icons/ai";
-import {FaEllipsisV} from "react-icons/fa";
+import { FaEllipsisV } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
@@ -27,39 +27,36 @@ import { GiCancel } from "react-icons/gi";
 import moment from "moment/moment";
 import BrandJson from "./json/BrandJson";
 
-
 let categoryArray = [];
 let encoded;
 // let newImageUrls = [];
 let ImgObj = [];
 
 function Product() {
-  const [vendorid,setVendorId] = useState([])
+  const [vendorid, setVendorId] = useState([]);
   const [category, setCategory] = useState([]);
   const [indVal, setIndVal] = useState(0);
   const [subCategory, setSubCategory] = useState([]);
   const [childCategory, setchildCategory] = useState([]);
   const [grandcCategory, setgrandcCategory] = useState([]);
   const [scategory, setScategory] = useState({
-    parent_category:"",
-    sub_category:"",
-    childcategory:"",
-    gcategory:""
+    parent_category: "",
+    sub_category: "",
+    childcategory: "",
+    gcategory: "",
   });
-  const [categoryeditparent,setCategoryEditparent] = useState('')
-  const [categoryeditsubparent,setCategoryEditSubparent] = useState('')
-  const [categoryeditchildparent,setCategoryEditChildparent] = useState('')
-
+  const [categoryeditparent, setCategoryEditparent] = useState("");
+  const [categoryeditsubparent, setCategoryEditSubparent] = useState("");
+  const [categoryeditchildparent, setCategoryEditChildparent] = useState("");
   const [level, setlevel] = useState("");
   const [pdata, setpdata] = useState([]);
   const [proddata, setproddata] = useState([]);
   const [variantid, setvariantid] = useState("");
   const [productid, setproductid] = useState("");
-
   const [Alert, setAlert] = useState(false);
   const [VerityAlert, setVerityAlert] = useState(false);
-
-  const[ProductAlert,setProductAlert]=useState(false)
+  const [ProductDraftAlert, setProductDraftAlert] = useState(false);
+  const [ProductAlert, setProductAlert] = useState(false);
 
   const [apicall, setapicall] = useState(false);
 
@@ -71,8 +68,7 @@ function Product() {
   const [modalshow, setmodalshow] = useState(false);
   const [seoarray, setseoArray] = useState([]);
 
-
-  var veriantData={
+  var veriantData = {
     product_status: "",
     product_id: "",
     unit: "",
@@ -88,7 +84,7 @@ function Product() {
     manufacturing_date: "",
     expire_date: "",
     quantity: "",
-  }
+  };
   const [variantarray, setvariantarray] = useState(veriantData);
   const [variantmainarray, setvariantmainarray] = useState([]);
   const [data1, setdata1] = useState("");
@@ -102,32 +98,32 @@ function Product() {
   });
   const [vdata, setvdata] = useState([]);
 
-  var data =   {
-     add_custom_input: [],
-  product_title_name: "",
-  product_slug: "",
-  store_name: "",
-  product_type: "",
-  category: "",
-  parent_category: "",
-  wholesale_sales_tax: "0",
-  gst: "0",
-  cgst: "0",
-  sgst: "0",
-  retails_sales_tax: "0",
-  value_added_tax: "0",
-  manufacturers_sales_tax: "0",
-  manufacturing_date: "",
-  expire_date: "",
-  seo_tag: "",
-  variety: false,
-  product_description: "",
-  other_introduction: "",
-  // is_active: "0",
-  vendor_id: "",
-  shop: "",
-  show_product_rating: "0",
-  }
+  var data = {
+    add_custom_input: [],
+    product_title_name: "",
+    product_slug: "",
+    store_name: "",
+    product_type: "",
+    category: "",
+    parent_category: "",
+    wholesale_sales_tax: "0",
+    gst: "0",
+    cgst: "0",
+    sgst: "0",
+    retails_sales_tax: "0",
+    value_added_tax: "0",
+    manufacturers_sales_tax: "0",
+    manufacturing_date: "",
+    expire_date: "",
+    seo_tag: "",
+    variety: false,
+    product_description: "",
+    other_introduction: "",
+    // is_active: "0",
+    vendor_id: "",
+    shop: "",
+    show_product_rating: "0",
+  };
   const [productdata, setproductdata] = useState(data);
   const mainformRef = useRef();
   const formRef = useRef();
@@ -136,139 +132,130 @@ function Product() {
     category: "",
     product_status: "",
   });
-const [newImageUrls,setnewImageUrls] = useState([])
-const [variantremove,setVariantRemove] = useState([])
-const [editbutton , setEditButton]= useState(false)
-const [taxdata,settaxdata] = useState({
-  wholesale_sales_tax: "0",
-  gst: "0",
-  cgst: "0",
-  sgst: "0",
-  retails_sales_tax: "0",
-  value_added_tax: "0",
-  manufacturers_sales_tax: "0",
-})
-const[productID,setproductID]=useState("")
+  const [newImageUrls, setnewImageUrls] = useState([]);
+  const [variantremove, setVariantRemove] = useState([]);
+  const [editbutton, setEditButton] = useState(false);
+  const [taxdata, settaxdata] = useState({
+    wholesale_sales_tax: "0",
+    gst: "0",
+    cgst: "0",
+    sgst: "0",
+    retails_sales_tax: "0",
+    value_added_tax: "0",
+    manufacturers_sales_tax: "0",
+  });
+  const [productID, setproductID] = useState("");
 
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
   };
 
-  
-  const onProductStatusChange = (e,id,productid) =>{
+  const onProductStatusChange = (e, id, productid) => {
     axios
       .put(`${process.env.REACT_APP_BASEURL}/product_status_update`, {
-          "id":`${id}`,
-          "product_id":`${productid}`,
-          "product_status":e.target.value
+        id: `${id}`,
+        product_id: `${productid}`,
+        product_status: e.target.value,
       })
       .then((response) => {
         // console.log("---update" + (response.data));
         setapicall(true);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
-  }
+  };
   const OnCategorySearchChange = (e) => {
     setsearchData({ ...searchdata, category: e.target.value });
     categoryArray.push(e.target.value);
   };
 
-  
-  const  fetchdata=()=>{
-  axios
-  .post(
-    `${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=500`,
-    {
-      product_search: {
-        search: `${searchdata.product_title_name}`,
-        price_from: "",
-        price_to: "",
-        latest_first:"",
-        product_title_name:"",
-        sale_price:"",
-        short_by_updated_on:"",
-        category: categoryArray,
-        product_status: [`${searchdata.product_status}`],
-        is_delete: ["1"],
-        colors: [],
-        size: [],
-        parent_category: [],
-        product_type: [],
-      },
-    }
-  )
-  .then((response) => {
-    setpdata(response.data);
-    
-    setapicall(false);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-}
+  const fetchdata = () => {
+    axios
+      .post(
+        `${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=500`,
+        {
+          product_search: {
+            search: `${searchdata.product_title_name}`,
+            price_from: "",
+            price_to: "",
+            latest_first: "",
+            product_title_name: "",
+            sale_price: "",
+            short_by_updated_on: "",
+            category: categoryArray,
+            product_status: [`${searchdata.product_status}`],
+            is_delete: ["1"],
+            colors: [],
+            size: [],
+            parent_category: [],
+            product_type: [],
+          },
+        }
+      )
+      .then((response) => {
+        setpdata(response.data);
+
+        setapicall(false);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
 
   useEffect(() => {
-    const first='';
-    fetchdata()
-  
-  }, [apicall,  Alert ]);
+    const first = "";
+    fetchdata();
+  }, [apicall, Alert]);
   //
   // console.log("ddddddddddddddddddDDDDDDDDDDDDD"+JSON.stringify(pdata))
   let filtered;
   const handleAlert = (id) => {
     setAlert(true);
-  
-    setVariantRemove({...variantremove, 
-      id:id[0],
-     productid:id[1]
-     })
+
+    setVariantRemove({ ...variantremove, id: id[0], productid: id[1] });
     setvariantid(id[0]);
     setproductid(id[1]);
-  
-
   };
-//  feature product 
-const [featureshow, setfeatureShow] = useState(false);
-const [featuredata, setfeaturedata] = useState({
-  start_date:"",
-  end_date:"",
-  product_id:"",
-  fetured_type:"",
-});
-const [productname, setproductname] = useState('');
+  //  feature product
+  const [featureshow, setfeatureShow] = useState(false);
+  const [featuredata, setfeaturedata] = useState({
+    start_date: "",
+    end_date: "",
+    product_id: "",
+    fetured_type: "",
+  });
+  const [productname, setproductname] = useState("");
 
   const featureModalClose = () => setfeatureShow(false);
   const featureModalShow = () => setfeatureShow(true);
-const OnProductOfferClick = (e,productid,productname) =>{
-  setfeaturedata({...featuredata, 
-    product_id:`${productid}`,
-    fetured_type:e.target.value,
-  })
-  setproductname(productname)
-  setfeatureShow(true)
-}
-const OnFeatureDateChaneg = (e)=>{
-  setfeaturedata({...featuredata, 
-    [e.target.name]:e.target.value
-  })
-}
-console.log("dataaaaaaaaaaattaaaaaaaa"+JSON.stringify(featuredata))
-const AddProductFeatureClick = (e) =>{
-  e.preventDefault();
-axios
-.post(`${process.env.REACT_APP_BASEURL}/add_fetured_product`,featuredata)
-.then((response) => {
-  // console.log("---update" + JSON.stringify(response.data));
-  setapicall(true);
-  setfeatureShow(false)
-})
-.catch(function (error) {
-  console.log(error);
-});
-}
-// end feature product
+  const OnProductOfferClick = (e, productid, productname) => {
+    setfeaturedata({
+      ...featuredata,
+      product_id: `${productid}`,
+      fetured_type: e.target.value,
+    });
+    setproductname(productname);
+    setfeatureShow(true);
+  };
+  const OnFeatureDateChaneg = (e) => {
+    setfeaturedata({ ...featuredata, [e.target.name]: e.target.value });
+  };
+  // console.log("dataaaaaaaaaaattaaaaaaaa" + JSON.stringify(featuredata));
+  const AddProductFeatureClick = (e) => {
+    e.preventDefault();
+    axios
+      .post(`${process.env.REACT_APP_BASEURL}/add_fetured_product`, featuredata)
+      .then((response) => {
+        // console.log("---update" + JSON.stringify(response.data));
+        setapicall(true);
+        setfeatureShow(false);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
+  // end feature product
   //  json
   var varietyy = VariationJson;
   var categorytype = CategoryJson;
@@ -287,7 +274,11 @@ axios
           // height="90px"
           // width="75px"
           alt={"apna_organic"}
-          src={row.all_images? row.all_images:"https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"}
+          src={
+            row.all_images
+              ? row.all_images
+              : "https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
+          }
           style={{
             padding: 10,
             textAlign: "right",
@@ -329,7 +320,7 @@ axios
     },
     {
       name: "Mrp",
-      selector: (row) => (row.mrp).toFixed(2),
+      selector: (row) => row.mrp.toFixed(2),
       sortable: true,
       width: "100px",
       center: true,
@@ -340,7 +331,7 @@ axios
     },
     {
       name: "Dis(%)",
-      selector: (row) => row.discount+'%',
+      selector: (row) => row.discount + "%",
       sortable: true,
       width: "130px",
       center: true,
@@ -351,7 +342,7 @@ axios
     },
     {
       name: "Price",
-      selector: (row) => (row.product_price).toFixed(2),
+      selector: (row) => row.product_price.toFixed(2),
       sortable: true,
       width: "100px",
       center: true,
@@ -360,10 +351,10 @@ axios
         paddingLeft: "0px",
       },
     },
-    
+
     {
       name: "Gst",
-      selector: (row) => row.gst+'%',
+      selector: (row) => row.gst + "%",
       sortable: true,
       width: "90px",
       center: true,
@@ -373,7 +364,7 @@ axios
     },
     {
       name: "SP",
-      selector: (row) => (row.sale_price).toFixed(2),
+      selector: (row) => row.sale_price.toFixed(2),
       sortable: true,
       width: "100px",
       center: true,
@@ -398,26 +389,31 @@ axios
       selector: (row) => (
         <span
           className={
-            row.product_status === 'pending'
+            row.product_status === "pending"
               ? "badge bg-success"
-              : row.product_status === 'active'
-              ? "badge bg-danger" :row.product_status === 'special_offer' ?
-              "badge bg-info" : row.product_status === 'featured_offer'?
-               "badge bg-warning" :row.product_status === 'promotional'?
-               "badge bg-primary" : row.product_status === 'draft'?
-               "badge bg-secondary":null
+              : row.product_status === "approved"
+              ? "badge bg-danger"
+              : row.product_status === "special_offer"
+              ? "badge bg-info"
+              : row.product_status === "featured_offer"
+              ? "badge bg-warning"
+              : row.product_status === "promotional"
+              ? "badge bg-primary"
+              : row.product_status === "draft"
+              ? "badge bg-secondary"
+              : null
           }
         >
-          {row.product_status === 'pending'
+          {row.product_status === "pending"
             ? "Pending"
-            : row.product_status === 'active'
-            ? "Active":
-            row.product_status === 'special_offer' ?
-            "Special Offer" :
-            row.product_status === 'featured_offer' ?
-            "Featured Offer":
-            row.product_status === 'promotional' ?
-             "Promotional"
+            : row.product_status === "approved"
+            ? "Approved"
+            : row.product_status === "special_offer"
+            ? "Special Offer"
+            : row.product_status === "featured_offer"
+            ? "Featured Offer"
+            : row.product_status === "promotional"
+            ? "Promotional"
             : "Draft"}
         </span>
       ),
@@ -432,12 +428,29 @@ axios
           aria-label="Search by delivery"
           size="sm"
           className="w-100"
-          onChange={(e)=>onProductStatusChange(e,row.id,row.product_id)}
+          onChange={(e) => onProductStatusChange(e, row.id, row.product_id)}
         >
-          <option selected={row.product_status === "" ? true : false} value="">Select</option>
-          <option selected={row.product_status === "pending" ? true : false} value="pending">Pending</option>
-          <option selected={row.product_status === "draft" ? true : false} value="draft">Draft</option>
-          <option selected={row.product_status === "active" ? true : false} value="active">Active</option>
+          <option selected={row.product_status === "" ? true : false} value="">
+            Select
+          </option>
+          <option
+            selected={row.product_status === "pending" ? true : false}
+            value="pending"
+          >
+            Pending
+          </option>
+          <option
+            selected={row.product_status === "draft" ? true : false}
+            value="draft"
+          >
+            Draft
+          </option>
+          <option
+            selected={row.product_status === "approved" ? true : false}
+            value="approved"
+          >
+            Approved
+          </option>
         </Form.Select>
       ),
       sortable: true,
@@ -453,7 +466,33 @@ axios
           Add Variety
         </Button>
         // : null
-      ),
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+       /*: null*/),
       sortable: true,
     },
     {
@@ -467,22 +506,22 @@ axios
       selector: (row) => (
         <div className={"actioncolimn"}>
           <div className="feature_product_dropdown_box">
-          <Form.Select
-          aria-label="Search by delivery"
-          size="sm"
-          className="w-100 feature_product_select"
-          onChange={(e)=>OnProductOfferClick(e,row.product_id,row.product_title_name)}
-        >
-          <option value="">Select</option>
-          <option value="special_offer">Special Offer</option>
-          <option  value="featured_offer" >Featured Offer </option>
-          <option value="promotional" >Promotional </option>
-        </Form.Select>
-          <FaEllipsisV className="feature_product_ellipsis"/>
-
-          
+            <Form.Select
+              aria-label="Search by delivery"
+              size="sm"
+              className="w-100 feature_product_select"
+              onChange={(e) =>
+                OnProductOfferClick(e, row.product_id, row.product_title_name)
+              }
+            >
+              <option value="">Select</option>
+              <option value="special_offer">Special Offer</option>
+              <option value="featured_offer">Featured Offer </option>
+              <option value="promotional">Promotional </option>
+            </Form.Select>
+            <FaEllipsisV className="feature_product_ellipsis" />
           </div>
-         
+
           <BiEdit
             className=" p-0 m-0  editiconn text-secondary"
             onClick={handleShow.bind(this, row.product_id)}
@@ -501,95 +540,91 @@ axios
   ];
   const categoryFormChange = (e, id) => {
     setIndVal(e.target.value);
-    setScategory({ ...scategory, [e.target.name]: e.target.value});
+    setScategory({ ...scategory, [e.target.name]: e.target.value });
   };
-  useEffect(()=>{
+  useEffect(() => {
     try {
       axios
-        .get(
-          `${process.env.REACT_APP_BASEURL}/category?category=${indVal}`
-        )
+        .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
         .then((response) => {
-          if(response.data !== []){
+          if (response.data !== []) {
             let cgory = response.data;
-           if (indVal === scategory.parent_category) {
-            setSubCategory(cgory);
-            setproductdata({
-              ...productdata,
-              "parent_category": "0",
-              "category":indVal
-            });
-          } 
-          else if (indVal === scategory.sub_category) {
-            setchildCategory(cgory);
-            setproductdata({
-              ...productdata,
-              "parent_category": cgory[0].all_parent_id,
-              "category":indVal
-            });
-            setlevel(2);
-          } else if (indVal === scategory.childcategory) {
-            setgrandcCategory(cgory);
-            setproductdata({
-              ...productdata,
-              "parent_category": cgory[0].all_parent_id,
-              "category":indVal
-            });
-            setlevel(3);
-          } else if (indVal === scategory.gcategory) {
-            setgrandcCategory(cgory);
-            setproductdata({
-              ...productdata,
-              "parent_category": cgory[0].all_parent_id,
-              "category":indVal
-            });
-            setlevel(4);
+            if (indVal === scategory.parent_category) {
+              setSubCategory(cgory);
+              setproductdata({
+                ...productdata,
+                parent_category: "0",
+                category: indVal,
+              });
+            } else if (indVal === scategory.sub_category) {
+              setchildCategory(cgory);
+              setproductdata({
+                ...productdata,
+                parent_category: cgory[0].all_parent_id,
+                category: indVal,
+              });
+              setlevel(2);
+            } else if (indVal === scategory.childcategory) {
+              setgrandcCategory(cgory);
+              setproductdata({
+                ...productdata,
+                parent_category: cgory[0].all_parent_id,
+                category: indVal,
+              });
+              setlevel(3);
+            } else if (indVal === scategory.gcategory) {
+              setgrandcCategory(cgory);
+              setproductdata({
+                ...productdata,
+                parent_category: cgory[0].all_parent_id,
+                category: indVal,
+              });
+              setlevel(4);
+            }
           }
-        }
         });
     } catch (err) {}
-  },[scategory,indVal])
+  }, [scategory, indVal]);
   // modal
-  const [editparentCategory,seteditparentCategory] = useState('');
-  
+  const [editparentCategory, seteditparentCategory] = useState("");
+
   const handleShow = (e) => {
-       // vendor
-    const getVendorData =()=>{
+    // vendor
+    const getVendorData = () => {
       try {
         axios
           .get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
           .then((response) => {
             let cgory = response.data;
-            const result = cgory.filter((thing, index, self) =>
-        index === self.findIndex((t) => (
-          t.shop_name == thing.shop_name 
-        )))
-            setVendorId(result)
+            const result = cgory.filter(
+              (thing, index, self) =>
+                index === self.findIndex((t) => t.shop_name == thing.shop_name)
+            );
+            setVendorId(result);
           });
       } catch (err) {}
-    }
-          getVendorData();
+    };
+    getVendorData();
 
-      // end vendor api
-// category data
-          const getCategorydata = () =>{
-            try {
-              axios
-                .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
-                .then((response) => {
-                  let cgory = response.data;
-                  
-                  if (indVal === 0) {
-                    setCategory(cgory);
-                   setSubCategory('');
-                    setlevel(0);
-                  }
-                });
-            } catch (err) {}
-      
-          }
-          getCategorydata();
-          // end category data
+    // end vendor api
+    // category data
+    const getCategorydata = () => {
+      try {
+        axios
+          .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
+          .then((response) => {
+            let cgory = response.data;
+
+            if (indVal === 0) {
+              setCategory(cgory);
+              setSubCategory("");
+              setlevel(0);
+            }
+          });
+      } catch (err) {}
+    };
+    getCategorydata();
+    // end category data
     if (e === "add") {
       setmodalshow(e);
     } else {
@@ -599,54 +634,59 @@ axios
           let data = response.data;
           if (data != undefined || data != "" || data != null) {
             setproductdata(data);
-            
-// categoryedit 
 
-const arr = data.parent_category.split(',');
-for(let i=0 ; i < arr.length; i++){
-axios
-.get(`${process.env.REACT_APP_BASEURL}/category_details?id=${arr[i]}`)
-.then((response) => {
-let data = response.data[0];
-if(i === 0 ){
-axios
-.get(`${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`)
-.then((response) => {
-setSubCategory(response.data)
-});
-seteditparentCategory(data.category_name)
-// console.log("---first"+data.category_name)
-}
-else if(i === 1 ){
-axios
-.get(`${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`)
-.then((response) => {
-       setchildCategory(response.data)
-});
-setCategoryEditparent(data.category_name);
-// console.log("---second"+data.category_name)
-}
-else if(i === 2){
-  axios
-.get(`${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`)
-.then((response) => {
-  setgrandcCategory(response.data)
-});
-setCategoryEditSubparent(data.category_name);
-// console.log("---third"+data.category_name)
-}
-else if(i===3){
-  setCategoryEditChildparent(data.category_name);
-  // console.log("---fourth"+data.category_name) 
-}
-})
-}
-// end category edit api
+            // categoryedit
+
+            const arr = data.parent_category.split(",");
+            for (let i = 0; i < arr.length; i++) {
+              axios
+                .get(
+                  `${process.env.REACT_APP_BASEURL}/category_details?id=${arr[i]}`
+                )
+                .then((response) => {
+                  let data = response.data[0];
+                  if (i === 0) {
+                    axios
+                      .get(
+                        `${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`
+                      )
+                      .then((response) => {
+                        setSubCategory(response.data);
+                      });
+                    seteditparentCategory(data.category_name);
+                    // console.log("---first"+data.category_name)
+                  } else if (i === 1) {
+                    axios
+                      .get(
+                        `${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`
+                      )
+                      .then((response) => {
+                        setchildCategory(response.data);
+                      });
+                    setCategoryEditparent(data.category_name);
+                    // console.log("---second"+data.category_name)
+                  } else if (i === 2) {
+                    axios
+                      .get(
+                        `${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`
+                      )
+                      .then((response) => {
+                        setgrandcCategory(response.data);
+                      });
+                    setCategoryEditSubparent(data.category_name);
+                    // console.log("---third"+data.category_name)
+                  } else if (i === 3) {
+                    setCategoryEditChildparent(data.category_name);
+                    // console.log("---fourth"+data.category_name)
+                  }
+                });
+            }
+            // end category edit api
           }
           let customdatra = JSON.parse(response.data.add_custom_input);
           setcustomarray(customdatra);
         })
-        .catch(function (error) {
+        .catch(function(error) {
           console.log(error);
         });
       setmodalshow(e);
@@ -655,47 +695,46 @@ else if(i===3){
   useEffect(() => {
     handleShow();
   }, []);
-const  getProductVariant = (id) =>{
-  console.log("id-----"+id)
-  axios
-  .post(
-    `${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=500`,
-    {
-      product_search: {
-        search: "",
-        category: "",
-        price_from: "",
-        price_to: "",
-        latest_first:"",
-        product_title_name:"",
-        sale_price:"",
-        short_by_updated_on:"",
-        is_delete: ["1"],
-        product_id: [`${id}`],
-      },
-    }
-  )
-  .then((response) => {
-    // console.log("response.data.results)"+JSON.stringify(response.data.results))
-    setvdata(response.data.results);
-    settaxdata(response.data.results[0])
-    // setvariantarray({
-    //   ...variantarray,
-    //   product_id: id,
-    // });
-    setvariantapicall(false);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-}
+  const getProductVariant = (id) => {
+    axios
+      .post(
+        `${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=500`,
+        {
+          product_search: {
+            search: "",
+            category: "",
+            price_from: "",
+            price_to: "",
+            latest_first: "",
+            product_title_name: "",
+            sale_price: "",
+            short_by_updated_on: "",
+            is_delete: ["1"],
+            product_id: [`${id}`],
+          },
+        }
+      )
+      .then((response) => {
+        // console.log("response.data.results)"+JSON.stringify(response.data.results))
+        setvdata(response.data.results);
+        settaxdata(response.data.results[0]);
+        // setvariantarray({
+        //   ...variantarray,
+        //   product_id: id,
+        // });
+        setvariantapicall(false);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
   const handlevarietyShow = (id) => {
     getProductVariant(id);
-     setvariantarray({
+    setvariantarray({
       ...variantarray,
       product_id: id,
     });
-    setproductID(id)
+    setproductID(id);
     // image show
 
     // axios
@@ -713,34 +752,22 @@ const  getProductVariant = (id) =>{
   };
 
   const handlevarietyClose = (e) => {
-    e.preventDefault()
-   
+    e.preventDefault();
+
     setValidated(false);
-  
+
     setvarietyShow(false);
-    mainformRef.current.reset();
+    // mainformRef.current.reset();
   };
-
-  
-
 
   const handleClose = () => {
-
-    mainformRef.current.reset();
     setproductdata(data);
-    setcustomarray([])
-
+    setcustomarray([]);
     setvariantarray(veriantData);
-    setvariantmainarray([])
-   
-     setValidated(false);
+    setvariantmainarray([]);
+    setValidated(false);
     setmodalshow(false);
-    // console.log("---product data------------" + JSON.stringify(productdata));
-
-    //  console.log("end Here-------------------")
-
   };
-           
 
   // seotag
   let tagname;
@@ -777,9 +804,9 @@ const  getProductVariant = (id) =>{
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
-      const {  name } = file;
+      const { name } = file;
       fileReader.addEventListener("load", () => {
-        resolve({name: name,base64:fileReader.result});
+        resolve({ name: name, base64: fileReader.result });
       });
       fileReader.readAsDataURL(file);
       fileReader.onerror = (error) => {
@@ -787,23 +814,17 @@ const  getProductVariant = (id) =>{
       };
     });
   };
-  
-  const imguploadchange = async (
-    e,
-    product_id,
-    id,
-    vendor_id,
-  ) => {
 
-    console.log("imagnewImageUrlse"+newImageUrls.length)
+  const imguploadchange = async (e, product_id, id, vendor_id) => {
+    onImgView(product_id, id);
+    console.log("imagnewImageUrlse" + newImageUrls.length);
     for (let i = 0; i < e.target.files.length; i++) {
       let coverimg;
-      
-      if(newImageUrls.length === 0 && i===0){
-        coverimg = 'cover'
-      }
-      else{
-        coverimg = `cover${i}`
+
+      if (newImageUrls.length === 0 && i === 0) {
+        coverimg = "cover";
+      } else {
+        coverimg = `cover${i}`;
       }
       encoded = await convertToBase64(e.target.files[i]);
       const [first, ...rest] = encoded.base64.split(",");
@@ -822,65 +843,58 @@ const  getProductVariant = (id) =>{
     axios
       .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
       .then((response) => {
-        ImgObj=[]
-        onImgView(id,product_id);
+        ImgObj = [];
+        onImgView(id, product_id);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
 
-  const onImgRemove = (
-    id,
-    name,
-    vendor_id,
-    product_id,
-    product_verient_id
-    ) => {
-       axios
-    .put(`${process.env.REACT_APP_BASEURL}/product_image_delete`,{
-      "product_image_id":`${id}`,
-      "product_image_name": `${name}`,
-      "vendor_id": `${vendor_id}`
-    }
-    )
-    .then((response) => {
-      onImgView(product_verient_id,product_id);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });};
-    
-const onImgView = (id, productid) =>{
-  setEditButton(false)
-  axios
-      .get(`${process.env.REACT_APP_BASEURL}/product_images_get_singal_veriant?product_id=${productid}&product_verient_id=${id}`)
+  const onImgRemove = (id, name, vendor_id, product_id, product_verient_id) => {
+    axios
+      .put(`${process.env.REACT_APP_BASEURL}/product_image_delete`, {
+        product_image_id: `${id}`,
+        product_image_name: `${name}`,
+        vendor_id: `${vendor_id}`,
+      })
       .then((response) => {
-        setnewImageUrls(response.data)
+        onImgView(product_verient_id, product_id);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
+
+  const onImgView = (id, productid) => {
+    setEditButton(false);
+    axios
+      .get(
+        `${process.env.REACT_APP_BASEURL}/product_images_get_singal_veriant?product_id=${productid}&product_verient_id=${id}`
+      )
+      .then((response) => {
+        setnewImageUrls(response.data);
         setapicall(true);
         setmodalshow(false);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
-}
-const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
-  axios
-  .put(
-    `${process.env.REACT_APP_BASEURL}/change_porduct_cover_image`,
-    {
-    "product_image_id":`${imgid}`,
-    "product_id":`${productid}`,
-    "product_verient_id":`${productvariantid}`
-  }
-  )
-  .then((response) => {
-    onImgView(productvariantid,productid)
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-}
+  };
+  const onImgCoverEditClick = (imgid, productid, productvariantid) => {
+    axios
+      .put(`${process.env.REACT_APP_BASEURL}/change_porduct_cover_image`, {
+        product_image_id: `${imgid}`,
+        product_id: `${productid}`,
+        product_verient_id: `${productvariantid}`,
+      })
+      .then((response) => {
+        onImgView(productvariantid, productid);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
 
   const onVariantChange = (e) => {
     setvariantarray({
@@ -888,31 +902,24 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
       [e.target.name]: e.target.value,
     });
   };
-  let discountt= variantarray.mrp * variantarray.discount/100;
+  let discountt = (variantarray.mrp * variantarray.discount) / 100;
   let product_price = variantarray.mrp - discountt;
-  let saleprice =(product_price) 
-  + 
-  (
-    (product_price*(taxdata.gst/100) )
-  +
-  (product_price*(taxdata.wholesale_sales_tax/100))
-  +
-  (product_price*(taxdata.retails_sales_tax/100))
-  +
-(product_price*(taxdata.value_added_tax/100))
-+
-(product_price*(taxdata.manufacturers_sales_tax/100))
-)
-
+  let saleprice =
+    product_price +
+    (product_price * (taxdata.gst / 100) +
+      product_price * (taxdata.wholesale_sales_tax / 100) +
+      product_price * (taxdata.retails_sales_tax / 100) +
+      product_price * (taxdata.value_added_tax / 100) +
+      product_price * (taxdata.manufacturers_sales_tax / 100));
 
   useEffect(() => {
     setvariantarray({
       ...variantarray,
-      product_status:"pending",
+      product_status: "pending",
       product_price: `${product_price}`,
-      sale_price:`${saleprice}`
+      sale_price: `${saleprice}`,
     });
-  }, [variantarray.mrp,variantarray.discount,taxdata]);
+  }, [variantarray.mrp, variantarray.discount, taxdata]);
   const handleInputcheckboxChange = (e) => {
     const target = e.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
@@ -928,7 +935,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
       [e.target.name]: e.target.value,
     });
   };
-  const onVariantaddclick = (id,productid) => {
+  const onVariantaddclick = (id, productid) => {
     // id.preventDefault();
     if (id == "" || id == undefined || id == null) {
       axios
@@ -942,7 +949,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
             unit: "",
             colors: "",
             unit_quantity: "",
-            size:"",
+            size: "",
             product_price: "",
             mrp: "",
             sale_price: "",
@@ -952,12 +959,13 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
             manufacturing_date: "",
             expire_date: "",
             quantity: "",
-            product_id:productID
+            product_id: productID,
           });
-          getProductVariant(productID)
+          setProductAlert(true);
+          // getProductVariant(productID);
           // formRef.reset();
         })
-        .catch(function (error) {
+        .catch(function(error) {
           console.log(error);
         });
     } else {
@@ -972,13 +980,13 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
 
           // setvarietyShow(false);
           // setvariantarray([])
-       
-       setvariantarray({
+
+          setvariantarray({
             product_status: "",
-            unit:"",
+            unit: "",
             colors: "",
             unit_quantity: "",
-            size:"",
+            size: "",
             product_price: "",
             mrp: "",
             sale_price: "",
@@ -988,14 +996,13 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
             manufacturing_date: "",
             expire_date: "",
             quantity: "",
-            product_id:productID
+            product_id: productID,
           });
-          // VariantEditClick(id,productid) 
-            //  setvarietyShow(false);
-                  getProductVariant(productID)
-        
+          // VariantEditClick(id,productid)
+          //  setvarietyShow(false);
+          getProductVariant(productID);
         })
-        .catch(function (error) {
+        .catch(function(error) {
           console.log(error);
         });
     }
@@ -1015,14 +1022,13 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
     // }
   };
   const VariantRemoveClick = (id, productid) => {
-
     setVerityAlert(true);
-    setVariantRemove((variantremove) =>{  
-      return{...variantremove,  id : id, productid:productid }});
+    setVariantRemove((variantremove) => {
+      return { ...variantremove, id: id, productid: productid };
+    });
   };
 
   const hideAlert = () => {
-   
     // product delete
     axios
       .put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
@@ -1034,9 +1040,9 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
         getProductVariant(variantremove.productid);
         // setapicall(true);
         // getProductVariant(productid);
-      //  setpdata(response.data)
+        //  setpdata(response.data)
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
 
@@ -1044,10 +1050,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
     setVerityAlert(false);
   };
 
-
-
   const deleteProductAlert = () => {
-   
     // product delete
     axios
       .put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
@@ -1060,22 +1063,24 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
         setapicall(true);
         // setpdata(response.data)
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
 
     // variety delete
-     setAlert(false);
+    setAlert(false);
   };
 
-  const closeAlert=()=>{
+  const closeAlert = () => {
     setAlert(false);
     setVerityAlert(false);
-  }
+  };
 
-const closeProductAlert=()=>{
-  setProductAlert(false)
-}
+  const closeProductAlert = () => {
+    setProductAlert(false);
+    setProductDraftAlert(false);
+    getProductVariant(productID);
+  };
 
   const VariantEditClick = (id, productid) => {
     axios
@@ -1084,9 +1089,8 @@ const closeProductAlert=()=>{
       )
       .then((response) => {
         setvariantarray(response.data[0]);
-        
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -1142,45 +1146,39 @@ const closeProductAlert=()=>{
     settaxdata({
       ...taxdata,
       [e.target.name]: e.target.value,
-    })
-  };
-  const handleVendorNameChange = (e) => {
-    let arr = e.target.value.split(',')
-    setproductdata({
-      ...productdata,
-      "store_name": arr[1],
-      "vendor_id": arr[0],
-      "shop": arr[1],
-
     });
   };
-
+  const handleVendorNameChange = (e) => {
+    let arr = e.target.value.split(",");
+    setproductdata({
+      ...productdata,
+      store_name: arr[1],
+      vendor_id: arr[0],
+      shop: arr[1],
+    });
+  };
 
   const handledescription = (event, editor) => {
     setdata1(editor.getData());
     console.log({ event, editor, data1 });
 
-
     let productdesc;
-    if((editor.getData()) != undefined){
-      productdesc = (editor.getData()).replaceAll(/"/g, '\'');
-   }
+    if (editor.getData() != undefined) {
+      productdesc = editor.getData().replaceAll(/"/g, "'");
+    }
     setproductdata({
       ...productdata,
       product_description: productdesc,
     });
-
-
-    
   };
 
   const OtherDescription = (event, editor) => {
     setotherintro(editor.getData());
     console.log({ event, editor, otherintro });
     let otherinstrction;
-    if((editor.getData()) != undefined){
-      otherinstrction = (editor.getData()).replaceAll(/"/g, '\'');
-   }
+    if (editor.getData() != undefined) {
+      otherinstrction = editor.getData().replaceAll(/"/g, "'");
+    }
     setproductdata({
       ...productdata,
       other_introduction: otherinstrction,
@@ -1194,21 +1192,22 @@ const closeProductAlert=()=>{
   const handleSaveDraft = (e) => {
     setvariantarray({
       ...variantarray,
-      product_status:"draft",
+      product_status: "draft",
     });
     productdataa.push(productdata);
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
       setValidated(false);
       e.preventDefault();
-    }
-    else{
+    } else {
       axios
-      .post(`${process.env.REACT_APP_BASEURL}/products`, productdataa)
-      .then((response) => {
-        console.log("finall---" + JSON.stringify(response.data));
-        setapicall(true);
-      });
+        .post(`${process.env.REACT_APP_BASEURL}/products`, productdataa)
+        .then((response) => {
+          setProductDraftAlert(true);
+
+          console.log("finall---" + JSON.stringify(response.data));
+          setapicall(true);
+        });
     }
   };
 
@@ -1228,12 +1227,12 @@ const closeProductAlert=()=>{
         setapicall(true);
       });
     e.preventDefault();
-     mainformRef.current.reset();
+    mainformRef.current.reset();
     //  setpdata('');
     setValidated(false);
-    setProductAlert(true)
+    setProductAlert(true);
 
-     handleClose();
+    handleClose();
   };
   const handleUpdateProduct = (e) => {
     // productdataa.push(productdata)
@@ -1243,10 +1242,9 @@ const closeProductAlert=()=>{
       .then((response) => {
         setapicall(true);
 
-      
         setmodalshow(false);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -1254,22 +1252,15 @@ const closeProductAlert=()=>{
   const handleClick = () => {};
   const navigate = useNavigate();
 
+  const submitHandler = () => {
+    setapicall(true);
+  };
 
-
-  const submitHandler=()=>{
-       
-    setapicall(true)
-   
-   }
-
-   const OnReset =()=>{
-   setsearchData({product_title_name:"",
-                   product_status:""
-                  })
-                  // fetchdata()
-     setapicall(true)
-   
-}
+  const OnReset = () => {
+    setsearchData({ product_title_name: "", product_status: "" });
+    // fetchdata()
+    setapicall(true);
+  };
   return (
     <div className="App productlist_maindiv">
       <h2>Products</h2>
@@ -1285,10 +1276,9 @@ const closeProductAlert=()=>{
               name="product_title_name"
               value={searchdata.product_title_name}
               className={"adminsideinput"}
-         
             />
           </div>
-          
+
           <div className="col-md-3 col-sm-6 aos_input">
             <Form.Select
               aria-label="Search by status"
@@ -1298,13 +1288,12 @@ const closeProductAlert=()=>{
               name="product_status"
               value={searchdata.product_status}
             >
-              <option>Search by status</option>
-              <option  value="">Select</option>
-          <option   value="pending">Pending</option>
-          <option value="draft">Draft</option>
-          <option value="approved ">Approved </option>
-          {/* <option value="active">Active</option> */}
-          {/* <option  value="expired">Expired</option>
+              <option value="">Search by status</option>
+              <option value="pending">Pending</option>
+              <option value="draft">Draft</option>
+              <option value="approved ">Approved </option>
+              {/* <option value="active">Active</option> */}
+              {/* <option  value="expired">Expired</option>
           <option  value="special_offer">Special Offer</option>
           <option   value="featured_offer">Featured Offer </option>
           <option  value="promotional">Promotional </option> */}
@@ -1313,7 +1302,6 @@ const closeProductAlert=()=>{
 
           <div className="col-md-3 col-sm-6 aos_input">
             <MainButton
-
               btntext={"Search"}
               btnclass={"button main_button w-50"}
               onClick={submitHandler}
@@ -1322,14 +1310,12 @@ const closeProductAlert=()=>{
 
           <div className="col-md-3 col-sm-6 aos_input">
             <MainButton
-
               btntext={"Reset"}
               btnclass={"button main_button w-50"}
-              type="reset" onClick={OnReset}
+              type="reset"
+              onClick={OnReset}
             />
           </div>
-
-        
         </div>
 
         {/* upload */}
@@ -1453,12 +1439,9 @@ const closeProductAlert=()=>{
                             }
                           >
                             <option value={""}>Select Brand</option>
-                            {BrandJson.BrandJson.map((item)=>{return(
-                           
-                            <option value={item}>{item}</option>
-                           )})}
-                           
-                           
+                            {BrandJson.BrandJson.map((item) => {
+                              return <option value={item}>{item}</option>;
+                            })}
                           </Form.Select>
                         </Col>
                       </Form.Group>
@@ -1479,25 +1462,30 @@ const closeProductAlert=()=>{
                           </span>
                         </Form.Label>
                         <Form.Select
-                             onChange={handleVendorNameChange}
-                        
-                        aria-label="store_name"
-                        className="adminselectbox"
-                        required
-                      > <option value={""}> Select Store Name</option>
-                        {vendorid.map((cdata, i) => {
-                          return (
-                            <option
-                              value={[cdata.id,cdata.shop_name]}
-                              key={i}
-                              selected={(productdata.vendor_id,productdata.store_name)===(cdata.id,cdata.shop_name)}
-                            >
-                              {cdata.shop_name}
-                              {""}
-                            </option>
-                          );
-                        })}
-                      </Form.Select>
+                          onChange={handleVendorNameChange}
+                          aria-label="store_name"
+                          className="adminselectbox"
+                          required
+                        >
+                          {" "}
+                          <option value={""}> Select Store Name</option>
+                          {vendorid.map((cdata, i) => {
+                            return (
+                              <option
+                                value={[cdata.id, cdata.shop_name]}
+                                key={i}
+                                selected={
+                                  (productdata.vendor_id,
+                                  productdata.store_name) ===
+                                  (cdata.id, cdata.shop_name)
+                                }
+                              >
+                                {cdata.shop_name}
+                                {""}
+                              </option>
+                            );
+                          })}
+                        </Form.Select>
                         <Col sm="12">
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill storename
@@ -1510,20 +1498,17 @@ const closeProductAlert=()=>{
                         className="mx-3"
                         controlId="validationCustom04"
                       >
-
                         <Form.Label className="inputlabelheading" sm="12">
-                          Product Description 
+                          Product Description
                         </Form.Label>
                         <Col sm="12">
                           <CKEditor
                             editor={ClassicEditor}
                             data={productdata.product_description}
-                            onChange={ handledescription}
+                            onChange={handledescription}
                             name={"product_description"}
-                           
                           />
                         </Col>
-                     
                       </Form.Group>
                     </div>
                   </div>
@@ -1532,7 +1517,6 @@ const closeProductAlert=()=>{
                 <div className="my-3 inputsection_box">
                   <h5 className="m-0">Category Info</h5>
                   <div className="productvariety">
-
                     <Form.Group className="mx-3" controlId="validationCustom05">
                       <Form.Label className="inputlabelheading" sm="12">
                         Product Type<span className="text-danger">* </span>
@@ -1556,7 +1540,6 @@ const closeProductAlert=()=>{
                           {categorytype.categorytype.map((data) => {
                             return <option value={data}>{data}</option>;
                           })}
-                        
                         </Form.Select>
                         <Form.Control.Feedback type="invalid" className="h6">
                           Please select producttype
@@ -1574,30 +1557,33 @@ const closeProductAlert=()=>{
                       </Form.Label>
                       <Form.Select
                         onChange={(e, id) => categoryFormChange(e, id)}
-                    
                         name={"parent_category"}
                         aria-label="Parent Category"
                         className="adminselectbox"
                         required
-                      ><option value={""}>Select category Type</option>
+                      >
+                        <option value={""}>Select category Type</option>
                         {category.map((cdata, i) => {
                           return (
                             <option
                               value={cdata.id}
-                              name='parent_category'
+                              name="parent_category"
                               key={i}
-                              selected={editparentCategory == cdata.category_name ? true :false }
+                              selected={
+                                editparentCategory == cdata.category_name
+                                  ? true
+                                  : false
+                              }
                             >
-                              {cdata.category_name} {""}</option>
-
+                              {cdata.category_name} {""}
+                            </option>
                           );
                         })}
                       </Form.Select>
                       <Form.Control.Feedback type="invalid" className="h6">
-                          Please select Category
-                        </Form.Control.Feedback>
+                        Please select Category
+                      </Form.Control.Feedback>
                     </Form.Group>
-
 
                     {subCategory === "" ||
                     subCategory === null ||
@@ -1622,7 +1608,11 @@ const closeProductAlert=()=>{
                               <option
                                 value={cdata.id}
                                 key={i}
-                                 selected={categoryeditparent === cdata.category_name ? true :false }
+                                selected={
+                                  categoryeditparent === cdata.category_name
+                                    ? true
+                                    : false
+                                }
                               >
                                 {cdata.category_name}{" "}
                               </option>
@@ -1656,7 +1646,11 @@ const closeProductAlert=()=>{
                               <option
                                 value={cdata.id}
                                 key={i}
-                                 selected={categoryeditsubparent === cdata.category_name ? true :false }
+                                selected={
+                                  categoryeditsubparent === cdata.category_name
+                                    ? true
+                                    : false
+                                }
                               >
                                 {cdata.category_name}{" "}
                               </option>
@@ -1692,7 +1686,12 @@ const closeProductAlert=()=>{
                               <option
                                 value={cdata.id}
                                 key={i}
-                                 selected={categoryeditchildparent === cdata.category_name ? true :false }
+                                selected={
+                                  categoryeditchildparent ===
+                                  cdata.category_name
+                                    ? true
+                                    : false
+                                }
                               >
                                 {cdata.category_name}{" "}
                               </option>
@@ -1718,7 +1717,7 @@ const closeProductAlert=()=>{
                       </Form.Label>
                       <Col sm="12">
                         <Form.Control
-                        min={0}
+                          min={0}
                           type="number"
                           placeholder="Wholesale Sales Tax"
                           name="wholesale_sales_tax"
@@ -1779,15 +1778,11 @@ const closeProductAlert=()=>{
                       <Col sm="12">
                         <Form.Control
                           type="number"
-                         
                           min={1}
                           placeholder="Gst"
                           className={
-                            customvalidated === true
-                              ? "border-danger"
-                              : null
+                            customvalidated === true ? "border-danger" : null
                           }
-                       
                           name="gst"
                           value={productdata.gst}
                           onChange={(e) => handleInputFieldChange(e)}
@@ -1835,25 +1830,25 @@ const closeProductAlert=()=>{
                             className="inputlabelheading"
                             sm="12 d-flex align-itmes-center"
                           >
-                              {productdata.variety === false ?
-                            <Form.Check
-                              type="radio"
-                              aria-label="radio 1"
-                              className="mx-2"
-                              onChange={handleVarietyChange}
-                              name="variety"
-                              value={false}
-                            />
-                            :
-                            <Form.Check
-                              type="radio"
-                              aria-label="radio 1"
-                              className="mx-2"
-                              onChange={handleVarietyChange}
-                              name="variety"
-                              value={false}
-                            />
-                              }
+                            {productdata.variety === false ? (
+                              <Form.Check
+                                type="radio"
+                                aria-label="radio 1"
+                                className="mx-2"
+                                onChange={handleVarietyChange}
+                                name="variety"
+                                value={false}
+                              />
+                            ) : (
+                              <Form.Check
+                                type="radio"
+                                aria-label="radio 1"
+                                className="mx-2"
+                                onChange={handleVarietyChange}
+                                name="variety"
+                                value={false}
+                              />
+                            )}
                             Single Product
                           </Form.Label>
                         </Form.Group>
@@ -1865,24 +1860,25 @@ const closeProductAlert=()=>{
                             className="inputlabelheading"
                             sm="12 d-flex align-itmes-center"
                           >
-                            {productdata.variety === true ?
-                            <Form.Check
-                              type="radio"
-                              aria-label="radio 2"
-                              className="mx-2"
-                              onChange={handleVarietyChange}
-                              name="variety"
-                              value={true}
-                            />
-                            :
-                            <Form.Check
-                              type="radio"
-                              aria-label="radio 2"
-                              className="mx-2"
-                              onChange={handleVarietyChange}
-                              name="variety"
-                              value={true}
-                            />}
+                            {productdata.variety === true ? (
+                              <Form.Check
+                                type="radio"
+                                aria-label="radio 2"
+                                className="mx-2"
+                                onChange={handleVarietyChange}
+                                name="variety"
+                                value={true}
+                              />
+                            ) : (
+                              <Form.Check
+                                type="radio"
+                                aria-label="radio 2"
+                                className="mx-2"
+                                onChange={handleVarietyChange}
+                                name="variety"
+                                value={true}
+                              />
+                            )}
                             Multiple Variety
                           </Form.Label>
                         </Form.Group>
@@ -1901,23 +1897,34 @@ const closeProductAlert=()=>{
                                 >
                                   <thead className="align-middle">
                                     <tr>
-                                      <th>Variety<span className="text-danger">* </span></th>
+                                      <th>
+                                        Variety
+                                        <span className="text-danger">* </span>
+                                      </th>
                                       <th>Color</th>
                                       <th>Weight</th>
                                       <th>Size</th>
-                                      <th>Mrp <span className="text-danger">* </span></th>
+                                      <th>
+                                        Mrp{" "}
+                                        <span className="text-danger">* </span>
+                                      </th>
                                       <th>Discount</th>
                                       <th>Price</th>
                                       <th>Sale Price</th>
                                       <th>Special Offer</th>
                                       <th>Featured Product</th>
                                       <th className="manufacture_date">
-                                        Mdate <span className="text-danger">* </span>
+                                        Mdate{" "}
+                                        <span className="text-danger">* </span>
                                       </th>
                                       <th className="manufacture_date">
-                                        Edate <span className="text-danger">* </span>
+                                        Edate{" "}
+                                        <span className="text-danger">* </span>
                                       </th>
-                                      <th className="">Qty <span className="text-danger">* </span></th>
+                                      <th className="">
+                                        Qty{" "}
+                                        <span className="text-danger">* </span>
+                                      </th>
                                     </tr>
                                   </thead>
                                   <tbody>
@@ -2047,22 +2054,19 @@ const closeProductAlert=()=>{
                                           <InputGroup className="" size="sm">
                                             <Form.Control
                                               type="number"
-                                              
                                               min={1}
-                                          
                                               sm="9"
                                               className={
                                                 customvalidated === true
                                                   ? "border-danger"
                                                   : null
                                               }
-                                            
                                               name="mrp"
                                               value={variantarray.mrp}
                                               onChange={(e) =>
                                                 onVariantChange(e)
                                               }
-                                            required
+                                              required
                                             />
                                           </InputGroup>
                                         </div>
@@ -2088,7 +2092,7 @@ const closeProductAlert=()=>{
                                           <InputGroup className="" size="sm">
                                             <Form.Control
                                               min={1}
-                                              step={'any'}
+                                              step={"any"}
                                               type="number"
                                               sm="9"
                                               className={
@@ -2106,14 +2110,13 @@ const closeProductAlert=()=>{
                                           </InputGroup>
                                         </div>
                                       </td>
-                                      
+
                                       <td className="p-0 text-center">
-                                        
                                         <div className=" d-flex align-items-center">
                                           <InputGroup className="" size="sm">
                                             <Form.Control
                                               type="number"
-                                              step={'any'}
+                                              step={"any"}
                                               sm="9"
                                               min={1}
                                               className={
@@ -2125,60 +2128,67 @@ const closeProductAlert=()=>{
                                                 onVariantChange(e)
                                               }
                                               name={"sale_price"}
-                                              value={
-                                                ((product_price) 
-                                                + 
-                                                (
-                                                  (product_price*productdata.gst/100 )
-                                                +
-                                                (product_price*productdata.wholesale_sales_tax/100)
-                                                +
-                                                (product_price*productdata.retails_sales_tax/100)
-                                                +
-                                              (product_price*productdata.value_added_tax/100)
-                                              +
-                                              (product_price*productdata.manufacturers_sales_tax/100)
-                                              )).toFixed(2)
-                                            }
+                                              value={(
+                                                product_price +
+                                                ((product_price *
+                                                  productdata.gst) /
+                                                  100 +
+                                                  (product_price *
+                                                    productdata.wholesale_sales_tax) /
+                                                    100 +
+                                                  (product_price *
+                                                    productdata.retails_sales_tax) /
+                                                    100 +
+                                                  (product_price *
+                                                    productdata.value_added_tax) /
+                                                    100 +
+                                                  (product_price *
+                                                    productdata.manufacturers_sales_tax) /
+                                                    100)
+                                              ).toFixed(2)}
                                             />
                                           </InputGroup>
                                         </div>
                                       </td>
-                                      
+
                                       <td className="p-0 text-center">
-                                  <div className="">
-                                    <Form.Check
-                                      onChange={(e) =>
-                                        handleInputcheckboxChange(e)
-                                      }
-                                      name={"special_offer"}
-                                      // value={variantarray.special_offer}
-                                      checked={
-                                        variantarray.special_offer === 1 ||
-                                        variantarray.special_offer === true
-                                          ? true
-                                          : false
-                                      }
-                                    />
-                                  </div>
-                                </td>
-                                <td className="p-0 text-center">
-                                  <div className="">
-                                    <Form.Check
-                                      onChange={(e) =>
-                                        handleInputcheckboxChange(e)
-                                      }
-                                      name={"featured_product"}
-                                      // value={variantarray.featured_product}
-                                      checked={
-                                        variantarray.featured_product === 1 ||
-                                        variantarray.featured_product === true
-                                          ? true
-                                          : false
-                                      }
-                                    />
-                                  </div>
-                                </td>
+                                        <div className="">
+                                          <Form.Check
+                                            onChange={(e) =>
+                                              handleInputcheckboxChange(e)
+                                            }
+                                            name={"special_offer"}
+                                            // value={variantarray.special_offer}
+                                            checked={
+                                              variantarray.special_offer ===
+                                                1 ||
+                                              variantarray.special_offer ===
+                                                true
+                                                ? true
+                                                : false
+                                            }
+                                          />
+                                        </div>
+                                      </td>
+                                      <td className="p-0 text-center">
+                                        <div className="">
+                                          <Form.Check
+                                            onChange={(e) =>
+                                              handleInputcheckboxChange(e)
+                                            }
+                                            name={"featured_product"}
+                                            // value={variantarray.featured_product}
+                                            checked={
+                                              variantarray.featured_product ===
+                                                1 ||
+                                              variantarray.featured_product ===
+                                                true
+                                                ? true
+                                                : false
+                                            }
+                                          />
+                                        </div>
+                                      </td>
                                       <td className="p-0 text-center">
                                         <div className="manufacture_date">
                                           <InputGroup className="" size="sm">
@@ -2260,7 +2270,6 @@ const closeProductAlert=()=>{
                                           >
                                             +
                                           </Button>
-                                         
                                         </div>
                                       </td>
                                     </tr>
@@ -2304,7 +2313,7 @@ const closeProductAlert=()=>{
                                             <td className="p-0 text-center ">
                                               {variantdata.product_price}
                                             </td>
-                                            
+
                                             <td className="p-0 text-center ">
                                               {saleprice}
                                             </td>
@@ -2323,23 +2332,22 @@ const closeProductAlert=()=>{
                                             <td className="p-0 text-center">
                                               {variantdata.quantity}
                                             </td>
+                                            <td className="p-0 text-center"></td>
                                             <td className="p-0 text-center">
-                                            </td>
-                                            <td className="p-0 text-center">
-                                            <Button
-                                              variant="text-danger"
-                                              className="addcategoryicon text-danger"
-                                              onClick={(id) =>
-                                                VariantRemoveClick(
-                                                  variantdata.id,
-                                                  variantdata.product_id
-                                                )
-                                              }
-                                              size="sm"
-                                            >
-                                              &times;
-                                            </Button>
-                                            {/* <Button
+                                              <Button
+                                                variant="text-danger"
+                                                className="addcategoryicon text-danger"
+                                                onClick={(id) =>
+                                                  VariantRemoveClick(
+                                                    variantdata.id,
+                                                    variantdata.product_id
+                                                  )
+                                                }
+                                                size="sm"
+                                              >
+                                                &times;
+                                              </Button>
+                                              {/* <Button
                                               variant="text-danger"
                                               className="addcategoryicon text-danger"
                                               onClick={(id) =>
@@ -2352,7 +2360,7 @@ const closeProductAlert=()=>{
                                             >
                                               <MdOutlineEdit />
                                             </Button> */}
-                                          </td>
+                                            </td>
                                           </tr>
                                         );
                                       }
@@ -2403,20 +2411,20 @@ const closeProductAlert=()=>{
                       <div className="d-flex align-items-center tagselectbox mt-2">
                         {/* {(seoarray || []).map((seotags, i) => {
                           return ( */}
-                          {productdata.seo_tag == ""? "":  
-                           <Badge className="tagselecttitle mb-0" bg="success">
-                          {productdata.seo_tag === null ||
-                          productdata.seo_tag === undefined
-                            ? ""
-                            : productdata.seo_tag}
-                          {/* <GiCancel
+                        {productdata.seo_tag == "" ? (
+                          ""
+                        ) : (
+                          <Badge className="tagselecttitle mb-0" bg="success">
+                            {productdata.seo_tag === null ||
+                            productdata.seo_tag === undefined
+                              ? ""
+                              : productdata.seo_tag}
+                            {/* <GiCancel
                             className=" mx-0 ms-1 btncancel"
                             onClick={() => tagRemoveClick(productdata.seo_tag)}
                           /> */}
-                        </Badge>
-
-                          }
-                     
+                          </Badge>
+                        )}
 
                         {/* )
 
@@ -2502,59 +2510,55 @@ const closeProductAlert=()=>{
                             </Button>
                           </td>
                         </tr>
-                        {
-                          // paraddcustom === null || paraddcustom === undefined ? '' :
-                          (customarray || []).map((variantdata, i) => {
-                            // const arr = variantdata.split(',')
-                            return (
-                              <tr className="">
-                                <td className=" text-center">
-                                  <InputGroup className="">
-                                    <Form.Control
-                                      value={variantdata.header}
-                                      type="text"
-                                      sm="9"
-                                      min={"1"}
-                                      onChange={oncustomheadChange}
-                                      name={"custom_input_header"}
-                                      required
-                                    />
-                                  </InputGroup>
-                                </td>
-                                <td className="text-center">
-                                  <InputGroup className="">
-                                    <Form.Control
-                                      required
-                                      value={variantdata.description}
-                                      name={"custom_input_desc"}
-                                      type="text"
-                                      sm="9"
-                                      min={"1"}
-                                      onChange={oncustomdescChange}
-                                      onKeyPress={(event) => {
-                                        if (event.key === "Enter") {
-                                          handleAddClick();
-                                        }
-                                      }}
-                                    />
-                                  </InputGroup>
-                                </td>
-                                <td className="">
-                                  <Button
-                                    variant="text-danger"
-                                    className="addcategoryicon text-danger"
-                                    onClick={() =>
-                                      handleRemoveClick(variantdata)
-                                    }
-                                    size="sm"
-                                  >
-                                    &times;
-                                  </Button>
-                                </td>
-                              </tr>
-                            );
-                          })
-                        }
+                        {// paraddcustom === null || paraddcustom === undefined ? '' :
+                        (customarray || []).map((variantdata, i) => {
+                          // const arr = variantdata.split(',')
+                          return (
+                            <tr className="">
+                              <td className=" text-center">
+                                <InputGroup className="">
+                                  <Form.Control
+                                    value={variantdata.header}
+                                    type="text"
+                                    sm="9"
+                                    min={"1"}
+                                    onChange={oncustomheadChange}
+                                    name={"custom_input_header"}
+                                    required
+                                  />
+                                </InputGroup>
+                              </td>
+                              <td className="text-center">
+                                <InputGroup className="">
+                                  <Form.Control
+                                    required
+                                    value={variantdata.description}
+                                    name={"custom_input_desc"}
+                                    type="text"
+                                    sm="9"
+                                    min={"1"}
+                                    onChange={oncustomdescChange}
+                                    onKeyPress={(event) => {
+                                      if (event.key === "Enter") {
+                                        handleAddClick();
+                                      }
+                                    }}
+                                  />
+                                </InputGroup>
+                              </td>
+                              <td className="">
+                                <Button
+                                  variant="text-danger"
+                                  className="addcategoryicon text-danger"
+                                  onClick={() => handleRemoveClick(variantdata)}
+                                  size="sm"
+                                >
+                                  &times;
+                                </Button>
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </Table>
                   </div>
@@ -2588,13 +2592,11 @@ const closeProductAlert=()=>{
         <Modal
           size="lg"
           show={varietyshow}
-          onHide={ handlevarietyClose}
-          
+          onHide={handlevarietyClose}
           dialogClassName="addproductmainmodal"
         >
-          <Form ref={formRef} validated={validated} 
-        >
-            <Modal.Header >
+          <Form ref={formRef} validated={validated}>
+            <Modal.Header>
               <Modal.Title>Add Variety</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -2760,7 +2762,7 @@ const closeProductAlert=()=>{
                                     </InputGroup>
                                   </div>
                                 </td>
-                              
+
                                 <td className="p-0 text-center">
                                   <div className=" d-flex align-items-center">
                                     <InputGroup className="" size="sm">
@@ -2800,7 +2802,7 @@ const closeProductAlert=()=>{
                                     <InputGroup className="" size="sm">
                                       <Form.Control
                                         min={1}
-                                      step={0.01}
+                                        step={0.01}
                                         type="number"
                                         sm="9"
                                         className={
@@ -2810,7 +2812,9 @@ const closeProductAlert=()=>{
                                         }
                                         onChange={(e) => onVariantChange(e)}
                                         name={"product_price"}
-                                        value={Number(variantarray.product_price)}
+                                        value={Number(
+                                          variantarray.product_price
+                                        )}
                                       />
                                     </InputGroup>
                                   </div>
@@ -2819,7 +2823,7 @@ const closeProductAlert=()=>{
                                   <div className=" d-flex align-items-center">
                                     <InputGroup className="" size="sm">
                                       <Form.Control
-                                      step={0.01}
+                                        step={0.01}
                                         type="number"
                                         sm="9"
                                         min={1}
@@ -2831,25 +2835,25 @@ const closeProductAlert=()=>{
                                         onChange={(e) => onVariantChange(e)}
                                         name={"sale_price"}
                                         value={Number(variantarray.sale_price)}
-                                      //     vdata[0] === '' ? (product_price) 
-                                      //     + 
-                                      //     (
-                                      //       (product_price*vdata[0].gst/100 )
-                                      //     +
-                                      //     (product_price*vdata[0].wholesale_sales_tax/100)
-                                      //     +
-                                      //     (product_price*vdata[0].retails_sales_tax/100)
-                                      //     +
-                                      //   (product_price*vdata[0].value_added_tax/100)
-                                      //   +
-                                      //   (product_price*vdata[0].manufacturers_sales_tax/100)
-                                      //   ) : null
-                                      // }
+                                        //     vdata[0] === '' ? (product_price)
+                                        //     +
+                                        //     (
+                                        //       (product_price*vdata[0].gst/100 )
+                                        //     +
+                                        //     (product_price*vdata[0].wholesale_sales_tax/100)
+                                        //     +
+                                        //     (product_price*vdata[0].retails_sales_tax/100)
+                                        //     +
+                                        //   (product_price*vdata[0].value_added_tax/100)
+                                        //   +
+                                        //   (product_price*vdata[0].manufacturers_sales_tax/100)
+                                        //   ) : null
+                                        // }
                                       />
                                     </InputGroup>
                                   </div>
                                 </td>
-                                
+
                                 <td className="p-0 text-center">
                                   <div className="">
                                     <Form.Check
@@ -2924,8 +2928,7 @@ const closeProductAlert=()=>{
                                     </InputGroup>
                                   </div>
                                 </td>
-                                <td className="p-0 text-center">
-                                </td>
+                                <td className="p-0 text-center"></td>
                                 <td className="p-0">
                                   <div className="manufacture_date">
                                     <InputGroup className="" size="sm">
@@ -2957,7 +2960,10 @@ const closeProductAlert=()=>{
                                       className="addcategoryicon"
                                       // type="submit"
                                       onClick={() =>
-                                        onVariantaddclick(variantarray.id,variantarray.product_id)
+                                        onVariantaddclick(
+                                          variantarray.id,
+                                          variantarray.product_id
+                                        )
                                       }
                                       size="sm"
                                     >
@@ -2977,7 +2983,7 @@ const closeProductAlert=()=>{
                                       <>
                                         <tr>
                                           <td className="p-0 text-center ">
-                                          {variantdata.unit === "pcs"
+                                            {variantdata.unit === "pcs"
                                               ? "color"
                                               : variantdata.unit === "piece"
                                               ? "piece"
@@ -3008,14 +3014,18 @@ const closeProductAlert=()=>{
                                             {Number(variantdata.mrp).toFixed(2)}
                                           </td>
                                           <td className="p-0 text-center ">
-                                            {Number(variantdata.discount).toFixed(2)}
+                                            {Number(
+                                              variantdata.discount
+                                            ).toFixed(2)}
                                           </td>
                                           <td className="p-0 text-center ">
-                                            {Number(variantdata.product_price).toFixed(2)}
+                                            {Number(
+                                              variantdata.product_price
+                                            ).toFixed(2)}
                                           </td>
-                                         
+
                                           <td className="p-0 text-center ">
-                                            {(variantdata.sale_price).toFixed(2)}
+                                            {variantdata.sale_price.toFixed(2)}
                                           </td>
                                           <td className="p-0 text-center ">
                                             {variantdata.special_offer}
@@ -3051,21 +3061,41 @@ const closeProductAlert=()=>{
                                                   onChange={(e) =>
                                                     imguploadchange(
                                                       e,
-                                                      vdata[0].product_id,
-                                                      vdata[0].id,
-                                                      vdata[0].vendor_id,
+                                                      variantdata.product_id,
+                                                      variantdata.id,
+                                                      variantdata.vendor_id
                                                     )
                                                   }
                                                   name={"img_64"}
                                                 />
                                               </InputGroup>
-                                              <p onClick={(id)=>onImgView(variantdata.id,
-                                                  variantdata.product_id)} className={'view_product_box my-2 text-primary'}>View Image</p>
+                                              <p
+                                                onClick={(id) =>
+                                                  onImgView(
+                                                    variantdata.id,
+                                                    variantdata.product_id
+                                                  )
+                                                }
+                                                className={
+                                                  "view_product_box my-2 text-primary"
+                                                }
+                                              >
+                                                View Image
+                                              </p>
                                             </div>
                                           </td>
                                           <td className="p-0 text-center manufacture_date">
                                             {variantdata.quantity}
-                                            <p onClick={()=>setEditButton(true)} className={'view_product_box my-2 text-primary'}>Edit Image</p>
+                                            <p
+                                              onClick={() =>
+                                                setEditButton(true)
+                                              }
+                                              className={
+                                                "view_product_box my-2 text-primary"
+                                              }
+                                            >
+                                              Edit Image
+                                            </p>
                                           </td>
                                           <td className="p-0 text-center">
                                             <Button
@@ -3099,31 +3129,39 @@ const closeProductAlert=()=>{
                                         {newImageUrls ? (
                                           <tr className="img_preview_boxx">
                                             {newImageUrls.map((imgg, i) => {
-                                              
-                                              return (
-                                                `${variantdata.id}` === imgg.product_verient_id ?
-                                               
-                                                  <td className="">
-                                                    <div className="imgprivew_box">
-                                                      {imgg.image_position === 'cover' ? 
-                                                    <p className="cover_img">Cover</p> : null   
-                                                    }
-                                                      <img
-                                                        src={imgg.product_image_path}
-                                                        key={i}
-                                                        alt="apna_organic"
-                                                        width={80}
-                                                        height={100}
-                                                      />
-                                                      {editbutton === true ?
+                                              return `${variantdata.id}` ===
+                                                imgg.product_verient_id ? (
+                                                <td className="">
+                                                  <div className="imgprivew_box">
+                                                    {imgg.image_position ===
+                                                    "cover" ? (
+                                                      <p className="cover_img">
+                                                        Cover
+                                                      </p>
+                                                    ) : null}
+                                                    <img
+                                                      src={
+                                                        imgg.product_image_path
+                                                      }
+                                                      key={i}
+                                                      alt="apna_organic"
+                                                      width={80}
+                                                      height={100}
+                                                    />
+                                                    {editbutton === true ? (
                                                       <span
-                                                      className="cross_icon" 
-                                                      onClick={(id)=>onImgCoverEditClick(imgg.product_image_id,
-                                                        imgg.product_id,
-                                                        imgg.product_verient_id
-                                                        )}>
-                                                          -
-                                                      </span> :
+                                                        className="cross_icon"
+                                                        onClick={(id) =>
+                                                          onImgCoverEditClick(
+                                                            imgg.product_image_id,
+                                                            imgg.product_id,
+                                                            imgg.product_verient_id
+                                                          )
+                                                        }
+                                                      >
+                                                        -
+                                                      </span>
+                                                    ) : (
                                                       <span
                                                         className="cross_icon"
                                                         onClick={() =>
@@ -3138,51 +3176,42 @@ const closeProductAlert=()=>{
                                                       >
                                                         x
                                                       </span>
-                                            }
-                                                    </div>
-                                                  </td>
-                                                 
-                                                
-                                                 : null
-                                              );
-                                             
+                                                    )}
+                                                  </div>
+                                                </td>
+                                              ) : null;
                                             })}
-                                             <td className="imgprivew_div">
-                                                    <div className="imgprivew_box">
-                                                      <img
-                                                        src={
-                                                          "https://i2.wp.com/asvs.in/wp-content/uploads/2017/08/dummy.png?fit=399%2C275&ssl=1"
-                                                        }
-                                                        key={i}
-                                                        alt="apna_organic"
-                                                        width={80}
-                                                        height={100}
-                                                      />
-                                                       <Form.Control
+                                            <td className="imgprivew_div">
+                                              <div className="imgprivew_box">
+                                                <img
+                                                  src={
+                                                    "https://i2.wp.com/asvs.in/wp-content/uploads/2017/08/dummy.png?fit=399%2C275&ssl=1"
+                                                  }
+                                                  key={i}
+                                                  alt="apna_organic"
+                                                  width={80}
+                                                  height={100}
+                                                />
+                                                <Form.Control
                                                   multiple
                                                   type="file"
                                                   sm="9"
-                                                  className={
-                                                   'img_add_button'
-                                                  }
+                                                  className={"img_add_button"}
                                                   onChange={(e) =>
                                                     imguploadchange(
                                                       e,
                                                       variantdata.product_id,
                                                       variantdata.id,
-                                                     variantdata.vendor_id,
+                                                      variantdata.vendor_id
                                                     )
                                                   }
                                                   name={"img_64"}
                                                 />
-                                                      <span
-                                                        className="plus_icon"
-                                                      >
-                                                       
-                                                        +
-                                                      </span>
-                                                    </div>
-                                                  </td>
+                                                <span className="plus_icon">
+                                                  +
+                                                </span>
+                                              </div>
+                                            </td>
                                           </tr>
                                         ) : null}
                                       </>
@@ -3204,7 +3233,6 @@ const closeProductAlert=()=>{
               >
                 Cancel
               </button>
-              
             </Modal.Footer>
           </Form>
         </Modal>
@@ -3227,8 +3255,7 @@ const closeProductAlert=()=>{
           onCancel={closeAlert}
         />
 
-
-           <SweetAlert
+        <SweetAlert
           show={Alert}
           title="Product Name"
           text="Are you Sure you want to delete"
@@ -3241,99 +3268,150 @@ const closeProductAlert=()=>{
           show={ProductAlert}
           title="Added Successfully "
           text=" Product Added"
-           onConfirm={closeProductAlert}
-      
+          onConfirm={closeProductAlert}
         />
 
-
-
-
+        <SweetAlert
+          show={ProductDraftAlert}
+          title="Added Successfully "
+          text=" Product Added To Draft"
+          onConfirm={closeProductAlert}
+        />
 
         {/* feature product modal */}
 
         <Modal show={featureshow} onHide={featureModalClose}>
-        <Form className="" novalidate validated={validated} ref={formRef} onSubmit={(e) => AddProductFeatureClick(e)} >
+          <Form
+            className=""
+            novalidate
+            validated={validated}
+            ref={formRef}
+            onSubmit={(e) => AddProductFeatureClick(e)}
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>Add Offer Product</Modal.Title>
+            </Modal.Header>
 
-        <Modal.Header closeButton>
-          <Modal.Title>Add Offer Product</Modal.Title>
-        </Modal.Header>
-
-<Modal.Body className="p-3">
-  <div className="d-flex justify-content-center align-items-center p-0 m-0">
-    <div className="">
-      <div className="">
-        <div className="row px-3">
-          <div className="col-12">
-            <Form.Group className="mb-3" controlId="formPlaintextName">
-              <Form.Label className="" column sm="12">
-                Product Name
-              </Form.Label>
-              <Form.Control type="text" placeholder="Name"  value={productname} name={'productname'} required />
-              
-            </Form.Group>
-          </div>
-          <div className="col-12">
-            <Form.Group className="mb-3" controlId="formPlaintextName">
-              <Form.Label className="" column sm="12">
-                Product Id
-              </Form.Label>
-              <Form.Control type="text" placeholder="Name"  value={featuredata.product_id} name={'product_id'} required />
-            </Form.Group>
-          </div>
-          <div className="col-12">
-            <Form.Group className="mb-3" controlId="formPlaintextName">
-              <Form.Label className="" column sm="12">
-                Offer Type
-              </Form.Label>
-              <Form.Control type="text" placeholder="Name"  value={featuredata.fetured_type} name={'fetured_type'} required />
-            </Form.Group>
-          </div>
-          <div className="col-12">
-            <Form.Group className="mb-3" controlId="formPlaintextName">
-              <Form.Label className="" column sm="12">
-                Start Date
-              </Form.Label>
-              <Form.Control type="date" placeholder="Name" onChange={(e) => OnFeatureDateChaneg(e)} value={featuredata.start_date} name={'start_date'} required />
-              <Form.Control.Feedback type="invalid" className="h6">
-                Please fill start date
-              </Form.Control.Feedback>
-            </Form.Group>
-          </div>
-          <div className="col-12">
-            <Form.Group className="mb-3" controlId="formPlaintextName">
-              <Form.Label className="" column sm="12">
-                End Date
-              </Form.Label>
-              <Form.Control type="date" placeholder="Name" onChange={(e) => OnFeatureDateChaneg(e)} value={featuredata.end_date} name={'end_date'} required />
-              <Form.Control.Feedback type="invalid" className="h6">
-                Please fill end date
-              </Form.Control.Feedback>
-            </Form.Group>
-          </div>
-         
-        </div>
-      </div>
-    </div>
-
-  </div>
-</Modal.Body>
-<Modal.Footer className="">
-  <button className='button main_outline_button' onClick={() => featureModalClose()}>Cancel</button>
-  <Iconbutton
-    type={'submit'}
-    btntext={"Save" }
-    btnclass={"button main_button "}
-  />
-</Modal.Footer>
-</Form>
-        
-
-        
-
-        
+            <Modal.Body className="p-3">
+              <div className="d-flex justify-content-center align-items-center p-0 m-0">
+                <div className="">
+                  <div className="">
+                    <div className="row px-3">
+                      <div className="col-12">
+                        <Form.Group
+                          className="mb-3"
+                          controlId="formPlaintextName"
+                        >
+                          <Form.Label className="" column sm="12">
+                            Product Name
+                          </Form.Label>
+                          <Form.Control
+                            type="text"
+                            placeholder="Name"
+                            value={productname}
+                            name={"productname"}
+                            required
+                          />
+                        </Form.Group>
+                      </div>
+                      <div className="col-12">
+                        <Form.Group
+                          className="mb-3"
+                          controlId="formPlaintextName"
+                        >
+                          <Form.Label className="" column sm="12">
+                            Product Id
+                          </Form.Label>
+                          <Form.Control
+                            type="text"
+                            placeholder="Name"
+                            value={featuredata.product_id}
+                            name={"product_id"}
+                            required
+                          />
+                        </Form.Group>
+                      </div>
+                      <div className="col-12">
+                        <Form.Group
+                          className="mb-3"
+                          controlId="formPlaintextName"
+                        >
+                          <Form.Label className="" column sm="12">
+                            Offer Type
+                          </Form.Label>
+                          <Form.Control
+                            type="text"
+                            placeholder="Name"
+                            value={featuredata.fetured_type}
+                            name={"fetured_type"}
+                            required
+                          />
+                        </Form.Group>
+                      </div>
+                      <div className="col-12">
+                        <Form.Group
+                          className="mb-3"
+                          controlId="formPlaintextName"
+                        >
+                          <Form.Label className="" column sm="12">
+                            Start Date
+                          </Form.Label>
+                          <Form.Control
+                            type="date"
+                            placeholder="Name"
+                            onChange={(e) => OnFeatureDateChaneg(e)}
+                            value={featuredata.start_date}
+                            name={"start_date"}
+                            required
+                          />
+                          <Form.Control.Feedback type="invalid" className="h6">
+                            Please fill start date
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </div>
+                      <div className="col-12">
+                        <Form.Group
+                          className="mb-3"
+                          controlId="formPlaintextName"
+                        >
+                          <Form.Label className="" column sm="12">
+                            End Date
+                          </Form.Label>
+                          <Form.Control
+                            type="date"
+                            placeholder="Name"
+                            onChange={(e) => OnFeatureDateChaneg(e)}
+                            value={featuredata.end_date}
+                            name={"end_date"}
+                            required
+                          />
+                          <Form.Control.Feedback type="invalid" className="h6">
+                            Please fill end date
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Modal.Body>
+            <Modal.Footer className="">
+              <button
+                className="button main_outline_button"
+                onClick={() => featureModalClose()}
+              >
+                Cancel
+              </button>
+              <Iconbutton
+                type={"submit"}
+                btntext={"Save"}
+                btnclass={"button main_button "}
+              />
+            </Modal.Footer>
+          </Form>
         </Modal>
 
-      {/* end feature product modal */}
+        {/* end feature product modal */}
       </div>
     </div>
   );
