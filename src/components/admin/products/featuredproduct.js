@@ -135,10 +135,10 @@ console.log("-----------------AAAAAAAAAAa"+JSON.stringify(featuredData))
       selector: (row) => (
         <span
           className={
-            row.status === 'pending'
+            row.status ==='pending'
               ? "badge bg-success"
               : row.status === 'active'
-              ? "badge bg-danger" :row.status === 'special_offer' ?
+              ? "badge bg-danger" :row.status === 'special_offer'?
               "badge bg-info" : row.status === 'featured_offer'?
                "badge bg-warning" :row.status === 'promotional'?
                "badge bg-primary" : row.status === 'draft'?
