@@ -407,7 +407,7 @@ function Product() {
           {row.product_status === "pending"
             ? "Pending"
             : row.product_status === "approved"
-            ? "Active"
+            ? "Approved"
             : row.product_status === "special_offer"
             ? "Special Offer"
             : row.product_status === "featured_offer"
@@ -466,6 +466,13 @@ function Product() {
           Add Variety
         </Button>
         // : null
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
         /*: null*/
         /*: null*/
         /*: null*/
@@ -750,22 +757,16 @@ function Product() {
     setValidated(false);
 
     setvarietyShow(false);
-    mainformRef.current.reset();
+    // mainformRef.current.reset();
   };
 
   const handleClose = () => {
-    mainformRef.current.reset();
     setproductdata(data);
     setcustomarray([]);
-
     setvariantarray(veriantData);
     setvariantmainarray([]);
-
     setValidated(false);
     setmodalshow(false);
-    // console.log("---product data------------" + JSON.stringify(productdata));
-
-    //  console.log("end Here-------------------")
   };
 
   // seotag
@@ -815,6 +816,7 @@ function Product() {
   };
 
   const imguploadchange = async (e, product_id, id, vendor_id) => {
+    onImgView(product_id, id);
     console.log("imagnewImageUrlse" + newImageUrls.length);
     for (let i = 0; i < e.target.files.length; i++) {
       let coverimg;
@@ -1287,11 +1289,11 @@ function Product() {
               value={searchdata.product_status}
             >
               <option value="">Search by status</option>
-          <option   value="pending">Pending</option>
-          <option value="draft">Draft</option>
-          <option value="approved ">Approved </option>
-          {/* <option value="active">Active</option> */}
-          {/* <option  value="expired">Expired</option>
+              <option value="pending">Pending</option>
+              <option value="draft">Draft</option>
+              <option value="approved ">Approved </option>
+              {/* <option value="active">Active</option> */}
+              {/* <option  value="expired">Expired</option>
           <option  value="special_offer">Special Offer</option>
           <option   value="featured_offer">Featured Offer </option>
           <option  value="promotional">Promotional </option> */}
