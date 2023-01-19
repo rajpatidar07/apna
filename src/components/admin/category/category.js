@@ -35,6 +35,7 @@ const CategoryList = () => {
       is_active: 0,
       level: level,
     });
+    setAlert(false);
     setapicall(true);
     
   };
@@ -204,7 +205,7 @@ const CategoryList = () => {
       axios
         .get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
         .then((response) => {
-          let data = response.data.filter((item) => item.is_active === "0");
+          let data = response.data.filter((item) => item.is_active === "1");
           setData(data);
           console.log("---------fdele" + JSON.stringify(data));
           setsearchData(data);
