@@ -33,8 +33,6 @@ const Deletedproduct = () => {
     let data=response.data;
     setapicall(true);
     setRestoreAlert(false);
-  
-
   })
   };
 console.log("dddddddddddd"+(id,productid))
@@ -219,7 +217,7 @@ console.log("dddddddddddd"+(id,productid))
           onClick={(e) => OnProductRestore(e, row.id, row.product_id)}
           btntext={"Restore"}
           btnclass={"button bg-warning"}
-          Iconname={<MdOutlineRestore className="mx-1" />}
+          Iconname={<MdOutlineRestore className="mx-1"/>}
         />
       ),
     },
