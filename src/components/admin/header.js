@@ -212,9 +212,17 @@ function AdminHeader() {
                     value={newpassword}
                     onChange={(e) => newPass(e)}
                     placeholder="Password"
+                    required
                   />
                 </Form.Group>
-                <Button variant="primary" type="submit">
+                <button
+                  type={"button"}
+                  className="btn btn-outline-primary "
+                  onClick={() => handleClose()}
+                >
+                  Cancel
+                </button>
+                <Button variant="primary" type="submit" className="mx-4">
                   Submit
                 </Button>
               </Form>
