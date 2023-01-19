@@ -761,10 +761,12 @@ function Product() {
   };
 
   const handleClose = () => {
+   
     setproductdata(data);
     setcustomarray([]);
     setvariantarray(veriantData);
     setvariantmainarray([]);
+    setcustomValidated(false)
     setValidated(false);
     setmodalshow(false);
   };
@@ -1007,26 +1009,53 @@ function Product() {
         });
     }
   };
-  const VariantAddProduct = () => {
-    // if (variantarray !== '') {
-    // e.preventDefault();
-    setvariantmainarray((variantmainarray) => [
-      ...variantmainarray,
-      variantarray,
-    ]);
-    setcustomValidated(false);
-    formRef.current.reset();
-    // }
-    // else {
+  const VariantAddProduct = (e) => {
+   
+    if(variantarray.unit==""){
+      setcustomValidated(true);
+     //alert("pleaws")
+    }
+
+    // const form = e.currentTarget;
+    // console.log("form----"+form )
+    // if (form.checkValidity() === false) {
+    //   e.stopPropagation();
+    //   e.preventDefault();
+
+    //   //setValidated(true);
     //   setcustomValidated(true);
     // }
+
+    else{
+      setvariantmainarray((variantmainarray) => [
+        ...variantmainarray,
+        variantarray,
+      ]);
+      setAlert(true)
+      setcustomValidated(false);
+      formRef.current.reset();
+    }
+ 
   };
+
+
+   
   const VariantRemoveClick = (id, productid) => {
     setVerityAlert(true);
     setVariantRemove((variantremove) => {
       return { ...variantremove, id: id, productid: productid };
     });
   };
+ 
+  const MainVariantRemoveClick = (id, productid) => {
+  
+    // // setVariantRemove((variantremove) => {
+    // //   return { ...variantremove, id: id, productid: productid };
+    // // });
+
+    // setcustomarray(customarray.filter((item) => item !== e));
+  };
+
 
   const hideAlert = () => {
     // product delete
@@ -1071,6 +1100,7 @@ function Product() {
     setAlert(false);
   };
 
+  
   const closeAlert = () => {
     setAlert(false);
     setVerityAlert(false);
@@ -1780,10 +1810,10 @@ function Product() {
                           type="number"
                           min={1}
                           placeholder="Gst"
-                          className={
-                            customvalidated === true ? "border-danger" : null
-                          }
-                          name="gst"
+                          // className={
+                          //   customvalidated === true ? "border-danger" : null
+                          // }
+                          // name="gst"
                           value={productdata.gst}
                           onChange={(e) => handleInputFieldChange(e)}
                           required
@@ -1817,7 +1847,17 @@ function Product() {
                 </div>
                 {/*Date  */}
 
+
+
                 {/* Variation */}
+                {/* <Form
+            className="p-2 addproduct_form"
+            validated={customvalidated}
+            ref={mainformRef}
+            onSubmit={
+              modalshow === "add"
+            }
+          > */}
                 {modalshow === "add" ? (
                   <div className="my-3 inputsection_box">
                     <div className="productvariety_box">
@@ -1933,6 +1973,7 @@ function Product() {
                                         <div className=" d-flex align-items-center">
                                           <InputGroup className="" size="sm">
                                             <Form.Select
+
                                               aria-label="Default select example"
                                               name="unit"
                                               value={variantarray.unit}
@@ -2338,7 +2379,7 @@ function Product() {
                                                 variant="text-danger"
                                                 className="addcategoryicon text-danger"
                                                 onClick={(id) =>
-                                                  VariantRemoveClick(
+                                                  MainVariantRemoveClick(
                                                     variantdata.id,
                                                     variantdata.product_id
                                                   )
@@ -2374,7 +2415,9 @@ function Product() {
                       </div>
                     </div>
                   </div>
+               
                 ) : null}
+                   {/* </Form> */}
                 {/* Offer */}
 
                 {/* seo tag */}
@@ -2469,22 +2512,22 @@ function Product() {
                                 min={"1"}
                                 onChange={oncustomheadChange}
                                 name={"header"}
-                                className={
-                                  customvalidated === true
-                                    ? "border-danger"
-                                    : null
-                                }
+                                // className={
+                                //   customvalidated === true
+                                //     ? "border-danger"
+                                //     : null
+                                // }
                               />
                             </InputGroup>
                           </td>
                           <td className="col-4">
                             <InputGroup className="">
                               <Form.Control
-                                className={
-                                  customvalidated === true
-                                    ? "border-danger"
-                                    : null
-                                }
+                                // className={
+                                //   customvalidated === true
+                                //     ? "border-danger"
+                                //     : null
+                                // }
                                 value={descval}
                                 name={"description"}
                                 type="text"
@@ -2587,6 +2630,14 @@ function Product() {
             </Modal.Footer>
           </Form>
         </Modal>
+
+
+
+
+
+
+
+
 
         {/* variety */}
         <Modal
