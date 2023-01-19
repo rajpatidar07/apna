@@ -138,6 +138,7 @@ const Login = () => {
                               className="checkbox_animated check-box"
                               type="checkbox"
                               id="flexCheckDefault"
+                              required
                             />
                             <label
                               className="form-check-label"
@@ -169,7 +170,7 @@ const Login = () => {
                     <ul className="p-0">
                       <li>
                         <a
-                          href="https://www.google.com/"
+                          href="https://accounts.google.com/v3/signin/identifier?dsh=S335595010%3A1674045400989712&elo=1&flowName=GlifWebSignIn&flowEntry=ServiceLogin&ifkv=AWnogHcsSuHeBcyABLSxgnqLHAmOiTyG0zqs4sEUAkLXL2LxAh8ahBIUYpRtRNWc3u3bPrfW6G7nlg"
                           className="btn google-button w-100"
                         >
                           {" "}

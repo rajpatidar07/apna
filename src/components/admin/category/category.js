@@ -25,16 +25,20 @@ const CategoryList = () => {
     setlevel(id[1]);
     setAlert(true);
   };
+
+
   const hideAlert = () => {
+
     console.log("--id" + parentid + "----" + level);
     axios.put(`${process.env.REACT_APP_BASEURL}/delete_category`, {
       id: parentid,
-      is_active: 1,
+      is_active: 0,
       level: level,
     });
     setapicall(true);
-    setAlert(false);
+    
   };
+
   const [Alert, setAlert] = useState(false);
   const [show, setShow] = useState("");
   const [newName, setnewName] = useState("");
@@ -79,6 +83,7 @@ const CategoryList = () => {
 
   const closeAddAlert = () => {
     setAddAlert(false);
+    setAlert(false);
   };
 
   const closeUpdateAlert = () => {
@@ -192,20 +197,23 @@ const CategoryList = () => {
     parentidddata.push(scategory.child_category);
   }
 
+
+
+  function getUser() {
+    try {
+      axios
+        .get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
+        .then((response) => {
+          let data = response.data.filter((item) => item.is_active === "0");
+          setData(data);
+          console.log("---------fdele" + JSON.stringify(data));
+          setsearchData(data);
+          setapicall(false);
+        });
+    } catch (err) {}
+  }
+
   useEffect(() => {
-    function getUser() {
-      try {
-        axios
-          .get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
-          .then((response) => {
-            let data = response.data.filter((item) => item.is_active === "0");
-            setData(data);
-            console.log("---------fdele" + JSON.stringify(data));
-            setsearchData(data);
-            setapicall(false);
-          });
-      } catch (err) {}
-    }
 
     getUser();
   }, [apicall]);
@@ -480,17 +488,29 @@ const CategoryList = () => {
     setValidated(false);
     // show.preventDefault();
   };
+
+
+
   const onValueChange = (e) => {
     setSearchCat({ ...SearchCat, [e.target.name]: e.target.value });
   };
+
+
   const SearchCategory = () => {
-    if (
-      SearchCat.category_name === "" ||
-      SearchCat.category_name === null ||
-      SearchCat.category_name === undefined
-    ) {
-      setsearchValidated(true);
-    } else {
+    // if (
+
+      // SearchCat.category_name === "" ||
+      // SearchCat.category_name === null ||
+      // SearchCat.category_name === undefined
+      
+    // )
+    //  {
+    //   // setsearchValidated(true);
+    // }
+    //  else
+    //   {
+         
+   
       axios
         .post(`${process.env.REACT_APP_BASEURL}/search_category`, {
           category_name: `${SearchCat.category_name}`,
@@ -502,8 +522,20 @@ const CategoryList = () => {
           setSearchCat("");
           setsearchValidated(false);
         });
-    }
+    // }
   };
+
+  
+  const OnReset =()=>{
+    setSearchCat({
+      category_name:"",
+      category_type:"",
+      level:""
+    })
+  
+     setapicall(true)
+   
+}
   const handleClick = () => {};
   const navigate = useNavigate();
 
@@ -524,11 +556,20 @@ const CategoryList = () => {
       <div className="card mt-3 p-3 ">
         <div className=" row">
           <div className="col-md-3 col-sm-6 aos_input">
-            <input  required type="text" className="adminsideinput"  placeholder={"Search by category name"} value={SearchCat.category_name} name={"category_name"} onChange={(e) => onValueChange(e)} />
-            {/* {searchvalidated === true? 
-            <p className="mt-1 ms-2 text-danger" type="invalid">
-                      Please fill this field
-                    </p> : null} */}
+            <input
+              required
+              type="text"
+              className="adminsideinput"
+              placeholder={"Search by category name"}
+              value={SearchCat.category_name}
+              name={"category_name"}
+              onChange={(e) => onValueChange(e)}
+            />
+            {searchvalidated === true ? (
+              <p className="mt-1 ms-2 text-danger" type="invalid">
+                Please fill this field
+              </p>
+            ) : null}
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
             <Form.Select
@@ -538,7 +579,7 @@ const CategoryList = () => {
               onChange={(e) => onValueChange(e)}
                value={SearchCat.category_type}
             >
-              {/* <option>Search by category</option> */}
+              <option>Search by category</option>
               {result1.map((lvl, i) => {
                 return (
                   <option value={lvl.category_type} key={i}>
@@ -572,6 +613,14 @@ const CategoryList = () => {
               btntext={"Search"}
               btnclass={"button main_button w-100"}
               onClick={SearchCategory}
+            />
+          </div>
+
+          <div className="col-md-3 col-sm-6 aos_input">
+            <MainButton
+              btntext={"Reset"}
+              btnclass={"button main_button "}
+              onClick={OnReset}
             />
           </div>
         </div>
@@ -985,7 +1034,7 @@ const CategoryList = () => {
           text="Are you Sure you want to delete"
           onConfirm={hideAlert}
           showCancelButton={true}
-          onCancel={hideAlert}
+          onCancel={closeAddAlert}
         />
         <SweetAlert
           show={AddAlert}

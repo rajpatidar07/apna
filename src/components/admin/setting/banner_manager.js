@@ -151,7 +151,7 @@ function Banner() {
     setAlert(false);
   };
 
-  console.log("helooooooooooo" + bannerId);
+  // console.log("helooooooooooo" + bannerId);
   const handleShow = (e, banner_id) => {
     // console.log("gggggggggggggg"+e)
 
@@ -173,9 +173,7 @@ function Banner() {
               setBanner(data);
               setAddBanner(response.data[0]);
               setBannerId(banner_id);
-              setImgArray(
-                JSON.parse(response.data[0].multiple_document_upload)
-              );
+              setImgArray(response.data[0].image);
             });
         } catch (err) {}
       }
@@ -183,7 +181,7 @@ function Banner() {
       setShow(true);
     }
   };
-  console.log("banner" + JSON.stringify(banner));
+  // console.log("banner" + JSON.stringify(banner));
   useEffect(() => {
     axios
       .post(`${process.env.REACT_APP_BASEURL}/banner_list`, {
@@ -203,7 +201,7 @@ function Banner() {
   };
   const handleFormChange = (e) => {
     setAddBanner({ ...addBanner, [e.target.name]: e.target.value });
-    console.log("dataaaaaaaaaaaaaaaaaaaaaaa" + JSON.stringify(addBanner));
+    // console.log(addBanner);
   };
   const handleClose = () => {
     formRef.current.reset();
@@ -228,6 +226,22 @@ function Banner() {
       formData.append("size", addBanner.size);
       formData.append("banner_location", addBanner.banner_location);
       // console.log("adminmmmmmmm"+adminId)
+      // console.log(
+      //   "image",
+      //   file,
+      //   "filename",
+      //   fileName,
+      //   "banner_url",
+      //   addBanner.banner_url,
+      //   "title",
+      //   addBanner.title,
+      //   "description",
+      //   addBanner.description,
+      //   "size",
+      //   addBanner.size,
+      //   "banner_location",
+      //   addBanner.banner_location
+      // );
       axios
         .post(`${process.env.REACT_APP_BASEURL}/add_banner`, formData)
         .then((response) => {
@@ -258,13 +272,13 @@ function Banner() {
       .then((response) => {
         let data = response.data;
         console.log("formupdate----------   " + JSON.stringify(response.data));
-        setapicall(true);
         setShow(false);
+        setapicall(true);
         setUpdateAlert(true);
       });
     formRef.current.reset();
     setValidated(false);
-    show.preventDefault();
+    // show.preventDefault();
   };
   return (
     <div>
@@ -326,6 +340,7 @@ function Banner() {
                     type="text"
                     placeholder="Add Title"
                     name={"title"}
+                    onChange={(e) => handleFormChange(e)}
                   />
                   <Form.Control.Feedback type="invalid" className="h6">
                     Please fill title
@@ -344,6 +359,7 @@ function Banner() {
                     type="text"
                     placeholder="Enter url"
                     name={"banner_url"}
+                    onChange={(e) => handleFormChange(e)}
                   />
                   <Form.Control.Feedback type="invalid" className="h6">
                     Please fill this field
@@ -362,6 +378,7 @@ function Banner() {
                     type="text"
                     placeholder="Add Size"
                     name={"size"}
+                    onChange={(e) => handleFormChange(e)}
                   />
                   <Form.Control.Feedback type="invalid" className="h6">
                     Please fill Size
@@ -451,6 +468,7 @@ required
                     name={"description"}
                     required
                     value={addBanner.description}
+                    onChange={(e) => handleFormChange(e)}
                   />
                   <Form.Control.Feedback type="invalid" className="h6">
                     Please fill description
@@ -461,7 +479,7 @@ required
           </Modal.Body>
           <Modal.Footer>
             <button
-              type={"button "}
+              type="button"
               className="button main_outline_button"
               onClick={() => handleClose()}
             >
