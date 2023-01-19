@@ -253,7 +253,8 @@ function Product() {
 
   const featureModalClose = (e) => {
     setfeatureShow(false)
-    setfeaturedata({ ...featuredata.start_date, [e.target.name]: e.target.value });
+    setfeaturedata({start_date: "",
+  end_date:""});
     
   };
   // const featureModalClose = () => setfeatureShow(false);
