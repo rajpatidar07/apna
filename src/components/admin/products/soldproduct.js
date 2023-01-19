@@ -11,23 +11,31 @@ import { Modal } from "react-bootstrap";
 import Button from "react-bootstrap";
 import Iconbutton from "../common/iconbutton";
 import axios from "axios";
+
+
 const Soldproduct = () => {
   const formRef = useRef();
+  const [validated, setValidated] = useState(false);
+
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
+
   const handleClick = () => {};
+
   const [show, setShow] = useState(false);
   const [id, setId] = useState("");
   const [productData, setProductData] = useState([]);
   const [solddata, setsolddata] = useState([]);
   const [apicall, setapicall] = useState([]);
   const [UpdateAlert, setUpdateAlert] = useState(false);
+
+
   const [searchdata, setsearchData] = useState({
     product_title_name: "",
     category: "",
   });
-  const [quantity, setQuantity] = useState([]);
+  const [quantity, setQuantity] = useState("");
   // {
   //   id: productData.id,
   //   product_status: productData.product_status,
@@ -46,9 +54,15 @@ const Soldproduct = () => {
   //   expire_date: productData.expire_date,
   //   quantity: quantity,
   // }
-  const handleClose = () => {
-    // formRef.current.reset();
+  const handleClose = (e) => {
+    // console.log("eeee-----"+JSON.stringify(e))
+    // e.prevantDefault()
+    setProductData([])
+   
+    
     setShow(false);
+   
+ 
   };
 
   const closeUpdateAlert = () => {
@@ -66,27 +80,33 @@ const Soldproduct = () => {
           setProductData(data[0]);
           setId(data[0].id);
         });
-    } catch (err) {}
+    } catch (err) {
+
+    }
 
     setShow(true);
   };
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
   };
+
   const onSearchClick = () => {
     setapicall(true);
   };
+
+
   const OnReset = () => {
     setsearchData({ product_title_name: "", manufacturing_date: "" });
     setapicall(true);
   };
-  // const OnInputChange = (e) => {
-  //   setProductData({ ...productData, [e.target.name]: e.target.value });
-  //   console.log("-----===========" + e.target.value);
-  // };
-  console.log("----json" + JSON.stringify(productData));
+
+
+  // console.log("----json" + JSON.stringify(productData));
+
   const OnQuntityChange = (e) => {
-    setProductData({ ...productData, [e.target.name]: e.target.value });
+
+
+    setProductData({ ...productData, quantity: quantity });
     // setQuantity(e.target.value);
   };
   useEffect(() => {
@@ -122,6 +142,8 @@ const Soldproduct = () => {
         console.log(error);
       });
   }, [apicall]);
+
+
   const columns = [
     {
       name: "Sku",
@@ -207,10 +229,12 @@ const Soldproduct = () => {
   ];
 
   const OnProductQutUpdate = (e) => {
-    e.prevantDefault();
-    let p = JSON.stringify(productData);
+      
+     alert("dddd")
+    console.log("data-----"+productData)
+    // let p = JSON.stringify(productData);
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/products_varient_update`, p)
+      .put(`${process.env.REACT_APP_BASEURL}/products_varient_update`, productData)
       .then((response) => {
         let data = response.data;
         console.log("data" + data);
@@ -255,8 +279,10 @@ const Soldproduct = () => {
         </div>
 
         {/* upload */}
-        <Modal size="lg" show={show} onHide={() => handleClose()}>
-          <Form className="" onSubmit={OnProductQutUpdate}>
+
+        <Modal size="lg" show={show} onHide={() => handleClose()} >
+          <Form className="" onSubmit={()=> OnProductQutUpdate()}  
+          >
             <Modal.Header closeButton>
               <Modal.Title>Sold Product</Modal.Title>
             </Modal.Header>
@@ -283,7 +309,7 @@ const Soldproduct = () => {
                   <input
                     type={"number"}
                     placeholder={"Select quantity"}
-                    onChange={OnQuntityChange}
+                    onChange={(e)=>setQuantity(e.target.value)}
                     name="quantity"
                     value={productData.quantity}
                     className={"adminsideinput"}
