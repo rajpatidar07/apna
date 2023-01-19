@@ -29,7 +29,8 @@ const Notification = () => {
   });
   const [AddAlert, setAddAlert] = useState(false);
   const [UpdateAlert, setUpdateAlert] = useState(false);
-  //   const [NotificationText, setNotificationText] = useState("");
+  const [deleteAlert, setDeleteAlert] = useState(false);
+  const [id, setId] = useState();
   const [getNotificationdata, setGetNotificationdata] = useState([]);
   const [apicall, setapicall] = useState(false);
   const [getNotificationType, setNotificationType] = useState("");
@@ -54,7 +55,7 @@ const Notification = () => {
 
   //To show or open the modal to add or update notification :-
 
-  const handleShow = (e) => {
+  const handleShow = (e, id) => {
     // console.log("----------" + e);
     if (e === "add") {
       setShow(e);
@@ -67,6 +68,7 @@ const Notification = () => {
           )
           .then((response) => {
             setNotificationdata(response.data[0]);
+            setId(id);
             // console.log(response.data[0].id);
             // setNotificationText(response.data[0].notification_text);
           });
@@ -182,24 +184,12 @@ const Notification = () => {
           />
           <BsTrash
             className=" p-0 m-0 editiconn text-danger"
-            onClick={deleteNotification.bind(this, row.id)}
+            onClick={ShowDeleteAlert.bind(this, row.id)}
           />
         </div>
       ),
     },
   ];
-
-  //   const NotificationTextHandler = (e) => {
-  //     let newTemp;
-  //     if (e.editor.getData() != undefined) {
-  //       newTemp = e.editor.getData().replaceAll(/"/g, "'");
-  //     }
-  //     setNotificationText(newTemp);
-
-  //     //  setNotificationText(e.editor. setEditorData(NotificationText))
-  //     //  let updateTemp=e.editor.setData(NotificationText)
-  //     //  setNotificationText(updateTemp)
-  //   };
 
   // OnCahnge function of the input feilds :-
 
@@ -231,7 +221,7 @@ const Notification = () => {
           status: Notificationdata.status,
         })
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           setAddAlert(true);
         })
         .catch(function (error) {
@@ -288,7 +278,6 @@ const Notification = () => {
         // console.log(response);
 
         let data = response.data.filter((item) => item.is_deleted === 1);
-
         setGetNotificationdata(data);
         setapicall(false);
       })
@@ -300,7 +289,7 @@ const Notification = () => {
   //To change the status :-
 
   const onStatusChange = (e, id) => {
-    setchangstatus( e.target.value);
+    setchangstatus(e.target.value);
     axios
       .put(`${process.env.REACT_APP_BASEURL}/notification_template_status`, {
         status: e.target.value,
@@ -317,17 +306,34 @@ const Notification = () => {
   //To delete the Notification :-
 
   const deleteNotification = (id) => {
+    console.log("1", id);
     axios
       .put(`${process.env.REACT_APP_BASEURL}/notification_template_remove`, {
         is_deleted: 0,
         id: `${id}`,
       })
       .then((response) => {
+        console.log(response);
+        setDeleteAlert(false);
         setapicall(true);
       })
       .catch(function (error) {
         console.log(error);
       });
+  };
+
+  //To mshow alert delete box :-
+
+  const ShowDeleteAlert = (id) => {
+    console.log(id);
+    setId(id);
+    setDeleteAlert(true);
+  };
+
+  //Tocancel the delete alert box :-
+
+  const CancelDelete = () => {
+    setDeleteAlert(false);
   };
 
   //To render the page :-
@@ -342,7 +348,12 @@ const Notification = () => {
     setapicall(true);
     fetchNotificationData();
   };
-
+  const OnReset = () => {
+    setNotificationType("");
+    setGetNotificationStatus("");
+    setGetUserType("");
+    setapicall(true);
+  };
   return (
     <div>
       <h2>Notification</h2>
@@ -407,6 +418,11 @@ const Notification = () => {
               Search
             </button>
           </div>
+          <div className="col-md-3 col-sm-6 mt-2 aos_input">
+            <button className="button main_button w-100" onClick={OnReset}>
+              Reset
+            </button>
+          </div>
         </div>
 
         <div className="product_page_uploadbox my-4">
@@ -425,6 +441,14 @@ const Notification = () => {
           pagination
           highlightOnHover
           pointerOnHover
+        />
+        <SweetAlert
+          show={deleteAlert}
+          title="Notification"
+          text="Are you Sure you want to delete "
+          onConfirm={() => deleteNotification(id)}
+          showCancelButton={true}
+          onCancel={CancelDelete}
         />
       </div>
       <Modal size="lg" show={show} onHide={() => handleClose()}>
@@ -544,61 +568,19 @@ const Notification = () => {
               </div>
               <div className="col-sm-6 aos_input mt-2">
                 <Form.Label>Notification Text</Form.Label>
-                <br />
-                <textarea
-                  // type={"text"}
+                <Form.Control
+                  as="textarea"
+                  rows={3}
                   placeholder={"Notification Text"}
-                  // className={"adminsideinput"}
                   value={Notificationdata.notification_text}
                   name={"notification_text"}
-                  rows={2}
                   cols={25}
                   onChange={(e) => {
                     valueHandler(e);
                   }}
                   required
                 />
-                {/* <textarea name="postContent" rows={4} cols={40} /> */}
               </div>
-              {/* <div className="col-sm-6 aos_input">
-                <Form.Label> Text Message</Form.Label>
-                <input
-                  type={"text"}
-                  placeholder={"Text Message"}
-                  className={"adminsideinput"}
-                  value={Notificationdata.text_msg}
-                  name={"text_msg"}
-                  onChange={(e) => {
-                    valueHandler(e);
-                  }}
-                  required
-                />
-              </div> */}
-              {/* <div className="col-sm-6 aos_input">
-                <Form.Label> Test Notification </Form.Label>
-                <input
-                  type={"text"}
-                  placeholder={"Test Notification "}
-                  className={"adminsideinput"}
-                  value={Notificationdata.test_notofication}
-                  name={"test_notofication"}
-                  onChange={(e) => {
-                    valueHandler(e);
-                  }}
-                  required
-                />
-              </div> */}
-
-              {/* <div sm="12" className="mt-3">
-                <CKEditor
-                  // editor={"classic"}
-                  data={NotificationText}
-                  //  value="<p>hjhjjhj</p>"
-                  onChange={(e) => NotificationTextHandler(e)}
-                  name={"notification_text"}
-                  required
-                />
-              </div> */}
             </div>
           </Modal.Body>
           <Modal.Footer>
