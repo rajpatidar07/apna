@@ -711,6 +711,7 @@ function Product() {
   useEffect(() => {
     handleShow();
   }, []);
+
   const getProductVariant = (id) => {
     axios
       .post(
@@ -976,6 +977,7 @@ function Product() {
           variantarray
         )
         .then((response) => {
+
           setvariantarray({
             product_status: "",
             unit: "",
@@ -994,7 +996,7 @@ function Product() {
             product_id: productID,
           });
           setProductAlert(true);
-          // getProductVariant(productID);
+            getProductVariant(productID);
           // formRef.reset();
         })
         .catch(function(error) {
@@ -2726,7 +2728,7 @@ function Product() {
                                         className={
                                           customvalidated === true
                                             ? "border-danger"
-                                            : null
+                                            :null
                                         }
                                       >
                                         <option
@@ -2739,7 +2741,7 @@ function Product() {
                                               ? "volume"
                                               : variantarray.unit === "piece"
                                               ? "piece"
-                                              : ""
+                                              :null
                                           }
                                         >
                                           {variantarray.unit === "pcs"
@@ -2765,7 +2767,7 @@ function Product() {
                                                     ? "ml"
                                                     : vari === "piece"
                                                     ? "piece"
-                                                    : ""
+                                                    :null
                                                 }
                                                 key={i}
                                               >
@@ -3056,14 +3058,14 @@ function Product() {
                                   </div>
                                 </td>
                               </tr>
-
+  {console.log("vdata-------"+JSON.stringify(vdata))}
                               {vdata === "" ||
                               vdata === null ||
                               vdata === undefined
                                 ? null
                                 : (vdata || []).map((variantdata, i) => {
                                     return variantdata.is_delete ===
-                                      "1" ? null : (
+                                      "1 " ? null : (
                                       <>
                                         <tr>
                                          
