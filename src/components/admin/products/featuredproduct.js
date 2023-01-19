@@ -15,7 +15,7 @@ import axios from "axios";
 import Feedback from "react-bootstrap/esm/Feedback";
 const Featuredproduct = () => {
 
-  const currentdate = moment().format('YYYY-MM-DD')
+  const currentdate = moment().format('')
 
   const formRef = useRef();
 
@@ -31,8 +31,7 @@ const [featuredProductData,setFeatureProductData]=useState([]);
   const [validated, setValidated] = useState(false);
 const [id,setId]=useState("");
 const [searchdata, setsearchData] = useState({
-  product_title_name: "",
-  category: "",
+  end_date:"",
   start_date:"",
 })
 const handleClose = () => {
@@ -71,7 +70,7 @@ console.log("-----------------AAAAAAAAAAa"+JSON.stringify(featuredData))
                   "product_id":"", 
                   "fetured_type":"featured_offer", 
                   "start_date":`${searchdata.start_date}`,
-                  "end_date":""
+                  "end_date":`${searchdata.end_date}`
                   })
         .then((response) => {
 
@@ -80,7 +79,7 @@ console.log("-----------------AAAAAAAAAAa"+JSON.stringify(featuredData))
         });
     } catch (err) {}
           },
-     [apicall,searchdata]);
+     [apicall]);
   console.log("gggggggggggggg"+JSON.stringify(featuredProductData))
 
   const columns = [
@@ -135,27 +134,21 @@ console.log("-----------------AAAAAAAAAAa"+JSON.stringify(featuredData))
       selector: (row) => (
         <span
           className={
-            row.status ==='pending'
+            ((currentdate >row.start_date || currentdate ===row.start_date) && currentdate <row.end_date)
               ? "badge bg-success"
-              : row.status === 'active'
-              ? "badge bg-danger" :row.status === 'special_offer'?
-              "badge bg-info" : row.status === 'featured_offer'?
-               "badge bg-warning" :row.status === 'promotional'?
-               "badge bg-primary" : row.status === 'draft'?
-               "badge bg-secondary":null
+              : (currentdate >row.end_date || currentdate ===row.end_date)
+              ? "badge bg-danger" :currentdate < row.start_date?
+              "badge bg-info" :null
+
           }
         >
-          {row.status === 'pending'
-            ? "Pending"
-            : row.status === 'active'
-            ? "Active":
-            row.status === 'special_offer' ?
-            "Special Offer" :
-            row.status === 'featured_offer' ?
-            "Featured Offer":
-            row.status === 'promotional' ?
-             "Promotional"
-            : "Draft"}
+          { ((currentdate >row.start_date || currentdate ===row.start_date) && currentdate <row.end_date)
+            ? "Active"
+            : (currentdate >row.end_date || currentdate ===row.end_date)
+            ? "Expired":
+            currentdate < row.start_date?
+            "In Active" :
+            null}
         </span>
       ),
       sortable: true,
@@ -200,6 +193,7 @@ console.log("-----------------AAAAAAAAAAa"+JSON.stringify(featuredData))
       ),
     },
   ];
+
   const handleFormChange = (e) => {
     setFeaturetData({...featuredData,[e.target.name]: e.target.value})
     };
@@ -224,18 +218,25 @@ console.log("-----------------AAAAAAAAAAa"+JSON.stringify(featuredData))
   setValidated(false);
 }
 // console.log("hhjjjjjjjjjjjjj0"+JSON.stringify(featuredProductData))
+
 const OnSearchChange = (e) => {
   setsearchData({ ...searchdata, [e.target.name]: e.target.value })
 }
 const OnDateChange = (e) => {
-  let mdate = moment(e.target.value).format('YYYY-MM-DD')
-  setsearchData({ ...searchdata,start_date: mdate })
-}
-const onSearchClick = () =>{
-  
-}
-console.log("DATE0000000000000"+JSON.stringify(featuredData));
 
+  let mdate = moment(e.target.value).format('YYYY-MM-DD')
+  setsearchData({ ...searchdata,[e.target.name]: mdate })
+}
+
+console.log("DATE0000000000000"+JSON.stringify(featuredData));
+const submitHandler = () => {
+  setapicall(true);
+};
+
+const OnReset = () => {
+  setsearchData({ start_date: "",end_date:""});
+  setapicall(true);
+};
 //  const UpdateFeturse
   return (
     <div>
@@ -248,8 +249,8 @@ console.log("DATE0000000000000"+JSON.stringify(featuredData));
         <input type={"text"}  onChange={OnSearchChange} name='product_title_name'
               value={searchdata.status} placeholder={"Search by status"} className={'adminsideinput'}/>
         </div> */}
-       <div className="col-md-3 col-sm-6 aos_input">
-        <Form.Select aria-label="Search by category" value={searchdata.status} className="adminselectbox" placeholder="Search by status">
+       {/* <div className="col-md-3 col-sm-6 aos_input">
+        <Form.Select aria-label="Search by category" onChange={OnSearchChange} value={searchdata.status} className="adminselectbox" placeholder="Search by status">
         <option>Search by status</option>
           <option value="active">Active</option>
           <option value="inactive">InActive</option>
@@ -258,17 +259,37 @@ console.log("DATE0000000000000"+JSON.stringify(featuredData));
 
 
         </Form.Select>
-        </div> 
+        </div>  */}
        <div className="col-md-3 col-sm-6 aos_input value={}">
-            <input type={"date"} onChange={OnDateChange} name='manufacturing_date'
+            <input type={"date"} onChange={OnDateChange} name='start_date'
               value={searchdata.start_date}
+              className={'adminsideinput'} placeholder={"Search by date"} />
+          </div>
+          <div className="col-md-3 col-sm-6 aos_input value={}">
+            <input type={"date"} onChange={OnDateChange} name='end_date'
+              value={searchdata.end_date}
               className={'adminsideinput'} placeholder={"Search by date"} />
           </div>
         {/* <div className="col-md-3 col-sm-6 aos_input">
         <MainButton btntext={"Search"} btnclass={'button main_button w-100'} />
         </div> */}
+          <div className="col-md-3 col-sm-6 aos_input">
+            <MainButton
+              onClick={submitHandler}
+              btntext={"Search"}
+              btnclass={"button main_button w-100"}
+            />
+          </div>
+          <div className="col-md-3 col-sm-6 aos_input">
+            <MainButton
+              btntext={"Reset"}
+              btnclass={"button main_button w-100"}
+              type="reset"
+              onClick={OnReset}
+            />
+          </div>
       </div>
-
+      
       {/* upload */}
      
       <Modal size="lg" show={show} onHide={() => handleClose()}>

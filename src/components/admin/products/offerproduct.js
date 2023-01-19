@@ -18,10 +18,9 @@ const [offerProductData,setOfferProductData]=useState([]);
 const[featuredData,setFeaturetData]=useState([]);
 const [id,setId]=useState("");
 
-const currentdate = moment().format('YYYY-MM-DD')
+const currentdate = moment().format('')
 const [searchdata, setsearchData] = useState({
-  product_title_name: "",
-  category: "",
+  end_date:"",
   start_date:"",
 
 })
@@ -31,8 +30,9 @@ const OnSearchChange = (e) => {
 }
 
 const OnDateChange = (e) => {
+
   let mdate = moment(e.target.value).format('YYYY-MM-DD')
-  setsearchData({ ...searchdata,start_date: mdate })
+  setsearchData({ ...searchdata,[e.target.name]: mdate })
 }
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
@@ -49,8 +49,8 @@ const OnDateChange = (e) => {
       axios.post(`${process.env.REACT_APP_BASEURL}/featured_list`,{
                   "product_id":"", 
                   "fetured_type":"special_offer", 
-                  "start_date":"",
-                  "end_date":""
+                  "start_date":`${searchdata.start_date}`,
+                  "end_date":`${searchdata.end_date}`
                   })
         .then((response) => {
 
@@ -59,7 +59,7 @@ const OnDateChange = (e) => {
         });
     } catch (err) {}
           },
-     [apicall,searchdata]);
+     [apicall]);
      const columns = [
       {
         name: "Product ID",
@@ -112,27 +112,21 @@ const OnDateChange = (e) => {
         selector: (row) => (
           <span
             className={
-              row.status === 'pending'
+              ((currentdate >row.start_date || currentdate ===row.start_date) && currentdate <row.end_date)
                 ? "badge bg-success"
-                : row.status === 'active'
-                ? "badge bg-danger" :row.status === 'special_offer' ?
-                "badge bg-info" : row.status === 'featured_offer'?
-                 "badge bg-warning" :row.status === 'promotional'?
-                 "badge bg-primary" : row.status === 'draft'?
-                 "badge bg-secondary":null
+                : (currentdate >row.end_date || currentdate ===row.end_date)
+                ? "badge bg-danger" :currentdate < row.start_date?
+                "badge bg-info" :null
+  
             }
           >
-            {row.status === 'pending'
-              ? "Pending"
-              : row.status === 'active'
-              ? "Active":
-              row.status === 'special_offer' ?
-              "Special Offer" :
-              row.status === 'featured_offer' ?
-              "Featured Offer":
-              row.status === 'promotional' ?
-               "Promotional"
-              : "Draft"}
+            { ((currentdate >row.start_date || currentdate ===row.start_date) && currentdate <row.end_date)
+              ? "Active"
+              : (currentdate >row.end_date || currentdate ===row.end_date)
+              ? "Expired":
+              currentdate < row.start_date?
+              "In Active" :
+              null}
           </span>
         ),
         sortable: true,
@@ -218,6 +212,17 @@ const OnDateChange = (e) => {
     });
     formRef.current.reset();
   }
+
+ 
+  const submitHandler = () => {
+    setapicall(true);
+  };
+  
+  const OnReset = () => {
+    setsearchData({ start_date: "",end_date:""});
+    // fetchdata()
+    setapicall(true);
+  };
     return (
         <div>
              <h2>Offer Products</h2>
@@ -225,16 +230,21 @@ const OnDateChange = (e) => {
   {/* search bar */}
   <div className="card mt-3 p-3 ">
   <div className="row pb-3">
-          <div className="col-md-3 col-sm-6 aos_input">
+          {/* <div className="col-md-3 col-sm-6 aos_input">
             <input onChange={OnSearchChange} name='product_title_name'
               value={searchdata.product_title_name}
               className={'adminsideinput'} type={"text"} placeholder={"Search by product name"} />
-          </div>
+          </div> */}
           
           <div className="col-md-3 col-sm-6 aos_input value={}">
-            <input type={"date"} onChange={OnDateChange} name='manufacturing_date'
+            <input type={"date"} onChange={OnDateChange} name='start_date'
               value={searchdata.start_date}
-              className={'adminsideinput'} placeholder={"Search by product name"} />
+              className={'adminsideinput'} placeholder={"Search by date"} />
+          </div>
+          <div className="col-md-3 col-sm-6 aos_input value={}">
+            <input type={"date"} onChange={OnDateChange} name='end_date'
+              value={searchdata.end_date}
+              className={'adminsideinput'} placeholder={"Search by date"} />
           </div>
           {/* <div className="col-md-3 col-sm-6 aos_input">
             <MainButton
@@ -242,6 +252,22 @@ const OnDateChange = (e) => {
               btnclass={"button main_button w-100"}
             />
           </div> */}
+
+<div className="col-md-3 col-sm-6 aos_input">
+            <MainButton
+              onClick={submitHandler}
+              btntext={"Search"}
+              btnclass={"button main_button w-100"}
+            />
+          </div>
+          <div className="col-md-3 col-sm-6 aos_input">
+            <MainButton
+              btntext={"Reset"}
+              btnclass={"button main_button w-100"}
+              type="reset"
+              onClick={OnReset}
+            />
+          </div>
         </div>
 
       {/* upload */}
