@@ -57,9 +57,7 @@ function Product() {
   const [VerityAlert, setVerityAlert] = useState(false);
   const [ProductDraftAlert, setProductDraftAlert] = useState(false);
   const [ProductAlert, setProductAlert] = useState(false);
-
   const [apicall, setapicall] = useState(false);
-
   const [variantapicall, setvariantapicall] = useState(false);
   const [varietyshow, setvarietyShow] = useState(false);
   const [addtag, setaddtag] = useState();
@@ -348,8 +346,16 @@ function Product() {
     },
 
     {
-      name: "Gst",
-      selector: (row) => row.gst + "%",
+      name: "Tax",
+      selector: (row) =>
+        Number(row.gst) +
+        Number(row.cgst) +
+        Number(row.sgst) +
+        Number(row.wholesale_sales_tax) +
+        Number(row.retails_sales_tax) +
+        Number(row.manufacturers_sales_tax) +
+        Number(row.value_added_tax) +
+        "%",
       sortable: true,
       width: "90px",
       center: true,
@@ -461,6 +467,16 @@ function Product() {
           Add Variety
         </Button>
         // : null
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
         /*: null*/
         /*: null*/
         /*: null*/
@@ -775,7 +791,7 @@ function Product() {
   };
 
   const handlevarietyClose = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     setValidated(false);
     setvarietyShow(false);
     // mainformRef.current.reset();
@@ -1850,6 +1866,50 @@ function Product() {
                           // }
                           // name="gst"
                           value={productdata.gst}
+                          onChange={(e) => handleInputFieldChange(e)}
+                          required
+                        />
+                        {/* <Form.Control.Feedback type="invalid">
+                          Please choose a gst
+                        </Form.Control.Feedback> */}
+                      </Col>
+                    </Form.Group>
+                    <Form.Group className="mx-3" controlId="validationCustom11">
+                      <Form.Label className="inputlabelheading" sm="12">
+                        Sgst<span className="text-danger"> </span>
+                      </Form.Label>
+                      <Col sm="12">
+                        <Form.Control
+                          type="number"
+                          min={1}
+                          placeholder="Sgst"
+                          className={
+                            customvalidated === true ? "border-danger" : null
+                          }
+                          name="gst"
+                          value={productdata.sgst}
+                          onChange={(e) => handleInputFieldChange(e)}
+                          required
+                        />
+                        {/* <Form.Control.Feedback type="invalid">
+                          Please choose a gst
+                        </Form.Control.Feedback> */}
+                      </Col>
+                    </Form.Group>
+                    <Form.Group className="mx-3" controlId="validationCustom11">
+                      <Form.Label className="inputlabelheading" sm="12">
+                        Cgst<span className="text-danger"></span>
+                      </Form.Label>
+                      <Col sm="12">
+                        <Form.Control
+                          type="number"
+                          min={1}
+                          placeholder="Cgst"
+                          className={
+                            customvalidated === true ? "border-danger" : null
+                          }
+                          name="cgst"
+                          value={productdata.cgst}
                           onChange={(e) => handleInputFieldChange(e)}
                           required
                         />
