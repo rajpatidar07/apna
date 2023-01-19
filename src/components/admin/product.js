@@ -727,6 +727,7 @@ function Product() {
   useEffect(() => {
     handleShow();
   }, []);
+
   const getProductVariant = (id) => {
     axios
       .post(
@@ -747,6 +748,7 @@ function Product() {
         }
       )
       .then((response) => {
+        // console.log("response.data.results)"+JSON.stringify(response.data.results))
         // console.log("response.data.results)"+JSON.stringify(response.data.results))
         setvdata(response.data.results);
         settaxdata(response.data.results[0]);
@@ -796,10 +798,12 @@ function Product() {
   };
 
   const handleClose = () => {
+   
     setproductdata(data);
     setcustomarray([]);
     setvariantarray(veriantData);
     setvariantmainarray([]);
+    setcustomValidated(false)
     setValidated(false);
     setmodalshow(false);
   };
@@ -977,20 +981,25 @@ function Product() {
     });
   };
   const onVariantaddclick = (id, productid) => {
+
+    // if(variantarray.unit==""){
+    //   setcustomValidated(true)
+    // }
     // id.preventDefault();
-    if (id == "" || id == undefined || id == null) {
+     if (id == "" || id == undefined || id == null) {
       axios
         .post(
           `${process.env.REACT_APP_BASEURL}/products_varient_add`,
           variantarray
         )
         .then((response) => {
+
           setvariantarray({
             product_status: "",
             unit: "",
             colors: "",
-            unit_quantity: "",
-            size: "",
+            unit_quantity: null,
+            size:null,
             product_price: "",
             mrp: "",
             sale_price: "",
@@ -1003,7 +1012,7 @@ function Product() {
             product_id: productID,
           });
           setProductAlert(true);
-          // getProductVariant(productID);
+            getProductVariant(productID);
           // formRef.reset();
         })
         .catch(function(error) {
@@ -1048,26 +1057,55 @@ function Product() {
         });
     }
   };
-  const VariantAddProduct = () => {
-    // if (variantarray !== '') {
-    // e.preventDefault();
-    setvariantmainarray((variantmainarray) => [
-      ...variantmainarray,
-      variantarray,
-    ]);
-    setcustomValidated(false);
-    // formRef.current.reset();
-    // }
-    // else {
+  const VariantAddProduct = (e) => {
+   
+    if(variantarray.unit==""){
+      setcustomValidated(true);
+     //alert("pleaws")
+    }
+
+    // const form = e.currentTarget;
+    // console.log("form----"+form )
+    // if (form.checkValidity() === false) {
+    //   e.stopPropagation();
+    //   e.preventDefault();
+
+    //   //setValidated(true);
     //   setcustomValidated(true);
     // }
+
+    else{
+      setvariantmainarray((variantmainarray) => [
+        ...variantmainarray,
+        variantarray,
+      ]);
+      // setAlert(true)
+      setcustomValidated(false);
+      formRef.current.reset();
+    }
+ 
   };
+
+
+   
   const VariantRemoveClick = (id, productid) => {
     setVerityAlert(true);
     setVariantRemove((variantremove) => {
       return { ...variantremove, id: id, productid: productid };
     });
   };
+ 
+  const MainVariantRemoveClick = (e) => {
+    console.log("id----"+e)
+
+
+    // // setVariantRemove((variantremove) => {
+    // //   return { ...variantremove, id: id, productid: productid };
+    // // });
+
+    setvariantmainarray(variantmainarray.filter((item) => item !== e));
+  };
+
 
   const hideAlert = () => {
     // product delete
@@ -1112,6 +1150,7 @@ function Product() {
     setAlert(false);
   };
 
+  
   const closeAlert = () => {
     setAlert(false);
     setVerityAlert(false);
@@ -1169,6 +1208,7 @@ function Product() {
   };
 
   const handleRemoveClick = (e) => {
+    console.log("iddd---"+ JSON.stringify(e))
     setcustomarray(customarray.filter((item) => item !== e));
   };
   useEffect(() => {
@@ -1821,10 +1861,10 @@ function Product() {
                           type="number"
                           min={1}
                           placeholder="Gst"
-                          className={
-                            customvalidated === true ? "border-danger" : null
-                          }
-                          name="gst"
+                          // className={
+                          //   customvalidated === true ? "border-danger" : null
+                          // }
+                          // name="gst"
                           value={productdata.gst}
                           onChange={(e) => handleInputFieldChange(e)}
                           required
@@ -1902,7 +1942,17 @@ function Product() {
                 </div>
                 {/*Date  */}
 
+
+
                 {/* Variation */}
+                {/* <Form
+            className="p-2 addproduct_form"
+            validated={customvalidated}
+            ref={mainformRef}
+            onSubmit={
+              modalshow === "add"
+            }
+          > */}
                 {modalshow === "add" ? (
                   <div className="my-3 inputsection_box">
                     <div className="productvariety_box">
@@ -2018,6 +2068,7 @@ function Product() {
                                         <div className=" d-flex align-items-center">
                                           <InputGroup className="" size="sm">
                                             <Form.Select
+
                                               aria-label="Default select example"
                                               name="unit"
                                               value={variantarray.unit}
@@ -2093,7 +2144,7 @@ function Product() {
                                                   : variantarray.unit ===
                                                     "piece"
                                                   ? variantarray.unit_quantity
-                                                  : ""
+                                                  : null
                                               }
                                               type="number"
                                               sm="9"
@@ -2117,7 +2168,7 @@ function Product() {
                                               value={
                                                 variantarray.unit === "pcs"
                                                   ? variantarray.size
-                                                  : ""
+                                                  : null
                                               }
                                               type="text"
                                               sm="9"
@@ -2382,7 +2433,7 @@ function Product() {
                                                 ? variantdata.unit_quantity
                                                 : variantdata.unit === "piece"
                                                 ? variantdata.unit_quantity
-                                                : ""}
+                                                : null}
                                             </td>
                                             <td className="p-0 text-center ">
                                               {variantdata.unit === "pcs"
@@ -2423,9 +2474,8 @@ function Product() {
                                                 variant="text-danger"
                                                 className="addcategoryicon text-danger"
                                                 onClick={(id) =>
-                                                  VariantRemoveClick(
-                                                    variantdata.id,
-                                                    variantdata.product_id
+                                                  MainVariantRemoveClick(
+                                                    variantdata
                                                   )
                                                 }
                                                 size="sm"
@@ -2459,7 +2509,9 @@ function Product() {
                       </div>
                     </div>
                   </div>
+               
                 ) : null}
+                   {/* </Form> */}
                 {/* Offer */}
 
                 {/* seo tag */}
@@ -2554,22 +2606,22 @@ function Product() {
                                 min={"1"}
                                 onChange={oncustomheadChange}
                                 name={"header"}
-                                className={
-                                  customvalidated === true
-                                    ? "border-danger"
-                                    : null
-                                }
+                                // className={
+                                //   customvalidated === true
+                                //     ? "border-danger"
+                                //     : null
+                                // }
                               />
                             </InputGroup>
                           </td>
                           <td className="col-4">
                             <InputGroup className="">
                               <Form.Control
-                                className={
-                                  customvalidated === true
-                                    ? "border-danger"
-                                    : null
-                                }
+                                // className={
+                                //   customvalidated === true
+                                //     ? "border-danger"
+                                //     : null
+                                // }
                                 value={descval}
                                 name={"description"}
                                 type="text"
@@ -2595,6 +2647,7 @@ function Product() {
                             </Button>
                           </td>
                         </tr>
+                        {console.log("customarray-----"+customarray)}
                         {// paraddcustom === null || paraddcustom === undefined ? '' :
                         (customarray || []).map((variantdata, i) => {
                           // const arr = variantdata.split(',')
@@ -2673,6 +2726,14 @@ function Product() {
           </Form>
         </Modal>
 
+
+
+
+
+
+
+
+
         {/* variety */}
         <Modal
           size="lg"
@@ -2727,7 +2788,7 @@ function Product() {
                                         className={
                                           customvalidated === true
                                             ? "border-danger"
-                                            : null
+                                            :null
                                         }
                                       >
                                         <option
@@ -2740,7 +2801,7 @@ function Product() {
                                               ? "volume"
                                               : variantarray.unit === "piece"
                                               ? "piece"
-                                              : ""
+                                              :null
                                           }
                                         >
                                           {variantarray.unit === "pcs"
@@ -2766,7 +2827,7 @@ function Product() {
                                                     ? "ml"
                                                     : vari === "piece"
                                                     ? "piece"
-                                                    : ""
+                                                    :null
                                                 }
                                                 key={i}
                                               >
@@ -2810,7 +2871,7 @@ function Product() {
                                             ? variantarray.unit_quantity
                                             : variantarray.unit === "piece"
                                             ? variantarray.unit_quantity
-                                            : ""
+                                            : null
                                         }
                                         type="text"
                                         sm="9"
@@ -2832,7 +2893,7 @@ function Product() {
                                         value={
                                           variantarray.unit === "pcs"
                                             ? variantarray.size
-                                            : " "
+                                            :null
                                         }
                                         type="text"
                                         sm="9"
@@ -3057,16 +3118,17 @@ function Product() {
                                   </div>
                                 </td>
                               </tr>
-
+  {console.log("vdata-------"+JSON.stringify(vdata))}
                               {vdata === "" ||
                               vdata === null ||
                               vdata === undefined
                                 ? null
                                 : (vdata || []).map((variantdata, i) => {
                                     return variantdata.is_delete ===
-                                      "1" ? null : (
+                                      "1 " ? null : (
                                       <>
                                         <tr>
+                                         
                                           <td className="p-0 text-center ">
                                             {variantdata.unit === "pcs"
                                               ? "color"
@@ -3079,6 +3141,7 @@ function Product() {
                                               : ""}
                                           </td>
                                           <td className="p-0 text-center ">
+                                          {console.log("variantdata.colors------"+variantdata.colors )}
                                             {variantdata.colors}
                                           </td>
                                           <td className="p-0 text-center ">
