@@ -179,7 +179,7 @@ function Product() {
             short_by_updated_on: "",
             category: categoryArray,
             product_status: [`${searchdata.product_status}`],
-            is_delete: ["0"],
+            is_delete: ["1"],
             colors: [],
             size: [],
             parent_category: [],
@@ -524,6 +524,17 @@ function Product() {
         /*: null*/
         /*: null*/
         /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
        /*: null*/),
       sortable: true,
     },
@@ -741,7 +752,7 @@ function Product() {
             product_title_name: "",
             sale_price: "",
             short_by_updated_on: "",
-            is_delete: ["0"],
+            is_delete: ["1"],
             product_id: [`${id}`],
           },
         }
@@ -1002,7 +1013,9 @@ function Product() {
             quantity: "",
             product_id: productID,
           });
-          setProductAlert(true);
+          // setProductAlert(true);
+          getProductVariant(productID);
+
           // getProductVariant(productID);
           // formRef.reset();
         })
@@ -1075,7 +1088,7 @@ function Product() {
       .put(`${process.env.REACT_APP_BASEURL}/products_delete_remove`, {
         varient_id: variantremove.id,
         product_id: variantremove.productid,
-        is_delete: "1",
+        is_delete: "0",
       })
       .then((response) => {
         getProductVariant(variantremove.productid);
@@ -1097,7 +1110,7 @@ function Product() {
       .put(`${process.env.REACT_APP_BASEURL}/products_delete_remove`, {
         varient_id: variantremove.id,
         product_id: variantremove.productid,
-        is_delete: "1",
+        is_delete: "0",
       })
       .then((response) => {
         // getProductVariant(variantremove.productid);
@@ -2920,20 +2933,6 @@ function Product() {
                                         onChange={(e) => onVariantChange(e)}
                                         name={"sale_price"}
                                         value={Number(variantarray.sale_price)}
-                                        //     vdata[0] === '' ? (product_price)
-                                        //     +
-                                        //     (
-                                        //       (product_price*vdata[0].gst/100 )
-                                        //     +
-                                        //     (product_price*vdata[0].wholesale_sales_tax/100)
-                                        //     +
-                                        //     (product_price*vdata[0].retails_sales_tax/100)
-                                        //     +
-                                        //   (product_price*vdata[0].value_added_tax/100)
-                                        //   +
-                                        //   (product_price*vdata[0].manufacturers_sales_tax/100)
-                                        //   ) : null
-                                        // }
                                       />
                                     </InputGroup>
                                   </div>
@@ -3064,7 +3063,7 @@ function Product() {
                                 ? null
                                 : (vdata || []).map((variantdata, i) => {
                                     return variantdata.is_delete ===
-                                      "1" ? null : (
+                                      "0" ? null : (
                                       <>
                                         <tr>
                                           <td className="p-0 text-center ">
@@ -3354,7 +3353,7 @@ function Product() {
 
         <SweetAlert
           show={ProductAlert}
-          title="Added Successfully "
+          title="Added Successfully"
           text=" Product Added"
           onConfirm={closeProductAlert}
         />
