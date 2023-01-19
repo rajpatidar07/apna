@@ -48,75 +48,76 @@ import CustomerReport from "./report/customer";
 import StoreReport from "./report/store";
 import BlogList from "./blog/add_blog";
 import EmailSend from "./email_send/email_send";
+import Notification from "./notification/Notification";
 function AdminLayout() {
   // const location = useLocation();
   console.log("-------" + window.location.pathname);
   return (
     <div className="container-fluid p-0">
       <Router>
-     
-          <Routes>
-            <Route path="/login" element={<Login/>} />
-            <Route path="/change_password" element={<ChangePassword />} />
-            <Route path="/forgot" element={<Forgot/>} />
-          </Routes>
-    
-          <div className="row m-0 page_main_row">
-            <div className="col-lg-2 col-md-3 col-sm-4 sidebar_main_div p-0">
-              <AdminSidebar />
-            </div>
-            <div className="col-lg-10 col-md-9 col-sm-8">
-              <AdminHeader/>
-              <div className="main_content_div">
-                <Routes>
-                  <Route path="/" element={<Dashboard />} />
-                  <Route path="/product" element={<Product />} />
-                  <Route path="/orders" element={<Orders />} />
-                  <Route path="/addproduct" element={<Addproduct />} />
-                  <Route path="/productdetail" element={<Productdetail />} />
-                  <Route path="/invoice" element={<InvoiceList/>} />
-                  <Route path="/invoice_detail" element={<Invoice />} />
-                  <Route path="/soldproduct" element={<Soldproduct />} />
-                  <Route path="/featureproduct" element={<Featuredproduct />} />
-                  <Route path="/expiredproduct" element={<Expiredproduct />} />
-                  <Route path="/pendingproduct" element={<Pendingproduct />} />
-                  <Route path="/promotionproduct" element={<Promotionproduct />}/>
-                  <Route path="/offerproduct" element={<Offerproduct />} />
-                  <Route path="/deletedproduct" element={<Deletedproduct />} />
-                  <Route path="/order_detail" element={<OrderDetail />} />
-                  <Route path="/footer" element={<Footer />} />
-                  <Route path="/vendors" element={<VendorsList />} />
-                  <Route path="/add_blog" element={<BlogList/>} />
-                  
-                  <Route path="/components" element={<AdminComponents />} />
-                  <Route path="/add_admin" element={<Admin />} />
-                  <Route path="/category" element={<CategoryList />} />
-                  <Route path="/complaint" element={<Complaint />} />
-                  <Route path="/transactions" element={<Transactions />} />
-                  <Route path="/transactions_detail" element={<TranDetail />} />
-                  <Route path="/home_manager" element={<Home />} />
-                  <Route path="/banner" element={<Banner />} />
-                  <Route path="/coupon" element={<Coupon />} />
-                  <Route path="/review" element={<Review />} />
-                  <Route path="/delivery" element={<Delivery />} />
-                  {/* report */}
-                  <Route path="/revenuereport" element={<RevenueReport />} />
-                  <Route path="/productreport" element={<ProductReport />} />
-                  <Route path="/orderreport" element={<OrderReport />} />
-                  <Route path="/couponreport" element={<CouponReport />} />
-                  <Route path="/stockreport" element={<StockReport />} />
-                  <Route path="/taxreport" element={<TaxesReport />} />
-                  <Route path="/categoryreport" element={<CategoryReport />} />
-                  <Route path="/content_manager" element={<ContentManager />} />
-                  <Route path="/customerreport" element={<CustomerReport />} />
-                  <Route path="/storereport" element={<StoreReport />} />
-                  <Route path="/email_send" element={<EmailSend/>} />
-                  
-                </Routes>
-              </div>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/change_password" element={<ChangePassword />} />
+          <Route path="/forgot" element={<Forgot />} />
+        </Routes>
+
+        <div className="row m-0 page_main_row">
+          <div className="col-lg-2 col-md-3 col-sm-4 sidebar_main_div p-0">
+            <AdminSidebar />
+          </div>
+          <div className="col-lg-10 col-md-9 col-sm-8">
+            <AdminHeader />
+            <div className="main_content_div">
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/product" element={<Product />} />
+                <Route path="/orders" element={<Orders />} />
+                <Route path="/addproduct" element={<Addproduct />} />
+                <Route path="/productdetail" element={<Productdetail />} />
+                <Route path="/invoice" element={<InvoiceList />} />
+                <Route path="/invoice_detail" element={<Invoice />} />
+                <Route path="/soldproduct" element={<Soldproduct />} />
+                <Route path="/featureproduct" element={<Featuredproduct />} />
+                <Route path="/expiredproduct" element={<Expiredproduct />} />
+                <Route path="/pendingproduct" element={<Pendingproduct />} />
+                <Route
+                  path="/promotionproduct"
+                  element={<Promotionproduct />}
+                />
+                <Route path="/offerproduct" element={<Offerproduct />} />
+                <Route path="/deletedproduct" element={<Deletedproduct />} />
+                <Route path="/order_detail" element={<OrderDetail />} />
+                <Route path="/footer" element={<Footer />} />
+                <Route path="/vendors" element={<VendorsList />} />
+                <Route path="/add_blog" element={<BlogList />} />
+                <Route path="/notification" element={<Notification />} />
+                <Route path="/components" element={<AdminComponents />} />
+                <Route path="/add_admin" element={<Admin />} />
+                <Route path="/category" element={<CategoryList />} />
+                <Route path="/complaint" element={<Complaint />} />
+                <Route path="/transactions" element={<Transactions />} />
+                <Route path="/transactions_detail" element={<TranDetail />} />
+                <Route path="/home_manager" element={<Home />} />
+                <Route path="/banner" element={<Banner />} />
+                <Route path="/coupon" element={<Coupon />} />
+                <Route path="/review" element={<Review />} />
+                <Route path="/delivery" element={<Delivery />} />
+                {/* report */}
+                <Route path="/revenuereport" element={<RevenueReport />} />
+                <Route path="/productreport" element={<ProductReport />} />
+                <Route path="/orderreport" element={<OrderReport />} />
+                <Route path="/couponreport" element={<CouponReport />} />
+                <Route path="/stockreport" element={<StockReport />} />
+                <Route path="/taxreport" element={<TaxesReport />} />
+                <Route path="/categoryreport" element={<CategoryReport />} />
+                <Route path="/content_manager" element={<ContentManager />} />
+                <Route path="/customerreport" element={<CustomerReport />} />
+                <Route path="/storereport" element={<StoreReport />} />
+                <Route path="/email_send" element={<EmailSend />} />
+              </Routes>
             </div>
           </div>
-       
+        </div>
       </Router>
     </div>
   );

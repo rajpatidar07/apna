@@ -27,12 +27,14 @@ import { GiCancel } from "react-icons/gi";
 import moment from "moment/moment";
 import BrandJson from "./json/BrandJson";
 
+
 let categoryArray = [];
 let encoded;
 // let newImageUrls = [];
 let ImgObj = [];
 
 function Product() {
+  const [error, setError] = useState(true);
   const [vendorid, setVendorId] = useState([]);
   const [category, setCategory] = useState([]);
   const [indVal, setIndVal] = useState(0);
@@ -56,9 +58,7 @@ function Product() {
   const [VerityAlert, setVerityAlert] = useState(false);
   const [ProductDraftAlert, setProductDraftAlert] = useState(false);
   const [ProductAlert, setProductAlert] = useState(false);
-
   const [apicall, setapicall] = useState(false);
-
   const [variantapicall, setvariantapicall] = useState(false);
   const [varietyshow, setvarietyShow] = useState(false);
   const [addtag, setaddtag] = useState();
@@ -157,23 +157,23 @@ function Product() {
   // }
 
 
-  const  OnSaveProduct = (e,productid) => {
+  const  OnSaveProduct = (e) => {
     e.preventDefault();
     axios
       .post(`${process.env.REACT_APP_BASEURL}/add_fetured_product`, featuredata)
       .then((response) => {
-        if(response.data.message==="already added in 'featured_offer")
+        if(response.data.message==="Already_Exist")
         {
-           setRestoreAlert(true);
+          setError(false);
+          
         }
         else
         {
+          setRestoreAlert(true);
           setapicall(true);
           setfeatureShow(false);
         }
-
-        // console.log("---update" + JSON.stringify(response.data));
-       
+           
       })
       .catch(function(error) {
         console.log(error);
@@ -250,8 +250,14 @@ function Product() {
     fetured_type: "",
   });
   const [productname, setproductname] = useState("");
+  
 
-  const featureModalClose = () => setfeatureShow(false);
+  const featureModalClose = (e) => {
+    setfeatureShow(false)
+    setfeaturedata({ ...featuredata.start_date, [e.target.name]: e.target.value });
+    
+  };
+  // const featureModalClose = () => setfeatureShow(false);
   const featureModalShow = () => setfeatureShow(true);
   const OnProductOfferClick = (e, productid, productname) => {
     setfeaturedata({
@@ -265,6 +271,7 @@ function Product() {
   const OnFeatureDateChaneg = (e) => {
     setfeaturedata({ ...featuredata, [e.target.name]: e.target.value });
   };
+
   // console.log("dataaaaaaaaaaattaaaaaaaa" + JSON.stringify(featuredata));
 
   // end feature product
@@ -365,8 +372,16 @@ function Product() {
     },
 
     {
-      name: "Gst",
-      selector: (row) => row.gst + "%",
+      name: "Tax",
+      selector: (row) =>
+        Number(row.gst) +
+        Number(row.cgst) +
+        Number(row.sgst) +
+        Number(row.wholesale_sales_tax) +
+        Number(row.retails_sales_tax) +
+        Number(row.manufacturers_sales_tax) +
+        Number(row.value_added_tax) +
+        "%",
       sortable: true,
       width: "90px",
       center: true,
@@ -742,7 +757,7 @@ function Product() {
   };
 
   const handlevarietyClose = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     setValidated(false);
     setvarietyShow(false);
     // mainformRef.current.reset();
@@ -1780,6 +1795,50 @@ function Product() {
                           }
                           name="gst"
                           value={productdata.gst}
+                          onChange={(e) => handleInputFieldChange(e)}
+                          required
+                        />
+                        {/* <Form.Control.Feedback type="invalid">
+                          Please choose a gst
+                        </Form.Control.Feedback> */}
+                      </Col>
+                    </Form.Group>
+                    <Form.Group className="mx-3" controlId="validationCustom11">
+                      <Form.Label className="inputlabelheading" sm="12">
+                        Sgst<span className="text-danger"> </span>
+                      </Form.Label>
+                      <Col sm="12">
+                        <Form.Control
+                          type="number"
+                          min={1}
+                          placeholder="Sgst"
+                          className={
+                            customvalidated === true ? "border-danger" : null
+                          }
+                          name="gst"
+                          value={productdata.sgst}
+                          onChange={(e) => handleInputFieldChange(e)}
+                          required
+                        />
+                        {/* <Form.Control.Feedback type="invalid">
+                          Please choose a gst
+                        </Form.Control.Feedback> */}
+                      </Col>
+                    </Form.Group>
+                    <Form.Group className="mx-3" controlId="validationCustom11">
+                      <Form.Label className="inputlabelheading" sm="12">
+                        Cgst<span className="text-danger"></span>
+                      </Form.Label>
+                      <Col sm="12">
+                        <Form.Control
+                          type="number"
+                          min={1}
+                          placeholder="Cgst"
+                          className={
+                            customvalidated === true ? "border-danger" : null
+                          }
+                          name="cgst"
+                          value={productdata.cgst}
                           onChange={(e) => handleInputFieldChange(e)}
                           required
                         />
@@ -3289,7 +3348,12 @@ function Product() {
             <Modal.Header closeButton>
               <Modal.Title>Add Offer Product</Modal.Title>
             </Modal.Header>
-
+            {error === false ? (
+                            <p className="mt-2 ms-2 text-danger text-center fs-6" type="invalid">
+                              Already Added In Offred Product List!!!
+                            </p>
+                          ) : null}
+            
             <Modal.Body className="p-3">
               <div className="d-flex justify-content-center align-items-center p-0 m-0">
                 <div className="">
@@ -3394,15 +3458,22 @@ function Product() {
               </div>
             </Modal.Body>
             <Modal.Footer className="">
-              <button
+            <Iconbutton
+              type={"button"}
+              btntext={"Cancel"}
+              onClick={featureModalClose}
+              btnclass={"button main_outline_button "}
+              // Iconname={<GiCancel /> }
+            />
+              {/* <button
                 className="button main_outline_button"
-                onClick={() => featureModalClose()}
+                onClick={featureModalClose}
               >
                 Cancel
-              </button>
+              </button> */}
               <Iconbutton
-                type={"submit"}
-                onClick={(e,productid) => OnSaveProduct(e,productid)}
+                // type={"submit"}
+                onClick={OnSaveProduct}
                 btntext={"Save"}
                 btnclass={"button main_button "}
               />
@@ -3411,7 +3482,7 @@ function Product() {
         </Modal>
         <SweetAlert
         show={RestoreAlert}
-        title="Already Added"
+        title="sucessfully added offered product"
         onConfirm={()=>setRestoreAlert(false)}
         // onCancel={hideAlert}
         // showCancelButton={true}

@@ -48,6 +48,18 @@ console.log("-----"+searchdata.start_date)
  
 const columns = [
   {
+    name: "ID",
+    selector: (row) => (
+      row.id
+    ),
+    sortable: true,
+    width: "150px",
+    center: true,
+    style: {
+      paddingLeft: 0,
+    }
+  },
+  {
     name: "Product ID",
     selector: (row) => (
       row.product_id
@@ -59,34 +71,34 @@ const columns = [
       paddingLeft: 0,
     }
   },
-  {
-    name: "Image",
-    width: "100px",
-    center: true,
-    cell: (row) => (
+  // {
+  //   name: "Image",
+  //   width: "100px",
+  //   center: true,
+  //   cell: (row) => (
       
-      <img
-        // height="90px"
-        // width="75px"
-        alt={'apna_organic'}
-        src={
-          row.image? row.image : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
-        }
-        style={{
-          padding: 10,
-          textAlign: "right",
-          maxHeight: "100px",
-          maxWidth: "100px"
-        }}
-        onClick={handleClick}
-      />
-    ),
-  },
+  //     <img
+  //       // height="90px"
+  //       // width="75px"
+  //       alt={'apna_organic'}
+  //       src={
+  //         row.image? row.image : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
+  //       }
+  //       style={{
+  //         padding: 10,
+  //         textAlign: "right",
+  //         maxHeight: "100px",
+  //         maxWidth: "100px"
+  //       }}
+  //       onClick={handleClick}
+  //     />
+  //   ),
+  // },
   {
     name: "Fetured_type",
     selector: (row) => row.fetured_type,
     sortable: true,
-    width: "100px",
+    width: "250px",
     center: true,
     style: {
       paddingRight: "32px",
@@ -116,7 +128,7 @@ const columns = [
       </span>
     ),
     sortable: true,
-    width: "115px",
+    width: "200px",
     // center: true,
   },
   {
@@ -152,7 +164,7 @@ const columns = [
     selector: (row) => (
       <div className={"actioncolimn"}>
        <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.product_id)} />
-        <BsTrash className=" p-0 m-0 editiconn text-danger"  onClick={handleAlert}/>
+        
       </div>
     ),
   },
