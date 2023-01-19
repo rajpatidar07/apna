@@ -11,45 +11,34 @@ import { Modal } from "react-bootstrap";
 import Button from "react-bootstrap";
 import Iconbutton from "../common/iconbutton";
 import axios from "axios";
+
+
 const Soldproduct = () => {
   const formRef = useRef();
+  const [validated, setValidated] = useState(false);
+
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
+
   const handleClick = () => {};
+
   const [show, setShow] = useState(false);
   const [id, setId] = useState("");
-  const [productData, setProductData] = useState([]);
+  const [productData, setProductData] = useState({});
   const [solddata, setsolddata] = useState([]);
   const [apicall, setapicall] = useState([]);
   const [UpdateAlert, setUpdateAlert] = useState(false);
+
+
   const [searchdata, setsearchData] = useState({
     product_title_name: "",
     category: "",
   });
-  const [quantity, setQuantity] = useState([]);
-  // {
-  //   id: productData.id,
-  //   product_status: productData.product_status,
-  //   product_id: productData.product_id,
-  //   unit: productData.unit,
-  //   colors: productData.colors,
-  //   unit_quantity: productData.unit_quantity,
-  //   size: productData.size,
-  //   product_price: productData.product_price,
-  //   mrp: productData.mrp,
-  //   sale_price: productData.sale_price,
-  //   discount: productData.discount,
-  //   special_offer: productData.special_offer,
-  //   featured_product: productData.featured_product,
-  //   manufacturing_date: productData.manufacturing_date,
-  //   expire_date: productData.expire_date,
-  //   quantity: quantity,
-  // }
-  const handleClose = () => {
-    // formRef.current.reset();
-    setShow(false);
-  };
+  // const [ productquantity, setproductquantity] = useState("");
+  
+
+
   const closeUpdateAlert = () => {
     setUpdateAlert(false);
   };
@@ -65,29 +54,31 @@ const Soldproduct = () => {
           setProductData(data[0]);
           setId(data[0].id);
         });
-    } catch (err) {}
+    } catch (err) {
+
+    }
 
     setShow(true);
   };
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
   };
+
   const onSearchClick = () => {
     setapicall(true);
   };
+
+
   const OnReset = () => {
     setsearchData({ product_title_name: "", manufacturing_date: "" });
     setapicall(true);
   };
-  // const OnInputChange = (e) => {
-  //   setProductData({ ...productData, [e.target.name]: e.target.value });
-  //   console.log("-----===========" + e.target.value);
-  // };
-  console.log("----json" + JSON.stringify(productData));
-  const OnQuntityChange = (e) => {
-    setProductData({ ...productData, [e.target.name]: e.target.value });
-    // setQuantity(e.target.value);
-  };
+
+
+
+
+
+
   useEffect(() => {
     axios
       .post(
@@ -102,7 +93,7 @@ const Soldproduct = () => {
             product_title_name: "",
             sale_price: "",
             category: "",
-            quantity: ["10"],
+            quantity:"",
             is_delete: ["0"],
           },
         }
@@ -122,6 +113,8 @@ const Soldproduct = () => {
         console.log(error);
       });
   }, [apicall]);
+
+
   const columns = [
     {
       name: "Sku",
@@ -197,29 +190,49 @@ const Soldproduct = () => {
             className=" p-0 m-0  editiconn text-secondary"
             onClick={handleShow.bind(this, row.id, row.product_id)}
           />
-          <BsTrash
+          {/* <BsTrash
             className=" p-0 m-0 editiconn text-danger"
             onClick={handleAlert}
-          />
+          /> */}
         </div>
       ),
     },
   ];
 
+
+
+  const OnQuntityChange = (e) => {
+    setProductData({ ...productData,[e.target.name]:e.target.value})
+
+   
+ 
+  };
+
+
+
+
+
   const OnProductQutUpdate = (e) => {
-    e.prevantDefault();
-    let p = JSON.stringify(productData);
+    
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/products_varient_update`, p)
+      .put(`${process.env.REACT_APP_BASEURL}/products_varient_update`,productData)
       .then((response) => {
         let data = response.data;
-        console.log("data" + data);
-        // setapicall(true);
-        // setShow(false);
-        // setUpdateAlert(true);
+        console.log("data-------" + data);
+        setapicall(true);
+        setShow(false);
+         setUpdateAlert(true);
       });
   };
 
+
+
+  const handleClose = () => {
+    setProductData({})
+    setShow(false);
+   
+ 
+  };
   return (
     <div>
       <h2>Sold Products </h2>
@@ -255,8 +268,11 @@ const Soldproduct = () => {
         </div>
 
         {/* upload */}
-        <Modal size="lg" show={show} onHide={() => handleClose()}>
-          <Form className="" onSubmit={OnProductQutUpdate}>
+
+        <Modal size="lg" show={show} 
+         onHide={() => handleClose()} 
+        >
+        
             <Modal.Header closeButton>
               <Modal.Title>Sold Product</Modal.Title>
             </Modal.Header>
@@ -285,7 +301,7 @@ const Soldproduct = () => {
                     placeholder={"Select quantity"}
                     onChange={OnQuntityChange}
                     name="quantity"
-                    value={productData.quantity}
+                     value={productData.quantity}
                     className={"adminsideinput"}
                   />
                 </div>
@@ -294,20 +310,18 @@ const Soldproduct = () => {
             <Modal.Footer>
               <button
                 className="button main_outline_button"
-                onClick={() => handleClose()}
+                 onClick={ ()=>handleClose()}
               >
                 Cancel
               </button>
               <button
                 className="button main_outline_button"
-                type="submit"
-                // onClick={OnProductQutUpdate}
-                // onClick={() => handleClose()}
+                onClick={()=> OnProductQutUpdate()} 
               >
                 Update
               </button>
             </Modal.Footer>
-          </Form>
+        
         </Modal>
 
         {/* datatable */}
@@ -320,14 +334,14 @@ const Soldproduct = () => {
           pointerOnHover
           className={"table_body soldproduct_table"}
         />
-        <SweetAlert
+        {/* <SweetAlert
           show={Alert}
           title="Product Name"
           text="Are you Sure you want to delete"
           onConfirm={hideAlert}
           showCancelButton={true}
           onCancel={hideAlert}
-        />
+        /> */}
         <SweetAlert
           show={UpdateAlert}
           title="Updated Complaint Successfully "
