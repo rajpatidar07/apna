@@ -10,8 +10,10 @@ import "sweetalert/dist/sweetalert.css";
 import axios from "axios";
 
 const Deletedproduct = () => {
-  const handleAlert = () => setAlert(true);
-  const hideAlert = () => setAlert(false);
+  const[id,setId]=useState();
+  const[productid,setProductId]=useState();
+  const [RestoreAlert, setRestoreAlert] = useState(false);
+
   const [Alert, setAlert] = useState(false);
   const [apicall, setapicall] = useState(false);
   const [deletedata, setdeletedata] = useState([]);
@@ -19,6 +21,23 @@ const Deletedproduct = () => {
     product_title_name: "",
     manufacturing_date: "",
   });
+
+  const hideAlert = () =>  setRestoreAlert(false);
+
+  const closeRestoreAlert = () => {
+    axios.put(`${process.env.REACT_APP_BASEURL}/products_delete_remove`,{
+      "varient_id":id,
+      "product_id":productid,
+      "is_delete":"0"
+  }).then((response)=>{
+    let data=response.data;
+    setapicall(true);
+    setRestoreAlert(false);
+  
+
+  })
+  };
+console.log("dddddddddddd"+(id,productid))
 
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
@@ -76,8 +95,8 @@ const Deletedproduct = () => {
           width="70px"
           alt={row.product_title_name}
           src={
-            row.image
-              ? row.image
+            row.all_images
+              ? row.all_images
               : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
           }
           style={{
@@ -206,16 +225,9 @@ const Deletedproduct = () => {
     },
   ];
   const OnProductRestore=(e,id,productid)=>{
-    axios.put(`${process.env.REACT_APP_BASEURL}/products_delete_remove`,{
-        "varient_id":id,
-        "product_id":productid,
-        "is_delete":"0"
-    }).then((response)=>{
-      let data=response.data;
-      setapicall(true);
-console.log("dddddddddddd"+(id))
-
-    })
+    setRestoreAlert(true);
+    setId(id);
+    setProductId(productid);
   }
  
   const handleClick = () => {};
@@ -270,6 +282,7 @@ console.log("dddddddddddd"+(id))
               type="reset"
               onClick={OnReset}
             />
+            
           </div>
         </div>
 
@@ -285,14 +298,22 @@ console.log("dddddddddddd"+(id))
           pointerOnHover
           className={"table_body deletedproduct_tabel"}
         />
-        <SweetAlert
+        {/* <SweetAlert
           show={Alert}
           title="Product Name"
           text="Are you Sure you want to restore"
           onConfirm={hideAlert}
           showCancelButton={true}
           onCancel={hideAlert}
-        />
+        /> */}
+        <SweetAlert
+        show={RestoreAlert}
+        title="Restor Successfully "
+        onConfirm={closeRestoreAlert}
+        onCancel={hideAlert}
+        showCancelButton={true}
+
+      />
       </div>
     </div>
   );

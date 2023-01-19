@@ -33,7 +33,6 @@ const Soldproduct = () => {
     formRef.current.reset();
     setShow(false);
   };
-
   const closeUpdateAlert = () => {
     setUpdateAlert(false);
   };
@@ -101,13 +100,13 @@ const Soldproduct = () => {
         }
         // let data = response.data.filter(item=>item.quantity==='0');
         setapicall(false);
-        console.log("---sold" + JSON.stringify(solddata));
+        // console.log("---sold" + JSON.stringify(solddata));
       })
       .catch(function (error) {
         console.log(error);
       });
   }, [searchdata, apicall]);
-  console.log("+++++++++++++++++++++" + JSON.stringify(solddata));
+  // console.log("+++++++++++++++++++++" + JSON.stringify(solddata));
   const columns = [
     {
       name: "Sku",
@@ -191,36 +190,40 @@ const Soldproduct = () => {
       ),
     },
   ];
-  console.log(
-    "---productDataAAAAAAAAAAAAAAAAAaa" + JSON.stringify(productData)
-  );
+  // console.log(
+  //   "---productDataAAAAAAAAAAAAAAAAAaa" + JSON.stringify(productData)
+  // );
 
   // }
-  const OnProductQutUpdate = (e, product_id) => {
+  const OnProductQutUpdate = (e,id ,productid) => {
     e.prevantDefault();
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/products_varient_update`, {
-        product_status: productData.product_status,
-        product_id: productData.product_id,
-        unit: productData.unit,
-        colors: productData.colors,
-        unit_quantity: productData.unit_quantity,
-        size: productData.size,
-        product_price: productData.product_price,
-        mrp: productData.mrp,
-        sale_price: productData.sale_price,
-        discount: productData.discount,
-        special_offer: productData.special_offer,
-        featured_product: productData.featured_product,
-        manufacturing_date: productData.manufacturing_date,
-        expire_date: productData.expire_date,
-        quantity: quantity,
-      })
+      .put(`${process.env.REACT_APP_BASEURL}/products_varient_update`,{
+        "id": id,
+        "product_id": productid,
+        "unit": productData.unit,
+        "colors": productData.colors,
+        "size": productData.size,
+        "product_price": productData.product_price,
+        "mrp": productData.mrp,
+        "sale_price": productData.sale_price,
+        "discount": productData.discount,
+        "special_offer": productData.special_offer,
+        "featured_product": productData.featured_product,
+        "manufacturing_date":productData.manufacturing_date,
+        "expire_date": productData.expire_date,
+        "quantity": quantity,
+        "unit_quantity": productData.unit_quantity,
+        "product_status": productData.product_status
+    })
       .then((response) => {
         let data = response.data;
         setapicall(true);
         setShow(false);
         setUpdateAlert(true);
+    show.preventDefault();
+
+        console.log("UPDATEEEEE================")
       });
   };
 
@@ -277,7 +280,7 @@ const Soldproduct = () => {
 
         {/* upload */}
         <Modal size="lg" show={show} onHide={() => handleClose()}>
-          <Form className="" ref={formRef}>
+          <Form className="" ref={formRef} onSubmit={OnProductQutUpdate}>
             <Modal.Header closeButton>
               <Modal.Title>Sold Product</Modal.Title>
             </Modal.Header>
@@ -313,19 +316,18 @@ const Soldproduct = () => {
               </div>
             </Modal.Body>
             <Modal.Footer>
-              <button
-                className="button main_outline_button"
-                onClick={() => handleClose()}
-              >
-                Cancel
-              </button>
-              <button
-                className="button main_outline_button"
-                onClick={(e) => OnProductQutUpdate(e)}
-                // onClick={() => handleClose()}
-              >
-                Update
-              </button>
+            <button
+              className="button main_outline_button"
+              onClick={() => handleClose()}
+            >
+              Cancel
+            </button>
+            <Iconbutton
+              type={"submit"}
+              btntext={"Update  Product"}
+              // onClick={(show === 'add' ? AddAdminClick : UpdateAdminClick(show))}
+              btnclass={"button main_button "}
+            />
             </Modal.Footer>
           </Form>
         </Modal>

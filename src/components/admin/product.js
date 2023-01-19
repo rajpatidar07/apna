@@ -465,34 +465,7 @@ function Product() {
         >
           Add Variety
         </Button>
-        // : null
-        /*: null*/
-        /*: null*/
-        /*: null*/
-        /*: null*/
-        /*: null*/
-        /*: null*/
-        /*: null*/
-        /*: null*/
-        /*: null*/
-        /*: null*/
-        /*: null*/
-        /*: null*/
-        /*: null*/
-        /*: null*/
-        /*: null*/
-        /*: null*/
-        /*: null*/
-        /*: null*/
-        /*: null*/
-        /*: null*/
-        /*: null*/
-        /*: null*/
-        /*: null*/
-        /*: null*/
-        /*: null*/
-        /*: null*/
-       /*: null*/),
+        ),
       sortable: true,
     },
     {
@@ -1302,16 +1275,16 @@ function Product() {
 
           <div className="col-md-3 col-sm-6 aos_input">
             <MainButton
-              btntext={"Search"}
-              btnclass={"button main_button w-50"}
               onClick={submitHandler}
+              btntext={"Search"}
+              btnclass={"button main_button w-100"}
             />
           </div>
 
           <div className="col-md-3 col-sm-6 aos_input">
             <MainButton
               btntext={"Reset"}
-              btnclass={"button main_button w-50"}
+              btnclass={"button main_button w-100"}
               type="reset"
               onClick={OnReset}
             />

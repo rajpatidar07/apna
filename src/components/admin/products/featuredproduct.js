@@ -260,7 +260,7 @@ const OnReset = () => {
 
         </Form.Select>
         </div>  */}
-       <div className="col-md-3 col-sm-6 aos_input value={}">
+       {/* <div className="col-md-3 col-sm-6 aos_input value={}">
             <input type={"date"} onChange={OnDateChange} name='start_date'
               value={searchdata.start_date}
               className={'adminsideinput'} placeholder={"Search by date"} />
@@ -269,11 +269,11 @@ const OnReset = () => {
             <input type={"date"} onChange={OnDateChange} name='end_date'
               value={searchdata.end_date}
               className={'adminsideinput'} placeholder={"Search by date"} />
-          </div>
+          </div> */}
         {/* <div className="col-md-3 col-sm-6 aos_input">
         <MainButton btntext={"Search"} btnclass={'button main_button w-100'} />
         </div> */}
-          <div className="col-md-3 col-sm-6 aos_input">
+          {/* <div className="col-md-3 col-sm-6 aos_input">
             <MainButton
               onClick={submitHandler}
               btntext={"Search"}
@@ -287,7 +287,7 @@ const OnReset = () => {
               type="reset"
               onClick={OnReset}
             />
-          </div>
+          </div> */}
       </div>
       
       {/* upload */}

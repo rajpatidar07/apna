@@ -237,7 +237,7 @@ const handleFormChange = (e) => {
               value={searchdata.product_title_name}
               className={'adminsideinput'} type={"text"} placeholder={"Search by product name"} />
           </div> */}
-          
+{/*           
           <div className="col-md-3 col-sm-6 aos_input value={}">
             <input type={"date"} onChange={OnDateChange} name='start_date'
               value={searchdata.start_date}
@@ -247,14 +247,14 @@ const handleFormChange = (e) => {
             <input type={"date"} onChange={OnDateChange} name='end_date'
               value={searchdata.end_date}
               className={'adminsideinput'} placeholder={"Search by product name"} />
-          </div>
+          </div> */}
           {/* <div className="col-md-3 col-sm-6 aos_input">
             <MainButton
               btntext={"Search"}
               btnclass={"button main_button w-100"}
             />
           </div> */}
-            <div className="col-md-3 col-sm-6 aos_input">
+            {/* <div className="col-md-3 col-sm-6 aos_input">
             <MainButton
               onClick={submitHandler}
               btntext={"Search"}
@@ -268,7 +268,7 @@ const handleFormChange = (e) => {
               type="reset"
               onClick={OnReset}
             />
-          </div>
+          </div> */}
         </div>
 
       {/* upload */}
