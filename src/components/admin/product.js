@@ -185,7 +185,7 @@ function Product() {
             short_by_updated_on: "",
             category: categoryArray,
             product_status: [`${searchdata.product_status}`],
-            is_delete: ["1"],
+            is_delete: ["0"],
             colors: [],
             size: [],
             parent_category: [],
@@ -709,7 +709,7 @@ function Product() {
             product_title_name: "",
             sale_price: "",
             short_by_updated_on: "",
-            is_delete: ["1"],
+            is_delete: ["0"],
             product_id: [`${id}`],
           },
         }
@@ -1060,10 +1060,10 @@ function Product() {
   const hideAlert = () => {
     // product delete
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
-        id: variantremove.id,
+      .put(`${process.env.REACT_APP_BASEURL}/products_delete_remove`, {
+        varient_id: variantremove.id,
         product_id: variantremove.productid,
-        is_delete: ["0"],
+        is_delete: "1",
       })
       .then((response) => {
         getProductVariant(variantremove.productid);
@@ -1082,10 +1082,10 @@ function Product() {
   const deleteProductAlert = () => {
     // product delete
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
-        id: variantremove.id,
+      .put(`${process.env.REACT_APP_BASEURL}/products_delete_remove`, {
+        varient_id: variantremove.id,
         product_id: variantremove.productid,
-        is_delete: ["0"],
+        is_delete: "1",
       })
       .then((response) => {
         // getProductVariant(variantremove.productid);
