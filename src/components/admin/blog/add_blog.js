@@ -53,9 +53,13 @@ const BlogList = () => {
   const [categorySearch, setCategorySearch] = useState("");
   const [productTagSearch, setProductTagSearch] = useState("");
 
+  // Function of cancel add success alert:-
+
   const closeAddAlert = () => {
     setAddAlert(false);
   };
+
+  // Function of cancel update success alert:-
 
   const closeUpdateAlert = () => {
     setUpdateAlert(false);
@@ -241,6 +245,12 @@ const BlogList = () => {
       id: `${id}`,
     });
     setapicall(true);
+    setAlert(false);
+  };
+
+  // to cancel in the delete alert :-
+
+  const CancelAlert = () => {
     setAlert(false);
   };
 
@@ -439,7 +449,7 @@ const BlogList = () => {
   let date = moment();
   let currentDate = date.format("YYYY-MM-DD");
   console.log(currentDate);
-  
+
   return (
     <div>
       <h2>Blog List</h2>
@@ -533,7 +543,7 @@ const BlogList = () => {
           text="Are you Sure you want to delete"
           onConfirm={hideAlert}
           showCancelButton={true}
-          onCancel={hideAlert}
+          onCancel={CancelAlert}
         />
       </div>
       <Modal size="lg" show={show} onHide={() => handleClose()}>
@@ -604,7 +614,11 @@ const BlogList = () => {
                     name="publish_date"
                     min={currentDate}
                     type="date"
-                    value={moment(addblog.publish_date).format("YYYY-MM-DD")}
+                    defaultValue={
+                      show === "add"
+                        ? ""
+                        : moment(addblog.publish_date).format("YYYY-MM-DD")
+                    }
                     onChange={(e) => handleFormChange(e)}
                     required
                     placeholder="Blog Date"
