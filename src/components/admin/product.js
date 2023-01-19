@@ -165,10 +165,6 @@ function Product() {
         console.log(error);
       });
   };
-  const OnCategorySearchChange = (e) => {
-    setsearchData({ ...searchdata, category: e.target.value });
-    categoryArray.push(e.target.value);
-  };
 
   const fetchdata = () => {
     axios
@@ -212,7 +208,6 @@ function Product() {
   let filtered;
   const handleAlert = (id) => {
     setAlert(true);
-
     setVariantRemove({ ...variantremove, id: id[0], productid: id[1] });
     setvariantid(id[0]);
     setproductid(id[1]);
@@ -461,11 +456,32 @@ function Product() {
         // (row.variety) ?
         <Button
           size="sm"
-          onClick={handlevarietyShow.bind(this, row.product_id)}
+          onClick={handlevarietyShow.bind(this, row.product_id, row.id)}
         >
           Add Variety
         </Button>
         // : null
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
         /*: null*/
         /*: null*/
         /*: null*/
@@ -728,8 +744,13 @@ function Product() {
         console.log(error);
       });
   };
-  const handlevarietyShow = (id) => {
+  const handlevarietyShow = (id, variantid) => {
     getProductVariant(id);
+    console.log(
+      "imagnewImageUrlse" + newImageUrls.length + "-]][]" + id + variantid
+    );
+
+    onImgView(variantid, id);
     setvariantarray({
       ...variantarray,
       product_id: id,
@@ -753,9 +774,7 @@ function Product() {
 
   const handlevarietyClose = (e) => {
     e.preventDefault();
-
     setValidated(false);
-
     setvarietyShow(false);
     // mainformRef.current.reset();
   };
@@ -881,6 +900,9 @@ function Product() {
         console.log(error);
       });
   };
+  const onCoverImgButtonCLick = (id, product_id) => {
+    setEditButton(true);
+  };
   const onImgCoverEditClick = (imgid, productid, productvariantid) => {
     axios
       .put(`${process.env.REACT_APP_BASEURL}/change_porduct_cover_image`, {
@@ -904,13 +926,16 @@ function Product() {
   };
   let discountt = (variantarray.mrp * variantarray.discount) / 100;
   let product_price = variantarray.mrp - discountt;
-  let saleprice =
-    product_price +
-    (product_price * (taxdata.gst / 100) +
-      product_price * (taxdata.wholesale_sales_tax / 100) +
-      product_price * (taxdata.retails_sales_tax / 100) +
-      product_price * (taxdata.value_added_tax / 100) +
-      product_price * (taxdata.manufacturers_sales_tax / 100));
+  let saleprice;
+  if (taxdata) {
+    saleprice =
+      product_price +
+      (product_price * (taxdata.gst / 100) +
+        product_price * (taxdata.wholesale_sales_tax / 100) +
+        product_price * (taxdata.retails_sales_tax / 100) +
+        product_price * (taxdata.value_added_tax / 100) +
+        product_price * (taxdata.manufacturers_sales_tax / 100));
+  }
 
   useEffect(() => {
     setvariantarray({
@@ -1015,7 +1040,7 @@ function Product() {
       variantarray,
     ]);
     setcustomValidated(false);
-    formRef.current.reset();
+    // formRef.current.reset();
     // }
     // else {
     //   setcustomValidated(true);
@@ -1227,7 +1252,7 @@ function Product() {
         setapicall(true);
       });
     e.preventDefault();
-    mainformRef.current.reset();
+    // mainformRef.current.reset();
     //  setpdata('');
     setValidated(false);
     setProductAlert(true);
@@ -2979,7 +3004,7 @@ function Product() {
                                 ? null
                                 : (vdata || []).map((variantdata, i) => {
                                     return variantdata.is_delete ===
-                                      "0" ? null : (
+                                      "1" ? null : (
                                       <>
                                         <tr>
                                           <td className="p-0 text-center ">
@@ -3087,8 +3112,11 @@ function Product() {
                                           <td className="p-0 text-center manufacture_date">
                                             {variantdata.quantity}
                                             <p
-                                              onClick={() =>
-                                                setEditButton(true)
+                                              onClick={(id) =>
+                                                onCoverImgButtonCLick(
+                                                  variantdata.id,
+                                                  variantdata.product_id
+                                                )
                                               }
                                               className={
                                                 "view_product_box my-2 text-primary"
