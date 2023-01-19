@@ -27,7 +27,7 @@ const Deletedproduct = () => {
     setapicall(true);
   };
   const OnReset = () => {
-    setsearchData({ product_title_name: "", manufacturing_date: "" });
+    setsearchData({ start_date: "", end_date: "" });
     setapicall(true);
   };
   useEffect(() => {
@@ -44,7 +44,7 @@ const Deletedproduct = () => {
             short_by_updated_on: "",
             product_title_name: "",
             sale_price: "",
-            is_delete: ["0"],
+            is_delete: ["1"],
             manufacturing_date: [`${searchdata.manufacturing_date}`],
           },
         }
@@ -205,47 +205,19 @@ const Deletedproduct = () => {
       ),
     },
   ];
+  const OnProductRestore=(e,id,productid)=>{
+    axios.put(`${process.env.REACT_APP_BASEURL}/products_delete_remove`,{
+        "varient_id":id,
+        "product_id":productid,
+        "is_delete":"0"
+    }).then((response)=>{
+      let data=response.data;
+      setapicall(true);
+console.log("dddddddddddd"+(id))
 
-  const OnProductRestore = (e, id, productid) => {
-    axios
-      .get(
-        `${process.env.REACT_APP_BASEURL}/products_pricing?id=${id}&product_id=${productid}`
-      )
-      .then((response) => {
-        let data = response.data;
-        //   axios
-        // .put(
-        //   `${process.env.REACT_APP_BASEURL}/products_varient_update`,{
-        //     "id": id,
-        //     "product_id": productid,
-        //     "unit": data.unit,
-        //     "colors": data.colors,
-        //     "size": data.size,
-        //     "product_price": data.product_price,
-        //     "mrp": data.mrp,
-        //     "sale_price": data.sale_price,
-        //     "discount":data.discount,
-        //     "special_offer": data.special_offer,
-        //     "featured_product": data.featured_product,
-        //     "manufacturing_date": data.manufacturing_date,
-        //     "expire_date": data.expire_date,
-        //     "quantity": data.quantity,
-        //     "unit_quantity": data.unit_quantity,
-        //     "product_status": "1"
-        //   }
-        // )
-        // .then((response) => {
-        //   let data = response.data
-
-        // })
-        // .catch(function (error) {
-        //   console.log(error);
-        // });
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-  };
+    })
+  }
+ 
   const handleClick = () => {};
   return (
     <div>

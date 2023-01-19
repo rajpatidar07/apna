@@ -28,9 +28,26 @@ const Soldproduct = () => {
     category: "",
   });
   const [quantity, setQuantity] = useState([]);
-
+  // {
+  //   id: productData.id,
+  //   product_status: productData.product_status,
+  //   product_id: productData.product_id,
+  //   unit: productData.unit,
+  //   colors: productData.colors,
+  //   unit_quantity: productData.unit_quantity,
+  //   size: productData.size,
+  //   product_price: productData.product_price,
+  //   mrp: productData.mrp,
+  //   sale_price: productData.sale_price,
+  //   discount: productData.discount,
+  //   special_offer: productData.special_offer,
+  //   featured_product: productData.featured_product,
+  //   manufacturing_date: productData.manufacturing_date,
+  //   expire_date: productData.expire_date,
+  //   quantity: quantity,
+  // }
   const handleClose = () => {
-    formRef.current.reset();
+    // formRef.current.reset();
     setShow(false);
   };
 
@@ -46,33 +63,31 @@ const Soldproduct = () => {
         )
         .then((response) => {
           let data = response.data;
-          // let data = response.data.filter(item=> item.is_active === 1);
           setProductData(data[0]);
-          setId(data.id);
-          // console.log("-----------******************-----------"+JSON.stringify(data.id))
-
-          setapicall(false);
+          setId(data[0].id);
         });
     } catch (err) {}
 
     setShow(true);
   };
-
-  // const pid=localStorage.getItem("productid");
-  // console.log("pidddddddddd"+pid)
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
   };
-  const onSearchClick = () => {};
-
-  const OnInputChange = (e) => {
-    setProductData({ ...productData, [e.target.name]: e.target.value });
-    // console.log("-----==========="+e.target.value);
+  const onSearchClick = () => {
+    setapicall(true);
   };
-
+  const OnReset = () => {
+    setsearchData({ product_title_name: "", manufacturing_date: "" });
+    setapicall(true);
+  };
+  // const OnInputChange = (e) => {
+  //   setProductData({ ...productData, [e.target.name]: e.target.value });
+  //   console.log("-----===========" + e.target.value);
+  // };
+  console.log("----json" + JSON.stringify(productData));
   const OnQuntityChange = (e) => {
-    setQuantity(e.target.value);
-    console.log("-----======QQQQQQQQQQQQQQQQ=====" + e.target.value);
+    setProductData({ ...productData, [e.target.name]: e.target.value });
+    // setQuantity(e.target.value);
   };
   useEffect(() => {
     axios
@@ -85,10 +100,11 @@ const Soldproduct = () => {
             price_to: "",
             latest_first: "",
             short_by_updated_on: "",
-            product_title_name: "asc",
+            product_title_name: "",
             sale_price: "",
-            category: `${searchdata.category}`,
+            category: "",
             quantity: ["10"],
+            is_delete: ["0"],
           },
         }
       )
@@ -101,13 +117,11 @@ const Soldproduct = () => {
         }
         // let data = response.data.filter(item=>item.quantity==='0');
         setapicall(false);
-        console.log("---sold" + JSON.stringify(solddata));
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
-  }, [searchdata, apicall]);
-  console.log("+++++++++++++++++++++" + JSON.stringify(solddata));
+  }, [apicall]);
   const columns = [
     {
       name: "Sku",
@@ -191,36 +205,18 @@ const Soldproduct = () => {
       ),
     },
   ];
-  console.log(
-    "---productDataAAAAAAAAAAAAAAAAAaa" + JSON.stringify(productData)
-  );
 
-  // }
-  const OnProductQutUpdate = (e, product_id) => {
+  const OnProductQutUpdate = (e) => {
     e.prevantDefault();
+    let p = JSON.stringify(productData);
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/products_varient_update`, {
-        product_status: productData.product_status,
-        product_id: productData.product_id,
-        unit: productData.unit,
-        colors: productData.colors,
-        unit_quantity: productData.unit_quantity,
-        size: productData.size,
-        product_price: productData.product_price,
-        mrp: productData.mrp,
-        sale_price: productData.sale_price,
-        discount: productData.discount,
-        special_offer: productData.special_offer,
-        featured_product: productData.featured_product,
-        manufacturing_date: productData.manufacturing_date,
-        expire_date: productData.expire_date,
-        quantity: quantity,
-      })
+      .put(`${process.env.REACT_APP_BASEURL}/products_varient_update`, p)
       .then((response) => {
         let data = response.data;
-        setapicall(true);
-        setShow(false);
-        setUpdateAlert(true);
+        console.log("data" + data);
+        // setapicall(true);
+        // setShow(false);
+        // setUpdateAlert(true);
       });
   };
 
@@ -241,31 +237,6 @@ const Soldproduct = () => {
               className={"adminsideinput"}
             />
           </div>
-          {/* <div className="col-md-3 col-sm-6">
-              <Form.Select
-                aria-label="Search by product type"
-                className="adminselectbox" name={"product_type"} onChange={(e) =>  OnChange(e)}  value={productData.product_type}
-              >
-                <option>Select Product Type</option>
-                <option>{productData.product_type}</option>
-                {/* <option value="1">Processing</option>
-                <option value="2">Success</option>
-                <option value="3">Failed</option>
-                <option value="4">Refund</option> 
-              </Form.Select>
-            </div> */}
-          {/* <div className="col-md-3 col-sm-6 aos_input">
-        <Form.Select aria-label="Search by category" className="adminselectbox" placeholder="Search by category"  onChange={OnChange}
-              name='product_type'
-              >
-        <option>Search By Product Type</option>
-        <option value={productData.product_type}>{productData.product_type}</option>
-          {/* <option value="1">Food</option>
-          <option value="2">Fish & Meat</option>
-          <option value="3">Baby Care</option> 
-        </Form.Select>
-        </div> */}
-
           <div className="col-md-3 col-sm-6 aos_input">
             <MainButton
               btntext={"Search"}
@@ -273,11 +244,19 @@ const Soldproduct = () => {
               onClick={onSearchClick}
             />
           </div>
+          <div className="col-md-3 col-sm-6 aos_input">
+            <MainButton
+              btntext={"Reset"}
+              btnclass={"button main_button w-100"}
+              type="reset"
+              onClick={OnReset}
+            />
+          </div>
         </div>
 
         {/* upload */}
         <Modal size="lg" show={show} onHide={() => handleClose()}>
-          <Form className="" ref={formRef}>
+          <Form className="" onSubmit={OnProductQutUpdate}>
             <Modal.Header closeButton>
               <Modal.Title>Sold Product</Modal.Title>
             </Modal.Header>
@@ -288,13 +267,13 @@ const Soldproduct = () => {
                     className="mb-3 aos_input"
                     controlId="validationCustom01"
                   >
-                    <Form.Label>Product Name</Form.Label>
+                    <Form.Label>Product Id</Form.Label>
                     <Form.Control
-                      onChange={OnInputChange}
-                      value={productData.product_title_name}
+                      // onChange={OnInputChange}
+                      value={productData.id}
                       type="text"
                       placeholder="Add Title"
-                      name={"product_title_name"}
+                      name={"id"}
                     />
                   </Form.Group>
                 </div>
@@ -306,7 +285,7 @@ const Soldproduct = () => {
                     placeholder={"Select quantity"}
                     onChange={OnQuntityChange}
                     name="quantity"
-                    value={quantity}
+                    value={productData.quantity}
                     className={"adminsideinput"}
                   />
                 </div>
@@ -321,7 +300,8 @@ const Soldproduct = () => {
               </button>
               <button
                 className="button main_outline_button"
-                onClick={(e) => OnProductQutUpdate(e)}
+                type="submit"
+                // onClick={OnProductQutUpdate}
                 // onClick={() => handleClose()}
               >
                 Update

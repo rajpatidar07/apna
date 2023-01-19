@@ -57,9 +57,7 @@ function Product() {
   const [VerityAlert, setVerityAlert] = useState(false);
   const [ProductDraftAlert, setProductDraftAlert] = useState(false);
   const [ProductAlert, setProductAlert] = useState(false);
-
   const [apicall, setapicall] = useState(false);
-
   const [variantapicall, setvariantapicall] = useState(false);
   const [varietyshow, setvarietyShow] = useState(false);
   const [addtag, setaddtag] = useState();
@@ -165,10 +163,6 @@ function Product() {
         console.log(error);
       });
   };
-  const OnCategorySearchChange = (e) => {
-    setsearchData({ ...searchdata, category: e.target.value });
-    categoryArray.push(e.target.value);
-  };
 
   const fetchdata = () => {
     axios
@@ -185,7 +179,7 @@ function Product() {
             short_by_updated_on: "",
             category: categoryArray,
             product_status: [`${searchdata.product_status}`],
-            is_delete: ["1"],
+            is_delete: ["0"],
             colors: [],
             size: [],
             parent_category: [],
@@ -212,7 +206,6 @@ function Product() {
   let filtered;
   const handleAlert = (id) => {
     setAlert(true);
-
     setVariantRemove({ ...variantremove, id: id[0], productid: id[1] });
     setvariantid(id[0]);
     setproductid(id[1]);
@@ -353,8 +346,16 @@ function Product() {
     },
 
     {
-      name: "Gst",
-      selector: (row) => row.gst + "%",
+      name: "Tax",
+      selector: (row) =>
+        Number(row.gst) +
+        Number(row.cgst) +
+        Number(row.sgst) +
+        Number(row.wholesale_sales_tax) +
+        Number(row.retails_sales_tax) +
+        Number(row.manufacturers_sales_tax) +
+        Number(row.value_added_tax) +
+        "%",
       sortable: true,
       width: "90px",
       center: true,
@@ -461,11 +462,42 @@ function Product() {
         // (row.variety) ?
         <Button
           size="sm"
-          onClick={handlevarietyShow.bind(this, row.product_id)}
+          onClick={handlevarietyShow.bind(this, row.product_id, row.id)}
         >
           Add Variety
         </Button>
         // : null
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
         /*: null*/
         /*: null*/
         /*: null*/
@@ -709,7 +741,7 @@ function Product() {
             product_title_name: "",
             sale_price: "",
             short_by_updated_on: "",
-            is_delete: ["1"],
+            is_delete: ["0"],
             product_id: [`${id}`],
           },
         }
@@ -728,8 +760,13 @@ function Product() {
         console.log(error);
       });
   };
-  const handlevarietyShow = (id) => {
+  const handlevarietyShow = (id, variantid) => {
     getProductVariant(id);
+    console.log(
+      "imagnewImageUrlse" + newImageUrls.length + "-]][]" + id + variantid
+    );
+
+    onImgView(variantid, id);
     setvariantarray({
       ...variantarray,
       product_id: id,
@@ -752,10 +789,8 @@ function Product() {
   };
 
   const handlevarietyClose = (e) => {
-    e.preventDefault();
-
+    // e.preventDefault();
     setValidated(false);
-
     setvarietyShow(false);
     // mainformRef.current.reset();
   };
@@ -881,6 +916,9 @@ function Product() {
         console.log(error);
       });
   };
+  const onCoverImgButtonCLick = (id, product_id) => {
+    setEditButton(true);
+  };
   const onImgCoverEditClick = (imgid, productid, productvariantid) => {
     axios
       .put(`${process.env.REACT_APP_BASEURL}/change_porduct_cover_image`, {
@@ -904,13 +942,16 @@ function Product() {
   };
   let discountt = (variantarray.mrp * variantarray.discount) / 100;
   let product_price = variantarray.mrp - discountt;
-  let saleprice =
-    product_price +
-    (product_price * (taxdata.gst / 100) +
-      product_price * (taxdata.wholesale_sales_tax / 100) +
-      product_price * (taxdata.retails_sales_tax / 100) +
-      product_price * (taxdata.value_added_tax / 100) +
-      product_price * (taxdata.manufacturers_sales_tax / 100));
+  let saleprice;
+  if (taxdata) {
+    saleprice =
+      product_price +
+      (product_price * (taxdata.gst / 100) +
+        product_price * (taxdata.wholesale_sales_tax / 100) +
+        product_price * (taxdata.retails_sales_tax / 100) +
+        product_price * (taxdata.value_added_tax / 100) +
+        product_price * (taxdata.manufacturers_sales_tax / 100));
+  }
 
   useEffect(() => {
     setvariantarray({
@@ -1015,7 +1056,7 @@ function Product() {
       variantarray,
     ]);
     setcustomValidated(false);
-    formRef.current.reset();
+    // formRef.current.reset();
     // }
     // else {
     //   setcustomValidated(true);
@@ -1031,10 +1072,10 @@ function Product() {
   const hideAlert = () => {
     // product delete
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
-        id: variantremove.id,
+      .put(`${process.env.REACT_APP_BASEURL}/products_delete_remove`, {
+        varient_id: variantremove.id,
         product_id: variantremove.productid,
-        is_delete: ["0"],
+        is_delete: "1",
       })
       .then((response) => {
         getProductVariant(variantremove.productid);
@@ -1053,10 +1094,10 @@ function Product() {
   const deleteProductAlert = () => {
     // product delete
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
-        id: variantremove.id,
+      .put(`${process.env.REACT_APP_BASEURL}/products_delete_remove`, {
+        varient_id: variantremove.id,
         product_id: variantremove.productid,
-        is_delete: ["0"],
+        is_delete: "1",
       })
       .then((response) => {
         // getProductVariant(variantremove.productid);
@@ -1227,7 +1268,7 @@ function Product() {
         setapicall(true);
       });
     e.preventDefault();
-    mainformRef.current.reset();
+    // mainformRef.current.reset();
     //  setpdata('');
     setValidated(false);
     setProductAlert(true);
@@ -1785,6 +1826,50 @@ function Product() {
                           }
                           name="gst"
                           value={productdata.gst}
+                          onChange={(e) => handleInputFieldChange(e)}
+                          required
+                        />
+                        {/* <Form.Control.Feedback type="invalid">
+                          Please choose a gst
+                        </Form.Control.Feedback> */}
+                      </Col>
+                    </Form.Group>
+                    <Form.Group className="mx-3" controlId="validationCustom11">
+                      <Form.Label className="inputlabelheading" sm="12">
+                        Sgst<span className="text-danger"> </span>
+                      </Form.Label>
+                      <Col sm="12">
+                        <Form.Control
+                          type="number"
+                          min={1}
+                          placeholder="Sgst"
+                          className={
+                            customvalidated === true ? "border-danger" : null
+                          }
+                          name="gst"
+                          value={productdata.sgst}
+                          onChange={(e) => handleInputFieldChange(e)}
+                          required
+                        />
+                        {/* <Form.Control.Feedback type="invalid">
+                          Please choose a gst
+                        </Form.Control.Feedback> */}
+                      </Col>
+                    </Form.Group>
+                    <Form.Group className="mx-3" controlId="validationCustom11">
+                      <Form.Label className="inputlabelheading" sm="12">
+                        Cgst<span className="text-danger"></span>
+                      </Form.Label>
+                      <Col sm="12">
+                        <Form.Control
+                          type="number"
+                          min={1}
+                          placeholder="Cgst"
+                          className={
+                            customvalidated === true ? "border-danger" : null
+                          }
+                          name="cgst"
+                          value={productdata.cgst}
                           onChange={(e) => handleInputFieldChange(e)}
                           required
                         />
@@ -2979,7 +3064,7 @@ function Product() {
                                 ? null
                                 : (vdata || []).map((variantdata, i) => {
                                     return variantdata.is_delete ===
-                                      "0" ? null : (
+                                      "1" ? null : (
                                       <>
                                         <tr>
                                           <td className="p-0 text-center ">
@@ -3087,8 +3172,11 @@ function Product() {
                                           <td className="p-0 text-center manufacture_date">
                                             {variantdata.quantity}
                                             <p
-                                              onClick={() =>
-                                                setEditButton(true)
+                                              onClick={(id) =>
+                                                onCoverImgButtonCLick(
+                                                  variantdata.id,
+                                                  variantdata.product_id
+                                                )
                                               }
                                               className={
                                                 "view_product_box my-2 text-primary"
