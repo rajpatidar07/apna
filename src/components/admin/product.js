@@ -716,6 +716,7 @@ function Product() {
       )
       .then((response) => {
         // console.log("response.data.results)"+JSON.stringify(response.data.results))
+        // console.log("response.data.results)"+JSON.stringify(response.data.results))
         setvdata(response.data.results);
         settaxdata(response.data.results[0]);
         // setvariantarray({
@@ -1031,7 +1032,7 @@ function Product() {
         ...variantmainarray,
         variantarray,
       ]);
-      setAlert(true)
+      // setAlert(true)
       setcustomValidated(false);
       formRef.current.reset();
     }
@@ -1047,13 +1048,15 @@ function Product() {
     });
   };
  
-  const MainVariantRemoveClick = (id, productid) => {
-  
+  const MainVariantRemoveClick = (e) => {
+    console.log("id----"+e)
+
+
     // // setVariantRemove((variantremove) => {
     // //   return { ...variantremove, id: id, productid: productid };
     // // });
 
-    // setcustomarray(customarray.filter((item) => item !== e));
+    setvariantmainarray(variantmainarray.filter((item) => item !== e));
   };
 
 
@@ -1158,6 +1161,7 @@ function Product() {
   };
 
   const handleRemoveClick = (e) => {
+    console.log("iddd---"+ JSON.stringify(e))
     setcustomarray(customarray.filter((item) => item !== e));
   };
   useEffect(() => {
@@ -2049,7 +2053,7 @@ function Product() {
                                                   : variantarray.unit ===
                                                     "piece"
                                                   ? variantarray.unit_quantity
-                                                  : ""
+                                                  : null
                                               }
                                               type="number"
                                               sm="9"
@@ -2073,7 +2077,7 @@ function Product() {
                                               value={
                                                 variantarray.unit === "pcs"
                                                   ? variantarray.size
-                                                  : ""
+                                                  : null
                                               }
                                               type="text"
                                               sm="9"
@@ -2338,7 +2342,7 @@ function Product() {
                                                 ? variantdata.unit_quantity
                                                 : variantdata.unit === "piece"
                                                 ? variantdata.unit_quantity
-                                                : ""}
+                                                : null}
                                             </td>
                                             <td className="p-0 text-center ">
                                               {variantdata.unit === "pcs"
@@ -2380,8 +2384,7 @@ function Product() {
                                                 className="addcategoryicon text-danger"
                                                 onClick={(id) =>
                                                   MainVariantRemoveClick(
-                                                    variantdata.id,
-                                                    variantdata.product_id
+                                                    variantdata
                                                   )
                                                 }
                                                 size="sm"
@@ -2553,6 +2556,7 @@ function Product() {
                             </Button>
                           </td>
                         </tr>
+                        {console.log("customarray-----"+customarray)}
                         {// paraddcustom === null || paraddcustom === undefined ? '' :
                         (customarray || []).map((variantdata, i) => {
                           // const arr = variantdata.split(',')
@@ -2776,7 +2780,7 @@ function Product() {
                                             ? variantarray.unit_quantity
                                             : variantarray.unit === "piece"
                                             ? variantarray.unit_quantity
-                                            : ""
+                                            : null
                                         }
                                         type="text"
                                         sm="9"
@@ -2798,7 +2802,7 @@ function Product() {
                                         value={
                                           variantarray.unit === "pcs"
                                             ? variantarray.size
-                                            : " "
+                                            : null
                                         }
                                         type="text"
                                         sm="9"
@@ -3030,9 +3034,10 @@ function Product() {
                                 ? null
                                 : (vdata || []).map((variantdata, i) => {
                                     return variantdata.is_delete ===
-                                      "0" ? null : (
+                                      "1" ? null : (
                                       <>
                                         <tr>
+                                         
                                           <td className="p-0 text-center ">
                                             {variantdata.unit === "pcs"
                                               ? "color"
@@ -3045,6 +3050,7 @@ function Product() {
                                               : ""}
                                           </td>
                                           <td className="p-0 text-center ">
+                                          {console.log("variantdata.colors------"+variantdata.colors )}
                                             {variantdata.colors}
                                           </td>
                                           <td className="p-0 text-center ">
