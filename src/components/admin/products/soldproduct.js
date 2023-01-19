@@ -88,7 +88,7 @@ const Soldproduct = () => {
             product_title_name: "asc",
             sale_price: "",
             category: `${searchdata.category}`,
-            quantity: ["10"],
+            quantity: ["0"],
           },
         }
       )
@@ -103,7 +103,7 @@ const Soldproduct = () => {
         setapicall(false);
         console.log("---sold" + JSON.stringify(solddata));
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   }, [searchdata, apicall]);
