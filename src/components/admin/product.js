@@ -19,8 +19,7 @@ import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import DataTable from "react-data-table-component";
 import Form from "react-bootstrap/Form";
-import SweetAlert from "sweetalert-react";
-import "sweetalert/dist/sweetalert.css";
+import SAlert from "./common/salert";
 import axios from "axios";
 import { Button } from "react-bootstrap";
 import { GiCancel } from "react-icons/gi";
@@ -56,6 +55,7 @@ function Product() {
   const [Alert, setAlert] = useState(false);
   const [VerityAlert, setVerityAlert] = useState(false);
   const [ProductDraftAlert, setProductDraftAlert] = useState(false);
+  const [UpdatetAlert, setUpdatetAlert] = useState(false);
   const [ProductAlert, setProductAlert] = useState(false);
   const [apicall, setapicall] = useState(false);
   const [variantapicall, setvariantapicall] = useState(false);
@@ -168,7 +168,7 @@ function Product() {
           setfeatureShow(false);
         }
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -183,7 +183,7 @@ function Product() {
         // console.log("---update" + (response.data));
         setapicall(true);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -216,7 +216,7 @@ function Product() {
 
         setapicall(false);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -676,7 +676,7 @@ function Product() {
           let customdatra = JSON.parse(response.data.add_custom_input);
           setcustomarray(customdatra);
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
       setmodalshow(e);
@@ -716,7 +716,7 @@ function Product() {
         // });
         setvariantapicall(false);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -842,7 +842,7 @@ function Product() {
         ImgObj = [];
         onImgView(id, product_id);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -857,7 +857,7 @@ function Product() {
       .then((response) => {
         onImgView(product_verient_id, product_id);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -873,7 +873,7 @@ function Product() {
         setapicall(true);
         setmodalshow(false);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -890,7 +890,7 @@ function Product() {
       .then((response) => {
         onImgView(productvariantid, productid);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -987,7 +987,7 @@ function Product() {
 
           // formRef.reset();
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
     } else {
@@ -1018,7 +1018,7 @@ function Product() {
           //  setvarietyShow(false);
           getProductVariant(productID);
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
     }
@@ -1063,7 +1063,7 @@ function Product() {
         // getProductVariant(productid);
         //  setpdata(response.data)
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
 
@@ -1085,7 +1085,7 @@ function Product() {
         setapicall(true);
         // setpdata(response.data)
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
 
@@ -1104,6 +1104,7 @@ function Product() {
     setunitValidated(false);
     setcustomValidated(false);
     getProductVariant(productID);
+    setUpdatetAlert(false);
   };
 
   const VariantEditClick = (id, productid) => {
@@ -1114,7 +1115,7 @@ function Product() {
       .then((response) => {
         setvariantarray(response.data[0]);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -1265,8 +1266,9 @@ function Product() {
       .then((response) => {
         setapicall(true);
         setmodalshow(false);
+        setUpdatetAlert(true);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -2583,55 +2585,59 @@ function Product() {
                           </td>
                         </tr>
                         {console.log("customarray-----" + customarray)}
-                        {// paraddcustom === null || paraddcustom === undefined ? '' :
-                        (customarray || []).map((variantdata, i) => {
-                          // const arr = variantdata.split(',')
-                          return (
-                            <tr className="">
-                              <td className=" text-center">
-                                <InputGroup className="">
-                                  <Form.Control
-                                    value={variantdata.header}
-                                    type="text"
-                                    sm="9"
-                                    min={"1"}
-                                    onChange={oncustomheadChange}
-                                    name={"custom_input_header"}
-                                    required
-                                  />
-                                </InputGroup>
-                              </td>
-                              <td className="text-center">
-                                <InputGroup className="">
-                                  <Form.Control
-                                    required
-                                    value={variantdata.description}
-                                    name={"custom_input_desc"}
-                                    type="text"
-                                    sm="9"
-                                    min={"1"}
-                                    onChange={oncustomdescChange}
-                                    onKeyPress={(event) => {
-                                      if (event.key === "Enter") {
-                                        handleAddClick();
-                                      }
-                                    }}
-                                  />
-                                </InputGroup>
-                              </td>
-                              <td className="">
-                                <Button
-                                  variant="text-danger"
-                                  className="addcategoryicon text-danger"
-                                  onClick={() => handleRemoveClick(variantdata)}
-                                  size="sm"
-                                >
-                                  &times;
-                                </Button>
-                              </td>
-                            </tr>
-                          );
-                        })}
+                        {
+                          // paraddcustom === null || paraddcustom === undefined ? '' :
+                          (customarray || []).map((variantdata, i) => {
+                            // const arr = variantdata.split(',')
+                            return (
+                              <tr className="">
+                                <td className=" text-center">
+                                  <InputGroup className="">
+                                    <Form.Control
+                                      value={variantdata.header}
+                                      type="text"
+                                      sm="9"
+                                      min={"1"}
+                                      onChange={oncustomheadChange}
+                                      name={"custom_input_header"}
+                                      required
+                                    />
+                                  </InputGroup>
+                                </td>
+                                <td className="text-center">
+                                  <InputGroup className="">
+                                    <Form.Control
+                                      required
+                                      value={variantdata.description}
+                                      name={"custom_input_desc"}
+                                      type="text"
+                                      sm="9"
+                                      min={"1"}
+                                      onChange={oncustomdescChange}
+                                      onKeyPress={(event) => {
+                                        if (event.key === "Enter") {
+                                          handleAddClick();
+                                        }
+                                      }}
+                                    />
+                                  </InputGroup>
+                                </td>
+                                <td className="">
+                                  <Button
+                                    variant="text-danger"
+                                    className="addcategoryicon text-danger"
+                                    onClick={() =>
+                                      handleRemoveClick(variantdata)
+                                    }
+                                    size="sm"
+                                  >
+                                    &times;
+                                  </Button>
+                                </td>
+                              </tr>
+                            );
+                          })
+                        }
                       </tbody>
                     </Table>
                   </div>
@@ -3315,7 +3321,7 @@ function Product() {
           className={"table_body product_table"}
         />
 
-        <SweetAlert
+        <SAlert
           show={VerityAlert}
           title="Product Name"
           text="Are you Sure you want to delete"
@@ -3324,7 +3330,7 @@ function Product() {
           onCancel={closeAlert}
         />
 
-        <SweetAlert
+        <SAlert
           show={Alert}
           title="Product Name"
           text="Are you Sure you want to delete"
@@ -3333,20 +3339,26 @@ function Product() {
           onCancel={closeAlert}
         />
 
-        <SweetAlert
+        <SAlert
           show={ProductAlert}
           title="Added Successfully"
           text=" Product Added"
           onConfirm={closeProductAlert}
         />
 
-        <SweetAlert
+        <SAlert
           show={ProductDraftAlert}
           title="Added Successfully "
           text=" Product Added To Draft"
           onConfirm={closeProductAlert}
         />
 
+        <SAlert
+          show={UpdatetAlert}
+          title="Updated Successfully "
+          text=" Product Updated"
+          onConfirm={closeProductAlert}
+        />
         {/* feature product modal */}
 
         <Modal show={featureshow} onHide={featureModalClose}>
@@ -3495,9 +3507,9 @@ function Product() {
             </Modal.Footer>
           </Form>
         </Modal>
-        <SweetAlert
+        <SAlert
           show={RestoreAlert}
-          title="sucessfully added offered product"
+          title="Offered Product Added  Sucessfully"
           onConfirm={() => setRestoreAlert(false)}
           // onCancel={hideAlert}
           // showCancelButton={true}
