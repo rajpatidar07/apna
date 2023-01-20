@@ -27,7 +27,6 @@ import { GiCancel } from "react-icons/gi";
 import moment from "moment/moment";
 import BrandJson from "./json/BrandJson";
 
-
 let categoryArray = [];
 let encoded;
 // let newImageUrls = [];
@@ -156,24 +155,18 @@ function Product() {
   //   productid(productid);
   // }
 
-
-  const  OnSaveProduct = (e) => {
+  const OnSaveProduct = (e) => {
     e.preventDefault();
     axios
       .post(`${process.env.REACT_APP_BASEURL}/add_fetured_product`, featuredata)
       .then((response) => {
-        if(response.data.message==="Already_Exist")
-        {
+        if (response.data.message === "Already_Exist") {
           setError(false);
-          
-        }
-        else
-        {
+        } else {
           setRestoreAlert(true);
           setapicall(true);
           setfeatureShow(false);
         }
-           
       })
       .catch(function(error) {
         console.log(error);
@@ -249,13 +242,10 @@ function Product() {
     fetured_type: "",
   });
   const [productname, setproductname] = useState("");
-  
 
   const featureModalClose = (e) => {
-    setfeatureShow(false)
-    setfeaturedata({start_date: "",
-  end_date:""});
-    
+    setfeatureShow(false);
+    setfeaturedata({ start_date: "", end_date: "" });
   };
   // const featureModalClose = () => setfeatureShow(false);
   const featureModalShow = () => setfeatureShow(true);
@@ -492,7 +482,7 @@ function Product() {
         >
           Add Variety
         </Button>
-        ),
+      ),
       sortable: true,
     },
     {
@@ -955,9 +945,11 @@ function Product() {
     ) {
       setunitValidated(true);
     } else if (
-      variantarray.unit === "Select" ||
-      variantarray.unit === null ||
-      variantarray.unit == ""
+      variantarray.unit === "" ||
+      variantarray.mrp === null ||
+      variantarray.manufacturing_date == "" ||
+      variantarray.expire_date == "" ||
+      variantarray.quantity == ""
     ) {
       setcustomValidated(true);
     }
@@ -1077,7 +1069,7 @@ function Product() {
 
     // variety delete
     setVerityAlert(false);
-    setRestoreAlert(false)
+    setRestoreAlert(false);
   };
 
   const deleteProductAlert = () => {
@@ -1834,7 +1826,7 @@ function Product() {
                           className={
                             customvalidated === true ? "border-danger" : null
                           }
-                          name="gst"
+                          name="sgst"
                           value={productdata.sgst}
                           onChange={(e) => handleInputFieldChange(e)}
                           required
@@ -3370,11 +3362,14 @@ function Product() {
               <Modal.Title>Add Offer Product</Modal.Title>
             </Modal.Header>
             {error === false ? (
-                            <p className="mt-2 ms-2 text-danger text-center fs-6" type="invalid">
-                              Already Added In Offred Product List!!!
-                            </p>
-                          ) : null}
-            
+              <p
+                className="mt-2 ms-2 text-danger text-center fs-6"
+                type="invalid"
+              >
+                Already Added In Offred Product List!!!
+              </p>
+            ) : null}
+
             <Modal.Body className="p-3">
               <div className="d-flex justify-content-center align-items-center p-0 m-0">
                 <div className="">
@@ -3479,13 +3474,13 @@ function Product() {
               </div>
             </Modal.Body>
             <Modal.Footer className="">
-            <Iconbutton
-              type={"button"}
-              btntext={"Cancel"}
-              onClick={featureModalClose}
-              btnclass={"button main_outline_button "}
-              // Iconname={<GiCancel /> }
-            />
+              <Iconbutton
+                type={"button"}
+                btntext={"Cancel"}
+                onClick={featureModalClose}
+                btnclass={"button main_outline_button "}
+                // Iconname={<GiCancel /> }
+              />
               {/* <button
                 className="button main_outline_button"
                 onClick={featureModalClose}
@@ -3502,13 +3497,12 @@ function Product() {
           </Form>
         </Modal>
         <SweetAlert
-        show={RestoreAlert}
-        title="sucessfully added offered product"
-        onConfirm={()=>setRestoreAlert(false)}
-        // onCancel={hideAlert}
-        // showCancelButton={true}
-
-      />
+          show={RestoreAlert}
+          title="sucessfully added offered product"
+          onConfirm={() => setRestoreAlert(false)}
+          // onCancel={hideAlert}
+          // showCancelButton={true}
+        />
         {/* end feature product modal */}
       </div>
     </div>
