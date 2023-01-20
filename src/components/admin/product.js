@@ -1245,7 +1245,7 @@ function Product() {
   const handleAddProduct = (e) => {
     productdataa.push(productdata);
     const form = e.currentTarget;
-    if (form.checkValidity() === false) {
+    if (form.checkValidity() === false){
       e.stopPropagation();
       e.preventDefault();
     }
