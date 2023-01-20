@@ -2,8 +2,6 @@ import React, { useState, useRef } from "react";
 import DataTable from "react-data-table-component";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
-import SweetAlert from "sweetalert-react";
-import "sweetalert/dist/sweetalert.css";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import Iconbutton from "../common/iconbutton";
@@ -14,6 +12,7 @@ import axios from "axios";
 import EmailType from "../json/EmailType";
 import EmailStatus from "../json/EmailStatus";
 import { Alert } from "bootstrap";
+import SAlert from "../common/salert";
 
 const EmailSend = () => {
   const [emaildata, setEmaildata] = useState({
@@ -327,8 +326,6 @@ const EmailSend = () => {
     fetchEmailData();
   }, [apicall, changstatus]);
 
-
-  
   const SearchHandler = () => {
     setapicall(true);
     fetchEmailData();
@@ -597,12 +594,12 @@ const EmailSend = () => {
           </Modal.Footer>
         </Form>
       </Modal>
-      <SweetAlert
+      <SAlert
         show={AddAlert}
         title="Added Email Successfully "
         onConfirm={closeAddAlert}
       />
-      <SweetAlert
+      <SAlert
         show={UpdateAlert}
         title="Updated Email Successfully "
         onConfirm={closeUpdateAlert}

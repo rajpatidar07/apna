@@ -3,7 +3,7 @@ import { AiFillEdit, AiOutlinePlus } from "react-icons/ai";
 import DataTable from "react-data-table-component";
 import Modal from "react-bootstrap/Modal";
 import Iconbutton from "../common/iconbutton";
-import SweetAlert from "sweetalert-react";
+import SAlert from "../common/salert";
 import Form from "react-bootstrap/Form";
 import MainButton from "../common/button";
 import { useEffect } from "react";
@@ -437,12 +437,12 @@ function Admin() {
           showCancelButton={true}
           onCancel={hideAlert}
         /> */}
-      <SweetAlert
+      <SAlert
         show={AddAlert}
         title="Added Admin Successfully "
         onConfirm={closeAddAlert}
       />
-      <SweetAlert
+      <SAlert
         show={UpdateAlert}
         title="Updated Admin Successfully "
         onConfirm={closeUpdateAlert}
