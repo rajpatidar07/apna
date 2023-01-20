@@ -8,8 +8,7 @@ import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import Iconbutton from "../common/iconbutton";
 import { Badge } from "react-bootstrap";
-import SweetAlert from "sweetalert-react";
-import "sweetalert/dist/sweetalert.css";
+import SAlert from "../common/salert";
 import axios from "axios";
 import moment from "moment";
 const Coupon = () => {
@@ -342,7 +341,7 @@ const Coupon = () => {
           setShow(false);
           setAddAlert(true);
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
       formRef.current.reset();
@@ -378,7 +377,7 @@ const Coupon = () => {
         setapicall(true);
         setUpdateAlert(true);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
     formRef.current.reset();
@@ -690,7 +689,7 @@ const Coupon = () => {
           pointerOnHover
           className={"table_body coupon_table"}
         />
-        <SweetAlert
+        <SAlert
           show={Alert}
           title="Coupoan"
           text="Are you Sure you want to delete"
@@ -698,12 +697,12 @@ const Coupon = () => {
           showCancelButton={true}
           onCancel={CancelAlert}
         />
-        <SweetAlert
+        <SAlert
           show={AddAlert}
           title="Added Coupon Successfully "
           onConfirm={closeAddAlert}
         />
-        <SweetAlert
+        <SAlert
           show={UpdateAlert}
           title="Updated Coupan Successfully "
           onConfirm={closeUpdateAlert}

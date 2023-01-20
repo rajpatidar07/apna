@@ -2,18 +2,15 @@ import React, { useState, useRef } from "react";
 import DataTable from "react-data-table-component";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
-import SweetAlert from "sweetalert-react";
-import "sweetalert/dist/sweetalert.css";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import Iconbutton from "../common/iconbutton";
-// import { CKEditor } from "ckeditor4-react";
-// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useEffect } from "react";
 import axios from "axios";
 import NotificationType from "../json/NotificationType";
 import NotificationStatus from "../json/NotificationStatus";
 import { Alert } from "bootstrap";
+import SAlert from "../common/salert";
 
 const Notification = () => {
   // Declaration of States or valiables :-
@@ -24,8 +21,6 @@ const Notification = () => {
     type: "",
     status: "",
     notification_name: "",
-    // test_notofication: "",
-    // text_msg: "",
   });
   const [AddAlert, setAddAlert] = useState(false);
   const [UpdateAlert, setUpdateAlert] = useState(false);
@@ -69,8 +64,6 @@ const Notification = () => {
           .then((response) => {
             setNotificationdata(response.data[0]);
             setId(id);
-            // console.log(response.data[0].id);
-            // setNotificationText(response.data[0].notification_text);
           });
       } catch (err) {}
     }
@@ -442,14 +435,6 @@ const Notification = () => {
           highlightOnHover
           pointerOnHover
         />
-        <SweetAlert
-          show={deleteAlert}
-          title="Notification"
-          text="Are you Sure you want to delete "
-          onConfirm={() => deleteNotification(id)}
-          showCancelButton={true}
-          onCancel={CancelDelete}
-        />
       </div>
       <Modal size="lg" show={show} onHide={() => handleClose()}>
         <Form
@@ -601,15 +586,23 @@ const Notification = () => {
           </Modal.Footer>
         </Form>
       </Modal>
-      <SweetAlert
+      <SAlert
         show={AddAlert}
         title="Added Notification Successfully "
         onConfirm={closeAddAlert}
       />
-      <SweetAlert
+      <SAlert
         show={UpdateAlert}
         title="Updated Notification Successfully "
         onConfirm={closeUpdateAlert}
+      />
+      <SAlert
+        show={deleteAlert}
+        title="Notification"
+        text="Are you Sure you want to delete "
+        onConfirm={() => deleteNotification(id)}
+        showCancelButton={true}
+        onCancel={CancelDelete}
       />
     </div>
   );

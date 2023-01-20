@@ -3,8 +3,7 @@ import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
-import SweetAlert from "sweetalert-react";
-import "sweetalert/dist/sweetalert.css";
+import SAlert from "../common/salert";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import { useEffect } from "react";
@@ -537,7 +536,7 @@ const BlogList = () => {
           highlightOnHover
           pointerOnHover
         />
-        <SweetAlert
+        <SAlert
           show={Alert}
           title="Blog"
           text="Are you Sure you want to delete"
@@ -716,12 +715,12 @@ const BlogList = () => {
         </Form>
       </Modal>
 
-      <SweetAlert
+      <SAlert
         show={AddAlert}
         title="Added Blog Successfully "
         onConfirm={closeAddAlert}
       />
-      <SweetAlert
+      <SAlert
         show={UpdateAlert}
         title="Updated Blog Successfully "
         onConfirm={closeUpdateAlert}
