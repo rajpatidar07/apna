@@ -7,10 +7,9 @@ import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import { Badge } from "react-bootstrap";
-import SweetAlert from "sweetalert-react";
-import "sweetalert/dist/sweetalert.css";
 import axios from "axios";
 import moment from "moment";
+import SAlert from "../common/salert";
 import { AiOutlineStar } from "react-icons/ai";
 import { AiFillStar } from "react-icons/ai";
 
@@ -396,7 +395,7 @@ const Review = () => {
           pointerOnHover
           className={"table_body review_table"}
         />
-        <SweetAlert
+        <SAlert
           show={Alert}
           title="Review"
           text="Are you Sure you want to delete"
@@ -404,7 +403,7 @@ const Review = () => {
           showCancelButton={true}
           onCancel={hideAlert}
         />
-        <SweetAlert
+        <SAlert
           show={UpdateAlert}
           title="Updated Review Successfully "
           onConfirm={closeUpdateAlert}
