@@ -1804,7 +1804,7 @@ function Product() {
                           // className={
                           //   customvalidated === true ? "border-danger" : null
                           // }
-                          // name="gst"
+                          name="gst"
                           value={productdata.gst}
                           onChange={(e) => handleInputFieldChange(e)}
                           required
@@ -1821,7 +1821,7 @@ function Product() {
                       <Col sm="12">
                         <Form.Control
                           type="number"
-                          min={1}
+                          min={0}
                           placeholder="Sgst"
                           className={
                             customvalidated === true ? "border-danger" : null
@@ -1843,7 +1843,7 @@ function Product() {
                       <Col sm="12">
                         <Form.Control
                           type="number"
-                          min={1}
+                          min={0}
                           placeholder="Cgst"
                           className={
                             customvalidated === true ? "border-danger" : null
@@ -1851,7 +1851,6 @@ function Product() {
                           name="cgst"
                           value={productdata.cgst}
                           onChange={(e) => handleInputFieldChange(e)}
-                          required
                         />
                         {/* <Form.Control.Feedback type="invalid">
                           Please choose a gst
