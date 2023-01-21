@@ -40,7 +40,6 @@ const CustomerReport = () => {
       body: data
     };
 
-    // doc.text(headers, backgroundColor, "pink");
     doc.text(title, marginLeft, 40);
 
 
@@ -144,83 +143,6 @@ function handleDownloadExcel() {
         
        
       ];
-    
-      // const data = [
-      //   {
-      //     id: 1,
-      //     name: "Newton",
-      //     uname: "Nicolas Edison",
-      //     lactive:"23 Sep,2022",
-      //     signup:"21 Oct,2025",
-      //     email:"newton@gmail1524/.com",
-      //     order:"25",
-      //     spend:"$250.2",
-      //   },
-      //   {
-      //     id: 1,
-      //     name: "Newton",
-      //     uname: "Nicolas Edison",
-      //     lactive:"23 Sep,2022",
-      //     signup:"21 Oct,2025",
-      //     email:"newton@gmail1524/.com",
-      //     order:"25",
-      //     spend:"$250.2",
-      //   }, {
-      //     id: 1,
-      //     name: "Newton",
-      //     uname: "Nicolas Edison",
-      //     lactive:"23 Sep,2022",
-      //     signup:"21 Oct,2025",
-      //     email:"newton@gmail1524/.com",
-      //     order:"25",
-      //     spend:"$250.2",
-      //   }, {
-      //     id: 1,
-      //     name: "Newton",
-      //     uname: "Nicolas Edison",
-      //     lactive:"23 Sep,2022",
-      //     signup:"21 Oct,2025",
-      //     email:"newton@gmail1524/.com",
-      //     order:"25",
-      //     spend:"$250.2",
-      //   }, {
-      //     id: 1,
-      //     name: "Newton",
-      //     uname: "Nicolas Edison",
-      //     lactive:"23 Sep,2022",
-      //     signup:"21 Oct,2025",
-      //     email:"newton@gmail1524/.com",
-      //     order:"25",
-      //     spend:"$250.2",
-      //   }, {
-      //     id: 1,
-      //     name: "Newton",
-      //     uname: "Nicolas Edison",
-      //     lactive:"23 Sep,2022",
-      //     signup:"21 Oct,2025",
-      //     email:"newton@gmail1524/.com",
-      //     order:"25",
-      //     spend:"$250.2",
-      //   }, {
-      //     id: 1,
-      //     name: "Newton",
-      //     uname: "Nicolas Edison",
-      //     lactive:"23 Sep,2022",
-      //     signup:"21 Oct,2025",
-      //     email:"newton@gmail1524/.com",
-      //     order:"25",
-      //     spend:"$250.2",
-      //   }, {
-      //     id: 1,
-      //     name: "Newton",
-      //     uname: "Nicolas Edison",
-      //     lactive:"23 Sep,2022",
-      //     signup:"21 Oct,2025",
-      //     email:"newton@gmail1524/.com",
-      //     order:"25",
-      //     spend:"$250.2",
-      //   },
-      // ];
       const [filterchange,setFilterchange] = useState('')
 
       const [tableCoustomer, setGetTableCoustomer]= useState([])
@@ -237,21 +159,12 @@ function handleDownloadExcel() {
               }
        
   const fetchData=()=>{
-
-   console.log("user----"+user)
     axios.post(`${process.env.REACT_APP_BASEURL}/customers_report`
     ,
     {
       "user_search":user
   }
     ).then((response) => {
-          console.log('coustomer data-all---'+JSON.stringify(response.data))
-          console.log('Error-----'+JSON.stringify(response.data))
-        // console.log('coustomer data'+JSON.stringify(response.data[0]))
- 
-
-
-        
        if(response.data.message=="No_Data"){
 
         setCustomerError(response.data.message)
@@ -301,22 +214,6 @@ function handleDownloadExcel() {
       <div className="card mt-3 p-3 ">
       <div className="row pb-3">
       <div className="col-md-3 col-sm-6 aos_input">
-            {/* <Form.Select
-              aria-label="Search by category"
-              className="adminseacrh"
-              placeholder="Search by category"
-              onChange={TimeChange}
-            >
-              <option>Search by category</option>
-              <option value="1">1 day</option>
-              <option value="2">1 week</option>
-              <option value="3">current month</option>
-              <option value="4">last month</option>
-              <option value="5">last 6  month</option>
-              <option value="6">custom month</option>
-              <option value="7">custom date</option>
-
-            </Form.Select> */}
             <Form.Group className="mb-3" >
         
             <Form.Control type="text" placeholder="Search by name" onChange={TimeChange} value={user}/>

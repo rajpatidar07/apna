@@ -38,9 +38,8 @@ const Promotionproduct = () => {
     let mdate = moment(e.target.value).format("YYYY-MM-DD");
     setsearchData({ ...searchdata, [e.target.name]: mdate });
   };
-  console.log("-----" + searchdata.start_date);
   const handleClose = () => setShow(false);
-  // const handleShow = () => setShow(true);
+
   const handleClick = () => {};
  
 const columns = [
@@ -68,29 +67,7 @@ const columns = [
       paddingLeft: 0,
     }
   },
-  // {
-  //   name: "Image",
-  //   width: "100px",
-  //   center: true,
-  //   cell: (row) => (
-      
-  //     <img
-  //       // height="90px"
-  //       // width="75px"
-  //       alt={'apna_organic'}
-  //       src={
-  //         row.image? row.image : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
-  //       }
-  //       style={{
-  //         padding: 10,
-  //         textAlign: "right",
-  //         maxHeight: "100px",
-  //         maxWidth: "100px"
-  //       }}
-  //       onClick={handleClick}
-  //     />
-  //   ),
-  // },
+
   {
     name: "Fetured_type",
     selector: (row) => row.fetured_type,
@@ -102,29 +79,6 @@ const columns = [
       paddingLeft: "0px",
     },
   },
-    // {
-    //   name: "Image",
-    //   width: "100px",
-    //   center: true,
-    //   cell: (row) => (
-
-    //     <img
-    //       // height="90px"
-    //       // width="75px"
-    //       alt={'apna_organic'}
-    //       src={
-    //         row.image? row.image : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
-    //       }
-    //       style={{
-    //         padding: 10,
-    //         textAlign: "right",
-    //         maxHeight: "100px",
-    //         maxWidth: "100px"
-    //       }}
-    //       onClick={handleClick}
-    //     />
-    //   ),
-    // },
     {
       name: "Fetured_type",
       selector: (row) => row.fetured_type,
@@ -163,7 +117,6 @@ const columns = [
       ),
       sortable: true,
       width: "200px",
-      // center: true,
     },
     {
       name: "Start Date",
@@ -256,13 +209,11 @@ const columns = [
       })
       .then((response) => {
         let data = response.data;
-        console.log("UPDATE===========" + JSON.stringify(response.data));
         setapicall(true);
         setShow(false);
         setUpdateAlert(true);
       });
     formRef.current.reset();
-    // setValidated(false);
   };
 
   const submitHandler = () => {
@@ -271,7 +222,6 @@ const columns = [
 
   const OnReset = () => {
     setsearchData({ start_date: "", end_date: "" });
-    // fetchdata()
     setapicall(true);
   };
 
@@ -327,7 +277,6 @@ const columns = [
           <Form className="" ref={formRef}>
             <Modal.Header closeButton>
               <Modal.Title>
-                {/* {show === "add" ? "Add New Blog " : " Update Blog "} */}
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>

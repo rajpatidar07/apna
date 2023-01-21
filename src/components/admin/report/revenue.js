@@ -92,11 +92,6 @@ const RevenueReport = () => {
  //----------------------------------------------------+++=++++++ excel--------------------------------------------------->
  const header = ["Date", "Gross Revenue","Total GST","Discount", "shipping","Net Revenue","Total Revenue"];
 
-//  const body2 = [
-//   { firstname: "Edison", lastname: "Padilla", age: 14 ,mobile:"87787866"},
-//   { firstname: "Cheila", lastname: "Rodrigez", age: 56 },
-// ];
-
 function handleDownloadExcel() {
   downloadExcel({
     fileName: "Revenue Report -> downloadExcel method",

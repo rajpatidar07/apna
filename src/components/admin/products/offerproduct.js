@@ -80,29 +80,6 @@ const Offerproduct = () => {
           paddingLeft: "0px",
         },
       },
-    // {
-    //   name: "Image",
-    //   width: "100px",
-    //   center: true,
-    //   cell: (row) => (
-
-    //     <img
-    //       // height="90px"
-    //       // width="75px"
-    //       alt={'apna_organic'}
-    //       src={
-    //         row.image? row.image : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
-    //       }
-    //       style={{
-    //         padding: 10,
-    //         textAlign: "right",
-    //         maxHeight: "100px",
-    //         maxWidth: "100px"
-    //       }}
-    //       onClick={handleClick}
-    //     />
-    //   ),
-    // },
     {
       name: "Fetured_type",
       selector: (row) => row.fetured_type,
@@ -141,7 +118,6 @@ const Offerproduct = () => {
       ),
       sortable: true,
       width: "200px",
-      // center: true,
     },
     {
       name: "Start Date",
@@ -220,12 +196,9 @@ const Offerproduct = () => {
       })
       .then((response) => {
         let data = response.data;
-        console.log("UPDATE===========" + JSON.stringify(response.data));
-        // setFeaturetData(response.data[0])
         setapicall(true);
         setShow(false);
         setUpdateAlert(true);
-        //  setFeaturetData('')
       });
     formRef.current.reset();
   };
@@ -236,7 +209,6 @@ const Offerproduct = () => {
 
   const OnReset = () => {
     setsearchData({ start_date: "", end_date: "" });
-    // fetchdata()
     setapicall(true);
   };
     return (
@@ -342,13 +314,6 @@ const Offerproduct = () => {
               >
                 Update
               </button>
-              {/* <Iconbutton
-              type={"submit"}
-                 
-              // btntext={show === "add" ? "Add Blog" : "Update Blog"}
-              // onClick={(show === 'add' ? AddVendorClick : UpdateVendorClick(show))}
-              btnclass={"button main_button "}
-            /> */}
             </Modal.Footer>
           </Form>
         </Modal>

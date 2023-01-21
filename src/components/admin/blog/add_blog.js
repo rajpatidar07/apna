@@ -39,15 +39,8 @@ const BlogList = () => {
     product_tag: "",
     publish_date: "",
   });
-  console.log("======================" + JSON.stringify(addblog));
   const [searchdata, setsearchData] = useState([]);
-  // const [searchblog, setsearchBlog] = useState({
-  //   id:"",
-  //   for_:"admin",
-  //   recent:"",
-  //   category:"",
-  //   product_tag:""
-  //   })
+
   const [recent, setRecent] = useState("");
   const [categorySearch, setCategorySearch] = useState("");
   const [productTagSearch, setProductTagSearch] = useState("");
@@ -84,7 +77,6 @@ const BlogList = () => {
       })
       .then((response) => {
         let data = response.data;
-        console.log("search----------   " + JSON.stringify(response.data));
         setBlog(response.data);
         // setsearchBlog('')
         categoryArray = [];
@@ -95,9 +87,10 @@ const BlogList = () => {
     setFile(e.target.files[0]);
     setFileName(e.target.files[0].name);
   };
+ 
   const handleFormChange = (e) => {
     setaddBlog({ ...addblog, [e.target.name]: e.target.value });
-    // console.log("dataaaaaaaaaaaaaaaaaaaaaaa"+JSON.stringify(addblog))
+
   };
 
   const handleClose = () => {
@@ -107,7 +100,6 @@ const BlogList = () => {
   };
 
   const handleShow = (e, id) => {
-    // console.log("gggggggggggggg"+e)
 
     if (e === "add") {
       setShow(e);
@@ -124,12 +116,9 @@ const BlogList = () => {
             })
             .then((response) => {
               let data = response.data;
-              // console.log("gggggggggggggg"+JSON.stringify(data));
-              setaddBlog(response.data[0]);
+              setaddBlog(response.data);
               setsearchData(data);
               setId(id);
-              // setBlog(response.data);
-              // setAdminId(response.data.admin_id);
               setapicall(false);
             });
         } catch (err) {}
@@ -150,9 +139,6 @@ const BlogList = () => {
       .then((response) => {
         let data = response.data;
         setBlog(response.data);
-        // console.log("ALL DATA"+JSON.stringify(response.data))
-        // setDocuImgArray(JSON.parse(response.data[0].multiple_document_upload))
-
         setaddBlog(response.data);
         setsearchData(data);
         setapicall(false);
@@ -160,8 +146,6 @@ const BlogList = () => {
   }, [apicall]);
 
   const admid = localStorage.getItem("adminid");
-  // console.log("adminnnnnnnnnnnn___________________-"+(admid))
-
   const AddBlog = (e, id) => {
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
@@ -180,15 +164,12 @@ const BlogList = () => {
       formData.append("description", addblog.description);
       formData.append("category", addblog.category);
       formData.append("product_tag", addblog.product_tag);
-      formData.append("publish_date", addblog.publish_date);
-      // console.log("adminmmmmmmm"+adminId)
       axios
         .post(`${process.env.REACT_APP_BASEURL}/add_blog`, formData)
         .then((response) => {
           let data = response.data;
           setShow(false);
           setapicall(true);
-          // setAdminId();
           setAddAlert(true);
         })
         .catch(function (error) {
@@ -196,15 +177,10 @@ const BlogList = () => {
         });
       formRef.current.reset();
       setValidated(false);
-      // setData("");
     }
   };
-
-  console.log("kkkkkkkkkkk_______________________kkkkkkkk" + admid);
   const UpdateBlog = (show) => {
     const formData = new FormData();
-    console.log("---show" + addblog.id);
-
     formData.append("image", file);
     formData.append("filename", fileName);
     formData.append("admin_id", admid);
@@ -218,7 +194,6 @@ const BlogList = () => {
       .put(`${process.env.REACT_APP_BASEURL}/update_blog`, formData)
       .then((response) => {
         let data = response.data;
-        console.log("formupdate----------   " + JSON.stringify(response.data));
         setapicall(true);
         setShow(false);
         setUpdateAlert(true);
@@ -234,7 +209,6 @@ const BlogList = () => {
   const handleAlert = (id) => {
     setId(id);
     setAlert(true);
-    console.log("idddddddd" + id);
   };
 
   const hideAlert = () => {
@@ -252,8 +226,6 @@ const BlogList = () => {
   const CancelAlert = () => {
     setAlert(false);
   };
-
-  console.log("newwwwwwwwww consoleeeeeeee" + id);
   const columns = [
     {
       name: "Admin_id",
@@ -282,28 +254,10 @@ const BlogList = () => {
               paddingBottom: 10,
               textAlign: "right",
             }}
-            // onClick={() => handleClick()}
           />
         </>
       ),
     },
-    // {
-    //   name: "Logo",
-    //   center: true,
-    //   cell: (row) => (
-    //     <img
-    //       width={"100%"}
-    //       alt={row.title}
-    //       src={row.image}
-    //       style={{
-    //         borderRadius: 15,
-    //         paddingTop: 10,
-    //         paddingBottom: 10,
-    //         textAlign: "right",
-    //       }}
-    //     />
-    //   ),
-    // },
     {
       name: "Title",
       selector: (row) => row.title,
@@ -419,14 +373,7 @@ const BlogList = () => {
       index === self.findIndex((t) => t.product_tag == thing.product_tag)
   );
   const handleClick = () => {};
-  // let logo = `${process.env.REACT_APP_BASEURL}/${addblog.image}`
-  // let docsdata = `${process.env.REACT_APP_BASEURL}/${DocuImgarray}`
-  // var Newlogo = logo.replace("/public", "");
-  // var imgdata =docsdata.replace("/public", "");
-  // console.log("dataaSHOWWWWWWWWWWWWW"+JSON.stringify(searchdata))
-
   const onStatusChange = (e, id) => {
-    // e.prevantDefault();
     setchangstatus(e.target.value);
     axios
       .put(`${process.env.REACT_APP_BASEURL}/update_blog_status`, {
@@ -443,7 +390,6 @@ const BlogList = () => {
         console.log(error);
       });
   };
-  console.log("kkkkkkkkkkkkkkkkkk" + JSON.stringify(status));
 
   let date = moment();
   let currentDate = date.format("YYYY-MM-DD");
@@ -471,7 +417,6 @@ const BlogList = () => {
               aria-label="Search by Category"
               className="adminselectbox"
               onChange={OnCtegorySearch}
-              // value={searchblog.category}
               name="category"
             >
               <option value={""}>Select Category</option>
@@ -491,8 +436,6 @@ const BlogList = () => {
               aria-label="Search by Store Type"
               className="adminselectbox"
               name="product_tag"
-              // value={searchblog.product_tag}
-
               onChange={(e) => {
                 setProductTagSearch(e.target.value);
               }}
@@ -509,6 +452,7 @@ const BlogList = () => {
               })}
             </Form.Select>
           </div>
+         
 
           <div className="col-md-3 col-sm-6 aos_input">
             <button
@@ -682,33 +626,25 @@ const BlogList = () => {
                     placeholder="Shop_logo"
                     name={"image"}
                   />
-                  {/* {addvendordata.shop_logo ?
-                  <img src={Newshoplogo} width={'50px'}/> : null} */}
-                  <Form.Control.Feedback type="invalid" className="h6">
-                    Please upload image
-                  </Form.Control.Feedback>
+                 <p className="mt-2 text-danger  fs-6" type="invalid">
+                            Select Image This (height-198px * width-198px)
+                            </p>
                 </Form.Group>
+              
               </div>
+             
             </div>
           </Modal.Body>
           <Modal.Footer>
-            {/* <button
-              className="button main_outline_button"
-              onClick={() => handleClose()}
-            >
-              Cancel
-            </button> */}
             <Iconbutton
               type={"button"}
               btntext={"Cancel"}
               onClick={() => handleClose()}
               btnclass={"button main_outline_button "}
-              // Iconname={<GiCancel /> }
             />
             <Iconbutton
               type={"submit"}
               btntext={show === "add" ? "Add Blog" : "Update Blog"}
-              // onClick={(show === 'add' ? AddVendorClick : UpdateVendorClick(show))}
               btnclass={"button main_button "}
             />
           </Modal.Footer>

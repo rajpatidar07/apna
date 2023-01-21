@@ -11,58 +11,7 @@ import "jspdf-autotable";
 import { downloadExcel } from "react-export-table-to-excel";
 
 const StockReport = () => {
-  // const options = {
-  //   chart: {
-  //     type: "line",
-  //     borderRadius: "5",
-  //     borderColor: "#335cad",
-  //   },
-  //   title: {
-  //     text: " Figures",
-  //     style: { color: "green", fontSize: "22px" },
-  //     align: "left",
-  //   },
-  //   series: [
-  //     {
-  //       name: "Total Tax",
-  //       data: [1, 2, 1, 4, 3, 6, 9, 4, 1, 8, 3, 5],
-  //     },
-  //     {
-  //       name: "Order Tax",
-  //       data: [1, 3, 1, 3, 2, 5, 1, 4, 1, 8, 3, 5],
-  //     },
-  //     {
-  //       name: "Shipping Tax",
-  //       data: [1, 0, 1, 1, 5, 6, 9, 4, 5, 7, 2, 1],
-  //     },
-  //     {
-  //       name: "Orders",
-  //       data: [2, 4, 2, 4, 3, 6, 2, 5, 2, 9, 4, 6],
-  //     },
-      
-  //   ],
-  //   xAxis: {
-  //     categories: [
-  //       "1",
-  //       "3",
-  //       "5",
-  //       "7",
-  //       "9",
-  //       "11",
-  //       "13",
-  //       "15",
-  //       "17",
-  //       "19",
-  //       "21",
-  //       "23",
-  //     ],
-  //   },
-  //   yAxis: {
-  //     categories: ["0", "200", "400", "600", "800", "1000"],
-  //   },
-  // };
-
-
+ 
 
            //----------------------------------------------------------------- pdf----------------------------------------------------->
            const exportPDF = () => {
@@ -140,58 +89,6 @@ const StockReport = () => {
     },
   ];
 
-  // const data = [
-  //   {
-  //     id: 1,
-  //     sku: "#de250",
-  //     pname: "leaves lettuce green",
-  //     status:"$230",
-  //   stock:"$23",
-  //   },
-  //   {
-  //     id: 1,
-  //     sku: "#de250",
-  //     pname: "leaves lettuce green",
-  //     status:"$230",
-  //   stock:"$23",
-  //   }, {
-  //     id: 1,
-  //     sku: "#de250",
-  //     pname: "leaves lettuce green",
-  //     status:"$230",
-  //   stock:"$23",
-  //   }, {
-  //     id: 1,
-  //     sku: "#de250",
-  //     pname: "leaves lettuce green",
-  //     status:"$230",
-  //   stock:"$23",
-  //   }, {
-  //     id: 1,
-  //     sku: "#de250",
-  //     pname: "leaves lettuce green",
-  //     status:"$230",
-  //   stock:"$23",
-  //   }, {
-  //     id: 1,
-  //     sku: "#de250",
-  //     pname: "leaves lettuce green",
-  //     status:"$230",
-  //   stock:"$23",
-  //   }, {
-  //     id: 1,
-  //     sku: "#de250",
-  //     pname: "leaves lettuce green",
-  //     status:"$230",
-  //   stock:"$23",
-  //   }, {
-  //     id: 1,
-  //     sku: "#de250",
-  //     pname: "leaves lettuce green",
-  //     status:"$230",
-  //   stock:"$23",
-  //   },
-  // ];
   const [filterchange,setFilterchange] = useState('')
   const [getTableStock, setGetTableStock]= useState([])
   const [apicall,setapicall]=useState(false)
@@ -224,16 +121,12 @@ const StockReport = () => {
             
   const fetchData=()=>{
 
-      console.log("Stock status-----"+StockStatus)
      axios.post(`${process.env.REACT_APP_BASEURL}/stock_report`
      ,
      {
       "values":StockStatus
     }
      ).then((response) => {
-           console.log('stock data-all---'+JSON.stringify(response.data))
-           console.log('stok Error---'+JSON.stringify(response.data))
-            
 
            if(response.data.message=="No_Data"){
              

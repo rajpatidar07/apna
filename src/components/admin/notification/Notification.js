@@ -51,7 +51,6 @@ const Notification = () => {
   //To show or open the modal to add or update notification :-
 
   const handleShow = (e, id) => {
-    // console.log("----------" + e);
     if (e === "add") {
       setShow(e);
     }
@@ -214,7 +213,6 @@ const Notification = () => {
           status: Notificationdata.status,
         })
         .then((response) => {
-          // console.log(response);
           setAddAlert(true);
         })
         .catch(function (error) {
@@ -232,7 +230,6 @@ const Notification = () => {
   // To update the notification:-
 
   const UpdateNotificationHandler = (e) => {
-    console.log("Notification id" + Notificationdata.id);
 
     e.preventDefault();
     axios

@@ -34,7 +34,6 @@ const CouponReport = () => {
 
   const [apicall,setapicall]=useState(false)
   const [tabledate, setTabledata]=useState([])
-  // const [searchCoupon, setSearchCoupon]=useState("")
   const [couponError,setCouponError]=useState("")
   const [venderList,setVenderList]=useState([])
   const[vendorId,setVendorId]=useState("")
@@ -51,17 +50,14 @@ const CouponReport = () => {
     setFilterchange(e.target.value)
 
     let value = e.target.value;
-    // console.log("---------------------------------------------"+value);
     if(value==1){
       let frommDate=moment().format("YYYY-MM-DD")
       setFromDate(frommDate)
-      // console.log("From date"+e.target.value)
-      // console.log("today")
       setToDate(moment().format("YYYY-MM-DD"))
       let previousTodate=moment(frommDate).subtract(1, 'days').startOf('days').format("YYYY-MM-DD")
       setprevTodate(previousTodate)
       setprevFromdate(previousTodate)
-      // console.log("previous day"+ prevDate)
+
       setpreviousStateChange(1)
     }
         //yesterday------------------------------------------------------------------------
@@ -100,8 +96,6 @@ const CouponReport = () => {
     let previouslastmont=moment(lastMonth).subtract(1, 'days').startOf('days').format('YYYY-MM-DD')
     setprevTodate(previouslastmont);
     setprevFromdate(moment(previouslastmont).subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
-    // setPrevDate(moment(month).subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
-    // console.log("previou month-"+prevDate)
     setpreviousStateChange(4)
  }
 //  last six month---------------------------------------------------------
@@ -113,8 +107,6 @@ const CouponReport = () => {
   let lastsixMonth=moment(sixMonth).subtract(1, 'month').startOf('month').format('YYYY-MM-DD')
   setprevTodate(lastsixMonth);
   setprevFromdate(moment(lastsixMonth).subtract(5, 'month').startOf('month').format('YYYY-MM-DD'))
-  // setPrevDate(moment(sixMonth).subtract(6, 'month').startOf('month').format('YYYY-MM-DD'))
-  // console.log("previou 6 month-"+prevDate)
   setpreviousStateChange(5)
 }
 
@@ -123,12 +115,10 @@ if(value==8){
   
 let ThisWeek=moment().startOf('weeks').format('YYYY-MM-DD')
 setFromDate(ThisWeek);
-// console.log("From last 6 month"+ThisWeek)
 setToDate( moment().format("YYYY-MM-DD") );
 let previousthisweek=moment(ThisWeek).subtract(1,'days').endOf('days').format('YYYY-MM-DD')
 setprevTodate(previousthisweek)
 setprevFromdate(moment(previousthisweek).subtract(1,'weeks').endOf('weeks').format('YYYY-MM-DD'))
-// setPrevDate(moment(ThisWeek).subtract(1, 'weeks').endOf('weeks').format('YYYY-MM-DD'))
 setpreviousStateChange(8)
   
 }
@@ -136,7 +126,6 @@ if(value==9){
   
 let ThisMonth=moment().startOf('month').format('YYYY-MM-DD')
 setFromDate(ThisMonth);
-// console.log("From last 6 month"+ThisMonth)
 setToDate( moment().format("YYYY-MM-DD") );
 let previousthismont=moment(ThisMonth).subtract(1, 'days').startOf('days').format('YYYY-MM-DD')
 setprevTodate(previousthismont);
@@ -145,14 +134,7 @@ setpreviousStateChange(9)
 }
 fetchData();
   }
-
-
-
           const fetchData=()=>{
-            console.log( "from_date---"+fromDate)
-            console.log( "to_date----"+toDate)
-            console.log( "Previous  Todate---------------------------------------"+prevTodate)
-            console.log( "Previous fromdate---------------------------------------"+prevFromdate)
               axios.post(`${process.env.REACT_APP_BASEURL}/coupons_report`
             ,
              {
@@ -166,14 +148,6 @@ fetchData();
                   brand:brandName
             }
             ).then((response) => {
-                console.log('Coupon orders-----'+JSON.stringify(response.data[0]))
-                console.log('Coupon ordersprevious-----'+JSON.stringify(response.data[1]))
-
-                console.log('All  Coupon--- '+JSON.stringify(response.data[2]))
-
-                console.log('Error-----'+JSON.stringify(response.data))
-               
-
                   if(response.data.message=="no_data"){
 
                     setCouponError(response.data.message)
@@ -200,17 +174,13 @@ fetchData();
     
            const VenderData= async()=>{
             let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
-            //  console.log("vendor----"+JSON.stringify(result.data))
             if(result.data){
               setVenderList(result.data)
             }
             
          }
-        
-        
          const CategoryData= async()=>{
           let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
-          // console.log(result.data)
           if(result.data){
             setCategory(result.data)
           }
@@ -221,7 +191,6 @@ fetchData();
         const BrandData= async()=>{
         let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/brand_list`)
         
-        //  console.log("Brand data-----"+ JSON.stringify(result.data))
         if(result.data){
           setBrand(result.data)
         }
@@ -249,24 +218,9 @@ fetchData();
             fetchData();
             
            }
-     
-
-          //  console.log("get Coupon+++++"+JSON.stringify(getCoupon[0].total_order))
-          //  console.log("get Coupon+++++"+JSON.stringify(getCoupon[0].amount))
-          // console.log("get Table====="+ JSON.stringify(tabledate))
-          // console.log("get Table++++"+ tabledate)
-          // console.log("couponError.message=====  "+ couponError);
-          // console.log("getCoupon====="+ getCoupon);
- 
-          // console.log("getCoupon====="+JSON.stringify( getCoupon));
-
-
 
           var OrderCount=getCoupon.orders_count;
           var DiscountAmmount=getCoupon.discount_amount
-
-
-
 
 
           const options = {
@@ -328,11 +282,9 @@ fetchData();
       body: data
     };
 
-    // doc.text(headers, backgroundColor, "pink");
     doc.text(title, marginLeft, 40);
     doc.autoTable(content);
     doc.save("Coupon Report.pdf")
-    // doc.setFillColor("Gray" ,100)
   }
 
   //-------------------------------------------- end pdf----------------------------------------------------------------->
@@ -382,12 +334,6 @@ function handleDownloadExcel() {
               sortable: true,
               
             },
-            // {
-            //   name: "Expires",
-            //   selector: (row) => row.edate,
-            //   sortable: true,
-             
-            // },
             {
               name: "Orders",
               selector: (row) => row.order_count,
@@ -445,10 +391,6 @@ const options2 = [
    setVendorId(vendorArray)
   
   }
-
-// console.log("$$$$$$------"+JSON.stringify(vendorId[0]))
-
- 
 const options3 = [
   category.map((item)=>(
     { value: `${item.id}` ,label:`${item.category_name}` }
@@ -518,20 +460,6 @@ var resultOrder=(((getDiscountOrder-getPreviousDiscountOrder)/getPreviousDiscoun
 
 resultOrder!="Infinity"?console.log():resultOrder=0
 
-// // // //-----------------------order count---------------------------------------
-// var getorderCount=Number(getProduct.order_count)
-
-// var getPreviousorderCount=Number(PrevProductreport.prev_order_count)
-
-// var resultOrderCount=(((getorderCount-getPreviousorderCount)/getPreviousorderCount)*100).toFixed(2)
-
-// resultOrderCount!="Infinity"?console.log():resultOrderCount=0
-
-
-
-
-
-
     return (
         <div>
             <h2>Coupon Report</h2>
@@ -553,7 +481,6 @@ resultOrder!="Infinity"?console.log():resultOrder=0
               <option name="this_week" value={9}>This  month</option>
               <option name="last_month" value={4}>last month</option>
               <option name="last_6_month" value={5}>last 6  month</option>
-              {/* <option name="custom_month" value="6">custom month</option> */}
               <option name="custom_date" value="7">custom date</option>
 
             </Form.Select>
@@ -663,8 +590,6 @@ resultOrder!="Infinity"?console.log():resultOrder=0
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
-                  {/* {console.log("********"+couponError)}
-                  {console.log(" order===="+getCoupon.orders_count)} */}
                   {(couponError)=="no_data"||(getCoupon.orders_count)==null || (getCoupon.orders_count)==undefined?<h3>0</h3>: <h3>{getCoupon.orders_count}</h3>}
 
                     <div className="d-flex align-items-center justify-content-center">
@@ -697,8 +622,6 @@ resultOrder!="Infinity"?console.log():resultOrder=0
                   <div className="row  d-flex flex-column align-items-center">
                   <div className="d-flex align-items-baseline justify-content-between">
                 
-                           {/* {console.log("********"+couponError)}
-                           {console.log(" Ammount===="+getCoupon.discount_amount)} */}
                         {(couponError)=="no_data"||(getCoupon.discount_amount)==null || (getCoupon.discount_amount)==undefined || (getCoupon.discount_amount)==""?<h3>₹0</h3>: <h3>{(getCoupon.discount_amount).toFixed(2)}</h3>}
                 
                     <div className="d-flex align-items-center justify-content-center">

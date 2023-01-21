@@ -22,9 +22,6 @@ const Complaint = () => {
     status_: "",
     resolve_description: "",
   });
-  const handleAlert = () => setAlert(true);
-  const hideAlert = () => setAlert(false);
-  const [Alert, setAlert] = useState(false);
   const [show, setShow] = useState("");
   const [apicall, setapicall] = useState(false);
 
@@ -89,7 +86,6 @@ const Complaint = () => {
       .get(`${process.env.REACT_APP_BASEURL}/complaint_details?id=all`)
       .then((response) => {
         setcomplaintdata(response.data);
-        console.log("----complaint" + JSON.stringify(response.data));
         setapicall(false);
       })
       .catch(function (error) {
@@ -214,10 +210,6 @@ const Complaint = () => {
             className=" p-0 m-0  editiconn text-secondary"
             onClick={handleShow.bind(this, row.id)}
           />
-          {/* <BsTrash
-            className=" p-0 m-0 editiconn text-danger"
-            onClick={handleAlert}
-          /> */}
         </div>
       ),
     },
@@ -234,7 +226,6 @@ const Complaint = () => {
     if (form.checkValidity() === false) {
       e.preventDefault();
       e.stopPropagation();
-      console.log("falsevalidatn----------   ");
       setValidated(true);
     } else {
       e.preventDefault();
@@ -244,7 +235,6 @@ const Complaint = () => {
           editcomplaintdata
         )
         .then((response) => {
-          // console.log("---update-complaint"+JSON.stringify(response.data))
           setShow(false);
           setapicall(true);
           setUpdateAlert(true);
@@ -320,14 +310,6 @@ const Complaint = () => {
           pointerOnHover
           className={"table_body complaint_table"}
         />
-        {/* <SAlert
-          show={Alert}
-          title="Complaint  "
-          text="Are you Sure you want to delete"
-          onConfirm={hideAlert}
-          showCancelButton={true}
-          onCancel={hideAlert}
-        /> */}
         <Modal size="md" show={show} onHide={() => handleClose()}>
           <Form
             className=""

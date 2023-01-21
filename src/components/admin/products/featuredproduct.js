@@ -1,16 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
-import Input from "../common/input";
 import DataTable from "react-data-table-component";
-import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
-import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
-import Iconbutton from "../common/iconbutton";
 import moment from "moment";
 import axios from "axios";
-import Feedback from "react-bootstrap/esm/Feedback";
 import SAlert from "../common/salert";
 
 const Featuredproduct = () => {
@@ -43,7 +37,6 @@ const Featuredproduct = () => {
   let closeUpdateAlert = () => {
     setUpdateAlert(false);
   };
-  // console.log("proidddddddddddd"+proid)
   const handleShow = (product_id) => {
     try {
       axios
@@ -67,8 +60,6 @@ const Featuredproduct = () => {
     setShow(true);
   };
   const handleClick = () => {};
-  // console.log("kkkkkkkkk"+product_id)
-  console.log("-----------------AAAAAAAAAAa" + JSON.stringify(featuredData));
 
   useEffect(() => {
     try {
@@ -76,8 +67,8 @@ const Featuredproduct = () => {
         .post(`${process.env.REACT_APP_BASEURL}/featured_list`, {
           product_id: "",
           fetured_type: "featured_offer",
-          start_date: `${searchdata.start_date}`,
-          end_date: `${searchdata.end_date}`,
+          start_date: "",
+          end_date:""
         })
         .then((response) => {
           setFeatureProductData(response.data);
@@ -85,8 +76,6 @@ const Featuredproduct = () => {
         });
     } catch (err) {}
   }, [apicall]);
-  console.log("gggggggggggggg" + JSON.stringify(featuredProductData));
-
   const columns = [
     {
       name: "ID",
@@ -146,7 +135,6 @@ const Featuredproduct = () => {
       ),
       sortable: true,
       width: "200px",
-      // center: true,
     },
     {
       name: "Start Date",
@@ -192,7 +180,6 @@ const Featuredproduct = () => {
   const handleFormChange = (e) => {
     setFeaturetData({ ...featuredData, [e.target.name]: e.target.value });
   };
-  console.log("dguuuuuuu" + JSON.stringify(featuredData));
 
   const UpdateFeaturedProduct = (e) => {
     e.preventDefault();
@@ -202,12 +189,9 @@ const Featuredproduct = () => {
       end_date:featuredData.end_date
     }).then((response) => {
       let data=response.data;
-      console.log("UPDATE==========="+JSON.stringify(response.data))
       setValidated(false);
-      // setFeaturetData(response.data[0])
        setapicall(true);
        setShow(false)
-      //  setFeaturetData('')
   });
   formRef.current.reset();
   setValidated(false);
@@ -221,12 +205,6 @@ const OnDateChange = (e) => {
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
   };
-  // const OnDateChange = (e) => {
-  //   let mdate = moment(e.target.value).format("YYYY-MM-DD");
-  //   setsearchData({ ...searchdata, [e.target.name]: mdate });
-  // };
-
-
   const submitHandler = () => {
     setapicall(true);
   };
@@ -236,7 +214,6 @@ const OnDateChange = (e) => {
     setapicall(true);
   };
 
-  //  const UpdateFeturse
   return (
     <div>
       <h2>Featured Products</h2>

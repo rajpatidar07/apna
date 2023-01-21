@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import Input from "../common/input";
 import { AiOutlinePlus } from "react-icons/ai";
-// import fetch from 'node-fetch';
 import { useNavigate } from "react-router-dom";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
@@ -28,8 +27,6 @@ const CategoryList = () => {
 
 
   const hideAlert = () => {
-
-    console.log("--id" + parentid + "----" + level);
     axios.put(`${process.env.REACT_APP_BASEURL}/delete_category`, {
       id: parentid,
       is_active: 0,
@@ -101,7 +98,6 @@ const CategoryList = () => {
     category_type,
     category_name
   ) => {
-    console.log("all parent id---------"+ all_parent_id)
     if (e === "add") {
       setShow(e);
     }
@@ -113,8 +109,6 @@ const CategoryList = () => {
             let data = response.data[0];
             setCategoryEditData(data);
             const arr = data.all_parent_id.split(",");
-            // let arrdata = arr.substring(0, arr.length-2);
-            // if(CategoryEditdata.level > 1){
             for (let i = 0; i < arr.length; i++) {
               axios
                 .get(
@@ -122,8 +116,6 @@ const CategoryList = () => {
                 )
                 .then((response) => {
                   let data = response.data[0];
-                  // console.log("-----------pareant" + JSON.stringify(data))
-
                   if (i === 0) {
                     axios
                       .get(
@@ -133,7 +125,6 @@ const CategoryList = () => {
                         setSubCategory(response.data);
                       });
                     setCategoryEditparent(data.category_name);
-                    // setCategoryEditparent(data.category_name);
                   } else if (i === 1) {
                     axios
                       .get(
@@ -142,22 +133,12 @@ const CategoryList = () => {
                       .then((response) => {
                         setchildCategory(response.data);
                       });
-                    // setSubCategory(response.data)
-                    // setCategoryEditparent(data.category_name);
-                    console.log(
-                      "-----------pcategory_nameareant" + data.category_name
-                    );
                     setCategoryEditSubparent(data.category_name);
                   } else if (i === 2) {
-                    // setchildCategory(response.data)
-                    console.log(
-                      "-----------pcategory_nameareant" + data.category_name
-                    );
                     setCategoryEditChildparent(data.category_name);
                   }
                 });
             }
-            // }
           });
       } catch (err) {}
       setnewName(name);
@@ -180,18 +161,6 @@ const CategoryList = () => {
   };
 
   const categoryFormChange = (e, id) => {
-
-  
-    // console.log("indVallllllll________"+e.target.value)
-    // console.log("grandcCategory.id________"+grandcCategory[0])
-    
-    // if(indVal===grandcCategory){
-    //   alert("dont select Any more")
-    // }
-    // else{
-      // if(e.target.s_category.value !== ""){
-      //   alert("fdhfbjhbjkbh")
-      // }
       setIndVal(e.target.value);
       setScategory({ ...scategory, [e.target.name]: e.target.value });
     
@@ -200,13 +169,9 @@ const CategoryList = () => {
         axios
   .get(`${process.env.REACT_APP_BASEURL}/category_details?id=${indVal}`)
   .then((response) => {
-    console.log("respoce-------"+response.data)
     setspanCategorydata(response.data[0].category_type)
   });
      }
-  
-    // }
-  
   };
 
 
@@ -218,10 +183,8 @@ const CategoryList = () => {
 
   if (scategory.sub_category !== "") {
     parentidddata.push(scategory.sub_category);
-    // parentidddata.push(scategory.child_category)
   }
   if (scategory.child_category !== "") {
-    // parentidddata.push(scategory.sub_category)
     parentidddata.push(scategory.child_category);
   }
 
@@ -234,7 +197,6 @@ const CategoryList = () => {
         .then((response) => {
           let data = response.data.filter((item) => item.is_active === "1");
           setData(data);
-          // console.log("---------fdele" + JSON.stringify(data));
            setsearchData(data);
           setapicall(false);
         });
@@ -262,33 +224,20 @@ const CategoryList = () => {
                 obj.all_parent_id.substring(0, obj.all_parent_id.length - 2) ===
                 scategory.category_name
             );
-            // console.log("---ppppp" + specificValues);
-
             if (indVal === 0) {
               setCategory(cgory);
-              // setSubCategory('');
-              // setchildCategory('');
-              // setgrandcCategory('');
               setlevel(0);
             }
             if (indVal === scategory.category_name) {
-              // if(cgory[0] === '' || cgory[0] === undefined || cgory[0] === null ){
-              // setSubCategory('');
-              // }
-              // else{
               setSubCategory(cgory);
               setchildCategory("");
               setlevel(1);
-              // }
             } else if (indVal === scategory.sub_category) {
               setchildCategory(cgory);
               setgrandcCategory("");
               setlevel(2);
             } else if (indVal === scategory.child_category) {
               setgrandcCategory(cgory);
-              console.log(
-                "---child_category" + scategory.child_category + indVal
-              );
               setlevel(3);
             } else if (indVal === scategory.s_category) {
               setgrandcCategory(cgory);
@@ -366,12 +315,6 @@ const CategoryList = () => {
       sortable: true,
       width: "250px",
     },
-    // {
-    //   name: "Category",
-    //   selector: (row) => row.all_parent_id,
-    //   sortable: true,
-    //   width: "250px",
-    // },
     {
       name: "Category Type",
       selector: (row) => row.category_type,
@@ -406,27 +349,7 @@ const CategoryList = () => {
       ),
       sortable: true,
       width: "105px",
-      // center: true,
     },
-    // {
-    //   name: "Status",
-    //   selector: (row) => (
-    //     <Badge
-    //       bg={
-    //         row.is_active === "0"
-    //           ? "bg-success"
-    //           : row.is_active === "1"
-    //           ? "bg-danger"
-    //           : null
-    //       }
-    //     >
-    //       {row.is_active === "0" ? "active" : "inactive"}
-    //     </Badge>
-    //   ),
-    //   sortable: true,
-    //   width: "105px",
-    //   // center: true,
-    // },
     {
       name: "Action",
       width: "200px",
@@ -485,13 +408,6 @@ const CategoryList = () => {
         });
       formRef.current.reset();
       setValidated(false);
-    
-    
-  
-    // if (form.checkValidity() === true) {
-    //   e.preventDefault();
-  
-    // }
   };
 
 
@@ -501,7 +417,6 @@ const CategoryList = () => {
 
   const UpdateCategoryClick = (show) => {
     const form = show.currentTarget;
-    // setValidated(true);
 
     if (form.checkValidity() === true) {
       show.stopPropagation();
@@ -536,7 +451,6 @@ const CategoryList = () => {
       });
     formRef.current.reset();
     setValidated(false);
-    // show.preventDefault();
   };
 
 
@@ -547,20 +461,6 @@ const CategoryList = () => {
 
 
   const SearchCategory = () => {
-    // if (
-
-      // SearchCat.category_name === "" ||
-      // SearchCat.category_name === null ||
-      // SearchCat.category_name === undefined
-      
-    // )
-    //  {
-    //   // setsearchValidated(true);
-    // }
-    //  else
-    //   {
-         
-   
       axios
         .post(`${process.env.REACT_APP_BASEURL}/search_category`, {
           category_name: `${SearchCat.category_name}`,
@@ -572,7 +472,6 @@ const CategoryList = () => {
           setSearchCat("");
           setsearchValidated(false);
         });
-    // }
   };
 
   
@@ -601,8 +500,6 @@ const CategoryList = () => {
 
 
   const handleClose = () => {
-
-    // formRef.current.reset();
     setnewName(" ")
     setType("")
     setCategoryEditparent("")
@@ -1087,11 +984,6 @@ const CategoryList = () => {
               <Iconbutton
                 type={"submit"}
                 btntext={show === "add" ? "Add Category" : "Update Category"}
-                // onClick={
-                //   show === "add"
-                //     ? AddCategoryClick
-                //     : () => UpdateCategoryClick(show)
-                // }
                 btnclass={"button main_button "}
               />
             </Modal.Footer>

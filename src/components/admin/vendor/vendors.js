@@ -87,7 +87,6 @@ const VendorsList = () => {
         status: `${searchdata.status}`,
       })
       .then((response) => {
-        console.log("search----------   " + JSON.stringify(response.data));
         setvendordata(response.data);
         setapicall(false);
       })
@@ -242,10 +241,6 @@ const VendorsList = () => {
             className=" p-0 m-0  editiconn text-secondary"
             onClick={handleShow.bind(this, row.id)}
           />
-          {/* <BsTrash
-              className=" p-0 m-0 editiconn text-danger"
-              onClick={handleAlert}
-            /> */}
         </div>
       ),
     },
@@ -257,7 +252,6 @@ const VendorsList = () => {
       .then((response) => {
         setvendordata(response.data);
         setapicall(false);
-        // console.log("gggggggggggggggggggggggg"+JSON.stringify(response.data))
       })
       .catch(function (error) {
         console.log(error);
@@ -279,7 +273,6 @@ const VendorsList = () => {
   };
   const handleClose = () => {
     formRef.current.reset();
-    // e.preventDefault()
     setValidated(false);
     setaddtag("");
     setaddvendordata("");
@@ -353,7 +346,6 @@ const VendorsList = () => {
 
   const [vendorID, setVendorId] = useState("");
   const handleDocsShow = (id) => {
-    // console.log("id- in show----------"+id)
     setVendorId(id);
     setDocsShow(true);
     onImgView(id);
@@ -378,15 +370,10 @@ const VendorsList = () => {
   };
 
   const imguploadchange = async (e) => {
-    // e.preventDefault()
-    console.log("Out id--" + vendorID);
     for (let i = 0; i < e.target.files.length; i++) {
       console.log("i   -- " + i);
 
       encoded = await convertToBase64(e.target.files[i]);
-
-      console.log("encoded--" + encoded);
-
       const [first, ...rest] = encoded.base64.split(",");
       const [nameimg, ext] = encoded.name.split(".");
 
@@ -400,8 +387,7 @@ const VendorsList = () => {
       };
       ImgObj.push(imar);
     }
-    // image
-    // console.log("image lenth-----"+newImageUrls.length)
+
     if (newImageUrls.length <= 5) {
       console.log("ImgObj --  " + JSON.stringify(ImgObj));
       console.log("newImageUrls.length --  " + newImageUrls.length);

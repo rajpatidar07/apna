@@ -6,7 +6,6 @@ import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import Iconbutton from "../common/iconbutton";
 import { CKEditor } from "ckeditor4-react";
-// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useEffect } from "react";
 import axios from "axios";
 import EmailType from "../json/EmailType";
@@ -49,7 +48,7 @@ const EmailSend = () => {
   };
 
   const handleShow = (e) => {
-    console.log("----------" + e);
+
     if (e === "add") {
       setShow(e);
     }
@@ -58,10 +57,7 @@ const EmailSend = () => {
         axios
           .get(`${process.env.REACT_APP_BASEURL}/email_template_get?id=${e}`)
           .then((response) => {
-            //  console.log("single Data"+ JSON.stringify(response.data))
             setEmaildata(response.data[0]);
-
-            // console.log(" update data------"+response.data[0].email_text)
 
             setEmailText(response.data[0].email_text);
           });
@@ -72,14 +68,11 @@ const EmailSend = () => {
   };
 
   const handleClose = () => {
-    //  formRef.current.reset();
     setEmaildata({});
 
     setValidated(false);
     setShow(false);
   };
-
-  // console.log(" get data-----"+JSON.stringify (emaildata))
   const columns = [
     {
       name: "Email Type",
@@ -194,16 +187,11 @@ const EmailSend = () => {
       newTemp = e.editor.getData().replaceAll(/"/g, "'");
     }
     setEmailText(newTemp);
-
-    //  setEmailText(e.editor. setEditorData(emailText))
-    //  let updateTemp=e.editor.setData(emailText)
-    //  setEmailText(updateTemp)
   };
 
   const valueHandler = (e) => {
     setEmaildata({ ...emaildata, [e.target.name]: e.target.value });
   };
-  // console.log("data- before-----"+JSON.stringify(emaildata))
 
   const EmailSubmitHandler = (e) => {
     const form = e.currentTarget;
@@ -215,7 +203,6 @@ const EmailSend = () => {
       setapicall(true);
     } else {
       e.preventDefault();
-      // console.log("data------"+JSON.stringify(emaildata))
       axios
         .post(`${process.env.REACT_APP_BASEURL}/add_email_template`, {
           type: emaildata.type,
@@ -243,7 +230,6 @@ const EmailSend = () => {
   };
 
   const UpdateEmailHandler = (e) => {
-    console.log(" email iddd" + emaildata.id);
 
     e.preventDefault();
     axios
@@ -258,7 +244,6 @@ const EmailSend = () => {
         status: emaildata.status,
       })
       .then((response) => {
-        // console.log("idddllllllllllllllllllllllllllllllll------"+JSON.stringify(response.data.message))
         setUpdateAlert(true);
       })
       .catch(function (error) {
@@ -280,8 +265,6 @@ const EmailSend = () => {
         status: getemailStatus,
       })
       .then((response) => {
-        //  console.log('emailData-------'+JSON.stringify(response.data))
-
         let data = response.data.filter((item) => item.is_deleted === 1);
 
         setGetEmaildata(data);
@@ -308,7 +291,6 @@ const EmailSend = () => {
   };
 
   const deleteEmail = (id) => {
-    // console.log("id---"+id)
     axios
       .put(`${process.env.REACT_APP_BASEURL}/email_template_remove`, {
         is_deleted: 0,
@@ -330,17 +312,6 @@ const EmailSend = () => {
     setapicall(true);
     fetchEmailData();
   };
-
-  // console.log("my single data--"+JSON.stringify(emaildata))
-  // let newTemp = emaildata.email_text.replace(/"/g, '\'');
-
-  // console.log("emaildata.email_text--"+emaildata.email_text)
-  // if((emaildata.email_text) != undefined){
-  //   let newTemp = (emaildata.email_text).replaceAll(/"/g, '\'');
-  //   console.log("newTemp -"+newTemp)
-  // }
-
-  console.log("data from database---------" + emailText);
   return (
     <div>
       <h2>Send Email</h2>
@@ -568,9 +539,7 @@ const EmailSend = () => {
 
               <div sm="12" className="mt-3">
                 <CKEditor
-                  // editor={"classic"}
                   data={emailText}
-                  //  value="<p>hjhjjhj</p>"
                   onChange={(e) => EmailTextHandler(e)}
                   name={"email_text"}
                   required

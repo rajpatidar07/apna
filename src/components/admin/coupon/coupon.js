@@ -38,7 +38,6 @@ const Coupon = () => {
   const [cid, setCId] = useState(false);
   const [AddAlert, setAddAlert] = useState(false);
   const [UpdateAlert, setUpdateAlert] = useState(false);
-  // const [scoupon, setScoupon] = useState([]);
   const [searchcoupon, setsearchCoupon] = useState([]);
   const [SearchCoup, setSearchCoup] = useState({
     campaign_name: "",
@@ -48,7 +47,6 @@ const Coupon = () => {
 
   const handleAlert = (id) => {
     setAlert(true);
-    // setisActive(is_active)
     setCId(id);
   };
   const closeAddAlert = () => {
@@ -73,24 +71,8 @@ const Coupon = () => {
   const CancelAlert = () => {
     setAlert(false);
   };
-  // const showAlert =()=> {
-  //   setAlert(true);
-  //    axios.put(`${process.env.REACT_APP_BASEURL}/coupons_delete`,
-  //   {
-  //        id:cid,
-  //        is_active:'0'
-  //   }) .then((response) => {
-  //     let data= response.data;
-
-  //     setcoupondata(data);
-  //     setsearchCoupon(data);
-  //     setAlert(false);
-  //     setDltapicall(true)
-  //   })
-  // }
   const handleClose = () => {
     formRef.current.reset();
-    // setcoupondata('')
     setValidated(false);
     setShow(false);
   };
@@ -99,18 +81,15 @@ const Coupon = () => {
     if (e === "add") {
       setShow(e);
     }
-    console.log(JSON.stringify(e));
     if (e !== "add") {
       try {
         axios
           .get(`${process.env.REACT_APP_BASEURL}/coupon?coupon_id=${e}`)
           .then((response) => {
             let data = response.data[0];
-            // let data = response.data[0].filter(item=>item.is_active===1);
             setaddcoupondata(data);
           });
       } catch (err) {}
-      // setcoupondata(couponjson[e - 1])
       setShow(e);
     }
   };
@@ -121,10 +100,8 @@ const Coupon = () => {
         axios
           .get(`${process.env.REACT_APP_BASEURL}/coupon?coupon_id=all`)
           .then((response) => {
-            // let data = response.data;
             let data = response.data.filter((item) => item.is_active === 1);
             setcoupondata(data);
-            console.log("tfggcvvvvvvvvvvvvvvvvv" + JSON.stringify(data));
             setaddcoupondata(data);
             setsearchCoupon(data);
             setapicall(false);
@@ -237,8 +214,6 @@ const Coupon = () => {
       center: true,
       cell: (row) => (
         <img
-          // height="90px"
-          // width="75px"
           alt={"apna_organic"}
           src={
             row.image
@@ -316,7 +291,6 @@ const Coupon = () => {
       e.preventDefault();
       setValidated(true);
     } else {
-      // e.preventDefault();
       const formData = new FormData();
       formData.append("filename", fileName);
       formData.append("campaign_name", addcoupondata.campaign_name);
@@ -666,7 +640,6 @@ const Coupon = () => {
                 btntext={"Cancel"}
                 onClick={() => handleClose()}
                 btnclass={"button main_outline_button adminmainbutton px-2"}
-                // Iconname={<GiCancel /> }
               />
               <Iconbutton
                 type={"submit"}

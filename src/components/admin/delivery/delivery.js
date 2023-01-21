@@ -57,14 +57,6 @@ const Delivery = () => {
       width: "140px",
       center: true,
     },
-
-    // {
-    //   name: "Product Type",
-    //   selector: (row) => row.ctype,
-    //   sortable: true,
-    //   width: "120px",
-    //   center:true
-    // },
     {
       name: "Order Date",
       selector: (row) => row.odate,
