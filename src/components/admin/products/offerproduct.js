@@ -1,9 +1,6 @@
 import React, { useEffect, useState,useRef } from "react";
-import Input from "../common/input";
 import DataTable from "react-data-table-component";
-import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
-import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import SweetAlert from 'sweetalert-react';
 import 'sweetalert/dist/sweetalert.css';
@@ -85,29 +82,6 @@ const OnDateChange = (e) => {
           paddingLeft: 0,
         }
       },
-      // {
-      //   name: "Image",
-      //   width: "100px",
-      //   center: true,
-      //   cell: (row) => (
-          
-      //     <img
-      //       // height="90px"
-      //       // width="75px"
-      //       alt={'apna_organic'}
-      //       src={
-      //         row.image? row.image : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
-      //       }
-      //       style={{
-      //         padding: 10,
-      //         textAlign: "right",
-      //         maxHeight: "100px",
-      //         maxWidth: "100px"
-      //       }}
-      //       onClick={handleClick}
-      //     />
-      //   ),
-      // },
       {
         name: "Fetured_type",
         selector: (row) => row.fetured_type,
@@ -237,7 +211,7 @@ const OnDateChange = (e) => {
   };
     return (
         <div>
-             <h2>Offer Products</h2>
+             <h2> Special Offer Products</h2>
 
   {/* search bar */}
   <div className="card mt-3 p-3 ">

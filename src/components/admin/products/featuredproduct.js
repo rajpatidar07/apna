@@ -107,29 +107,6 @@ console.log("-----------------AAAAAAAAAAa"+JSON.stringify(featuredData))
         paddingLeft: 0,
       }
     },
-    // {
-    //   name: "Image",
-    //   width: "100px",
-    //   center: true,
-    //   cell: (row) => (
-        
-    //     <img
-    //       // height="90px"
-    //       // width="75px"
-    //       alt={'apna_organic'}
-    //       src={
-    //         row.image? row.image : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
-    //       }
-    //       style={{
-    //         padding: 10,
-    //         textAlign: "right",
-    //         maxHeight: "100px",
-    //         maxWidth: "100px"
-    //       }}
-    //       onClick={handleClick}
-    //     />
-    //   ),
-    // },
     {
       name: "Fetured_type",
       selector: (row) => row.fetured_type,
@@ -229,7 +206,6 @@ console.log("-----------------AAAAAAAAAAa"+JSON.stringify(featuredData))
   formRef.current.reset();
   setValidated(false);
 }
-// console.log("hhjjjjjjjjjjjjj0"+JSON.stringify(featuredProductData))
 
 const OnSearchChange = (e) => {
   setsearchData({ ...searchdata, [e.target.name]: e.target.value })

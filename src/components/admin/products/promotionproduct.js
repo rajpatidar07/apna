@@ -44,8 +44,6 @@ console.log("-----"+searchdata.start_date)
   // const handleShow = () => setShow(true);
   const handleClick = () => {};
  
-// console.log("---------"+JSON.stringify(featuredProductData))
- 
 const columns = [
   {
     name: "ID",
@@ -327,13 +325,6 @@ const handleFormChange = (e) => {
             >
               Update
             </button>
-            {/* <Iconbutton
-              type={"submit"}
-                 
-              // btntext={show === "add" ? "Add Blog" : "Update Blog"}
-              // onClick={(show === 'add' ? AddVendorClick : UpdateVendorClick(show))}
-              btnclass={"button main_button "}
-            /> */}
           </Modal.Footer>
         </Form>
       </Modal>
