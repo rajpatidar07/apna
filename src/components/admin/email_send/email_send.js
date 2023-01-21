@@ -49,6 +49,12 @@ const EmailSend = () => {
 
   const handleShow = (e) => {
 
+<<<<<<< HEAD
+=======
+ 
+
+    console.log("----------" + e);
+>>>>>>> 1f6ba98fac6e353df42b5c2be94c03c644949c1d
     if (e === "add") {
       setShow(e);
     }
@@ -68,8 +74,13 @@ const EmailSend = () => {
   };
 
   const handleClose = () => {
+<<<<<<< HEAD
+=======
+  
+    
+>>>>>>> 1f6ba98fac6e353df42b5c2be94c03c644949c1d
     setEmaildata({});
-
+   
     setValidated(false);
     setShow(false);
   };
@@ -536,10 +547,15 @@ const EmailSend = () => {
                   required
                 />
               </div>
-
-              <div sm="12" className="mt-3">
+             {console.log("emailtext------"+emailText)}
+              <div sm="12" className="mt-3"> 
                 <CKEditor
                   data={emailText}
+<<<<<<< HEAD
+=======
+                  initData={emailText}
+                  type={"classic"}
+>>>>>>> 1f6ba98fac6e353df42b5c2be94c03c644949c1d
                   onChange={(e) => EmailTextHandler(e)}
                   name={"email_text"}
                   required

@@ -13,7 +13,7 @@ import { Badge } from "react-bootstrap";
 import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
 import axios from "axios";
-
+var newImg;
 const CategoryList = () => {
   const formRef = useRef();
   const [validated, setValidated] = useState(false);
@@ -36,12 +36,12 @@ const CategoryList = () => {
     setapicall(true);
     
   };
-  const [spanCategorydata, setspanCategorydata] = useState([]);
+
   const [Alert, setAlert] = useState(false);
   const [show, setShow] = useState("");
   const [newName, setnewName] = useState("");
   const [type, setType] = useState("");
-  const [image, setImage] = useState();
+  const [ImagePaht, setImagePath] = useState("");
   const [data, setData] = useState([]);
   const [category, setCategory] = useState([]);
   const [indVal, setIndVal] = useState(0);
@@ -106,8 +106,12 @@ const CategoryList = () => {
         axios
           .get(`${process.env.REACT_APP_BASEURL}/category_details?id=${e}`)
           .then((response) => {
+
             let data = response.data[0];
+            console.log("data-------------"+ JSON.stringify(data))
             setCategoryEditData(data);
+            setImagePath(response.data[0].image)
+            
             const arr = data.all_parent_id.split(",");
             for (let i = 0; i < arr.length; i++) {
               axios
@@ -152,6 +156,13 @@ const CategoryList = () => {
     }
   };
 
+
+
+
+  {console.log("image path---"+ImagePaht)}
+   newImg= ImagePaht.replace("public","")
+  {console.log("image new path ---"+newImg)}
+  
   const handlChangeName = (e, id) => {
     setnewName(e.target.value);
   };
@@ -161,9 +172,27 @@ const CategoryList = () => {
   };
 
   const categoryFormChange = (e, id) => {
+<<<<<<< HEAD
+=======
+
+  
+    // console.log("indVallllllll________"+e.target.value)
+    // console.log("grandcCategory.id________"+grandcCategory[0])
+    
+    // if(indVal===grandcCategory){
+    //   alert("dont select Any more")
+    // }
+    // else{
+      // if(e.target.s_category.value !== ""){
+      //   alert("fdhfbjhbjkbh")
+      // }
+   
+>>>>>>> 1f6ba98fac6e353df42b5c2be94c03c644949c1d
       setIndVal(e.target.value);
       setScategory({ ...scategory, [e.target.name]: e.target.value });
+  
     
+<<<<<<< HEAD
     
       {
         axios
@@ -172,6 +201,13 @@ const CategoryList = () => {
     setspanCategorydata(response.data[0].category_type)
   });
      }
+=======
+
+
+  
+    // }
+  
+>>>>>>> 1f6ba98fac6e353df42b5c2be94c03c644949c1d
   };
 
 
@@ -240,9 +276,12 @@ const CategoryList = () => {
               setgrandcCategory(cgory);
               setlevel(3);
             } else if (indVal === scategory.s_category) {
+
               setgrandcCategory(cgory);
               setlevel(4);
             }
+           
+            
           });
       } catch (err) {}
     }
@@ -402,6 +441,22 @@ const CategoryList = () => {
       axios
         .post(`${process.env.REACT_APP_BASEURL}/add_category`, formData)
         .then((response) => {
+
+
+          setnewName(" ")
+          setType("")
+          setCategoryEditparent("")
+          setCategoryEditSubparent("")
+          setCategoryEditChildparent("")
+          setSubCategory([])
+          setchildCategory([])
+          setgrandcCategory([])
+      
+          setValidated(false);
+
+
+          setShow(false);
+
           setShow(false);
           setapicall(true);
           setAddAlert(true);
@@ -505,6 +560,11 @@ const CategoryList = () => {
     setCategoryEditparent("")
     setCategoryEditSubparent("")
     setCategoryEditChildparent("")
+    setSubCategory([])
+    setchildCategory([])
+    setgrandcCategory([])
+   setImagePath("")
+   newImg=""
     setValidated(false);
     setShow(false);
   };
@@ -779,7 +839,7 @@ const CategoryList = () => {
                     <Form.Control.Feedback type="invalid" className="h6">
                       Please fill category type
                     </Form.Control.Feedback>
-                     {spanCategorydata==type?  <span className="text-success">{spanCategorydata}</span>:(spanCategorydata!==type)?<span className="text-danger">{spanCategorydata} </span>:null}
+                 
                     <span className="text-danger"> </span>
                   </Form.Group>
                 </div>
@@ -902,7 +962,7 @@ const CategoryList = () => {
                   </div>
                 )}
 
-
+{/* 
                 {grandcCategory[0] === "" ||
                 grandcCategory[0] === null ||
                 grandcCategory[0] === undefined ? null : (
@@ -946,7 +1006,7 @@ const CategoryList = () => {
                       </Form.Control.Feedback>
                     </Form.Group>
                   </div>
-                )}
+                )} */}
 
 
                 <div className="col-md-6">
@@ -961,15 +1021,19 @@ const CategoryList = () => {
                         placeholder="Category Icon"
                         onChange={(e) => saveFile(e)}
                         name={"category_icon"}
+                        // value={newImg}
                       />
-                      {data.category_icon ? (
-                        <img
-                          src={image}
+                      
+                    </div>
+                    {newImg==""?null:  <img
+                          src={newImg}
                           alt={"apna_organic"}
                           className={"category_icon"}
-                        />
-                      ) : null}
-                    </div>
+                          width={"100px"}
+                          height={"100px"}
+                          style={{marginTop:10}}
+                        />}
+                  
                   </Form.Group>
                 </div>
               </div>

@@ -274,6 +274,8 @@ const VendorsList = () => {
   const handleClose = () => {
     formRef.current.reset();
     setValidated(false);
+    setcustomarray([]) 
+
     setaddtag("");
     setaddvendordata("");
     setDocnameArray("");
@@ -369,6 +371,7 @@ const VendorsList = () => {
     });
   };
 
+<<<<<<< HEAD
   const imguploadchange = async (e) => {
     for (let i = 0; i < e.target.files.length; i++) {
       console.log("i   -- " + i);
@@ -376,17 +379,60 @@ const VendorsList = () => {
       encoded = await convertToBase64(e.target.files[i]);
       const [first, ...rest] = encoded.base64.split(",");
       const [nameimg, ext] = encoded.name.split(".");
+=======
 
-      const vendorimg = rest.join("-");
-      let imar = {
-        vendor_id: `${vendorID}`,
-        documents_name: `${encoded.name}${i}${vendorID}`,
-        documents_position: `position${i}`,
-        type_of_file: `${ext}`,
-        img_64: vendorimg,
-      };
-      ImgObj.push(imar);
+
+  const imguploadchange = async (e) => {
+
+
+    if(e.target.files.length<=5){
+      console.log("lemth------"+e.target.files.length)
+       
+         // e.preventDefault()
+         console.log("Out id--" + vendorID);
+         for (let i = 0; i < e.target.files.length; i++) {
+           console.log("i   -- " + i);
+     
+           encoded = await convertToBase64(e.target.files[i]);
+     
+           console.log("encoded--" + encoded);
+     
+           const [first, ...rest] = encoded.base64.split(",");
+           const [nameimg, ext] = encoded.name.split(".");
+     
+           const vendorimg = rest.join("-");
+           let imar = {
+             vendor_id: `${vendorID}`,
+             documents_name: `${encoded.name}${i}${vendorID}`,
+             documents_position: `position${i}`,
+             type_of_file: `${ext}`,
+             img_64: vendorimg,
+           };
+           ImgObj.push(imar);
+         }
+         
+              if(newImageUrls.length<=5){
+                axios
+                .post(
+                  `${process.env.REACT_APP_BASEURL}/vendor_documents_upload`,
+                  ImgObj
+                )
+                .then((response) => {
+                  onImgView(vendorID);
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
+              } 
+              else{
+                alert("Cannot More than 6 picss")
+              }   
+        
+          
+>>>>>>> 1f6ba98fac6e353df42b5c2be94c03c644949c1d
+
     }
+<<<<<<< HEAD
 
     if (newImageUrls.length <= 5) {
       console.log("ImgObj --  " + JSON.stringify(ImgObj));
@@ -404,7 +450,17 @@ const VendorsList = () => {
         });
     } else {
       alert("Cannot upload more than 6 image");
+=======
+    else{
+   
+alert("Cannot More than 6 pics")
+>>>>>>> 1f6ba98fac6e353df42b5c2be94c03c644949c1d
     }
+
+        
+   
+
+
   };
 
   const onImgRemove = (id, vendor_id) => {
