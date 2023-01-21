@@ -5,13 +5,11 @@ import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
-import SweetAlert from "sweetalert-react";
-import "sweetalert/dist/sweetalert.css";
 import { Modal } from "react-bootstrap";
 import Button from "react-bootstrap";
 import Iconbutton from "../common/iconbutton";
 import axios from "axios";
-
+import SAlert from "../common/salert";
 
 const Soldproduct = () => {
   const formRef = useRef();
@@ -30,14 +28,11 @@ const Soldproduct = () => {
   const [apicall, setapicall] = useState([]);
   const [UpdateAlert, setUpdateAlert] = useState(false);
 
-
   const [searchdata, setsearchData] = useState({
     product_title_name: "",
     category: "",
   });
   // const [ productquantity, setproductquantity] = useState("");
-  
-
 
   const closeUpdateAlert = () => {
     setUpdateAlert(false);
@@ -54,9 +49,7 @@ const Soldproduct = () => {
           setProductData(data[0]);
           setId(data[0].id);
         });
-    } catch (err) {
-
-    }
+    } catch (err) {}
 
     setShow(true);
   };
@@ -68,16 +61,10 @@ const Soldproduct = () => {
     setapicall(true);
   };
 
-
   const OnReset = () => {
     setsearchData({ product_title_name: "", manufacturing_date: "" });
     setapicall(true);
   };
-
-
-
-
-
 
   useEffect(() => {
     axios
@@ -93,7 +80,7 @@ const Soldproduct = () => {
             product_title_name: "",
             sale_price: "",
             category: "",
-            quantity:"",
+            quantity: "",
             is_delete: ["0"],
           },
         }
@@ -109,11 +96,10 @@ const Soldproduct = () => {
         setapicall(false);
         // console.log("---sold" + JSON.stringify(solddata));
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }, [apicall]);
-
 
   const columns = [
     {
@@ -199,39 +185,28 @@ const Soldproduct = () => {
     },
   ];
 
-
-
   const OnQuntityChange = (e) => {
-    setProductData({ ...productData,[e.target.name]:e.target.value})
-
-   
- 
+    setProductData({ ...productData, [e.target.name]: e.target.value });
   };
 
-
-
-
-
   const OnProductQutUpdate = (e) => {
-    
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/products_varient_update`,productData)
+      .put(
+        `${process.env.REACT_APP_BASEURL}/products_varient_update`,
+        productData
+      )
       .then((response) => {
         let data = response.data;
         console.log("data-------" + data);
         setapicall(true);
         setShow(false);
-         setUpdateAlert(true);
+        setUpdateAlert(true);
       });
   };
 
-
-
   const handleClose = () => {
-    setProductData({})
+    setProductData({});
     setShow(false);
-   
- 
   };
   return (
     <div>
@@ -269,59 +244,55 @@ const Soldproduct = () => {
 
         {/* upload */}
 
-        <Modal size="lg" show={show} 
-         onHide={() => handleClose()} 
-        >
-        
-            <Modal.Header closeButton>
-              <Modal.Title>Sold Product</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <div className="row p-3 m-0">
-                <div className="col-md-6">
-                  <Form.Group
-                    className="mb-3 aos_input"
-                    controlId="validationCustom01"
-                  >
-                    <Form.Label>Product Id</Form.Label>
-                    <Form.Control
-                      // onChange={OnInputChange}
-                      value={productData.id}
-                      type="text"
-                      placeholder="Add Title"
-                      name={"id"}
-                    />
-                  </Form.Group>
-                </div>
-
-                <div className="col-md-3 col-sm-6 aos_input">
-                  <label>Quantity</label>
-                  <input
-                    type={"number"}
-                    placeholder={"Select quantity"}
-                    onChange={OnQuntityChange}
-                    name="quantity"
-                     value={productData.quantity}
-                    className={"adminsideinput"}
+        <Modal size="lg" show={show} onHide={() => handleClose()}>
+          <Modal.Header closeButton>
+            <Modal.Title>Sold Product</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="row p-3 m-0">
+              <div className="col-md-6">
+                <Form.Group
+                  className="mb-3 aos_input"
+                  controlId="validationCustom01"
+                >
+                  <Form.Label>Product Id</Form.Label>
+                  <Form.Control
+                    // onChange={OnInputChange}
+                    value={productData.id}
+                    type="text"
+                    placeholder="Add Title"
+                    name={"id"}
                   />
-                </div>
+                </Form.Group>
               </div>
-            </Modal.Body>
-            <Modal.Footer>
-              <button
-                className="button main_outline_button"
-                 onClick={ ()=>handleClose()}
-              >
-                Cancel
-              </button>
-              <button
-                className="button main_outline_button"
-                onClick={()=> OnProductQutUpdate()} 
-              >
-                Update
-              </button>
-            </Modal.Footer>
-        
+
+              <div className="col-md-3 col-sm-6 aos_input">
+                <label>Quantity</label>
+                <input
+                  type={"number"}
+                  placeholder={"Select quantity"}
+                  onChange={OnQuntityChange}
+                  name="quantity"
+                  value={productData.quantity}
+                  className={"adminsideinput"}
+                />
+              </div>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <button
+              className="button main_outline_button"
+              onClick={() => handleClose()}
+            >
+              Cancel
+            </button>
+            <button
+              className="button main_outline_button"
+              onClick={() => OnProductQutUpdate()}
+            >
+              Update
+            </button>
+          </Modal.Footer>
         </Modal>
 
         {/* datatable */}
@@ -342,9 +313,9 @@ const Soldproduct = () => {
           showCancelButton={true}
           onCancel={hideAlert}
         /> */}
-        <SweetAlert
+        <SAlert
           show={UpdateAlert}
-          title="Updated Complaint Successfully "
+          title="Updated Sold product Successfully "
           onConfirm={closeUpdateAlert}
         />
       </div>

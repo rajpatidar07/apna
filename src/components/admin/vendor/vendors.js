@@ -3,8 +3,7 @@ import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
-import SweetAlert from "sweetalert-react";
-import "sweetalert/dist/sweetalert.css";
+import SAlert from "../common/salert";
 import logo from "../../../images/logo.png";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
@@ -683,10 +682,10 @@ const VendorsList = () => {
           highlightOnHover
           pointerOnHover
         />
-        <SweetAlert
+        <SAlert
           show={Alert}
-          title="Demo"
-          text="SweetAlert in React"
+          title="Vender"
+          text="Are you Sure you want to delete"
           onConfirm={hideAlert}
           showCancelButton={true}
           onCancel={hideAlert}
@@ -1298,12 +1297,12 @@ const VendorsList = () => {
         </Form>
       </Modal>
 
-      <SweetAlert
+      <SAlert
         show={AddAlert}
         title="Added Vender Successfully "
         onConfirm={closeAddAlert}
       />
-      <SweetAlert
+      <SAlert
         show={UpdateAlert}
         title="Updated Vender Successfully "
         onConfirm={closeUpdateAlert}

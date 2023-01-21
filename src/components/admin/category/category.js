@@ -39,7 +39,7 @@ const CategoryList = () => {
     setapicall(true);
     
   };
-
+  const [spanCategorydata, setspanCategorydata] = useState([]);
   const [Alert, setAlert] = useState(false);
   const [show, setShow] = useState("");
   const [newName, setnewName] = useState("");
@@ -91,11 +91,7 @@ const CategoryList = () => {
     setUpdateAlert(false);
   };
 
-  const handleClose = () => {
-    formRef.current.reset();
-    setValidated(false);
-    setShow(false);
-  };
+
   const handleShow = (
     e,
     name,
@@ -105,6 +101,7 @@ const CategoryList = () => {
     category_type,
     category_name
   ) => {
+    console.log("all parent id---------"+ all_parent_id)
     if (e === "add") {
       setShow(e);
     }
@@ -166,7 +163,6 @@ const CategoryList = () => {
       setnewName(name);
       setCid(e);
       setParentid(parent_id);
-
       setAllparentid(all_parent_id);
       setlevel(level);
       setType(category_type);
@@ -184,11 +180,42 @@ const CategoryList = () => {
   };
 
   const categoryFormChange = (e, id) => {
-    setIndVal(e.target.value);
-    setScategory({ ...scategory, [e.target.name]: e.target.value });
+
+  
+    // console.log("indVallllllll________"+e.target.value)
+    // console.log("grandcCategory.id________"+grandcCategory[0])
+    
+    // if(indVal===grandcCategory){
+    //   alert("dont select Any more")
+    // }
+    // else{
+      // if(e.target.s_category.value !== ""){
+      //   alert("fdhfbjhbjkbh")
+      // }
+      setIndVal(e.target.value);
+      setScategory({ ...scategory, [e.target.name]: e.target.value });
+    
+    
+      {
+        axios
+  .get(`${process.env.REACT_APP_BASEURL}/category_details?id=${indVal}`)
+  .then((response) => {
+    console.log("respoce-------"+response.data)
+    setspanCategorydata(response.data[0].category_type)
+  });
+     }
+  
+    // }
+  
   };
+
+
+
+  console.log(" Indval---"+indVal)
+  console.log(" Scategory---"+ JSON.stringify( scategory))
   let parentidddata = [];
   parentidddata.push(scategory.category_name);
+
   if (scategory.sub_category !== "") {
     parentidddata.push(scategory.sub_category);
     // parentidddata.push(scategory.child_category)
@@ -207,8 +234,8 @@ const CategoryList = () => {
         .then((response) => {
           let data = response.data.filter((item) => item.is_active === "1");
           setData(data);
-          console.log("---------fdele" + JSON.stringify(data));
-          setsearchData(data);
+          // console.log("---------fdele" + JSON.stringify(data));
+           setsearchData(data);
           setapicall(false);
         });
     } catch (err) {}
@@ -228,13 +255,14 @@ const CategoryList = () => {
         axios
           .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
           .then((response) => {
+           
             let cgory = response.data;
             let specificValues = cgory.filter(
               (obj) =>
                 obj.all_parent_id.substring(0, obj.all_parent_id.length - 2) ===
                 scategory.category_name
             );
-            console.log("---ppppp" + specificValues);
+            // console.log("---ppppp" + specificValues);
 
             if (indVal === 0) {
               setCategory(cgory);
@@ -432,13 +460,14 @@ const CategoryList = () => {
 
   const AddCategoryClick = (e, id) => {
     const form = e.currentTarget;
-    if (form.checkValidity() === false) {
+    setValidated(true);
+
+    if (form.checkValidity() === true) {
       e.stopPropagation();
       e.preventDefault();
-      setValidated(true);
     }
-    if (form.checkValidity() === true) {
-      e.preventDefault();
+   
+  
       const formData = new FormData();
       formData.append("image", file);
       formData.append("filename", fileName);
@@ -456,26 +485,46 @@ const CategoryList = () => {
         });
       formRef.current.reset();
       setValidated(false);
-    }
+    
+    
+  
+    // if (form.checkValidity() === true) {
+    //   e.preventDefault();
+  
+    // }
   };
 
+
+
+
+
+
   const UpdateCategoryClick = (show) => {
-    console.log(
-      "---show" +
-        CategoryEditdata.id +
-        indVal +
-        level +
-        allparentid +
-        newName +
-        type
-    );
+    const form = show.currentTarget;
+    // setValidated(true);
+
+    if (form.checkValidity() === true) {
+      show.stopPropagation();
+      show.preventDefault();
+    }
+
+  console.log("update data-- id"+CategoryEditdata.id)
+  console.log("update data-- Image"+file)
+  console.log("update data-- filename"+fileName)
+  console.log("update data-- level"+level)
+  console.log("update data-- all_parent_id"+allparentid)
+  console.log("update data-- new_category"+newName)
+  console.log("update data-- category_type"+type)
+
+
+
     const formData = new FormData();
     formData.append("id", CategoryEditdata.id);
     formData.append("image", file);
     formData.append("filename", fileName);
     formData.append("parent_id", indVal);
     formData.append("level", level);
-    formData.append("all_parent_id", allparentid);
+    formData.append("all_parent_id", parentidddata);
     formData.append("new_category", newName);
     formData.append("category_type", type);
     axios
@@ -548,6 +597,22 @@ const CategoryList = () => {
     (thing, index, self) =>
       index === self.findIndex((t) => t.level == thing.level)
   );
+
+
+
+  const handleClose = () => {
+
+    // formRef.current.reset();
+    setnewName(" ")
+    setType("")
+    setCategoryEditparent("")
+    setCategoryEditSubparent("")
+    setCategoryEditChildparent("")
+    setValidated(false);
+    setShow(false);
+  };
+
+
 
   return (
     <div className="App productlist_maindiv">
@@ -811,10 +876,14 @@ const CategoryList = () => {
                       >
                         Sports & Accessories
                       </option>
+                    
                     </Form.Select>
+                    
                     <Form.Control.Feedback type="invalid" className="h6">
                       Please fill category type
                     </Form.Control.Feedback>
+                     {spanCategorydata==type?  <span className="text-success">{spanCategorydata}</span>:(spanCategorydata!==type)?<span className="text-danger">{spanCategorydata} </span>:null}
+                    <span className="text-danger"> </span>
                   </Form.Group>
                 </div>
                 <div className="col-md-6">
@@ -826,14 +895,15 @@ const CategoryList = () => {
                     <Form.Select
                       aria-label="Search by status"
                       className="adminselectbox"
-                      required
                       onChange={(e, id) => categoryFormChange(e, id)}
                       name={"category_name"}
                       placeholder={"Search by category"}
                     >
+                      <option value={""}>Select Parent Category</option>
                       {category.map((cdata, i) => {
                         return (
                           <option
+                        
                             value={cdata.id}
                             key={i}
                             selected={
@@ -865,14 +935,15 @@ const CategoryList = () => {
                       <Form.Select
                         aria-label="Search by status"
                         className="adminselectbox"
-                        required
                         onChange={(e, id) => categoryFormChange(e, id)}
                         name={"sub_category"}
                         // value={CategoryEditdata.category_name}
                       >
-                        {/* <option value="" selected={CategoryEditdata === '' ? true :false }>Search by category</option> */}
+                        <option value="" >Select Sub category</option>
+                        {  
+                        subCategory.map((cdata, i) => {
+                        console.log(CategoryEditSubparent+"CategoryEditSubparent")
 
-                        {subCategory.map((cdata, i) => {
                           return (
                             <option
                               value={cdata.id}
@@ -886,7 +957,7 @@ const CategoryList = () => {
                               {cdata.category_name}{" "}
                             </option>
                           );
-                        })}
+                        }) }
                       </Form.Select>
                       <Form.Control.Feedback type="invalid" className="h6">
                         Please fill category
@@ -907,11 +978,10 @@ const CategoryList = () => {
                       <Form.Select
                         aria-label="Search by status"
                         className="adminselectbox"
-                        required
                         onChange={(e, id) => categoryFormChange(e, id)}
                         name={"child_category"}
-                      >
-                        {/* <option value="">Search by category</option> */}
+                      >   <option value="" >Select Child category</option>
+                       
                         {childCategory.map((cdata, i) => {
                           return (
                             <option
@@ -935,28 +1005,32 @@ const CategoryList = () => {
                   </div>
                 )}
 
+
                 {grandcCategory[0] === "" ||
                 grandcCategory[0] === null ||
                 grandcCategory[0] === undefined ? null : (
                   <div className="col-md-6">
                     <Form.Group
                       className="mb-3 aos_input"
-                      controlId="formBasicParentCategory"
+                      controlId="s_category"
+
                     >
                       <Form.Label> Inner Category</Form.Label>
                       <Form.Select
                         aria-label="Search by status"
                         className="adminselectbox"
-                        required
                         onChange={(e, id) => categoryFormChange(e, id)}
                         name={"s_category"}
+                        
                       >
-                        {/* <option value={''} >
-                              Select Category
-                            </option> */}
+                        <option value={''} >
+                              Select Inner Category
+                            </option>
                         {grandcCategory.map((cdata, i) => {
                           return (
                             <option
+                      id={"s_category"}
+
                               value={cdata.id}
                               key={i}
                               selected={
@@ -976,6 +1050,8 @@ const CategoryList = () => {
                     </Form.Group>
                   </div>
                 )}
+
+
                 <div className="col-md-6">
                   <Form.Group
                     className="mb-3 aos_input"
@@ -1011,11 +1087,11 @@ const CategoryList = () => {
               <Iconbutton
                 type={"submit"}
                 btntext={show === "add" ? "Add Category" : "Update Category"}
-                onClick={
-                  show === "add"
-                    ? AddCategoryClick
-                    : () => UpdateCategoryClick(show)
-                }
+                // onClick={
+                //   show === "add"
+                //     ? AddCategoryClick
+                //     : () => UpdateCategoryClick(show)
+                // }
                 btnclass={"button main_button "}
               />
             </Modal.Footer>

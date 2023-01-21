@@ -3,12 +3,11 @@ import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
-import SweetAlert from "sweetalert-react";
-import "sweetalert/dist/sweetalert.css";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
 import moment from "moment";
+import SAlert from "../common/salert";
 
 const Complaint = () => {
   const formRef = useRef();
@@ -215,10 +214,10 @@ const Complaint = () => {
             className=" p-0 m-0  editiconn text-secondary"
             onClick={handleShow.bind(this, row.id)}
           />
-          <BsTrash
+          {/* <BsTrash
             className=" p-0 m-0 editiconn text-danger"
             onClick={handleAlert}
-          />
+          /> */}
         </div>
       ),
     },
@@ -321,14 +320,14 @@ const Complaint = () => {
           pointerOnHover
           className={"table_body complaint_table"}
         />
-        <SweetAlert
+        {/* <SAlert
           show={Alert}
           title="Complaint  "
           text="Are you Sure you want to delete"
           onConfirm={hideAlert}
           showCancelButton={true}
           onCancel={hideAlert}
-        />
+        /> */}
         <Modal size="md" show={show} onHide={() => handleClose()}>
           <Form
             className=""
@@ -463,7 +462,7 @@ const Complaint = () => {
           </Form>
         </Modal>
       </div>
-      <SweetAlert
+      <SAlert
         show={UpdateAlert}
         title="Updated Complaint Successfully "
         onConfirm={closeUpdateAlert}
