@@ -941,12 +941,12 @@ function Product() {
     console.log("variantarray.unit  " + variantarray.unit);
     if (
       (variantarray.unit !== "pcs" && variantarray.unit_quantity === "") ||
-      variantarray.unit == ""
+      variantarray.unit !== ""
     ) {
       setunitValidated(true);
     } else if (
       variantarray.unit === "" ||
-      variantarray.mrp === null ||
+      variantarray.mrp === "" ||
       variantarray.manufacturing_date == "" ||
       variantarray.expire_date == "" ||
       variantarray.quantity == ""
@@ -2582,7 +2582,6 @@ function Product() {
                             </Button>
                           </td>
                         </tr>
-                        {console.log("customarray-----" + customarray)}
                         {// paraddcustom === null || paraddcustom === undefined ? '' :
                         (customarray || []).map((variantdata, i) => {
                           // const arr = variantdata.split(',')
