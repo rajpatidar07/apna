@@ -19,8 +19,7 @@ import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import DataTable from "react-data-table-component";
 import Form from "react-bootstrap/Form";
-import SweetAlert from "sweetalert-react";
-import "sweetalert/dist/sweetalert.css";
+import SAlert from "./common/salert";
 import axios from "axios";
 import { Button } from "react-bootstrap";
 import { GiCancel } from "react-icons/gi";
@@ -56,6 +55,7 @@ function Product() {
   const [Alert, setAlert] = useState(false);
   const [VerityAlert, setVerityAlert] = useState(false);
   const [ProductDraftAlert, setProductDraftAlert] = useState(false);
+  const [UpdatetAlert, setUpdatetAlert] = useState(false);
   const [ProductAlert, setProductAlert] = useState(false);
   const [apicall, setapicall] = useState(false);
   const [variantapicall, setvariantapicall] = useState(false);
@@ -1104,6 +1104,7 @@ function Product() {
     setunitValidated(false);
     setcustomValidated(false);
     getProductVariant(productID);
+    setUpdatetAlert(false);
   };
 
   const VariantEditClick = (id, productid) => {
@@ -1265,6 +1266,7 @@ function Product() {
       .then((response) => {
         setapicall(true);
         setmodalshow(false);
+        setUpdatetAlert(true);
       })
       .catch(function(error) {
         console.log(error);
@@ -3314,7 +3316,7 @@ function Product() {
           className={"table_body product_table"}
         />
 
-        <SweetAlert
+        <SAlert
           show={VerityAlert}
           title="Product Name"
           text="Are you Sure you want to delete"
@@ -3323,7 +3325,7 @@ function Product() {
           onCancel={closeAlert}
         />
 
-        <SweetAlert
+        <SAlert
           show={Alert}
           title="Product Name"
           text="Are you Sure you want to delete"
@@ -3332,20 +3334,26 @@ function Product() {
           onCancel={closeAlert}
         />
 
-        <SweetAlert
+        <SAlert
           show={ProductAlert}
           title="Added Successfully"
           text=" Product Added"
           onConfirm={closeProductAlert}
         />
 
-        <SweetAlert
+        <SAlert
           show={ProductDraftAlert}
           title="Added Successfully "
           text=" Product Added To Draft"
           onConfirm={closeProductAlert}
         />
 
+        <SAlert
+          show={UpdatetAlert}
+          title="Updated Successfully "
+          text=" Product Updated"
+          onConfirm={closeProductAlert}
+        />
         {/* feature product modal */}
 
         <Modal show={featureshow} onHide={featureModalClose}>
@@ -3494,9 +3502,9 @@ function Product() {
             </Modal.Footer>
           </Form>
         </Modal>
-        <SweetAlert
+        <SAlert
           show={RestoreAlert}
-          title="sucessfully added offered product"
+          title="Offered Product Added  Sucessfully"
           onConfirm={() => setRestoreAlert(false)}
           // onCancel={hideAlert}
           // showCancelButton={true}
