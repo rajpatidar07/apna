@@ -49,6 +49,9 @@ const EmailSend = () => {
   };
 
   const handleShow = (e) => {
+
+ 
+
     console.log("----------" + e);
     if (e === "add") {
       setShow(e);
@@ -72,9 +75,10 @@ const EmailSend = () => {
   };
 
   const handleClose = () => {
-    //  formRef.current.reset();
+  
+    
     setEmaildata({});
-
+   
     setValidated(false);
     setShow(false);
   };
@@ -565,12 +569,13 @@ const EmailSend = () => {
                   required
                 />
               </div>
-
-              <div sm="12" className="mt-3">
+             {console.log("emailtext------"+emailText)}
+              <div sm="12" className="mt-3"> 
                 <CKEditor
                   // editor={"classic"}
                   data={emailText}
-                  //  value="<p>hjhjjhj</p>"
+                  initData={emailText}
+                  type={"classic"}
                   onChange={(e) => EmailTextHandler(e)}
                   name={"email_text"}
                   required

@@ -115,7 +115,7 @@ function Product() {
     expire_date: "",
     seo_tag: "",
     variety: false,
-    product_description: "",
+    product_description:"",
     other_introduction: "",
     // is_active: "0",
     vendor_id: "",
@@ -579,6 +579,7 @@ function Product() {
   const [editparentCategory, seteditparentCategory] = useState("");
 
   const handleShow = (e) => {
+    setproductdata(data);
     // vendor
     const getVendorData = () => {
       try {
@@ -756,7 +757,22 @@ function Product() {
   };
 
   const handleClose = () => {
+
+    // setproductdata({
+    //   ...productdata,
+    //   other_introduction:""
+    // })
+     
     setproductdata(data);
+
+    // setproductdata({
+    //   ...productdata,
+    //   product_description:""
+    // })
+
+
+   
+   
     setcustomarray([]);
     setvariantarray(veriantData);
     setvariantmainarray([]);
@@ -812,39 +828,56 @@ function Product() {
   };
 
   const imguploadchange = async (e, product_id, id, vendor_id) => {
-    onImgView(product_id, id);
-    console.log("imagnewImageUrlse" + newImageUrls.length);
-    for (let i = 0; i < e.target.files.length; i++) {
-      let coverimg;
 
-      if (newImageUrls.length === 0 && i === 0) {
-        coverimg = "cover";
-      } else {
-        coverimg = `cover${i}`;
+    onImgView(product_id, id);
+    console.log("imge newImageUrlse" + newImageUrls.length);
+    console.log("imge lenth--" + e.target.files.length);
+    if(e.target.files.length<=10){
+
+      for (let i = 0; i < e.target.files.length; i++) {
+        let coverimg;
+  
+        if (newImageUrls.length === 0 && i === 0) {
+          coverimg = "cover";
+        } else {
+          coverimg = `cover${i}`;
+        }
+        encoded = await convertToBase64(e.target.files[i]);
+        const [first, ...rest] = encoded.base64.split(",");
+        const productimg = rest.join("-");
+        let imar = {
+          product_id: `${product_id}`,
+          product_verient_id: `${id}`,
+          vendor_id: `${vendor_id}`,
+          product_image_name: `${encoded.name}${i}${id}`,
+          image_position: coverimg,
+          img_64: productimg,
+        };
+        ImgObj.push(imar);
       }
-      encoded = await convertToBase64(e.target.files[i]);
-      const [first, ...rest] = encoded.base64.split(",");
-      const productimg = rest.join("-");
-      let imar = {
-        product_id: `${product_id}`,
-        product_verient_id: `${id}`,
-        vendor_id: `${vendor_id}`,
-        product_image_name: `${encoded.name}${i}${id}`,
-        image_position: coverimg,
-        img_64: productimg,
-      };
-      ImgObj.push(imar);
+
+      if(newImageUrls.length<=9){
+        axios
+        .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
+        .then((response) => {
+          ImgObj = [];
+          onImgView(id, product_id);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      }
+      else{
+        alert("More than 10 Pics are allowedd")
+      }
+      // image
+     
+
     }
-    // image
-    axios
-      .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
-      .then((response) => {
-        ImgObj = [];
-        onImgView(id, product_id);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    else{
+      alert("More than 10 Pics are allowed")
+    }
+
   };
 
   const onImgRemove = (id, name, vendor_id, product_id, product_verient_id) => {
@@ -1521,11 +1554,13 @@ function Product() {
                         className="mx-3"
                         controlId="validationCustom04"
                       >
+                        {console.log("product description-------"+productdata.product_description)}
                         <Form.Label className="inputlabelheading" sm="12">
                           Product Description
                         </Form.Label>
                         <Col sm="12">
                           <CKEditor
+                          
                             editor={ClassicEditor}
                             data={productdata.product_description}
                             onChange={handledescription}
@@ -2507,7 +2542,7 @@ function Product() {
                     </Form.Group>
                   </div>
                 </div>
-
+                {console.log("product other description-------"+productdata.other_introduction)}
                 {/* other info */}
                 <div className="my-3 inputsection_box">
                   <h5 className="m-0">Other Instruction</h5>
