@@ -1,9 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
-import Input from "../common/input";
+import React, { useEffect, useState,useRef } from "react";
 import DataTable from "react-data-table-component";
-import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
-import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
@@ -70,18 +67,19 @@ const Offerproduct = () => {
       center: true,
       style: {
         paddingLeft: 0,
-      },
+      }
     },
-    {
-      name: "Product ID",
-      selector: (row) => row.product_id,
-      sortable: true,
-      width: "150px",
-      center: true,
-      style: {
-        paddingLeft: 0,
+      {
+        name: "Fetured_type",
+        selector: (row) => row.fetured_type,
+        sortable: true,
+        width: "250px",
+        center: true,
+        style: {
+          paddingRight: "32px",
+          paddingLeft: "0px",
+        },
       },
-    },
     // {
     //   name: "Image",
     //   width: "100px",
@@ -241,9 +239,9 @@ const Offerproduct = () => {
     // fetchdata()
     setapicall(true);
   };
-  return (
-    <div>
-      <h2>Offer Products</h2>
+    return (
+        <div>
+             <h2> Special Offer Products</h2>
 
       {/* search bar */}
       <div className="card mt-3 p-3 ">

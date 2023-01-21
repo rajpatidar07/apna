@@ -168,7 +168,7 @@ function Product() {
           setfeatureShow(false);
         }
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -183,7 +183,7 @@ function Product() {
         // console.log("---update" + (response.data));
         setapicall(true);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -216,7 +216,7 @@ function Product() {
 
         setapicall(false);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -677,7 +677,7 @@ function Product() {
           let customdatra = JSON.parse(response.data.add_custom_input);
           setcustomarray(customdatra);
         })
-        .catch(function (error) {
+        .catch(function(error) {
           console.log(error);
         });
       setmodalshow(e);
@@ -717,7 +717,7 @@ function Product() {
         // });
         setvariantapicall(false);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -878,6 +878,16 @@ function Product() {
       alert("More than 10 Pics are allowed")
     }
 
+    // image
+    axios
+      .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
+      .then((response) => {
+        ImgObj = [];
+        onImgView(id, product_id);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
   };
 
   const onImgRemove = (id, name, vendor_id, product_id, product_verient_id) => {
@@ -890,7 +900,7 @@ function Product() {
       .then((response) => {
         onImgView(product_verient_id, product_id);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -906,7 +916,7 @@ function Product() {
         setapicall(true);
         setmodalshow(false);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -923,7 +933,7 @@ function Product() {
       .then((response) => {
         onImgView(productvariantid, productid);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -974,12 +984,12 @@ function Product() {
     console.log("variantarray.unit  " + variantarray.unit);
     if (
       (variantarray.unit !== "pcs" && variantarray.unit_quantity === "") ||
-      variantarray.unit == ""
+      variantarray.unit !== ""
     ) {
       setunitValidated(true);
     } else if (
       variantarray.unit === "" ||
-      variantarray.mrp === null ||
+      variantarray.mrp === "" ||
       variantarray.manufacturing_date == "" ||
       variantarray.expire_date == "" ||
       variantarray.quantity == ""
@@ -1020,7 +1030,7 @@ function Product() {
 
           // formRef.reset();
         })
-        .catch(function (error) {
+        .catch(function(error) {
           console.log(error);
         });
     } else {
@@ -1051,7 +1061,7 @@ function Product() {
           //  setvarietyShow(false);
           getProductVariant(productID);
         })
-        .catch(function (error) {
+        .catch(function(error) {
           console.log(error);
         });
     }
@@ -1096,7 +1106,7 @@ function Product() {
         // getProductVariant(productid);
         //  setpdata(response.data)
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
 
@@ -1118,7 +1128,7 @@ function Product() {
         setapicall(true);
         // setpdata(response.data)
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
 
@@ -1148,7 +1158,7 @@ function Product() {
       .then((response) => {
         setvariantarray(response.data[0]);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -1271,7 +1281,7 @@ function Product() {
   const handleAddProduct = (e) => {
     productdataa.push(productdata);
     const form = e.currentTarget;
-    if (form.checkValidity() === false){
+    if (form.checkValidity() === false) {
       e.stopPropagation();
       e.preventDefault();
     }
@@ -1301,7 +1311,7 @@ function Product() {
         setmodalshow(false);
         setUpdatetAlert(true);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -2619,60 +2629,55 @@ function Product() {
                             </Button>
                           </td>
                         </tr>
-                        {console.log("customarray-----" + customarray)}
-                        {
-                          // paraddcustom === null || paraddcustom === undefined ? '' :
-                          (customarray || []).map((variantdata, i) => {
-                            // const arr = variantdata.split(',')
-                            return (
-                              <tr className="">
-                                <td className=" text-center">
-                                  <InputGroup className="">
-                                    <Form.Control
-                                      value={variantdata.header}
-                                      type="text"
-                                      sm="9"
-                                      min={"1"}
-                                      onChange={oncustomheadChange}
-                                      name={"custom_input_header"}
-                                      required
-                                    />
-                                  </InputGroup>
-                                </td>
-                                <td className="text-center">
-                                  <InputGroup className="">
-                                    <Form.Control
-                                      required
-                                      value={variantdata.description}
-                                      name={"custom_input_desc"}
-                                      type="text"
-                                      sm="9"
-                                      min={"1"}
-                                      onChange={oncustomdescChange}
-                                      onKeyPress={(event) => {
-                                        if (event.key === "Enter") {
-                                          handleAddClick();
-                                        }
-                                      }}
-                                    />
-                                  </InputGroup>
-                                </td>
-                                <td className="">
-                                  <Button
-                                    variant="text-danger"
-                                    className="addcategoryicon text-danger"
-                                    onClick={() =>
-                                      handleRemoveClick(variantdata)
-                                    }
-                                    size="sm"
-                                  >
-                                    &times;
-                                  </Button>
-                                </td>
-                              </tr>
-                            );
-                          })
-                        }
+                        {// paraddcustom === null || paraddcustom === undefined ? '' :
+                        (customarray || []).map((variantdata, i) => {
+                          // const arr = variantdata.split(',')
+                          return (
+                            <tr className="">
+                              <td className=" text-center">
+                                <InputGroup className="">
+                                  <Form.Control
+                                    value={variantdata.header}
+                                    type="text"
+                                    sm="9"
+                                    min={"1"}
+                                    onChange={oncustomheadChange}
+                                    name={"custom_input_header"}
+                                    required
+                                  />
+                                </InputGroup>
+                              </td>
+                              <td className="text-center">
+                                <InputGroup className="">
+                                  <Form.Control
+                                    required
+                                    value={variantdata.description}
+                                    name={"custom_input_desc"}
+                                    type="text"
+                                    sm="9"
+                                    min={"1"}
+                                    onChange={oncustomdescChange}
+                                    onKeyPress={(event) => {
+                                      if (event.key === "Enter") {
+                                        handleAddClick();
+                                      }
+                                    }}
+                                  />
+                                </InputGroup>
+                              </td>
+                              <td className="">
+                                <Button
+                                  variant="text-danger"
+                                  className="addcategoryicon text-danger"
+                                  onClick={() => handleRemoveClick(variantdata)}
+                                  size="sm"
+                                >
+                                  &times;
+                                </Button>
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </Table>
                   </div>

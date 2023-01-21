@@ -17,6 +17,8 @@ import { data } from "jquery";
 
 function Banner() {
   const formRef = useRef();
+  const [error, setError] = useState(true);
+
   const [show, setShow] = useState("");
   const [Alert, setAlert] = useState(false);
   const [validated, setValidated] = useState(false);
@@ -397,6 +399,9 @@ function Banner() {
                   name={"banner_location"}
                 >
                   <option>Select location</option>
+                  <option value="home_page_left_side">
+                    home_page_left_side
+                  </option>
                   <option value="home_page_left_side(1)">
                     home_page_left_side(1)
                   </option>
@@ -415,6 +420,11 @@ function Banner() {
 
                   <option value="top_product_banner">top_product_banner</option>
                 </Form.Select>
+                {error === false ? (
+                            <p className="mt-2 ms-2 text-danger text-center fs-6" type="invalid">
+                             
+                            </p>
+                          ) : null}
                 {/* <Form.Group
                   className="mb-3 aos_input"
                   controlId="validationCustom01"

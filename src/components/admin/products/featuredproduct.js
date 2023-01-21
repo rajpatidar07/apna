@@ -108,29 +108,6 @@ const Featuredproduct = () => {
         paddingLeft: 0,
       },
     },
-    // {
-    //   name: "Image",
-    //   width: "100px",
-    //   center: true,
-    //   cell: (row) => (
-
-    //     <img
-    //       // height="90px"
-    //       // width="75px"
-    //       alt={'apna_organic'}
-    //       src={
-    //         row.image? row.image : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
-    //       }
-    //       style={{
-    //         padding: 10,
-    //         textAlign: "right",
-    //         maxHeight: "100px",
-    //         maxWidth: "100px"
-    //       }}
-    //       onClick={handleClick}
-    //     />
-    //   ),
-    // },
     {
       name: "Fetured_type",
       selector: (row) => row.fetured_type,
@@ -219,36 +196,37 @@ const Featuredproduct = () => {
 
   const UpdateFeaturedProduct = (e) => {
     e.preventDefault();
-    axios
-      .put(`${process.env.REACT_APP_BASEURL}/update_fetured_product`, {
-        id: id,
-        start_date: featuredData.start_date,
-        end_date: featuredData.end_date,
-      })
-      .then((response) => {
-        let data = response.data;
-        console.log("UPDATE===========" + JSON.stringify(response.data));
-        setValidated(false);
-        // setFeaturetData(response.data[0])
-        setapicall(true);
-        setShow(false);
-        setUpdateAlert(true);
-        //  setFeaturetData('')
-      });
-    formRef.current.reset();
-    setValidated(false);
-  };
-  // console.log("hhjjjjjjjjjjjjj0"+JSON.stringify(featuredProductData))
+    axios.put(`${process.env.REACT_APP_BASEURL}/update_fetured_product`,{
+      id:id,
+      start_date:featuredData.start_date,
+      end_date:featuredData.end_date
+    }).then((response) => {
+      let data=response.data;
+      console.log("UPDATE==========="+JSON.stringify(response.data))
+      setValidated(false);
+      // setFeaturetData(response.data[0])
+       setapicall(true);
+       setShow(false)
+      //  setFeaturetData('')
+  });
+  formRef.current.reset();
+  setValidated(false);
+}
+
+const OnSearchChange = (e) => {
+  setsearchData({ ...searchdata, [e.target.name]: e.target.value })
+}
+const OnDateChange = (e) => {
 
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
   };
-  const OnDateChange = (e) => {
-    let mdate = moment(e.target.value).format("YYYY-MM-DD");
-    setsearchData({ ...searchdata, [e.target.name]: mdate });
-  };
+  // const OnDateChange = (e) => {
+  //   let mdate = moment(e.target.value).format("YYYY-MM-DD");
+  //   setsearchData({ ...searchdata, [e.target.name]: mdate });
+  // };
 
-  console.log("DATE0000000000000" + JSON.stringify(featuredData));
+
   const submitHandler = () => {
     setapicall(true);
   };
@@ -257,6 +235,7 @@ const Featuredproduct = () => {
     setsearchData({ start_date: "", end_date: "" });
     setapicall(true);
   };
+
   //  const UpdateFeturse
   return (
     <div>
@@ -402,5 +381,5 @@ const Featuredproduct = () => {
     </div>
   );
 };
-
+}
 export default Featuredproduct;
