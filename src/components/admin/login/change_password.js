@@ -20,8 +20,17 @@ const ChangePassword = () => {
   };
   console.log("fff" + JSON.stringify(password));
   const LoginForm = (e) => {
-    if (password.new_password !== password.confirm_password) {
+    if (
+      password.new_password !== password.confirm_password &&
+      password.new_password !== "" &&
+      password.confirm_password !== ""
+    ) {
       setValidation("not same");
+    } else if (
+      password.new_password === "" ||
+      password.confirm_password === ""
+    ) {
+      setValidation("please fill all input");
     } else {
       axios
         .put(`${process.env.REACT_APP_BASEURL}/update_password`, {

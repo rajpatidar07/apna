@@ -114,7 +114,7 @@ function Product() {
     expire_date: "",
     seo_tag: "",
     variety: false,
-    product_description:"",
+    product_description: "",
     other_introduction: "",
     vendor_id: "",
     shop: "",
@@ -160,7 +160,7 @@ function Product() {
           setfeatureShow(false);
         }
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -174,7 +174,7 @@ function Product() {
       .then((response) => {
         setapicall(true);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -207,7 +207,7 @@ function Product() {
 
         setapicall(false);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -250,7 +250,6 @@ function Product() {
   const OnFeatureDateChaneg = (e) => {
     setfeaturedata({ ...featuredata, [e.target.name]: e.target.value });
   };
-
 
   // end feature product
   //  json
@@ -461,7 +460,6 @@ function Product() {
     {
       name: "Variety",
       selector: (row) => (
-
         <Button
           size="sm"
           onClick={handlevarietyShow.bind(this, row.product_id, row.id)}
@@ -660,7 +658,7 @@ function Product() {
           let customdatra = JSON.parse(response.data.add_custom_input);
           setcustomarray(customdatra);
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
       setmodalshow(e);
@@ -694,7 +692,7 @@ function Product() {
         settaxdata(response.data.results[0]);
         setvariantapicall(false);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -715,12 +713,11 @@ function Product() {
   };
 
   const handleClose = () => {
-
     // setproductdata({
     //   ...productdata,
     //   other_introduction:""
     // })
-     
+
     setproductdata(data);
 
     // setproductdata({
@@ -728,9 +725,6 @@ function Product() {
     //   product_description:""
     // })
 
-
-   
-   
     setcustomarray([]);
     setvariantarray(veriantData);
     setvariantmainarray([]);
@@ -747,7 +741,8 @@ function Product() {
   };
 
   const tagRemoveClick = (e) => {
-    setseoArray(seoarray.filter((item) => item !== e));
+    setproductdata({ ...productdata, seo_tag: "" });
+    // setseoArray(seoarray.filter((item) => item !== e));
   };
   const ontagaddclick = (e) => {
     setproductdata({
@@ -772,15 +767,13 @@ function Product() {
   };
 
   const imguploadchange = async (e, product_id, id, vendor_id) => {
-
     onImgView(product_id, id);
     console.log("imge newImageUrlse" + newImageUrls.length);
     console.log("imge lenth--" + e.target.files.length);
-    if(e.target.files.length<=10){
-
+    if (e.target.files.length <= 10) {
       for (let i = 0; i < e.target.files.length; i++) {
         let coverimg;
-  
+
         if (newImageUrls.length === 0 && i === 0) {
           coverimg = "cover";
         } else {
@@ -800,26 +793,22 @@ function Product() {
         ImgObj.push(imar);
       }
 
-      if(newImageUrls.length<=9){
+      if (newImageUrls.length <= 9) {
         axios
-        .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
-        .then((response) => {
-          ImgObj = [];
-          onImgView(id, product_id);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-      }
-      else{
-        alert("More than 10 Pics are allowedd")
+          .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
+          .then((response) => {
+            ImgObj = [];
+            onImgView(id, product_id);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      } else {
+        alert("More than 10 Pics are allowedd");
       }
       // image
-     
-
-    }
-    else{
-      alert("More than 10 Pics are allowed")
+    } else {
+      alert("More than 10 Pics are allowed");
     }
 
     // image
@@ -829,7 +818,7 @@ function Product() {
         ImgObj = [];
         onImgView(id, product_id);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -844,7 +833,7 @@ function Product() {
       .then((response) => {
         onImgView(product_verient_id, product_id);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -860,7 +849,7 @@ function Product() {
         setapicall(true);
         setmodalshow(false);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -877,7 +866,7 @@ function Product() {
       .then((response) => {
         onImgView(productvariantid, productid);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -972,7 +961,7 @@ function Product() {
 
           // formRef.reset();
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
     } else {
@@ -1001,7 +990,7 @@ function Product() {
           });
           getProductVariant(productID);
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
     }
@@ -1040,7 +1029,7 @@ function Product() {
       .then((response) => {
         getProductVariant(variantremove.productid);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
 
@@ -1060,7 +1049,7 @@ function Product() {
       .then((response) => {
         setapicall(true);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
 
@@ -1090,7 +1079,7 @@ function Product() {
       .then((response) => {
         setvariantarray(response.data[0]);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -1233,7 +1222,7 @@ function Product() {
         setmodalshow(false);
         setUpdatetAlert(true);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -1481,13 +1470,15 @@ function Product() {
                         className="mx-3"
                         controlId="validationCustom04"
                       >
-                        {console.log("product description-------"+productdata.product_description)}
+                        {console.log(
+                          "product description-------" +
+                            productdata.product_description
+                        )}
                         <Form.Label className="inputlabelheading" sm="12">
                           Product Description
                         </Form.Label>
                         <Col sm="12">
                           <CKEditor
-                          
                             editor={ClassicEditor}
                             data={productdata.product_description}
                             onChange={handledescription}
@@ -1892,9 +1883,7 @@ function Product() {
                         </Form.Group>
                       </div>
                       <div className="row">
-                        <Form.Group
-                          className="mx-3"
-                        >
+                        <Form.Group className="mx-3">
                           <div className="variation_box my-2">
                             <div className="row">
                               <div className="col-auto">
@@ -1932,7 +1921,6 @@ function Product() {
                                         Qty{" "}
                                         <span className="text-danger">* </span>
                                       </th>
-                                      
                                     </tr>
                                   </thead>
                                   <tbody>
@@ -2338,9 +2326,7 @@ function Product() {
                                             <td className="p-0 text-center">
                                               {variantdata.quantity}
                                             </td>
-                                            <td className="p-0 text-center">
-                                            
-                                            </td>
+                                            <td className="p-0 text-center"></td>
                                             <td className="p-0 text-center">
                                               <Button
                                                 variant="text-danger"
@@ -2412,6 +2398,12 @@ function Product() {
                             productdata.seo_tag === undefined
                               ? ""
                               : productdata.seo_tag}
+                            <span
+                              onClick={() => tagRemoveClick()}
+                              className={"addcategoryicon mx-2 text-light"}
+                            >
+                              {"x"}
+                            </span>
                           </Badge>
                         )}
 
@@ -2422,7 +2414,10 @@ function Product() {
                     </Form.Group>
                   </div>
                 </div>
-                {console.log("product other description-------"+productdata.other_introduction)}
+                {console.log(
+                  "product other description-------" +
+                    productdata.other_introduction
+                )}
                 {/* other info */}
                 <div className="my-3 inputsection_box">
                   <h5 className="m-0">Other Instruction</h5>
@@ -2489,55 +2484,59 @@ function Product() {
                             </Button>
                           </td>
                         </tr>
-                        {// paraddcustom === null || paraddcustom === undefined ? '' :
-                        (customarray || []).map((variantdata, i) => {
-                          // const arr = variantdata.split(',')
-                          return (
-                            <tr className="">
-                              <td className=" text-center">
-                                <InputGroup className="">
-                                  <Form.Control
-                                    value={variantdata.header}
-                                    type="text"
-                                    sm="9"
-                                    min={"1"}
-                                    onChange={oncustomheadChange}
-                                    name={"custom_input_header"}
-                                    required
-                                  />
-                                </InputGroup>
-                              </td>
-                              <td className="text-center">
-                                <InputGroup className="">
-                                  <Form.Control
-                                    required
-                                    value={variantdata.description}
-                                    name={"custom_input_desc"}
-                                    type="text"
-                                    sm="9"
-                                    min={"1"}
-                                    onChange={oncustomdescChange}
-                                    onKeyPress={(event) => {
-                                      if (event.key === "Enter") {
-                                        handleAddClick();
-                                      }
-                                    }}
-                                  />
-                                </InputGroup>
-                              </td>
-                              <td className="">
-                                <Button
-                                  variant="text-danger"
-                                  className="addcategoryicon text-danger"
-                                  onClick={() => handleRemoveClick(variantdata)}
-                                  size="sm"
-                                >
-                                  &times;
-                                </Button>
-                              </td>
-                            </tr>
-                          );
-                        })}
+                        {
+                          // paraddcustom === null || paraddcustom === undefined ? '' :
+                          (customarray || []).map((variantdata, i) => {
+                            // const arr = variantdata.split(',')
+                            return (
+                              <tr className="">
+                                <td className=" text-center">
+                                  <InputGroup className="">
+                                    <Form.Control
+                                      value={variantdata.header}
+                                      type="text"
+                                      sm="9"
+                                      min={"1"}
+                                      onChange={oncustomheadChange}
+                                      name={"custom_input_header"}
+                                      required
+                                    />
+                                  </InputGroup>
+                                </td>
+                                <td className="text-center">
+                                  <InputGroup className="">
+                                    <Form.Control
+                                      required
+                                      value={variantdata.description}
+                                      name={"custom_input_desc"}
+                                      type="text"
+                                      sm="9"
+                                      min={"1"}
+                                      onChange={oncustomdescChange}
+                                      onKeyPress={(event) => {
+                                        if (event.key === "Enter") {
+                                          handleAddClick();
+                                        }
+                                      }}
+                                    />
+                                  </InputGroup>
+                                </td>
+                                <td className="">
+                                  <Button
+                                    variant="text-danger"
+                                    className="addcategoryicon text-danger"
+                                    onClick={() =>
+                                      handleRemoveClick(variantdata)
+                                    }
+                                    size="sm"
+                                  >
+                                    &times;
+                                  </Button>
+                                </td>
+                              </tr>
+                            );
+                          })
+                        }
                       </tbody>
                     </Table>
                   </div>
@@ -2895,10 +2894,13 @@ function Product() {
                                   </InputGroup>
                                 </div>
                               </td>
-                              <td className="p-0 text-center"> 
-                              <p className="mt-2  text-danger text-center fs-6" type="invalid">
-                                            Select Image This (height-156px * width-136px) 
-                                            </p>
+                              <td className="p-0 text-center">
+                                <p
+                                  className="mt-2  text-primary text-center fs-6"
+                                  type="invalid"
+                                >
+                                  Select Image This (height-156px * width-136px)
+                                </p>
                               </td>
                               <td className="p-0">
                                 <div className="manufacture_date">
@@ -3263,12 +3265,7 @@ function Product() {
         {/* feature product modal */}
 
         <Modal show={featureshow} onHide={featureModalClose}>
-          <Form
-            className=""
-            novalidate
-            validated={validated}
-            ref={formRef}
-          >
+          <Form className="" novalidate validated={validated} ref={formRef}>
             <Modal.Header closeButton>
               <Modal.Title>Add Offer Product</Modal.Title>
             </Modal.Header>
