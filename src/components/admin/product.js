@@ -25,6 +25,7 @@ import { Button } from "react-bootstrap";
 import { GiCancel } from "react-icons/gi";
 import moment from "moment/moment";
 import BrandJson from "./json/BrandJson";
+import { downloadExcel } from "react-export-table-to-excel";
 
 let categoryArray = [];
 let encoded;
@@ -70,8 +71,8 @@ function Product() {
     product_id: "",
     unit: "",
     colors: "",
-    unit_quantity: "",
-    size: "",
+    unit_quantity: null,
+    size: null,
     product_price: "",
     mrp: "",
     sale_price: "",
@@ -143,6 +144,8 @@ function Product() {
     manufacturers_sales_tax: "0",
   });
   const [productID, setproductID] = useState("");
+
+  const [ExcelFile, setExcelFile] = useState("");
 
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
@@ -708,7 +711,9 @@ function Product() {
   };
 
   const handlevarietyClose = (e) => {
-    setValidated(false);
+    setcustomValidated(false);
+    e.preventDefault();
+    // setValidated(false);
     setvarietyShow(false);
   };
 
@@ -872,14 +877,23 @@ function Product() {
   };
 
   const onVariantChange = (e) => {
+    setcustomValidated(false);
     setvariantarray({
       ...variantarray,
       [e.target.name]: e.target.value,
     });
   };
+
   let discountt = (variantarray.mrp * variantarray.discount) / 100;
+  // console.log("Discounttt-----"+ JSON.stringify(discountt))
   let product_price = variantarray.mrp - discountt;
+  // console.log("Product prieccc-----"+ JSON.stringify(product_price))
   let saleprice;
+  //  console.log("tdaxxxxxxxx--"+ JSON.stringify(taxdata))
+  //  console.log("GST--"+ JSON.stringify(taxdata.gst))
+
+  // const  saleeprice=variantarray.sale_price
+
   if (taxdata) {
     saleprice =
       product_price +
@@ -889,6 +903,7 @@ function Product() {
         product_price * (taxdata.value_added_tax / 100) +
         product_price * (taxdata.manufacturers_sales_tax / 100));
   }
+  // console.log("saleeee-----"+ JSON.stringify(saleprice))
 
   useEffect(() => {
     setvariantarray({
@@ -899,6 +914,7 @@ function Product() {
     });
   }, [variantarray.mrp, variantarray.discount, taxdata]);
   const handleInputcheckboxChange = (e) => {
+    setcustomValidated(false);
     const target = e.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     setvariantarray({
@@ -913,58 +929,60 @@ function Product() {
     });
   };
   const onVariantaddclick = (e, id) => {
-    if (
-      (variantarray.unit !== "pcs" && variantarray.unit_quantity === "") ||
-      variantarray.unit !== ""
-    ) {
-      setunitValidated(true);
-    } else if (
-      variantarray.unit === "" ||
-      variantarray.mrp === "" ||
-      variantarray.manufacturing_date == "" ||
-      variantarray.expire_date == "" ||
-      variantarray.quantity == ""
-    ) {
-      setcustomValidated(true);
-    }
     // id.preventDefault();
-    else if (
-      id == "" ||
-      id == undefined ||
-      id == null ||
-      unitValidated === false
-    ) {
-      axios
-        .post(
-          `${process.env.REACT_APP_BASEURL}/products_varient_add`,
-          variantarray
-        )
-        .then((response) => {
-          setvariantarray({
-            product_status: "",
-            unit: "",
-            colors: "",
-            unit_quantity: null,
-            size: null,
-            product_price: "",
-            mrp: "",
-            sale_price: "",
-            discount: "0",
-            special_offer: false,
-            featured_product: false,
-            manufacturing_date: "",
-            expire_date: "",
-            quantity: "",
-            product_id: productID,
-          });
-          setProductAlert(true);
+    if (id == "" || id == undefined || id == null || unitValidated === false) {
+      if (
+        variantarray.unit == "" ||
+        variantarray.unit_quantity == "" ||
+        variantarray.colors == "" ||
+        variantarray.size == "" ||
+        variantarray.product_price == "" ||
+        variantarray.mrp == "" ||
+        variantarray.sale_price == "" ||
+        variantarray.discount == "" ||
+        variantarray.special_offer == false ||
+        variantarray.featured_product == false ||
+        variantarray.manufacturing_date == "" ||
+        variantarray.expire_date == "" ||
+        variantarray.quantity == "" ||
+        unitValidated === false
+      ) {
+        setcustomValidated(true);
+      } else {
+        axios
+          .post(
+            `${process.env.REACT_APP_BASEURL}/products_varient_add`,
+            variantarray
+          )
+          .then((response) => {
+            setvariantarray({
+              product_status: "",
+              unit: "",
+              colors: "",
+              unit_quantity: "",
+              size: "",
+              product_price: "",
+              mrp: "",
+              sale_price: "",
+              discount: "0",
+              special_offer: false,
+              featured_product: false,
+              manufacturing_date: "",
+              expire_date: "",
+              quantity: "",
+              product_id: productID,
+            });
+            console.log("respo----" + JSON.stringify(response));
+            // setProductAlert(true);
 
-          // formRef.reset();
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+            // formRef.reset();
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
     } else {
+      // e.preventDefault()
       axios
         .put(
           `${process.env.REACT_APP_BASEURL}/products_varient_update`,
@@ -995,9 +1013,12 @@ function Product() {
         });
     }
   };
+
+  console.log("veriant arartry----" + JSON.stringify(variantarray));
   const VariantAddProduct = (e) => {
     if (variantarray.unit == "") {
-      setcustomValidated(true);
+      setValidated(true);
+      // setcustomValidated(true)
     } else {
       setvariantmainarray((variantmainarray) => [
         ...variantmainarray,
@@ -1238,6 +1259,80 @@ function Product() {
     setsearchData({ product_title_name: "", product_status: "" });
     setapicall(true);
   };
+
+  //-----------------------Download excel sheet code start here---------------------------------------------------
+
+  const header = [
+    "Product code",
+    "Product title name",
+    "Product slug",
+    "Store name",
+    "Product Description",
+    "Product Type",
+    "Brand",
+    "Category",
+    "Parent category",
+    "Seo tag",
+    "Other introduction",
+    "Add custom input",
+    "Wholesale sales tax",
+    "Manufacturers sales tax",
+    "Retails sales tax",
+    "Gst",
+    "Cgst",
+    "Sgst",
+    "Value added tax",
+    "Variety",
+    "Vendor id",
+    "Shop",
+    "colors",
+    "Size",
+    "Mrp",
+    "Product price",
+    "Sale price",
+    "Discount",
+    "Manufacturing date",
+    "Expire date",
+    "Special offer",
+    "Featured product",
+    "Unit",
+    "Unit quantity",
+    "Quantity",
+    "Product Status",
+  ];
+
+  function handleDownloadExcel() {
+    downloadExcel({
+      fileName: "Product Excel Report -> downloadExcel method",
+      sheet: "Product Excel Report",
+      tablePayload: {
+        header,
+        body: [""],
+        blankrows: "No record",
+      },
+    });
+  }
+
+  const saveFile = (e) => {
+    e.preventDefault();
+    setExcelFile(e.target.files[0]);
+    FileUploadAPI();
+  };
+  const FileUploadAPI = () => {
+    const formData = new FormData();
+    formData.append("bulk_xls", ExcelFile);
+
+    axios
+      .post(`${process.env.REACT_APP_BASEURL}/product_bulk_uploads`, formData)
+      .then((response) => {
+        console.log("response-------------" + response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  //-----------------------Download excel sheet code End  here---------------------------------------------------
   return (
     <div className="App productlist_maindiv">
       <h2>Products</h2>
@@ -1299,9 +1394,11 @@ function Product() {
               btntext={"Upload"}
               btnclass={"button main_outline_button"}
               Iconname={<AiOutlineCloudUpload />}
+              onChange={(e) => saveFile(e)}
             />
           </div>
-          <MainButton btntext={"Download"} />
+          <MainButton btntext={"Download"} onClick={handleDownloadExcel} />
+
           <Iconbutton
             btntext={"Add Product"}
             onClick={() => {
@@ -1816,545 +1913,564 @@ function Product() {
                   </div>
                 </div>
                 {/*Date  */}
-
-                {modalshow === "add" ? (
-                  <div className="my-3 inputsection_box">
-                    <div className="productvariety_box">
-                      <div className="productvariety">
-                        <Form.Group
-                          className="mx-3"
-                          controlId="validationCustom11"
-                        >
-                          <Form.Label
-                            className="inputlabelheading"
-                            sm="12 d-flex align-itmes-center"
+                <Form
+                  className="p-2 addproduct_form"
+                  validated={validated}
+                  ref={mainformRef}
+                >
+                  {modalshow === "add" ? (
+                    <div className="my-3 inputsection_box">
+                      <div className="productvariety_box">
+                        <div className="productvariety">
+                          <Form.Group
+                            className="mx-3"
+                            controlId="validationCustom11"
                           >
-                            {productdata.variety === false ? (
-                              <Form.Check
-                                type="radio"
-                                aria-label="radio 1"
-                                className="mx-2"
-                                onChange={handleVarietyChange}
-                                name="variety"
-                                value={false}
-                              />
-                            ) : (
-                              <Form.Check
-                                type="radio"
-                                aria-label="radio 1"
-                                className="mx-2"
-                                onChange={handleVarietyChange}
-                                name="variety"
-                                value={false}
-                              />
-                            )}
-                            Single Product
-                          </Form.Label>
-                        </Form.Group>
-                        <Form.Group
-                          className="mx-3"
-                          controlId="validationCustom11"
-                        >
-                          <Form.Label
-                            className="inputlabelheading"
-                            sm="12 d-flex align-itmes-center"
+                            <Form.Label
+                              className="inputlabelheading"
+                              sm="12 d-flex align-itmes-center"
+                            >
+                              {productdata.variety === false ? (
+                                <Form.Check
+                                  type="radio"
+                                  aria-label="radio 1"
+                                  className="mx-2"
+                                  onChange={handleVarietyChange}
+                                  name="variety"
+                                  value={false}
+                                />
+                              ) : (
+                                <Form.Check
+                                  type="radio"
+                                  aria-label="radio 1"
+                                  className="mx-2"
+                                  onChange={handleVarietyChange}
+                                  name="variety"
+                                  value={false}
+                                />
+                              )}
+                              Single Product
+                            </Form.Label>
+                          </Form.Group>
+                          <Form.Group
+                            className="mx-3"
+                            controlId="validationCustom11"
                           >
-                            {productdata.variety === true ? (
-                              <Form.Check
-                                type="radio"
-                                aria-label="radio 2"
-                                className="mx-2"
-                                onChange={handleVarietyChange}
-                                name="variety"
-                                value={true}
-                              />
-                            ) : (
-                              <Form.Check
-                                type="radio"
-                                aria-label="radio 2"
-                                className="mx-2"
-                                onChange={handleVarietyChange}
-                                name="variety"
-                                value={true}
-                              />
-                            )}
-                            Multiple Variety
-                          </Form.Label>
-                        </Form.Group>
-                      </div>
-                      <div className="row">
-                        <Form.Group className="mx-3">
-                          <div className="variation_box my-2">
-                            <div className="row">
-                              <div className="col-auto">
-                                <Table
-                                  bordered
-                                  className="align-middle my-2 aadvariety_table_"
-                                >
-                                  <thead className="align-middle">
-                                    <tr>
-                                      <th>
-                                        Variety
-                                        <span className="text-danger">* </span>
-                                      </th>
-                                      <th>Color</th>
-                                      <th>Weight</th>
-                                      <th>Size</th>
-                                      <th>
-                                        Mrp{" "}
-                                        <span className="text-danger">* </span>
-                                      </th>
-                                      <th>Discount</th>
-                                      <th>Price</th>
-                                      <th>Sale Price</th>
-                                      <th>Special Offer</th>
-                                      <th>Featured Product</th>
-                                      <th className="manufacture_date">
-                                        Mdate{" "}
-                                        <span className="text-danger">* </span>
-                                      </th>
-                                      <th className="manufacture_date">
-                                        Edate{" "}
-                                        <span className="text-danger">* </span>
-                                      </th>
-                                      <th className="">
-                                        Qty{" "}
-                                        <span className="text-danger">* </span>
-                                      </th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr>
-                                      <td className="p-0 text-center">
-                                        <div className=" d-flex align-items-center">
-                                          <InputGroup className="" size="sm">
-                                            <Form.Select
-                                              aria-label="Default select example"
-                                              name="unit"
-                                              value={variantarray.unit}
-                                              onChange={(e) =>
-                                                onVariantChange(e)
-                                              }
-                                              required
-                                              className={
-                                                customvalidated === true
-                                                  ? "border-danger"
-                                                  : null
-                                              }
-                                            >
-                                              <option value={""}>Select</option>
-                                              {(varietyy.variety || []).map(
-                                                (vari, i) => {
-                                                  return (
-                                                    <option
-                                                      value={
-                                                        vari === "weight"
-                                                          ? "gms"
-                                                          : vari === "volume"
-                                                          ? "ml"
-                                                          : vari === "piece"
-                                                          ? "piece"
-                                                          : vari === "color"
-                                                          ? "pcs"
-                                                          : ""
-                                                      }
-                                                      key={i}
-                                                    >
-                                                      {vari}
-                                                    </option>
-                                                  );
+                            <Form.Label
+                              className="inputlabelheading"
+                              sm="12 d-flex align-itmes-center"
+                            >
+                              {productdata.variety === true ? (
+                                <Form.Check
+                                  type="radio"
+                                  aria-label="radio 2"
+                                  className="mx-2"
+                                  onChange={handleVarietyChange}
+                                  name="variety"
+                                  value={true}
+                                />
+                              ) : (
+                                <Form.Check
+                                  type="radio"
+                                  aria-label="radio 2"
+                                  className="mx-2"
+                                  onChange={handleVarietyChange}
+                                  name="variety"
+                                  value={true}
+                                />
+                              )}
+                              Multiple Variety
+                            </Form.Label>
+                          </Form.Group>
+                        </div>
+                        <div className="row">
+                          <Form.Group className="mx-3">
+                            <div className="variation_box my-2">
+                              <div className="row">
+                                <div className="col-auto">
+                                  <Table
+                                    bordered
+                                    className="align-middle my-2 aadvariety_table_"
+                                  >
+                                    <thead className="align-middle">
+                                      <tr>
+                                        <th>
+                                          Variety
+                                          <span className="text-danger">
+                                            *{" "}
+                                          </span>
+                                        </th>
+                                        <th>Color</th>
+                                        <th>Weight</th>
+                                        <th>Size</th>
+                                        <th>
+                                          Mrp{" "}
+                                          <span className="text-danger">
+                                            *{" "}
+                                          </span>
+                                        </th>
+                                        <th>Discount</th>
+                                        <th>Price</th>
+                                        <th>Sale Price</th>
+                                        <th>Special Offer</th>
+                                        <th>Featured Product</th>
+                                        <th className="manufacture_date">
+                                          Mdate{" "}
+                                          <span className="text-danger">
+                                            *{" "}
+                                          </span>
+                                        </th>
+                                        <th className="manufacture_date">
+                                          Edate{" "}
+                                          <span className="text-danger">
+                                            *{" "}
+                                          </span>
+                                        </th>
+                                        <th className="">
+                                          Qty{" "}
+                                          <span className="text-danger">
+                                            *{" "}
+                                          </span>
+                                        </th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr>
+                                        <td className="p-0 text-center">
+                                          <div className=" d-flex align-items-center">
+                                            <InputGroup className="" size="sm">
+                                              <Form.Select
+                                                aria-label="Default select example"
+                                                name="unit"
+                                                required
+                                                value={variantarray.unit}
+                                                onChange={(e) =>
+                                                  onVariantChange(e)
                                                 }
-                                              )}
-                                            </Form.Select>
-                                          </InputGroup>
-                                        </div>
-                                      </td>
-
-                                      <td className="p-0 text-center">
-                                        <div className=" d-flex align-items-center">
-                                          <InputGroup className="" size="sm">
-                                            <Form.Control
-                                              type="text"
-                                              sm="9"
-                                              className={
-                                                customvalidated === true
-                                                  ? "border-danger"
-                                                  : null
-                                              }
-                                              onChange={(e) =>
-                                                onVariantChange(e)
-                                              }
-                                              name={"colors"}
-                                              value={variantarray.colors}
-                                            />
-                                          </InputGroup>
-                                        </div>
-                                      </td>
-
-                                      <td className="p-0 text-center">
-                                        <div className=" d-flex align-items-center">
-                                          <InputGroup className="" size="sm">
-                                            <Form.Control
-                                              value={
-                                                variantarray.unit === "weight"
-                                                  ? variantarray.unit_quantity
-                                                  : variantarray.unit ===
-                                                    "volume"
-                                                  ? variantarray.unit_quantity
-                                                  : variantarray.unit ===
-                                                    "piece"
-                                                  ? variantarray.unit_quantity
-                                                  : null
-                                              }
-                                              type="number"
-                                              sm="9"
-                                              className={
-                                                customvalidated === true
-                                                  ? "border-danger"
-                                                  : null
-                                              }
-                                              onChange={(e) =>
-                                                onVariantChange(e)
-                                              }
-                                              name={"unit_quantity"}
-                                            />
-                                          </InputGroup>
-                                        </div>
-                                      </td>
-                                      <td className="p-0 text-center">
-                                        <div className=" d-flex align-items-center">
-                                          <InputGroup className="" size="sm">
-                                            <Form.Control
-                                              value={
-                                                variantarray.unit === "pcs"
-                                                  ? variantarray.size
-                                                  : null
-                                              }
-                                              type="text"
-                                              sm="9"
-                                              className={
-                                                customvalidated === true
-                                                  ? "border-danger"
-                                                  : null
-                                              }
-                                              onChange={(e) =>
-                                                onVariantChange(e)
-                                              }
-                                              name={"size"}
-                                            />
-                                          </InputGroup>
-                                        </div>
-                                      </td>
-                                      <td className="p-0 text-center">
-                                        <div className=" d-flex align-items-center">
-                                          <InputGroup className="" size="sm">
-                                            <Form.Control
-                                              type="number"
-                                              min={1}
-                                              sm="9"
-                                              className={
-                                                customvalidated === true
-                                                  ? "border-danger"
-                                                  : null
-                                              }
-                                              name="mrp"
-                                              value={variantarray.mrp}
-                                              onChange={(e) =>
-                                                onVariantChange(e)
-                                              }
-                                              required
-                                            />
-                                          </InputGroup>
-                                        </div>
-                                      </td>
-                                      <td className="p-0 text-center">
-                                        <div className=" d-flex align-items-center">
-                                          <InputGroup className="" size="sm">
-                                            <Form.Control
-                                              type="number"
-                                              sm="9"
-                                              min={0}
-                                              onChange={(e) =>
-                                                onVariantChange(e)
-                                              }
-                                              name={"discount"}
-                                              value={variantarray.discount}
-                                            />
-                                          </InputGroup>
-                                        </div>
-                                      </td>
-                                      <td className="p-0 text-center">
-                                        <div className=" d-flex align-items-center">
-                                          <InputGroup className="" size="sm">
-                                            <Form.Control
-                                              min={1}
-                                              step={"any"}
-                                              type="number"
-                                              sm="9"
-                                              className={
-                                                customvalidated === true
-                                                  ? "border-danger"
-                                                  : null
-                                              }
-                                              onChange={(e) =>
-                                                onVariantChange(e)
-                                              }
-                                              name={"product_price"}
-                                              value={product_price}
-                                              required
-                                            />
-                                          </InputGroup>
-                                        </div>
-                                      </td>
-
-                                      <td className="p-0 text-center">
-                                        <div className=" d-flex align-items-center">
-                                          <InputGroup className="" size="sm">
-                                            <Form.Control
-                                              type="number"
-                                              step={"any"}
-                                              sm="9"
-                                              min={1}
-                                              className={
-                                                customvalidated === true
-                                                  ? "border-danger"
-                                                  : null
-                                              }
-                                              onChange={(e) =>
-                                                onVariantChange(e)
-                                              }
-                                              name={"sale_price"}
-                                              value={(
-                                                product_price +
-                                                ((product_price *
-                                                  productdata.gst) /
-                                                  100 +
-                                                  (product_price *
-                                                    productdata.wholesale_sales_tax) /
-                                                    100 +
-                                                  (product_price *
-                                                    productdata.retails_sales_tax) /
-                                                    100 +
-                                                  (product_price *
-                                                    productdata.value_added_tax) /
-                                                    100 +
-                                                  (product_price *
-                                                    productdata.manufacturers_sales_tax) /
-                                                    100)
-                                              ).toFixed(2)}
-                                            />
-                                          </InputGroup>
-                                        </div>
-                                      </td>
-
-                                      <td className="p-0 text-center">
-                                        <div className="">
-                                          <Form.Check
-                                            onChange={(e) =>
-                                              handleInputcheckboxChange(e)
-                                            }
-                                            name={"special_offer"}
-                                            checked={
-                                              variantarray.special_offer ===
-                                                1 ||
-                                              variantarray.special_offer ===
-                                                true
-                                                ? true
-                                                : false
-                                            }
-                                          />
-                                        </div>
-                                      </td>
-                                      <td className="p-0 text-center">
-                                        <div className="">
-                                          <Form.Check
-                                            onChange={(e) =>
-                                              handleInputcheckboxChange(e)
-                                            }
-                                            name={"featured_product"}
-                                            checked={
-                                              variantarray.featured_product ===
-                                                1 ||
-                                              variantarray.featured_product ===
-                                                true
-                                                ? true
-                                                : false
-                                            }
-                                          />
-                                        </div>
-                                      </td>
-                                      <td className="p-0 text-center">
-                                        <div className="manufacture_date">
-                                          <InputGroup className="" size="sm">
-                                            <Form.Control
-                                              type="date"
-                                              sm="9"
-                                              required
-                                              className={
-                                                customvalidated === true
-                                                  ? "border-danger"
-                                                  : null
-                                              }
-                                              onChange={(e) =>
-                                                onVariantChange(e)
-                                              }
-                                              name={"manufacturing_date"}
-                                              value={
-                                                variantarray.manufacturing_date
-                                              }
-                                            />
-                                          </InputGroup>
-                                        </div>
-                                      </td>
-                                      <td className="p-0 text-center">
-                                        <div className="manufacture_date">
-                                          <InputGroup className="" size="sm">
-                                            <Form.Control
-                                              type="date"
-                                              sm="9"
-                                              requ
-                                              className={
-                                                customvalidated === true
-                                                  ? "border-danger"
-                                                  : null
-                                              }
-                                              onChange={(e) =>
-                                                onVariantChange(e)
-                                              }
-                                              name={"expire_date"}
-                                              value={variantarray.expire_date}
-                                            />
-                                          </InputGroup>
-                                        </div>
-                                      </td>
-                                      <td className="p-0">
-                                        <div className="">
-                                          <InputGroup className="" size="sm">
-                                            <Form.Control
-                                              name={"quantity"}
-                                              type="number"
-                                              value={variantarray.quantity}
-                                              sm="9"
-                                              min={"1"}
-                                              required
-                                              className={
-                                                customvalidated === true
-                                                  ? "border-danger"
-                                                  : null
-                                              }
-                                              onChange={(e) =>
-                                                onVariantChange(e)
-                                              }
-                                              onKeyPress={(event) => {
-                                                if (event.key === "Enter") {
-                                                  VariantAddProduct();
+                                                className={
+                                                  customvalidated === true
+                                                    ? "border-danger"
+                                                    : null
                                                 }
-                                              }}
-                                            />
-                                          </InputGroup>
-                                        </div>
-                                      </td>
-                                      <td className="p-0">
-                                        <div className=" d-flex align-items-center">
-                                          <Button
-                                            variant="outline-success"
-                                            className="addcategoryicon"
-                                            onClick={() => VariantAddProduct()}
-                                            size="sm"
-                                          >
-                                            +
-                                          </Button>
-                                        </div>
-                                      </td>
-                                    </tr>
-
-                                    {(variantmainarray || []).map(
-                                      (variantdata, i) => {
-                                        return (
-                                          <tr>
-                                            <td className="p-0 text-center ">
-                                              {variantdata.unit === "pcs"
-                                                ? "color"
-                                                : variantdata.unit === "gms"
-                                                ? "weight"
-                                                : variantdata.unit === "ml"
-                                                ? "volume"
-                                                : ""}
-                                            </td>
-                                            <td className="p-0 text-center ">
-                                              {variantdata.colors}
-                                            </td>
-                                            <td className="p-0 text-center ">
-                                              {variantdata.unit === "gms"
-                                                ? variantdata.unit_quantity
-                                                : variantdata.unit === "ml"
-                                                ? variantdata.unit_quantity
-                                                : variantdata.unit === "piece"
-                                                ? variantdata.unit_quantity
-                                                : null}
-                                            </td>
-                                            <td className="p-0 text-center ">
-                                              {variantdata.unit === "pcs"
-                                                ? variantdata.size
-                                                : ""}
-                                            </td>
-                                            <td className="p-0 text-center ">
-                                              {variantdata.mrp}
-                                            </td>
-                                            <td className="p-0 text-center ">
-                                              {variantdata.discount}
-                                            </td>
-                                            <td className="p-0 text-center ">
-                                              {variantdata.product_price}
-                                            </td>
-
-                                            <td className="p-0 text-center ">
-                                              {saleprice}
-                                            </td>
-                                            <td className="p-0 text-center ">
-                                              {`${variantdata.special_offer}`}
-                                            </td>
-                                            <td className="p-0 text-center ">
-                                              {`${variantdata.featured_product}`}
-                                            </td>
-                                            <td className="p-0 text-center ">
-                                              {variantdata.manufacturing_date}
-                                            </td>
-                                            <td className="p-0 text-center ">
-                                              {variantdata.expire_date}
-                                            </td>
-                                            <td className="p-0 text-center">
-                                              {variantdata.quantity}
-                                            </td>
-                                            <td className="p-0 text-center"></td>
-                                            <td className="p-0 text-center">
-                                              <Button
-                                                variant="text-danger"
-                                                className="addcategoryicon text-danger"
-                                                onClick={(id) =>
-                                                  MainVariantRemoveClick(
-                                                    variantdata
-                                                  )
-                                                }
-                                                size="sm"
                                               >
-                                                &times;
-                                              </Button>
-                                            </td>
-                                          </tr>
-                                        );
-                                      }
-                                    )}
-                                  </tbody>
-                                </Table>
+                                                <option value={""}>
+                                                  Select
+                                                </option>
+                                                {(varietyy.variety || []).map(
+                                                  (vari, i) => {
+                                                    return (
+                                                      <option
+                                                        value={
+                                                          vari === "weight"
+                                                            ? "gms"
+                                                            : vari === "volume"
+                                                            ? "ml"
+                                                            : vari === "piece"
+                                                            ? "piece"
+                                                            : vari === "color"
+                                                            ? "pcs"
+                                                            : ""
+                                                        }
+                                                        key={i}
+                                                      >
+                                                        {vari}
+                                                      </option>
+                                                    );
+                                                  }
+                                                )}
+                                              </Form.Select>
+                                            </InputGroup>
+                                          </div>
+                                        </td>
+
+                                        <td className="p-0 text-center">
+                                          <div className=" d-flex align-items-center">
+                                            <InputGroup className="" size="sm">
+                                              <Form.Control
+                                                type="text"
+                                                sm="9"
+                                                className={
+                                                  customvalidated === true
+                                                    ? "border-danger"
+                                                    : null
+                                                }
+                                                onChange={(e) =>
+                                                  onVariantChange(e)
+                                                }
+                                                name={"colors"}
+                                                value={variantarray.colors}
+                                              />
+                                            </InputGroup>
+                                          </div>
+                                        </td>
+
+                                        <td className="p-0 text-center">
+                                          <div className=" d-flex align-items-center">
+                                            <InputGroup className="" size="sm">
+                                              <Form.Control
+                                                value={
+                                                  variantarray.unit === "weight"
+                                                    ? variantarray.unit_quantity
+                                                    : variantarray.unit ===
+                                                      "volume"
+                                                    ? variantarray.unit_quantity
+                                                    : variantarray.unit ===
+                                                      "piece"
+                                                    ? variantarray.unit_quantity
+                                                    : null
+                                                }
+                                                type="number"
+                                                sm="9"
+                                                className={
+                                                  customvalidated === true
+                                                    ? "border-danger"
+                                                    : null
+                                                }
+                                                onChange={(e) =>
+                                                  onVariantChange(e)
+                                                }
+                                                name={"unit_quantity"}
+                                              />
+                                            </InputGroup>
+                                          </div>
+                                        </td>
+                                        <td className="p-0 text-center">
+                                          <div className=" d-flex align-items-center">
+                                            <InputGroup className="" size="sm">
+                                              <Form.Control
+                                                value={
+                                                  variantarray.unit === "pcs"
+                                                    ? variantarray.size
+                                                    : null
+                                                }
+                                                type="text"
+                                                sm="9"
+                                                className={
+                                                  customvalidated === true
+                                                    ? "border-danger"
+                                                    : null
+                                                }
+                                                onChange={(e) =>
+                                                  onVariantChange(e)
+                                                }
+                                                name={"size"}
+                                              />
+                                            </InputGroup>
+                                          </div>
+                                        </td>
+                                        <td className="p-0 text-center">
+                                          <div className=" d-flex align-items-center">
+                                            <InputGroup className="" size="sm">
+                                              <Form.Control
+                                                type="number"
+                                                min={1}
+                                                sm="9"
+                                                className={
+                                                  customvalidated === true
+                                                    ? "border-danger"
+                                                    : null
+                                                }
+                                                name="mrp"
+                                                value={variantarray.mrp}
+                                                onChange={(e) =>
+                                                  onVariantChange(e)
+                                                }
+                                                required
+                                              />
+                                            </InputGroup>
+                                          </div>
+                                        </td>
+                                        <td className="p-0 text-center">
+                                          <div className=" d-flex align-items-center">
+                                            <InputGroup className="" size="sm">
+                                              <Form.Control
+                                                type="number"
+                                                sm="9"
+                                                min={0}
+                                                onChange={(e) =>
+                                                  onVariantChange(e)
+                                                }
+                                                name={"discount"}
+                                                value={variantarray.discount}
+                                              />
+                                            </InputGroup>
+                                          </div>
+                                        </td>
+                                        <td className="p-0 text-center">
+                                          <div className=" d-flex align-items-center">
+                                            <InputGroup className="" size="sm">
+                                              <Form.Control
+                                                min={1}
+                                                step={"any"}
+                                                type="number"
+                                                sm="9"
+                                                className={
+                                                  customvalidated === true
+                                                    ? "border-danger"
+                                                    : null
+                                                }
+                                                onChange={(e) =>
+                                                  onVariantChange(e)
+                                                }
+                                                name={"product_price"}
+                                                value={product_price}
+                                                required
+                                              />
+                                            </InputGroup>
+                                          </div>
+                                        </td>
+
+                                        <td className="p-0 text-center">
+                                          <div className=" d-flex align-items-center">
+                                            <InputGroup className="" size="sm">
+                                              <Form.Control
+                                                type="number"
+                                                step={"any"}
+                                                sm="9"
+                                                min={1}
+                                                className={
+                                                  customvalidated === true
+                                                    ? "border-danger"
+                                                    : null
+                                                }
+                                                onChange={(e) =>
+                                                  onVariantChange(e)
+                                                }
+                                                name={"sale_price"}
+                                                value={(
+                                                  product_price +
+                                                  ((product_price *
+                                                    productdata.gst) /
+                                                    100 +
+                                                    (product_price *
+                                                      productdata.wholesale_sales_tax) /
+                                                      100 +
+                                                    (product_price *
+                                                      productdata.retails_sales_tax) /
+                                                      100 +
+                                                    (product_price *
+                                                      productdata.value_added_tax) /
+                                                      100 +
+                                                    (product_price *
+                                                      productdata.manufacturers_sales_tax) /
+                                                      100)
+                                                ).toFixed(2)}
+                                              />
+                                            </InputGroup>
+                                          </div>
+                                        </td>
+
+                                        <td className="p-0 text-center">
+                                          <div className="">
+                                            <Form.Check
+                                              onChange={(e) =>
+                                                handleInputcheckboxChange(e)
+                                              }
+                                              name={"special_offer"}
+                                              checked={
+                                                variantarray.special_offer ===
+                                                  1 ||
+                                                variantarray.special_offer ===
+                                                  true
+                                                  ? true
+                                                  : false
+                                              }
+                                            />
+                                          </div>
+                                        </td>
+                                        <td className="p-0 text-center">
+                                          <div className="">
+                                            <Form.Check
+                                              onChange={(e) =>
+                                                handleInputcheckboxChange(e)
+                                              }
+                                              name={"featured_product"}
+                                              checked={
+                                                variantarray.featured_product ===
+                                                  1 ||
+                                                variantarray.featured_product ===
+                                                  true
+                                                  ? true
+                                                  : false
+                                              }
+                                            />
+                                          </div>
+                                        </td>
+                                        <td className="p-0 text-center">
+                                          <div className="manufacture_date">
+                                            <InputGroup className="" size="sm">
+                                              <Form.Control
+                                                type="date"
+                                                sm="9"
+                                                required
+                                                className={
+                                                  customvalidated === true
+                                                    ? "border-danger"
+                                                    : null
+                                                }
+                                                onChange={(e) =>
+                                                  onVariantChange(e)
+                                                }
+                                                name={"manufacturing_date"}
+                                                value={
+                                                  variantarray.manufacturing_date
+                                                }
+                                              />
+                                            </InputGroup>
+                                          </div>
+                                        </td>
+                                        <td className="p-0 text-center">
+                                          <div className="manufacture_date">
+                                            <InputGroup className="" size="sm">
+                                              <Form.Control
+                                                type="date"
+                                                sm="9"
+                                                requ
+                                                className={
+                                                  customvalidated === true
+                                                    ? "border-danger"
+                                                    : null
+                                                }
+                                                onChange={(e) =>
+                                                  onVariantChange(e)
+                                                }
+                                                name={"expire_date"}
+                                                value={variantarray.expire_date}
+                                              />
+                                            </InputGroup>
+                                          </div>
+                                        </td>
+                                        <td className="p-0">
+                                          <div className="">
+                                            <InputGroup className="" size="sm">
+                                              <Form.Control
+                                                name={"quantity"}
+                                                type="number"
+                                                value={variantarray.quantity}
+                                                sm="9"
+                                                min={"1"}
+                                                required
+                                                className={
+                                                  customvalidated === true
+                                                    ? "border-danger"
+                                                    : null
+                                                }
+                                                onChange={(e) =>
+                                                  onVariantChange(e)
+                                                }
+                                                onKeyPress={(event) => {
+                                                  if (event.key === "Enter") {
+                                                    VariantAddProduct();
+                                                  }
+                                                }}
+                                              />
+                                            </InputGroup>
+                                          </div>
+                                        </td>
+                                        <td className="p-0">
+                                          <div className=" d-flex align-items-center">
+                                            <Button
+                                              variant="outline-success"
+                                              className="addcategoryicon"
+                                              onClick={() =>
+                                                VariantAddProduct()
+                                              }
+                                              size="sm"
+                                            >
+                                              +
+                                            </Button>
+                                          </div>
+                                        </td>
+                                      </tr>
+
+                                      {(variantmainarray || []).map(
+                                        (variantdata, i) => {
+                                          return (
+                                            <tr>
+                                              <td className="p-0 text-center ">
+                                                {variantdata.unit === "pcs"
+                                                  ? "color"
+                                                  : variantdata.unit === "gms"
+                                                  ? "weight"
+                                                  : variantdata.unit === "ml"
+                                                  ? "volume"
+                                                  : ""}
+                                              </td>
+                                              <td className="p-0 text-center ">
+                                                {variantdata.colors}
+                                              </td>
+                                              <td className="p-0 text-center ">
+                                                {variantdata.unit === "gms"
+                                                  ? variantdata.unit_quantity
+                                                  : variantdata.unit === "ml"
+                                                  ? variantdata.unit_quantity
+                                                  : variantdata.unit === "piece"
+                                                  ? variantdata.unit_quantity
+                                                  : null}
+                                              </td>
+                                              <td className="p-0 text-center ">
+                                                {variantdata.unit === "pcs"
+                                                  ? variantdata.size
+                                                  : ""}
+                                              </td>
+                                              <td className="p-0 text-center ">
+                                                {variantdata.mrp}
+                                              </td>
+                                              <td className="p-0 text-center ">
+                                                {variantdata.discount}
+                                              </td>
+                                              <td className="p-0 text-center ">
+                                                {variantdata.product_price}
+                                              </td>
+
+                                              <td className="p-0 text-center ">
+                                                {saleprice}
+                                              </td>
+                                              <td className="p-0 text-center ">
+                                                {`${variantdata.special_offer}`}
+                                              </td>
+                                              <td className="p-0 text-center ">
+                                                {`${variantdata.featured_product}`}
+                                              </td>
+                                              <td className="p-0 text-center ">
+                                                {variantdata.manufacturing_date}
+                                              </td>
+                                              <td className="p-0 text-center ">
+                                                {variantdata.expire_date}
+                                              </td>
+                                              <td className="p-0 text-center">
+                                                {variantdata.quantity}
+                                              </td>
+                                              <td className="p-0 text-center"></td>
+                                              <td className="p-0 text-center">
+                                                <Button
+                                                  variant="text-danger"
+                                                  className="addcategoryicon text-danger"
+                                                  onClick={(id) =>
+                                                    MainVariantRemoveClick(
+                                                      variantdata
+                                                    )
+                                                  }
+                                                  size="sm"
+                                                >
+                                                  &times;
+                                                </Button>
+                                              </td>
+                                            </tr>
+                                          );
+                                        }
+                                      )}
+                                    </tbody>
+                                  </Table>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </Form.Group>
+                          </Form.Group>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ) : null}
+                  ) : null}
+                </Form>
                 {/* </Form> */}
                 {/* Offer */}
 
@@ -2573,7 +2689,7 @@ function Product() {
           onHide={handlevarietyClose}
           dialogClassName="addproductmainmodal"
         >
-          <Form ref={formRef} validated={customvalidated}>
+          <Form ref={formRef}>
             <Modal.Header>
               <Modal.Title>Add Variety</Modal.Title>
             </Modal.Header>
@@ -2616,11 +2732,11 @@ function Product() {
                                       aria-label="Default select example"
                                       name="unit"
                                       onChange={(e) => onVariantChange(e)}
-                                      className={
-                                        customvalidated === true
-                                          ? "border-danger"
-                                          : null
-                                      }
+                                      // className={
+                                      //   customvalidated === true
+                                      //     ? "border-danger"
+                                      //     : null
+                                      // }
                                     >
                                       <option
                                         value={
@@ -2632,6 +2748,9 @@ function Product() {
                                             ? "volume"
                                             : variantarray.unit === "piece"
                                             ? "piece"
+                                            : variantarray.unit === "" ||
+                                              variantarray.unit === null
+                                            ? "Select"
                                             : null
                                         }
                                       >
@@ -2643,7 +2762,10 @@ function Product() {
                                           ? "volume"
                                           : variantarray.unit === "piece"
                                           ? "piece"
-                                          : "Select"}
+                                          : variantarray.unit === "" ||
+                                            variantarray.unit === null
+                                          ? "Select"
+                                          : null}
                                       </option>
                                       {(varietyy.variety || []).map(
                                         (vari, i) => {
@@ -2658,7 +2780,7 @@ function Product() {
                                                   ? "ml"
                                                   : vari === "piece"
                                                   ? "piece"
-                                                  : null
+                                                  : ""
                                               }
                                               key={i}
                                             >
@@ -2678,11 +2800,11 @@ function Product() {
                                     <Form.Control
                                       type="text"
                                       sm="9"
-                                      className={
-                                        customvalidated === true
-                                          ? "border-danger"
-                                          : null
-                                      }
+                                      // className={
+                                      //   customvalidated === true
+                                      //     ? "border-danger"
+                                      //     : null
+                                      // }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"colors"}
                                       value={variantarray.colors}
@@ -2702,6 +2824,8 @@ function Product() {
                                           ? variantarray.unit_quantity
                                           : variantarray.unit === "piece"
                                           ? variantarray.unit_quantity
+                                          : variantarray.unit === ""
+                                          ? variantarray.unit_quantity
                                           : null
                                       }
                                       required={
@@ -2712,12 +2836,12 @@ function Product() {
                                       }
                                       type="text"
                                       sm="9"
-                                      className={
-                                        customvalidated === true ||
-                                        unitValidated === true
-                                          ? "border-danger"
-                                          : null
-                                      }
+                                      // className={
+                                      //   customvalidated === true ||
+                                      //   unitValidated === true
+                                      //     ? "border-danger"
+                                      //     : null
+                                      // }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"unit_quantity"}
                                     />
@@ -2731,15 +2855,17 @@ function Product() {
                                       value={
                                         variantarray.unit === "pcs"
                                           ? variantarray.size
+                                          : variantarray.unit === ""
+                                          ? variantarray.size
                                           : null
                                       }
                                       type="text"
                                       sm="9"
-                                      className={
-                                        customvalidated === true
-                                          ? "border-danger"
-                                          : null
-                                      }
+                                      // className={
+                                      //   customvalidated === true
+                                      //     ? "border-danger"
+                                      //     : null
+                                      // }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"size"}
                                     />
@@ -2755,11 +2881,11 @@ function Product() {
                                       step={"any"}
                                       min={1}
                                       sm="9"
-                                      className={
-                                        customvalidated === true
-                                          ? "border-danger"
-                                          : null
-                                      }
+                                      // className={
+                                      //   customvalidated === true
+                                      //     ? "border-danger"
+                                      //     : null
+                                      // }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"mrp"}
                                       value={Number(variantarray.mrp)}
@@ -2789,11 +2915,11 @@ function Product() {
                                       step={0.01}
                                       type="number"
                                       sm="9"
-                                      className={
-                                        customvalidated === true
-                                          ? "border-danger"
-                                          : null
-                                      }
+                                      // className={
+                                      //   customvalidated === true
+                                      //     ? "border-danger"
+                                      //     : null
+                                      // }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"product_price"}
                                       value={Number(variantarray.product_price)}
@@ -2801,6 +2927,10 @@ function Product() {
                                   </InputGroup>
                                 </div>
                               </td>
+                              {console.log(
+                                "sale price---" +
+                                  JSON.stringify(variantarray.sale_price)
+                              )}
                               <td className="p-0 text-center">
                                 <div className=" d-flex align-items-center">
                                   <InputGroup className="" size="sm">
@@ -2809,11 +2939,11 @@ function Product() {
                                       type="number"
                                       sm="9"
                                       min={1}
-                                      className={
-                                        customvalidated === true
-                                          ? "border-danger"
-                                          : null
-                                      }
+                                      // className={
+                                      //   customvalidated === true
+                                      //     ? "border-danger"
+                                      //     : null
+                                      // }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"sale_price"}
                                       value={Number(variantarray.sale_price)}
@@ -2860,11 +2990,11 @@ function Product() {
                                     <Form.Control
                                       type="date"
                                       sm="9"
-                                      className={
-                                        customvalidated === true
-                                          ? "border-danger"
-                                          : null
-                                      }
+                                      // className={
+                                      //   customvalidated === true
+                                      //     ? "border-danger"
+                                      //     : null
+                                      // }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"manufacturing_date"}
                                       value={moment(
@@ -2880,11 +3010,11 @@ function Product() {
                                     <Form.Control
                                       type="date"
                                       sm="9"
-                                      className={
-                                        customvalidated === true
-                                          ? "border-danger"
-                                          : null
-                                      }
+                                      // className={
+                                      //   customvalidated === true
+                                      //     ? "border-danger"
+                                      //     : null
+                                      // }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"expire_date"}
                                       value={moment(
@@ -2896,7 +3026,7 @@ function Product() {
                               </td>
                               <td className="p-0 text-center">
                                 <p
-                                  className="mt-2  text-primary text-center fs-6"
+                                  className="mt-2   text-center fs-6"
                                   type="invalid"
                                 >
                                   Select Image This (height-156px * width-136px)
@@ -2911,11 +3041,11 @@ function Product() {
                                       value={variantarray.quantity}
                                       sm="9"
                                       min={"1"}
-                                      className={
-                                        customvalidated === true
-                                          ? "border-danger"
-                                          : null
-                                      }
+                                      // className={
+                                      //   customvalidated === true
+                                      //     ? "border-danger"
+                                      //     : null
+                                      // }
                                       onChange={(e) => onVariantChange(e)}
                                       onKeyPress={(event) => {
                                         if (event.key === "Enter") {
@@ -2946,6 +3076,16 @@ function Product() {
                                 </div>
                               </td>
                             </tr>
+                            {customvalidated === true ? (
+                              <tr>
+                                <p
+                                  className="mt-1 ms-2 text-danger"
+                                  type="invalid"
+                                >
+                                  Please fill value
+                                </p>
+                              </tr>
+                            ) : null}
 
                             {vdata === "" ||
                             vdata === null ||
@@ -3028,11 +3168,11 @@ function Product() {
                                                 multiple
                                                 type="file"
                                                 sm="9"
-                                                className={
-                                                  customvalidated === true
-                                                    ? "border-danger"
-                                                    : null
-                                                }
+                                                // className={
+                                                //   customvalidated === true
+                                                //     ? "border-danger"
+                                                //     : null
+                                                // }
                                                 onChange={(e) =>
                                                   imguploadchange(
                                                     e,
