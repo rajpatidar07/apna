@@ -48,10 +48,6 @@ const EmailSend = () => {
   };
 
   const handleShow = (e) => {
-
- 
-
-    console.log("----------" + e);
     if (e === "add") {
       setShow(e);
     }
@@ -71,10 +67,8 @@ const EmailSend = () => {
   };
 
   const handleClose = () => {
-  
-    
     setEmaildata({});
-   
+
     setValidated(false);
     setShow(false);
   };
@@ -222,7 +216,7 @@ const EmailSend = () => {
           console.log(response);
           setAddAlert(true);
         })
-        .catch(function (error) {
+        .catch(function(error) {
           console.log(error);
         });
 
@@ -235,7 +229,6 @@ const EmailSend = () => {
   };
 
   const UpdateEmailHandler = (e) => {
-
     e.preventDefault();
     axios
       .put(`${process.env.REACT_APP_BASEURL}/update_email_template`, {
@@ -251,7 +244,7 @@ const EmailSend = () => {
       .then((response) => {
         setUpdateAlert(true);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
 
@@ -275,7 +268,7 @@ const EmailSend = () => {
         setGetEmaildata(data);
         setapicall(false);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -290,7 +283,7 @@ const EmailSend = () => {
       .then((response) => {
         setapicall(true);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -304,7 +297,7 @@ const EmailSend = () => {
       .then((response) => {
         setapicall(true);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -541,8 +534,8 @@ const EmailSend = () => {
                   required
                 />
               </div>
-             {console.log("emailtext------"+emailText)}
-              <div sm="12" className="mt-3"> 
+              {console.log("emailtext------" + emailText)}
+              <div sm="12" className="mt-3">
                 <CKEditor
                   data={emailText}
                   initData={emailText}
