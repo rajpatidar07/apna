@@ -25,6 +25,8 @@ import { Button } from "react-bootstrap";
 import { GiCancel } from "react-icons/gi";
 import moment from "moment/moment";
 import BrandJson from "./json/BrandJson";
+import { downloadExcel } from "react-export-table-to-excel";
+
 
 let categoryArray = [];
 let encoded;
@@ -143,6 +145,9 @@ function Product() {
     manufacturers_sales_tax: "0",
   });
   const [productID, setproductID] = useState("");
+
+
+  const [ExcelFile,setExcelFile]= useState("")
 
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
@@ -710,6 +715,7 @@ function Product() {
   };
 
   const handlevarietyClose = (e) => {
+    e.preventDefault()
     setValidated(false);
     setvarietyShow(false);
   };
@@ -888,9 +894,19 @@ function Product() {
       [e.target.name]: e.target.value,
     });
   };
+
+
   let discountt = (variantarray.mrp * variantarray.discount) / 100;
+    // console.log("Discounttt-----"+ JSON.stringify(discountt))
   let product_price = variantarray.mrp - discountt;
+  // console.log("Product prieccc-----"+ JSON.stringify(product_price))
   let saleprice;
+  //  console.log("tdaxxxxxxxx--"+ JSON.stringify(taxdata))
+  //  console.log("GST--"+ JSON.stringify(taxdata.gst))
+
+  // const  saleeprice=variantarray.sale_price
+
+         
   if (taxdata) {
     saleprice =
       product_price +
@@ -900,6 +916,7 @@ function Product() {
         product_price * (taxdata.value_added_tax / 100) +
         product_price * (taxdata.manufacturers_sales_tax / 100));
   }
+  // console.log("saleeee-----"+ JSON.stringify(saleprice))
 
   useEffect(() => {
     setvariantarray({
@@ -924,27 +941,13 @@ function Product() {
     });
   };
   const onVariantaddclick = (e, id) => {
+// id.preventDefault();
     if (
-      (variantarray.unit !== "pcs" && variantarray.unit_quantity === "") ||
-      variantarray.unit !== ""
-    ) {
-      setunitValidated(true);
-    } else if (
-      variantarray.unit === "" ||
-      variantarray.mrp === "" ||
-      variantarray.manufacturing_date == "" ||
-      variantarray.expire_date == "" ||
-      variantarray.quantity == ""
-    ) {
-      setcustomValidated(true);
-    }
-    // id.preventDefault();
-    else if (
       id == "" ||
       id == undefined ||
       id == null ||
       unitValidated === false
-    ) {
+    ) {console.log("veriant arartry----"+JSON.stringify(variantarray))
       axios
         .post(
           `${process.env.REACT_APP_BASEURL}/products_varient_add`,
@@ -968,7 +971,8 @@ function Product() {
             quantity: "",
             product_id: productID,
           });
-          setProductAlert(true);
+          console.log("respo----"+JSON.stringify (response))
+          // setProductAlert(true);
 
           // formRef.reset();
         })
@@ -976,6 +980,7 @@ function Product() {
           console.log(error);
         });
     } else {
+      // e.preventDefault()
       axios
         .put(
           `${process.env.REACT_APP_BASEURL}/products_varient_update`,
@@ -1006,9 +1011,13 @@ function Product() {
         });
     }
   };
+
+
   const VariantAddProduct = (e) => {
-    if (variantarray.unit == "") {
-      setcustomValidated(true);
+
+    if ( variantarray.unit == "") {
+       setValidated(true)
+      // setcustomValidated(true)
     } else {
       setvariantmainarray((variantmainarray) => [
         ...variantmainarray,
@@ -1249,6 +1258,54 @@ function Product() {
     setsearchData({ product_title_name: "", product_status: "" });
     setapicall(true);
   };
+
+//-----------------------Download excel sheet code start here---------------------------------------------------
+
+  const header = ["Product code","Product title name","Product slug","Store name","Product Description","Product Type","Brand","Category","Parent category","Seo tag","Other introduction","Add custom input" ,"Wholesale sales tax","Manufacturers sales tax","Retails sales tax","Gst","Cgst","Sgst","Value added tax","Variety","Vendor id","Shop","colors","Size","Mrp","Product price","Sale price","Discount","Manufacturing date","Expire date","Special offer","Featured product","Unit","Unit quantity","Quantity","Product Status"];
+
+  function handleDownloadExcel() {
+
+    downloadExcel({
+      fileName: "Product Excel Report -> downloadExcel method",
+      sheet: "Product Excel Report",
+      tablePayload: {
+         header,
+        body: [""] ,
+        blankrows:"No record"
+      },
+    });
+   }
+  
+
+   const saveFile = (e) => {
+    
+        e.preventDefault()
+    setExcelFile(e.target.files[0]);
+    FileUploadAPI()
+    
+   
+
+   
+  };
+  const FileUploadAPI=()=>{
+    const formData = new FormData();
+    formData.append("bulk_xls", ExcelFile);
+
+
+    axios
+    .post(`${process.env.REACT_APP_BASEURL}/product_bulk_uploads`,
+   formData
+    )
+    .then((response) => {
+      console.log("response-------------"+response)
+    })
+    .catch(function(error) {
+      console.log(error);
+    });
+  }
+
+
+//-----------------------Download excel sheet code End  here---------------------------------------------------
   return (
     <div className="App productlist_maindiv">
       <h2>Products</h2>
@@ -1310,9 +1367,12 @@ function Product() {
               btntext={"Upload"}
               btnclass={"button main_outline_button"}
               Iconname={<AiOutlineCloudUpload />}
+              onChange={(e) => saveFile(e)}
             />
           </div>
-          <MainButton btntext={"Download"} />
+          <MainButton btntext={"Download"} onClick={handleDownloadExcel} />
+
+
           <Iconbutton
             btntext={"Add Product"}
             onClick={() => {
@@ -1825,8 +1885,13 @@ function Product() {
                   </div>
                 </div>
                 {/*Date  */}
+                <Form   
+                 className="p-2 addproduct_form"
+            validated={validated}
+            ref={mainformRef}>
 
                 {modalshow === "add" ? (
+                  
                   <div className="my-3 inputsection_box">
                     <div className="productvariety_box">
                       <div className="productvariety">
@@ -1898,6 +1963,7 @@ function Product() {
                           <div className="variation_box my-2">
                             <div className="row">
                               <div className="col-auto">
+                                
                                 <Table
                                   bordered
                                   className="align-middle my-2 aadvariety_table_"
@@ -1943,11 +2009,12 @@ function Product() {
                                             <Form.Select
                                               aria-label="Default select example"
                                               name="unit"
+                                              required
                                               value={variantarray.unit}
                                               onChange={(e) =>
                                                 onVariantChange(e)
                                               }
-                                              required
+                                           
                                               className={
                                                 customvalidated === true
                                                   ? "border-danger"
@@ -2361,6 +2428,7 @@ function Product() {
                                     )}
                                   </tbody>
                                 </Table>
+                              
                               </div>
                             </div>
                           </div>
@@ -2369,6 +2437,7 @@ function Product() {
                     </div>
                   </div>
                 ) : null}
+                </Form>
                 {/* </Form> */}
                 {/* Offer */}
 
@@ -2802,6 +2871,7 @@ function Product() {
                                   </InputGroup>
                                 </div>
                               </td>
+                              {console.log("sale price---"+JSON.stringify(variantarray.sale_price))}
                               <td className="p-0 text-center">
                                 <div className=" d-flex align-items-center">
                                   <InputGroup className="" size="sm">
@@ -2817,6 +2887,7 @@ function Product() {
                                       }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"sale_price"}
+                                     
                                       value={Number(variantarray.sale_price)}
                                     />
                                   </InputGroup>
