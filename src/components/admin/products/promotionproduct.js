@@ -38,61 +38,47 @@ const Promotionproduct = () => {
     let mdate = moment(e.target.value).format("YYYY-MM-DD");
     setsearchData({ ...searchdata, [e.target.name]: mdate });
   };
-  console.log("-----" + searchdata.start_date);
   const handleClose = () => setShow(false);
-  // const handleShow = () => setShow(true);
+
   const handleClick = () => {};
+ 
+const columns = [
+  {
+    name: "ID",
+    selector: (row) => (
+      row.id
+    ),
+    sortable: true,
+    width: "150px",
+    center: true,
+    style: {
+      paddingLeft: 0,
+    }
+  },
+  {
+    name: "Product ID",
+    selector: (row) => (
+      row.product_id
+    ),
+    sortable: true,
+    width: "150px",
+    center: true,
+    style: {
+      paddingLeft: 0,
+    }
+  },
 
-  // console.log("---------"+JSON.stringify(featuredProductData))
-
-  let closeUpdateAlert = () => {
-    setUpdateAlert(false);
-  };
-
-  const columns = [
-    {
-      name: "ID",
-      selector: (row) => row.id,
-      sortable: true,
-      width: "150px",
-      center: true,
-      style: {
-        paddingLeft: 0,
-      },
+  {
+    name: "Fetured_type",
+    selector: (row) => row.fetured_type,
+    sortable: true,
+    width: "250px",
+    center: true,
+    style: {
+      paddingRight: "32px",
+      paddingLeft: "0px",
     },
-    {
-      name: "Product ID",
-      selector: (row) => row.product_id,
-      sortable: true,
-      width: "150px",
-      center: true,
-      style: {
-        paddingLeft: 0,
-      },
-    },
-    // {
-    //   name: "Image",
-    //   width: "100px",
-    //   center: true,
-    //   cell: (row) => (
-
-    //     <img
-    //       // height="90px"
-    //       // width="75px"
-    //       alt={'apna_organic'}
-    //       src={
-    //         row.image? row.image : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
-    //       }
-    //       style={{
-    //         padding: 10,
-    //         textAlign: "right",
-    //         maxHeight: "100px",
-    //         maxWidth: "100px"
-    //       }}
-    //       onClick={handleClick}
-    //     />
-    //   ),
-    // },
+  },
     {
       name: "Fetured_type",
       selector: (row) => row.fetured_type,
@@ -131,7 +117,6 @@ const Promotionproduct = () => {
       ),
       sortable: true,
       width: "200px",
-      // center: true,
     },
     {
       name: "Start Date",
@@ -224,13 +209,11 @@ const Promotionproduct = () => {
       })
       .then((response) => {
         let data = response.data;
-        console.log("UPDATE===========" + JSON.stringify(response.data));
         setapicall(true);
         setShow(false);
         setUpdateAlert(true);
       });
     formRef.current.reset();
-    // setValidated(false);
   };
 
   const submitHandler = () => {
@@ -239,7 +222,6 @@ const Promotionproduct = () => {
 
   const OnReset = () => {
     setsearchData({ start_date: "", end_date: "" });
-    // fetchdata()
     setapicall(true);
   };
 
@@ -295,7 +277,6 @@ const Promotionproduct = () => {
           <Form className="" ref={formRef}>
             <Modal.Header closeButton>
               <Modal.Title>
-                {/* {show === "add" ? "Add New Blog " : " Update Blog "} */}
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -329,32 +310,25 @@ const Promotionproduct = () => {
                       placeholder="Coupon Start Date"
                     />
                   </Form.Group>
-                </div>
-              </div>
-            </Modal.Body>
-            <Modal.Footer>
-              <button
-                className="button main_outline_button"
-                onClick={() => handleClose()}
-              >
-                Cancel
-              </button>
-              <button
-                className="button main_outline_button"
-                onClick={UpdatePromotionProduct}
-              >
-                Update
-              </button>
-              {/* <Iconbutton
-              type={"submit"}
-                 
-              // btntext={show === "add" ? "Add Blog" : "Update Blog"}
-              // onClick={(show === 'add' ? AddVendorClick : UpdateVendorClick(show))}
-              btnclass={"button main_button "}
-            /> */}
-            </Modal.Footer>
-          </Form>
-        </Modal>
+                </div> 
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <button
+              className="button main_outline_button"
+              onClick={() => handleClose()}
+            >
+              Cancel
+            </button>
+            <button
+              className="button main_outline_button"
+              onClick={UpdatePromotionProduct}
+            >
+              Update
+            </button>
+          </Modal.Footer>
+        </Form>
+      </Modal>
 
         {/* datatable */}
 
@@ -377,7 +351,7 @@ const Promotionproduct = () => {
         <SAlert
           show={UpdateAlert}
           title="Promotional Products Updated Successfully "
-          onConfirm={closeUpdateAlert}
+          onConfirm={setUpdateAlert}
         />
       </div>
     </div>

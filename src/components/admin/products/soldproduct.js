@@ -1,19 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
-import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
-import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import { Modal } from "react-bootstrap";
-import Button from "react-bootstrap";
-import Iconbutton from "../common/iconbutton";
 import axios from "axios";
 import SAlert from "../common/salert";
 
 const Soldproduct = () => {
   const formRef = useRef();
-  const [validated, setValidated] = useState(false);
 
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
@@ -32,7 +27,6 @@ const Soldproduct = () => {
     product_title_name: "",
     category: "",
   });
-  // const [ productquantity, setproductquantity] = useState("");
 
   const closeUpdateAlert = () => {
     setUpdateAlert(false);
@@ -92,9 +86,7 @@ const Soldproduct = () => {
         } else {
           setsolddata(response.data);
         }
-        // let data = response.data.filter(item=>item.quantity==='0');
         setapicall(false);
-        // console.log("---sold" + JSON.stringify(solddata));
       })
       .catch(function (error) {
         console.log(error);
@@ -176,10 +168,6 @@ const Soldproduct = () => {
             className=" p-0 m-0  editiconn text-secondary"
             onClick={handleShow.bind(this, row.id, row.product_id)}
           />
-          {/* <BsTrash
-            className=" p-0 m-0 editiconn text-danger"
-            onClick={handleAlert}
-          /> */}
         </div>
       ),
     },
@@ -197,7 +185,6 @@ const Soldproduct = () => {
       )
       .then((response) => {
         let data = response.data;
-        console.log("data-------" + data);
         setapicall(true);
         setShow(false);
         setUpdateAlert(true);
@@ -257,7 +244,6 @@ const Soldproduct = () => {
                 >
                   <Form.Label>Product Id</Form.Label>
                   <Form.Control
-                    // onChange={OnInputChange}
                     value={productData.id}
                     type="text"
                     placeholder="Add Title"
@@ -305,14 +291,6 @@ const Soldproduct = () => {
           pointerOnHover
           className={"table_body soldproduct_table"}
         />
-        {/* <SweetAlert
-          show={Alert}
-          title="Product Name"
-          text="Are you Sure you want to delete"
-          onConfirm={hideAlert}
-          showCancelButton={true}
-          onCancel={hideAlert}
-        /> */}
         <SAlert
           show={UpdateAlert}
           title="Updated Sold product Successfully "

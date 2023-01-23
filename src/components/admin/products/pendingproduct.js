@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Input from "../common/input";
-import { ImCross } from "react-icons/im";
-import { BsCheckLg } from "react-icons/bs";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
-import Iconbutton from "../common/iconbutton";
 import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
 import axios from "axios";
@@ -60,7 +56,6 @@ const Pendingproduct = () => {
       });
   }, [apicall]);
 
-  // search and reset
 
   const onSearchClick = () => {
     setapicall(true);

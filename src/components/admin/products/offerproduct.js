@@ -1,9 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
-import Input from "../common/input";
+import React, { useEffect, useState,useRef } from "react";
 import DataTable from "react-data-table-component";
-import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
-import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
@@ -70,41 +67,19 @@ const Offerproduct = () => {
       center: true,
       style: {
         paddingLeft: 0,
-      },
+      }
     },
-    {
-      name: "Product ID",
-      selector: (row) => row.product_id,
-      sortable: true,
-      width: "150px",
-      center: true,
-      style: {
-        paddingLeft: 0,
+      {
+        name: "Fetured_type",
+        selector: (row) => row.fetured_type,
+        sortable: true,
+        width: "250px",
+        center: true,
+        style: {
+          paddingRight: "32px",
+          paddingLeft: "0px",
+        },
       },
-    },
-    // {
-    //   name: "Image",
-    //   width: "100px",
-    //   center: true,
-    //   cell: (row) => (
-
-    //     <img
-    //       // height="90px"
-    //       // width="75px"
-    //       alt={'apna_organic'}
-    //       src={
-    //         row.image? row.image : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
-    //       }
-    //       style={{
-    //         padding: 10,
-    //         textAlign: "right",
-    //         maxHeight: "100px",
-    //         maxWidth: "100px"
-    //       }}
-    //       onClick={handleClick}
-    //     />
-    //   ),
-    // },
     {
       name: "Fetured_type",
       selector: (row) => row.fetured_type,
@@ -143,7 +118,6 @@ const Offerproduct = () => {
       ),
       sortable: true,
       width: "200px",
-      // center: true,
     },
     {
       name: "Start Date",
@@ -222,12 +196,9 @@ const Offerproduct = () => {
       })
       .then((response) => {
         let data = response.data;
-        console.log("UPDATE===========" + JSON.stringify(response.data));
-        // setFeaturetData(response.data[0])
         setapicall(true);
         setShow(false);
         setUpdateAlert(true);
-        //  setFeaturetData('')
       });
     formRef.current.reset();
   };
@@ -238,12 +209,11 @@ const Offerproduct = () => {
 
   const OnReset = () => {
     setsearchData({ start_date: "", end_date: "" });
-    // fetchdata()
     setapicall(true);
   };
-  return (
-    <div>
-      <h2>Offer Products</h2>
+    return (
+        <div>
+             <h2> Special Offer Products</h2>
 
       {/* search bar */}
       <div className="card mt-3 p-3 ">
@@ -344,13 +314,6 @@ const Offerproduct = () => {
               >
                 Update
               </button>
-              {/* <Iconbutton
-              type={"submit"}
-                 
-              // btntext={show === "add" ? "Add Blog" : "Update Blog"}
-              // onClick={(show === 'add' ? AddVendorClick : UpdateVendorClick(show))}
-              btnclass={"button main_button "}
-            /> */}
             </Modal.Footer>
           </Form>
         </Modal>

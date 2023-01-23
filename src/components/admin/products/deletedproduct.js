@@ -35,7 +35,6 @@ const Deletedproduct = () => {
     setRestoreAlert(false);
   })
   };
-console.log("dddddddddddd"+(id,productid))
 
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
@@ -246,16 +245,6 @@ console.log("dddddddddddd"+(id,productid))
               className={"adminsideinput"}
             />
           </div>
-          {/* <div className="col-md-3 col-sm-6 aos_input">
-        <Form.Select aria-label="Search by category" className="adminselectbox" placeholder="Search by category" onChange={OnSearchChange}
-              name='category'
-              value={searchdata.category}>
-        <option>Search by category</option>
-          <option value="1">Food</option>
-          <option value="2">Fish & Meat</option>
-          <option value="3">Baby Care</option>
-        </Form.Select>
-        </div> */}
           <div className="col-md-3 col-sm-6 aos_input">
             <input
               type={"date"}
@@ -296,14 +285,6 @@ console.log("dddddddddddd"+(id,productid))
           pointerOnHover
           className={"table_body deletedproduct_tabel"}
         />
-        {/* <SweetAlert
-          show={Alert}
-          title="Product Name"
-          text="Are you Sure you want to restore"
-          onConfirm={hideAlert}
-          showCancelButton={true}
-          onCancel={hideAlert}
-        /> */}
         <SweetAlert
         show={RestoreAlert}
         title="Restor Successfully "

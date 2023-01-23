@@ -16,7 +16,6 @@ const Expiredproduct = () => {
 
   const [expiredata, setexpiredata] = useState([]);
   const currentdate = moment().format("YYYY-MM-DD");
-  // console.log("---date"+currentdate)
   const [searchdata, setsearchData] = useState({
     product_title_name: "",
     category: "",
@@ -69,8 +68,6 @@ const Expiredproduct = () => {
       center: true,
       cell: (row) => (
         <img
-          // height="90px"
-          // width="75px"
           alt={"apna_organic"}
           src={
             row.all_images

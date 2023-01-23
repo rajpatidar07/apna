@@ -8,7 +8,6 @@ import { useState} from "react";
 import { useEffect } from "react";
 import "../../../style/order.css";
 import axios from "axios";
-//import TransactionJson from "../json/transaction"
 function Transactions() {
   const [transectiondata,setTransectionData]=useState([]);
   const [SearchTransection, setSearchTransection] = useState({
@@ -29,8 +28,6 @@ function Transactions() {
           .then((response) => {
             let data = response.data;
             setTransectionData(data);
-            console.log("transection-------------------"+JSON.stringify(data))
-            //setapicall(false);
           });
       } catch (err) {}
     }
@@ -52,7 +49,6 @@ function Transactions() {
    
     setSearchTransection({...SearchTransection, [e.target.name]: e.target.value });
   };
-  // var transactions = TransactionJson.transactions;
   const columns = [
 
     {
@@ -60,11 +56,6 @@ function Transactions() {
       selector: (row) => <Link to="/transactions_detail">{row.id}</Link>,
       sortable: true,
     },
-    // {
-    //   name: "Transactions id",
-    //   selector: (row) => <Link to="/transactions_detail">{row.transaction_id}</Link>,
-    //   sortable: true,
-    // },
     {
       name: "Order Id",
       selector: (row) => row.order_id,
@@ -140,9 +131,6 @@ function Transactions() {
             <div className="col-md-3 col-sm-6">
               <input type={"text"}  className="adminsideinput" placeholder={"Search by order id"} onChange={(e) => TranSearch(e)} name={"order_id"} value={SearchTransection.order_id} />
             </div>
-            {/* <div className="col-md-3 col-sm-6">
-              <input type={"text"} className="adminsideinput" placeholder={"Search by transaction id"} onChange={(e) => TranSearch(e)} name={"transaction_id"} value={SearchTransection.transaction_id} />
-            </div> */}
             <div className="col-md-3 col-sm-6">
               <Form.Select
                 aria-label="Search by status"

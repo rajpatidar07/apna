@@ -28,7 +28,6 @@ import BrandJson from "./json/BrandJson";
 
 let categoryArray = [];
 let encoded;
-// let newImageUrls = [];
 let ImgObj = [];
 
 function Product() {
@@ -115,9 +114,8 @@ function Product() {
     expire_date: "",
     seo_tag: "",
     variety: false,
-    product_description: "",
+    product_description:"",
     other_introduction: "",
-    // is_active: "0",
     vendor_id: "",
     shop: "",
     show_product_rating: "0",
@@ -149,12 +147,6 @@ function Product() {
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
   };
-  // const OnSaveProduct=(e,productid)=>{
-  //   setRestoreAlert(true);
-  //   // setId(id);
-  //   productid(productid);
-  // }
-
   const OnSaveProduct = (e) => {
     e.preventDefault();
     axios
@@ -180,7 +172,6 @@ function Product() {
         product_status: e.target.value,
       })
       .then((response) => {
-        // console.log("---update" + (response.data));
         setapicall(true);
       })
       .catch(function(error) {
@@ -233,7 +224,6 @@ function Product() {
     setvariantid(id[0]);
     setproductid(id[1]);
   };
-  //  feature product
   const [featureshow, setfeatureShow] = useState(false);
   const [featuredata, setfeaturedata] = useState({
     start_date: "",
@@ -247,7 +237,6 @@ function Product() {
     setfeatureShow(false);
     setfeaturedata({ start_date: "", end_date: "" });
   };
-  // const featureModalClose = () => setfeatureShow(false);
   const featureModalShow = () => setfeatureShow(true);
   const OnProductOfferClick = (e, productid, productname) => {
     setfeaturedata({
@@ -262,7 +251,6 @@ function Product() {
     setfeaturedata({ ...featuredata, [e.target.name]: e.target.value });
   };
 
-  // console.log("dataaaaaaaaaaattaaaaaaaa" + JSON.stringify(featuredata));
 
   // end feature product
   //  json
@@ -280,8 +268,6 @@ function Product() {
       center: true,
       cell: (row) => (
         <img
-          // height="90px"
-          // width="75px"
           alt={"apna_organic"}
           src={
             row.all_images
@@ -475,7 +461,7 @@ function Product() {
     {
       name: "Variety",
       selector: (row) => (
-        // (row.variety) ?
+
         <Button
           size="sm"
           onClick={handlevarietyShow.bind(this, row.product_id, row.id)}
@@ -579,6 +565,7 @@ function Product() {
   const [editparentCategory, seteditparentCategory] = useState("");
 
   const handleShow = (e) => {
+    setproductdata(data);
     // vendor
     const getVendorData = () => {
       try {
@@ -654,7 +641,6 @@ function Product() {
                         setchildCategory(response.data);
                       });
                     setCategoryEditparent(data.category_name);
-                    // console.log("---second"+data.category_name)
                   } else if (i === 2) {
                     axios
                       .get(
@@ -664,10 +650,8 @@ function Product() {
                         setgrandcCategory(response.data);
                       });
                     setCategoryEditSubparent(data.category_name);
-                    // console.log("---third"+data.category_name)
                   } else if (i === 3) {
                     setCategoryEditChildparent(data.category_name);
-                    // console.log("---fourth"+data.category_name)
                   }
                 });
             }
@@ -706,14 +690,8 @@ function Product() {
         }
       )
       .then((response) => {
-        // console.log("response.data.results)"+JSON.stringify(response.data.results))
-        // console.log("response.data.results)"+JSON.stringify(response.data.results))
         setvdata(response.data.results);
         settaxdata(response.data.results[0]);
-        // setvariantarray({
-        //   ...variantarray,
-        //   product_id: id,
-        // });
         setvariantapicall(false);
       })
       .catch(function(error) {
@@ -722,41 +700,37 @@ function Product() {
   };
   const handlevarietyShow = (id, variantid) => {
     getProductVariant(id);
-    console.log(
-      "imagnewImageUrlse" + newImageUrls.length + "-]][]" + id + variantid
-    );
-
     onImgView(variantid, id);
     setvariantarray({
       ...variantarray,
       product_id: id,
     });
     setproductID(id);
-    // image show
-
-    // axios
-    //   .get(
-    //     `${process.env.REACT_APP_BASEURL}/product_images_get?product_id=${id}&product_verient_id=11`
-    //   )
-    //   .then((response) => {
-    //     console.log("-----response" + JSON.stringify(response.data));
-    //     setvariantapicall(false);
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
     setvarietyShow(true);
   };
 
   const handlevarietyClose = (e) => {
-    // e.preventDefault();
     setValidated(false);
     setvarietyShow(false);
-    // mainformRef.current.reset();
   };
 
   const handleClose = () => {
+
+    // setproductdata({
+    //   ...productdata,
+    //   other_introduction:""
+    // })
+     
     setproductdata(data);
+
+    // setproductdata({
+    //   ...productdata,
+    //   product_description:""
+    // })
+
+
+   
+   
     setcustomarray([]);
     setvariantarray(veriantData);
     setvariantmainarray([]);
@@ -776,26 +750,12 @@ function Product() {
     setseoArray(seoarray.filter((item) => item !== e));
   };
   const ontagaddclick = (e) => {
-    // e.preventDefault();
     setproductdata({
       ...productdata,
       seo_tag: addtag,
     });
-    // setseoArray(seoarray => [...seoarray, addtag]);
     setaddtag("");
   };
-
-  // useEffect(() => {
-  //   setproductdata({
-  //     ...productdata,
-  //     seo_tag: addtag
-  //   });
-  // }, [seoarray]);
-  // useEffect(() => {
-  //   setvariantarray(varietyjson)
-  // }, []);
-  // end seotag
-
   // variant
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -812,29 +772,56 @@ function Product() {
   };
 
   const imguploadchange = async (e, product_id, id, vendor_id) => {
-    onImgView(product_id, id);
-    console.log("imagnewImageUrlse" + newImageUrls.length);
-    for (let i = 0; i < e.target.files.length; i++) {
-      let coverimg;
 
-      if (newImageUrls.length === 0 && i === 0) {
-        coverimg = "cover";
-      } else {
-        coverimg = `cover${i}`;
+    onImgView(product_id, id);
+    console.log("imge newImageUrlse" + newImageUrls.length);
+    console.log("imge lenth--" + e.target.files.length);
+    if(e.target.files.length<=10){
+
+      for (let i = 0; i < e.target.files.length; i++) {
+        let coverimg;
+  
+        if (newImageUrls.length === 0 && i === 0) {
+          coverimg = "cover";
+        } else {
+          coverimg = `cover${i}`;
+        }
+        encoded = await convertToBase64(e.target.files[i]);
+        const [first, ...rest] = encoded.base64.split(",");
+        const productimg = rest.join("-");
+        let imar = {
+          product_id: `${product_id}`,
+          product_verient_id: `${id}`,
+          vendor_id: `${vendor_id}`,
+          product_image_name: `${encoded.name}${i}${id}`,
+          image_position: coverimg,
+          img_64: productimg,
+        };
+        ImgObj.push(imar);
       }
-      encoded = await convertToBase64(e.target.files[i]);
-      const [first, ...rest] = encoded.base64.split(",");
-      const productimg = rest.join("-");
-      let imar = {
-        product_id: `${product_id}`,
-        product_verient_id: `${id}`,
-        vendor_id: `${vendor_id}`,
-        product_image_name: `${encoded.name}${i}${id}`,
-        image_position: coverimg,
-        img_64: productimg,
-      };
-      ImgObj.push(imar);
+
+      if(newImageUrls.length<=9){
+        axios
+        .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
+        .then((response) => {
+          ImgObj = [];
+          onImgView(id, product_id);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      }
+      else{
+        alert("More than 10 Pics are allowedd")
+      }
+      // image
+     
+
     }
+    else{
+      alert("More than 10 Pics are allowed")
+    }
+
     // image
     axios
       .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
@@ -931,14 +918,12 @@ function Product() {
     });
   };
   const handleVarietyChange = (e) => {
-    // const varietyvalue = e.target.type === 'radio' ? e.target.checked : e.target.value
     setproductdata({
       ...productdata,
       [e.target.name]: e.target.value,
     });
   };
   const onVariantaddclick = (e, id) => {
-    console.log("variantarray.unit  " + variantarray.unit);
     if (
       (variantarray.unit !== "pcs" && variantarray.unit_quantity === "") ||
       variantarray.unit !== ""
@@ -1014,8 +999,6 @@ function Product() {
             quantity: "",
             product_id: productID,
           });
-          // VariantEditClick(id,productid)
-          //  setvarietyShow(false);
           getProductVariant(productID);
         })
         .catch(function(error) {
@@ -1026,15 +1009,12 @@ function Product() {
   const VariantAddProduct = (e) => {
     if (variantarray.unit == "") {
       setcustomValidated(true);
-      //alert("pleaws")
     } else {
       setvariantmainarray((variantmainarray) => [
         ...variantmainarray,
         variantarray,
       ]);
-      // setAlert(true)
       setcustomValidated(false);
-      formRef.current.reset();
     }
   };
 
@@ -1059,9 +1039,6 @@ function Product() {
       })
       .then((response) => {
         getProductVariant(variantremove.productid);
-        // setapicall(true);
-        // getProductVariant(productid);
-        //  setpdata(response.data)
       })
       .catch(function(error) {
         console.log(error);
@@ -1081,9 +1058,7 @@ function Product() {
         is_delete: "0",
       })
       .then((response) => {
-        // getProductVariant(variantremove.productid);
         setapicall(true);
-        // setpdata(response.data)
       })
       .catch(function(error) {
         console.log(error);
@@ -1125,8 +1100,6 @@ function Product() {
       price: variantmainarray,
     });
   }, [variantmainarray]);
-  // varint end
-  // handle click event of the Remove button
 
   const oncustomheadChange = (e) => {
     setheaderval(e.target.value);
@@ -1209,9 +1182,6 @@ function Product() {
       other_introduction: otherinstrction,
     });
   };
-  //  const createMarkup = () => {
-  //     return { __html: pdata.product_description };
-  //   }
   let productdataa = [];
 
   const handleSaveDraft = (e) => {
@@ -1229,7 +1199,6 @@ function Product() {
         .post(`${process.env.REACT_APP_BASEURL}/products`, productdataa)
         .then((response) => {
           setProductDraftAlert(true);
-          console.log("finall---" + JSON.stringify(response.data));
           setapicall(true);
         });
     }
@@ -1247,19 +1216,15 @@ function Product() {
     axios
       .post(`${process.env.REACT_APP_BASEURL}/products`, productdataa)
       .then((response) => {
-        console.log("finall---" + JSON.stringify(response.data));
         setapicall(true);
       });
     e.preventDefault();
-    // mainformRef.current.reset();
-    //  setpdata('');
     setValidated(false);
     setProductAlert(true);
 
     handleClose();
   };
   const handleUpdateProduct = (e) => {
-    // productdataa.push(productdata)
     e.preventDefault();
     axios
       .put(`${process.env.REACT_APP_BASEURL}/products_update`, productdata)
@@ -1315,11 +1280,6 @@ function Product() {
               <option value="pending">Pending</option>
               <option value="draft">Draft</option>
               <option value="approved ">Approved </option>
-              {/* <option value="active">Active</option> */}
-              {/* <option  value="expired">Expired</option>
-          <option  value="special_offer">Special Offer</option>
-          <option   value="featured_offer">Featured Offer </option>
-          <option  value="promotional">Promotional </option> */}
             </Form.Select>
           </div>
 
@@ -1521,11 +1481,13 @@ function Product() {
                         className="mx-3"
                         controlId="validationCustom04"
                       >
+                        {console.log("product description-------"+productdata.product_description)}
                         <Form.Label className="inputlabelheading" sm="12">
                           Product Description
                         </Form.Label>
                         <Col sm="12">
                           <CKEditor
+                          
                             editor={ClassicEditor}
                             data={productdata.product_description}
                             onChange={handledescription}
@@ -1622,10 +1584,7 @@ function Product() {
                           required
                           onChange={(e, id) => categoryFormChange(e, id)}
                           name={"sub_category"}
-                          // value={CategoryEditdata.category_name}
                         >
-                          {/* <option value="" selected={CategoryEditdata === '' ? true :false }>Search by category</option> */}
-
                           {subCategory.map((cdata, i) => {
                             return (
                               <option
@@ -1663,7 +1622,6 @@ function Product() {
                           onChange={(e, id) => categoryFormChange(e, id)}
                           name={"childcategory"}
                         >
-                          {/* <option value="">Search by category</option> */}
                           {childCategory.map((cdata, i) => {
                             return (
                               <option
@@ -1701,9 +1659,6 @@ function Product() {
                           onChange={(e, id) => categoryFormChange(e, id)}
                           name={"gcategory"}
                         >
-                          {/* <option value={''} >
-                              Select Category
-                            </option> */}
                           {grandcCategory.map((cdata, i) => {
                             return (
                               <option
@@ -1803,17 +1758,11 @@ function Product() {
                           type="number"
                           min={1}
                           placeholder="Gst"
-                          // className={
-                          //   customvalidated === true ? "border-danger" : null
-                          // }
                           name="gst"
                           value={productdata.gst}
                           onChange={(e) => handleInputFieldChange(e)}
                           required
                         />
-                        {/* <Form.Control.Feedback type="invalid">
-                          Please choose a gst
-                        </Form.Control.Feedback> */}
                       </Col>
                     </Form.Group>
                     <Form.Group className="mx-3" controlId="validationCustom11">
@@ -1833,9 +1782,6 @@ function Product() {
                           onChange={(e) => handleInputFieldChange(e)}
                           required
                         />
-                        {/* <Form.Control.Feedback type="invalid">
-                          Please choose a gst
-                        </Form.Control.Feedback> */}
                       </Col>
                     </Form.Group>
                     <Form.Group className="mx-3" controlId="validationCustom11">
@@ -1854,9 +1800,6 @@ function Product() {
                           value={productdata.cgst}
                           onChange={(e) => handleInputFieldChange(e)}
                         />
-                        {/* <Form.Control.Feedback type="invalid">
-                          Please choose a gst
-                        </Form.Control.Feedback> */}
                       </Col>
                     </Form.Group>
                     <Form.Group className="mx-3" controlId="validationCustom11">
@@ -1883,15 +1826,6 @@ function Product() {
                 </div>
                 {/*Date  */}
 
-                {/* Variation */}
-                {/* <Form
-            className="p-2 addproduct_form"
-            validated={customvalidated}
-            ref={mainformRef}
-            onSubmit={
-              modalshow === "add"
-            }
-          > */}
                 {modalshow === "add" ? (
                   <div className="my-3 inputsection_box">
                     <div className="productvariety_box">
@@ -1960,7 +1894,6 @@ function Product() {
                       <div className="row">
                         <Form.Group
                           className="mx-3"
-                          // controlId="validationCustom13"
                         >
                           <div className="variation_box my-2">
                             <div className="row">
@@ -1999,6 +1932,7 @@ function Product() {
                                         Qty{" "}
                                         <span className="text-danger">* </span>
                                       </th>
+                                      
                                     </tr>
                                   </thead>
                                   <tbody>
@@ -2232,7 +2166,6 @@ function Product() {
                                               handleInputcheckboxChange(e)
                                             }
                                             name={"special_offer"}
-                                            // value={variantarray.special_offer}
                                             checked={
                                               variantarray.special_offer ===
                                                 1 ||
@@ -2251,7 +2184,6 @@ function Product() {
                                               handleInputcheckboxChange(e)
                                             }
                                             name={"featured_product"}
-                                            // value={variantarray.featured_product}
                                             checked={
                                               variantarray.featured_product ===
                                                 1 ||
@@ -2406,7 +2338,9 @@ function Product() {
                                             <td className="p-0 text-center">
                                               {variantdata.quantity}
                                             </td>
-                                            <td className="p-0 text-center"></td>
+                                            <td className="p-0 text-center">
+                                            
+                                            </td>
                                             <td className="p-0 text-center">
                                               <Button
                                                 variant="text-danger"
@@ -2420,19 +2354,6 @@ function Product() {
                                               >
                                                 &times;
                                               </Button>
-                                              {/* <Button
-                                              variant="text-danger"
-                                              className="addcategoryicon text-danger"
-                                              onClick={(id) =>
-                                                VariantEditClick(
-                                                  variantdata.id,
-                                                  variantdata.product_id
-                                                )
-                                              }
-                                              size="sm"
-                                            >
-                                              <MdOutlineEdit />
-                                            </Button> */}
                                             </td>
                                           </tr>
                                         );
@@ -2483,8 +2404,6 @@ function Product() {
                       </div>
 
                       <div className="d-flex align-items-center tagselectbox mt-2">
-                        {/* {(seoarray || []).map((seotags, i) => {
-                          return ( */}
                         {productdata.seo_tag == "" ? (
                           ""
                         ) : (
@@ -2493,10 +2412,6 @@ function Product() {
                             productdata.seo_tag === undefined
                               ? ""
                               : productdata.seo_tag}
-                            {/* <GiCancel
-                            className=" mx-0 ms-1 btncancel"
-                            onClick={() => tagRemoveClick(productdata.seo_tag)}
-                          /> */}
                           </Badge>
                         )}
 
@@ -2507,7 +2422,7 @@ function Product() {
                     </Form.Group>
                   </div>
                 </div>
-
+                {console.log("product other description-------"+productdata.other_introduction)}
                 {/* other info */}
                 <div className="my-3 inputsection_box">
                   <h5 className="m-0">Other Instruction</h5>
@@ -2543,22 +2458,12 @@ function Product() {
                                 min={"1"}
                                 onChange={oncustomheadChange}
                                 name={"header"}
-                                // className={
-                                //   customvalidated === true
-                                //     ? "border-danger"
-                                //     : null
-                                // }
                               />
                             </InputGroup>
                           </td>
                           <td className="col-4">
                             <InputGroup className="">
                               <Form.Control
-                                // className={
-                                //   customvalidated === true
-                                //     ? "border-danger"
-                                //     : null
-                                // }
                                 value={descval}
                                 name={"description"}
                                 type="text"
@@ -2711,7 +2616,6 @@ function Product() {
                                       required
                                       aria-label="Default select example"
                                       name="unit"
-                                      // value={variantarray.unit === 'pcs' ? 'color' : variantarray.unit === 'gms' ? 'weight' : variantarray.unit === 'ml' ? 'volume' : null}
                                       onChange={(e) => onVariantChange(e)}
                                       className={
                                         customvalidated === true
@@ -2926,7 +2830,6 @@ function Product() {
                                       handleInputcheckboxChange(e)
                                     }
                                     name={"special_offer"}
-                                    // value={variantarray.special_offer}
                                     checked={
                                       variantarray.special_offer === 1 ||
                                       variantarray.special_offer === true
@@ -2943,7 +2846,6 @@ function Product() {
                                       handleInputcheckboxChange(e)
                                     }
                                     name={"featured_product"}
-                                    // value={variantarray.featured_product}
                                     checked={
                                       variantarray.featured_product === 1 ||
                                       variantarray.featured_product === true
@@ -2993,7 +2895,11 @@ function Product() {
                                   </InputGroup>
                                 </div>
                               </td>
-                              <td className="p-0 text-center"></td>
+                              <td className="p-0 text-center"> 
+                              <p className="mt-2  text-danger text-center fs-6" type="invalid">
+                                            Select Image This (height-156px * width-136px) 
+                                            </p>
+                              </td>
                               <td className="p-0">
                                 <div className="manufacture_date">
                                   <InputGroup className="" size="sm">
@@ -3362,7 +3268,6 @@ function Product() {
             novalidate
             validated={validated}
             ref={formRef}
-            // onSubmit={(e) => AddProductFeatureClick(e)}
           >
             <Modal.Header closeButton>
               <Modal.Title>Add Offer Product</Modal.Title>
@@ -3485,16 +3390,8 @@ function Product() {
                 btntext={"Cancel"}
                 onClick={featureModalClose}
                 btnclass={"button main_outline_button "}
-                // Iconname={<GiCancel /> }
               />
-              {/* <button
-                className="button main_outline_button"
-                onClick={featureModalClose}
-              >
-                Cancel
-              </button> */}
               <Iconbutton
-                // type={"submit"}
                 onClick={OnSaveProduct}
                 btntext={"Save"}
                 btnclass={"button main_button "}
@@ -3506,10 +3403,7 @@ function Product() {
           show={RestoreAlert}
           title="Offered Product Added  Sucessfully"
           onConfirm={() => setRestoreAlert(false)}
-          // onCancel={hideAlert}
-          // showCancelButton={true}
         />
-        {/* end feature product modal */}
       </div>
     </div>
   );

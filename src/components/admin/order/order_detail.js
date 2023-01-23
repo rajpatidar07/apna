@@ -26,7 +26,6 @@ const OrderDetail = () => {
   };
 
   const onStatusChangee = (e) => {
-    // e.prevantDefault();
     setchangstatuss(e.target.value);
     axios
       .put("http://192.168.29.108:5000/order_status_change", {
@@ -34,7 +33,6 @@ const OrderDetail = () => {
         id: `${orderid}`,
       })
       .then((response) => {
-        // setapicall(true)
       })
       .catch(function(error) {
         console.log(error);
@@ -48,8 +46,6 @@ const OrderDetail = () => {
         setproductOrder(response.data.product_types);
 
         UserData();
-        // console.log("______uuuuu_____"+JSON.stringify(response.data))
-        // setapicall(false)
       })
       .catch(function(error) {
         console.log(error);
@@ -61,8 +57,6 @@ const OrderDetail = () => {
       .then((response) => {
         let data = response.data;
         setUser(data);
-        console.log("______uuuuserdataa_____" + JSON.stringify(response.data));
-        // setapicall(false)
       })
       .catch(function(error) {
         console.log(error);
@@ -99,7 +93,6 @@ const OrderDetail = () => {
                     aria-label="Floating label select example"
                     onChange={onStatusChangee}
                     name="status"
-                    // value={changstatuss}
                   >
                     <option>Select Order Status</option>
                     <option
@@ -188,8 +181,6 @@ const OrderDetail = () => {
                 orderdata.mrp == ""
                   ? (orderdata.mrp = "0")
                   : Number(orderdata.mrp);
-
-                //  console.log("-------"+orderdata.sgst)
                 let countAllText =
                   Number(orderdata.gst) +
                   Number(orderdata.cgst) +
@@ -199,10 +190,8 @@ const OrderDetail = () => {
                   Number(orderdata.retails_sales_tax) +
                   Number(orderdata.value_added_tax);
                 let discont = (orderdata.mrp * orderdata.discount) / 100;
-                // let product_price= Number(orderdata.mrp)-discont;
                 let tax =
                   (Number(orderdata.product_price) * countAllText) / 100;
-                //  let sale_price=(product_price+tax)
                 let total_price = orderdata.sale_price * orderdata.quantity;
                 total += Number(total_price);
                 sub_total += Number(orderdata.sale_price);
@@ -343,7 +332,6 @@ const OrderDetail = () => {
                         <AiOutlineFileText className="order_icon p-1" />
 
                         <div className="customer_orders_no ps-4 my-auto">
-                          {/* {totalorder=Number(totalorder)+Number(orderdata.quantity)} */}
                           {order.total_quantity}
                         </div>
                       </div>
@@ -395,59 +383,6 @@ const OrderDetail = () => {
                   </div>
                 );
               })}
-
-              {/* <div className="customer_info">
-                  <div className="customer">Customer</div>
-                  
-                  <div className="customer_name_img d-flex py-3">
-                    <img src={Profile} alt={'apnaorganic'}/>
-                    <div className="customer_name ps-4 my-auto">
-                      Gourav Choudhary
-                    </div>
-                  </div>
-                  <div className="customer_orders d-flex py-3">
-                    <AiOutlineFileText className="order_icon p-1" />
-                    <div className="customer_orders_no ps-4 my-auto">
-                      2 Order
-                    </div>
-                  </div>
-                </div>
-                <div className="contact py-3">
-                  <div className="contact_heading pb-3">
-                    <h5>Contact Info</h5>
-                  </div>
-                  <div className="email py-2">
-                    <BsFillEnvelopeFill />
-                    <span>text159@gamil.com</span>
-                  </div>
-                  <div className="number py-2">
-                    <BsTelephoneFill />
-                    <span> +91 987654321</span>
-                  </div>
-                </div>
-                <div className="ship_Address py-3">
-                  <h5>Ship Address</h5>
-                  <div className="address">
-                    <p>Gourav Choudhary</p>
-                    <p>45 Universal Tower</p>
-                    <p>2nd Floor Scheme 54 PU4</p>
-                    <p>Indore Madhya Pradesh</p>
-                    <p>Pin:452001</p>
-                    <p>+91 9876543210</p>
-                  </div>
-                </div>
-                <div className="bill_Address py-3">
-                  <h5>Bill Address</h5>
-                  <div className="address">
-                    <p>Gourav Choudhary</p>
-                    <p>45 Universal Tower</p>
-                    <p>2nd Floor Scheme 54 PU4</p>
-                    <p>Indore Madhya Pradesh</p>
-                    <p>Pin:452001</p>
-                    <p>+91 9876543210</p>
-                  </div>
-                </div> */}
-              {/* </div> */}
             </div>
           </div>
         </div>

@@ -17,9 +17,6 @@ const InvoiceList = () => {
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
   const [invoice, setInvoice] = useState([]);
-  // const[invoiceno,setInvoiceNo]=useState([]);
-  // const [invoiceid,setInvoiceId]=useState([]);
-  // const [invoiceprice,setInvoicePrice]=useState([]);
   const [SearchInvo, setSearchInvo] = useState({
     search: "",
     from_date: "",
@@ -43,7 +40,6 @@ const InvoiceList = () => {
           .then((response) => {
             let data = response.data;
             setInvoice(data);
-            // InvoiceCheck();
           });
       } catch (err) {}
     }
@@ -54,7 +50,6 @@ const InvoiceList = () => {
   const onValueChange = (e) => {
     setSearchInvo({ ...SearchInvo, [e.target.name]: e.target.value });
   };
-  console.log("---ss" + JSON.stringify(SearchInvo));
   const onDateChange = (e) => {
     let mdate = moment(e.target.value).format("YYYY-MM-DD");
     setSearchInvo({
@@ -194,24 +189,6 @@ const InvoiceList = () => {
         paddingLeft: "0px",
       },
     },
-    // {
-    //   name: "Action",
-    //   width: "100px",
-    //   style: {
-    //     paddingRight: "12px",
-    //     paddingLeft: "0px",
-    //   },
-    //   center: true,
-    //   selector: (row) => (
-    //     <div className={"actioncolimn"}>
-    //       <BiEdit className=" p-0 m-0  editiconn text-secondary" />
-    //       <BsTrash
-    //         className=" p-0 m-0 editiconn text-danger"
-    //         onClick={handleAlert}
-    //       />
-    //     </div>
-    //   ),
-    // },
   ];
   const [filterText, setFilterText] = React.useState("");
   const [resetPaginationToggle, setResetPaginationToggle] = React.useState(
@@ -284,13 +261,6 @@ const InvoiceList = () => {
               Search
             </button>
           </div>
-          {/* <div className="col-md-3 col-sm-6 aos_input">
-            <MainButton
-              btntext={"Search"}
-              btnclass={"button main_button w-100"}
-              onClick={SearchInvoices}
-            />
-          </div> */}
         </div>
 
         {/* upload */}
@@ -307,14 +277,6 @@ const InvoiceList = () => {
           subHeader
           subHeaderComponent={subHeaderComponent}
         />
-        {/* <SweetAlert
-          show={Alert}
-          title="Product Name"
-          text="Are you Sure you want to delete"
-          onConfirm={hideAlert}
-          showCancelButton={true}
-          onCancel={hideAlert}
-        /> */}
       </div>
     </div>
   );

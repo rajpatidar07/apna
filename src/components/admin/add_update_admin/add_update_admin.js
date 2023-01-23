@@ -10,8 +10,6 @@ import { useEffect } from "react";
 import axios from "axios";
 
 function Admin() {
-  // const handleAlert = () => setAlert(true);
-  // const hideAlert = () => setAlert(false);
   const [apicall, setapicall] = useState(false);
   const [show, setShow] = useState("");
   const [validated, setValidated] = useState(false);
@@ -42,7 +40,6 @@ function Admin() {
   };
 
   const handleShow = (e) => {
-    console.log("----------" + e);
     if (e === "add") {
       setShow(e);
     }
@@ -54,7 +51,6 @@ function Admin() {
             let data = response.data[0];
             setaddadmindata(data);
             localStorage.setItem("adminid", response.data.id);
-            // console.log(""+response.data.id)
           });
       } catch (err) {}
     }
@@ -99,12 +95,6 @@ function Admin() {
       sortable: true,
       center: true,
     },
-    // {
-    //   name: "Password",
-    //   selector: (row) => row.admin_password,
-    //   sortable: true,
-    //   center: true,
-    // },
     {
       name: "Action",
       width: "120px",
@@ -115,7 +105,6 @@ function Admin() {
             className=" p-0 m-0 editiconn"
             onClick={handleShow.bind(this, row.id)}
           />
-          {/* <BsTrash className=" p-0 m-0 editiconn text-danger" onClick={handleAlert} /> */}
         </div>
       ),
     },
@@ -136,10 +125,6 @@ function Admin() {
   const handleFormChange = (e) => {
     setaddadmindata({ ...addadmindata, [e.target.name]: e.target.value });
   };
-
-  console.log(
-    "--------------addadmindata---------" + JSON.stringify(addadmindata)
-  );
   const onValueChange = (e) => {
     setSearchAd({ ...Searchad, [e.target.name]: e.target.value });
   };
@@ -151,7 +136,6 @@ function Admin() {
         admin_type: `${Searchad.admin_type}`,
       })
       .then((response) => {
-        console.log("data---------------" + JSON.stringify(response.data));
         setadmindata(response.data);
         setSearchAd("");
         setsearchValidated(false);
@@ -162,7 +146,6 @@ function Admin() {
     if (form.checkValidity() === false) {
       e.preventDefault();
       e.stopPropagation();
-      console.log("falsecheckValidity----------");
       setValidated(true);
       setapicall(true);
     } else {
@@ -415,7 +398,6 @@ function Admin() {
             <Iconbutton
               type={"submit"}
               btntext={show === "add" ? "Add Admin" : "Update Admin"}
-              // onClick={(show === 'add' ? AddAdminClick : UpdateAdminClick(show))}
               btnclass={"button main_button "}
             />
           </Modal.Footer>
@@ -429,14 +411,6 @@ function Admin() {
         pointerOnHover
         className={"table_body add_update_admin_table"}
       />
-      {/* <SweetAlert
-          show={Alert}
-          title="Admin Name"
-          text="Are you Sure you want to delete"
-          onConfirm={hideAlert}
-          showCancelButton={true}
-          onCancel={hideAlert}
-        /> */}
       <SAlert
         show={AddAlert}
         title="Added Admin Successfully "

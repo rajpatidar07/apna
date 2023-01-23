@@ -22,7 +22,6 @@ const Login = () => {
   const onPasswordChange = (e, id) => {
     setPassword(e.target.value);
   };
-  console.log("id free-----" + id);
 
   const LoginCheck = () => {
     localStorage.setItem("loginid", email);
@@ -35,11 +34,9 @@ const Login = () => {
     if (form.checkValidity() === false) {
       e.preventDefault();
       e.stopPropagation();
-      // setError(false);
       setEmailError(false);
       setPasswordError(false);
     } else {
-      console.log("elseeeeeee");
 
       axios
         .post(`${process.env.REACT_APP_BASEURL}/admin_login`, {
@@ -49,7 +46,6 @@ const Login = () => {
         .then((response) => {
           console.log(response);
           if (response.data === "email not found") {
-            // setError(false);
             setEmailError(false);
           } else if (response.data === "password not matched") {
             setPasswordError(false);

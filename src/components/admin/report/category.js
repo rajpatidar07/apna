@@ -46,10 +46,6 @@ const CategoryReport = () => {
 
 
   const fetchData=()=>{
-    console.log( "from_date---"+fromDate)
-    console.log( "to_date---"+toDate)
-    console.log( "Previous  Todate---------------------------------------"+prevTodate)
-    console.log( "Previous fromdate---------------------------------------"+prevFromdate)
     axios.post(`${process.env.REACT_APP_BASEURL}/categories_report`, 
     {
       from_date:fromDate,
@@ -63,14 +59,6 @@ const CategoryReport = () => {
        brand:brandName
   
     }).then((response) => {
-     
-       console.log("Category data Report ----"+ JSON.stringify(response.data[0]))
-       console.log("Category Previous data ----"+ JSON.stringify(response.data[1]))
-       console.log("Category table data ----"+ JSON.stringify(response.data[2]))
-     
-      //  console.log('Error-----'+JSON.stringify(response.data))
-
-
        if(response.data.message=="no_data"){
 
         setCategoryError(response.data.message)
@@ -96,7 +84,6 @@ const CategoryReport = () => {
 
    const VenderData= async()=>{
     let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
-    //  console.log("vendor----"+JSON.stringify(result.data))
     if(result.data){
       setVenderList(result.data)
     }
@@ -107,8 +94,6 @@ const CategoryReport = () => {
  
 const BrandData= async()=>{
   let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/brand_list`)
-  
-  //  console.log("Brand data-----"+ JSON.stringify(result.data))
   if(result.data){
     setBrand(result.data)
   }
@@ -117,7 +102,6 @@ const BrandData= async()=>{
 
    const CategoryData= async()=>{
     let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
-    // console.log(result.data)
     if(result.data){
       setCategory(result.data)
     }
@@ -138,18 +122,13 @@ const BrandData= async()=>{
   const TimeChange = (e)=>{
     setFilterchange(e.target.value)
     let value = e.target.value;
-    console.log("---------------------------------------------"+value);
-      //today---------------------------------------------------------------------------
       if(value==1){
         let frommDate=moment().format("YYYY-MM-DD")
         setFromDate(frommDate)
-        // console.log("From date"+e.target.value)
-        // console.log("today")
         setToDate(moment().format("YYYY-MM-DD"))
         let previousTodate=moment(frommDate).subtract(1, 'days').startOf('days').format("YYYY-MM-DD")
         setprevTodate(previousTodate)
         setprevFromdate(previousTodate)
-        // console.log("previous day"+ prevDate)
         setpreviousStateChange(1)
       }
           //yesterday------------------------------------------------------------------------
@@ -188,8 +167,6 @@ const BrandData= async()=>{
       let previouslastmont=moment(lastMonth).subtract(1, 'days').startOf('days').format('YYYY-MM-DD')
       setprevTodate(previouslastmont);
       setprevFromdate(moment(previouslastmont).subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
-      // setPrevDate(moment(month).subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
-      // console.log("previou month-"+prevDate)
       setpreviousStateChange(4)
    }
   //  last six month---------------------------------------------------------
@@ -201,8 +178,6 @@ const BrandData= async()=>{
     let lastsixMonth=moment(sixMonth).subtract(1, 'month').startOf('month').format('YYYY-MM-DD')
     setprevTodate(lastsixMonth);
     setprevFromdate(moment(lastsixMonth).subtract(5, 'month').startOf('month').format('YYYY-MM-DD'))
-    // setPrevDate(moment(sixMonth).subtract(6, 'month').startOf('month').format('YYYY-MM-DD'))
-    // console.log("previou 6 month-"+prevDate)
     setpreviousStateChange(5)
   }
   
@@ -211,12 +186,10 @@ const BrandData= async()=>{
     
   let ThisWeek=moment().startOf('weeks').format('YYYY-MM-DD')
   setFromDate(ThisWeek);
-  // console.log("From last 6 month"+ThisWeek)
   setToDate( moment().format("YYYY-MM-DD") );
   let previousthisweek=moment(ThisWeek).subtract(1,'days').endOf('days').format('YYYY-MM-DD')
   setprevTodate(previousthisweek)
   setprevFromdate(moment(previousthisweek).subtract(1,'weeks').endOf('weeks').format('YYYY-MM-DD'))
-  // setPrevDate(moment(ThisWeek).subtract(1, 'weeks').endOf('weeks').format('YYYY-MM-DD'))
   setpreviousStateChange(8)
     
   }
@@ -224,7 +197,6 @@ const BrandData= async()=>{
     
   let ThisMonth=moment().startOf('month').format('YYYY-MM-DD')
   setFromDate(ThisMonth);
-  // console.log("From last 6 month"+ThisMonth)
   setToDate( moment().format("YYYY-MM-DD") );
   let previousthismont=moment(ThisMonth).subtract(1, 'days').startOf('days').format('YYYY-MM-DD')
   setprevTodate(previousthismont);
@@ -245,15 +217,6 @@ fetchData()
          
             
            }
-        
-
-
-
-
-
-
-
-
            const options1 = [
             brand.map((item)=>(
               { value: `${item.brand}` ,label:`${item.brand}` }
@@ -273,10 +236,6 @@ fetchData()
             setBrandName(arrr)
            
            }
-          
-          
-          
-          //  console.log("$$$$$$------"+JSON.stringify(brandName[0]))
           const options2 = [
             venderList.map((item)=>(
               { value: `${item.id}` ,label:`${item.shop_name}` }
@@ -297,10 +256,6 @@ fetchData()
              setVendorId(vendorArray)
             
             }
-          
-          // console.log("$$$$$$------"+JSON.stringify(vendorId[0]))
-          
-           
           const options3 = [
             category.map((item)=>(
               { value: `${item.id}` ,label:`${item.category_name}` }
@@ -347,10 +302,6 @@ fetchData()
            setLocation(SearchArray)
           
           }
-
-
-
-
            var itemSold= Categoryreport.total_sold_product_count
            var NetSales=Categoryreport.total_sold_product_amount
            var order=Categoryreport.order_count
@@ -430,99 +381,6 @@ fetchData()
       
            
           ];
-        
-          // const data = [
-          //   {
-          //     id: 1,
-          //     net: "$250",
-          //     isold: "25",
-          //     category: <p className="reviewdesc"> Decoration Decoration </p>,
-          //     product: "120",
-          //     order:"12"
-          //   },
-          //   {
-          //     id: 2,
-          //     net: "$250",
-          //     category: "Backpacks",
-          //     order: "120",
-          //     products: "$14",
-          //     isold: "25",
-          //   },
-          //   {
-          //     id: 1,
-          //     net: "$250",
-          //     category: "Backpacks",
-          //     order: "120",
-          //     product: "25",
-          //     isold: "25",
-        
-        
-          //   },
-          //   {
-          //     id: 2,
-          //     net: "$250",
-          //     category: "Backpacks",
-          //     order: "120",
-          //     product: "25",
-          //     isold: "25",
-        
-          //   },
-          //   {
-          //     id: 1,
-          //     net: "$250",
-          //     category: "Backpacks",
-          //     order: "120",
-          //     product: "25",
-          //     isold: "25",
-        
-          //   },
-          //   {
-          //     id: 2,
-          //     net: "$250",
-          //     category: "Backpacks",
-          //     order: "120",
-          //     product: "25",
-          //     isold: "25",
-        
-          //   },
-          //   {
-          //     id: 1,
-          //     net: "$250",
-          //     category: "Backpacks",
-          //     order: "120",
-          //     product: "25",
-          //     isold: "25",
-        
-          //   },
-          //   {
-          //     id: 2,
-          //     net: "$250",
-          //     category: "Backpacks",
-          //     order: "120",
-          //     product: "25",
-          //     isold: "25",
-        
-          //   },
-          //   {
-          //     id: 1,
-          //     net: "$250",
-          //     category: "Backpacks",
-          //     order: "120",
-          //     product: "25",
-          //     isold: "25",
-        
-          //   },
-          //   {
-          //     id: 2,
-          //     net: "$250",
-          //     category: "Backpacks",
-          //     order: "120",
-          //     product: "25",
-          //     isold: "25",
-        
-          //   },
-          // ];
-          
                   //----------------------------------------------------------------- pdf----------------------------------------------------->
   const exportPDF = () => {
     const unit = "pt";
@@ -548,7 +406,6 @@ fetchData()
       blankrows:"No Record"
     };
 
-    // doc.text(headers, backgroundColor, "pink");
     doc.text(title, marginLeft, 40);
     doc.autoTable(content);
     doc.save("Category Report.pdf")
@@ -571,7 +428,6 @@ function handleDownloadExcel() {
     sheet: "Category Report",
     tablePayload: {
        header,
-      // accept two different data structures
       body: tableCategory ,
       blankrows:"No Record"
     },
@@ -609,16 +465,6 @@ var getPreviousSoldorder=Number(PrevCategoryreport.prev_order_count)
 var resultorder=(((getSoldorder-getPreviousSoldorder)/getPreviousSoldorder)*100).toFixed(2)
 
 resultorder!="Infinity"?console.log():resultorder=0
-
-
-
-
-
-
-
-
-
-
   return (
     <div>
       <h2>Category Report</h2>
@@ -640,7 +486,6 @@ resultorder!="Infinity"?console.log():resultorder=0
               <option name="this_week" value={9}>This  month</option>
               <option name="last_month" value={4}>last month</option>
               <option name="last_6_month" value={5}>last 6  month</option>
-              {/* <option name="custom_month" value="6">custom month</option> */}
               <option name="custom_date" value="7">custom date</option>
 
             </Form.Select>

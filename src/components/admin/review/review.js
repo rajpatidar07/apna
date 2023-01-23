@@ -215,7 +215,6 @@ const Review = () => {
       ),
     },
   ];
-  console.log("eeeeeee" + JSON.stringify(reviewdata));
 
   return (
     <div>
@@ -321,18 +320,6 @@ const Review = () => {
                     </Form.Text>
                   </Form.Group>
                 </div>
-                {/* <div className="col-md-12">
-                <Form.Group
-                  className="mb-3 aos_input flex-column d-flex"
-                  controlId="formBasicEmail"
-                >
-                  <Form.Label className="mb-0">Rating</Form.Label>
-                
-                      <AiOutlineStar/>
-
-                  <Form.Text className="mt-0">{addreviewdata.review_rating}</Form.Text>
-                </Form.Group>
-              </div> */}
                 <div className="col-md-12">
                   <Form.Group
                     className="mb-3 aos_input flex-column d-flex"

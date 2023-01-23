@@ -17,11 +17,3 @@ const SAlert = (props) => {
   );
 };
 export default SAlert;
-// SAlert.defaultProps = {
-//   show: "",
-//   title: "",
-//   text: "",
-//   onConfirm: "",
-//   showCancelButton: "",
-//   onCancel: false,
-// };

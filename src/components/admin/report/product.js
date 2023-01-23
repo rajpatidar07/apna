@@ -42,7 +42,6 @@ const ProductReport = () => {
   const[prevTodate,setprevTodate]=useState(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'))
 
   const [apicall,setapicall]=useState(false)
-  // const [ProductSearch,setProductSearch]=useState("")
   const [ProductError,setProductError]=useState("")
   const [venderList,setVenderList]=useState([])
   const[vendorId,setVendorId]=useState("")
@@ -61,18 +60,14 @@ const ProductReport = () => {
     setFilterchange(e.target.value)
 
     let value = e.target.value;
-    console.log("---------------------------------------------"+value);
     //today---------------------------------------------------------------------------
     if(value==1){
       let frommDate=moment().format("YYYY-MM-DD")
       setFromDate(frommDate)
-      // console.log("From date"+e.target.value)
-      // console.log("today")
       setToDate(moment().format("YYYY-MM-DD"))
       let previousTodate=moment(frommDate).subtract(1, 'days').startOf('days').format("YYYY-MM-DD")
       setprevTodate(previousTodate)
       setprevFromdate(previousTodate)
-      // console.log("previous day"+ prevDate)
       setpreviousStateChange(1)
     }
         //yesterday------------------------------------------------------------------------
@@ -111,8 +106,6 @@ const ProductReport = () => {
     let previouslastmont=moment(lastMonth).subtract(1, 'days').startOf('days').format('YYYY-MM-DD')
     setprevTodate(previouslastmont);
     setprevFromdate(moment(previouslastmont).subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
-    // setPrevDate(moment(month).subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
-    // console.log("previou month-"+prevDate)
     setpreviousStateChange(4)
  }
 //  last six month---------------------------------------------------------
@@ -124,8 +117,6 @@ const ProductReport = () => {
   let lastsixMonth=moment(sixMonth).subtract(1, 'month').startOf('month').format('YYYY-MM-DD')
   setprevTodate(lastsixMonth);
   setprevFromdate(moment(lastsixMonth).subtract(5, 'month').startOf('month').format('YYYY-MM-DD'))
-  // setPrevDate(moment(sixMonth).subtract(6, 'month').startOf('month').format('YYYY-MM-DD'))
-  // console.log("previou 6 month-"+prevDate)
   setpreviousStateChange(5)
 }
 
@@ -134,12 +125,10 @@ if(value==8){
   
 let ThisWeek=moment().startOf('weeks').format('YYYY-MM-DD')
 setFromDate(ThisWeek);
-// console.log("From last 6 month"+ThisWeek)
 setToDate( moment().format("YYYY-MM-DD") );
 let previousthisweek=moment(ThisWeek).subtract(1,'days').endOf('days').format('YYYY-MM-DD')
 setprevTodate(previousthisweek)
 setprevFromdate(moment(previousthisweek).subtract(1,'weeks').endOf('weeks').format('YYYY-MM-DD'))
-// setPrevDate(moment(ThisWeek).subtract(1, 'weeks').endOf('weeks').format('YYYY-MM-DD'))
 setpreviousStateChange(8)
   
 }
@@ -147,7 +136,6 @@ if(value==9){
   
 let ThisMonth=moment().startOf('month').format('YYYY-MM-DD')
 setFromDate(ThisMonth);
-// console.log("From last 6 month"+ThisMonth)
 setToDate( moment().format("YYYY-MM-DD") );
 let previousthismont=moment(ThisMonth).subtract(1, 'days').startOf('days').format('YYYY-MM-DD')
 setprevTodate(previousthismont);
@@ -161,12 +149,6 @@ fetchData()
    
   
   const fetchData=()=>{
-    console.log( "from_date---"+fromDate)
-    console.log( "to_date---"+toDate)
-    console.log( "Previous  Todate---------------------------------------"+prevTodate)
-    console.log( "Previous fromdate---------------------------------------"+prevFromdate)
-   
-
     axios.post(`${process.env.REACT_APP_BASEURL}/products_report`
     ,
     {
@@ -180,14 +162,6 @@ fetchData()
       brand:brandName
   }
     ).then((response) => {
-          console.log('product data-all---'+JSON.stringify(response.data))
-         console.log('product data --'+JSON.stringify(response.data[0][0]))
-        console.log('Product  previous data'+JSON.stringify(response.data[1]))
-        console.log("Order table  data----"+ JSON.stringify(response.data[2]))
-        // console.log('Product Error=======---------'+JSON.stringify(response.data.message))
-
-
-
         if(response.data.message=="No_Data"){
           setProductError(response.data.message)
           setGetProduct([0])
@@ -217,7 +191,6 @@ fetchData()
 
   const VenderData= async()=>{
     let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
-    //  console.log("vendor----"+JSON.stringify(result.data))
     if(result.data){
       setVenderList(result.data)
     }
@@ -227,7 +200,6 @@ fetchData()
 
  const CategoryData= async()=>{
   let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
-  // console.log(result.data)
   if(result.data){
     setCategory(result.data)
   }
@@ -237,8 +209,6 @@ fetchData()
 
 const BrandData= async()=>{
 let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/brand_list`)
-
-//  console.log("Brand data-----"+ JSON.stringify(result.data))
 if(result.data){
   setBrand(result.data)
 }
@@ -262,25 +232,10 @@ if(result.data){
         setapicall(true)
          fetchData()
        }
-            
 
-      
-
-
-    // getProduct.forEach((item,key)=>{
-      
-    //  ItemSold.push(item.product_count)
-    // //  NetSales.push(item.net_sales)
-    // //  Order.push(item.order_count)
-    // })
     var ItemSold=getProduct.product_count;
     var NetSales=getProduct.net_sales;
     var Order=getProduct.order_count;
-    console.log("Item Sold ------"+ItemSold)
-    console.log("Net sales ------"+NetSales)
-    console.log("Order ------"+Order)
-    // // console.log("Net Sales ------"+ NetSales)
-    // // console.log("Order ------"+ Order)
 
 
     const options = {
@@ -444,17 +399,6 @@ function handleDownloadExcel() {
           paddingLeft: "0px",
         },
       },
-      // {
-      //   name: "Status",
-      //   selector: (row) => row.product_count,
-      //   sortable: true,
-      //   width: "100px",
-      //   center: true,
-      //   style: {
-      //     paddingRight: "32px",
-      //     paddingLeft: "0px",
-      //   },
-      // },
     ];
 
 
@@ -478,9 +422,6 @@ function handleDownloadExcel() {
      
      }
     
-    
-    
-    //  console.log("$$$$$$------"+JSON.stringify(brandName[0]))
     const options2 = [
       venderList.map((item)=>(
         { value: `${item.id}` ,label:`${item.shop_name}` }
@@ -502,7 +443,6 @@ function handleDownloadExcel() {
       
       }
     
-    console.log("$$$$$$------"+JSON.stringify(vendorId[0]))
     
      
     const options3 = [
@@ -607,7 +547,6 @@ resultOrderCount!="Infinity"?console.log():resultOrderCount=0
               <option name="this_week" value={9}>This  month</option>
               <option name="last_month" value={4}>last month</option>
               <option name="last_6_month" value={5}>last 6  month</option>
-              {/* <option name="custom_month" value="6">custom month</option> */}
               <option name="custom_date" value="7">custom date</option>
 
             </Form.Select>
@@ -716,7 +655,6 @@ resultOrderCount!="Infinity"?console.log():resultOrderCount=0
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
                       <h3>
-                      {/* {console.log("Product error----"+ProductError)} */}
                   {console.log(" Product count---===="+getProduct.product_count)}
                         { (ProductError)=="No_Data"||(getProduct.product_count)==null||(getProduct.product_count)==undefined||(getProduct.product_count)==""? <h3> 0</h3>:  <h3>{getProduct.product_count}</h3> }  
                         </h3>

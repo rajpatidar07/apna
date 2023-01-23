@@ -1,26 +1,24 @@
 import React, { useState, useRef } from "react";
-import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
-import logo from "../../../images/logo.png";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import { useEffect } from "react";
 import Iconbutton from "../common/iconbutton";
 import axios from "axios";
-import { Badge, Button, InputGroup } from "react-bootstrap";
-import { GiCancel } from "react-icons/gi";
-import { data } from "jquery";
 
 function Banner() {
   const formRef = useRef();
+  const [error, setError] = useState(true);
+
   const [show, setShow] = useState("");
   const [Alert, setAlert] = useState(false);
   const [validated, setValidated] = useState(false);
   const [banner, setBanner] = useState([]);
+  const[imageBanner,setImageBanner]=useState([]);
   const [apicall, setapicall] = useState([]);
   const [bannerId, setBannerId] = useState("");
   const [Imgarray, setImgArray] = useState([]);
@@ -129,17 +127,14 @@ function Banner() {
   let logo = `${process.env.REACT_APP_BASEURL}/${addBanner.image}`;
   let docsdata = `${process.env.REACT_APP_BASEURL}/${Imgarray}`;
   var Newlogo = logo.replace("/public", "");
-  // var imgdata =docsdata.replace("/public", "");
   const handleAlert = (banner_id) => {
     setBannerId(banner_id);
     setAlert(true);
-    console.log("idddddddd" + banner_id);
   };
 
   const handleClick = () => {};
 
   const hideAlert = () => {
-    console.log("--id" + bannerId);
     axios.put(`${process.env.REACT_APP_BASEURL}/banner_delete`, {
       banner_id: `${bannerId}`,
       is_deleted: 0,
@@ -151,9 +146,8 @@ function Banner() {
     setAlert(false);
   };
 
-  // console.log("helooooooooooo" + bannerId);
   const handleShow = (e, banner_id) => {
-    // console.log("gggggggggggggg"+e)
+
 
     if (e === "add") {
       setShow(e);
@@ -168,8 +162,6 @@ function Banner() {
             })
             .then((response) => {
               let data = response.data;
-              console.log("gggggggggggggg" + JSON.stringify(data));
-
               setBanner(data);
               setAddBanner(response.data[0]);
               setBannerId(banner_id);
@@ -181,7 +173,6 @@ function Banner() {
       setShow(true);
     }
   };
-  // console.log("banner" + JSON.stringify(banner));
   useEffect(() => {
     axios
       .post(`${process.env.REACT_APP_BASEURL}/banner_list`, {
@@ -193,16 +184,21 @@ function Banner() {
         let data = response.data;
         setBanner(response.data);
         setAddBanner(response.data);
+        
       });
   }, [apicall]);
+
   const ImgFormChange = (e) => {
     setFile(e.target.files[0]);
     setFileName(e.target.files[0].name);
   };
   const handleFormChange = (e) => {
     setAddBanner({ ...addBanner, [e.target.name]: e.target.value });
-    // console.log(addBanner);
   };
+  const handleBannerChange=(e)=>{
+    setImageBanner({...imageBanner,[e.target.name]: e.target.value})
+  }
+
   const handleClose = () => {
     formRef.current.reset();
     setValidated(false);
@@ -225,30 +221,19 @@ function Banner() {
       formData.append("description", addBanner.description);
       formData.append("size", addBanner.size);
       formData.append("banner_location", addBanner.banner_location);
-      // console.log("adminmmmmmmm"+adminId)
-      // console.log(
-      //   "image",
-      //   file,
-      //   "filename",
-      //   fileName,
-      //   "banner_url",
-      //   addBanner.banner_url,
-      //   "title",
-      //   addBanner.title,
-      //   "description",
-      //   addBanner.description,
-      //   "size",
-      //   addBanner.size,
-      //   "banner_location",
-      //   addBanner.banner_location
-      // );
       axios
         .post(`${process.env.REACT_APP_BASEURL}/add_banner`, formData)
         .then((response) => {
-          let data = response.data;
-          setShow(false);
+          if(response.data.code=="ER_DUP_ENTRY"){
+            setError(false);
+          }
+          else
+          {
+            setShow(false);
           setapicall(true);
           setAddAlert(true);
+          }
+          let data = response.data;
         });
       formRef.current.reset();
       setValidated(false);
@@ -256,7 +241,6 @@ function Banner() {
     }
   };
   const UpdateBanner = (show) => {
-    // console.log("---------------------show"+addBanner.banner_id)
 
     const formData = new FormData();
     formData.append("image", file);
@@ -271,14 +255,12 @@ function Banner() {
       .put(`${process.env.REACT_APP_BASEURL}/update_banner`, formData)
       .then((response) => {
         let data = response.data;
-        console.log("formupdate----------   " + JSON.stringify(response.data));
         setShow(false);
         setapicall(true);
         setUpdateAlert(true);
       });
     formRef.current.reset();
     setValidated(false);
-    // show.preventDefault();
   };
   return (
     <div>
@@ -326,6 +308,14 @@ function Banner() {
               {show === "add" ? "Add New Banner " : " Update Banner "}
             </Modal.Title>
           </Modal.Header>
+          {error === false ? (
+              <p
+                className="mt-2 ms-2 text-danger text-center fs-6"
+                type="invalid"
+              >
+                Already Added!!!
+              </p>
+            ) : null}
           <Modal.Body>
             <div className="row p-3 m-0">
               <div className="col-md-6">
@@ -387,16 +377,22 @@ function Banner() {
               </div>
               <div className="col-md-4">
                 <Form.Label>Banner_location</Form.Label>
-                <Form.Select
+                {show === "add" ?
+                <>
+                 <Form.Select
                   aria-label="Search by location"
                   className="mb-3 aos_input"
                   controlId="validationCustom01"
-                  onChange={(e) => handleFormChange(e)}
+                  onChange={(e) => handleBannerChange(e)}
                   placeholder="Add banner_location"
-                  value={addBanner.banner_location}
+
                   name={"banner_location"}
                 >
                   <option>Select location</option>
+                  
+                  <option value="home_page_left_side">
+                    home_page_left_side
+                  </option>
                   <option value="home_page_left_side(1)">
                     home_page_left_side(1)
                   </option>
@@ -406,33 +402,43 @@ function Banner() {
                   <option value="home_page_right_side(2)">
                     home_page_right_side(2)
                   </option>
-                  <option value="home_page_right_side(3)">
-                    home_page_right_side(3)
-                  </option>
-                  <option value="home_page_right_side(4)">
-                    home_page_right_side(4)
-                  </option>
-
-                  <option value="top_product_banner">top_product_banner</option>
                 </Form.Select>
-                {/* <Form.Group
-                  className="mb-3 aos_input"
-                  controlId="validationCustom01"
-                >
-                  <Form.Label>Banner_location</Form.Label>
-                  <Form.Control
-required
-                    value={addBanner.banner_location}
-                    
-                    type="text"
-                    placeholder="Add banner_location"
-                    name={"banner_location"}
-                  />
-                  <Form.Control.Feedback type="invalid" className="h6">
-                    Please fill location
-                  </Form.Control.Feedback>
-                </Form.Group> */}
+
+                {imageBanner.banner_location === "home_page_left_side"?
+                  <p className="mt-2 ms-2 text-danger text-center fs-6" type="invalid">
+                            Select Image This (height-738px * width-738px)
+                            </p>:imageBanner.banner_location==="home_page_left_side(1)"? <p className="mt-2 ms-2 text-danger text-center fs-6" type="invalid">
+                            Select Image This (height-356px * width-738px)
+                            </p>:imageBanner.banner_location==="home_page_right_side(1)"? <p className="mt-2 ms-2 text-danger text-center fs-6" type="invalid">
+                            Select Image This (height-356px * width-356px)</p>:imageBanner.banner_location==="home_page_right_side(2)"? <p className="mt-2 ms-2 text-danger text-center fs-6" type="invalid">
+                            Select Image This(height-356px * width-356px)</p> :null}
+                </>
+               : <Form.Select
+               aria-label="Search by location"
+               className="mb-3 aos_input"
+               
+               controlId="validationCustom01"
+               placeholder="Add banner_location"
+
+               name={"banner_location"}
+             >
+               <option>Select location</option>
+               
+               <option disabled value="home_page_left_side">
+                 home_page_left_side
+               </option>
+               <option disabled value="home_page_left_side(1)">
+                 home_page_left_side(1)
+               </option>
+               <option disabled value="home_page_right_side(1)">
+                 home_page_right_side(1)
+               </option>
+               <option disabled value="home_page_right_side(2)">
+                 home_page_right_side(2)
+               </option>
+             </Form.Select>}
               </div>
+              
               <div className="col-md-4">
                 <Form.Group
                   className="mb-3 aos_input"
@@ -488,7 +494,6 @@ required
             <Iconbutton
               type={"submit"}
               btntext={show === "add" ? "Add Banner" : "Update Banner"}
-              // onClick={(show === 'add' ? AddVendorClick : UpdateVendorClick(show))}
               btnclass={"button main_button "}
             />
           </Modal.Footer>
@@ -504,82 +509,6 @@ required
         title="Updated Banner Successfully "
         onConfirm={closeUpdateAlert}
       />
-      {/* <h2>Banner Manager</h2>
-     
-      <div className="main_body  card">
-        <Tabs
-          defaultActiveKey="home"
-          id="justify-tab-example"
-          className="my-3 ms-3"
-          justify
-        >
-          <Tab eventKey="home" title="Home" className="iframe_tabs">
-            <iframe
-              src="https://www.we2code.com/"
-              title="W3Schools Free Online Web Tutorials"
-              scrolling="no"
-            />
-            <div className="product_page_uploadbox upload_file_1 p-4 d-flex flex-column">
-              <div className="product_page_uploadbox_one">
-                <Input type={"file"} inputclass={"hiddeninput"} />
-                <Iconbutton
-                  btntext={"Upload"}
-                  btnclass={"button main_outline_button"}
-                  Iconname={<AiOutlineCloudUpload />}
-                />
-              </div>
-              <div>
-                <p>615 &times; 556</p>
-              </div>
-            </div>
-            <div className="product_page_uploadbox upload_file_2 p-4 d-flex flex-column">
-              <div className="product_page_uploadbox_one">
-                <Input type={"file"} inputclass={"hiddeninput"} />
-                <Iconbutton
-                  btntext={"Upload"}
-                  btnclass={"button main_outline_button"}
-                  Iconname={<AiOutlineCloudUpload />}
-                />
-              </div>
-              <div>
-                <p>615 &times; 556</p>
-              </div>
-            </div>
-          </Tab>
-          <Tab eventKey="profile" title="Product" className="iframe_tabs">
-            <iframe
-              src="https://www.we2code.com/"
-              title="W3Schools Free Online Web Tutorials"
-              scrolling="no"
-            />
-            <div className="product_page_uploadbox upload_file_1 p-4 d-flex flex-column">
-              <div className="product_page_uploadbox_one">
-                <Input type={"file"} inputclass={"hiddeninput"} />
-                <Iconbutton
-                  btntext={"Upload"}
-                  btnclass={"button main_outline_button"}
-                  Iconname={<AiOutlineCloudUpload />}
-                />
-              </div>
-              <div>
-                <p>615 &times; 556</p>
-              </div>
-            </div>
-            <div className="product_page_uploadbox upload_file_2 p-4 d-flex flex-column">
-              <div className="product_page_uploadbox_one">
-                <Input type={"file"} inputclass={"hiddeninput"} />
-                <Iconbutton
-                  btntext={"Upload"}
-                  btnclass={"button main_outline_button"}
-                  Iconname={<AiOutlineCloudUpload />}
-                />
-              </div>
-              <div>
-                <p>615 &times; 556</p>
-              </div>
-            </div>
-          </Tab>
-        </Tabs>*/}
     </div>
   );
 }

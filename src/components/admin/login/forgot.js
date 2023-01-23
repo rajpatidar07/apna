@@ -5,9 +5,7 @@ import MainButton from "../common/button";
 import Logo from "../../../images/logo.png";
 import axios from "axios";
 const Forgot = () => {
-  // const navigate = useNavigate();
   const[email,setEmail]=useState('')
-  // const[forgotInfo,setForgotInfo]=useState([]);
   const forgotInfo=(e)=>{
     e.preventDefault();
     axios.put(`${process.env.REACT_APP_BASEURL}/admin_forget_password`, 
@@ -20,7 +18,6 @@ const Forgot = () => {
  
 const handleFormChange =(e)=>{
   setEmail(e.target.value);
-  // setForgotInfo({...forgotInfo,[e.target.name]: e.target.value})
 }
 console.log("forrrr"+JSON.stringify(email))
   return (
