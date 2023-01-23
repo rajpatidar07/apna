@@ -172,8 +172,6 @@ const CategoryList = () => {
   };
 
   const categoryFormChange = (e, id) => {
-<<<<<<< HEAD
-=======
 
   
     // console.log("indVallllllll________"+e.target.value)
@@ -187,27 +185,15 @@ const CategoryList = () => {
       //   alert("fdhfbjhbjkbh")
       // }
    
->>>>>>> 1f6ba98fac6e353df42b5c2be94c03c644949c1d
       setIndVal(e.target.value);
       setScategory({ ...scategory, [e.target.name]: e.target.value });
   
     
-<<<<<<< HEAD
-    
-      {
-        axios
-  .get(`${process.env.REACT_APP_BASEURL}/category_details?id=${indVal}`)
-  .then((response) => {
-    setspanCategorydata(response.data[0].category_type)
-  });
-     }
-=======
 
 
   
     // }
   
->>>>>>> 1f6ba98fac6e353df42b5c2be94c03c644949c1d
   };
 
 
