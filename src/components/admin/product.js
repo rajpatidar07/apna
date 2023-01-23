@@ -72,8 +72,8 @@ function Product() {
     product_id: "",
     unit: "",
     colors: "",
-    unit_quantity: "",
-    size: "",
+    unit_quantity: null,
+    size: null,
     product_price: "",
     mrp: "",
     sale_price: "",
@@ -715,8 +715,9 @@ function Product() {
   };
 
   const handlevarietyClose = (e) => {
+    setcustomValidated(false)
     e.preventDefault()
-    setValidated(false);
+    // setValidated(false);
     setvarietyShow(false);
   };
 
@@ -889,6 +890,7 @@ function Product() {
   };
 
   const onVariantChange = (e) => {
+    setcustomValidated(false)
     setvariantarray({
       ...variantarray,
       [e.target.name]: e.target.value,
@@ -906,7 +908,6 @@ function Product() {
 
   // const  saleeprice=variantarray.sale_price
 
-         
   if (taxdata) {
     saleprice =
       product_price +
@@ -927,6 +928,7 @@ function Product() {
     });
   }, [variantarray.mrp, variantarray.discount, taxdata]);
   const handleInputcheckboxChange = (e) => {
+    setcustomValidated(false)
     const target = e.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     setvariantarray({
@@ -947,8 +949,27 @@ function Product() {
       id == undefined ||
       id == null ||
       unitValidated === false
-    ) {console.log("veriant arartry----"+JSON.stringify(variantarray))
-      axios
+    ) {
+      if (
+        variantarray.unit  == "" ||
+        variantarray.unit_quantity == "" ||
+        variantarray.colors == "" ||
+        variantarray.size==""||
+        variantarray.product_price==""||
+        variantarray.mrp==""||
+        variantarray.sale_price==""||
+        variantarray.discount==""||
+        variantarray.special_offer==false||
+        variantarray.featured_product==false||
+        variantarray.manufacturing_date==""||
+        variantarray.expire_date==""||
+        variantarray.quantity==""||
+        unitValidated === false
+      ){
+        setcustomValidated(true)
+      }
+      else {
+        axios
         .post(
           `${process.env.REACT_APP_BASEURL}/products_varient_add`,
           variantarray
@@ -958,8 +979,8 @@ function Product() {
             product_status: "",
             unit: "",
             colors: "",
-            unit_quantity: null,
-            size: null,
+            unit_quantity: "",
+            size: "",
             product_price: "",
             mrp: "",
             sale_price: "",
@@ -979,6 +1000,9 @@ function Product() {
         .catch(function(error) {
           console.log(error);
         });
+      }
+
+     
     } else {
       // e.preventDefault()
       axios
@@ -1013,6 +1037,8 @@ function Product() {
   };
 
 
+
+  console.log("veriant arartry----"+JSON.stringify(variantarray))
   const VariantAddProduct = (e) => {
 
     if ( variantarray.unit == "") {
@@ -2491,7 +2517,7 @@ function Product() {
                     </Form.Group>
                   </div>
                 </div>
-                {console.log("product other description-------"+productdata.other_introduction)}
+               
                 {/* other info */}
                 <div className="my-3 inputsection_box">
                   <h5 className="m-0">Other Instruction</h5>
@@ -2643,7 +2669,7 @@ function Product() {
           onHide={handlevarietyClose}
           dialogClassName="addproductmainmodal"
         >
-          <Form ref={formRef} validated={customvalidated}>
+          <Form ref={formRef}>
             <Modal.Header>
               <Modal.Title>Add Variety</Modal.Title>
             </Modal.Header>
@@ -2686,11 +2712,11 @@ function Product() {
                                       aria-label="Default select example"
                                       name="unit"
                                       onChange={(e) => onVariantChange(e)}
-                                      className={
-                                        customvalidated === true
-                                          ? "border-danger"
-                                          : null
-                                      }
+                                      // className={
+                                      //   customvalidated === true
+                                      //     ? "border-danger"
+                                      //     : null
+                                      // }
                                     >
                                       <option
                                         value={
@@ -2702,7 +2728,7 @@ function Product() {
                                             ? "volume"
                                             : variantarray.unit === "piece"
                                             ? "piece"
-                                            : null
+                                            : variantarray.unit === "" || variantarray.unit === null ? "Select" :null
                                         }
                                       >
                                         {variantarray.unit === "pcs"
@@ -2713,7 +2739,7 @@ function Product() {
                                           ? "volume"
                                           : variantarray.unit === "piece"
                                           ? "piece"
-                                          : "Select"}
+                                         : variantarray.unit === "" || variantarray.unit === null? "Select" : null }
                                       </option>
                                       {(varietyy.variety || []).map(
                                         (vari, i) => {
@@ -2728,7 +2754,7 @@ function Product() {
                                                   ? "ml"
                                                   : vari === "piece"
                                                   ? "piece"
-                                                  : null
+                                                  : "" 
                                               }
                                               key={i}
                                             >
@@ -2748,11 +2774,11 @@ function Product() {
                                     <Form.Control
                                       type="text"
                                       sm="9"
-                                      className={
-                                        customvalidated === true
-                                          ? "border-danger"
-                                          : null
-                                      }
+                                      // className={
+                                      //   customvalidated === true
+                                      //     ? "border-danger"
+                                      //     : null
+                                      // }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"colors"}
                                       value={variantarray.colors}
@@ -2772,7 +2798,7 @@ function Product() {
                                           ? variantarray.unit_quantity
                                           : variantarray.unit === "piece"
                                           ? variantarray.unit_quantity
-                                          : null
+                                          : variantarray.unit === "" ? variantarray.unit_quantity : null
                                       }
                                       required={
                                         variantarray.unit !== "pcs" &&
@@ -2782,12 +2808,12 @@ function Product() {
                                       }
                                       type="text"
                                       sm="9"
-                                      className={
-                                        customvalidated === true ||
-                                        unitValidated === true
-                                          ? "border-danger"
-                                          : null
-                                      }
+                                      // className={
+                                      //   customvalidated === true ||
+                                      //   unitValidated === true
+                                      //     ? "border-danger"
+                                      //     : null
+                                      // }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"unit_quantity"}
                                     />
@@ -2801,15 +2827,15 @@ function Product() {
                                       value={
                                         variantarray.unit === "pcs"
                                           ? variantarray.size
-                                          : null
+                                          :  variantarray.unit === "" ?variantarray.size :null
                                       }
                                       type="text"
                                       sm="9"
-                                      className={
-                                        customvalidated === true
-                                          ? "border-danger"
-                                          : null
-                                      }
+                                      // className={
+                                      //   customvalidated === true
+                                      //     ? "border-danger"
+                                      //     : null
+                                      // }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"size"}
                                     />
@@ -2825,11 +2851,11 @@ function Product() {
                                       step={"any"}
                                       min={1}
                                       sm="9"
-                                      className={
-                                        customvalidated === true
-                                          ? "border-danger"
-                                          : null
-                                      }
+                                      // className={
+                                      //   customvalidated === true
+                                      //     ? "border-danger"
+                                      //     : null
+                                      // }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"mrp"}
                                       value={Number(variantarray.mrp)}
@@ -2859,11 +2885,11 @@ function Product() {
                                       step={0.01}
                                       type="number"
                                       sm="9"
-                                      className={
-                                        customvalidated === true
-                                          ? "border-danger"
-                                          : null
-                                      }
+                                      // className={
+                                      //   customvalidated === true
+                                      //     ? "border-danger"
+                                      //     : null
+                                      // }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"product_price"}
                                       value={Number(variantarray.product_price)}
@@ -2880,11 +2906,11 @@ function Product() {
                                       type="number"
                                       sm="9"
                                       min={1}
-                                      className={
-                                        customvalidated === true
-                                          ? "border-danger"
-                                          : null
-                                      }
+                                      // className={
+                                      //   customvalidated === true
+                                      //     ? "border-danger"
+                                      //     : null
+                                      // }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"sale_price"}
                                      
@@ -2932,11 +2958,11 @@ function Product() {
                                     <Form.Control
                                       type="date"
                                       sm="9"
-                                      className={
-                                        customvalidated === true
-                                          ? "border-danger"
-                                          : null
-                                      }
+                                      // className={
+                                      //   customvalidated === true
+                                      //     ? "border-danger"
+                                      //     : null
+                                      // }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"manufacturing_date"}
                                       value={moment(
@@ -2952,11 +2978,11 @@ function Product() {
                                     <Form.Control
                                       type="date"
                                       sm="9"
-                                      className={
-                                        customvalidated === true
-                                          ? "border-danger"
-                                          : null
-                                      }
+                                      // className={
+                                      //   customvalidated === true
+                                      //     ? "border-danger"
+                                      //     : null
+                                      // }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"expire_date"}
                                       value={moment(
@@ -2967,7 +2993,7 @@ function Product() {
                                 </div>
                               </td>
                               <td className="p-0 text-center"> 
-                              <p className="mt-2  text-danger text-center fs-6" type="invalid">
+                              <p className="mt-2   text-center fs-6" type="invalid">
                                             Select Image This (height-156px * width-136px) 
                                             </p>
                               </td>
@@ -2980,11 +3006,11 @@ function Product() {
                                       value={variantarray.quantity}
                                       sm="9"
                                       min={"1"}
-                                      className={
-                                        customvalidated === true
-                                          ? "border-danger"
-                                          : null
-                                      }
+                                      // className={
+                                      //   customvalidated === true
+                                      //     ? "border-danger"
+                                      //     : null
+                                      // }
                                       onChange={(e) => onVariantChange(e)}
                                       onKeyPress={(event) => {
                                         if (event.key === "Enter") {
@@ -3015,6 +3041,12 @@ function Product() {
                                 </div>
                               </td>
                             </tr>
+                            {customvalidated === true ? (
+                              <tr><p className="mt-1 ms-2 text-danger" type="invalid">
+                              Please fill value
+                            </p></tr>
+                            
+                          ) : null}
 
                             {vdata === "" ||
                             vdata === null ||
@@ -3097,11 +3129,11 @@ function Product() {
                                                 multiple
                                                 type="file"
                                                 sm="9"
-                                                className={
-                                                  customvalidated === true
-                                                    ? "border-danger"
-                                                    : null
-                                                }
+                                                // className={
+                                                //   customvalidated === true
+                                                //     ? "border-danger"
+                                                //     : null
+                                                // }
                                                 onChange={(e) =>
                                                   imguploadchange(
                                                     e,
