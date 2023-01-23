@@ -90,7 +90,7 @@ const VendorsList = () => {
         setvendordata(response.data);
         setapicall(false);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -229,7 +229,7 @@ const VendorsList = () => {
           Add Docs
         </Button>
         // : null
-      ),
+       /*: null*/),
       sortable: true,
     },
     {
@@ -253,7 +253,7 @@ const VendorsList = () => {
         setvendordata(response.data);
         setapicall(false);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   }, [apicall]);
@@ -274,7 +274,7 @@ const VendorsList = () => {
   const handleClose = () => {
     formRef.current.reset();
     setValidated(false);
-    setcustomarray([]) 
+    setcustomarray([]);
 
     setaddtag("");
     setaddvendordata("");
@@ -304,7 +304,7 @@ const VendorsList = () => {
           setDocnameArray(strCopy);
           setapicall(false);
         })
-        .catch(function (error) {
+        .catch(function(error) {
           console.log(error);
         });
       setShow(e);
@@ -334,7 +334,7 @@ const VendorsList = () => {
       .then((response) => {
         setapicall(true);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -371,96 +371,51 @@ const VendorsList = () => {
     });
   };
 
-<<<<<<< HEAD
   const imguploadchange = async (e) => {
-    for (let i = 0; i < e.target.files.length; i++) {
-      console.log("i   -- " + i);
+    if (e.target.files.length <= 5) {
+      console.log("lemth------" + e.target.files.length);
 
-      encoded = await convertToBase64(e.target.files[i]);
-      const [first, ...rest] = encoded.base64.split(",");
-      const [nameimg, ext] = encoded.name.split(".");
-=======
+      // e.preventDefault()
+      console.log("Out id--" + vendorID);
+      for (let i = 0; i < e.target.files.length; i++) {
+        console.log("i   -- " + i);
 
+        encoded = await convertToBase64(e.target.files[i]);
 
-  const imguploadchange = async (e) => {
+        console.log("encoded--" + encoded);
 
+        const [first, ...rest] = encoded.base64.split(",");
+        const [nameimg, ext] = encoded.name.split(".");
 
-    if(e.target.files.length<=5){
-      console.log("lemth------"+e.target.files.length)
-       
-         // e.preventDefault()
-         console.log("Out id--" + vendorID);
-         for (let i = 0; i < e.target.files.length; i++) {
-           console.log("i   -- " + i);
-     
-           encoded = await convertToBase64(e.target.files[i]);
-     
-           console.log("encoded--" + encoded);
-     
-           const [first, ...rest] = encoded.base64.split(",");
-           const [nameimg, ext] = encoded.name.split(".");
-     
-           const vendorimg = rest.join("-");
-           let imar = {
-             vendor_id: `${vendorID}`,
-             documents_name: `${encoded.name}${i}${vendorID}`,
-             documents_position: `position${i}`,
-             type_of_file: `${ext}`,
-             img_64: vendorimg,
-           };
-           ImgObj.push(imar);
-         }
-         
-              if(newImageUrls.length<=5){
-                axios
-                .post(
-                  `${process.env.REACT_APP_BASEURL}/vendor_documents_upload`,
-                  ImgObj
-                )
-                .then((response) => {
-                  onImgView(vendorID);
-                })
-                .catch(function (error) {
-                  console.log(error);
-                });
-              } 
-              else{
-                alert("Cannot More than 6 picss")
-              }   
-        
-          
->>>>>>> 1f6ba98fac6e353df42b5c2be94c03c644949c1d
+        const vendorimg = rest.join("-");
+        let imar = {
+          vendor_id: `${vendorID}`,
+          documents_name: `${encoded.name}${i}${vendorID}`,
+          documents_position: `position${i}`,
+          type_of_file: `${ext}`,
+          img_64: vendorimg,
+        };
+        ImgObj.push(imar);
+      }
 
-    }
-<<<<<<< HEAD
-
-    if (newImageUrls.length <= 5) {
-      console.log("ImgObj --  " + JSON.stringify(ImgObj));
-      console.log("newImageUrls.length --  " + newImageUrls.length);
-      axios
-        .post(
-          `${process.env.REACT_APP_BASEURL}/vendor_documents_upload`,
-          ImgObj
-        )
-        .then((response) => {
-          onImgView(vendorID);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+      if (newImageUrls.length <= 5) {
+        axios
+          .post(
+            `${process.env.REACT_APP_BASEURL}/vendor_documents_upload`,
+            ImgObj
+          )
+          .then((response) => {
+            onImgView(vendorID);
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+      } else {
+        alert("Cannot More than 6 picss");
+      }
     } else {
-      alert("Cannot upload more than 6 image");
-=======
-    else{
-   
-alert("Cannot More than 6 pics")
->>>>>>> 1f6ba98fac6e353df42b5c2be94c03c644949c1d
+      alert("Cannot More than 6 pics");
     }
-
-        
-   
-
-
   };
 
   const onImgRemove = (id, vendor_id) => {
@@ -472,7 +427,7 @@ alert("Cannot More than 6 pics")
       .then((response) => {
         onImgView(vendor_id);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -487,7 +442,7 @@ alert("Cannot More than 6 pics")
         setnewImageUrls(response.data);
         //  console.log("new img length------"+((response.data.length)))
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -593,7 +548,7 @@ alert("Cannot More than 6 pics")
           setAddAlert(true);
           // console.log("-------done"+response.data)
         })
-        .catch(function (error) {
+        .catch(function(error) {
           console.log(error);
         });
       formRef.current.reset();
@@ -644,7 +599,7 @@ alert("Cannot More than 6 pics")
         setapicall(true);
         setShow(false);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };

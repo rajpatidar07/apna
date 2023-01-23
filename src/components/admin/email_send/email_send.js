@@ -48,13 +48,6 @@ const EmailSend = () => {
   };
 
   const handleShow = (e) => {
-
-<<<<<<< HEAD
-=======
- 
-
-    console.log("----------" + e);
->>>>>>> 1f6ba98fac6e353df42b5c2be94c03c644949c1d
     if (e === "add") {
       setShow(e);
     }
@@ -74,13 +67,8 @@ const EmailSend = () => {
   };
 
   const handleClose = () => {
-<<<<<<< HEAD
-=======
-  
-    
->>>>>>> 1f6ba98fac6e353df42b5c2be94c03c644949c1d
     setEmaildata({});
-   
+
     setValidated(false);
     setShow(false);
   };
@@ -228,7 +216,7 @@ const EmailSend = () => {
           console.log(response);
           setAddAlert(true);
         })
-        .catch(function (error) {
+        .catch(function(error) {
           console.log(error);
         });
 
@@ -241,7 +229,6 @@ const EmailSend = () => {
   };
 
   const UpdateEmailHandler = (e) => {
-
     e.preventDefault();
     axios
       .put(`${process.env.REACT_APP_BASEURL}/update_email_template`, {
@@ -257,7 +244,7 @@ const EmailSend = () => {
       .then((response) => {
         setUpdateAlert(true);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
 
@@ -281,7 +268,7 @@ const EmailSend = () => {
         setGetEmaildata(data);
         setapicall(false);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -296,7 +283,7 @@ const EmailSend = () => {
       .then((response) => {
         setapicall(true);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -310,7 +297,7 @@ const EmailSend = () => {
       .then((response) => {
         setapicall(true);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -547,15 +534,12 @@ const EmailSend = () => {
                   required
                 />
               </div>
-             {console.log("emailtext------"+emailText)}
-              <div sm="12" className="mt-3"> 
+              {console.log("emailtext------" + emailText)}
+              <div sm="12" className="mt-3">
                 <CKEditor
                   data={emailText}
-<<<<<<< HEAD
-=======
                   initData={emailText}
                   type={"classic"}
->>>>>>> 1f6ba98fac6e353df42b5c2be94c03c644949c1d
                   onChange={(e) => EmailTextHandler(e)}
                   name={"email_text"}
                   required

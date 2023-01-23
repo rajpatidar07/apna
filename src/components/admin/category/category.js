@@ -25,8 +25,8 @@ const CategoryList = () => {
     setAlert(true);
   };
 
-
   const hideAlert = () => {
+    console.log("--id" + parentid + "----" + level);
     axios.put(`${process.env.REACT_APP_BASEURL}/delete_category`, {
       id: parentid,
       is_active: 0,
@@ -34,7 +34,6 @@ const CategoryList = () => {
     });
     setAlert(false);
     setapicall(true);
-    
   };
 
   const [Alert, setAlert] = useState(false);
@@ -88,7 +87,6 @@ const CategoryList = () => {
     setUpdateAlert(false);
   };
 
-
   const handleShow = (
     e,
     name,
@@ -98,6 +96,7 @@ const CategoryList = () => {
     category_type,
     category_name
   ) => {
+    console.log("all parent id---------" + all_parent_id);
     if (e === "add") {
       setShow(e);
     }
@@ -106,12 +105,11 @@ const CategoryList = () => {
         axios
           .get(`${process.env.REACT_APP_BASEURL}/category_details?id=${e}`)
           .then((response) => {
-
             let data = response.data[0];
-            console.log("data-------------"+ JSON.stringify(data))
+            console.log("data-------------" + JSON.stringify(data));
             setCategoryEditData(data);
-            setImagePath(response.data[0].image)
-            
+            setImagePath(response.data[0].image);
+
             const arr = data.all_parent_id.split(",");
             for (let i = 0; i < arr.length; i++) {
               axios
@@ -156,13 +154,14 @@ const CategoryList = () => {
     }
   };
 
+  {
+    console.log("image path---" + ImagePaht);
+  }
+  newImg = ImagePaht.replace("public", "");
+  {
+    console.log("image new path ---" + newImg);
+  }
 
-
-
-  {console.log("image path---"+ImagePaht)}
-   newImg= ImagePaht.replace("public","")
-  {console.log("image new path ---"+newImg)}
-  
   const handlChangeName = (e, id) => {
     setnewName(e.target.value);
   };
@@ -172,34 +171,27 @@ const CategoryList = () => {
   };
 
   const categoryFormChange = (e, id) => {
-
-  
     // console.log("indVallllllll________"+e.target.value)
     // console.log("grandcCategory.id________"+grandcCategory[0])
-    
+
     // if(indVal===grandcCategory){
     //   alert("dont select Any more")
     // }
     // else{
-      // if(e.target.s_category.value !== ""){
-      //   alert("fdhfbjhbjkbh")
-      // }
-   
-      setIndVal(e.target.value);
-      setScategory({ ...scategory, [e.target.name]: e.target.value });
-  
-    
-
-
-  
+    // if(e.target.s_category.value !== ""){
+    //   alert("fdhfbjhbjkbh")
     // }
-  
+
+    setIndVal(e.target.value);
+    setScategory({ ...scategory, [e.target.name]: e.target.value });
+
+    // }
   };
 
+  // }
 
-
-  console.log(" Indval---"+indVal)
-  console.log(" Scategory---"+ JSON.stringify( scategory))
+  console.log(" Indval---" + indVal);
+  console.log(" Scategory---" + JSON.stringify(scategory));
   let parentidddata = [];
   parentidddata.push(scategory.category_name);
 
@@ -210,8 +202,6 @@ const CategoryList = () => {
     parentidddata.push(scategory.child_category);
   }
 
-
-
   function getUser() {
     try {
       axios
@@ -219,14 +209,13 @@ const CategoryList = () => {
         .then((response) => {
           let data = response.data.filter((item) => item.is_active === "1");
           setData(data);
-           setsearchData(data);
+          setsearchData(data);
           setapicall(false);
         });
     } catch (err) {}
   }
 
   useEffect(() => {
-
     getUser();
   }, [apicall]);
 
@@ -234,12 +223,11 @@ const CategoryList = () => {
     addCategory();
   }, [indVal]);
   const addCategory = async (category, id) => {
-    if (id === "" || id === null || id === undefined) {
+    if (id === "" || id === null || id === undefined || indVal !== "") {
       try {
         axios
           .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
           .then((response) => {
-           
             let cgory = response.data;
             let specificValues = cgory.filter(
               (obj) =>
@@ -262,12 +250,9 @@ const CategoryList = () => {
               setgrandcCategory(cgory);
               setlevel(3);
             } else if (indVal === scategory.s_category) {
-
               setgrandcCategory(cgory);
               setlevel(4);
             }
-           
-            
           });
       } catch (err) {}
     }
@@ -414,47 +399,38 @@ const CategoryList = () => {
       e.stopPropagation();
       e.preventDefault();
     }
-   
-  
-      const formData = new FormData();
-      formData.append("image", file);
-      formData.append("filename", fileName);
-      formData.append("parent_id", indVal);
-      formData.append("level", level);
-      formData.append("all_parent_id", parentidddata);
-      formData.append("new_category", newName);
-      formData.append("category_type", type);
-      axios
-        .post(`${process.env.REACT_APP_BASEURL}/add_category`, formData)
-        .then((response) => {
 
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("filename", fileName);
+    formData.append("parent_id", indVal);
+    formData.append("level", level);
+    formData.append("all_parent_id", parentidddata);
+    formData.append("new_category", newName);
+    formData.append("category_type", type);
+    axios
+      .post(`${process.env.REACT_APP_BASEURL}/add_category`, formData)
+      .then((response) => {
+        setnewName(" ");
+        setType("");
+        setCategoryEditparent("");
+        setCategoryEditSubparent("");
+        setCategoryEditChildparent("");
+        setSubCategory([]);
+        setchildCategory([]);
+        setgrandcCategory([]);
 
-          setnewName(" ")
-          setType("")
-          setCategoryEditparent("")
-          setCategoryEditSubparent("")
-          setCategoryEditChildparent("")
-          setSubCategory([])
-          setchildCategory([])
-          setgrandcCategory([])
-      
-          setValidated(false);
+        setValidated(false);
 
+        setShow(false);
 
-          setShow(false);
-
-          setShow(false);
-          setapicall(true);
-          setAddAlert(true);
-        });
-      formRef.current.reset();
-      setValidated(false);
+        setShow(false);
+        setapicall(true);
+        setAddAlert(true);
+      });
+    formRef.current.reset();
+    setValidated(false);
   };
-
-
-
-
-
 
   const UpdateCategoryClick = (show) => {
     const form = show.currentTarget;
@@ -463,16 +439,6 @@ const CategoryList = () => {
       show.stopPropagation();
       show.preventDefault();
     }
-
-  console.log("update data-- id"+CategoryEditdata.id)
-  console.log("update data-- Image"+file)
-  console.log("update data-- filename"+fileName)
-  console.log("update data-- level"+level)
-  console.log("update data-- all_parent_id"+allparentid)
-  console.log("update data-- new_category"+newName)
-  console.log("update data-- category_type"+type)
-
-
 
     const formData = new FormData();
     formData.append("id", CategoryEditdata.id);
@@ -494,38 +460,33 @@ const CategoryList = () => {
     setValidated(false);
   };
 
-
-
   const onValueChange = (e) => {
     setSearchCat({ ...SearchCat, [e.target.name]: e.target.value });
   };
 
-
   const SearchCategory = () => {
-      axios
-        .post(`${process.env.REACT_APP_BASEURL}/search_category`, {
-          category_name: `${SearchCat.category_name}`,
-          category_type: `${SearchCat.category_type}`,
-          level: `${SearchCat.level}`,
-        })
-        .then((response) => {
-          setData(response.data);
-          setSearchCat("");
-          setsearchValidated(false);
-        });
+    axios
+      .post(`${process.env.REACT_APP_BASEURL}/search_category`, {
+        category_name: `${SearchCat.category_name}`,
+        category_type: `${SearchCat.category_type}`,
+        level: `${SearchCat.level}`,
+      })
+      .then((response) => {
+        setData(response.data);
+        setSearchCat("");
+        setsearchValidated(false);
+      });
   };
 
-  
-  const OnReset =()=>{
+  const OnReset = () => {
     setSearchCat({
-      category_name:"",
-      category_type:"",
-      level:""
-    })
-  
-     setapicall(true)
-   
-}
+      category_name: "",
+      category_type: "",
+      level: "",
+    });
+
+    setapicall(true);
+  };
   const handleClick = () => {};
   const navigate = useNavigate();
 
@@ -538,24 +499,20 @@ const CategoryList = () => {
       index === self.findIndex((t) => t.level == thing.level)
   );
 
-
-
   const handleClose = () => {
-    setnewName(" ")
-    setType("")
-    setCategoryEditparent("")
-    setCategoryEditSubparent("")
-    setCategoryEditChildparent("")
-    setSubCategory([])
-    setchildCategory([])
-    setgrandcCategory([])
-   setImagePath("")
-   newImg=""
+    setnewName(" ");
+    setType("");
+    setCategoryEditparent("");
+    setCategoryEditSubparent("");
+    setCategoryEditChildparent("");
+    setSubCategory([]);
+    setchildCategory([]);
+    setgrandcCategory([]);
+    setImagePath("");
+    newImg = "";
     setValidated(false);
     setShow(false);
   };
-
-
 
   return (
     <div className="App productlist_maindiv">
@@ -586,7 +543,7 @@ const CategoryList = () => {
               className="adminselectbox"
               name="category_type"
               onChange={(e) => onValueChange(e)}
-               value={SearchCat.category_type}
+              value={SearchCat.category_type}
             >
               <option>Search by category</option>
               {result1.map((lvl, i) => {
@@ -733,8 +690,9 @@ const CategoryList = () => {
                       </option>
                       <option
                         selected={
-                          (CategoryEditdata.category_type =
-                            "Beauty & Personal care" ? true : false)
+                          (CategoryEditdata.category_type = "Beauty & Personal care"
+                            ? true
+                            : false)
                         }
                         value="Beauty & Personal care"
                       >
@@ -812,20 +770,20 @@ const CategoryList = () => {
                       </option>
                       <option
                         selected={
-                          (CategoryEditdata.category_type =
-                            "Sports & Accessories" ? true : false)
+                          (CategoryEditdata.category_type = "Sports & Accessories"
+                            ? true
+                            : false)
                         }
                         value="Sports & Accessories"
                       >
                         Sports & Accessories
                       </option>
-                    
                     </Form.Select>
-                    
+
                     <Form.Control.Feedback type="invalid" className="h6">
                       Please fill category type
                     </Form.Control.Feedback>
-                 
+
                     <span className="text-danger"> </span>
                   </Form.Group>
                 </div>
@@ -846,7 +804,6 @@ const CategoryList = () => {
                       {category.map((cdata, i) => {
                         return (
                           <option
-                        
                             value={cdata.id}
                             key={i}
                             selected={
@@ -882,10 +839,11 @@ const CategoryList = () => {
                         name={"sub_category"}
                         // value={CategoryEditdata.category_name}
                       >
-                        <option value="" >Select Sub category</option>
-                        {  
-                        subCategory.map((cdata, i) => {
-                        console.log(CategoryEditSubparent+"CategoryEditSubparent")
+                        <option value="">Select Sub category</option>
+                        {subCategory.map((cdata, i) => {
+                          console.log(
+                            CategoryEditSubparent + "CategoryEditSubparent"
+                          );
 
                           return (
                             <option
@@ -900,7 +858,7 @@ const CategoryList = () => {
                               {cdata.category_name}{" "}
                             </option>
                           );
-                        }) }
+                        })}
                       </Form.Select>
                       <Form.Control.Feedback type="invalid" className="h6">
                         Please fill category
@@ -923,8 +881,9 @@ const CategoryList = () => {
                         className="adminselectbox"
                         onChange={(e, id) => categoryFormChange(e, id)}
                         name={"child_category"}
-                      >   <option value="" >Select Child category</option>
-                       
+                      >
+                        {" "}
+                        <option value="">Select Child category</option>
                         {childCategory.map((cdata, i) => {
                           return (
                             <option
@@ -948,53 +907,6 @@ const CategoryList = () => {
                   </div>
                 )}
 
-{/* 
-                {grandcCategory[0] === "" ||
-                grandcCategory[0] === null ||
-                grandcCategory[0] === undefined ? null : (
-                  <div className="col-md-6">
-                    <Form.Group
-                      className="mb-3 aos_input"
-                      controlId="s_category"
-
-                    >
-                      <Form.Label> Inner Category</Form.Label>
-                      <Form.Select
-                        aria-label="Search by status"
-                        className="adminselectbox"
-                        onChange={(e, id) => categoryFormChange(e, id)}
-                        name={"s_category"}
-                        
-                      >
-                        <option value={''} >
-                              Select Inner Category
-                            </option>
-                        {grandcCategory.map((cdata, i) => {
-                          return (
-                            <option
-                      id={"s_category"}
-
-                              value={cdata.id}
-                              key={i}
-                              selected={
-                                CategoryEditChildparent === cdata.category_name
-                                  ? true
-                                  : false
-                              }
-                            >
-                              {cdata.category_name}{" "}
-                            </option>
-                          );
-                        })}
-                      </Form.Select>
-                      <Form.Control.Feedback type="invalid" className="h6">
-                        Please fill category
-                      </Form.Control.Feedback>
-                    </Form.Group>
-                  </div>
-                )} */}
-
-
                 <div className="col-md-6">
                   <Form.Group
                     className="mb-3 aos_input"
@@ -1009,17 +921,17 @@ const CategoryList = () => {
                         name={"category_icon"}
                         // value={newImg}
                       />
-                      
                     </div>
-                    {newImg==""?null:  <img
-                          src={newImg}
-                          alt={"apna_organic"}
-                          className={"category_icon"}
-                          width={"100px"}
-                          height={"100px"}
-                          style={{marginTop:10}}
-                        />}
-                  
+                    {newImg == "" ? null : (
+                      <img
+                        src={newImg}
+                        alt={"apna_organic"}
+                        className={"category_icon"}
+                        width={"100px"}
+                        height={"100px"}
+                        style={{ marginTop: 10 }}
+                      />
+                    )}
                   </Form.Group>
                 </div>
               </div>
@@ -1069,5 +981,4 @@ const CategoryList = () => {
     </div>
   );
 };
-
 export default CategoryList;
