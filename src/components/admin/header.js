@@ -15,11 +15,12 @@ import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
+import { useNavigate } from "react-router-dom";
 
 function AdminHeader() {
   let loginid = localStorage.getItem("loginid");
   let pass = localStorage.getItem("password");
-  // const formRef = useRef();
+  const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -60,7 +61,13 @@ function AdminHeader() {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
+  const OnLogoutClick = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("encryptloginid");
+    localStorage.removeItem("encryptpassword");
+    localStorage.removeItem("encryptadminid");
+    navigate("/");
+  };
   return (
     <div className="container content_top_container">
       <div className="row content_top_row ">
@@ -159,10 +166,10 @@ function AdminHeader() {
               <span className="px-2">Gourav</span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item href="#/action-1" className="profile_list py-2">
+              {/* <Dropdown.Item href="#/action-1" className="profile_list py-2">
                 <CgProfile />
                 profile
-              </Dropdown.Item>
+              </Dropdown.Item> */}
               <Dropdown.Item
                 href="#/action-2"
                 className="profile_list py-2"
@@ -171,7 +178,10 @@ function AdminHeader() {
                 <AiOutlineSetting />
                 Setting
               </Dropdown.Item>
-              <Dropdown.Item href="/login" className="profile_list py-2">
+              <Dropdown.Item
+                className="profile_list py-2"
+                onClick={() => OnLogoutClick()}
+              >
                 <FiLogOut />
                 LogOut
               </Dropdown.Item>
