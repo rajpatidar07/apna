@@ -1,25 +1,56 @@
-import React, { Fragment,useState } from "react";
-import {  useNavigate } from "react-router-dom";
+import React, { Fragment, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./login.css";
 import MainButton from "../common/button";
 import Logo from "../../../images/logo.png";
 import axios from "axios";
+import Countdown from "react-countdown";
 const Forgot = () => {
-  const[email,setEmail]=useState('')
-  const forgotInfo=(e)=>{
+  const [email, setEmail] = useState("");
+  const [emailerror, setemailerror] = useState(false);
+  const [timer, settimer] = useState(false);
+
+  const navigate = useNavigate();
+  const forgotInfo = (e) => {
+    if (email === "") {
+      setemailerror("null");
+    } else {
+      settimer(true);
+      axios
+        .put(`${process.env.REACT_APP_BASEURL}/admin_forget_password`, {
+          admin_email: email,
+        })
+        .then((response) => {
+          if (response.data.response === "invalid_mail") {
+            settimer(false);
+            setemailerror(response.data.response);
+          } else {
+            navigate("/login");
+          }
+        });
+    }
     e.preventDefault();
-    axios.put(`${process.env.REACT_APP_BASEURL}/admin_forget_password`, 
-    {
-      admin_email:email,
-  
-  }).then((response) => {
-  });
-  }
- 
-const handleFormChange =(e)=>{
-  setEmail(e.target.value);
-}
-console.log("forrrr"+JSON.stringify(email))
+  };
+  const handleFormChange = (e) => {
+    setEmail(e.target.value);
+    setemailerror(false);
+  };
+
+  // countdown
+  const renderer = ({ hours, minutes, seconds, completed }) => {
+    if (completed) {
+      // Render a complete state
+      // return <Completionist />;
+    } else {
+      // Render a countdown
+      return (
+        <h4 className="mt-2 ms-2 text-danger mx-3">
+          {hours}:{minutes}:{seconds}
+        </h4>
+      );
+    }
+  };
+  // end countdown
   return (
     <Fragment>
       <div className="for_scrol">
@@ -28,7 +59,7 @@ console.log("forrrr"+JSON.stringify(email))
             <div className="col-xl-4 col-lg-6 m-auto">
               <div className="heading_logo text-center">
                 <div className="logo">
-                  <img src={Logo} alt={'apnaorganic'}/>
+                  <img src={Logo} alt={"apnaorganic"} />
                 </div>
                 <div className="heading_line">
                   <h3>Sell On Apna Organic</h3>
@@ -48,11 +79,28 @@ console.log("forrrr"+JSON.stringify(email))
                             type="email"
                             className="form-control"
                             id="email"
-                            onChange={(e) => handleFormChange(e)} value={email} name={'admin_email'}
+                            onChange={(e) => handleFormChange(e)}
+                            value={email}
+                            name={"admin_email"}
                             placeholder="Email Address"
                           />
                           <label for="email">Email Address</label>
                         </div>
+                        {timer === true ? (
+                          <Countdown
+                            date={Date.now() + 30000}
+                            renderer={renderer}
+                          />
+                        ) : null}
+                        {emailerror === "null" ? (
+                          <p className="mt-1 ms-2 text-danger" type="invalid">
+                            Please Enter Email
+                          </p>
+                        ) : emailerror === "invalid_mail" ? (
+                          <p className="mt-1 ms-2 text-danger" type="invalid">
+                            Please Enter Valid Email
+                          </p>
+                        ) : null}
                       </div>
 
                       <div className="col-12">

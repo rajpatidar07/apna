@@ -1,11 +1,52 @@
-import React, { Fragment } from "react";
-import {  useNavigate } from "react-router-dom";
+import React, { Fragment, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./login.css";
 import MainButton from "../common/button";
 import Logo from "../../../images/logo.png";
+import axios from "axios";
 
 const ChangePassword = () => {
   const navigate = useNavigate();
+  const [password, setpassword] = useState({
+    email: "",
+    current_password: "",
+    new_password: "",
+    confirm_password: "",
+  });
+  const [validation, setValidation] = useState(false);
+  const onPasswordChange = (e) => {
+    setpassword({ ...password, [e.target.name]: e.target.value });
+    setValidation(false);
+  };
+  console.log("fff" + JSON.stringify(password));
+  const LoginForm = (e) => {
+    if (password.new_password !== password.confirm_password) {
+      setValidation("not same");
+    } else {
+      axios
+        .put(`${process.env.REACT_APP_BASEURL}/update_password`, {
+          admin_email: password.email,
+          admin_password: password.current_password,
+          new_admin_password: password.confirm_password,
+        })
+        .then((response) => {
+          if (response.data.response === "please fill all input") {
+            setValidation("please fill all input");
+          } else if (response.data.response === "email not matched") {
+            setValidation("email not matched");
+          } else if (response.data.response === "password not matched") {
+            setValidation("password not matched");
+          } else if (
+            password.new_password === password.confirm_password &&
+            response.data.response === "password_updated"
+          ) {
+            navigate("/login");
+          }
+        });
+    }
+    e.preventDefault();
+  };
+
   return (
     <Fragment>
       <div className="for_scrol">
@@ -14,7 +55,7 @@ const ChangePassword = () => {
             <div className="col-xl-4 col-lg-6 m-auto">
               <div className="heading_logo text-center">
                 <div className="logo">
-                  <img src={Logo} alt={'apnaorganic'}/>
+                  <img src={Logo} alt={"apnaorganic"} />
                 </div>
                 <div className="heading_line">
                   <h3>Sell On Apna Organic</h3>
@@ -31,45 +72,86 @@ const ChangePassword = () => {
                       <div className="col-12">
                         <div className="form-floating theme-form-floating log-in-form">
                           <input
+                            required
+                            value={password.email}
+                            name={"email"}
+                            onChange={(e) => onPasswordChange(e)}
                             type="email"
                             className="form-control"
                             id="email"
-                            placeholder="Email Address"
+                            placeholder="Email"
                           />
-                          <label for="email">Current Password</label>
+                          <label for="currentpassword">Email</label>
                         </div>
                       </div>
                       <div className="col-12">
                         <div className="form-floating theme-form-floating log-in-form">
                           <input
-                            type="email"
-                            className="form-control"
-                            id="email"
-                            placeholder="Email Address"
-                          />
-                          <label for="email">New Password</label>
-                        </div>
-                      </div>
-
-                      <div className="col-12">
-                        <div className="form-floating theme-form-floating log-in-form">
-                          <input
+                            required
+                            value={password.current_password}
+                            name={"current_password"}
+                            onChange={(e) => onPasswordChange(e)}
                             type="password"
                             className="form-control"
-                            id="password"
-                            placeholder="Password"
+                            id="currentpassword"
+                            placeholder="Current Password"
                           />
-                          <label for="password">Confirm Password</label>
+                          <label for="currentpassword">Current Password</label>
+                        </div>
+                      </div>
+                      <div className="col-12">
+                        <div className="form-floating theme-form-floating log-in-form">
+                          <input
+                            required
+                            value={password.new_password}
+                            name={"new_password"}
+                            onChange={(e) => onPasswordChange(e)}
+                            type="password"
+                            className="form-control"
+                            id="new password"
+                            placeholder="New Password"
+                          />
+                          <label for="new password">New Password</label>
                         </div>
                       </div>
 
+                      <div className="col-12">
+                        <div className="form-floating theme-form-floating log-in-form">
+                          <input
+                            required
+                            value={password.confirm_password}
+                            name={"confirm_password"}
+                            onChange={(e) => onPasswordChange(e)}
+                            type="password"
+                            className="form-control"
+                            id="confirm password"
+                            placeholder="Confirm Password"
+                          />
+                          <label for="confirm password">Confirm Password</label>
+                        </div>
+                      </div>
+                      {validation === "please fill all input" ? (
+                        <p className="mt-2 ms-2 text-danger" type="invalid">
+                          Please Fill All Fields
+                        </p>
+                      ) : validation === "email not matched" ? (
+                        <p className="mt-2 ms-2 text-danger" type="invalid">
+                          Please Fill Correct Email
+                        </p>
+                      ) : validation === "password not matched" ? (
+                        <p className="mt-2 ms-2 text-danger" type="invalid">
+                          Please Fill Correct Password
+                        </p>
+                      ) : validation === "not same" ? (
+                        <p className="mt-2 ms-2 text-danger" type="invalid">
+                          New Password And Confirm Password Should Be Same
+                        </p>
+                      ) : null}
                       <div className="col-12">
                         <MainButton
                           btntext={"Change Password"}
                           btnclass={"w-100 btn-success btn"}
-                          onClick={() => {
-                            navigate("/dashboard");
-                          }}
+                          onClick={LoginForm}
                         />
                       </div>
                     </form>

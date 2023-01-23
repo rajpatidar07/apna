@@ -13,22 +13,18 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   // const [validated, setValidated] = useState(false);
-  // const [error, setError] = useState(true);
+  const [token, settoken] = useState("");
   const [Emailerror, setEmailError] = useState(true);
   const [Passworderror, setPasswordError] = useState(true);
   const onValueChange = (e, id) => {
     setEmail(e.target.value);
+    setEmailError(true);
   };
   const onPasswordChange = (e, id) => {
     setPassword(e.target.value);
+    setPasswordError(true);
   };
 
-  const LoginCheck = () => {
-    localStorage.setItem("loginid", email);
-    localStorage.setItem("password", password);
-    localStorage.setItem("adminid", id);
-    navigate("/");
-  };
   const handleSubmit = (e) => {
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
@@ -37,20 +33,22 @@ const Login = () => {
       setEmailError(false);
       setPasswordError(false);
     } else {
-
       axios
         .post(`${process.env.REACT_APP_BASEURL}/admin_login`, {
           admin_email: email,
           admin_password: password,
         })
         .then((response) => {
-          console.log(response);
           if (response.data === "email not found") {
             setEmailError(false);
           } else if (response.data === "password not matched") {
             setPasswordError(false);
           } else {
-            LoginCheck();
+            localStorage.setItem("encryptloginid", email);
+            localStorage.setItem("encryptpassword", password);
+            localStorage.setItem("encryptadminid", id);
+            localStorage.setItem("token", response.data[1].token);
+            navigate("/");
           }
         });
     }
@@ -100,7 +98,7 @@ const Login = () => {
                           />
                           {Emailerror === false ? (
                             <p className="mt-1 ms-2 text-danger" type="invalid">
-                              Please Enter Your Email
+                              Please Enter Correct Email
                             </p>
                           ) : null}
                           <label htmlFor="email">Email Address</label>
@@ -120,7 +118,7 @@ const Login = () => {
                           />
                           {Passworderror === false ? (
                             <p className="mt-1 ms-2 text-danger" type="invalid">
-                              Please Enter Your Password
+                              Please Enter Correct Password
                             </p>
                           ) : null}
                           <label htmlFor="password">Password</label>
