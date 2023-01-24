@@ -298,9 +298,9 @@ const CategoryList = () => {
             width="75px"
             alt={row.category_name}
             src={
-              row.image
-                ? row.image
-                : "https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
+              row.image === "no image"
+                ? "https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
+                : row.image
             }
             style={{
               borderRadius: 10,
@@ -452,6 +452,15 @@ const CategoryList = () => {
     axios
       .put(`${process.env.REACT_APP_BASEURL}/update_category`, formData)
       .then((response) => {
+        setnewName(" ");
+        setType("");
+        setCategoryEditparent("");
+        setCategoryEditSubparent("");
+        setCategoryEditChildparent("");
+        setSubCategory([]);
+        setchildCategory([]);
+        setgrandcCategory([]);
+        setValidated(false);
         setapicall(true);
         setShow(false);
         setUpdateAlert(true);
@@ -465,17 +474,31 @@ const CategoryList = () => {
   };
 
   const SearchCategory = () => {
-    axios
-      .post(`${process.env.REACT_APP_BASEURL}/search_category`, {
-        category_name: `${SearchCat.category_name}`,
-        category_type: `${SearchCat.category_type}`,
-        level: `${SearchCat.level}`,
-      })
-      .then((response) => {
-        setData(response.data);
-        setSearchCat("");
-        setsearchValidated(false);
-      });
+    console.log(
+      SearchCat.category_name,
+      SearchCat.category_type,
+      SearchCat.level
+    );
+    if (
+      SearchCat.category_name === undefined ||
+      SearchCat.category_type === undefined ||
+      SearchCat.level === undefined
+    ) {
+      setsearchValidated(true);
+    } else {
+      axios
+        .post(`${process.env.REACT_APP_BASEURL}/search_category`, {
+          category_name: `${SearchCat.category_name}`,
+          category_type: `${SearchCat.category_type}`,
+          level: `${SearchCat.level}`,
+        })
+        .then((response) => {
+          console.log(response);
+          setData(response.data);
+          setsearchValidated(false);
+          setSearchCat("");
+        });
+    }
   };
 
   const OnReset = () => {
@@ -690,9 +713,8 @@ const CategoryList = () => {
                       </option>
                       <option
                         selected={
-                          (CategoryEditdata.category_type = "Beauty & Personal care"
-                            ? true
-                            : false)
+                          (CategoryEditdata.category_type =
+                            "Beauty & Personal care" ? true : false)
                         }
                         value="Beauty & Personal care"
                       >
@@ -770,9 +792,8 @@ const CategoryList = () => {
                       </option>
                       <option
                         selected={
-                          (CategoryEditdata.category_type = "Sports & Accessories"
-                            ? true
-                            : false)
+                          (CategoryEditdata.category_type =
+                            "Sports & Accessories" ? true : false)
                         }
                         value="Sports & Accessories"
                       >
@@ -922,7 +943,7 @@ const CategoryList = () => {
                         // value={newImg}
                       />
                     </div>
-                    {newImg == "" ? null : (
+                    {newImg === "" ? null : (
                       <img
                         src={newImg}
                         alt={"apna_organic"}

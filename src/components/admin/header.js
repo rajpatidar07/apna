@@ -196,6 +196,7 @@ function AdminHeader() {
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Email</Form.Label>
                   <Form.Control
+                    required
                     onChange={(e) => onEmailChange(e)}
                     name={"admin_email"}
                     value={loginid}
@@ -207,6 +208,7 @@ function AdminHeader() {
                 <Form.Group className="mb-3" controlId="formBasicPassword">
                   <Form.Label>Old Password</Form.Label>
                   <Form.Control
+                    required
                     onChange={(e) => onPasswordChange(e)}
                     value={pass}
                     name={"admin_password"}
