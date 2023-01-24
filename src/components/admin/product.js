@@ -933,19 +933,24 @@ function Product() {
     if (id == "" || id == undefined || id == null || unitValidated === false) {
       if (
         variantarray.unit == "" ||
-        variantarray.unit_quantity == "" ||
-        variantarray.colors == "" ||
-        variantarray.size == "" ||
         variantarray.product_price == "" ||
         variantarray.mrp == "" ||
         variantarray.sale_price == "" ||
-        variantarray.discount == "" ||
-        variantarray.special_offer == false ||
-        variantarray.featured_product == false ||
         variantarray.manufacturing_date == "" ||
         variantarray.expire_date == "" ||
         variantarray.quantity == "" 
     
+      ) {
+        setcustomValidated(true);
+      } else if (
+        variantarray.unit === "pcs" &&
+        variantarray.colors === "" &&
+        variantarray.size === ""
+      ) {
+        setcustomValidated(true);
+      } else if (
+        variantarray.unit !== "pcs" &&
+        variantarray.unit_quantity === ""
       ) {
         setcustomValidated(true);
       } else {
