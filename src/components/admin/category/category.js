@@ -13,7 +13,7 @@ import { Badge } from "react-bootstrap";
 import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
 import axios from "axios";
-var newImg;
+var newImg = "";
 const CategoryList = () => {
   const formRef = useRef();
   const [validated, setValidated] = useState(false);
@@ -26,7 +26,7 @@ const CategoryList = () => {
   };
 
   const hideAlert = () => {
-    console.log("--id" + parentid + "----" + level);
+    console.log("id", parentid, "level", level);
     axios.put(`${process.env.REACT_APP_BASEURL}/delete_category`, {
       id: parentid,
       is_active: 0,
@@ -96,7 +96,7 @@ const CategoryList = () => {
     category_type,
     category_name
   ) => {
-    console.log("all parent id---------" + all_parent_id);
+    // console.log("all parent id---------" + all_parent_id);
     if (e === "add") {
       setShow(e);
     }
@@ -106,7 +106,7 @@ const CategoryList = () => {
           .get(`${process.env.REACT_APP_BASEURL}/category_details?id=${e}`)
           .then((response) => {
             let data = response.data[0];
-            console.log("data-------------" + JSON.stringify(data));
+            // console.log("data-------------" + JSON.stringify(data));
             setCategoryEditData(data);
             setImagePath(response.data[0].image);
 
@@ -155,11 +155,11 @@ const CategoryList = () => {
   };
 
   {
-    console.log("image path---" + ImagePaht);
+    // console.log("image path---" + ImagePaht);
   }
   newImg = ImagePaht.replace("public", "");
   {
-    console.log("image new path ---" + newImg);
+    // console.log("image new path ---" + newImg);
   }
 
   const handlChangeName = (e, id) => {
@@ -190,8 +190,8 @@ const CategoryList = () => {
 
   // }
 
-  console.log(" Indval---" + indVal);
-  console.log(" Scategory---" + JSON.stringify(scategory));
+  // console.log(" Indval---" + indVal);
+  // console.log(" Scategory---" + JSON.stringify(scategory));
   let parentidddata = [];
   parentidddata.push(scategory.category_name);
 
@@ -222,6 +222,7 @@ const CategoryList = () => {
   useEffect(() => {
     addCategory();
   }, [indVal]);
+
   const addCategory = async (category, id) => {
     if (id === "" || id === null || id === undefined || indVal !== "") {
       try {
@@ -257,6 +258,7 @@ const CategoryList = () => {
       } catch (err) {}
     }
   };
+
   const columns = [
     {
       name: "ID",
@@ -384,7 +386,7 @@ const CategoryList = () => {
           />
           <BsTrash
             className=" p-0 m-0 editiconn text-danger"
-            onClick={handleAlert.bind(this, [row.parent_id, row.level])}
+            onClick={handleAlert.bind(this, [row.id, row.level])}
           />
         </div>
       ),
@@ -411,7 +413,9 @@ const CategoryList = () => {
     axios
       .post(`${process.env.REACT_APP_BASEURL}/add_category`, formData)
       .then((response) => {
-        setnewName(" ");
+        console.log("Add ", response);
+        setnewName("");
+        setFileName("");
         setType("");
         setCategoryEditparent("");
         setCategoryEditSubparent("");
@@ -419,16 +423,15 @@ const CategoryList = () => {
         setSubCategory([]);
         setchildCategory([]);
         setgrandcCategory([]);
-
+        setImagePath("");
+        newImg = "";
+        setFile();
         setValidated(false);
-
-        setShow(false);
-
         setShow(false);
         setapicall(true);
         setAddAlert(true);
+        formRef.current.reset();
       });
-    formRef.current.reset();
     setValidated(false);
   };
 
@@ -452,14 +455,17 @@ const CategoryList = () => {
     axios
       .put(`${process.env.REACT_APP_BASEURL}/update_category`, formData)
       .then((response) => {
-        setnewName(" ");
+        setnewName("");
         setType("");
+        setFileName("");
         setCategoryEditparent("");
         setCategoryEditSubparent("");
         setCategoryEditChildparent("");
         setSubCategory([]);
         setchildCategory([]);
         setgrandcCategory([]);
+        setImagePath("");
+        newImg = "";
         setValidated(false);
         setapicall(true);
         setShow(false);
@@ -471,18 +477,20 @@ const CategoryList = () => {
 
   const onValueChange = (e) => {
     setSearchCat({ ...SearchCat, [e.target.name]: e.target.value });
+    setsearchValidated(false);
   };
 
+  // console.log("Search data------" + JSON.stringify(SearchCat));
+
   const SearchCategory = () => {
-    console.log(
-      SearchCat.category_name,
-      SearchCat.category_type,
-      SearchCat.level
-    );
+    // console.log(
+    //   SearchCat.category_name,
+    //   SearchCat.category_type,
+    //   SearchCat.level
+    // );
     if (
-      SearchCat.category_name === undefined ||
-      SearchCat.category_type === undefined ||
-      SearchCat.level === undefined
+      SearchCat.category_name === "" ||
+      SearchCat.category_name === undefined
     ) {
       setsearchValidated(true);
     } else {
@@ -493,15 +501,16 @@ const CategoryList = () => {
           level: `${SearchCat.level}`,
         })
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           setData(response.data);
           setsearchValidated(false);
-          setSearchCat("");
+          // setSearchCat("");
         });
     }
   };
 
   const OnReset = () => {
+    setsearchValidated(false);
     setSearchCat({
       category_name: "",
       category_type: "",
@@ -862,9 +871,9 @@ const CategoryList = () => {
                       >
                         <option value="">Select Sub category</option>
                         {subCategory.map((cdata, i) => {
-                          console.log(
-                            CategoryEditSubparent + "CategoryEditSubparent"
-                          );
+                          // console.log(
+                          //   CategoryEditSubparent + "CategoryEditSubparent"
+                          // );
 
                           return (
                             <option
