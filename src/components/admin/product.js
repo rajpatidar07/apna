@@ -944,8 +944,8 @@ function Product() {
         variantarray.featured_product == false ||
         variantarray.manufacturing_date == "" ||
         variantarray.expire_date == "" ||
-        variantarray.quantity == "" ||
-        unitValidated === false
+        variantarray.quantity == "" 
+    
       ) {
         setcustomValidated(true);
       } else {
