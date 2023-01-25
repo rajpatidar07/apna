@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import DataTable from "react-data-table-component";
 import Form from "react-bootstrap/Form";
 import { BiEdit } from "react-icons/bi";
@@ -40,7 +40,10 @@ const Offerproduct = () => {
   const [apicall, setapicall] = useState(false);
   const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
+  const handleClose = (e) => {
+    e.preventDefault();
+    setShow(false);
+  };
   const handleClick = () => {};
 
   useEffect(() => {
@@ -67,19 +70,19 @@ const Offerproduct = () => {
       center: true,
       style: {
         paddingLeft: 0,
-      }
-    },
-      {
-        name: "Fetured_type",
-        selector: (row) => row.fetured_type,
-        sortable: true,
-        width: "250px",
-        center: true,
-        style: {
-          paddingRight: "32px",
-          paddingLeft: "0px",
-        },
       },
+    },
+    {
+      name: "Fetured_type",
+      selector: (row) => row.fetured_type,
+      sortable: true,
+      width: "250px",
+      center: true,
+      style: {
+        paddingRight: "32px",
+        paddingLeft: "0px",
+      },
+    },
     {
       name: "Fetured_type",
       selector: (row) => row.fetured_type,
@@ -211,9 +214,9 @@ const Offerproduct = () => {
     setsearchData({ start_date: "", end_date: "" });
     setapicall(true);
   };
-    return (
-        <div>
-             <h2> Special Offer Products</h2>
+  return (
+    <div>
+      <h2> Special Offer Products</h2>
 
       {/* search bar */}
       <div className="card mt-3 p-3 ">
@@ -260,12 +263,10 @@ const Offerproduct = () => {
 
         {/* upload */}
 
-        <Modal size="lg" show={show} onHide={() => handleClose()}>
+        <Modal size="lg" show={show} onHide={() => setShow(false)}>
           <Form className="" ref={formRef}>
             <Modal.Header closeButton>
-              <Modal.Title>
-                {show === "add" ? "Add New Blog " : " Update Blog "}
-              </Modal.Title>
+              <Modal.Title></Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <div className="row p-3 m-0">
@@ -304,7 +305,7 @@ const Offerproduct = () => {
             <Modal.Footer>
               <button
                 className="button main_outline_button"
-                onClick={() => handleClose()}
+                onClick={handleClose}
               >
                 Cancel
               </button>
