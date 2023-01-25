@@ -8,6 +8,7 @@ import Iconbutton from "../common/iconbutton";
 import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
 import axios from "axios";
+import moment from "moment";
 
 const Deletedproduct = () => {
   const [id, setId] = useState();
@@ -186,7 +187,7 @@ const Deletedproduct = () => {
 
     {
       name: "MDate",
-      selector: (row) => row.manufacturing_date,
+      selector: (row) => moment(row.manufacturing_date).format("yyyy-MM-DD"),
       sortable: true,
       width: "150px",
       center: true,
@@ -197,7 +198,7 @@ const Deletedproduct = () => {
     },
     {
       name: "EDate",
-      selector: (row) => row.expire_date,
+      selector: (row) => moment(row.expire_date).format("yyyy-MM-DD"),
       sortable: true,
       width: "150px",
       center: true,
