@@ -14,6 +14,7 @@ import { Badge, Button, InputGroup, Table } from "react-bootstrap";
 import { GiCancel } from "react-icons/gi";
 
 const VendorsList = () => {
+  const token = localStorage.getItem("token");
   const formRef = useRef();
   const [newImageUrls, setnewImageUrls] = useState([]);
   const [validated, setValidated] = useState(false);
@@ -81,16 +82,24 @@ const VendorsList = () => {
 
   const onSearchClick = () => {
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/vendor_list`, {
-        owner_name: `${searchdata.owner_name}`,
-        store_type: `${searchdata.store_type}`,
-        status: `${searchdata.status}`,
-      })
+      .post(
+        `${process.env.REACT_APP_BASEURL}/vendor_list`,
+        {
+          owner_name: `${searchdata.owner_name}`,
+          store_type: `${searchdata.store_type}`,
+          status: `${searchdata.status}`,
+        },
+        {
+          headers: {
+            admin_token: `${token}`,
+          },
+        }
+      )
       .then((response) => {
         setvendordata(response.data);
         setapicall(false);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -229,7 +238,8 @@ const VendorsList = () => {
           Add Docs
         </Button>
         // : null
-       /*: null*/),
+        /*: null*/
+      ),
       sortable: true,
     },
     {
@@ -253,7 +263,7 @@ const VendorsList = () => {
         setvendordata(response.data);
         setapicall(false);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }, [apicall]);
@@ -304,7 +314,7 @@ const VendorsList = () => {
           setDocnameArray(strCopy);
           setapicall(false);
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
       setShow(e);
@@ -334,7 +344,7 @@ const VendorsList = () => {
       .then((response) => {
         setapicall(true);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -407,7 +417,7 @@ const VendorsList = () => {
           .then((response) => {
             onImgView(vendorID);
           })
-          .catch(function(error) {
+          .catch(function (error) {
             console.log(error);
           });
       } else {
@@ -427,7 +437,7 @@ const VendorsList = () => {
       .then((response) => {
         onImgView(vendor_id);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -442,7 +452,7 @@ const VendorsList = () => {
         setnewImageUrls(response.data);
         //  console.log("new img length------"+((response.data.length)))
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -548,7 +558,7 @@ const VendorsList = () => {
           setAddAlert(true);
           // console.log("-------done"+response.data)
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
       formRef.current.reset();
@@ -599,7 +609,7 @@ const VendorsList = () => {
         setapicall(true);
         setShow(false);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };

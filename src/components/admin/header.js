@@ -20,17 +20,13 @@ import { useNavigate } from "react-router-dom";
 function AdminHeader() {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [UpdateAlert, setUpdateAlert] = useState(false);
   const [newpassword, setnewPassword] = useState("");
   let loginid = localStorage.getItem("encryptloginid");
   let pass = localStorage.getItem("encryptpassword");
   // console.log(loginid, pass);
-  const onEmailChange = (e) => {
-    setEmail(e.target.value);
-    // setnewPassword(e.target.value)
-  };
+
   const onPasswordChange = (e) => {
     setPassword(e.target.value);
   };
@@ -43,8 +39,8 @@ function AdminHeader() {
   };
 
   const LoginForm = (e) => {
-    // console.log("1");
     e.preventDefault();
+    // console.log("1");
     axios
       .put(`${process.env.REACT_APP_BASEURL}/update_password`, {
         admin_email: loginid,
@@ -55,12 +51,12 @@ function AdminHeader() {
         // console.log("possttttttt------" + JSON.stringify(response));
         setShow(false);
         setUpdateAlert(true);
+        setPassword("");
+        setnewPassword("");
       })
       .catch((err) => {
         console.log(err);
       });
-    setEmail("");
-    setPassword("");
     e.preventDefault();
   };
 
@@ -202,11 +198,10 @@ function AdminHeader() {
                   <Form.Label>Email</Form.Label>
                   <Form.Control
                     required
-                    onChange={(e) => onEmailChange(e)}
                     name={"admin_email"}
-                    value={email}
+                    value={loginid}
                     type="email"
-                    placeholder="Enter Email"
+                    disabled
                   />
                 </Form.Group>
 
@@ -226,7 +221,7 @@ function AdminHeader() {
                   <Form.Control
                     type="password"
                     name={"new_admin_password"}
-                    value={newpassword}
+                    defaultValue={newpassword}
                     onChange={(e) => newPass(e)}
                     placeholder="Password"
                     required
