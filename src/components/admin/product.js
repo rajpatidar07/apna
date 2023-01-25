@@ -968,15 +968,19 @@ console.log("token----"+token)
       {
         setcustomValidated(true);
       } 
+     else if( variantarray.quantity==0){
+        setVarietyUnitvalidation("QwanityValidation");
+      }
       else if (
-       ( variantarray.unit === "pcs") &&
-       ( variantarray.colors === "" )  )
+        variantarray.unit === "pcs" &&
+        variantarray.colors === ""  || 
+        variantarray.size === null )
+       
       {
    
         setVarietyUnitvalidation("fillUnit&size&color");
       } 
-      else if(variantarray.unit === "pcs" || variantarray.size === null){ setVarietyUnitvalidation("fillUnit&size&color");}
-
+    
       else if (
         (variantarray.unit === "gms" ||  variantarray.unit === "ml"  ||  variantarray.unit === "piece")&&
        ( variantarray.unit_quantity === null) 
@@ -993,6 +997,7 @@ console.log("token----"+token)
         setunitValidated(true);
         setVarietyUnitvalidation("unitQwanity&size&color");
       } 
+    
       else {
         console.log("new veriant array---"+JSON.stringify(variantarray))
         axios
@@ -1001,27 +1006,27 @@ console.log("token----"+token)
             variantarray
           )
           .then((response) => {
-            setvariantarray({
-              product_status: "",
-              unit: "",
-              colors: "",
-              unit_quantity: "",
-              size: "",
-              product_price: "",
-              mrp: "",
-              sale_price: "",
-              discount: "0",
-              special_offer: false,
-              featured_product: false,
-              manufacturing_date: "",
-              expire_date: "",
-              quantity: "",
-              product_id: productID,
-            });
+           
             console.log("respo----" + JSON.stringify(response));
             if(response.affectedRows="1"){
               setProductAlert(true);
-             
+              setvariantarray({
+                product_status: "",
+                unit: "",
+                colors: "",
+                unit_quantity: "",
+                size: "",
+                product_price: "",
+                mrp: "",
+                sale_price: "",
+                discount: "0",
+                special_offer: false,
+                featured_product: false,
+                manufacturing_date: "",
+                expire_date: "",
+                quantity: "",
+                product_id: productID,
+              });
             }
             else if(response.errno==1064){
                alert("Error in add product")
@@ -1142,49 +1147,60 @@ console.log("token----"+token)
     {
       setcustomValidated(true);
     } 
+    else if(variantarray.quantity ==0 ){
+      setVarietyUnitvalidation("QwanityValidation")
+    }
     else if (
       variantarray.unit === "pcs" &&
       variantarray.colors === ""  ||
-     variantarray.size === null ||  variantarray.size === ""
+     variantarray.size === null 
+    //  ||  variantarray.size === ""
     ) 
     {
  
       setVarietyUnitvalidation("fillUnit&size&color");
     } 
     else if (
-      variantarray.unit === "pcs" &&
-      variantarray.colors === ""  ||
-     variantarray.size === null ||  variantarray.size === ""
+      variantarray.unit !== "pcs" &&
+      variantarray.unit_quantity === ""  
+      // ||
+    //  variantarray.size === null ||  variantarray.size === ""
        
     ) 
     {
       setunitValidated(true);
       setVarietyUnitvalidation("unitQwanity&size&color");
-    } else {
+    }
+    
+   
+    else {
       setvariantmainarray((variantmainarray) => [
         ...variantmainarray,
         variantarray,
       ]);
 
+
+
+      setvariantarray({
+        product_status: "",
+        unit: "",
+        colors: "",
+        unit_quantity: "",
+        size: "",
+        product_price: "",
+        mrp: "",
+        sale_price: "",
+        discount: "0",
+        special_offer: false,
+        featured_product: false,
+        manufacturing_date: "",
+        expire_date: "",
+        quantity: "",
+        product_id: productID,
+      });
       // setcustomValidated(false);
     }
-    setvariantarray({
-      product_status: "",
-      unit: "",
-      colors: "",
-      unit_quantity: "",
-      size: "",
-      product_price: "",
-      mrp: "",
-      sale_price: "",
-      discount: "0",
-      special_offer: false,
-      featured_product: false,
-      manufacturing_date: "",
-      expire_date: "",
-      quantity: "",
-      product_id: productID,
-    });
+
   };
 
   const VariantRemoveClick = (id, productid) => {
@@ -1828,7 +1844,7 @@ console.log("token----"+token)
                         className=" aos_input"
                         controlId="formBasicParentCategory"
                       >
-                        <Form.Label>Sub Category</Form.Label>
+                        <Form.Label>Sub Category <span className="text-danger">* </span></Form.Label>
                         <Form.Select
                           aria-label="Search by status"
                           className="adminselectbox"
@@ -2025,9 +2041,9 @@ console.log("token----"+token)
                           type="number"
                           min={0}
                           placeholder="Sgst"
-                          className={
-                            customvalidated === true ? "border-danger" : null
-                          }
+                          // className={
+                          //   customvalidated === true ? "border-danger" : null
+                          // }
                           name="sgst"
                           value={productdata.sgst}
                           onChange={(e) => handleInputFieldChange(e)}
@@ -2044,9 +2060,9 @@ console.log("token----"+token)
                           type="number"
                           min={0}
                           placeholder="Cgst"
-                          className={
-                            customvalidated === true ? "border-danger" : null
-                          }
+                          // className={
+                          //   customvalidated === true ? "border-danger" : null
+                          // }
                           name="cgst"
                           value={productdata.cgst}
                           onChange={(e) => handleInputFieldChange(e)}
@@ -2164,7 +2180,7 @@ console.log("token----"+token)
                                           </span>
                                         </th>
                                         <th>Color</th>
-                                        <th>Weight</th>
+                                        <th>Weight/piece/Volume</th>
                                         <th>Size</th>
                                         <th>
                                           Mrp{" "}
@@ -2174,19 +2190,21 @@ console.log("token----"+token)
                                         </th>
                                         <th>Discount</th>
                                         <th>Price</th>
-                                        <th>Sale Price</th>
+                                        <th>Sale Price <span className="text-danger">
+                                            *
+                                          </span></th>
                                         <th>Special Offer</th>
                                         <th>Featured Product</th>
                                         <th className="manufacture_date">
-                                          Mdate{" "}
+                                          Mdate
                                           <span className="text-danger">
-                                            *{" "}
+                                            *
                                           </span>
                                         </th>
                                         <th className="manufacture_date">
                                           Edate{" "}
                                           <span className="text-danger">
-                                            *{" "}
+                                            *
                                           </span>
                                         </th>
                                         <th className="">
@@ -2326,7 +2344,7 @@ console.log("token----"+token)
                                             <InputGroup className="" size="sm">
                                               <Form.Control
                                                 type="number"
-                                                min={1}
+                                            
                                                 sm="9"
                                                 // className={
                                                 //   customvalidated === true
@@ -2349,7 +2367,7 @@ console.log("token----"+token)
                                               <Form.Control
                                                 type="number"
                                                 sm="9"
-                                                min={0}
+                                               
                                                 onChange={(e) =>
                                                   onVariantChange(e)
                                                 }
@@ -2363,7 +2381,7 @@ console.log("token----"+token)
                                           <div className=" d-flex align-items-center">
                                             <InputGroup className="" size="sm">
                                               <Form.Control
-                                                min={1}
+                                                
                                                 step={"any"}
                                                 type="number"
                                                 sm="9"
@@ -2390,7 +2408,7 @@ console.log("token----"+token)
                                                 type="number"
                                                 step={"any"}
                                                 sm="9"
-                                                min={1}
+                                              
                                                 // className={
                                                 //   customvalidated === true
                                                 //     ? "border-danger"
@@ -2494,6 +2512,7 @@ console.log("token----"+token)
                                                 //     ? "border-danger"
                                                 //     : null
                                                 // }
+                                                min={moment(variantarray.manufacturing_date).format("YYYY-MM-DD")}
                                                 onChange={(e) =>
                                                   onVariantChange(e)
                                                 }
@@ -2545,19 +2564,19 @@ console.log("token----"+token)
                                           </div>
                                         </td>
                                       </tr>
-                                      {customvalidated === true ? (
+
                               <tr>
+                              {customvalidated === true ? (
                                 <p
                                   className="mt-1 ms-2 text-danger"
                                   type="invalid"
                                 >
                                   Please fill Required fields
                                 </p>
-                              </tr>
-                            ) : null}
+                                    ) : null}
 
-                              <tr>
-                              {varietyUnitvalidation==="fillUnit&size&color"?
+
+                             {varietyUnitvalidation==="fillUnit&size&color"?
                                 <p
                                   className="mt-1 ms-2 text-danger"
                                   type="invalid"
@@ -2567,19 +2586,30 @@ console.log("token----"+token)
                                     :varietyUnitvalidation==="" ?null:null }
 
 
+                       {varietyUnitvalidation==="unitQwanity&size&color"?
 
-                     {varietyUnitvalidation==="unitQwanity&size&color"?
+                          <p
+                            className="mt-1 ms-2 text-danger my-3"
+                            type="invalid"
+                             >
+                         Please fill weight
+                            </p>
 
-                        <p
-                         className="mt-1 ms-2 text-danger my-3"
-                        type="invalid"
+                             : varietyUnitvalidation==="" ?null:null}
+
+                            {varietyUnitvalidation==="QwanityValidation"?(
+                            
+                            <p
+                              className="mt-1 ms-2 text-danger my-3"
+                              type="invalid"
                             >
-                      Please fill weight
-                           </p>
+                              Quantity must be greater than 0
+                            </p>
+                        
+                             ) :varietyUnitvalidation==="" ?null: null }
 
-                              : varietyUnitvalidation==="" ?null:null}
-                              </tr>
-                          
+                               </tr>
+
                                       {(variantmainarray || []).map(
                                         (variantdata, i) => {
                                           return (
@@ -3213,6 +3243,7 @@ console.log("token----"+token)
                                       //     ? "border-danger"
                                       //     : null
                                       // }
+                                      min={moment(variantarray.manufacturing_date).format("YYYY-MM-DD")}
                                       onChange={(e) => onVariantChange(e)}
                                       name={"expire_date"}
                                       value={moment(
@@ -3307,6 +3338,16 @@ console.log("token----"+token)
                             
                                  ) :varietyUnitvalidation==="" ?null: null}
 
+                          {varietyUnitvalidation==="QwanityValidation"?(
+                            
+                            <p
+                              className="mt-1 ms-2 text-danger my-3"
+                              type="invalid"
+                            >
+                              Quantity must be greater than 0
+                            </p>
+                        
+                             ) :varietyUnitvalidation==="" ?null: null}
 
 
                               </tr>
