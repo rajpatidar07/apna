@@ -24,9 +24,9 @@ function AdminHeader() {
   const [password, setPassword] = useState("");
   const [UpdateAlert, setUpdateAlert] = useState(false);
   const [newpassword, setnewPassword] = useState("");
-  let loginid = localStorage.getItem("encryptloginid", email);
-  let pass = localStorage.getItem("encryptpassword", password);
-  console.log(loginid, pass);
+  let loginid = localStorage.getItem("encryptloginid");
+  let pass = localStorage.getItem("encryptpassword");
+  // console.log(loginid, pass);
   const onEmailChange = (e) => {
     setEmail(e.target.value);
     // setnewPassword(e.target.value)
@@ -204,7 +204,7 @@ function AdminHeader() {
                     required
                     onChange={(e) => onEmailChange(e)}
                     name={"admin_email"}
-                    value={loginid}
+                    value={email}
                     type="email"
                     placeholder="Enter Email"
                   />
@@ -215,7 +215,7 @@ function AdminHeader() {
                   <Form.Control
                     required
                     onChange={(e) => onPasswordChange(e)}
-                    value={pass}
+                    value={password}
                     name={"admin_password"}
                     type="password"
                     placeholder="Password"
