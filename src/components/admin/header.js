@@ -18,14 +18,15 @@ import "sweetalert/dist/sweetalert.css";
 import { useNavigate } from "react-router-dom";
 
 function AdminHeader() {
-  let loginid = localStorage.getItem("loginid");
-  let pass = localStorage.getItem("password");
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [UpdateAlert, setUpdateAlert] = useState(false);
   const [newpassword, setnewPassword] = useState("");
+  let loginid = localStorage.getItem("encryptloginid", email);
+  let pass = localStorage.getItem("encryptpassword", password);
+  console.log(loginid, pass);
   const onEmailChange = (e) => {
     setEmail(e.target.value);
     // setnewPassword(e.target.value)
@@ -42,6 +43,7 @@ function AdminHeader() {
   };
 
   const LoginForm = (e) => {
+    // console.log("1");
     e.preventDefault();
     axios
       .put(`${process.env.REACT_APP_BASEURL}/update_password`, {
@@ -50,9 +52,12 @@ function AdminHeader() {
         new_admin_password: newpassword,
       })
       .then((response) => {
-        // console.log("possttttttt------"+JSON.stringify(response))
+        // console.log("possttttttt------" + JSON.stringify(response));
         setShow(false);
         setUpdateAlert(true);
+      })
+      .catch((err) => {
+        console.log(err);
       });
     setEmail("");
     setPassword("");
