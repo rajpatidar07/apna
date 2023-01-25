@@ -54,7 +54,7 @@ function AdminLayout() {
   const [adminLogged, setadminLogged] = useState(localStorage.getItem("token"));
 
   useEffect(() => {
-    localStorage.setItem("token", JSON.stringify(adminLogged));
+    localStorage.setItem("token", adminLogged);
   }, [adminLogged]);
 
   return (
