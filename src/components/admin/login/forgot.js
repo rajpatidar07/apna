@@ -9,13 +9,16 @@ const Forgot = () => {
   const [email, setEmail] = useState("");
   const [emailerror, setemailerror] = useState(false);
   const [timer, settimer] = useState(false);
-
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const forgotInfo = (e) => {
     if (email === "") {
       setemailerror("null");
+      setLoading(false);
     } else {
       settimer(true);
+      setLoading(true);
+
       axios
         .put(`${process.env.REACT_APP_BASEURL}/admin_forget_password`, {
           admin_email: email,
@@ -24,6 +27,7 @@ const Forgot = () => {
           if (response.data.response === "invalid_mail") {
             settimer(false);
             setemailerror(response.data.response);
+            setLoading(false);
           } else {
             navigate("/login");
           }
@@ -104,11 +108,25 @@ const Forgot = () => {
                       </div>
 
                       <div className="col-12">
-                        <MainButton
-                          btntext={"Forgot password"}
-                          btnclass={"w-100 btn-success btn"}
-                          onClick={forgotInfo}
-                        />
+                        {loading == true ? (
+                          <button
+                            type="submit"
+                            className="w-100 btn-success btn"
+                          >
+                            &nbsp;&nbsp;&nbsp; sending...
+                            <span
+                              className="spinner-border spinner-border-sm"
+                              role="status"
+                              aria-hidden="true"
+                            ></span>
+                          </button>
+                        ) : (
+                          <MainButton
+                            btntext={"Forgot password"}
+                            btnclass={"w-100 btn-success btn"}
+                            onClick={forgotInfo}
+                          />
+                        )}
                       </div>
                     </form>
                   </div>

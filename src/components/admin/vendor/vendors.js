@@ -15,6 +15,7 @@ import { GiCancel } from "react-icons/gi";
 
 const VendorsList = () => {
   const token = localStorage.getItem("token");
+
   const formRef = useRef();
   const [newImageUrls, setnewImageUrls] = useState([]);
   const [validated, setValidated] = useState(false);
@@ -82,19 +83,11 @@ const VendorsList = () => {
 
   const onSearchClick = () => {
     axios
-      .post(
-        `${process.env.REACT_APP_BASEURL}/vendor_list`,
-        {
-          owner_name: `${searchdata.owner_name}`,
-          store_type: `${searchdata.store_type}`,
-          status: `${searchdata.status}`,
-        },
-        {
-          headers: {
-            admin_token: `${token}`,
-          },
-        }
-      )
+      .post(`${process.env.REACT_APP_BASEURL}/vendor_list`, {
+        owner_name: `${searchdata.owner_name}`,
+        store_type: `${searchdata.store_type}`,
+        status: `${searchdata.status}`,
+      })
       .then((response) => {
         setvendordata(response.data);
         setapicall(false);
@@ -258,7 +251,17 @@ const VendorsList = () => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
+      .post(
+        `${process.env.REACT_APP_BASEURL}/vendors`,
+        {
+          vendor_id: "all",
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
         setvendordata(response.data);
         setapicall(false);
@@ -294,6 +297,7 @@ const VendorsList = () => {
   };
 
   const handleShow = (e) => {
+    console.log(e);
     if (e === "add") {
       setShow(e);
     }
@@ -301,7 +305,19 @@ const VendorsList = () => {
       setCall(true);
 
       axios
-        .get(`${process.env.REACT_APP_BASEURL}/vendors?id=${e}`, addvendordata)
+        // .get(`${process.env.REACT_APP_BASEURL}/vendors?id=${e}`, addvendordata)
+        .post(
+          `${process.env.REACT_APP_BASEURL}/vendors`,
+          {
+            vendor_id: e,
+            addvendordata,
+          },
+          {
+            headers: {
+              admin_token: token,
+            },
+          }
+        )
         .then((response) => {
           setaddvendordata(response.data[0]);
 
@@ -722,6 +738,7 @@ const VendorsList = () => {
                   className="mb-3 aos_input"
                   controlId="validationCustom01"
                 >
+                  {console.log(addvendordata)}
                   <Form.Label>Owner Name</Form.Label>
                   <Form.Control
                     onChange={(e) => handleFormChange(e)}
