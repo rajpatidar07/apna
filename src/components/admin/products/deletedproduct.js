@@ -10,8 +10,8 @@ import "sweetalert/dist/sweetalert.css";
 import axios from "axios";
 
 const Deletedproduct = () => {
-  const[id,setId]=useState();
-  const[productid,setProductId]=useState();
+  const [id, setId] = useState();
+  const [productid, setProductId] = useState();
   const [RestoreAlert, setRestoreAlert] = useState(false);
 
   const [Alert, setAlert] = useState(false);
@@ -22,18 +22,20 @@ const Deletedproduct = () => {
     manufacturing_date: "",
   });
 
-  const hideAlert = () =>  setRestoreAlert(false);
+  const hideAlert = () => setRestoreAlert(false);
 
   const closeRestoreAlert = () => {
-    axios.put(`${process.env.REACT_APP_BASEURL}/products_delete_remove`,{
-      "varient_id":id,
-      "product_id":productid,
-      "is_delete":"0"
-  }).then((response)=>{
-    let data=response.data;
-    setapicall(true);
-    setRestoreAlert(false);
-  })
+    axios
+      .put(`${process.env.REACT_APP_BASEURL}/products_delete_remove`, {
+        varient_id: id,
+        product_id: productid,
+        is_delete: "0",
+      })
+      .then((response) => {
+        let data = response.data;
+        setapicall(true);
+        setRestoreAlert(false);
+      });
   };
 
   const OnSearchChange = (e) => {
@@ -69,7 +71,7 @@ const Deletedproduct = () => {
         setdeletedata(response.data);
         setapicall(false);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }, [apicall]);
@@ -216,17 +218,17 @@ const Deletedproduct = () => {
           onClick={(e) => OnProductRestore(e, row.id, row.product_id)}
           btntext={"Restore"}
           btnclass={"button bg-warning"}
-          Iconname={<MdOutlineRestore className="mx-1"/>}
+          Iconname={<MdOutlineRestore className="mx-1" />}
         />
       ),
     },
   ];
-  const OnProductRestore=(e,id,productid)=>{
+  const OnProductRestore = (e, id, productid) => {
     setRestoreAlert(true);
     setId(id);
     setProductId(productid);
-  }
- 
+  };
+
   const handleClick = () => {};
   return (
     <div>
@@ -269,7 +271,6 @@ const Deletedproduct = () => {
               type="reset"
               onClick={OnReset}
             />
-            
           </div>
         </div>
 
@@ -286,13 +287,12 @@ const Deletedproduct = () => {
           className={"table_body deletedproduct_tabel"}
         />
         <SweetAlert
-        show={RestoreAlert}
-        title="Restor Successfully "
-        onConfirm={closeRestoreAlert}
-        onCancel={hideAlert}
-        showCancelButton={true}
-
-      />
+          show={RestoreAlert}
+          title="Restor Successfully "
+          onConfirm={closeRestoreAlert}
+          onCancel={hideAlert}
+          showCancelButton={true}
+        />
       </div>
     </div>
   );
