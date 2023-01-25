@@ -11,6 +11,8 @@ const OrderDetail = () => {
   let totalorder = 0;
   let orderid = localStorage.getItem("orderid");
   let userid = localStorage.getItem("userid");
+  const token = localStorage.getItem("token");
+
   const [order, setOrder] = useState([]);
   const [productorder, setproductOrder] = useState([]);
   const [amt, setAmt] = useState("");
@@ -32,9 +34,8 @@ const OrderDetail = () => {
         status_change: e.target.value,
         id: `${orderid}`,
       })
-      .then((response) => {
-      })
-      .catch(function(error) {
+      .then((response) => {})
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -47,7 +48,7 @@ const OrderDetail = () => {
 
         UserData();
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }, []);
@@ -58,7 +59,7 @@ const OrderDetail = () => {
         let data = response.data;
         setUser(data);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };

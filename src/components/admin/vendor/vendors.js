@@ -14,6 +14,8 @@ import { Badge, Button, InputGroup, Table } from "react-bootstrap";
 import { GiCancel } from "react-icons/gi";
 
 const VendorsList = () => {
+  const token = localStorage.getItem("token");
+
   const formRef = useRef();
   const [newImageUrls, setnewImageUrls] = useState([]);
   const [validated, setValidated] = useState(false);
@@ -90,7 +92,7 @@ const VendorsList = () => {
         setvendordata(response.data);
         setapicall(false);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -229,7 +231,8 @@ const VendorsList = () => {
           Add Docs
         </Button>
         // : null
-       /*: null*/),
+        /*: null*/
+      ),
       sortable: true,
     },
     {
@@ -248,12 +251,22 @@ const VendorsList = () => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
+      .post(
+        `${process.env.REACT_APP_BASEURL}/vendors`,
+        {
+          vendor_id: "all",
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
         setvendordata(response.data);
         setapicall(false);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }, [apicall]);
@@ -284,6 +297,7 @@ const VendorsList = () => {
   };
 
   const handleShow = (e) => {
+    console.log(e);
     if (e === "add") {
       setShow(e);
     }
@@ -291,7 +305,19 @@ const VendorsList = () => {
       setCall(true);
 
       axios
-        .get(`${process.env.REACT_APP_BASEURL}/vendors?id=${e}`, addvendordata)
+        // .get(`${process.env.REACT_APP_BASEURL}/vendors?id=${e}`, addvendordata)
+        .post(
+          `${process.env.REACT_APP_BASEURL}/vendors`,
+          {
+            vendor_id: e,
+            addvendordata,
+          },
+          {
+            headers: {
+              admin_token: token,
+            },
+          }
+        )
         .then((response) => {
           setaddvendordata(response.data[0]);
 
@@ -304,7 +330,7 @@ const VendorsList = () => {
           setDocnameArray(strCopy);
           setapicall(false);
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
       setShow(e);
@@ -334,7 +360,7 @@ const VendorsList = () => {
       .then((response) => {
         setapicall(true);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -407,7 +433,7 @@ const VendorsList = () => {
           .then((response) => {
             onImgView(vendorID);
           })
-          .catch(function(error) {
+          .catch(function (error) {
             console.log(error);
           });
       } else {
@@ -427,7 +453,7 @@ const VendorsList = () => {
       .then((response) => {
         onImgView(vendor_id);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -442,7 +468,7 @@ const VendorsList = () => {
         setnewImageUrls(response.data);
         //  console.log("new img length------"+((response.data.length)))
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -548,7 +574,7 @@ const VendorsList = () => {
           setAddAlert(true);
           // console.log("-------done"+response.data)
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
       formRef.current.reset();
@@ -599,7 +625,7 @@ const VendorsList = () => {
         setapicall(true);
         setShow(false);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -712,6 +738,7 @@ const VendorsList = () => {
                   className="mb-3 aos_input"
                   controlId="validationCustom01"
                 >
+                  {console.log(addvendordata)}
                   <Form.Label>Owner Name</Form.Label>
                   <Form.Control
                     onChange={(e) => handleFormChange(e)}
