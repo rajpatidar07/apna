@@ -29,6 +29,7 @@ const Promotionproduct = () => {
     start_date: "",
     end_date: "",
   });
+  const hideUpdateAlert = () => setUpdateAlert(false);
 
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
@@ -38,47 +39,46 @@ const Promotionproduct = () => {
     let mdate = moment(e.target.value).format("YYYY-MM-DD");
     setsearchData({ ...searchdata, [e.target.name]: mdate });
   };
-  const handleClose = () => setShow(false);
+  const handleClose = (e) => {
+    e.preventDefault();
+    setShow(false);
+  };
 
   const handleClick = () => {};
- 
-const columns = [
-  {
-    name: "ID",
-    selector: (row) => (
-      row.id
-    ),
-    sortable: true,
-    width: "150px",
-    center: true,
-    style: {
-      paddingLeft: 0,
-    }
-  },
-  {
-    name: "Product ID",
-    selector: (row) => (
-      row.product_id
-    ),
-    sortable: true,
-    width: "150px",
-    center: true,
-    style: {
-      paddingLeft: 0,
-    }
-  },
 
-  {
-    name: "Fetured_type",
-    selector: (row) => row.fetured_type,
-    sortable: true,
-    width: "250px",
-    center: true,
-    style: {
-      paddingRight: "32px",
-      paddingLeft: "0px",
+  const columns = [
+    {
+      name: "ID",
+      selector: (row) => row.id,
+      sortable: true,
+      width: "150px",
+      center: true,
+      style: {
+        paddingLeft: 0,
+      },
     },
-  },
+    {
+      name: "Product ID",
+      selector: (row) => row.product_id,
+      sortable: true,
+      width: "150px",
+      center: true,
+      style: {
+        paddingLeft: 0,
+      },
+    },
+
+    {
+      name: "Fetured_type",
+      selector: (row) => row.fetured_type,
+      sortable: true,
+      width: "250px",
+      center: true,
+      style: {
+        paddingRight: "32px",
+        paddingLeft: "0px",
+      },
+    },
     {
       name: "Fetured_type",
       selector: (row) => row.fetured_type,
@@ -273,11 +273,10 @@ const columns = [
 
         {/* upload */}
 
-        <Modal size="lg" show={show} onHide={() => handleClose()}>
+        <Modal size="lg" show={show} onHide={() => setShow(false)}>
           <Form className="" ref={formRef}>
             <Modal.Header closeButton>
-              <Modal.Title>
-              </Modal.Title>
+              <Modal.Title></Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <div className="row p-3 m-0">
@@ -310,25 +309,25 @@ const columns = [
                       placeholder="Coupon Start Date"
                     />
                   </Form.Group>
-                </div> 
-            </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <button
-              className="button main_outline_button"
-              onClick={() => handleClose()}
-            >
-              Cancel
-            </button>
-            <button
-              className="button main_outline_button"
-              onClick={UpdatePromotionProduct}
-            >
-              Update
-            </button>
-          </Modal.Footer>
-        </Form>
-      </Modal>
+                </div>
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <button
+                className="button main_outline_button"
+                onClick={handleClose}
+              >
+                Cancel
+              </button>
+              <button
+                className="button main_outline_button"
+                onClick={UpdatePromotionProduct}
+              >
+                Update
+              </button>
+            </Modal.Footer>
+          </Form>
+        </Modal>
 
         {/* datatable */}
 
@@ -351,7 +350,7 @@ const columns = [
         <SAlert
           show={UpdateAlert}
           title="Promotional Products Updated Successfully "
-          onConfirm={setUpdateAlert}
+          onConfirm={hideUpdateAlert}
         />
       </div>
     </div>
