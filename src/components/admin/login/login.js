@@ -39,6 +39,7 @@ const Login = () => {
           admin_password: password,
         })
         .then((response) => {
+          console.log("responce------"+JSON.stringify (response))
           if (response.data === "email not found") {
             setEmailError(false);
           } else if (response.data === "password not matched") {

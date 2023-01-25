@@ -567,14 +567,23 @@ function Product() {
   // modal
   const [editparentCategory, seteditparentCategory] = useState("");
 
+let token=localStorage.getItem("token");
+
+console.log("token----"+token)
   const handleShow = (e) => {
     setproductdata(data);
     // vendor
     const getVendorData = () => {
       try {
         axios
-          .get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
+          .post(`${process.env.REACT_APP_BASEURL}/vendors`,
+          {"vendor_id":"all"},
+          {
+            headers: { admin_token:`${token}`} 
+              
+         })
           .then((response) => {
+            console.log("vendor data----"+ JSON.stringify (response.data))
             let cgory = response.data;
             const result = cgory.filter(
               (thing, index, self) =>
@@ -781,7 +790,8 @@ function Product() {
     onImgView(product_id, id);
     console.log("imge newImageUrlse" + newImageUrls.length);
     console.log("imge lenth--" + e.target.files.length);
-    if (e.target.files.length <= 10) {
+    // if (e.target.files.length <= 10) {
+
       for (let i = 0; i < e.target.files.length; i++) {
         let coverimg;
 
@@ -804,7 +814,8 @@ function Product() {
         ImgObj.push(imar);
       }
 
-      if (newImageUrls.length <= 9) {
+      // if (newImageUrls.length <= 9) {
+
         axios
           .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
           .then((response) => {
@@ -814,13 +825,15 @@ function Product() {
           .catch(function (error) {
             console.log(error);
           });
-      } else {
-        alert("More than 10 Pics are allowedd");
-      }
+
+      // } else {
+      //   alert("More than 10 Pics are allowedd");
+      // }
       // image
-    } else {
-      alert("More than 10 Pics are allowed");
-    }
+    // } 
+    // else {
+    //   alert("More than 10 Pics are allowed");
+    // }
 
     // image
     axios
@@ -938,7 +951,9 @@ function Product() {
 
 
   console.log("new veriant array---"+JSON.stringify(variantarray))
+ 
   const onVariantaddclick = (e, id) => {
+    setunitValidated(false)
     // id.preventDefault();
     if (id == undefined || id == null || unitValidated== "false" ) {
       if (
@@ -954,21 +969,28 @@ function Product() {
         setcustomValidated(true);
       } 
       else if (
-        variantarray.unit === "pcs" &&
-        variantarray.colors === ""  ||
-       variantarray.size === null ||  variantarray.size === ""
-      ) 
+       ( variantarray.unit === "pcs") &&
+       ( variantarray.colors === "" )  )
       {
    
         setVarietyUnitvalidation("fillUnit&size&color");
       } 
+      else if(variantarray.unit === "pcs" || variantarray.size === null){ setVarietyUnitvalidation("fillUnit&size&color");}
+
       else if (
         (variantarray.unit === "gms" ||  variantarray.unit === "ml"  ||  variantarray.unit === "piece")&&
-        variantarray.unit_quantity === ""
+       ( variantarray.unit_quantity === null) 
+
+        // variantarray.unit !== "pcs" &&
+        // variantarray.unit_quantity === null
+        // &&
+        // variantarray.size === null
         
       ) 
+
+
       {
-        // setunitValidated(true);
+        setunitValidated(true);
         setVarietyUnitvalidation("unitQwanity&size&color");
       } 
       else {
@@ -2535,25 +2557,27 @@ function Product() {
                             ) : null}
 
                               <tr>
-                              {varietyUnitvalidation==="fillUnit&size&color"?(
+                              {varietyUnitvalidation==="fillUnit&size&color"?
                                 <p
                                   className="mt-1 ms-2 text-danger"
                                   type="invalid"
                                 >
                                   Please must be Fill size and colors
                                 </p>
-                                   ) :varietyUnitvalidation==="" ?null :
+                                    :varietyUnitvalidation==="" ?null:null }
 
-                                varietyUnitvalidation==="unitQwanity&size&color"?(
-                            
-                                <p
-                                  className="mt-1 ms-2 text-danger my-3"
-                                  type="invalid"
-                                >
-                                  Please fill weight
-                                </p>
-                            
-                                 ) : null}
+
+
+                     {varietyUnitvalidation==="unitQwanity&size&color"?
+
+                        <p
+                         className="mt-1 ms-2 text-danger my-3"
+                        type="invalid"
+                            >
+                      Please fill weight
+                           </p>
+
+                              : varietyUnitvalidation==="" ?null:null}
                               </tr>
                           
                                       {(variantmainarray || []).map(
