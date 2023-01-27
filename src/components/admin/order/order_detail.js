@@ -30,19 +30,33 @@ const OrderDetail = () => {
   const onStatusChangee = (e) => {
     setchangstatuss(e.target.value);
     axios
-      .put("http://192.168.29.108:5000/order_status_change", {
-        status_change: e.target.value,
-        id: `${orderid}`,
-      })
+      .put(
+        "http://192.168.29.108:5000/order_status_change",
+        {
+          status_change: e.target.value,
+          id: `${orderid}`,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {})
       .catch(function (error) {
         console.log(error);
       });
   };
+
   useEffect(() => {
     axios
-      .get(`http://192.168.29.108:5000/order_deteils?id=${orderid}`)
+      .post(`http://192.168.29.108:5000/order_deteils?id=${orderid}`, {
+        headers: {
+          admin_token: token,
+        },
+      })
       .then((response) => {
+        console.log(response);
         setOrder(response.data);
         setproductOrder(response.data.product_types);
 
@@ -52,10 +66,23 @@ const OrderDetail = () => {
         console.log(error);
       });
   }, []);
+
   const UserData = () => {
     axios
-      .get(`http://192.168.29.108:5000/user_details?user_id=${userid}`)
+      .post(
+        `http://192.168.29.108:5000/user_details`,
+        {
+          user_id: userid,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
+        console.log(response);
+
         let data = response.data;
         setUser(data);
       })
