@@ -46,7 +46,8 @@ const Deletedproduct = () => {
     setapicall(true);
   };
   const OnReset = () => {
-    setsearchData({ start_date: "", end_date: "" });
+    console.log("1");
+    setsearchData({ product_title_name: "", manufacturing_date: "" });
     setapicall(true);
   };
   useEffect(() => {
