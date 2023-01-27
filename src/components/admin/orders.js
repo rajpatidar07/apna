@@ -4,80 +4,102 @@ import { FaFileInvoiceDollar } from "react-icons/fa";
 import DataTable from "react-data-table-component";
 import MainButton from "./common/button";
 import Form from "react-bootstrap/Form";
-import { Link,  useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../../style/order.css";
-import OrderJson from "./json/orders"
+import OrderJson from "./json/orders";
 import axios from "axios";
 import moment from "moment";
 import Status from "./json/Status";
 
-
 function Product() {
+  let token = localStorage.getItem("token");
   const navigate = useNavigate();
   const [orderdata, setorderdata] = useState([]);
-  const [changstatus, setchangstatus] = useState('');
+  const [changstatus, setchangstatus] = useState("");
   const [apicall, setapicall] = useState(false);
   const [searchdata, setsearchData] = useState({
-  status:"",
-  created_on:""
-  })
- 
+    status: "",
+    created_on: "",
+  });
+
   const OnSearchChange = (e) => {
-    setsearchData({ ...searchdata, [e.target.name]: e.target.value })
-  }
-    useEffect(() => {
-      axios.post(`${process.env.REACT_APP_BASEURL}/orders_list`, {
-        "status":`${searchdata.status}`,
-        "created_on":`${searchdata.created_on}`
-        }).then((response) => {
-        setorderdata(response.data)
-        setapicall(false)
-      }).catch(function (error) {
+    setsearchData({ ...searchdata, [e.target.name]: e.target.value });
+  };
+  useEffect(() => {
+    axios
+      .post(
+        `${process.env.REACT_APP_BASEURL}/orders_list`,
+        {
+          status: "",
+          created_on: "",
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        setorderdata(response.data);
+        setapicall(false);
+      })
+      .catch(function (error) {
         console.log(error);
       });
-    }, [searchdata,apicall,changstatus]);
+  }, [searchdata, apicall, changstatus]);
 
-
-
-    const onStatusChange = (e,id) => {
-      // e.prevantDefault();
-      setchangstatus(e.target.value)
-      axios.put(`${process.env.REACT_APP_BASEURL}/order_status_change`, {
-      status_change:e.target.value,
-      id:`${id}`
-        }).then((response) => {
-        setapicall(true)
-      }).catch(function (error) {
+  const onStatusChange = (e, id) => {
+    // e.prevantDefault();
+    setchangstatus(e.target.value);
+    axios
+      .put(`${process.env.REACT_APP_BASEURL}/order_status_change`, {
+        status_change: e.target.value,
+        id: `${id}`,
+      })
+      .then((response) => {
+        setapicall(true);
+      })
+      .catch(function (error) {
         console.log(error);
       });
-    }
-    const onOrderClick = (id) =>{
-      localStorage.setItem("orderid", id[0])
-      localStorage.setItem("userid", id[1])
-      
-      navigate('/order_detail')
-    }
+  };
+  const onOrderClick = (id) => {
+    localStorage.setItem("orderid", id[0]);
+    localStorage.setItem("userid", id[1]);
+
+    navigate("/order_detail");
+  };
   const columns = [
     {
       name: "Order Id",
-      selector: (row) => <p onClick={onOrderClick.bind(this,[row.order_id,row.user_id])}> {row.order_id}</p>,
+      selector: (row) => (
+        <p onClick={onOrderClick.bind(this, [row.order_id, row.user_id])}>
+          {" "}
+          {row.order_id}
+        </p>
+      ),
       sortable: true,
     },
-  
+
     {
       name: "Items",
       selector: (row) => (
-        <p className="m-0"><b>Product ID:</b> {row.product_id}<br/>
-        <b>Quantity:</b> {row.quantity}</p>
+        <p className="m-0">
+          <b>Product ID:</b> {row.product_id}
+          <br />
+          <b>Quantity:</b> {row.quantity}
+        </p>
       ),
       sortable: true,
     },
     {
       name: "price",
       selector: (row) => (
-        <p className="m-0"><b>MRP :</b>₹ {row.mrp} ({row.discount}%) <br/>
-        <b>Product Price:</b>₹ {Number(row.taxable_value).toFixed(2)} <br/>
-        <b>Sale Price:</b> ₹ {Number(row.sale_price).toFixed(2)}
+        <p className="m-0">
+          <b>MRP :</b>₹ {row.mrp} ({row.discount}%) <br />
+          <b>Product Price:</b>₹ {Number(row.taxable_value).toFixed(2)} <br />
+          <b>Sale Price:</b> ₹ {Number(row.sale_price).toFixed(2)}
         </p>
       ),
       sortable: true,
@@ -86,28 +108,31 @@ function Product() {
       name: "Tax",
       selector: (row) => (
         <p className="m-0">
-          <b>GST %:</b> {row.gst}<br/>
-          <b>CGST %:</b> {row.cgst}<br/>
-          <b>SGST %:</b> {row.sgst}<br/>
+          <b>GST %:</b> {row.gst}
+          <br />
+          <b>CGST %:</b> {row.cgst}
+          <br />
+          <b>SGST %:</b> {row.sgst}
+          <br />
         </p>
       ),
       sortable: true,
     },
-  
+
     {
       name: "Total Ammount",
       selector: (row) => (
         <p className="m-0">
-          <b>Sale Price X Quantity</b><br/>
-          ₹{(Number(row.sale_price)* Number(row.quantity)).toFixed(2)}<br/>
-     
+          <b>Sale Price X Quantity</b>
+          <br />₹{(Number(row.sale_price) * Number(row.quantity)).toFixed(2)}
+          <br />
         </p>
       ),
       sortable: true,
     },
     {
       name: "Order Date",
-      selector: (row) => moment(row.created_on).format('YYYY-MM-DD'),
+      selector: (row) => moment(row.created_on).format("YYYY-MM-DD"),
       sortable: true,
     },
     {
@@ -115,10 +140,10 @@ function Product() {
       selector: (row) => row.delivery_date,
       sortable: true,
     },
-  
+
     {
       name: "Pyament Mode",
-      selector: (row) => (row.payment_mode),
+      selector: (row) => row.payment_mode,
       sortable: true,
     },
     {
@@ -133,31 +158,31 @@ function Product() {
               : row.status === "shipped"
               ? "badge bg-primary"
               : row.status === "delivered"
-                ? "badge bg-success"
-                : row.status === "packed"
-                  ? "badge bg-primary"
-                  : row.status === "cancel"
-                    ? "badge bg-danger"
-                    : row.status === "approved"
-                      ? "badge bg-info"
-                      : "badge bg-dark"
+              ? "badge bg-success"
+              : row.status === "packed"
+              ? "badge bg-primary"
+              : row.status === "cancel"
+              ? "badge bg-danger"
+              : row.status === "approved"
+              ? "badge bg-info"
+              : "badge bg-dark"
           }
         >
           {row.status === "placed"
-              ? "placed"
-              : row.status === "delivered"
-                ? "delivered"
-                : row.status === "shipped"
-                ? "shipped"
-                : row.status === "packed"
-                  ? "packed"
-                  : row.status === "cancel"
-                    ? "cancel"
-                    : row.status === "approved"
-                      ? "approved"
-                      :
-                      row.status === "pending"
-                      ? "pending": "return"}
+            ? "placed"
+            : row.status === "delivered"
+            ? "delivered"
+            : row.status === "shipped"
+            ? "shipped"
+            : row.status === "packed"
+            ? "packed"
+            : row.status === "cancel"
+            ? "cancel"
+            : row.status === "approved"
+            ? "approved"
+            : row.status === "pending"
+            ? "pending"
+            : "return"}
         </span>
       ),
       sortable: true,
@@ -165,25 +190,67 @@ function Product() {
     {
       name: "Change Status",
       selector: (row) => (
-        <Form.Select aria-label="Search by delivery" size="sm" className="w-100" onChange={(e)=>onStatusChange(e,row.order_id)} name='status' >
-          <option value="placed" selected={row.status === 'placed' ? true : false}>Placed</option>
-          <option value="pending" selected={row.status === 'pending' ? true : false}>Pending</option>
-          <option value="shipped" selected={row.status === 'shipped' ? true : false}>Shipped</option>
-          <option value="delivered"  selected={row.status === 'delivered' ? true : false}>Delivered</option>
-          <option value="packed"  selected={row.status === 'packed' ? true : false}>Packed</option>
-          <option value="cancel" selected={row.status === 'cancel' ? true : false}>Cancel</option>
-          <option value="approved" selected={row.status === 'approved' ? true : false}>Approved  </option>
-          <option value="return" selected={row.status === 'return' ? true : false}>Return  </option>
+        <Form.Select
+          aria-label="Search by delivery"
+          size="sm"
+          className="w-100"
+          onChange={(e) => onStatusChange(e, row.order_id)}
+          name="status"
+        >
+          <option
+            value="placed"
+            selected={row.status === "placed" ? true : false}
+          >
+            Placed
+          </option>
+          <option
+            value="pending"
+            selected={row.status === "pending" ? true : false}
+          >
+            Pending
+          </option>
+          <option
+            value="shipped"
+            selected={row.status === "shipped" ? true : false}
+          >
+            Shipped
+          </option>
+          <option
+            value="delivered"
+            selected={row.status === "delivered" ? true : false}
+          >
+            Delivered
+          </option>
+          <option
+            value="packed"
+            selected={row.status === "packed" ? true : false}
+          >
+            Packed
+          </option>
+          <option
+            value="cancel"
+            selected={row.status === "cancel" ? true : false}
+          >
+            Cancel
+          </option>
+          <option
+            value="approved"
+            selected={row.status === "approved" ? true : false}
+          >
+            Approved{" "}
+          </option>
+          <option
+            value="return"
+            selected={row.status === "return" ? true : false}
+          >
+            Return{" "}
+          </option>
         </Form.Select>
-      ),      
+      ),
       sortable: true,
-    }
-  
- 
+    },
   ];
-  
- 
-  
+
   return (
     <div className="App">
       <h2>Orders</h2>
@@ -195,8 +262,8 @@ function Product() {
                 aria-label="Search by delivery"
                 className="adminselectbox"
                 onChange={OnSearchChange}
-              name='status'
-              value={searchdata.status}
+                name="status"
+                value={searchdata.status}
               >
                 <option>Delivery status</option>
                 <option value="delivered">Delivered</option>
@@ -212,8 +279,8 @@ function Product() {
                 aria-label="Search by delivery_status"
                 className="adminselectbox"
                 onChange={OnSearchChange}
-              name='created_on'
-              value={searchdata.created_on}
+                name="created_on"
+                value={searchdata.created_on}
               >
                 <option>Order limits</option>
                 <option value="one">Today</option>
@@ -222,7 +289,6 @@ function Product() {
                 <option value="30">Last 30 days orders</option>
                 <option value="90">Last 3 month orders</option>
                 <option value="180">Last 6 month orders</option>
-
               </Form.Select>
             </div>
             <div className="col-md-3 col-sm-6">

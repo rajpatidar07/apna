@@ -15,20 +15,18 @@ import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
+import { useNavigate } from "react-router-dom";
 
 function AdminHeader() {
-  let loginid = localStorage.getItem("loginid");
-  let pass = localStorage.getItem("password");
-  // const formRef = useRef();
+  const navigate = useNavigate();
   const [show, setShow] = useState(false);
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [UpdateAlert, setUpdateAlert] = useState(false);
   const [newpassword, setnewPassword] = useState("");
-  const onEmailChange = (e) => {
-    setEmail(e.target.value);
-    // setnewPassword(e.target.value)
-  };
+  let loginid = localStorage.getItem("encryptloginid");
+  let pass = localStorage.getItem("encryptpassword");
+  // console.log(loginid, pass);
+
   const onPasswordChange = (e) => {
     setPassword(e.target.value);
   };
@@ -42,6 +40,7 @@ function AdminHeader() {
 
   const LoginForm = (e) => {
     e.preventDefault();
+    // console.log("1");
     axios
       .put(`${process.env.REACT_APP_BASEURL}/update_password`, {
         admin_email: loginid,
@@ -49,18 +48,27 @@ function AdminHeader() {
         new_admin_password: newpassword,
       })
       .then((response) => {
-        // console.log("possttttttt------"+JSON.stringify(response))
+        // console.log("possttttttt------" + JSON.stringify(response));
         setShow(false);
         setUpdateAlert(true);
+        setPassword("");
+        setnewPassword("");
+      })
+      .catch((err) => {
+        console.log(err);
       });
-    setEmail("");
-    setPassword("");
     e.preventDefault();
   };
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
+  const OnLogoutClick = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("encryptloginid");
+    localStorage.removeItem("encryptpassword");
+    localStorage.removeItem("encryptadminid");
+    navigate("/");
+  };
   return (
     <div className="container content_top_container">
       <div className="row content_top_row ">
@@ -159,10 +167,10 @@ function AdminHeader() {
               <span className="px-2">Gourav</span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item href="#/action-1" className="profile_list py-2">
+              {/* <Dropdown.Item href="#/action-1" className="profile_list py-2">
                 <CgProfile />
                 profile
-              </Dropdown.Item>
+              </Dropdown.Item> */}
               <Dropdown.Item
                 href="#/action-2"
                 className="profile_list py-2"
@@ -171,7 +179,10 @@ function AdminHeader() {
                 <AiOutlineSetting />
                 Setting
               </Dropdown.Item>
-              <Dropdown.Item href="/login" className="profile_list py-2">
+              <Dropdown.Item
+                className="profile_list py-2"
+                onClick={() => OnLogoutClick()}
+              >
                 <FiLogOut />
                 LogOut
               </Dropdown.Item>
@@ -186,19 +197,20 @@ function AdminHeader() {
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Email</Form.Label>
                   <Form.Control
-                    onChange={(e) => onEmailChange(e)}
+                    required
                     name={"admin_email"}
                     value={loginid}
                     type="email"
-                    placeholder="Enter Email"
+                    disabled
                   />
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formBasicPassword">
                   <Form.Label>Old Password</Form.Label>
                   <Form.Control
+                    required
                     onChange={(e) => onPasswordChange(e)}
-                    value={pass}
+                    value={password}
                     name={"admin_password"}
                     type="password"
                     placeholder="Password"
@@ -209,7 +221,7 @@ function AdminHeader() {
                   <Form.Control
                     type="password"
                     name={"new_admin_password"}
-                    value={newpassword}
+                    defaultValue={newpassword}
                     onChange={(e) => newPass(e)}
                     placeholder="Password"
                     required

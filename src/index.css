@@ -403,5 +403,9 @@ code {
     color: #198754;
     right: -7px;
     top: -5px;
-    cursor: pointer;
+  
+}
+
+.spanCurser{
+  cursor: pointer;
 }
