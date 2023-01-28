@@ -13,6 +13,7 @@ import moment from "moment";
 const Deletedproduct = () => {
   const [id, setId] = useState();
   const [productid, setProductId] = useState();
+  let [searcherror, setsearcherror] = useState(false);
   const [RestoreAlert, setRestoreAlert] = useState(false);
 
   const [Alert, setAlert] = useState(false);
@@ -41,13 +42,20 @@ const Deletedproduct = () => {
 
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
+    setsearcherror(false);
   };
   const onSearchClick = () => {
-    setapicall(true);
+    if (searchdata.product_title_name === "") {
+      setsearcherror(true);
+    } else {
+      setsearcherror(false);
+      setapicall(true);
+    }
   };
   const OnReset = () => {
     setsearchData({ product_title_name: "", manufacturing_date: "" });
     setapicall(true);
+    setsearcherror(false);
   };
   useEffect(() => {
     axios
@@ -71,6 +79,7 @@ const Deletedproduct = () => {
       .then((response) => {
         setdeletedata(response.data);
         setapicall(false);
+        setsearcherror(false);
       })
       .catch(function (error) {
         console.log(error);
@@ -246,7 +255,10 @@ const Deletedproduct = () => {
               name="product_title_name"
               value={searchdata.product_title_name}
               className={"adminsideinput"}
-            />
+            />{" "}
+            {searcherror === true ? (
+              <small className="text-danger">please fill the feild</small>
+            ) : null}
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
             <input
