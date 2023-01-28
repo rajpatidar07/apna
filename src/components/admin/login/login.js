@@ -39,7 +39,7 @@ const Login = () => {
           admin_password: password,
         })
         .then((response) => {
-          console.log("responce------"+JSON.stringify (response))
+          console.log("responce------" + JSON.stringify(response));
           if (response.data === "email not found") {
             setEmailError(false);
           } else if (response.data === "password not matched") {
@@ -133,7 +133,6 @@ const Login = () => {
                               className="checkbox_animated check-box"
                               type="checkbox"
                               id="flexCheckDefault"
-                              required
                             />
                             <label
                               className="form-check-label"
