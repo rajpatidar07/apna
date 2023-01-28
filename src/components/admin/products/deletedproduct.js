@@ -46,7 +46,6 @@ const Deletedproduct = () => {
     setapicall(true);
   };
   const OnReset = () => {
-    console.log("1");
     setsearchData({ product_title_name: "", manufacturing_date: "" });
     setapicall(true);
   };

@@ -96,6 +96,14 @@ const VendorsList = () => {
         console.log(error);
       });
   };
+
+  //To reset the search feild blank :-
+
+  const OnReset = () => {
+    setsearchData({ owner_name: "", store_type: "", status: "" });
+    setapicall(true);
+  };
+
   const columns = [
     {
       name: "ID",
@@ -191,7 +199,7 @@ const VendorsList = () => {
             name="status"
           >
             <option value="" selected={row.status === "" ? true : false}>
-              Status
+              select
             </option>
             <option
               value="pending"
@@ -642,7 +650,7 @@ const VendorsList = () => {
           <div className="col-md-3 col-sm-6 aos_input">
             <input
               type={"text"}
-              plchldr={"Search by Owner Name"}
+              placeholder={"Search by Owner Name"}
               onChange={OnSearchChange}
               name="owner_name"
               value={searchdata.owner_name}
@@ -685,6 +693,14 @@ const VendorsList = () => {
               onClick={() => onSearchClick()}
             >
               Search
+            </button>
+          </div>
+          <div className="col-md-3 col-sm-6 aos_input mt-3">
+            <button
+              className="button main_button w-100"
+              onClick={() => OnReset()}
+            >
+              Reset
             </button>
           </div>
         </div>
@@ -738,7 +754,7 @@ const VendorsList = () => {
                   className="mb-3 aos_input"
                   controlId="validationCustom01"
                 >
-                  {console.log(addvendordata)}
+                  {/* {console.log(addvendordata)} */}
                   <Form.Label>Owner Name</Form.Label>
                   <Form.Control
                     onChange={(e) => handleFormChange(e)}
@@ -1049,7 +1065,7 @@ const VendorsList = () => {
                       +
                     </Button>
                   </InputGroup>
-                  {console.log("ddddd--" + Docnamearray)}
+                  {/* {console.log("ddddd--" + Docnamearray)} */}
 
                   {Docnamearray === undefined ||
                   Docnamearray === null ||
@@ -1221,7 +1237,7 @@ const VendorsList = () => {
                     placeholder="Shop_logo"
                     name={"shop_logo"}
                   />
-                  {console.log("img---" + addvendordata.shop_logo)}
+                  {/* {console.log("img---" + addvendordata.shop_logo)} */}
                   {addvendordata.shop_logo ? (
                     <img src={addvendordata.shop_logo} width={"50px"} />
                   ) : null}

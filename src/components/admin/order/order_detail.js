@@ -27,6 +27,7 @@ const OrderDetail = () => {
     setsearchDataa({ ...searchdataa, [e.target.name]: e.target.value });
   };
 
+  // Function to change the status:-
   const onStatusChangee = (e) => {
     setchangstatuss(e.target.value);
     axios
@@ -34,7 +35,7 @@ const OrderDetail = () => {
         "http://192.168.29.108:5000/order_status_change",
         {
           status_change: e.target.value,
-          id: `${orderid}`,
+          id: orderid,
         },
         {
           headers: {
@@ -42,21 +43,30 @@ const OrderDetail = () => {
           },
         }
       )
-      .then((response) => {})
+      .then((response) => {
+        // console.log(response);
+      })
       .catch(function (error) {
         console.log(error);
       });
   };
 
+  // To get the data of the order details:-
   useEffect(() => {
     axios
-      .post(`http://192.168.29.108:5000/order_deteils?id=${orderid}`, {
-        headers: {
-          admin_token: token,
+      .post(
+        `http://192.168.29.108:5000/order_deteils`,
+        {
+          id: orderid,
         },
-      })
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         setOrder(response.data);
         setproductOrder(response.data.product_types);
 
@@ -67,6 +77,7 @@ const OrderDetail = () => {
       });
   }, []);
 
+  // To get the data of the user details :-
   const UserData = () => {
     axios
       .post(
@@ -81,8 +92,7 @@ const OrderDetail = () => {
         }
       )
       .then((response) => {
-        console.log(response);
-
+        // console.log(response);
         let data = response.data;
         setUser(data);
       })
@@ -225,7 +235,10 @@ const OrderDetail = () => {
                 sub_total += Number(orderdata.sale_price);
                 total_tax += Number(tax);
                 return (
-                  <div className="d-flex justify-content-between mb-3 align-items-center">
+                  <div
+                    className="d-flex justify-content-between mb-3 align-items-center"
+                    key={orderdata.id}
+                  >
                     <div className="product_img d-flex">
                       <img
                         src={
@@ -346,7 +359,7 @@ const OrderDetail = () => {
             <div className="right_side">
               {user.map((userdata) => {
                 return (
-                  <div className="customer_name_address">
+                  <div className="customer_name_address" key={userdata.user_id}>
                     <div className="customer_info">
                       <div className="customer">Customer</div>
 

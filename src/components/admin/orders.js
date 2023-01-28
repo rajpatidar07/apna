@@ -11,7 +11,7 @@ import axios from "axios";
 import moment from "moment";
 import Status from "./json/Status";
 
-function Product() {
+function Orders() {
   let token = localStorage.getItem("token");
   const navigate = useNavigate();
   const [orderdata, setorderdata] = useState([]);
@@ -22,16 +22,30 @@ function Product() {
     created_on: "",
   });
 
+  // On selete the status or order limit to search :-
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
   };
+
+  //To search by status and order limit :-
+  const onSearchClick = () => {
+    setapicall(true);
+  };
+
+  //To reset the search feild blank :-
+  const OnReset = () => {
+    setsearchData({ status: "", created_on: "" });
+    setapicall(true);
+  };
+
+  //To get the order list :-
   useEffect(() => {
     axios
       .post(
         `${process.env.REACT_APP_BASEURL}/orders_list`,
         {
-          status: "",
-          created_on: "",
+          status: searchdata.status,
+          created_on: searchdata.created_on,
         },
         {
           headers: {
@@ -40,36 +54,49 @@ function Product() {
         }
       )
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         setorderdata(response.data);
         setapicall(false);
       })
       .catch(function (error) {
         console.log(error);
       });
-  }, [searchdata, apicall, changstatus]);
+  }, [apicall, changstatus]);
 
   const onStatusChange = (e, id) => {
     // e.prevantDefault();
     setchangstatus(e.target.value);
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/order_status_change`, {
-        status_change: e.target.value,
-        id: `${id}`,
-      })
+      .put(
+        `${process.env.REACT_APP_BASEURL}/order_status_change`,
+        {
+          status_change: e.target.value,
+          id: `${id}`,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
+        console.log(response.data);
         setapicall(true);
       })
       .catch(function (error) {
         console.log(error);
       });
   };
+
+  // To go on the order details page :-
   const onOrderClick = (id) => {
     localStorage.setItem("orderid", id[0]);
     localStorage.setItem("userid", id[1]);
 
     navigate("/order_detail");
   };
+
+  // Table data :-
   const columns = [
     {
       name: "Order Id",
@@ -291,8 +318,11 @@ function Product() {
                 <option value="180">Last 6 month orders</option>
               </Form.Select>
             </div>
-            <div className="col-md-3 col-sm-6">
-              <MainButton btntext={"Search"} />
+            <div className="col-md-1 col-sm-6 mx-3  ">
+              <MainButton btntext={"Search"} onClick={onSearchClick} />
+            </div>
+            <div className="col-md-1 col-sm-6 mx-3  ">
+              <MainButton btntext={"Reset"} onClick={OnReset} />
             </div>
           </div>
         </div>
@@ -310,4 +340,4 @@ function Product() {
   );
 }
 
-export default Product;
+export default Orders;
