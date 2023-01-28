@@ -249,7 +249,6 @@ fetchData()
     
 
 
-
    const options = {
     chart: {
       type: "bar",
@@ -414,7 +413,7 @@ function handleDownloadExcel() {
   ];
 
 
-console.log("dd"+orderTable)
+// console.log("dd"+orderTable)
 
 const options1 = [
   brand.map((item)=>(
@@ -538,6 +537,7 @@ var getPreviouNetSales=Number(Prevordersreport.prev_net_sales)
 var resultNetSales=(((getNetSales-getPreviouNetSales)/getPreviouNetSales)*100).toFixed(2)
 console.log("result Net sales------"+resultNetSales)
 resultNetSales!="Infinity"?console.log():resultNetSales=0
+console.log("oooooooo=-----------"+JSON.stringify(orderTable))
 
 
   return (

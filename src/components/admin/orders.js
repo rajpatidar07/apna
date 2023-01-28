@@ -197,51 +197,54 @@ function Product() {
           onChange={(e) => onStatusChange(e, row.order_id)}
           name="status"
         >
+            <option selected={row.product_status === "" ? true : false} value="">
+            Select
+          </option>
           <option
             value="placed"
-            selected={row.status === "placed" ? true : false}
+            selected={row.product_status === "placed" ? true : false}
           >
             Placed
           </option>
           <option
             value="pending"
-            selected={row.status === "pending" ? true : false}
+            selected={row.product_status === "pending" ? true : false}
           >
             Pending
           </option>
           <option
             value="shipped"
-            selected={row.status === "shipped" ? true : false}
+            selected={row.product_status === "shipped" ? true : false}
           >
             Shipped
           </option>
           <option
             value="delivered"
-            selected={row.status === "delivered" ? true : false}
+            selected={row.product_status === "delivered" ? true : false}
           >
             Delivered
           </option>
           <option
             value="packed"
-            selected={row.status === "packed" ? true : false}
+            selected={row.product_status === "packed" ? true : false}
           >
             Packed
           </option>
           <option
             value="cancel"
-            selected={row.status === "cancel" ? true : false}
+            selected={row.product_status === "cancel" ? true : false}
           >
             Cancel
           </option>
           <option
             value="approved"
-            selected={row.status === "approved" ? true : false}
+            selected={row.product_status === "approved" ? true : false}
           >
             Approved{" "}
           </option>
           <option
             value="return"
-            selected={row.status === "return" ? true : false}
+            selected={row.product_status === "return" ? true : false}
           >
             Return{" "}
           </option>
@@ -250,7 +253,7 @@ function Product() {
       sortable: true,
     },
   ];
-
+console.log("--------==========="+JSON.stringify(orderdata))
   return (
     <div className="App">
       <h2>Orders</h2>

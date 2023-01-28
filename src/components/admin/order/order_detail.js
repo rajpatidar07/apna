@@ -94,6 +94,7 @@ const OrderDetail = () => {
   var total = 0;
   var sub_total = 0;
   var total_tax = 0;
+
   return (
     <div className="order_detail_page">
       <div className="order_detail">
