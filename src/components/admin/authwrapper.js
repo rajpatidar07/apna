@@ -6,14 +6,17 @@ const AuthWrapper = () => {
 
   const adminLogged = localStorage.getItem("token");
 
-  return adminLogged ? (
-    <Outlet />
-  ) : (
+  return adminLogged === null ||
+    adminLogged === "" ||
+    adminLogged === undefined ||
+    adminLogged === "null" ? (
     <Navigate
       to="/login"
       replace
       state={{ from: location }} // <-- pass location in route state
     />
+  ) : (
+    <Outlet />
   );
 };
 
