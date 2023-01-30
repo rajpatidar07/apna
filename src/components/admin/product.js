@@ -49,7 +49,7 @@ function Product() {
   const [categoryeditparent, setCategoryEditparent] = useState("");
   const [categoryeditsubparent, setCategoryEditSubparent] = useState("");
   const [categoryeditchildparent, setCategoryEditChildparent] = useState("");
-  const [level, setlevel] = useState("");
+  const [level, setlevel] = useState("");  
   const [pdata, setpdata] = useState([]);
   const [variantid, setvariantid] = useState("");
   const [productid, setproductid] = useState("");
