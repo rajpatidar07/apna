@@ -9,7 +9,9 @@ const AuthWrapper = () => {
   return adminLogged === null ||
     adminLogged === "" ||
     adminLogged === undefined ||
-    adminLogged === "null" ? (
+    adminLogged === "null" ||
+    adminLogged === true ||
+    adminLogged === "true" ? (
     <Navigate
       to="/login"
       replace

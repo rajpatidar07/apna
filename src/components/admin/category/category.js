@@ -26,7 +26,6 @@ const CategoryList = () => {
   };
 
   const hideAlert = () => {
-    console.log("id", parentid, "level", level);
     axios.put(`${process.env.REACT_APP_BASEURL}/delete_category`, {
       id: parentid,
       is_active: 0,
@@ -96,7 +95,6 @@ const CategoryList = () => {
     category_type,
     category_name
   ) => {
-    // console.log("all parent id---------" + all_parent_id);
     if (e === "add") {
       setShow(e);
     }
@@ -171,27 +169,10 @@ const CategoryList = () => {
   };
 
   const categoryFormChange = (e, id) => {
-    // console.log("indVallllllll________"+e.target.value)
-    // console.log("grandcCategory.id________"+grandcCategory[0])
-
-    // if(indVal===grandcCategory){
-    //   alert("dont select Any more")
-    // }
-    // else{
-    // if(e.target.s_category.value !== ""){
-    //   alert("fdhfbjhbjkbh")
-    // }
-
     setIndVal(e.target.value);
     setScategory({ ...scategory, [e.target.name]: e.target.value });
-
-    // }
   };
 
-  // }
-
-  // console.log(" Indval---" + indVal);
-  // console.log(" Scategory---" + JSON.stringify(scategory));
   let parentidddata = [];
   parentidddata.push(scategory.category_name);
 
@@ -484,11 +465,6 @@ const CategoryList = () => {
   // console.log("Search data------" + JSON.stringify(SearchCat));
 
   const SearchCategory = () => {
-    // console.log(
-    //   SearchCat.category_name,
-    //   SearchCat.category_type,
-    //   SearchCat.level
-    // );
     if (
       SearchCat.category_name === "" ||
       SearchCat.category_name === undefined
@@ -509,7 +485,7 @@ const CategoryList = () => {
         });
     }
   };
-
+  console.log("-----category  " + newName + type);
   const OnReset = () => {
     setsearchValidated(false);
     setSearchCat({
