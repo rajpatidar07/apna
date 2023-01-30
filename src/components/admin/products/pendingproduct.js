@@ -12,6 +12,7 @@ const Pendingproduct = () => {
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
   const [apicall, setapicall] = useState(false);
+  let [searcherror, setsearcherror] = useState(false);
   const [pendingdata, setpendingdata] = useState([]);
   const currentdate = moment().format("YYYY-MM-DD");
   const [searchdata, setsearchData] = useState({
@@ -22,6 +23,7 @@ const Pendingproduct = () => {
 
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
+    setsearcherror(false);
   };
 
   const OnDateChange = (e) => {
@@ -50,19 +52,26 @@ const Pendingproduct = () => {
       .then((response) => {
         setpendingdata(response.data);
         setapicall(false);
+        setsearcherror(false);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }, [apicall]);
 
-
   const onSearchClick = () => {
-    setapicall(true);
+    if (searchdata.product_title_name === "") {
+      setsearcherror(true);
+    } else {
+      setsearcherror(false);
+      setapicall(true);
+    }
   };
+
   const OnReset = () => {
     setsearchData({ product_title_name: "", manufacturing_date: "" });
     setapicall(true);
+    setsearcherror(false);
   };
   // end search and reset
   const columns = [
@@ -252,7 +261,7 @@ const Pendingproduct = () => {
       .then((response) => {
         setapicall(true);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -274,6 +283,9 @@ const Pendingproduct = () => {
               type={"text"}
               placeholder={"Search by product name"}
             />
+            {searcherror === true ? (
+              <small className="text-danger">please fill the feild</small>
+            ) : null}
           </div>
 
           <div className="col-md-3 col-sm-6 aos_input value={}">
