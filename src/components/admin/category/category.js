@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import DataTable from "react-data-table-component";
-import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import Iconbutton from "../common/iconbutton";
@@ -262,15 +261,7 @@ const CategoryList = () => {
   const columns = [
     {
       name: "ID",
-      selector: (row) => (
-        <p
-          onClick={() => {
-            navigate("/productdetail");
-          }}
-        >
-          {row.id}
-        </p>
-      ),
+      selector: (row) => row.id,
       sortable: true,
       width: "100px",
       center: true,
@@ -349,14 +340,14 @@ const CategoryList = () => {
       selector: (row) => (
         <span
           className={
-            row.is_active === "0"
+            row.is_active === "1"
               ? "badge bg-success"
-              : row.is_active === "1"
+              : row.is_active === "0"
               ? " badge bg-danger"
               : null
           }
         >
-          {row.is_active === "0" ? "active" : "inactive"}
+          {row.is_active === "1" ? "active" : "inactive"}
         </span>
       ),
       sortable: true,
@@ -503,7 +494,8 @@ const CategoryList = () => {
         })
         .then((response) => {
           // console.log(response);
-          setData(response.data);
+          let data = response.data.filter((item) => item.is_active === "1");
+          setData(data);
           setsearchValidated(false);
           // setSearchCat("");
         });
@@ -608,19 +600,22 @@ const CategoryList = () => {
             </Form.Select>
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
-            <MainButton
-              btntext={"Search"}
-              btnclass={"button main_button w-100"}
-              onClick={SearchCategory}
-            />
+            <button
+              className="button main_button w-100"
+              onClick={() => SearchCategory()}
+            >
+              Search
+            </button>
           </div>
 
-          <div className="col-md-3 col-sm-6 aos_input">
-            <MainButton
-              btntext={"Reset"}
-              btnclass={"button main_button "}
-              onClick={OnReset}
-            />
+          <div className="col-md-3 col-sm-6 aos_input mt-3">
+            {" "}
+            <button
+              className="button main_button w-100"
+              onClick={() => OnReset()}
+            >
+              Reset
+            </button>
           </div>
         </div>
 
