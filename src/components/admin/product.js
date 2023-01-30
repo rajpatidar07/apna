@@ -702,7 +702,9 @@ console.log("token----"+token)
         }
       )
       .then((response) => {
+        
         setvdata(response.data.results);
+        // console.log("veriant product---"+verlength)
         settaxdata(response.data.results[0]);
         setvariantapicall(false);
       })
@@ -1224,6 +1226,7 @@ console.log("token----"+token)
       })
       .then((response) => {
         getProductVariant(variantremove.productid);
+
       })
       .catch(function (error) {
         console.log(error);
