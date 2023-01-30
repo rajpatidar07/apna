@@ -466,6 +466,7 @@ const CategoryList = () => {
         setgrandcCategory([]);
         setImagePath("");
         newImg = "";
+        setFile();
         setValidated(false);
         setapicall(true);
         setShow(false);
@@ -991,7 +992,7 @@ const CategoryList = () => {
         />
         <SweetAlert
           show={Alert}
-          title={"category_name"}
+          title={"Category"}
           text="Are you Sure you want to delete"
           onConfirm={hideAlert}
           showCancelButton={true}

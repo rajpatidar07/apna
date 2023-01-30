@@ -13,7 +13,7 @@ const Expiredproduct = () => {
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
   const [apicall, setapicall] = useState(false);
-
+  let [searcherror, setsearcherror] = useState(false);
   const [expiredata, setexpiredata] = useState([]);
   const currentdate = moment().format("YYYY-MM-DD");
   const [searchdata, setsearchData] = useState({
@@ -23,6 +23,7 @@ const Expiredproduct = () => {
   });
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
+    setsearcherror(false);
   };
 
   const OnDateChange = (e) => {
@@ -52,6 +53,7 @@ const Expiredproduct = () => {
         let data = response.data.results;
         setexpiredata(data);
         setapicall(false);
+        setsearcherror(false);
       });
   }, [apicall]);
   const columns = [
@@ -196,11 +198,18 @@ const Expiredproduct = () => {
     },
   ];
   const onSearchClick = () => {
-    setapicall(true);
+    if (searchdata.product_title_name === "") {
+      setsearcherror(true);
+    } else {
+      setsearcherror(false);
+      setapicall(true);
+    }
   };
+
   const OnReset = () => {
     setsearchData({ product_title_name: "", manufacturing_date: "" });
     setapicall(true);
+    setsearcherror(false);
   };
   return (
     <div>
@@ -217,7 +226,10 @@ const Expiredproduct = () => {
               name="product_title_name"
               value={searchdata.product_title_name}
               className={"adminsideinput"}
-            />
+            />{" "}
+            {searcherror === true ? (
+              <small className="text-danger">please fill the feild</small>
+            ) : null}
           </div>
 
           <div className="col-md-3 col-sm-6 aos_input">

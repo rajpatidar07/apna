@@ -27,22 +27,46 @@ const OrderDetail = () => {
     setsearchDataa({ ...searchdataa, [e.target.name]: e.target.value });
   };
 
+  // Function to change the status:-
   const onStatusChangee = (e) => {
     setchangstatuss(e.target.value);
     axios
-      .put("http://192.168.29.108:5000/order_status_change", {
-        status_change: e.target.value,
-        id: `${orderid}`,
+      .put(
+        "http://192.168.29.108:5000/order_status_change",
+        {
+          status_change: e.target.value,
+          id: orderid,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
+      .then((response) => {
+        // console.log(response);
       })
-      .then((response) => {})
       .catch(function (error) {
         console.log(error);
       });
   };
+
+  // To get the data of the order details:-
   useEffect(() => {
     axios
-      .get(`http://192.168.29.108:5000/order_deteils?id=${orderid}`)
+      .post(
+        `http://192.168.29.108:5000/order_deteils`,
+        {
+          id: orderid,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
+        // console.log(response);
         setOrder(response.data);
         setproductOrder(response.data.product_types);
 
@@ -52,10 +76,23 @@ const OrderDetail = () => {
         console.log(error);
       });
   }, []);
+
+  // To get the data of the user details :-
   const UserData = () => {
     axios
-      .get(`http://192.168.29.108:5000/user_details?user_id=${userid}`)
+      .post(
+        `http://192.168.29.108:5000/user_details`,
+        {
+          user_id: userid,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
+        // console.log(response);
         let data = response.data;
         setUser(data);
       })
@@ -198,7 +235,10 @@ const OrderDetail = () => {
                 sub_total += Number(orderdata.sale_price);
                 total_tax += Number(tax);
                 return (
-                  <div className="d-flex justify-content-between mb-3 align-items-center">
+                  <div
+                    className="d-flex justify-content-between mb-3 align-items-center"
+                    key={orderdata.id}
+                  >
                     <div className="product_img d-flex">
                       <img
                         src={
@@ -319,7 +359,7 @@ const OrderDetail = () => {
             <div className="right_side">
               {user.map((userdata) => {
                 return (
-                  <div className="customer_name_address">
+                  <div className="customer_name_address" key={userdata.user_id}>
                     <div className="customer_info">
                       <div className="customer">Customer</div>
 
