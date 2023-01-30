@@ -11,46 +11,64 @@ import { CgProfile } from "react-icons/cg";
 import { AiOutlineSetting } from "react-icons/ai";
 import { BiTransfer } from "react-icons/bi";
 import { useState } from "react";
-import Modal from 'react-bootstrap/Modal';
+import Modal from "react-bootstrap/Modal";
 import axios from "axios";
+import SweetAlert from "sweetalert-react";
+import "sweetalert/dist/sweetalert.css";
+import { useNavigate } from "react-router-dom";
+
 function AdminHeader() {
-  let loginid = localStorage.getItem("loginid")
-  let pass=localStorage.getItem("password");
-  // const formRef = useRef();
+  const navigate = useNavigate();
   const [show, setShow] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
+  const [UpdateAlert, setUpdateAlert] = useState(false);
   const [newpassword, setnewPassword] = useState("");
-  const onEmailChange=(e)=>{
-    setEmail(e.target.value);
-    // setnewPassword(e.target.value)
-  }
-  const onPasswordChange=(e)=>{
+  let loginid = localStorage.getItem("encryptloginid");
+  let pass = localStorage.getItem("encryptpassword");
+  // console.log(loginid, pass);
+
+  const onPasswordChange = (e) => {
     setPassword(e.target.value);
-  }
+  };
   const newPass = (e, id) => {
     setnewPassword(e.target.value);
   };
-  const LoginForm=(e)=>{
+
+  const closeUpdateAlert = () => {
+    setUpdateAlert(false);
+  };
+
+  const LoginForm = (e) => {
     e.preventDefault();
-    axios.put(`${process.env.REACT_APP_BASEURL}/update_password`,
-    {
-    admin_email:loginid,
-    admin_password:pass,
-    new_admin_password:newpassword
-  }
-  ).then((response) => {
-    // console.log("possttttttt------"+JSON.stringify(response))
-  });
-  setEmail("");
-  setPassword("");
-  e.preventDefault();
-  }
-  
+    // console.log("1");
+    axios
+      .put(`${process.env.REACT_APP_BASEURL}/update_password`, {
+        admin_email: loginid,
+        admin_password: pass,
+        new_admin_password: newpassword,
+      })
+      .then((response) => {
+        // console.log("possttttttt------" + JSON.stringify(response));
+        setShow(false);
+        setUpdateAlert(true);
+        setPassword("");
+        setnewPassword("");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    e.preventDefault();
+  };
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
-
+  const OnLogoutClick = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("encryptloginid");
+    localStorage.removeItem("encryptpassword");
+    localStorage.removeItem("encryptadminid");
+    navigate("/");
+  };
   return (
     <div className="container content_top_container">
       <div className="row content_top_row ">
@@ -149,46 +167,84 @@ function AdminHeader() {
               <span className="px-2">Gourav</span>
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item href="#/action-1" className="profile_list py-2">
+              {/* <Dropdown.Item href="#/action-1" className="profile_list py-2">
                 <CgProfile />
                 profile
-              </Dropdown.Item>
-              <Dropdown.Item href="#/action-2" className="profile_list py-2" onClick={handleShow}>
-             
+              </Dropdown.Item> */}
+              <Dropdown.Item
+                href="#/action-2"
+                className="profile_list py-2"
+                onClick={handleShow}
+              >
                 <AiOutlineSetting />
                 Setting
               </Dropdown.Item>
-              <Dropdown.Item href="/login" className="profile_list py-2">
+              <Dropdown.Item
+                className="profile_list py-2"
+                onClick={() => OnLogoutClick()}
+              >
                 <FiLogOut />
                 LogOut
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
           <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Login</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-        <Form onSubmit={LoginForm}>
-      <Form.Group className="mb-3" controlId="formBasicEmail">
-        <Form.Label>Email</Form.Label>
-        <Form.Control  onChange={(e) => onEmailChange(e)} name={"admin_email"} value={loginid} type="email" placeholder="Enter Email"/>
-      </Form.Group>
+            <Modal.Header closeButton>
+              <Modal.Title>Login</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form onSubmit={LoginForm}>
+                <Form.Group className="mb-3" controlId="formBasicEmail">
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    required
+                    name={"admin_email"}
+                    value={loginid}
+                    type="email"
+                    disabled
+                  />
+                </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Label>Old Password</Form.Label>
-        <Form.Control onChange={(e) => onPasswordChange(e)} value={pass}  name={"admin_password"} type="password" placeholder="Password" />
-      </Form.Group>
-      <Form.Group className="mb-3" controlId="formBasicPassword">
-        <Form.Label>Update Password</Form.Label>
-        <Form.Control type="password" name={"new_admin_password"} value={newpassword} onChange={(e) => newPass(e)} placeholder="Password" />
-      </Form.Group>
-      <Button variant="primary" type="submit">
-        Submit
-      </Button>
-    </Form>
-        </Modal.Body>
-      </Modal>
+                <Form.Group className="mb-3" controlId="formBasicPassword">
+                  <Form.Label>Old Password</Form.Label>
+                  <Form.Control
+                    required
+                    onChange={(e) => onPasswordChange(e)}
+                    value={password}
+                    name={"admin_password"}
+                    type="password"
+                    placeholder="Password"
+                  />
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="formBasicPassword">
+                  <Form.Label>Update Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    name={"new_admin_password"}
+                    defaultValue={newpassword}
+                    onChange={(e) => newPass(e)}
+                    placeholder="Password"
+                    required
+                  />
+                </Form.Group>
+                <button
+                  type={"button"}
+                  className="btn btn-outline-primary "
+                  onClick={() => handleClose()}
+                >
+                  Cancel
+                </button>
+                <Button variant="primary" type="submit" className="mx-4">
+                  Submit
+                </Button>
+              </Form>
+            </Modal.Body>
+          </Modal>
+          <SweetAlert
+            show={UpdateAlert}
+            title="Updated Password Successfully "
+            onConfirm={closeUpdateAlert}
+          />
         </div>
       </div>
     </div>

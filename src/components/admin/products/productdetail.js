@@ -1,15 +1,9 @@
 import React, { useState, useRef } from "react";
-import MainButton from "../common/button";
 import ShowMoreText from "react-show-more-text";
-import { AiFillPushpin } from "react-icons/ai";
-import { ImCross } from "react-icons/im";
-import { BsCheckLg } from "react-icons/bs";
-import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
-import ListGroup from "react-bootstrap/ListGroup";
 import axios from "axios";
 import { useEffect } from "react";
-import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Table from "react-bootstrap/Table";
 import VariationJson from "../json/variation";
@@ -63,7 +57,6 @@ const Productdetail = () => {
     other_introduction: "",
     is_active: "0",
   });
-  console.log("88888888888888888888"+productalldata)
   const [variantmainarray, setvariantmainarray] = useState([]);
   const [customvalidated, setcustomValidated] = useState(false);
   const formRef = useRef();
@@ -93,12 +86,10 @@ const Productdetail = () => {
   const onColorChange = (e, id) => {
     setcolorchange(e.target.value);
     vid = localStorage.setItem("variantid", id);
-    console.log("----color" + e.target.value + "000" + id);
   };
   const onSizeClick = (e, id) => {
     setsizechange(e.target.value);
     vid = localStorage.setItem("variantid", id);
-    console.log("----size" + e.target.value + "000" + id);
   };
   var varietyy = VariationJson;
   const handlevarietyShow = (id) => {
@@ -184,7 +175,6 @@ const Productdetail = () => {
 const onImgView = (id, productid) =>{
   localStorage.setItem("variantid", id);
   localStorage.setItem("productid", productid);
-  // setvariantapicall(true);
   setEditButton(false)
   axios
       .get(`${process.env.REACT_APP_BASEURL}/product_images_get_singal_veriant?product_id=${productid}&product_verient_id=${id}`)
@@ -257,8 +247,6 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
   };
 
   const handleVarietyChange = (e) => {
-    // const varietyvalue = e.target.type === 'radio' ? e.target.checked : e.target.value
-    console.log("varietyvalue --------->  " + e.target.type);
     setproductalldata({
       ...productalldata,
       [e.target.name]: e.target.value,
@@ -273,7 +261,6 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
           variantarray
         )
         .then((response) => {
-          // setvdata(response.data.results)
           formRef.current.reset();
           setvariantapicall(true);
         })
@@ -312,13 +299,11 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
         is_delete: "0",
       })
       .then((response) => {
-        console.log("------changeediteddd---" + JSON.stringify(response.data));
         setvariantapicall(true);
       })
       .catch(function (error) {
         console.log(error);
       });
-    console.log("-----id" + id + "productid" + productid);
     setvdata(vdata.filter((item) => item !== id));
   };
   const VariantEditClick = (id, productid) => {
@@ -459,16 +444,6 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                           >
                             <div className="detailproduct statuslabeltext"  dangerouslySetInnerHTML={{ __html: productdata.product_description }}>
                             </div>
-                            {/* <ListGroup variant="flush">
-                <ListGroup.Item>No style</ListGroup.Item>
-                <ListGroup.Item variant="secondary">Secondary</ListGroup.Item>
-                <ListGroup.Item variant="secondary">Success</ListGroup.Item>
-                <ListGroup.Item variant="secondary">Danger</ListGroup.Item>
-                <ListGroup.Item variant="secondary">Warning</ListGroup.Item>
-                <ListGroup.Item variant="secondary">Info</ListGroup.Item>
-                <ListGroup.Item variant="secondary">Light</ListGroup.Item>
-                <ListGroup.Item variant="secondary">Dark</ListGroup.Item>
-              </ListGroup> */}
                           </ShowMoreText>
                         </div>
                       </div>
@@ -559,11 +534,9 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
            
 
                 <div className="variety_section_box col-12">
-                  {/* <h3> Variety</h3> */}
                   <Form ref={formRef} validated={validated}>
                     <Form.Group
                       className=""
-                      // controlId="validationCustom13"
                     >
                          <div className="variation_box my-2">
                     <div className="row">
@@ -597,7 +570,6 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                       <Form.Select
                                         aria-label="Default select example"
                                         name="unit"
-                                        // value={variantarray.unit === 'pcs' ? 'color' : variantarray.unit === 'gms' ? 'weight' : variantarray.unit === 'ml' ? 'volume' : null}
                                         onChange={(e) => onVariantChange(e)}
                                         className={
                                           customvalidated === true
@@ -805,7 +777,6 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                         handleInputcheckboxChange(e)
                                       }
                                       name={"special_offer"}
-                                      // value={variantarray.special_offer}
                                       checked={
                                         variantarray.special_offer === 1 ||
                                         variantarray.special_offer === true
@@ -822,7 +793,6 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                         handleInputcheckboxChange(e)
                                       }
                                       name={"featured_product"}
-                                      // value={variantarray.featured_product}
                                       checked={
                                         variantarray.featured_product === 1 ||
                                         variantarray.featured_product === true

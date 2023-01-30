@@ -5,60 +5,64 @@ import Modal from "react-bootstrap/Modal";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import Iconbutton from "../common/iconbutton";
-import { CKEditor } from "ckeditor4-react";
 import { useEffect } from "react";
 import axios from "axios";
-import EmailType from "../json/EmailType";
-import EmailStatus from "../json/EmailStatus";
+import NotificationType from "../json/NotificationType";
+import NotificationStatus from "../json/NotificationStatus";
 import { Alert } from "bootstrap";
 import SAlert from "../common/salert";
 
-const EmailSend = () => {
-  const [emaildata, setEmaildata] = useState({
-    email_type: "",
-    email_text: "",
+const Notification = () => {
+  // Declaration of States or valiables :-
+
+  const [Notificationdata, setNotificationdata] = useState({
+    notification_type: "",
+    notification_text: "",
     type: "",
     status: "",
-    test_email: "",
-    email_name: "",
-    text_msg: "",
+    notification_name: "",
   });
-
   const [AddAlert, setAddAlert] = useState(false);
   const [UpdateAlert, setUpdateAlert] = useState(false);
-  const [emailText, setEmailText] = useState("");
-  const [getEmaildata, setGetEmaildata] = useState([]);
+  const [deleteAlert, setDeleteAlert] = useState(false);
+  const [id, setId] = useState();
+  const [getNotificationdata, setGetNotificationdata] = useState([]);
   const [apicall, setapicall] = useState(false);
-  const [getemailtype, setGetEmailtype] = useState("");
+  const [getNotificationType, setNotificationType] = useState("");
   const [getusertype, setGetUserType] = useState("");
-  const [getemailStatus, setGetEmailStatus] = useState("");
+  const [getNotificationStatus, setGetNotificationStatus] = useState("");
   const [changstatus, setchangstatus] = useState("");
-
   const formRef = useRef();
-
   const [validated, setValidated] = useState(false);
   const [show, setShow] = useState(false);
+
+  //To close sweetalert after Added notification :-
 
   const closeAddAlert = () => {
     setAddAlert(false);
   };
 
+  //To close sweetalert after update :-
+
   const closeUpdateAlert = () => {
     setUpdateAlert(false);
   };
 
-  const handleShow = (e) => {
+  //To show or open the modal to add or update notification :-
+
+  const handleShow = (e, id) => {
     if (e === "add") {
       setShow(e);
     }
     if (e !== "add") {
       try {
         axios
-          .get(`${process.env.REACT_APP_BASEURL}/email_template_get?id=${e}`)
+          .get(
+            `${process.env.REACT_APP_BASEURL}/notification_template_get?id=${e}`
+          )
           .then((response) => {
-            setEmaildata(response.data[0]);
-
-            setEmailText(response.data[0].email_text);
+            setNotificationdata(response.data[0]);
+            setId(id);
           });
       } catch (err) {}
     }
@@ -66,17 +70,21 @@ const EmailSend = () => {
     setShow(e);
   };
 
-  const handleClose = () => {
-    setEmaildata({});
+  //To close the Model or On click on cancel :-
 
+  const handleClose = () => {
+    setNotificationdata({});
     setValidated(false);
     setShow(false);
   };
+
+  //To show the  Data in the table :-
+
   const columns = [
     {
-      name: "Email Type",
+      name: "Notofication Type",
       width: "130px",
-      selector: (row) => row.email_type,
+      selector: (row) => row.notification_type,
       sortable: true,
     },
     {
@@ -90,19 +98,14 @@ const EmailSend = () => {
       name: "Title",
       width: "100px",
 
-      selector: (row) => row.email_name,
+      selector: (row) => row.notification_name,
       sortable: true,
     },
     {
-      name: "Email Text",
+      name: "Notification Text",
       width: "500px",
 
-      selector: (row) => (
-        <div className="spanText">
-          {" "}
-          <span dangerouslySetInnerHTML={{ __html: row.email_text }}></span>
-        </div>
-      ),
+      selector: (row) => row.notification_text,
       sortable: true,
     },
 
@@ -173,26 +176,25 @@ const EmailSend = () => {
           />
           <BsTrash
             className=" p-0 m-0 editiconn text-danger"
-            onClick={deleteEmail.bind(this, row.id)}
+            onClick={ShowDeleteAlert.bind(this, row.id)}
           />
         </div>
       ),
     },
   ];
 
-  const EmailTextHandler = (e) => {
-    let newTemp;
-    if (e.editor.getData() != undefined) {
-      newTemp = e.editor.getData().replaceAll(/"/g, "'");
-    }
-    setEmailText(newTemp);
-  };
+  // OnCahnge function of the input feilds :-
 
   const valueHandler = (e) => {
-    setEmaildata({ ...emaildata, [e.target.name]: e.target.value });
+    setNotificationdata({
+      ...Notificationdata,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const EmailSubmitHandler = (e) => {
+  //ToAdd the Notification :-
+
+  const NotificationSubmitHandler = (e) => {
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
       e.preventDefault();
@@ -203,116 +205,148 @@ const EmailSend = () => {
     } else {
       e.preventDefault();
       axios
-        .post(`${process.env.REACT_APP_BASEURL}/add_email_template`, {
-          type: emaildata.type,
-          email_type: emaildata.email_type,
-          email_name: emaildata.email_name,
-          email_text: emailText,
-          text_msg: emaildata.text_msg,
-          test_email: emaildata.test_email,
-          status: emaildata.status,
+        .post(`${process.env.REACT_APP_BASEURL}/add_notification_template`, {
+          type: Notificationdata.type,
+          notification_type: Notificationdata.notification_type,
+          notification_name: Notificationdata.notification_name,
+          notification_text: Notificationdata.notification_text,
+          status: Notificationdata.status,
         })
         .then((response) => {
-          console.log(response);
           setAddAlert(true);
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
 
       formRef.current.reset();
       setValidated(false);
+      setNotificationdata({});
       setapicall(true);
-
       setShow(false);
     }
   };
 
-  const UpdateEmailHandler = (e) => {
+  // To update the notification:-
+
+  const UpdateNotificationHandler = (e) => {
+
     e.preventDefault();
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/update_email_template`, {
-        id: emaildata.id,
-        type: emaildata.type,
-        email_type: emaildata.email_type,
-        email_name: emaildata.email_name,
-        email_text: emailText,
-        text_msg: emaildata.text_msg,
-        test_email: emaildata.test_email,
-        status: emaildata.status,
+      .put(`${process.env.REACT_APP_BASEURL}/update_notification_template`, {
+        id: Notificationdata.id,
+        type: Notificationdata.type,
+        notification_type: Notificationdata.notification_type,
+        notification_name: Notificationdata.notification_name,
+        notification_text: Notificationdata.notification_text,
+        status: Notificationdata.status,
       })
       .then((response) => {
         setUpdateAlert(true);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
 
     formRef.current.reset();
     setValidated(false);
+    setNotificationdata({});
     setapicall(true);
-
     setShow(false);
   };
 
-  const fetchEmailData = () => {
+  //To get the data in the list :-
+
+  const fetchNotificationData = () => {
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/email_template_list`, {
+      .post(`${process.env.REACT_APP_BASEURL}/notification_template_list`, {
         type: getusertype,
-        email_type: getemailtype,
-        status: getemailStatus,
+        notification_type: getNotificationType,
+        status: getNotificationStatus,
       })
       .then((response) => {
-        let data = response.data.filter((item) => item.is_deleted === 1);
+        // console.log(response);
 
-        setGetEmaildata(data);
+        let data = response.data.filter((item) => item.is_deleted === 1);
+        setGetNotificationdata(data);
         setapicall(false);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
 
+  //To change the status :-
+
   const onStatusChange = (e, id) => {
-    setchangstatus("ssssssssss" + e.target.value);
+    setchangstatus(e.target.value);
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/email_template_status`, {
+      .put(`${process.env.REACT_APP_BASEURL}/notification_template_status`, {
         status: e.target.value,
         id: `${id}`,
       })
       .then((response) => {
         setapicall(true);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
 
-  const deleteEmail = (id) => {
+  //To delete the Notification :-
+
+  const deleteNotification = (id) => {
+    console.log("1", id);
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/email_template_remove`, {
+      .put(`${process.env.REACT_APP_BASEURL}/notification_template_remove`, {
         is_deleted: 0,
         id: `${id}`,
       })
       .then((response) => {
+        console.log(response);
+        setDeleteAlert(false);
         setapicall(true);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
 
+  //To mshow alert delete box :-
+
+  const ShowDeleteAlert = (id) => {
+    console.log(id);
+    setId(id);
+    setDeleteAlert(true);
+  };
+
+  //Tocancel the delete alert box :-
+
+  const CancelDelete = () => {
+    setDeleteAlert(false);
+  };
+
+  //To render the page :-
+
   useEffect(() => {
-    fetchEmailData();
+    fetchNotificationData();
   }, [apicall, changstatus]);
+
+  //To search the Notification :-
 
   const SearchHandler = () => {
     setapicall(true);
-    fetchEmailData();
+    fetchNotificationData();
+  };
+  const OnReset = () => {
+    setNotificationType("");
+    setGetNotificationStatus("");
+    setGetUserType("");
+    setapicall(true);
   };
   return (
     <div>
-      <h2>Send Email</h2>
+      <h2>Notification</h2>
 
       {/* search bar */}
       <div className="card p-3">
@@ -323,12 +357,12 @@ const EmailSend = () => {
               className="adminselectbox"
               name="category"
               onChange={(e) => {
-                setGetEmailtype(e.target.value);
+                setNotificationType(e.target.value);
               }}
             >
               {" "}
-              <option value={""}>Email Type</option>
-              {EmailType.EmailType.map((item) => {
+              <option value={""}>Notification Type</option>
+              {NotificationType.NotificationType.map((item) => {
                 return <option value={item}>{item}</option>;
               })}
             </Form.Select>
@@ -356,11 +390,11 @@ const EmailSend = () => {
               className="adminselectbox"
               name="Status"
               onChange={(e) => {
-                setGetEmailStatus(e.target.value);
+                setGetNotificationStatus(e.target.value);
               }}
             >
               <option value={""}>Status</option>
-              {EmailStatus.EmailStatus.map((item) => {
+              {NotificationStatus.NotificationStatus.map((item) => {
                 return <option value={item}>{item}</option>;
               })}
             </Form.Select>
@@ -374,6 +408,11 @@ const EmailSend = () => {
               Search
             </button>
           </div>
+          <div className="col-md-3 col-sm-6 mt-2 aos_input">
+            <button className="button main_button w-100" onClick={OnReset}>
+              Reset
+            </button>
+          </div>
         </div>
 
         <div className="product_page_uploadbox my-4">
@@ -381,14 +420,14 @@ const EmailSend = () => {
             className="button main_button ml-auto"
             onClick={() => handleShow("add")}
           >
-            Add Email
+            Add Notification
           </button>
         </div>
 
         <DataTable
           columns={columns}
           className="main_data_table"
-          data={getEmaildata}
+          data={getNotificationdata}
           pagination
           highlightOnHover
           pointerOnHover
@@ -402,13 +441,15 @@ const EmailSend = () => {
           ref={formRef}
           onSubmit={
             show === "add"
-              ? (e) => EmailSubmitHandler(e)
-              : (show) => UpdateEmailHandler(show)
+              ? (e) => NotificationSubmitHandler(e)
+              : (show) => UpdateNotificationHandler(show)
           }
         >
           <Modal.Header closeButton>
             <Modal.Title>
-              {show === "add" ? "Add New Email " : " Update Email"}
+              {show === "add"
+                ? "Add New Notification "
+                : " Update Notification"}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -418,19 +459,19 @@ const EmailSend = () => {
                   className="mb-3 aos_input"
                   controlId="validationCustom06"
                 >
-                  <Form.Label>Email Type</Form.Label>
+                  <Form.Label>Notification Type</Form.Label>
                   <Form.Select
                     size="sm"
                     aria-label=""
-                    value={emaildata.email_type}
-                    name={"email_type"}
+                    value={Notificationdata.notification_type}
+                    name={"notification_type"}
                     onChange={(e) => {
                       valueHandler(e);
                     }}
                     required
                   >
-                    <option value={""}>Email Type</option>
-                    {EmailType.EmailType.map((item) => {
+                    <option value={""}>Notification Type</option>
+                    {NotificationType.NotificationType.map((item) => {
                       return <option value={item}>{item}</option>;
                     })}
                   </Form.Select>
@@ -452,7 +493,7 @@ const EmailSend = () => {
                     onChange={(e) => {
                       valueHandler(e);
                     }}
-                    value={emaildata.type}
+                    value={Notificationdata.type}
                     required
                   >
                     <option value={""}>User Type</option>
@@ -474,7 +515,7 @@ const EmailSend = () => {
                   <Form.Select
                     size="sm"
                     aria-label=""
-                    value={emaildata.status}
+                    value={Notificationdata.status}
                     name={"status"}
                     onChange={(e) => {
                       valueHandler(e);
@@ -482,7 +523,7 @@ const EmailSend = () => {
                     required
                   >
                     <option value={""}>Status</option>
-                    {EmailStatus.EmailStatus.map((item) => {
+                    {NotificationStatus.NotificationStatus.map((item) => {
                       return <option value={item}>{item}</option>;
                     })}
                   </Form.Select>
@@ -493,55 +534,32 @@ const EmailSend = () => {
                 </Form.Group>
               </div>
               <div className="col-sm-6 aos_input">
-                <Form.Label>Email Title</Form.Label>
+                <Form.Label>Notification Title</Form.Label>
+                <br />
                 <input
                   type={"text"}
-                  placeholder={"Email Title"}
+                  placeholder={"Notification Title"}
                   className={"adminsideinput"}
-                  value={emaildata.email_name}
-                  name={"email_name"}
+                  value={Notificationdata.notification_name}
+                  name={"notification_name"}
                   onChange={(e) => {
                     valueHandler(e);
                   }}
                   required
                 />
               </div>
-              <div className="col-sm-6 aos_input">
-                <Form.Label> Text Message</Form.Label>
-                <input
-                  type={"text"}
-                  placeholder={"Text Message"}
-                  className={"adminsideinput"}
-                  value={emaildata.text_msg}
-                  name={"text_msg"}
+              <div className="col-sm-6 aos_input mt-2">
+                <Form.Label>Notification Text</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  placeholder={"Notification Text"}
+                  value={Notificationdata.notification_text}
+                  name={"notification_text"}
+                  cols={25}
                   onChange={(e) => {
                     valueHandler(e);
                   }}
-                  required
-                />
-              </div>
-              <div className="col-sm-6 aos_input">
-                <Form.Label> Test Email </Form.Label>
-                <input
-                  type={"text"}
-                  placeholder={"Test Email "}
-                  className={"adminsideinput"}
-                  value={emaildata.test_email}
-                  name={"test_email"}
-                  onChange={(e) => {
-                    valueHandler(e);
-                  }}
-                  required
-                />
-              </div>
-              {console.log("emailtext------" + emailText)}
-              <div sm="12" className="mt-3">
-                <CKEditor
-                  data={emailText}
-                  initData={emailText}
-                  type={"classic"}
-                  onChange={(e) => EmailTextHandler(e)}
-                  name={"email_text"}
                   required
                 />
               </div>
@@ -557,7 +575,9 @@ const EmailSend = () => {
             </button>
             <Iconbutton
               type={"submit"}
-              btntext={show === "add" ? "Add Email" : "Update Email"}
+              btntext={
+                show === "add" ? "Add Notification" : "Update Notification"
+              }
               btnclass={"button main_button "}
             />
           </Modal.Footer>
@@ -565,16 +585,24 @@ const EmailSend = () => {
       </Modal>
       <SAlert
         show={AddAlert}
-        title="Added Email Successfully "
+        title="Added Notification Successfully "
         onConfirm={closeAddAlert}
       />
       <SAlert
         show={UpdateAlert}
-        title="Updated Email Successfully "
+        title="Updated Notification Successfully "
         onConfirm={closeUpdateAlert}
+      />
+      <SAlert
+        show={deleteAlert}
+        title="Notification"
+        text="Are you Sure you want to delete "
+        onConfirm={() => deleteNotification(id)}
+        showCancelButton={true}
+        onCancel={CancelDelete}
       />
     </div>
   );
 };
 
-export default EmailSend;
+export default Notification;

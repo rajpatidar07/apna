@@ -44,10 +44,6 @@ const TaxesReport = () => {
   const[location,setLocation]=useState([])
 
   const fetchData=()=>{
-    console.log( "from_date---"+fromDate)
-    console.log( "to_date----"+toDate)
-    console.log( "Previous  Todate---------------------------------------"+prevTodate)
-    console.log( "Previous fromdate---------------------------------------"+prevFromdate)
     axios.post(`${process.env.REACT_APP_BASEURL}/taxes_report`, 
     {
       from_date:fromDate,
@@ -60,11 +56,6 @@ const TaxesReport = () => {
       brand:brandName
     }).then((response) => {
      
-       console.log("Order data----"+ JSON.stringify(response.data[0]))
-       console.log("Order Table data---"+ JSON.stringify(response.data[2]))
-       console.log("Order previous data---"+ JSON.stringify(response.data[1][0]))
-       console.log('Error-----'+JSON.stringify(response.data))
-
 
        if(response.data.message=="No_Data"){
 
@@ -89,7 +80,6 @@ const TaxesReport = () => {
 
    const VenderData= async()=>{
     let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
-    //  console.log("vendor----"+JSON.stringify(result.data))
     if(result.data){
       setVenderList(result.data)
     }
@@ -99,7 +89,6 @@ const TaxesReport = () => {
 
  const CategoryData= async()=>{
   let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
-  // console.log(result.data)
   if(result.data){
     setCategory(result.data)
   }
@@ -110,7 +99,6 @@ const TaxesReport = () => {
 const BrandData= async()=>{
 let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/brand_list`)
 
-//  console.log("Brand data-----"+ JSON.stringify(result.data))
 if(result.data){
   setBrand(result.data)
 }
@@ -141,13 +129,11 @@ if(result.data){
     if(value==1){
       let frommDate=moment().format("YYYY-MM-DD")
       setFromDate(frommDate)
-      // console.log("From date"+e.target.value)
-      // console.log("today")
       setToDate(moment().format("YYYY-MM-DD"))
       let previousTodate=moment(frommDate).subtract(1, 'days').startOf('days').format("YYYY-MM-DD")
       setprevTodate(previousTodate)
       setprevFromdate(previousTodate)
-      // console.log("previous day"+ prevDate)
+
       setpreviousStateChange(1)
     }
         //yesterday------------------------------------------------------------------------
@@ -186,8 +172,6 @@ if(result.data){
     let previouslastmont=moment(lastMonth).subtract(1, 'days').startOf('days').format('YYYY-MM-DD')
     setprevTodate(previouslastmont);
     setprevFromdate(moment(previouslastmont).subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
-    // setPrevDate(moment(month).subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
-    // console.log("previou month-"+prevDate)
     setpreviousStateChange(4)
  }
 //  last six month---------------------------------------------------------
@@ -199,8 +183,6 @@ if(result.data){
   let lastsixMonth=moment(sixMonth).subtract(1, 'month').startOf('month').format('YYYY-MM-DD')
   setprevTodate(lastsixMonth);
   setprevFromdate(moment(lastsixMonth).subtract(5, 'month').startOf('month').format('YYYY-MM-DD'))
-  // setPrevDate(moment(sixMonth).subtract(6, 'month').startOf('month').format('YYYY-MM-DD'))
-  // console.log("previou 6 month-"+prevDate)
   setpreviousStateChange(5)
 }
 
@@ -209,12 +191,10 @@ if(value==8){
   
 let ThisWeek=moment().startOf('weeks').format('YYYY-MM-DD')
 setFromDate(ThisWeek);
-// console.log("From last 6 month"+ThisWeek)
 setToDate( moment().format("YYYY-MM-DD") );
 let previousthisweek=moment(ThisWeek).subtract(1,'days').endOf('days').format('YYYY-MM-DD')
 setprevTodate(previousthisweek)
 setprevFromdate(moment(previousthisweek).subtract(1,'weeks').endOf('weeks').format('YYYY-MM-DD'))
-// setPrevDate(moment(ThisWeek).subtract(1, 'weeks').endOf('weeks').format('YYYY-MM-DD'))
 setpreviousStateChange(8)
   
 }
@@ -222,7 +202,6 @@ if(value==9){
   
 let ThisMonth=moment().startOf('month').format('YYYY-MM-DD')
 setFromDate(ThisMonth);
-// console.log("From last 6 month"+ThisMonth)
 setToDate( moment().format("YYYY-MM-DD") );
 let previousthismont=moment(ThisMonth).subtract(1, 'days').startOf('days').format('YYYY-MM-DD')
 setprevTodate(previousthismont);
@@ -268,10 +247,7 @@ fetchData()
     setBrandName(arrr)
    
    }
-  
-  
-  
-  //  console.log("$$$$$$------"+JSON.stringify(brandName[0]))
+
   const options2 = [
     venderList.map((item)=>(
       { value: `${item.id}` ,label:`${item.shop_name}` }
@@ -292,7 +268,6 @@ fetchData()
     
     }
   
-  console.log("$$$$$$------"+JSON.stringify(vendorId[0]))
   
    
   const options3 = [

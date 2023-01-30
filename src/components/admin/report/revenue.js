@@ -92,11 +92,6 @@ const RevenueReport = () => {
  //----------------------------------------------------+++=++++++ excel--------------------------------------------------->
  const header = ["Date", "Gross Revenue","Total GST","Discount", "shipping","Net Revenue","Total Revenue"];
 
-//  const body2 = [
-//   { firstname: "Edison", lastname: "Padilla", age: 14 ,mobile:"87787866"},
-//   { firstname: "Cheila", lastname: "Rodrigez", age: 56 },
-// ];
-
 function handleDownloadExcel() {
   downloadExcel({
     fileName: "Revenue Report -> downloadExcel method",
@@ -468,19 +463,19 @@ const optionss = {
          
         {
           name: "Gross Revenue",
-          selector: (row) => row.gross_amount,
+          selector: (row) => row.gross_amount.toFixed(2),
           sortable: true,
           width: "150px",
         },
         {
           name: "Total GST",
-          selector: (row) => row.total_gst,
+          selector: (row) => row.total_gst.toFixed(2),
           sortable: true,
           width: "150px",
         },
         {
           name: "Discount",
-          selector: (row) => row.discount,
+          selector: (row) => row.discount.toFixed(2),
           sortable: true,
           width: "150px",
           center: true,
@@ -493,7 +488,7 @@ const optionss = {
   
         {
           name: "Shipping",
-          selector: (row) => row.total_shipping_charges,
+          selector: (row) => row.total_shipping_charges.toFixed(2),
           sortable: true,
           width: "160px",
           center: true,
@@ -504,7 +499,7 @@ const optionss = {
         },
         {
             name: "Net Revenue",
-            selector: (row) => row.net_sales,
+            selector: (row) => row.net_sales.toFixed(2),
             sortable: true,
             width: "150px",
             center: true,
@@ -516,7 +511,7 @@ const optionss = {
 
           {
             name: "Total Revenue",
-            selector: (row) => row.total_sales,
+            selector: (row) => row.total_sales.toFixed(2),
             sortable: true,
             width: "150px",
             center: true,

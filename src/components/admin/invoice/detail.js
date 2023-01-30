@@ -7,16 +7,12 @@ import html2canvas from 'html2canvas';
 
 const Invoice = () => {
     let invoice_no=localStorage.getItem("invoice_no")
-    // let invoiceid=localStorage.getItem("invoiceid")
     const[invoicedetails,setInvoiceDetails]=useState([]);
     const[pdetails,setpDetails]=useState([]);
-
-    // const total=(invoicedetails.reduce((total,price)=>total = total+price , 0 ));
     useEffect(() => {
             axios
               .get(`${process.env.REACT_APP_BASEURL}/invoice_details?invoice_no=${invoice_no}`)
               .then((response) => {
-                // let data = response.data;
                 setInvoiceDetails(response.data);
                 setpDetails(response.data.product_types)
               });
@@ -32,15 +28,6 @@ const Invoice = () => {
       var totalSGST=0;
       var GrandTotal=0;
 
-
-
-
-
-
-
-
-
-
      function printDocument() {
     const input = document.getElementById('container1');
     html2canvas(input)
@@ -52,7 +39,6 @@ const Invoice = () => {
         const pdf = new jsPDF(orientation, unit, size);
       
         pdf.addImage(imgData, 'JPEG', 0, 0);
-        // pdf.output('dataurlnewwindow');
         pdf.save("Invoice.pdf");
       });
     }
@@ -70,7 +56,6 @@ const Invoice = () => {
                                         <table className="invoice_header w-100">
                                             <tr className="border-bottom">
                                                 <td className="align-bottom" width={'50%'}>
-                                                    {/* <img src={logo} className="w-25" /> */}
                                                     <h2 className="m-0 mt-2"><b>INVOICE</b></h2>
                                                 </td>
                                                 <td className="text-end">
@@ -94,7 +79,6 @@ const Invoice = () => {
                                                         <p className="m-0"><b>Order Id:</b> {invoicedetails.id}</p>
                                                         <p className="m-0"><b>Order Date:</b>{invoicedetails.order_date}</p>
                                                         <p className="m-0"><b>Invoice Date:</b> {invoicedetails.invoice_date}</p>
-                                                        {/* <p className="m-0"><b>GSTIN:</b> {invoicedetails.cgst}</p> */}
                                                     </td>
                                                     <td className="">
                                                         <h5 className="text-uppercase m-0"><b>Bill to:</b></h5>
@@ -151,11 +135,7 @@ const Invoice = () => {
                                                  totalGSt += Number(invodetails.gst)
                                                  totalCGST += Number(invodetails.cgst)
                                                  totalSGST += Number(invodetails.sgst)
-                                                 GrandTotal +=  Number(totalAmmount)
-                                                
-
-
-                                                    
+                                                 GrandTotal +=  Number(totalAmmount)   
                                              return(
                                                
                                                 <tr>
@@ -194,19 +174,6 @@ const Invoice = () => {
 
                                               )
                                             })} 
-                                          
-                                            {/* <tr>
-                                                <td className="center"><b>Shipping And Packaging Charges</b>
-                                                </td>
-                                                <td className="">2</td>
-                                                <td className="left">00</td>
-                                                <td className="left">00</td>
-                                                <td className="left">00</td>
-                                                <td className="left">00</td>
-                                                <td className="left">00</td>
-                                                <td className="left">00</td>
-                                            </tr> */}
-                                           
                                             <tr>
                                                 <th className="font-weight-bold"><b>Total</b></th>
                                                 
@@ -231,7 +198,6 @@ const Invoice = () => {
                                         </table>
                                         <div className="col-md-12 text-end">
                                             <h5>Apna Organic Store</h5>
-                                            {/* <img src={logo} className='w-25 p-4 pt-1 pb-1 px-1' /> */}
                                             <h5>Authorised Signatury</h5>
                                         </div>
                                         <div className="col-md-12 border-top p-2">
@@ -248,17 +214,7 @@ const Invoice = () => {
                          </div>
                         </div>
                     </div>
-                </div>
-
-
-
-
-{/* ----------------------------------------------------jjj ---------------------------------------------------------------*/}
-
-               
-            {/* </Page>
-
-        </Document> */}
+                </div>s
         </>
     );
 };
