@@ -30,6 +30,7 @@ const VendorsList = () => {
   const [scall, setsCall] = useState(false);
   const [AddAlert, setAddAlert] = useState(false);
   const [UpdateAlert, setUpdateAlert] = useState(false);
+  let [condition, setCondition] = useState(false);
   const [fileName, setFileName] = useState("");
   const [addvendordata, setaddvendordata] = useState({
     owner_name: "",
@@ -90,6 +91,7 @@ const VendorsList = () => {
       })
       .then((response) => {
         setvendordata(response.data);
+        setCondition(false);
         setapicall(false);
       })
       .catch(function (error) {
@@ -203,24 +205,28 @@ const VendorsList = () => {
             </option>
             <option
               value="pending"
+              disabled={condition ? true : false}
               selected={row.status === "pending" ? true : false}
             >
               Pending
             </option>
             <option
               value="active"
+              disabled={condition ? true : false}
               selected={row.status === "active" ? true : false}
             >
               Active
             </option>
             <option
               value="blocked"
+              disabled={condition ? true : false}
               selected={row.status === "blocked" ? true : false}
             >
               Block
             </option>
             <option
               value="in progress"
+              disabled={condition ? true : false}
               selected={row.status === "in progress" ? true : false}
             >
               In Progress
@@ -272,6 +278,7 @@ const VendorsList = () => {
       )
       .then((response) => {
         setvendordata(response.data);
+        setCondition(false);
         setapicall(false);
       })
       .catch(function (error) {
@@ -360,16 +367,19 @@ const VendorsList = () => {
 
   const handleStatusChnage = (e, id) => {
     setchangstatus(e.target.value);
+    setCondition(true);
     axios
       .put(`${process.env.REACT_APP_BASEURL}/vendor_status_change`, {
         status_change: e.target.value,
         id: `${id}`,
       })
       .then((response) => {
+        setCondition(false);
         setapicall(true);
       })
       .catch(function (error) {
         console.log(error);
+        setCondition(false);
       });
   };
 
