@@ -68,7 +68,7 @@ const Featuredproduct = () => {
           product_id: "",
           fetured_type: "featured_offer",
           start_date: "",
-          end_date:""
+          end_date: "",
         })
         .then((response) => {
           setFeatureProductData(response.data);
@@ -183,49 +183,50 @@ const Featuredproduct = () => {
 
   const UpdateFeaturedProduct = (e) => {
     e.preventDefault();
-    axios.put(`${process.env.REACT_APP_BASEURL}/update_fetured_product`,{
-      id:id,
-      start_date:featuredData.start_date,
-      end_date:featuredData.end_date
-    }).then((response) => {
-      let data=response.data;
-      setValidated(false);
-       setapicall(true);
-       setShow(false)
-  });
-  formRef.current.reset();
-  setValidated(false);
-}
-
-const OnSearchChange = (e) => {
-  setsearchData({ ...searchdata, [e.target.name]: e.target.value })
-}
-const OnDateChange = (e) => {
+    axios
+      .put(`${process.env.REACT_APP_BASEURL}/update_fetured_product`, {
+        id: id,
+        start_date: featuredData.start_date,
+        end_date: featuredData.end_date,
+      })
+      .then((response) => {
+        let data = response.data;
+        setValidated(false);
+        setapicall(true);
+        setShow(false);
+      });
+    formRef.current.reset();
+    setValidated(false);
+  };
 
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
   };
-  const submitHandler = () => {
-    setapicall(true);
-  };
+  const OnDateChange = (e) => {
+    const OnSearchChange = (e) => {
+      setsearchData({ ...searchdata, [e.target.name]: e.target.value });
+    };
+    const submitHandler = () => {
+      setapicall(true);
+    };
 
-  const OnReset = () => {
-    setsearchData({ start_date: "", end_date: "" });
-    setapicall(true);
-  };
+    const OnReset = () => {
+      setsearchData({ start_date: "", end_date: "" });
+      setapicall(true);
+    };
 
-  return (
-    <div>
-      <h2>Featured Products</h2>
+    return (
+      <div>
+        <h2>Featured Products</h2>
 
-      {/* search bar */}
-      <div className="card mt-3 p-3 ">
-        <div className="row pb-3">
-          {/* <div className="col-md-3 col-sm-6 aos_input">
+        {/* search bar */}
+        <div className="card mt-3 p-3 ">
+          <div className="row pb-3">
+            {/* <div className="col-md-3 col-sm-6 aos_input">
         <input type={"text"}  onChange={OnSearchChange} name='product_title_name'
               value={searchdata.status} placeholder={"Search by status"} className={'adminsideinput'}/>
         </div> */}
-          {/* <div className="col-md-3 col-sm-6 aos_input">
+            {/* <div className="col-md-3 col-sm-6 aos_input">
         <Form.Select aria-label="Search by category" onChange={OnSearchChange} value={searchdata.status} className="adminselectbox" placeholder="Search by status">
         <option>Search by status</option>
           <option value="active">Active</option>
@@ -236,7 +237,7 @@ const OnDateChange = (e) => {
 
         </Form.Select>
         </div>  */}
-          {/* <div className="col-md-3 col-sm-6 aos_input value={}">
+            {/* <div className="col-md-3 col-sm-6 aos_input value={}">
             <input type={"date"} onChange={OnDateChange} name='start_date'
               value={searchdata.start_date}
               className={'adminsideinput'} placeholder={"Search by date"} />
@@ -246,10 +247,10 @@ const OnDateChange = (e) => {
               value={searchdata.end_date}
               className={'adminsideinput'} placeholder={"Search by date"} />
           </div> */}
-          {/* <div className="col-md-3 col-sm-6 aos_input">
+            {/* <div className="col-md-3 col-sm-6 aos_input">
         <MainButton btntext={"Search"} btnclass={'button main_button w-100'} />
         </div> */}
-          {/* <div className="col-md-3 col-sm-6 aos_input">
+            {/* <div className="col-md-3 col-sm-6 aos_input">
             <MainButton
               onClick={submitHandler}
               btntext={"Search"}
@@ -264,99 +265,99 @@ const OnDateChange = (e) => {
               onClick={OnReset}
             />
           </div> */}
-        </div>
+          </div>
 
-        {/* upload */}
+          {/* upload */}
 
-        <Modal size="lg" show={show} onHide={() => handleClose()}>
-          <Form className="" ref={formRef} validated={validated}>
-            <Modal.Header closeButton>
-              <Modal.Title>Featured Product</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <div className="row p-3 m-0">
-                <div className="col-md-6">
-                  <Form.Group
-                    className="mb-3 aos_input"
-                    controlId="formBasicStartDate"
-                  >
-                    <Form.Label>Start Date</Form.Label>
-                    <Form.Control
-                      name="start_date"
-                      value={featuredData.start_date}
-                      onChange={(e) => handleFormChange(e)}
-                      type="date"
-                      placeholder="Coupon Start Date"
-                    />
-                  </Form.Group>
+          <Modal size="lg" show={show} onHide={() => handleClose()}>
+            <Form className="" ref={formRef} validated={validated}>
+              <Modal.Header closeButton>
+                <Modal.Title>Featured Product</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <div className="row p-3 m-0">
+                  <div className="col-md-6">
+                    <Form.Group
+                      className="mb-3 aos_input"
+                      controlId="formBasicStartDate"
+                    >
+                      <Form.Label>Start Date</Form.Label>
+                      <Form.Control
+                        name="start_date"
+                        value={featuredData.start_date}
+                        onChange={(e) => handleFormChange(e)}
+                        type="date"
+                        placeholder="Coupon Start Date"
+                      />
+                    </Form.Group>
+                  </div>
+                  <div className="col-md-6">
+                    <Form.Group
+                      className="mb-3 aos_input"
+                      controlId="formBasicStartDate"
+                    >
+                      <Form.Label>End Date</Form.Label>
+                      <Form.Control
+                        name="end_date"
+                        value={featuredData.end_date}
+                        onChange={(e) => handleFormChange(e)}
+                        type="date"
+                        placeholder="Coupon Start Date"
+                      />
+                    </Form.Group>
+                  </div>
                 </div>
-                <div className="col-md-6">
-                  <Form.Group
-                    className="mb-3 aos_input"
-                    controlId="formBasicStartDate"
-                  >
-                    <Form.Label>End Date</Form.Label>
-                    <Form.Control
-                      name="end_date"
-                      value={featuredData.end_date}
-                      onChange={(e) => handleFormChange(e)}
-                      type="date"
-                      placeholder="Coupon Start Date"
-                    />
-                  </Form.Group>
-                </div>
-              </div>
-            </Modal.Body>
-            <Modal.Footer>
-              <button
-                className="button main_outline_button"
-                onClick={() => handleClose()}
-              >
-                Cancel
-              </button>
-              <button
-                className="button main_outline_button"
-                onClick={UpdateFeaturedProduct}
-              >
-                Update
-              </button>
-              {/* <Iconbutton
+              </Modal.Body>
+              <Modal.Footer>
+                <button
+                  className="button main_outline_button"
+                  onClick={() => handleClose()}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="button main_outline_button"
+                  onClick={UpdateFeaturedProduct}
+                >
+                  Update
+                </button>
+                {/* <Iconbutton
               type={"submit"}
                  
               // btntext={show === "add" ? "Add Blog" : "Update Blog"}
               // onClick={(show === 'add' ? AddVendorClick : UpdateVendorClick(show))}
               btnclass={"button main_button "}
             /> */}
-            </Modal.Footer>
-          </Form>
-        </Modal>
+              </Modal.Footer>
+            </Form>
+          </Modal>
 
-        {/* datatable */}
+          {/* datatable */}
 
-        <DataTable
-          columns={columns}
-          data={featuredProductData}
-          pagination
-          highlightOnHover
-          pointerOnHover
-          className={"table_body featuredproduct_table"}
-        />
-        <SAlert
-          show={Alert}
-          title="Product Name"
-          text="Are you Sure you want to remove"
-          onConfirm={hideAlert}
-          showCancelButton={true}
-          onCancel={hideAlert}
-        />
-        <SAlert
-          show={UpdateAlert}
-          title="Updated Sold product Successfully "
-          onConfirm={closeUpdateAlert}
-        />
+          <DataTable
+            columns={columns}
+            data={featuredProductData}
+            pagination
+            highlightOnHover
+            pointerOnHover
+            className={"table_body featuredproduct_table"}
+          />
+          <SAlert
+            show={Alert}
+            title="Product Name"
+            text="Are you Sure you want to remove"
+            onConfirm={hideAlert}
+            showCancelButton={true}
+            onCancel={hideAlert}
+          />
+          <SAlert
+            show={UpdateAlert}
+            title="Updated Sold product Successfully "
+            onConfirm={closeUpdateAlert}
+          />
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 };
-}
 export default Featuredproduct;

@@ -17,6 +17,7 @@ function Orders() {
   const [orderdata, setorderdata] = useState([]);
   const [changstatus, setchangstatus] = useState("");
   const [apicall, setapicall] = useState(false);
+  let [condition, setCondition] = useState(false);
   const [searchdata, setsearchData] = useState({
     status: "",
     created_on: "",
@@ -57,6 +58,7 @@ function Orders() {
         // console.log(response);
         setorderdata(response.data);
         setapicall(false);
+        setCondition(false);
       })
       .catch(function (error) {
         console.log(error);
@@ -66,12 +68,13 @@ function Orders() {
   const onStatusChange = (e, id) => {
     // e.prevantDefault();
     setchangstatus(e.target.value);
+    setCondition(true);
     axios
       .put(
         `${process.env.REACT_APP_BASEURL}/order_status_change`,
         {
           status_change: e.target.value,
-          id: `${id}`,
+          id: id,
         },
         {
           headers: {
@@ -82,9 +85,11 @@ function Orders() {
       .then((response) => {
         console.log(response.data);
         setapicall(true);
+        setCondition(false);
       })
       .catch(function (error) {
         console.log(error);
+        setCondition(false);
       });
   };
 
@@ -227,48 +232,56 @@ function Orders() {
           <option
             value="placed"
             selected={row.status === "placed" ? true : false}
+            disabled={condition ? `true` : false}
           >
             Placed
           </option>
           <option
             value="pending"
             selected={row.status === "pending" ? true : false}
+            disabled={condition ? true : false}
           >
             Pending
           </option>
           <option
             value="shipped"
             selected={row.status === "shipped" ? true : false}
+            disabled={condition ? true : false}
           >
             Shipped
           </option>
           <option
             value="delivered"
             selected={row.status === "delivered" ? true : false}
+            disabled={condition ? true : false}
           >
             Delivered
           </option>
           <option
             value="packed"
             selected={row.status === "packed" ? true : false}
+            disabled={condition ? true : false}
           >
             Packed
           </option>
           <option
             value="cancel"
             selected={row.status === "cancel" ? true : false}
+            disabled={condition ? true : false}
           >
             Cancel
           </option>
           <option
             value="approved"
             selected={row.status === "approved" ? true : false}
+            disabled={condition ? true : false}
           >
             Approved{" "}
           </option>
           <option
             value="return"
             selected={row.status === "return" ? true : false}
+            disabled={condition ? true : false}
           >
             Return{" "}
           </option>
