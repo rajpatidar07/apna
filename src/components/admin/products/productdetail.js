@@ -30,14 +30,14 @@ const Productdetail = () => {
   const [varietyshow, setvarietyShow] = useState(false);
   const [ProductAlert, setProductAlert] = useState(false);
   const [UpdatetAlert, setUpdatetAlert] = useState(false);
-  const[viewImage,setViewImage]=useState(true)
+  const[viewImage,setViewImage]=useState("view")
 const veriantData={   
 product_status: "1",
 product_id: pid,
 unit: "",
 colors: "",
-unit_quantity: "",
-size: "",
+unit_quantity: null,
+size: null,
 product_price: "",
 mrp: "",
 sale_price: "",
@@ -83,8 +83,9 @@ quantity: "",
         .get(`${process.env.REACT_APP_BASEURL}/product_details?id=${pid}`)
         .then((response) => {
             let data = response.data;
-            console.log("dtatttttttttt--"+JSON.stringify (data))
+          
             if (data != undefined || data != "" || data != null) {
+             
             setProductData(data);
             setVariantdetail(data.product_verient)
             onImgView(vid,pid)
@@ -154,6 +155,7 @@ quantity: "",
       ImgObj.push(imar);
     }
     // image
+    console.log("img information--"+ImgObj)
     axios
       .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
       .then((response) => {
@@ -186,7 +188,7 @@ quantity: "",
     });};
     
 const onImgView = (id, productid) =>{
-  setViewImage(false)
+  setViewImage("notview")
   localStorage.setItem("variantid", id);
   localStorage.setItem("productid", productid);
   setEditButton(false)
@@ -269,7 +271,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
       [e.target.name]: e.target.value,
     });
   };
-console.log("veriant data---"+JSON.stringify(variantarray))
+// console.log("veriant data---"+JSON.stringify(variantarray))
 
   const onVariantaddclick = (id) => {
  
@@ -318,7 +320,24 @@ console.log("veriant data---"+JSON.stringify(variantarray))
          
           if(response.affectedRows="1"){
             setProductAlert(true);
-            setvariantarray(veriantData);
+
+            setvariantarray({
+              product_status: "",
+              unit: "",
+              colors: "",
+              unit_quantity: "",
+              size: "",
+              product_price: "",
+              mrp: "",
+              sale_price: "",
+              discount: "0",
+              special_offer: false,
+              featured_product: false,
+              manufacturing_date: "",
+              expire_date: "",
+              quantity: "",
+              product_id:"",
+            });
             setvariantapicall(true);
             setcustomValidated(false)
             setVarietyUnitvalidation("")
@@ -388,7 +407,23 @@ console.log("veriant data---"+JSON.stringify(variantarray))
             
             // setvariantarray(response.data);
           
-            setvariantarray(veriantData);
+            setvariantarray({
+              product_status: "",
+              unit: "",
+              colors: "",
+              unit_quantity: "",
+              size: "",
+              product_price: "",
+              mrp: "",
+              sale_price: "",
+              discount: "0",
+              special_offer: false,
+              featured_product: false,
+              manufacturing_date: "",
+              expire_date: "",
+              quantity: "",
+              product_id:"",
+            });
             setvariantapicall(true);
             setcustomValidated(false)
             setVarietyUnitvalidation("")
@@ -478,8 +513,6 @@ console.log("veriant data---"+JSON.stringify(variantarray))
       });
   };
 
-
-
   return (
     <div>
             <h2 className="productname mb-0">{productdata.product_title_name}</h2>
@@ -504,24 +537,22 @@ console.log("veriant data---"+JSON.stringify(variantarray))
                 data.product_verient_id == vid && data.product_id == pid ?
                     <div className="w-100 h-50" key={i}>
                       <img
-                        src={data.product_image_path?data.product_image_path:"https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"}
+                        src={newImageUrls.length===0?"https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg":data.product_image_path?data.product_image_path:null}
                         alt={data.product_image_name}
                       />
 
-                    
-            
                     </div>
                    : null
                    )
                  })
                  : null
                }
-
-                {viewImage===false? 
-                <img
-                        src="https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
-                      />
-                    :viewImage===true?<p>hhh</p>:null}
+               
+                {/* {
+               
+               newImageUrls!==[]? <img
+                    src="https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
+                  />:""} */}
                     
                   </Carousel>
                 </div>
@@ -762,7 +793,10 @@ console.log("veriant data---"+JSON.stringify(variantarray))
                                               ? "volume"
                                               : variantarray.unit === "piece"
                                               ? "piece"
-                                              : ""
+                                              : variantarray.unit === "" ||
+                                              variantarray.unit === null
+                                            ? "Select"
+                                            : null
                                           }
                                         >
                                           {variantarray.unit === "pcs"
@@ -773,7 +807,10 @@ console.log("veriant data---"+JSON.stringify(variantarray))
                                             ? "volume"
                                             : variantarray.unit === "piece"
                                             ? "piece"
-                                            : "Select"}
+                                            : variantarray.unit === "" ||
+                                            variantarray.unit === null
+                                            ? "Select"
+                                            : null}
                                         </option>
                                         {(varietyy.variety || []).map(
                                           (vari, i) => {
@@ -788,7 +825,7 @@ console.log("veriant data---"+JSON.stringify(variantarray))
                                                     ? "l"
                                                     : vari === "piece"
                                                     ? "piece"
-                                                    : null
+                                                    : ""
                                                 }
                                                 key={i}
                                               >
@@ -832,6 +869,8 @@ console.log("veriant data---"+JSON.stringify(variantarray))
                                             ? variantarray.unit_quantity
                                             : variantarray.unit === "piece"
                                             ? variantarray.unit_quantity
+                                            : variantarray.unit === ""
+                                            ? variantarray.unit_quantity
                                             : null
                                         }
                                         type="text"
@@ -853,6 +892,8 @@ console.log("veriant data---"+JSON.stringify(variantarray))
                                       <Form.Control
                                         value={
                                           variantarray.unit === "pcs"
+                                            ? variantarray.size
+                                            : variantarray.unit === ""
                                             ? variantarray.size
                                             : null
                                         }
