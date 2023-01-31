@@ -9,6 +9,8 @@ import Table from "react-bootstrap/Table";
 import VariationJson from "../json/variation";
 import { MdOutlineEdit } from "react-icons/md";
 import { Button } from "react-bootstrap";
+
+import SAlert from "../../admin/common/salert";
 import moment from "moment/moment";
 import InputGroup from "react-bootstrap/InputGroup";
 let encoded;
@@ -16,6 +18,9 @@ let ImgObj = [];
 const Productdetail = () => {
   let vid = localStorage.getItem("variantid");
   let pid = localStorage.getItem("productid");
+  const [variantremove, setVariantRemove] = useState([]);
+  const [VerityAlert, setVerityAlert] = useState(false);
+ 
   const [productdata, setProductData] = useState([]);
   const [validated, setValidated] = useState(false);
   const [vdata, setvdata] = useState([]);
@@ -23,23 +28,28 @@ const Productdetail = () => {
   const [sizechange, setsizechange] = useState("");
   const [variantapicall, setvariantapicall] = useState(false);
   const [varietyshow, setvarietyShow] = useState(false);
-  const [variantarray, setvariantarray] = useState({
-    product_status: "1",
-    product_id: pid,
-    unit: "",
-    colors: "",
-    unit_quantity: "",
-    size: "",
-    product_price: "",
-    mrp: "",
-    sale_price: "",
-    discount: "",
-    special_offer: false,
-    featured_product: false,
-    manufacturing_date: "",
-    expire_date: "",
-    quantity: "",
-  });
+  const [ProductAlert, setProductAlert] = useState(false);
+  const [UpdatetAlert, setUpdatetAlert] = useState(false);
+  const[viewImage,setViewImage]=useState(true)
+const veriantData={   
+product_status: "1",
+product_id: pid,
+unit: "",
+colors: "",
+unit_quantity: "",
+size: "",
+product_price: "",
+mrp: "",
+sale_price: "",
+discount: "0",
+special_offer: false,
+featured_product: false,
+manufacturing_date: "",
+expire_date: "",
+quantity: "",
+}
+  const [variantarray, setvariantarray] = useState(veriantData);
+
   const [productalldata, setproductalldata] = useState({
     add_custom_input: "",
     product_title_name: "",
@@ -59,6 +69,8 @@ const Productdetail = () => {
   });
   const [variantmainarray, setvariantmainarray] = useState([]);
   const [customvalidated, setcustomValidated] = useState(false);
+  const [unitValidated, setunitValidated] = useState(false);
+  const[varietyUnitvalidation,setVarietyUnitvalidation]=useState("")
   const formRef = useRef();
   const [newImageUrls,setnewImageUrls] = useState([])
   const [variantdetail,setVariantdetail] = useState([])
@@ -71,6 +83,7 @@ const Productdetail = () => {
         .get(`${process.env.REACT_APP_BASEURL}/product_details?id=${pid}`)
         .then((response) => {
             let data = response.data;
+            console.log("dtatttttttttt--"+JSON.stringify (data))
             if (data != undefined || data != "" || data != null) {
             setProductData(data);
             setVariantdetail(data.product_verient)
@@ -83,22 +96,22 @@ const Productdetail = () => {
     getProductDetails();
   }, [variantapicall]);
 
+
+
+  
   const onColorChange = (e, id) => {
     setcolorchange(e.target.value);
     vid = localStorage.setItem("variantid", id);
   };
+
   const onSizeClick = (e, id) => {
     setsizechange(e.target.value);
     vid = localStorage.setItem("variantid", id);
   };
+
   var varietyy = VariationJson;
-  const handlevarietyShow = (id) => {
-    setvarietyShow(true);
-  };
-  const handlevarietyClose = () => {
-    setvariantarray("");
-    setvarietyShow(false);
-  };
+
+
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
@@ -173,6 +186,7 @@ const Productdetail = () => {
     });};
     
 const onImgView = (id, productid) =>{
+  setViewImage(false)
   localStorage.setItem("variantid", id);
   localStorage.setItem("productid", productid);
   setEditButton(false)
@@ -204,7 +218,10 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
 }
 
   const onVariantChange = (e) => {
+    setVarietyUnitvalidation("")
+    setcustomValidated(false)
     setvariantapicall(true);
+    setunitValidated(false)
     setvariantarray({
       ...variantarray,
       [e.target.name]: e.target.value,
@@ -252,35 +269,151 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
       [e.target.name]: e.target.value,
     });
   };
+console.log("veriant data---"+JSON.stringify(variantarray))
 
   const onVariantaddclick = (id) => {
+ 
     if (id === "" || id === null || id === undefined) {
-      axios
+      if (
+        variantarray.unit == "" ||
+        variantarray.product_price == "" ||
+        variantarray.mrp == "" ||
+        variantarray.sale_price == "" ||
+        variantarray.manufacturing_date == "" ||
+        variantarray.expire_date == "" ||
+        variantarray.quantity == "" 
+      ) 
+      {
+        setcustomValidated(true);
+      } 
+      else if( variantarray.quantity==0){
+        setVarietyUnitvalidation("QwanityValidation");
+      }
+      else if (
+        variantarray.unit === "pcs" &&   
+    (    variantarray.colors === ""  ||
+        variantarray.size === "") )
+       
+      {
+   
+        setVarietyUnitvalidation("fillUnit&size&color");
+      } 
+
+      else if (
+        variantarray.unit !== "pcs" &&
+        variantarray.unit_quantity === "" ) 
+
+      {
+        setunitValidated(true);
+        setVarietyUnitvalidation("unitQwanity&size&color");
+      } 
+
+      else{
+        axios
         .post(
           `${process.env.REACT_APP_BASEURL}/products_varient_add`,
           variantarray
         )
         .then((response) => {
-          formRef.current.reset();
-          setvariantapicall(true);
+         
+          if(response.affectedRows="1"){
+            setProductAlert(true);
+            setvariantarray(veriantData);
+            setvariantapicall(true);
+            setcustomValidated(false)
+            setVarietyUnitvalidation("")
+          }
+      
+          else if(response.errno==1064){
+            alert("Error in add product")
+           setProductAlert(false)}
+
+           else{setProductAlert(false);}
+         
         })
         .catch(function (error) {
           console.log(error);
         });
+      }
+  
     } else {
-      axios
+       if(id){
+         
+        if (
+          variantarray.unit == "" ||
+          variantarray.product_price == "" ||
+          variantarray.mrp == "" ||
+          variantarray.sale_price == "" ||
+          variantarray.manufacturing_date == "" ||
+          variantarray.expire_date == "" ||
+          variantarray.quantity == "" 
+        ) 
+        {
+          setcustomValidated(true);
+        } 
+        else if
+        (
+         
+         variantarray.unit === "pcs" &&
+         variantarray.colors === ""  ||
+        variantarray.size === null ||  variantarray.size === ""
+       )
+        {
+         setVarietyUnitvalidation("fillUnit&size&color");
+       }
+
+       else if (
+        variantarray.unit !== "pcs" &&
+        variantarray.unit_quantity === ""
+        &&
+        variantarray.size === ""
+   
+      )
+       {
+
+        setVarietyUnitvalidation("unitQwanity&size&color");
+      }
+
+      else{
+
+        axios
         .put(
           `${process.env.REACT_APP_BASEURL}/products_varient_update`,
           variantarray
         )
         .then((response) => {
-          setvariantarray(response.data);
-          formRef.current.reset();
-          setvariantapicall(true);
-        })
+
+          if(response.affectedRows="1"){
+            setUpdatetAlert(true);
+            
+            // setvariantarray(response.data);
+          
+            setvariantarray(veriantData);
+            setvariantapicall(true);
+            setcustomValidated(false)
+            setVarietyUnitvalidation("")
+          }
+      
+          else if(response.errno==1064){
+            alert("Error in Update product")
+            setUpdatetAlert(false)}
+
+           else{setUpdatetAlert(false);}
+
+       
+           })
         .catch(function (error) {
           console.log(error);
         });
+      }
+       
+
+       } 
+       else{
+        alert("Id not provide")
+       }
+
+ 
     }
   };
   const VariantAddProduct = () => {
@@ -291,11 +424,34 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
     setcustomValidated(false);
     formRef.current.reset();
   };
+
+
+
+
   const VariantRemoveClick = (id, productid) => {
+      
+    setVerityAlert(true);
+   
+    setVariantRemove((variantremove) => {
+      return { ...variantremove, id: id, productid: productid };
+    });
+
+    
+  };
+
+  const closeAlert = () => {
+          setVerityAlert(false);
+          setProductAlert(false)
+          setUpdatetAlert(false)
+        };
+
+
+
+  const deleteProductVeriant=()=>{
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
-        id: `${id}`,
-        product_id: `${productid}`,
+      .put(`${process.env.REACT_APP_BASEURL}/products_delete_remove`, {
+        varient_id:  variantremove.id,
+        product_id: variantremove.productid,
         is_delete: "0",
       })
       .then((response) => {
@@ -304,8 +460,11 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
       .catch(function (error) {
         console.log(error);
       });
-    setvdata(vdata.filter((item) => item !== id));
-  };
+    setvdata(vdata.filter((item) => item !==  variantremove.id));
+    setVerityAlert(false);
+  }
+
+
   const VariantEditClick = (id, productid) => {
     axios
       .get(
@@ -318,6 +477,9 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
         console.log(error);
       });
   };
+
+
+
   return (
     <div>
             <h2 className="productname mb-0">{productdata.product_title_name}</h2>
@@ -332,6 +494,9 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                     className={"productimg_carousel"}
                     showStatus={false}
                   >
+                 
+
+
                     {
                         newImageUrls?
                       (newImageUrls || []).map((data,i)=>{
@@ -339,15 +504,25 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                 data.product_verient_id == vid && data.product_id == pid ?
                     <div className="w-100 h-50" key={i}>
                       <img
-                        src={data.product_image_path}
+                        src={data.product_image_path?data.product_image_path:"https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"}
                         alt={data.product_image_name}
                       />
+
+                    
+            
                     </div>
                    : null
                    )
                  })
                  : null
                }
+
+                {viewImage===false? 
+                <img
+                        src="https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
+                      />
+                    :viewImage===true?<p>hhh</p>:null}
+                    
                   </Carousel>
                 </div>
 
@@ -545,20 +720,20 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                           <Table bordered className="align-middle my-2">
                             <thead className="align-middle">
                               <tr>
-                                <th>Variety</th>
+                                <th>Variety <span className="text-danger">*</span></th>
                                 <th>Color</th>
-                                <th>Weight</th>
+                                <th>Weight/piece/Volume </th>
                                 <th>Size</th>
-                                <th>Mrp</th>
+                                <th>Mrp <span className="text-danger">*</span></th>
                                 <th>Discount</th>
-                                <th>Price</th>
-                                <th>Sale Price</th>
+                                <th>Price <span className="text-danger">*</span></th>
+                                <th>Sale Price <span className="text-danger">*</span></th>
                                 <th>Special Offer</th>
                                 <th>Featured Product</th>
-                                <th className="manufacture_date">Mdate</th>
-                                <th className="manufacture_date">Edate</th>
+                                <th className="manufacture_date">Mdate <span className="text-danger">*</span></th>
+                                <th className="manufacture_date">Edate <span className="text-danger">*</span></th>
                                 <th className="manufacture_date">Image</th>
-                                <th className="manufacture_date">Quantity</th>
+                                <th className="manufacture_date">Quantity <span className="text-danger">*</span></th>
                                 <th></th>
                               </tr>
                             </thead>
@@ -571,11 +746,11 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                         aria-label="Default select example"
                                         name="unit"
                                         onChange={(e) => onVariantChange(e)}
-                                        className={
-                                          customvalidated === true
-                                            ? "border-danger"
-                                            : null
-                                        }
+                                        // className={
+                                        //   customvalidated === true
+                                        //     ? "border-danger"
+                                        //     : null
+                                        // }
                                       >
                                         <option
                                           value={
@@ -633,11 +808,11 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                       <Form.Control
                                         type="text"
                                         sm="9"
-                                        className={
-                                          customvalidated === true
-                                            ? "border-danger"
-                                            : null
-                                        }
+                                        // className={
+                                        //   customvalidated === true
+                                        //     ? "border-danger"
+                                        //     : null
+                                        // }
                                         onChange={(e) => onVariantChange(e)}
                                         name={"colors"}
                                         value={variantarray.colors}
@@ -662,7 +837,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                         type="text"
                                         sm="9"
                                         className={
-                                          customvalidated === true
+                                          unitValidated === true
                                             ? "border-danger"
                                             : null
                                         }
@@ -683,11 +858,11 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                         }
                                         type="text"
                                         sm="9"
-                                        className={
-                                          customvalidated === true
-                                            ? "border-danger"
-                                            : null
-                                        }
+                                        // className={
+                                        //   customvalidated === true
+                                        //     ? "border-danger"
+                                        //     : null
+                                        // }
                                         onChange={(e) => onVariantChange(e)}
                                         name={"size"}
                                       />
@@ -703,11 +878,11 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                         step={"any"}
                                         min={1}
                                         sm="9"
-                                        className={
-                                          customvalidated === true
-                                            ? "border-danger"
-                                            : null
-                                        }
+                                        // className={
+                                        //   customvalidated === true
+                                        //     ? "border-danger"
+                                        //     : null
+                                        // }
                                         onChange={(e) => onVariantChange(e)}
                                         name={"mrp"}
                                         value={variantarray.mrp}
@@ -737,11 +912,11 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                       step={0.01}
                                         type="number"
                                         sm="9"
-                                        className={
-                                          customvalidated === true
-                                            ? "border-danger"
-                                            : null
-                                        }
+                                        // className={
+                                        //   customvalidated === true
+                                        //     ? "border-danger"
+                                        //     : null
+                                        // }
                                         onChange={(e) => onVariantChange(e)}
                                         name={"product_price"}
                                         value={variantarray.product_price}
@@ -757,11 +932,11 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                         type="number"
                                         sm="9"
                                         min={1}
-                                        className={
-                                          customvalidated === true
-                                            ? "border-danger"
-                                            : null
-                                        }
+                                        // className={
+                                        //   customvalidated === true
+                                        //     ? "border-danger"
+                                        //     : null
+                                        // }
                                         onChange={(e) => onVariantChange(e)}
                                         name={"sale_price"}
                                         value={saleprice.toFixed(2)}
@@ -808,11 +983,11 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                       <Form.Control
                                         type="date"
                                         sm="9"
-                                        className={
-                                          customvalidated === true
-                                            ? "border-danger"
-                                            : null
-                                        }
+                                        // className={
+                                        //   customvalidated === true
+                                        //     ? "border-danger"
+                                        //     : null
+                                        // }
                                         onChange={(e) => onVariantChange(e)}
                                         name={"manufacturing_date"}
                                         value={moment(
@@ -828,13 +1003,14 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                       <Form.Control
                                         type="date"
                                         sm="9"
-                                        className={
-                                          customvalidated === true
-                                            ? "border-danger"
-                                            : null
-                                        }
+                                        // className={
+                                        //   customvalidated === true
+                                        //     ? "border-danger"
+                                        //     : null
+                                        // }
                                         onChange={(e) => onVariantChange(e)}
                                         name={"expire_date"}
+                                        min={moment(variantarray.manufacturing_date).format("YYYY-MM-DD")}
                                         value={moment(
                                           variantarray.expire_date
                                         ).format("YYYY-MM-DD")}
@@ -853,11 +1029,11 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                         value={variantarray.quantity}
                                         sm="9"
                                         min={"1"}
-                                        className={
-                                          customvalidated === true
-                                            ? "border-danger"
-                                            : null
-                                        }
+                                        // className={
+                                        //   customvalidated === true
+                                        //     ? "border-danger"
+                                        //     : null
+                                        // }
                                         onChange={(e) => onVariantChange(e)}
                                         onKeyPress={(event) => {
                                           if (event.key === "Enter") {
@@ -883,6 +1059,53 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                     </Button>
                                   </div>
                                 </td>
+                              </tr>
+
+                             
+                            {customvalidated === true ? (
+                              <tr>
+                                <p
+                                  className="mt-1 ms-2 text-danger"
+                                  type="invalid"
+                                >
+                                  Please fill Required fields
+                                </p>
+                              </tr>
+                            ) : null}
+
+                            
+<tr>
+                              {varietyUnitvalidation==="fillUnit&size&color"?(
+                                <p
+                                  className="mt-1 ms-2 text-danger"
+                                  type="invalid"
+                                >
+                                  Please must be Fill size and colors
+                                </p>
+                                   ) :varietyUnitvalidation==="" ?null:null}
+                                {varietyUnitvalidation==="unitQwanity&size&color"?(
+                            
+                                <p
+                                  className="mt-1 ms-2 text-danger my-3"
+                                  type="invalid"
+                                >
+                                  Please fill weight
+                                </p>
+                            
+                                 ) :varietyUnitvalidation==="" ?null: null}
+
+                             {varietyUnitvalidation==="QwanityValidation"?(
+                            
+                            <p
+                              className="mt-1 ms-2 text-danger my-3"
+                              type="invalid"
+                            >
+                              Quantity must be greater than 0
+                            </p>
+                        
+                             ) :varietyUnitvalidation==="" ?null: null}
+
+
                               </tr>
 
                               {productdata.product_verient === "" ||
@@ -960,11 +1183,11 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                                   multiple
                                                   type="file"
                                                   sm="9"
-                                                  className={
-                                                    customvalidated === true
-                                                      ? "border-danger"
-                                                      : null
-                                                  }
+                                                  // className={
+                                                  //   customvalidated === true
+                                                  //     ? "border-danger"
+                                                  //     : null
+                                                  // }
                                                   onChange={(e) =>
                                                     imguploadchange(
                                                       e,
@@ -1118,9 +1341,36 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                 </div>
               </div>
         
-     
-    </div>
+              <SAlert
+show={VerityAlert}
+title={"Product"}
+text="Are you Sure you want to delete"
+onConfirm={deleteProductVeriant}
+showCancelButton={true}
+onCancel={closeAlert}
+/>
+
+
+          <SAlert
+          show={ProductAlert}
+          title="Added Successfully"
+          text=" Product Added"
+          onConfirm={closeAlert}
+        />
+
+            <SAlert
+          show={UpdatetAlert}
+          title="Updated Successfully "
+          text=" Product Updated"
+          onConfirm={closeAlert}
+        />
+         </div>
   );
+
+
+
+
 };
+
 
 export default Productdetail;

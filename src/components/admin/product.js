@@ -49,7 +49,7 @@ function Product() {
   const [categoryeditparent, setCategoryEditparent] = useState("");
   const [categoryeditsubparent, setCategoryEditSubparent] = useState("");
   const [categoryeditchildparent, setCategoryEditChildparent] = useState("");
-  const [level, setlevel] = useState("");
+  const [level, setlevel] = useState("");  
   const [pdata, setpdata] = useState([]);
   const [variantid, setvariantid] = useState("");
   const [productid, setproductid] = useState("");
@@ -714,7 +714,9 @@ function Product() {
         }
       )
       .then((response) => {
+        
         setvdata(response.data.results);
+        // console.log("veriant product---"+verlength)
         settaxdata(response.data.results[0]);
         setvariantapicall(false);
       })
@@ -1182,6 +1184,7 @@ function Product() {
       })
       .then((response) => {
         getProductVariant(variantremove.productid);
+
       })
       .catch(function (error) {
         console.log(error);
