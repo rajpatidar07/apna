@@ -49,12 +49,13 @@ function Product() {
   const [categoryeditparent, setCategoryEditparent] = useState("");
   const [categoryeditsubparent, setCategoryEditSubparent] = useState("");
   const [categoryeditchildparent, setCategoryEditChildparent] = useState("");
-  const [level, setlevel] = useState("");  
+  const [level, setlevel] = useState("");
   const [pdata, setpdata] = useState([]);
   const [variantid, setvariantid] = useState("");
   const [productid, setproductid] = useState("");
   const [Alert, setAlert] = useState(false);
   const [VerityAlert, setVerityAlert] = useState(false);
+  const [varietyValidation, setvarietyValidated] = useState(false);
   const [ProductDraftAlert, setProductDraftAlert] = useState(false);
   const [UpdatetAlert, setUpdatetAlert] = useState(false);
   const [ProductAlert, setProductAlert] = useState(false);
@@ -117,7 +118,7 @@ function Product() {
     manufacturing_date: "",
     expire_date: "",
     seo_tag: "",
-    variety: false,
+    variety: "",
     product_description: "",
     other_introduction: "",
     vendor_id: "",
@@ -322,6 +323,12 @@ function Product() {
       width: "90px",
     },
     {
+      name: "Product Type",
+      selector: (row) => row.product_type,
+      sortable: true,
+      width: "90px",
+    },
+    {
       name: "Mrp",
       selector: (row) => row.mrp.toFixed(2),
       sortable: true,
@@ -419,13 +426,13 @@ function Product() {
             ? "Pending"
             : row.product_status === "approved"
             ? "Approved"
-            : row.product_status === "special_offer"
-            ? "Special Offer"
+            : row.product_status === ""
+            ? "Select"
             : row.product_status === "featured_offer"
             ? "Featured Offer"
-            : row.product_status === "promotional"
-            ? "Promotional"
-            : "Draft"}
+            : row.product_status === "draft"
+            ? "Draft"
+            : "Select"}
         </span>
       ),
       sortable: true,
@@ -442,7 +449,7 @@ function Product() {
           onChange={(e) => onProductStatusChange(e, row.id, row.product_id)}
         >
           <option
-            disabled={condition ? true : false}
+            disabled={true}
             selected={row.product_status === "" ? true : false}
             value=""
           >
@@ -580,7 +587,6 @@ function Product() {
 
   let token = localStorage.getItem("token");
 
-  console.log("token----" + token);
   const handleShow = (e) => {
     setproductdata(data);
     // vendor
@@ -595,7 +601,6 @@ function Product() {
             }
           )
           .then((response) => {
-            console.log("vendor data----" + JSON.stringify(response.data));
             let cgory = response.data;
             const result = cgory.filter(
               (thing, index, self) =>
@@ -655,7 +660,6 @@ function Product() {
                         setSubCategory(response.data);
                       });
                     seteditparentCategory(data.category_name);
-                    // console.log("---first"+data.category_name)
                   } else if (i === 1) {
                     axios
                       .get(
@@ -714,9 +718,7 @@ function Product() {
         }
       )
       .then((response) => {
-        
         setvdata(response.data.results);
-        // console.log("veriant product---"+verlength)
         settaxdata(response.data.results[0]);
         setvariantapicall(false);
       })
@@ -739,30 +741,21 @@ function Product() {
     setvariantarray(veriantData);
     setVarietyUnitvalidation("");
     setcustomValidated(false);
-    e.preventDefault();
+    // e.preventDefault();
     // setValidated(false);
     setvarietyShow(false);
   };
 
   const handleClose = () => {
-    // setproductdata({
-    //   ...productdata,
-    //   other_introduction:""
-    // })
-
     setproductdata(data);
-
-    // setproductdata({
-    //   ...productdata,
-    //   product_description:""
-    // })
-
     setcustomarray([]);
     setvariantarray(veriantData);
     setvariantmainarray([]);
     setcustomValidated(false);
     setValidated(false);
     setmodalshow(false);
+    setVarietyUnitvalidation("");
+    setvarietyValidated(false);
   };
 
   // seotag
@@ -802,8 +795,6 @@ function Product() {
     onImgView(product_id, id);
     console.log("imge newImageUrlse" + newImageUrls.length);
     console.log("imge lenth--" + e.target.files.length);
-    // if (e.target.files.length <= 10) {
-
     for (let i = 0; i < e.target.files.length; i++) {
       let coverimg;
 
@@ -826,28 +817,6 @@ function Product() {
       ImgObj.push(imar);
     }
 
-    // if (newImageUrls.length <= 9) {
-
-    axios
-      .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
-      .then((response) => {
-        ImgObj = [];
-        onImgView(id, product_id);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-
-    // } else {
-    //   alert("More than 10 Pics are allowedd");
-    // }
-    // image
-    // }
-    // else {
-    //   alert("More than 10 Pics are allowed");
-    // }
-
-    // image
     axios
       .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
       .then((response) => {
@@ -908,8 +877,10 @@ function Product() {
   };
 
   const onVariantChange = (e) => {
+    setValidated(false);
     setcustomValidated(false);
     setVarietyUnitvalidation("");
+    setvarietyValidated(false);
     setvariantarray({
       ...variantarray,
       [e.target.name]: e.target.value,
@@ -917,15 +888,8 @@ function Product() {
   };
 
   let discountt = (variantarray.mrp * variantarray.discount) / 100;
-  // console.log("Discounttt-----"+ JSON.stringify(discountt))
   let product_price = variantarray.mrp - discountt;
-  // console.log("Product prieccc-----"+ JSON.stringify(product_price))
   let saleprice;
-  //  console.log("tdaxxxxxxxx--"+ JSON.stringify(taxdata))
-  //  console.log("GST--"+ JSON.stringify(taxdata.gst))
-
-  // const  saleeprice=variantarray.sale_price
-
   if (taxdata) {
     saleprice =
       product_price +
@@ -935,7 +899,6 @@ function Product() {
         product_price * (taxdata.value_added_tax / 100) +
         product_price * (taxdata.manufacturers_sales_tax / 100));
   }
-  // console.log("saleeee-----"+ JSON.stringify(saleprice))
 
   useEffect(() => {
     setvariantarray({
@@ -961,8 +924,7 @@ function Product() {
     });
   };
 
-  console.log("new veriant array---" + JSON.stringify(variantarray));
-
+  // console.log("product--" + JSON.stringify(productdata));
   const onVariantaddclick = (e, id) => {
     setunitValidated(false);
     // id.preventDefault();
@@ -980,32 +942,38 @@ function Product() {
       } else if (variantarray.quantity == 0) {
         setVarietyUnitvalidation("QwanityValidation");
       } else if (
-        (variantarray.unit === "pcs" && variantarray.colors === "") ||
-        variantarray.size === null
+        vdata[0].product_type === "Cloths" &&
+        variantarray.unit === "pcs" &&
+        (variantarray.colors === "" ||
+          variantarray.size === null ||
+          variantarray.size === "")
       ) {
+        console.log("-----coth");
         setVarietyUnitvalidation("fillUnit&size&color");
       } else if (
-        (variantarray.unit === "gms" ||
-          variantarray.unit === "ml" ||
-          variantarray.unit === "piece") &&
-        variantarray.unit_quantity === null
-
-        // variantarray.unit !== "pcs" &&
-        // variantarray.unit_quantity === null
-        // &&
-        // variantarray.size === null
+        vdata[0].product_type !== "Cloths" &&
+        variantarray.unit === "pcs" &&
+        variantarray.colors === "" &&
+        (variantarray.size === null || variantarray.size === "")
       ) {
-        setunitValidated(true);
+        console.log("-----notlcoth");
+        setVarietyUnitvalidation("fillUnit&color");
+      } else if (
+        variantarray.unit !== "pcs" &&
+        variantarray.unit_quantity === ""
+      ) {
         setVarietyUnitvalidation("unitQwanity&size&color");
+      } else if (Number(variantarray.discount) > 100) {
+        setVarietyUnitvalidation("discountmore");
+      } else if (Number(variantarray.mrp) > 50000) {
+        setVarietyUnitvalidation("mrpmore");
       } else {
-        console.log("new veriant array---" + JSON.stringify(variantarray));
         axios
           .post(
             `${process.env.REACT_APP_BASEURL}/products_varient_add`,
             variantarray
           )
           .then((response) => {
-            console.log("respo----" + JSON.stringify(response));
             if ((response.affectedRows = "1")) {
               setProductAlert(true);
               setvariantarray({
@@ -1039,9 +1007,6 @@ function Product() {
           });
       }
     } else {
-      // console.log("variantarray.unit------------"+variantarray.unit)
-      // console.log("variantarray.colors-----------"+variantarray.colors)
-      // console.log("variantarray.size---------------"+variantarray.size)
       if (
         variantarray.unit == "" ||
         variantarray.product_price == "" ||
@@ -1052,18 +1017,32 @@ function Product() {
         variantarray.quantity == ""
       ) {
         setcustomValidated(true);
+      } else if (variantarray.quantity == 0) {
+        setVarietyUnitvalidation("QwanityValidation");
       } else if (
-        (variantarray.unit === "pcs" && variantarray.colors === "") ||
-        variantarray.size === null ||
-        variantarray.size === ""
+        vdata[0].product_type === "Cloths" &&
+        variantarray.unit === "pcs" &&
+        (variantarray.colors === "" ||
+          variantarray.size === null ||
+          variantarray.size === "")
       ) {
         setVarietyUnitvalidation("fillUnit&size&color");
       } else if (
+        vdata[0].product_type !== "Cloths" &&
+        variantarray.unit === "pcs" &&
+        variantarray.colors === "" &&
+        (variantarray.size === null || variantarray.size === "")
+      ) {
+        setVarietyUnitvalidation("fillUnit&color");
+      } else if (
         variantarray.unit !== "pcs" &&
-        variantarray.unit_quantity === "" &&
-        variantarray.size === ""
+        variantarray.unit_quantity === ""
       ) {
         setVarietyUnitvalidation("unitQwanity&size&color");
+      } else if (Number(variantarray.discount) > 100) {
+        setVarietyUnitvalidation("discountmore");
+      } else if (Number(variantarray.mrp) > 50000) {
+        setVarietyUnitvalidation("mrpmore");
       } else {
         console.log("update veriant array---" + JSON.stringify(variantarray));
         axios
@@ -1110,6 +1089,10 @@ function Product() {
   };
 
   const VariantAddProduct = (e) => {
+    setproductdata({
+      ...productdata,
+      variety: true,
+    });
     if (
       variantarray.unit == "" ||
       variantarray.product_price == "" ||
@@ -1123,24 +1106,38 @@ function Product() {
     } else if (variantarray.quantity == 0) {
       setVarietyUnitvalidation("QwanityValidation");
     } else if (
-      (variantarray.unit === "pcs" && variantarray.colors === "") ||
-      variantarray.size === null
-      //  ||  variantarray.size === ""
+      productdata.product_type === "Cloths" &&
+      variantarray.unit === "pcs" &&
+      (variantarray.colors === "" || variantarray.size === "")
     ) {
       setVarietyUnitvalidation("fillUnit&size&color");
     } else if (
+      productdata.product_type !== "Cloths" &&
+      variantarray.unit === "pcs" &&
+      variantarray.colors === "" &&
+      variantarray.size === ""
+    ) {
+      setVarietyUnitvalidation("fillUnit&color");
+    } else if (
       variantarray.unit !== "pcs" &&
       variantarray.unit_quantity === ""
-      // ||
-      //  variantarray.size === null ||  variantarray.size === ""
     ) {
       setunitValidated(true);
       setVarietyUnitvalidation("unitQwanity&size&color");
+    } else if (Number(variantarray.discount) > 100) {
+      setunitValidated(true);
+      setVarietyUnitvalidation("discountmore");
+    } else if (Number(variantarray.mrp) > 50000) {
+      setunitValidated(true);
+      setVarietyUnitvalidation("mrpmore");
     } else {
       setvariantmainarray((variantmainarray) => [
         ...variantmainarray,
         variantarray,
       ]);
+      setVarietyUnitvalidation("");
+      setvarietyValidated(false);
+      setcustomValidated(false);
 
       setvariantarray({
         product_status: "",
@@ -1176,6 +1173,12 @@ function Product() {
 
   const hideAlert = () => {
     // product delete
+    if (vdata.length === 1) {
+      setVerityAlert(false);
+      setRestoreAlert(false);
+      setvarietyShow(false);
+      setapicall(true);
+    }
     axios
       .put(`${process.env.REACT_APP_BASEURL}/products_delete_remove`, {
         varient_id: variantremove.id,
@@ -1184,7 +1187,6 @@ function Product() {
       })
       .then((response) => {
         getProductVariant(variantremove.productid);
-
       })
       .catch(function (error) {
         console.log(error);
@@ -1236,7 +1238,6 @@ function Product() {
       )
       .then((response) => {
         setvariantarray(response.data[0]);
-        console.log("setvariantarray after get data");
       })
       .catch(function (error) {
         console.log(error);
@@ -1246,6 +1247,7 @@ function Product() {
   useEffect(() => {
     setproductdata({
       ...productdata,
+      product_slug: productdata.product_title_name + "_123",
       price: variantmainarray,
     });
   }, [variantmainarray]);
@@ -1307,7 +1309,7 @@ function Product() {
 
   const handledescription = (event, editor) => {
     setdata1(editor.getData());
-    console.log({ event, editor, data1 });
+    // console.log({ event, editor, data1 });
 
     let productdesc;
     if (editor.getData() != undefined) {
@@ -1321,7 +1323,7 @@ function Product() {
 
   const OtherDescription = (event, editor) => {
     setotherintro(editor.getData());
-    console.log({ event, editor, otherintro });
+    // console.log({ event, editor, otherintro });
     let otherinstrction;
     if (editor.getData() != undefined) {
       otherinstrction = editor.getData().replaceAll(/"/g, "'");
@@ -1356,22 +1358,24 @@ function Product() {
   const handleAddProduct = (e) => {
     productdataa.push(productdata);
     const form = e.currentTarget;
-    if (form.checkValidity() === false) {
+    if (form.checkValidity() === false || productdata.variety === "") {
       e.stopPropagation();
       e.preventDefault();
+      setValidated(true);
+      setcustomValidated(false);
+      setvarietyValidated("varietyadd");
+    } else {
+      axios
+        .post(`${process.env.REACT_APP_BASEURL}/products`, productdataa)
+        .then((response) => {
+          setapicall(true);
+        });
+      e.preventDefault();
+      setValidated(false);
+      setcustomValidated(true);
+      setProductAlert(true);
+      handleClose();
     }
-    setValidated(true);
-    setcustomValidated(false);
-    axios
-      .post(`${process.env.REACT_APP_BASEURL}/products`, productdataa)
-      .then((response) => {
-        setapicall(true);
-      });
-    e.preventDefault();
-    setValidated(false);
-    setProductAlert(true);
-
-    handleClose();
   };
   const handleUpdateProduct = (e) => {
     e.preventDefault();
@@ -1463,9 +1467,7 @@ function Product() {
 
     axios
       .post(`${process.env.REACT_APP_BASEURL}/product_bulk_uploads`, formData)
-      .then((response) => {
-        console.log("response-------------" + response);
-      })
+      .then((response) => {})
       .catch(function (error) {
         console.log(error);
       });
@@ -1618,9 +1620,13 @@ function Product() {
                           <Form.Control
                             type="text"
                             placeholder="Product Slug"
-                            onChange={(e) => handleInputFieldChange(e)}
+                            // onChange={(e) => handleInputFieldChange(e)}
                             name={"product_slug"}
-                            value={productdata.product_slug}
+                            value={
+                              productdata.product_title_name
+                                ? productdata.product_title_name + "_123"
+                                : null
+                            }
                             required
                           />
                         </Col>
@@ -1774,7 +1780,7 @@ function Product() {
                         className="adminselectbox"
                         required
                       >
-                        <option value={""}>Select category Type</option>
+                        <option value={""}>Select Parent Category </option>
                         {category.map((cdata, i) => {
                           return (
                             <option
@@ -1814,6 +1820,7 @@ function Product() {
                           onChange={(e, id) => categoryFormChange(e, id)}
                           name={"sub_category"}
                         >
+                          <option value={""}>Select Category </option>
                           {subCategory.map((cdata, i) => {
                             return (
                               <option
@@ -1851,6 +1858,7 @@ function Product() {
                           onChange={(e, id) => categoryFormChange(e, id)}
                           name={"childcategory"}
                         >
+                          <option value={""}>Select Category </option>
                           {childCategory.map((cdata, i) => {
                             return (
                               <option
@@ -1888,6 +1896,7 @@ function Product() {
                           onChange={(e, id) => categoryFormChange(e, id)}
                           name={"gcategory"}
                         >
+                          <option value={""}>Select Category </option>
                           {grandcCategory.map((cdata, i) => {
                             return (
                               <option
@@ -2053,7 +2062,7 @@ function Product() {
                     </Form.Group>
                   </div>
                 </div>
-                {/*Date  */}
+                {/*single variety  */}
                 <Form
                   className="p-2 addproduct_form"
                   validated={validated}
@@ -2257,6 +2266,8 @@ function Product() {
                                                     : variantarray.unit ===
                                                       "piece"
                                                     ? variantarray.unit_quantity
+                                                    : variantarray.unit === ""
+                                                    ? ""
                                                     : null
                                                 }
                                                 type="number"
@@ -2281,6 +2292,8 @@ function Product() {
                                                 value={
                                                   variantarray.unit === "pcs"
                                                     ? variantarray.size
+                                                    : variantarray.unit === ""
+                                                    ? ""
                                                     : null
                                                 }
                                                 type="text"
@@ -2304,6 +2317,10 @@ function Product() {
                                               <Form.Control
                                                 type="number"
                                                 sm="9"
+                                                maxLength={"5"}
+                                                minLength={"1"}
+                                                min="1"
+                                                max="50000"
                                                 // className={
                                                 //   customvalidated === true
                                                 //     ? "border-danger"
@@ -2325,6 +2342,8 @@ function Product() {
                                               <Form.Control
                                                 type="number"
                                                 sm="9"
+                                                min={"1"}
+                                                max={"100"}
                                                 onChange={(e) =>
                                                   onVariantChange(e)
                                                 }
@@ -2461,7 +2480,7 @@ function Product() {
                                               <Form.Control
                                                 type="date"
                                                 sm="9"
-                                                requ
+                                                required
                                                 // className={
                                                 //   customvalidated === true
                                                 //     ? "border-danger"
@@ -2530,6 +2549,15 @@ function Product() {
                                           >
                                             Please fill Required fields
                                           </p>
+                                        ) : varietyValidation ===
+                                          "varietyadd" ? (
+                                          <p
+                                            className="mt-1 ms-2 text-danger"
+                                            type="invalid"
+                                          >
+                                            Please Click On Plus Button To Add
+                                            Variety
+                                          </p>
                                         ) : null}
 
                                         {varietyUnitvalidation ===
@@ -2538,13 +2566,18 @@ function Product() {
                                             className="mt-1 ms-2 text-danger"
                                             type="invalid"
                                           >
-                                            Please must be Fill size and colors
+                                            Please Fill size and colors
                                           </p>
                                         ) : varietyUnitvalidation ===
-                                          "" ? null : null}
-
-                                        {varietyUnitvalidation ===
-                                        "unitQwanity&size&color" ? (
+                                          "fillUnit&color" ? (
+                                          <p
+                                            className="mt-1 ms-2 text-danger my-3"
+                                            type="invalid"
+                                          >
+                                            Please fill color
+                                          </p>
+                                        ) : varietyUnitvalidation ===
+                                          "unitQwanity&size&color" ? (
                                           <p
                                             className="mt-1 ms-2 text-danger my-3"
                                             type="invalid"
@@ -2552,15 +2585,28 @@ function Product() {
                                             Please fill weight
                                           </p>
                                         ) : varietyUnitvalidation ===
-                                          "" ? null : null}
-
-                                        {varietyUnitvalidation ===
-                                        "QwanityValidation" ? (
+                                          "discountmore" ? (
+                                          <p
+                                            className="mt-1 ms-2 text-danger my-3"
+                                            type="invalid"
+                                          >
+                                            Discount should be less then 100
+                                          </p>
+                                        ) : varietyUnitvalidation ===
+                                          "QwanityValidation" ? (
                                           <p
                                             className="mt-1 ms-2 text-danger my-3"
                                             type="invalid"
                                           >
                                             Quantity must be greater than 0
+                                          </p>
+                                        ) : varietyUnitvalidation ===
+                                          "mrpmore" ? (
+                                          <p
+                                            className="mt-1 ms-2 text-danger my-3"
+                                            type="invalid"
+                                          >
+                                            Mrp must be lesser than 50000
                                           </p>
                                         ) : varietyUnitvalidation ===
                                           "" ? null : null}
@@ -2624,7 +2670,6 @@ function Product() {
                                               <td className="p-0 text-center">
                                                 {variantdata.quantity}
                                               </td>
-                                              <td className="p-0 text-center"></td>
                                               <td className="p-0 text-center">
                                                 <Button
                                                   variant="text-danger"
@@ -3034,11 +3079,11 @@ function Product() {
                                       }
                                       type="text"
                                       sm="9"
-                                      className={
-                                        unitValidated === true
-                                          ? "border-danger"
-                                          : null
-                                      }
+                                      // className={
+                                      //   unitValidated === true
+                                      //     ? "border-danger"
+                                      //     : null
+                                      // }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"unit_quantity"}
                                     />
@@ -3096,7 +3141,8 @@ function Product() {
                                     <Form.Control
                                       type="number"
                                       sm="9"
-                                      min={1}
+                                      min={"1"}
+                                      max={"100"}
                                       onChange={(e) => onVariantChange(e)}
                                       name={"discount"}
                                       value={variantarray.discount}
@@ -3276,18 +3322,65 @@ function Product() {
                                 </div>
                               </td>
                             </tr>
-                            {customvalidated === true ? (
-                              <tr>
+
+                            <tr>
+                              {customvalidated === true ? (
                                 <p
                                   className="mt-1 ms-2 text-danger"
                                   type="invalid"
                                 >
                                   Please fill Required fields
                                 </p>
-                              </tr>
-                            ) : null}
+                              ) : null}
 
-                            <tr>
+                              {varietyUnitvalidation ===
+                              "fillUnit&size&color" ? (
+                                <p
+                                  className="mt-1 ms-2 text-danger"
+                                  type="invalid"
+                                >
+                                  Please Fill size and colors
+                                </p>
+                              ) : varietyUnitvalidation === "fillUnit&color" ? (
+                                <p
+                                  className="mt-1 ms-2 text-danger my-3"
+                                  type="invalid"
+                                >
+                                  Please fill color
+                                </p>
+                              ) : varietyUnitvalidation ===
+                                "unitQwanity&size&color" ? (
+                                <p
+                                  className="mt-1 ms-2 text-danger my-3"
+                                  type="invalid"
+                                >
+                                  Please fill weight
+                                </p>
+                              ) : varietyUnitvalidation === "discountmore" ? (
+                                <p
+                                  className="mt-1 ms-2 text-danger my-3"
+                                  type="invalid"
+                                >
+                                  Discount should be less then 100
+                                </p>
+                              ) : varietyUnitvalidation ===
+                                "QwanityValidation" ? (
+                                <p
+                                  className="mt-1 ms-2 text-danger my-3"
+                                  type="invalid"
+                                >
+                                  Quantity must be greater than 0
+                                </p>
+                              ) : varietyUnitvalidation === "mrpmore" ? (
+                                <p
+                                  className="mt-1 ms-2 text-danger my-3"
+                                  type="invalid"
+                                >
+                                  Mrp must be lesser than 50000
+                                </p>
+                              ) : varietyUnitvalidation === "" ? null : null}
+                            </tr>
+                            {/* <tr>
                               {varietyUnitvalidation ===
                               "fillUnit&size&color" ? (
                                 <p
@@ -3315,7 +3408,7 @@ function Product() {
                                   Quantity must be greater than 0
                                 </p>
                               ) : varietyUnitvalidation === "" ? null : null}
-                            </tr>
+                            </tr> */}
 
                             {vdata === "" ||
                             vdata === null ||
@@ -3632,6 +3725,7 @@ function Product() {
           text=" Product Updated"
           onConfirm={closeProductAlert}
         />
+
         {/* feature product modal */}
 
         <Modal show={featureshow} onHide={featureModalClose}>
