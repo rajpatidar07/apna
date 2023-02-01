@@ -3130,7 +3130,7 @@ function Product() {
                                       // }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"mrp"}
-                                      value={Number(variantarray.mrp)}
+                                      value={variantarray.mrp}
                                     />
                                   </InputGroup>
                                 </div>
@@ -3189,7 +3189,7 @@ function Product() {
                                       // }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"sale_price"}
-                                      value={Number(variantarray.sale_price)}
+                                      value={Number(variantarray.sale_price).toFixed(2)}
                                     />
                                   </InputGroup>
                                 </div>
