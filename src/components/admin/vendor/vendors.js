@@ -99,9 +99,6 @@ const VendorsList = () => {
       });
   };
 
-<<<<<<< HEAD
-  console.log("&&&&&&&&&&&&&&&"+JSON.stringify(vendordata))
-=======
   //To reset the search feild blank :-
 
   const OnReset = () => {
@@ -109,7 +106,6 @@ const VendorsList = () => {
     setapicall(true);
   };
 
->>>>>>> de88f84acf0b946e9bbd38956f78aeb9dfefae73
   const columns = [
     {
       name: "ID",

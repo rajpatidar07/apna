@@ -234,89 +234,57 @@ function Orders() {
           </option>
           <option
             value="placed"
-<<<<<<< HEAD
-            selected={row.product_status === "placed" ? true : false}
-=======
             selected={row.status === "placed" ? true : false}
             disabled={condition ? `true` : false}
->>>>>>> de88f84acf0b946e9bbd38956f78aeb9dfefae73
           >
             Placed
           </option>
           <option
             value="pending"
-<<<<<<< HEAD
-            selected={row.product_status === "pending" ? true : false}
-=======
             selected={row.status === "pending" ? true : false}
             disabled={condition ? true : false}
->>>>>>> de88f84acf0b946e9bbd38956f78aeb9dfefae73
           >
             Pending
           </option>
           <option
             value="shipped"
-<<<<<<< HEAD
-            selected={row.product_status === "shipped" ? true : false}
-=======
             selected={row.status === "shipped" ? true : false}
             disabled={condition ? true : false}
->>>>>>> de88f84acf0b946e9bbd38956f78aeb9dfefae73
           >
             Shipped
           </option>
           <option
             value="delivered"
-<<<<<<< HEAD
-            selected={row.product_status === "delivered" ? true : false}
-=======
             selected={row.status === "delivered" ? true : false}
             disabled={condition ? true : false}
->>>>>>> de88f84acf0b946e9bbd38956f78aeb9dfefae73
           >
             Delivered
           </option>
           <option
             value="packed"
-<<<<<<< HEAD
-            selected={row.product_status === "packed" ? true : false}
-=======
             selected={row.status === "packed" ? true : false}
             disabled={condition ? true : false}
->>>>>>> de88f84acf0b946e9bbd38956f78aeb9dfefae73
           >
             Packed
           </option>
           <option
             value="cancel"
-<<<<<<< HEAD
-            selected={row.product_status === "cancel" ? true : false}
-=======
             selected={row.status === "cancel" ? true : false}
             disabled={condition ? true : false}
->>>>>>> de88f84acf0b946e9bbd38956f78aeb9dfefae73
           >
             Cancel
           </option>
           <option
             value="approved"
-<<<<<<< HEAD
-            selected={row.product_status === "approved" ? true : false}
-=======
             selected={row.status === "approved" ? true : false}
             disabled={condition ? true : false}
->>>>>>> de88f84acf0b946e9bbd38956f78aeb9dfefae73
           >
             Approved{" "}
           </option>
           <option
             value="return"
-<<<<<<< HEAD
-            selected={row.product_status === "return" ? true : false}
-=======
             selected={row.status === "return" ? true : false}
             disabled={condition ? true : false}
->>>>>>> de88f84acf0b946e9bbd38956f78aeb9dfefae73
           >
             Return{" "}
           </option>
