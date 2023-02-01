@@ -927,7 +927,12 @@ function Product() {
     });
   };
 
-  console.log("product--" + JSON.stringify(variantarray));
+  console.log(
+    "product--" +
+      JSON.stringify(variantarray) +
+      variantarray.length +
+      variantmainarray.length
+  );
   const onVariantaddclick = (e, id) => {
     setunitValidated(false);
     // id.preventDefault();
@@ -1372,7 +1377,7 @@ function Product() {
     if (
       form.checkValidity() === false ||
       productdata.variety === "" ||
-      variantmainarray === ""
+      variantmainarray.length === 0
     ) {
       e.stopPropagation();
       e.preventDefault();
@@ -1395,7 +1400,7 @@ function Product() {
     if (
       form.checkValidity() === false ||
       productdata.variety === "" ||
-      variantmainarray === ""
+      variantmainarray.length === 0
     ) {
       e.stopPropagation();
       e.preventDefault();
