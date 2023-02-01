@@ -155,7 +155,7 @@ quantity: "",
       ImgObj.push(imar);
     }
     // image
-    console.log("img information--"+ImgObj)
+
     axios
       .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
       .then((response) => {
