@@ -18,6 +18,7 @@ import "jspdf-autotable";
 import { downloadExcel } from "react-export-table-to-excel";
 
 const OrderReport = () => {
+  const token = localStorage.getItem("token");
   
   const [filterchange, setFilterchange] = useState("");
  
@@ -39,7 +40,6 @@ const OrderReport = () => {
   const [brand,setBrand]=useState([])
   const[brandName,setBrandName]=useState([])
   const[location,setLocation]=useState([])
-
    const fetchData=()=>{
     console.log( "from_date------------------------------------"+fromDate)
         console.log( "to_date---------------------------------------"+toDate)
@@ -89,7 +89,13 @@ const OrderReport = () => {
 
 
    const VenderData= async()=>{
-    let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
+    let result=  await axios.post(`${process.env.REACT_APP_BASEURL}/vendors`,{
+      vendor_id: "all",
+    },{
+      headers: {
+        admin_token: token,
+      },
+    })
     //  console.log("vendor----"+JSON.stringify(result.data))
     if(result.data){
       setVenderList(result.data)
@@ -247,7 +253,6 @@ fetchData()
     var AvarageOrderValue=ordersreport.avg_order_value
     var AvarageItemPerOrder=ordersreport.avg_item_per_order
     
-
 
 
    const options = {
@@ -414,7 +419,7 @@ function handleDownloadExcel() {
   ];
 
 
-console.log("dd"+orderTable)
+// console.log("dd"+orderTable)
 
 const options1 = [
   brand.map((item)=>(
@@ -538,6 +543,7 @@ var getPreviouNetSales=Number(Prevordersreport.prev_net_sales)
 var resultNetSales=(((getNetSales-getPreviouNetSales)/getPreviouNetSales)*100).toFixed(2)
 console.log("result Net sales------"+resultNetSales)
 resultNetSales!="Infinity"?console.log():resultNetSales=0
+console.log("oooooooo=-----------"+JSON.stringify(orderTable))
 
 
   return (

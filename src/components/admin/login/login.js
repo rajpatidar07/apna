@@ -9,7 +9,7 @@ import axios from "axios";
 const Login = () => {
   const navigate = useNavigate();
   const [admindata, setAdminData] = useState([]);
-  const [id, setId] = useState();
+  const [adminid, setadminId] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   // const [validated, setValidated] = useState(false);
@@ -47,7 +47,8 @@ const Login = () => {
           } else {
             localStorage.setItem("encryptloginid", email);
             localStorage.setItem("encryptpassword", password);
-            localStorage.setItem("encryptadminid", id);
+            localStorage.setItem("encryptadminid", adminid);
+            console.log("*++++++++============"+adminid)
             localStorage.setItem("token", response.data[1].token);
             navigate("/");
           }
@@ -60,11 +61,11 @@ const Login = () => {
       .get(`${process.env.REACT_APP_BASEURL}/admin?id=1`)
       .then((response) => {
         let data = response.data[0];
-        setId(data.id);
+        setadminId(data.id);
         setAdminData(data);
       });
   }, []);
-
+// console.log("ppppppppppp"+JSON.stringify(admindata))
   return (
     <Fragment>
       <div className="for_scrol">

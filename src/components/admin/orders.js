@@ -229,6 +229,9 @@ function Orders() {
           onChange={(e) => onStatusChange(e, row.order_id)}
           name="status"
         >
+            <option selected={row.product_status === "" ? true : false} value="">
+            Select
+          </option>
           <option
             value="placed"
             selected={row.status === "placed" ? true : false}
@@ -290,7 +293,7 @@ function Orders() {
       sortable: true,
     },
   ];
-
+console.log("--------==========="+JSON.stringify(orderdata))
   return (
     <div className="App">
       <h2>Orders</h2>

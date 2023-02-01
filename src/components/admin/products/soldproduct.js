@@ -27,7 +27,7 @@ const Soldproduct = () => {
     product_title_name: "",
     category: "",
   });
-
+console.log("*****************----------"+JSON.stringify(solddata))
   const closeUpdateAlert = () => {
     setUpdateAlert(false);
   };

@@ -81,7 +81,7 @@ const VendorsList = () => {
       setapicall(true);
     }
   };
-
+  
   const onSearchClick = () => {
     axios
       .post(`${process.env.REACT_APP_BASEURL}/vendor_list`, {

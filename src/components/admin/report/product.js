@@ -24,6 +24,7 @@ const ProductReport = () => {
   var NetSales=[];
   var Order=[];
 
+  const token = localStorage.getItem("token");
   
 
 
@@ -190,7 +191,13 @@ fetchData()
 
 
   const VenderData= async()=>{
-    let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
+    let result=  await axios.post(`${process.env.REACT_APP_BASEURL}/vendors`,{
+      vendor_id: "all",
+    },{
+      headers: {
+        admin_token: token,
+      },
+    })
     if(result.data){
       setVenderList(result.data)
     }
