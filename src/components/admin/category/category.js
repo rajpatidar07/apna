@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import DataTable from "react-data-table-component";
-import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import Iconbutton from "../common/iconbutton";
@@ -26,7 +25,6 @@ const CategoryList = () => {
   };
 
   const hideAlert = () => {
-    console.log("id", parentid, "level", level);
     axios.put(`${process.env.REACT_APP_BASEURL}/delete_category`, {
       id: parentid,
       is_active: 0,
@@ -96,7 +94,6 @@ const CategoryList = () => {
     category_type,
     category_name
   ) => {
-    // console.log("all parent id---------" + all_parent_id);
     if (e === "add") {
       setShow(e);
     }
@@ -171,27 +168,10 @@ const CategoryList = () => {
   };
 
   const categoryFormChange = (e, id) => {
-    // console.log("indVallllllll________"+e.target.value)
-    // console.log("grandcCategory.id________"+grandcCategory[0])
-
-    // if(indVal===grandcCategory){
-    //   alert("dont select Any more")
-    // }
-    // else{
-    // if(e.target.s_category.value !== ""){
-    //   alert("fdhfbjhbjkbh")
-    // }
-
     setIndVal(e.target.value);
     setScategory({ ...scategory, [e.target.name]: e.target.value });
-
-    // }
   };
 
-  // }
-
-  // console.log(" Indval---" + indVal);
-  // console.log(" Scategory---" + JSON.stringify(scategory));
   let parentidddata = [];
   parentidddata.push(scategory.category_name);
 
@@ -262,15 +242,7 @@ const CategoryList = () => {
   const columns = [
     {
       name: "ID",
-      selector: (row) => (
-        <p
-          onClick={() => {
-            navigate("/productdetail");
-          }}
-        >
-          {row.id}
-        </p>
-      ),
+      selector: (row) => row.id,
       sortable: true,
       width: "100px",
       center: true,
@@ -349,14 +321,14 @@ const CategoryList = () => {
       selector: (row) => (
         <span
           className={
-            row.is_active === "0"
+            row.is_active === "1"
               ? "badge bg-success"
-              : row.is_active === "1"
+              : row.is_active === "0"
               ? " badge bg-danger"
               : null
           }
         >
-          {row.is_active === "0" ? "active" : "inactive"}
+          {row.is_active === "1" ? "active" : "inactive"}
         </span>
       ),
       sortable: true,
@@ -395,44 +367,44 @@ const CategoryList = () => {
 
   const AddCategoryClick = (e, id) => {
     const form = e.currentTarget;
-    setValidated(true);
+    e.preventDefault();
 
-    if (form.checkValidity() === true) {
+    console.log("form.checkValidity() " + form.checkValidity() + newName);
+    if (form.checkValidity() === false && newName === "") {
       e.stopPropagation();
-      e.preventDefault();
+      setValidated(true);
+    } else {
+      const formData = new FormData();
+      formData.append("image", file);
+      formData.append("filename", fileName);
+      formData.append("parent_id", indVal);
+      formData.append("level", level);
+      formData.append("all_parent_id", parentidddata);
+      formData.append("new_category", newName);
+      formData.append("category_type", type);
+      axios
+        .post(`${process.env.REACT_APP_BASEURL}/add_category`, formData)
+        .then((response) => {
+          setnewName("");
+          setFileName("");
+          setType("");
+          setCategoryEditparent("");
+          setCategoryEditSubparent("");
+          setCategoryEditChildparent("");
+          setSubCategory([]);
+          setchildCategory([]);
+          setgrandcCategory([]);
+          setImagePath("");
+          newImg = "";
+          setFile();
+          setValidated(false);
+          setShow(false);
+          setapicall(true);
+          setAddAlert(true);
+          formRef.current.reset();
+          setValidated(false);
+        });
     }
-
-    const formData = new FormData();
-    formData.append("image", file);
-    formData.append("filename", fileName);
-    formData.append("parent_id", indVal);
-    formData.append("level", level);
-    formData.append("all_parent_id", parentidddata);
-    formData.append("new_category", newName);
-    formData.append("category_type", type);
-    axios
-      .post(`${process.env.REACT_APP_BASEURL}/add_category`, formData)
-      .then((response) => {
-        console.log("Add ", response);
-        setnewName("");
-        setFileName("");
-        setType("");
-        setCategoryEditparent("");
-        setCategoryEditSubparent("");
-        setCategoryEditChildparent("");
-        setSubCategory([]);
-        setchildCategory([]);
-        setgrandcCategory([]);
-        setImagePath("");
-        newImg = "";
-        setFile();
-        setValidated(false);
-        setShow(false);
-        setapicall(true);
-        setAddAlert(true);
-        formRef.current.reset();
-      });
-    setValidated(false);
   };
 
   const UpdateCategoryClick = (show) => {
@@ -484,11 +456,6 @@ const CategoryList = () => {
   // console.log("Search data------" + JSON.stringify(SearchCat));
 
   const SearchCategory = () => {
-    // console.log(
-    //   SearchCat.category_name,
-    //   SearchCat.category_type,
-    //   SearchCat.level
-    // );
     if (
       SearchCat.category_name === "" ||
       SearchCat.category_name === undefined
@@ -503,13 +470,13 @@ const CategoryList = () => {
         })
         .then((response) => {
           // console.log(response);
-          setData(response.data);
+          let data = response.data.filter((item) => item.is_active === "1");
+          setData(data);
           setsearchValidated(false);
           // setSearchCat("");
         });
     }
   };
-
   const OnReset = () => {
     setsearchValidated(false);
     setSearchCat({
@@ -546,7 +513,6 @@ const CategoryList = () => {
     setValidated(false);
     setShow(false);
   };
-
   return (
     <div className="App productlist_maindiv">
       <h2>Category</h2>
@@ -608,19 +574,22 @@ const CategoryList = () => {
             </Form.Select>
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
-            <MainButton
-              btntext={"Search"}
-              btnclass={"button main_button w-100"}
-              onClick={SearchCategory}
-            />
+            <button
+              className="button main_button w-100"
+              onClick={() => SearchCategory()}
+            >
+              Search
+            </button>
           </div>
 
-          <div className="col-md-3 col-sm-6 aos_input">
-            <MainButton
-              btntext={"Reset"}
-              btnclass={"button main_button "}
-              onClick={OnReset}
-            />
+          <div className="col-md-3 col-sm-6 aos_input mt-3">
+            {" "}
+            <button
+              className="button main_button w-100"
+              onClick={() => OnReset()}
+            >
+              Reset
+            </button>
           </div>
         </div>
 
@@ -642,6 +611,7 @@ const CategoryList = () => {
           dialogClassName="addproductmainmodal"
           aria-labelledby="example-custom-modal-styling-title"
           centered
+          backdrop={() => handleClose()}
         >
           <Form
             className=""
@@ -672,7 +642,7 @@ const CategoryList = () => {
                       required
                       onChange={(e) => handlChangeName(e)}
                       value={newName}
-                      name={"category_name"}
+                      name={"new_category"}
                     />
                     <Form.Control.Feedback type="invalid" className="h6">
                       Please fill name
@@ -686,7 +656,7 @@ const CategoryList = () => {
                   >
                     <Form.Label>Category Type</Form.Label>
                     <Form.Select
-                      aria-label="Search by category type"
+                      aria-label="Select by category type"
                       className="adminselectbox"
                       onChange={(e) => handlChangeType(e)}
                       value={type}
@@ -825,11 +795,11 @@ const CategoryList = () => {
                   >
                     <Form.Label>Parent Category</Form.Label>
                     <Form.Select
-                      aria-label="Search by status"
+                      aria-label="Select by status"
                       className="adminselectbox"
                       onChange={(e, id) => categoryFormChange(e, id)}
                       name={"category_name"}
-                      placeholder={"Search by category"}
+                      placeholder={"Select by category"}
                     >
                       <option value={""}>Select Parent Category</option>
                       {category.map((cdata, i) => {

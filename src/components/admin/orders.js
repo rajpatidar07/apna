@@ -11,27 +11,42 @@ import axios from "axios";
 import moment from "moment";
 import Status from "./json/Status";
 
-function Product() {
+function Orders() {
   let token = localStorage.getItem("token");
   const navigate = useNavigate();
   const [orderdata, setorderdata] = useState([]);
   const [changstatus, setchangstatus] = useState("");
   const [apicall, setapicall] = useState(false);
+  let [condition, setCondition] = useState(false);
   const [searchdata, setsearchData] = useState({
     status: "",
     created_on: "",
   });
 
+  // On selete the status or order limit to search :-
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
   };
+
+  //To search by status and order limit :-
+  const onSearchClick = () => {
+    setapicall(true);
+  };
+
+  //To reset the search feild blank :-
+  const OnReset = () => {
+    setsearchData({ status: "", created_on: "" });
+    setapicall(true);
+  };
+
+  //To get the order list :-
   useEffect(() => {
     axios
       .post(
         `${process.env.REACT_APP_BASEURL}/orders_list`,
         {
-          status: "",
-          created_on: "",
+          status: searchdata.status,
+          created_on: searchdata.created_on,
         },
         {
           headers: {
@@ -40,36 +55,53 @@ function Product() {
         }
       )
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         setorderdata(response.data);
         setapicall(false);
+        setCondition(false);
       })
       .catch(function (error) {
         console.log(error);
       });
-  }, [searchdata, apicall, changstatus]);
+  }, [apicall, changstatus]);
 
   const onStatusChange = (e, id) => {
     // e.prevantDefault();
     setchangstatus(e.target.value);
+    setCondition(true);
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/order_status_change`, {
-        status_change: e.target.value,
-        id: `${id}`,
-      })
+      .put(
+        `${process.env.REACT_APP_BASEURL}/order_status_change`,
+        {
+          status_change: e.target.value,
+          id: id,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
+        console.log(response.data);
         setapicall(true);
+        setCondition(false);
       })
       .catch(function (error) {
         console.log(error);
+        setCondition(false);
       });
   };
+
+  // To go on the order details page :-
   const onOrderClick = (id) => {
     localStorage.setItem("orderid", id[0]);
     localStorage.setItem("userid", id[1]);
 
     navigate("/order_detail");
   };
+
+  // Table data :-
   const columns = [
     {
       name: "Order Id",
@@ -202,49 +234,89 @@ function Product() {
           </option>
           <option
             value="placed"
+<<<<<<< HEAD
             selected={row.product_status === "placed" ? true : false}
+=======
+            selected={row.status === "placed" ? true : false}
+            disabled={condition ? `true` : false}
+>>>>>>> de88f84acf0b946e9bbd38956f78aeb9dfefae73
           >
             Placed
           </option>
           <option
             value="pending"
+<<<<<<< HEAD
             selected={row.product_status === "pending" ? true : false}
+=======
+            selected={row.status === "pending" ? true : false}
+            disabled={condition ? true : false}
+>>>>>>> de88f84acf0b946e9bbd38956f78aeb9dfefae73
           >
             Pending
           </option>
           <option
             value="shipped"
+<<<<<<< HEAD
             selected={row.product_status === "shipped" ? true : false}
+=======
+            selected={row.status === "shipped" ? true : false}
+            disabled={condition ? true : false}
+>>>>>>> de88f84acf0b946e9bbd38956f78aeb9dfefae73
           >
             Shipped
           </option>
           <option
             value="delivered"
+<<<<<<< HEAD
             selected={row.product_status === "delivered" ? true : false}
+=======
+            selected={row.status === "delivered" ? true : false}
+            disabled={condition ? true : false}
+>>>>>>> de88f84acf0b946e9bbd38956f78aeb9dfefae73
           >
             Delivered
           </option>
           <option
             value="packed"
+<<<<<<< HEAD
             selected={row.product_status === "packed" ? true : false}
+=======
+            selected={row.status === "packed" ? true : false}
+            disabled={condition ? true : false}
+>>>>>>> de88f84acf0b946e9bbd38956f78aeb9dfefae73
           >
             Packed
           </option>
           <option
             value="cancel"
+<<<<<<< HEAD
             selected={row.product_status === "cancel" ? true : false}
+=======
+            selected={row.status === "cancel" ? true : false}
+            disabled={condition ? true : false}
+>>>>>>> de88f84acf0b946e9bbd38956f78aeb9dfefae73
           >
             Cancel
           </option>
           <option
             value="approved"
+<<<<<<< HEAD
             selected={row.product_status === "approved" ? true : false}
+=======
+            selected={row.status === "approved" ? true : false}
+            disabled={condition ? true : false}
+>>>>>>> de88f84acf0b946e9bbd38956f78aeb9dfefae73
           >
             Approved{" "}
           </option>
           <option
             value="return"
+<<<<<<< HEAD
             selected={row.product_status === "return" ? true : false}
+=======
+            selected={row.status === "return" ? true : false}
+            disabled={condition ? true : false}
+>>>>>>> de88f84acf0b946e9bbd38956f78aeb9dfefae73
           >
             Return{" "}
           </option>
@@ -294,8 +366,11 @@ console.log("--------==========="+JSON.stringify(orderdata))
                 <option value="180">Last 6 month orders</option>
               </Form.Select>
             </div>
-            <div className="col-md-3 col-sm-6">
-              <MainButton btntext={"Search"} />
+            <div className="col-md-1 col-sm-6 mx-3  ">
+              <MainButton btntext={"Search"} onClick={onSearchClick} />
+            </div>
+            <div className="col-md-1 col-sm-6 mx-3  ">
+              <MainButton btntext={"Reset"} onClick={OnReset} />
             </div>
           </div>
         </div>
@@ -313,4 +388,4 @@ console.log("--------==========="+JSON.stringify(orderdata))
   );
 }
 
-export default Product;
+export default Orders;

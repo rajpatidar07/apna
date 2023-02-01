@@ -22,7 +22,7 @@ const Soldproduct = () => {
   const [solddata, setsolddata] = useState([]);
   const [apicall, setapicall] = useState([]);
   const [UpdateAlert, setUpdateAlert] = useState(false);
-
+  let [searcherror, setsearcherror] = useState(false);
   const [searchdata, setsearchData] = useState({
     product_title_name: "",
     category: "",
@@ -52,12 +52,18 @@ console.log("*****************----------"+JSON.stringify(solddata))
   };
 
   const onSearchClick = () => {
-    setapicall(true);
+    if (searchdata.product_title_name === "") {
+      setsearcherror(true);
+    } else {
+      setsearcherror(false);
+      setapicall(true);
+    }
   };
 
   const OnReset = () => {
     setsearchData({ product_title_name: "", manufacturing_date: "" });
     setapicall(true);
+    setsearcherror(false);
   };
 
   useEffect(() => {
@@ -80,6 +86,7 @@ console.log("*****************----------"+JSON.stringify(solddata))
         }
       )
       .then((response) => {
+        setsearcherror(false);
         let data = response.data;
         if ((data.length = 0)) {
           setsolddata([0]);
@@ -211,6 +218,9 @@ console.log("*****************----------"+JSON.stringify(solddata))
               value={searchdata.product_title_name}
               className={"adminsideinput"}
             />
+            {searcherror === true ? (
+              <small className="text-danger">please fill the feild</small>
+            ) : null}
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
             <MainButton

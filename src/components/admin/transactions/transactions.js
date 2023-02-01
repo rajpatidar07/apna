@@ -1,56 +1,71 @@
-import React  from "react";
+import React from "react";
 import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
 import { Link } from "react-router-dom";
-import { useState} from "react";
+import { useState } from "react";
 import { useEffect } from "react";
 import "../../../style/order.css";
 import axios from "axios";
 function Transactions() {
-  const [transectiondata,setTransectionData]=useState([]);
+  const [apicall, setapicall] = useState(false);
+  const [transectiondata, setTransectionData] = useState([]);
   const [SearchTransection, setSearchTransection] = useState({
-    "order_id":"",
-    "method":"",
-    "status":""
-});
+    order_id: "",
+    method: "",
+    status: "",
+  });
+
+  // To render the data of the transaction list :-
   useEffect(() => {
- 
-    function getTransactions() {
-      try {
-        axios.post(`${process.env.REACT_APP_BASEURL}/transaction_list`,{
-          "order_id":"",
-          "method":"",
-          "status":""
-  
-    })
-          .then((response) => {
-            let data = response.data;
-            setTransectionData(data);
-          });
-      } catch (err) {}
-    }
-    getTransactions();
-  }, []);
-  const TransectionSearch=()=>{
-    axios.post(`${process.env.REACT_APP_BASEURL}/transaction_list`,{
-        "order_id":`${SearchTransection.order_id}`,
-        "method":`${SearchTransection.method}`,
-        "status":`${SearchTransection.status}`
+    axios
+      .post(`${process.env.REACT_APP_BASEURL}/transaction_list`, {
+        order_id: SearchTransection.order_id,
+        method: SearchTransection.method,
+        status: SearchTransection.status,
+      })
+      .then((response) => {
+        let data = response.data;
+        setTransectionData(data);
+        setapicall(false);
+      })
+      .catch((err) => {});
+  }, [apicall]);
 
-  }).then ((response) => {
-    setTransectionData(response.data);
-    setSearchTransection('');
+  // const TransectionSearch = () => {
+  //   axios
+  //     .post(`${process.env.REACT_APP_BASEURL}/transaction_list`, {
+  //       order_id: `${SearchTransection.order_id}`,
+  //       method: `${SearchTransection.method}`,
+  //       status: `${SearchTransection.status}`,
+  //     })
+  //     .then((response) => {
+  //       setTransectionData(response.data);
+  //       setSearchTransection("");
+  //     });
+  // };
 
-    })
-  }
+  //Function to search the data on feild :-
   const TranSearch = (e) => {
-   
-    setSearchTransection({...SearchTransection, [e.target.name]: e.target.value });
+    setSearchTransection({
+      ...SearchTransection,
+      [e.target.name]: e.target.value,
+    });
   };
-  const columns = [
 
+  //Onclick search function:-
+  const onSearchClick = () => {
+    setapicall(true);
+  };
+
+  //To reset the search feild :-
+  const OnReset = () => {
+    setSearchTransection({ order_id: "", method: "", status: "" });
+    setapicall(true);
+  };
+  //To get the data in the table :-
+  const columns = [
     {
       name: "Id",
       selector: (row) => <Link to="/transactions_detail">{row.id}</Link>,
@@ -80,19 +95,18 @@ function Transactions() {
 
     {
       name: "Method",
-      selector: (row) => (
+      selector: (row) =>
         row.method === 1
           ? "UPI"
           : row.method === 2
-            ? "Card"
-            : row.method === 3
-              ? "COD"
-              : row.method === 4
-                ? "Netbanking"
-                : row.method === 5
-                  ? "Wallet"
-                  : "Other"
-      ),
+          ? "Card"
+          : row.method === 3
+          ? "COD"
+          : row.method === 4
+          ? "Netbanking"
+          : row.method === 5
+          ? "Wallet"
+          : "Other",
       sortable: true,
     },
     {
@@ -103,19 +117,19 @@ function Transactions() {
             row.status === 1
               ? "badge bg-primary"
               : row.status === 2
-                ? "badge bg-success"
-                : row.status === 3
-                  ? "badge bg-danger"
-                  : "badge bg-dark"
+              ? "badge bg-success"
+              : row.status === 3
+              ? "badge bg-danger"
+              : "badge bg-dark"
           }
         >
           {row.status === 1
-              ? "Processing"
-              : row.status === 2
-                ? "Success"
-                : row.status === 3
-                  ? "Failed"
-                  : "Refund"}
+            ? "Processing"
+            : row.status === 2
+            ? "Success"
+            : row.status === 3
+            ? "Failed"
+            : "Refund"}
         </span>
       ),
       sortable: true,
@@ -129,12 +143,22 @@ function Transactions() {
         <div className="product_page_searchbox bg-gray my-4">
           <div className="row">
             <div className="col-md-3 col-sm-6">
-              <input type={"text"}  className="adminsideinput" placeholder={"Search by order id"} onChange={(e) => TranSearch(e)} name={"order_id"} value={SearchTransection.order_id} />
+              <input
+                type={"text"}
+                className="adminsideinput"
+                placeholder={"Search by order id"}
+                onChange={(e) => TranSearch(e)}
+                name={"order_id"}
+                value={SearchTransection.order_id}
+              />
             </div>
             <div className="col-md-3 col-sm-6">
               <Form.Select
                 aria-label="Search by status"
-                className="adminselectbox" name={"status"} onChange={(e) =>  TranSearch(e)}  value={SearchTransection.status}
+                className="adminselectbox"
+                name={"status"}
+                onChange={(e) => TranSearch(e)}
+                value={SearchTransection.status}
               >
                 <option>Select Status</option>
                 <option value="0">Status</option>
@@ -147,7 +171,10 @@ function Transactions() {
             <div className="col-md-3 col-sm-6">
               <Form.Select
                 aria-label="Search by method"
-                className="adminselectbox" name={"method"} onChange={(e) =>  TranSearch(e)}  value={SearchTransection.method}
+                className="adminselectbox"
+                name={"method"}
+                onChange={(e) => TranSearch(e)}
+                value={SearchTransection.method}
               >
                 <option>Select Pyament Mode</option>
                 <option value="0">Pyament Method</option>
@@ -159,7 +186,10 @@ function Transactions() {
               </Form.Select>
             </div>
             <div className="col-md-3 col-sm-6">
-              <MainButton btntext={"Search"} onClick={TransectionSearch} />
+              <MainButton btntext={"Search"} onClick={onSearchClick} />
+            </div>
+            <div className="col-md-3 col-sm-6 mt-2">
+              <MainButton btntext={"Reset"} onClick={OnReset} />
             </div>
           </div>
         </div>

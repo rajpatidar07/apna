@@ -30,6 +30,7 @@ const VendorsList = () => {
   const [scall, setsCall] = useState(false);
   const [AddAlert, setAddAlert] = useState(false);
   const [UpdateAlert, setUpdateAlert] = useState(false);
+  let [condition, setCondition] = useState(false);
   const [fileName, setFileName] = useState("");
   const [addvendordata, setaddvendordata] = useState({
     owner_name: "",
@@ -90,6 +91,7 @@ const VendorsList = () => {
       })
       .then((response) => {
         setvendordata(response.data);
+        setCondition(false);
         setapicall(false);
       })
       .catch(function (error) {
@@ -97,7 +99,17 @@ const VendorsList = () => {
       });
   };
 
+<<<<<<< HEAD
   console.log("&&&&&&&&&&&&&&&"+JSON.stringify(vendordata))
+=======
+  //To reset the search feild blank :-
+
+  const OnReset = () => {
+    setsearchData({ owner_name: "", store_type: "", status: "" });
+    setapicall(true);
+  };
+
+>>>>>>> de88f84acf0b946e9bbd38956f78aeb9dfefae73
   const columns = [
     {
       name: "ID",
@@ -193,28 +205,32 @@ const VendorsList = () => {
             name="status"
           >
             <option value="" selected={row.status === "" ? true : false}>
-              Status
+              select
             </option>
             <option
               value="pending"
+              disabled={condition ? true : false}
               selected={row.status === "pending" ? true : false}
             >
               Pending
             </option>
             <option
               value="active"
+              disabled={condition ? true : false}
               selected={row.status === "active" ? true : false}
             >
               Active
             </option>
             <option
               value="blocked"
+              disabled={condition ? true : false}
               selected={row.status === "blocked" ? true : false}
             >
               Block
             </option>
             <option
               value="in progress"
+              disabled={condition ? true : false}
               selected={row.status === "in progress" ? true : false}
             >
               In Progress
@@ -266,6 +282,7 @@ const VendorsList = () => {
       )
       .then((response) => {
         setvendordata(response.data);
+        setCondition(false);
         setapicall(false);
       })
       .catch(function (error) {
@@ -354,16 +371,19 @@ const VendorsList = () => {
 
   const handleStatusChnage = (e, id) => {
     setchangstatus(e.target.value);
+    setCondition(true);
     axios
       .put(`${process.env.REACT_APP_BASEURL}/vendor_status_change`, {
         status_change: e.target.value,
         id: `${id}`,
       })
       .then((response) => {
+        setCondition(false);
         setapicall(true);
       })
       .catch(function (error) {
         console.log(error);
+        setCondition(false);
       });
   };
 
@@ -644,7 +664,7 @@ const VendorsList = () => {
           <div className="col-md-3 col-sm-6 aos_input">
             <input
               type={"text"}
-              plchldr={"Search by Owner Name"}
+              placeholder={"Search by Owner Name"}
               onChange={OnSearchChange}
               name="owner_name"
               value={searchdata.owner_name}
@@ -687,6 +707,14 @@ const VendorsList = () => {
               onClick={() => onSearchClick()}
             >
               Search
+            </button>
+          </div>
+          <div className="col-md-3 col-sm-6 aos_input mt-3">
+            <button
+              className="button main_button w-100"
+              onClick={() => OnReset()}
+            >
+              Reset
             </button>
           </div>
         </div>
@@ -740,7 +768,7 @@ const VendorsList = () => {
                   className="mb-3 aos_input"
                   controlId="validationCustom01"
                 >
-                  {console.log(addvendordata)}
+                  {/* {console.log(addvendordata)} */}
                   <Form.Label>Owner Name</Form.Label>
                   <Form.Control
                     onChange={(e) => handleFormChange(e)}
@@ -1051,7 +1079,7 @@ const VendorsList = () => {
                       +
                     </Button>
                   </InputGroup>
-                  {console.log("ddddd--" + Docnamearray)}
+                  {/* {console.log("ddddd--" + Docnamearray)} */}
 
                   {Docnamearray === undefined ||
                   Docnamearray === null ||
@@ -1223,7 +1251,7 @@ const VendorsList = () => {
                     placeholder="Shop_logo"
                     name={"shop_logo"}
                   />
-                  {console.log("img---" + addvendordata.shop_logo)}
+                  {/* {console.log("img---" + addvendordata.shop_logo)} */}
                   {addvendordata.shop_logo ? (
                     <img src={addvendordata.shop_logo} width={"50px"} />
                   ) : null}

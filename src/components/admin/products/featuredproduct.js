@@ -70,7 +70,7 @@ const Featuredproduct = () => {
           product_id: "",
           fetured_type: "featured_offer",
           start_date: "",
-          end_date:""
+          end_date: "",
         })
         .then((response) => {
           setFeatureProductData(response.data);
@@ -78,6 +78,7 @@ const Featuredproduct = () => {
         });
     } catch (err) {}
   }, [apicall]);
+
   const columns = [
     {
       name: "ID",

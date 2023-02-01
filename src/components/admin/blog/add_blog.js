@@ -29,6 +29,7 @@ const BlogList = () => {
   const [status, setStatus] = useState("");
   const [AddAlert, setAddAlert] = useState(false);
   const [UpdateAlert, setUpdateAlert] = useState(false);
+  let [condition, setCondition] = useState(false);
   const [blog, setBlog] = useState([]);
   const [addblog, setaddBlog] = useState({
     admin_id: "",
@@ -80,6 +81,7 @@ const BlogList = () => {
       .then((response) => {
         let data = response.data;
         setBlog(response.data);
+        setCondition(false);
         // setsearchBlog('')
         categoryArray = [];
         setapicall(false);
@@ -89,10 +91,9 @@ const BlogList = () => {
     setFile(e.target.files[0]);
     setFileName(e.target.files[0].name);
   };
- 
+
   const handleFormChange = (e) => {
     setaddBlog({ ...addblog, [e.target.name]: e.target.value });
-
   };
 
   const handleClose = () => {
@@ -102,7 +103,6 @@ const BlogList = () => {
   };
 
   const handleShow = (e, id) => {
-
     if (e === "add") {
       setShow(e);
     } else {
@@ -143,6 +143,7 @@ const BlogList = () => {
         setBlog(response.data);
         setaddBlog(response.data);
         setsearchData(data);
+        setCondition(false);
         setapicall(false);
       });
   }, [apicall]);
@@ -229,7 +230,7 @@ console.log("BLOGGGGGGGGGG----------"+JSON.stringify(addblog))
     setAlert(false);
   };
 
-  // to cancel in the delete alert :-
+  // To cancel in the delete alert :-
 
   const CancelAlert = () => {
     setAlert(false);
@@ -326,18 +327,21 @@ console.log("BLOGGGGGGGGGG----------"+JSON.stringify(addblog))
         >
           <option
             value="pending"
+            disabled={condition ? true : false}
             selected={row.status === "pending" ? true : false}
           >
             Pending
           </option>
           <option
             value="published"
+            disabled={condition ? true : false}
             selected={row.status === "published" ? true : false}
           >
             Published
           </option>
           <option
             value="approved"
+            disabled={condition ? true : false}
             selected={row.status === "approved" ? true : false}
           >
             Approved{" "}
@@ -383,6 +387,7 @@ console.log("BLOGGGGGGGGGG----------"+JSON.stringify(addblog))
   const handleClick = () => {};
   const onStatusChange = (e, id) => {
     setchangstatus(e.target.value);
+    setCondition(true);
     axios
       .put(`${process.env.REACT_APP_BASEURL}/update_blog_status`, {
         status: e.target.value,
@@ -392,10 +397,12 @@ console.log("BLOGGGGGGGGGG----------"+JSON.stringify(addblog))
       .then((response) => {
         let data = response.data;
         setStatus(data);
+        setCondition(false);
         setapicall(true);
       })
       .catch(function (error) {
         console.log(error);
+        setCondition(false);
       });
   };
 
@@ -460,7 +467,6 @@ console.log("BLOGGGGGGGGGG----------"+JSON.stringify(addblog))
               })}
             </Form.Select>
           </div>
-         
 
           <div className="col-md-3 col-sm-6 aos_input">
             <button
@@ -634,13 +640,11 @@ console.log("BLOGGGGGGGGGG----------"+JSON.stringify(addblog))
                     placeholder="Shop_logo"
                     name={"image"}
                   />
-                 <p className="mt-2 text-danger  fs-6" type="invalid">
-                            Select Image This (height-198px * width-198px)
-                            </p>
+                  <p className="mt-2 text-danger  fs-6" type="invalid">
+                    Select Image This (height-198px * width-198px)
+                  </p>
                 </Form.Group>
-              
               </div>
-             
             </div>
           </Modal.Body>
           <Modal.Footer>

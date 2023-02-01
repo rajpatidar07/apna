@@ -56,6 +56,7 @@ function Product() {
   const [productid, setproductid] = useState("");
   const [Alert, setAlert] = useState(false);
   const [VerityAlert, setVerityAlert] = useState(false);
+  const [varietyValidation, setvarietyValidated] = useState(false);
   const [ProductDraftAlert, setProductDraftAlert] = useState(false);
   const [UpdatetAlert, setUpdatetAlert] = useState(false);
   const [ProductAlert, setProductAlert] = useState(false);
@@ -68,7 +69,7 @@ function Product() {
   const [modalshow, setmodalshow] = useState(false);
   const [seoarray, setseoArray] = useState([]);
   const [unitValidated, setunitValidated] = useState(false);
-  const[varietyUnitvalidation,setVarietyUnitvalidation]=useState("")
+  const [varietyUnitvalidation, setVarietyUnitvalidation] = useState("");
   var veriantData = {
     product_status: "",
     product_id: "",
@@ -98,6 +99,7 @@ function Product() {
     description: [],
   });
   const [vdata, setvdata] = useState([]);
+  let [condition, setCondition] = useState(false);
 
   var data = {
     add_custom_input: [],
@@ -117,7 +119,7 @@ function Product() {
     manufacturing_date: "",
     expire_date: "",
     seo_tag: "",
-    variety: false,
+    variety: "",
     product_description: "",
     other_introduction: "",
     vendor_id: "",
@@ -171,6 +173,7 @@ function Product() {
       });
   };
   const onProductStatusChange = (e, id, productid) => {
+    setCondition(true);
     axios
       .put(`${process.env.REACT_APP_BASEURL}/product_status_update`, {
         id: `${id}`,
@@ -178,10 +181,12 @@ function Product() {
         product_status: e.target.value,
       })
       .then((response) => {
+        setCondition(false);
         setapicall(true);
       })
       .catch(function (error) {
         console.log(error);
+        setCondition(false);
       });
   };
 
@@ -210,7 +215,7 @@ function Product() {
       )
       .then((response) => {
         setpdata(response.data);
-
+        setCondition(false);
         setapicall(false);
       })
       .catch(function (error) {
@@ -320,6 +325,12 @@ function Product() {
       width: "90px",
     },
     {
+      name: "Product Type",
+      selector: (row) => row.product_type,
+      sortable: true,
+      width: "90px",
+    },
+    {
       name: "Mrp",
       selector: (row) => row.mrp.toFixed(2),
       sortable: true,
@@ -417,13 +428,13 @@ function Product() {
             ? "Pending"
             : row.product_status === "approved"
             ? "Approved"
-            : row.product_status === "special_offer"
-            ? "Special Offer"
+            : row.product_status === ""
+            ? "Select"
             : row.product_status === "featured_offer"
             ? "Featured Offer"
-            : row.product_status === "promotional"
-            ? "Promotional"
-            : "Draft"}
+            : row.product_status === "draft"
+            ? "Draft"
+            : "Select"}
         </span>
       ),
       sortable: true,
@@ -439,22 +450,29 @@ function Product() {
           className="w-100"
           onChange={(e) => onProductStatusChange(e, row.id, row.product_id)}
         >
-          <option selected={row.product_status === "" ? true : false} value="">
+          <option
+            disabled={true}
+            selected={row.product_status === "" ? true : false}
+            value=""
+          >
             Select
           </option>
           <option
+            disabled={condition ? true : false}
             selected={row.product_status === "pending" ? true : false}
             value="pending"
           >
             Pending
           </option>
           <option
+            disabled={condition ? true : false}
             selected={row.product_status === "draft" ? true : false}
             value="draft"
           >
             Draft
           </option>
           <option
+            disabled={condition ? true : false}
             selected={row.product_status === "approved" ? true : false}
             value="approved"
           >
@@ -570,23 +588,22 @@ function Product() {
   // modal
   const [editparentCategory, seteditparentCategory] = useState("");
 
-let token=localStorage.getItem("token");
+  let token = localStorage.getItem("token");
 
-console.log("token----"+token)
   const handleShow = (e) => {
     setproductdata(data);
     // vendor
     const getVendorData = () => {
       try {
         axios
-          .post(`${process.env.REACT_APP_BASEURL}/vendors`,
-          {"vendor_id":"all"},
-          {
-            headers: { admin_token:`${token}`} 
-              
-         })
+          .post(
+            `${process.env.REACT_APP_BASEURL}/vendors`,
+            { vendor_id: "all" },
+            {
+              headers: { admin_token: `${token}` },
+            }
+          )
           .then((response) => {
-            console.log("vendor data----"+ JSON.stringify (response.data))
             let cgory = response.data;
             const result = cgory.filter(
               (thing, index, self) =>
@@ -646,7 +663,6 @@ console.log("token----"+token)
                         setSubCategory(response.data);
                       });
                     seteditparentCategory(data.category_name);
-                    // console.log("---first"+data.category_name)
                   } else if (i === 1) {
                     axios
                       .get(
@@ -723,37 +739,29 @@ console.log("token----"+token)
     setproductID(id);
     setvarietyShow(true);
   };
-
+  const AddMoreVariety = (e) => {
+    handleAddProduct(e);
+    // handlevarietyShow(id, variantid);
+  };
   const handlevarietyClose = (e) => {
-    setvariantarray(veriantData)
-    setVarietyUnitvalidation("")
+    setvariantarray(veriantData);
+    setVarietyUnitvalidation("");
     setcustomValidated(false);
-    e.preventDefault();
+    // e.preventDefault();
     // setValidated(false);
     setvarietyShow(false);
   };
 
-
-
   const handleClose = () => {
-    // setproductdata({
-    //   ...productdata,
-    //   other_introduction:""
-    // })
-
     setproductdata(data);
-
-    // setproductdata({
-    //   ...productdata,
-    //   product_description:""
-    // })
-
     setcustomarray([]);
     setvariantarray(veriantData);
     setvariantmainarray([]);
     setcustomValidated(false);
     setValidated(false);
     setmodalshow(false);
+    setVarietyUnitvalidation("");
+    setvarietyValidated(false);
   };
 
   // seotag
@@ -793,52 +801,28 @@ console.log("token----"+token)
     onImgView(product_id, id);
     console.log("imge newImageUrlse" + newImageUrls.length);
     console.log("imge lenth--" + e.target.files.length);
-    // if (e.target.files.length <= 10) {
+    for (let i = 0; i < e.target.files.length; i++) {
+      let coverimg;
 
-      for (let i = 0; i < e.target.files.length; i++) {
-        let coverimg;
-
-        if (newImageUrls.length === 0 && i === 0) {
-          coverimg = "cover";
-        } else {
-          coverimg = `cover${i}`;
-        }
-        encoded = await convertToBase64(e.target.files[i]);
-        const [first, ...rest] = encoded.base64.split(",");
-        const productimg = rest.join("-");
-        let imar = {
-          product_id: `${product_id}`,
-          product_verient_id: `${id}`,
-          vendor_id: `${vendor_id}`,
-          product_image_name: `${encoded.name}${i}${id}`,
-          image_position: coverimg,
-          img_64: productimg,
-        };
-        ImgObj.push(imar);
+      if ((newImageUrls.length === 0 || newImageUrls.length === 1) && i === 0) {
+        coverimg = "cover";
+      } else {
+        coverimg = `cover${i}`;
       }
+      encoded = await convertToBase64(e.target.files[i]);
+      const [first, ...rest] = encoded.base64.split(",");
+      const productimg = rest.join("-");
+      let imar = {
+        product_id: `${product_id}`,
+        product_verient_id: `${id}`,
+        vendor_id: `${vendor_id}`,
+        product_image_name: `${encoded.name}${i}${id}`,
+        image_position: coverimg,
+        img_64: productimg,
+      };
+      ImgObj.push(imar);
+    }
 
-      // if (newImageUrls.length <= 9) {
-
-        axios
-          .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
-          .then((response) => {
-            ImgObj = [];
-            onImgView(id, product_id);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-
-      // } else {
-      //   alert("More than 10 Pics are allowedd");
-      // }
-      // image
-    // } 
-    // else {
-    //   alert("More than 10 Pics are allowed");
-    // }
-
-    // image
     axios
       .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
       .then((response) => {
@@ -899,8 +883,10 @@ console.log("token----"+token)
   };
 
   const onVariantChange = (e) => {
+    setValidated(false);
     setcustomValidated(false);
-    setVarietyUnitvalidation("")
+    setVarietyUnitvalidation("");
+    setvarietyValidated(false);
     setvariantarray({
       ...variantarray,
       [e.target.name]: e.target.value,
@@ -908,15 +894,8 @@ console.log("token----"+token)
   };
 
   let discountt = (variantarray.mrp * variantarray.discount) / 100;
-  // console.log("Discounttt-----"+ JSON.stringify(discountt))
   let product_price = variantarray.mrp - discountt;
-  // console.log("Product prieccc-----"+ JSON.stringify(product_price))
   let saleprice;
-  //  console.log("tdaxxxxxxxx--"+ JSON.stringify(taxdata))
-  //  console.log("GST--"+ JSON.stringify(taxdata.gst))
-
-  // const  saleeprice=variantarray.sale_price
-
   if (taxdata) {
     saleprice =
       product_price +
@@ -926,7 +905,6 @@ console.log("token----"+token)
         product_price * (taxdata.value_added_tax / 100) +
         product_price * (taxdata.manufacturers_sales_tax / 100));
   }
-  // console.log("saleeee-----"+ JSON.stringify(saleprice))
 
   useEffect(() => {
     setvariantarray({
@@ -952,66 +930,69 @@ console.log("token----"+token)
     });
   };
 
-
-  console.log("new veriant array---"+JSON.stringify(variantarray))
- 
+  console.log(
+    "product--" +
+      JSON.stringify(variantarray) +
+      variantarray.length +
+      variantmainarray.length
+  );
   const onVariantaddclick = (e, id) => {
-    setunitValidated(false)
+    setunitValidated(false);
     // id.preventDefault();
-    if (id == undefined || id == null || unitValidated== "false" ) {
+    if (id == undefined || id == null || unitValidated == "false") {
       if (
         variantarray.unit == "" ||
+        variantarray.unit == null ||
+        variantarray.unit == "Select" ||
         variantarray.product_price == "" ||
         variantarray.mrp == "" ||
         variantarray.sale_price == "" ||
         variantarray.manufacturing_date == "" ||
         variantarray.expire_date == "" ||
-        variantarray.quantity == "" 
-      ) 
-      {
+        variantarray.quantity == ""
+      ) {
         setcustomValidated(true);
-      } 
-     else if( variantarray.quantity==0){
+      } else if (variantarray.quantity === 0 || variantarray.quantity < 1) {
         setVarietyUnitvalidation("QwanityValidation");
-      }
-      else if (
+      } else if (
+        vdata[0].product_type === "Cloths" &&
         variantarray.unit === "pcs" &&
-        variantarray.colors === ""  || 
-        variantarray.size === null )
-       
-      {
-   
+        (variantarray.colors === "" ||
+          variantarray.size === null ||
+          variantarray.size === "")
+      ) {
+        console.log("-----coth");
         setVarietyUnitvalidation("fillUnit&size&color");
-      } 
-    
-      else if (
-        (variantarray.unit === "gms" ||  variantarray.unit === "ml"  ||  variantarray.unit === "piece")&&
-       ( variantarray.unit_quantity === null) 
-
-        // variantarray.unit !== "pcs" &&
-        // variantarray.unit_quantity === null
-        // &&
-        // variantarray.size === null
-        
-      ) 
-
-
-      {
-        setunitValidated(true);
+      } else if (
+        vdata[0].product_type !== "Cloths" &&
+        variantarray.unit === "pcs" &&
+        variantarray.colors === "" &&
+        (variantarray.size === null || variantarray.size === "")
+      ) {
+        console.log("-----notlcoth");
+        setVarietyUnitvalidation("fillUnit&color");
+      } else if (
+        variantarray.unit !== "pcs" &&
+        (variantarray.unit_quantity === "" ||
+          variantarray.unit_quantity === "null" ||
+          variantarray.unit_quantity === null)
+      ) {
         setVarietyUnitvalidation("unitQwanity&size&color");
-      } 
-    
-      else {
-        console.log("new veriant array---"+JSON.stringify(variantarray))
+      } else if (Number(variantarray.discount) > 100) {
+        setVarietyUnitvalidation("discountmore");
+      } else if (
+        Number(variantarray.mrp) > 50000 ||
+        Number(variantarray.mrp) <= 0
+      ) {
+        setVarietyUnitvalidation("mrpmore");
+      } else {
         axios
           .post(
             `${process.env.REACT_APP_BASEURL}/products_varient_add`,
             variantarray
           )
           .then((response) => {
-           
-            console.log("respo----" + JSON.stringify(response));
-            if(response.affectedRows="1"){
+            if ((response.affectedRows = "1")) {
               setProductAlert(true);
               setvariantarray({
                 product_status: "",
@@ -1030,13 +1011,12 @@ console.log("token----"+token)
                 quantity: "",
                 product_id: productID,
               });
+            } else if (response.errno == 1064) {
+              alert("Error in add product");
+              setProductAlert(false);
+            } else {
+              setProductAlert(false);
             }
-            else if(response.errno==1064){
-               alert("Error in add product")
-              setProductAlert(false)}
-
-            else{setProductAlert(false);}
-             
 
             // formRef.reset();
           })
@@ -1044,145 +1024,155 @@ console.log("token----"+token)
             console.log(error);
           });
       }
-    }
-     else {
-      // console.log("variantarray.unit------------"+variantarray.unit)
-      // console.log("variantarray.colors-----------"+variantarray.colors)
-      // console.log("variantarray.size---------------"+variantarray.size)
+    } else {
       if (
         variantarray.unit == "" ||
+        variantarray.unit == null ||
+        variantarray.unit == "Select" ||
         variantarray.product_price == "" ||
         variantarray.mrp == "" ||
         variantarray.sale_price == "" ||
         variantarray.manufacturing_date == "" ||
         variantarray.expire_date == "" ||
-        variantarray.quantity == "" 
-      ) 
-      {
+        variantarray.quantity == ""
+      ) {
         setcustomValidated(true);
-      } 
-      
-      else if
-       (
-        
+      } else if (variantarray.quantity === 0 || variantarray.quantity < 1) {
+        setVarietyUnitvalidation("QwanityValidation");
+      } else if (
+        vdata[0].product_type === "Cloths" &&
         variantarray.unit === "pcs" &&
-        variantarray.colors === ""  ||
-       variantarray.size === null ||  variantarray.size === ""
-      )
-       {
-              
-
+        (variantarray.colors === "" ||
+          variantarray.size === null ||
+          variantarray.size === "")
+      ) {
         setVarietyUnitvalidation("fillUnit&size&color");
-      } 
-      else if (
+      } else if (
+        vdata[0].product_type !== "Cloths" &&
+        variantarray.unit === "pcs" &&
+        variantarray.colors === "" &&
+        (variantarray.size === null || variantarray.size === "")
+      ) {
+        setVarietyUnitvalidation("fillUnit&color");
+      } else if (
         variantarray.unit !== "pcs" &&
-        variantarray.unit_quantity === ""
-        &&
-        variantarray.size === ""
-   
-      )
-       {
-
+        (variantarray.unit_quantity === "" ||
+          variantarray.unit_quantity === "null" ||
+          variantarray.unit_quantity === null)
+      ) {
         setVarietyUnitvalidation("unitQwanity&size&color");
-      }
-      else{
-    
-        console.log("update veriant array---"+JSON.stringify(variantarray))
+      } else if (
+        Number(variantarray.discount) > 100 ||
+        Number(variantarray.discount) < 0
+      ) {
+        setVarietyUnitvalidation("discountmore");
+      } else if (
+        Number(variantarray.mrp) > 50000 ||
+        Number(variantarray.mrp) <= 0
+      ) {
+        setVarietyUnitvalidation("mrpmore");
+      } else {
+        console.log("update veriant array---" + JSON.stringify(variantarray));
         axios
-        .put(
-          `${process.env.REACT_APP_BASEURL}/products_varient_update`,
-          variantarray
-        )
-        .then((response) => {
+          .put(
+            `${process.env.REACT_APP_BASEURL}/products_varient_update`,
+            variantarray
+          )
+          .then((response) => {
+            setvariantarray({
+              product_status: "",
+              unit: "",
+              colors: "",
+              unit_quantity: "",
+              size: "",
+              product_price: "",
+              mrp: "",
+              sale_price: "",
+              discount: "0",
+              special_offer: false,
+              featured_product: false,
+              manufacturing_date: "",
+              expire_date: "",
+              quantity: "",
+              product_id: productID,
+            });
 
-          setvariantarray({
-            product_status: "",
-            unit: "",
-            colors: "",
-            unit_quantity: "",
-            size: "",
-            product_price: "",
-            mrp: "",
-            sale_price: "",
-            discount: "0",
-            special_offer: false,
-            featured_product: false,
-            manufacturing_date: "",
-            expire_date: "",
-            quantity: "",
-            product_id: productID,
+            if ((response.affectedRows = "1")) {
+              setUpdatetAlert(true);
+            } else if (response.error) {
+              alert("Error in add product");
+              setUpdatetAlert(false);
+            } else {
+              setUpdatetAlert(false);
+            }
+
+            getProductVariant(productID);
+          })
+          .catch(function (error) {
+            console.log(error);
           });
-
-
-          if(response.affectedRows="1"){
-            setUpdatetAlert(true);
-           
-          }else if(response.error){
-             alert("Error in add product")
-             setUpdatetAlert(false)}
-
-          else{setUpdatetAlert(false);}
-
-           
-          getProductVariant(productID);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
       }
     }
-      // e.preventDefault()
-    
-    
+    // e.preventDefault()
   };
 
-
   const VariantAddProduct = (e) => {
+    setproductdata({
+      ...productdata,
+      variety: true,
+    });
     if (
       variantarray.unit == "" ||
+      variantarray.unit == null ||
+      variantarray.unit == "Select" ||
       variantarray.product_price == "" ||
       variantarray.mrp == "" ||
       variantarray.sale_price == "" ||
       variantarray.manufacturing_date == "" ||
       variantarray.expire_date == "" ||
-      variantarray.quantity == "" 
-    ) 
-    {
+      variantarray.quantity == ""
+    ) {
       setcustomValidated(true);
-    } 
-    else if(variantarray.quantity ==0 ){
-      setVarietyUnitvalidation("QwanityValidation")
-    }
-    else if (
+    } else if (variantarray.quantity === 0 || variantarray.quantity < 1) {
+      setVarietyUnitvalidation("QwanityValidation");
+    } else if (
+      productdata.product_type === "Cloths" &&
       variantarray.unit === "pcs" &&
-      variantarray.colors === ""  ||
-     variantarray.size === null 
-    //  ||  variantarray.size === ""
-    ) 
-    {
- 
+      (variantarray.colors === "" || variantarray.size === "")
+    ) {
       setVarietyUnitvalidation("fillUnit&size&color");
-    } 
-    else if (
+    } else if (
+      productdata.product_type !== "Cloths" &&
+      variantarray.unit === "pcs" &&
+      variantarray.colors === "" &&
+      variantarray.size === ""
+    ) {
+      setVarietyUnitvalidation("fillUnit&color");
+    } else if (
       variantarray.unit !== "pcs" &&
-      variantarray.unit_quantity === ""  
-      // ||
-    //  variantarray.size === null ||  variantarray.size === ""
-       
-    ) 
-    {
+      (variantarray.unit_quantity === "" ||
+        variantarray.unit_quantity === "null" ||
+        variantarray.unit_quantity === null)
+    ) {
       setunitValidated(true);
       setVarietyUnitvalidation("unitQwanity&size&color");
-    }
-    
-   
-    else {
+    } else if (Number(variantarray.discount) > 100) {
+      setunitValidated(true);
+      setVarietyUnitvalidation("discountmore");
+    } else if (
+      Number(variantarray.mrp) > 50000 ||
+      Number(variantarray.mrp) <= 0
+    ) {
+      setunitValidated(true);
+      setVarietyUnitvalidation("mrpmore");
+    } else {
       setvariantmainarray((variantmainarray) => [
         ...variantmainarray,
         variantarray,
       ]);
-
-
+      setVarietyUnitvalidation("");
+      setvarietyValidated(false);
+      setcustomValidated(false);
 
       setvariantarray({
         product_status: "",
@@ -1203,7 +1193,6 @@ console.log("token----"+token)
       });
       // setcustomValidated(false);
     }
-
   };
 
   const VariantRemoveClick = (id, productid) => {
@@ -1219,6 +1208,12 @@ console.log("token----"+token)
 
   const hideAlert = () => {
     // product delete
+    if (vdata.length === 1) {
+      setVerityAlert(false);
+      setRestoreAlert(false);
+      setvarietyShow(false);
+      setapicall(true);
+    }
     axios
       .put(`${process.env.REACT_APP_BASEURL}/products_delete_remove`, {
         varient_id: variantremove.id,
@@ -1271,15 +1266,13 @@ console.log("token----"+token)
   };
 
   const VariantEditClick = (id, productid) => {
-    setVarietyUnitvalidation("")
+    setVarietyUnitvalidation("");
     axios
       .get(
         `${process.env.REACT_APP_BASEURL}/products_pricing?id=${id}&product_id=${productid}`
       )
       .then((response) => {
         setvariantarray(response.data[0]);
-        console.log("setvariantarray after get data")
-    
       })
       .catch(function (error) {
         console.log(error);
@@ -1289,6 +1282,7 @@ console.log("token----"+token)
   useEffect(() => {
     setproductdata({
       ...productdata,
+      product_slug: productdata.product_title_name + "_123",
       price: variantmainarray,
     });
   }, [variantmainarray]);
@@ -1350,7 +1344,7 @@ console.log("token----"+token)
 
   const handledescription = (event, editor) => {
     setdata1(editor.getData());
-    console.log({ event, editor, data1 });
+    // console.log({ event, editor, data1 });
 
     let productdesc;
     if (editor.getData() != undefined) {
@@ -1364,7 +1358,7 @@ console.log("token----"+token)
 
   const OtherDescription = (event, editor) => {
     setotherintro(editor.getData());
-    console.log({ event, editor, otherintro });
+    // console.log({ event, editor, otherintro });
     let otherinstrction;
     if (editor.getData() != undefined) {
       otherinstrction = editor.getData().replaceAll(/"/g, "'");
@@ -1383,9 +1377,16 @@ console.log("token----"+token)
     });
     productdataa.push(productdata);
     const form = e.currentTarget;
-    if (form.checkValidity() === false) {
-      setValidated(false);
+    if (
+      form.checkValidity() === false ||
+      productdata.variety === "" ||
+      variantmainarray.length === 0
+    ) {
+      e.stopPropagation();
       e.preventDefault();
+      setValidated(true);
+      setcustomValidated(false);
+      setvarietyValidated("varietyadd");
     } else {
       axios
         .post(`${process.env.REACT_APP_BASEURL}/products`, productdataa)
@@ -1399,22 +1400,28 @@ console.log("token----"+token)
   const handleAddProduct = (e) => {
     productdataa.push(productdata);
     const form = e.currentTarget;
-    if (form.checkValidity() === false) {
+    if (
+      form.checkValidity() === false ||
+      productdata.variety === "" ||
+      variantmainarray.length === 0
+    ) {
       e.stopPropagation();
       e.preventDefault();
+      setValidated(true);
+      setcustomValidated(false);
+      setvarietyValidated("varietyadd");
+    } else {
+      axios
+        .post(`${process.env.REACT_APP_BASEURL}/products`, productdataa)
+        .then((response) => {
+          setapicall(true);
+        });
+      e.preventDefault();
+      setValidated(false);
+      setcustomValidated(true);
+      setProductAlert(true);
+      handleClose();
     }
-    setValidated(true);
-    setcustomValidated(false);
-    axios
-      .post(`${process.env.REACT_APP_BASEURL}/products`, productdataa)
-      .then((response) => {
-        setapicall(true);
-      });
-    e.preventDefault();
-    setValidated(false);
-    setProductAlert(true);
-
-    handleClose();
   };
   const handleUpdateProduct = (e) => {
     e.preventDefault();
@@ -1506,9 +1513,7 @@ console.log("token----"+token)
 
     axios
       .post(`${process.env.REACT_APP_BASEURL}/product_bulk_uploads`, formData)
-      .then((response) => {
-        console.log("response-------------" + response);
-      })
+      .then((response) => {})
       .catch(function (error) {
         console.log(error);
       });
@@ -1661,9 +1666,15 @@ console.log("token----"+token)
                           <Form.Control
                             type="text"
                             placeholder="Product Slug"
-                            onChange={(e) => handleInputFieldChange(e)}
+                            // onChange={(e) => handleInputFieldChange(e)}
                             name={"product_slug"}
-                            value={productdata.product_slug}
+                            value={
+                              productdata.product_title_name === "" ||
+                              productdata.product_title_name === "null" ||
+                              productdata.product_title_name === null
+                                ? null
+                                : productdata.product_title_name + "_123"
+                            }
                             required
                           />
                         </Col>
@@ -1817,7 +1828,7 @@ console.log("token----"+token)
                         className="adminselectbox"
                         required
                       >
-                        <option value={""}>Select category Type</option>
+                        <option value={""}>Select Parent Category </option>
                         {category.map((cdata, i) => {
                           return (
                             <option
@@ -1847,7 +1858,9 @@ console.log("token----"+token)
                         className=" aos_input"
                         controlId="formBasicParentCategory"
                       >
-                        <Form.Label>Sub Category <span className="text-danger">* </span></Form.Label>
+                        <Form.Label>
+                          Sub Category <span className="text-danger">* </span>
+                        </Form.Label>
                         <Form.Select
                           aria-label="Search by status"
                           className="adminselectbox"
@@ -1855,6 +1868,7 @@ console.log("token----"+token)
                           onChange={(e, id) => categoryFormChange(e, id)}
                           name={"sub_category"}
                         >
+                          <option value={""}>Select Category </option>
                           {subCategory.map((cdata, i) => {
                             return (
                               <option
@@ -1892,6 +1906,7 @@ console.log("token----"+token)
                           onChange={(e, id) => categoryFormChange(e, id)}
                           name={"childcategory"}
                         >
+                          <option value={""}>Select Category </option>
                           {childCategory.map((cdata, i) => {
                             return (
                               <option
@@ -1929,6 +1944,7 @@ console.log("token----"+token)
                           onChange={(e, id) => categoryFormChange(e, id)}
                           name={"gcategory"}
                         >
+                          <option value={""}>Select Category </option>
                           {grandcCategory.map((cdata, i) => {
                             return (
                               <option
@@ -2094,7 +2110,7 @@ console.log("token----"+token)
                     </Form.Group>
                   </div>
                 </div>
-                {/*Date  */}
+                {/*single variety  */}
                 <Form
                   className="p-2 addproduct_form"
                   validated={validated}
@@ -2193,22 +2209,19 @@ console.log("token----"+token)
                                         </th>
                                         <th>Discount</th>
                                         <th>Price</th>
-                                        <th>Sale Price <span className="text-danger">
-                                            *
-                                          </span></th>
+                                        <th>
+                                          Sale Price{" "}
+                                          <span className="text-danger">*</span>
+                                        </th>
                                         <th>Special Offer</th>
                                         <th>Featured Product</th>
                                         <th className="manufacture_date">
                                           Mdate
-                                          <span className="text-danger">
-                                            *
-                                          </span>
+                                          <span className="text-danger">*</span>
                                         </th>
                                         <th className="manufacture_date">
                                           Edate{" "}
-                                          <span className="text-danger">
-                                            *
-                                          </span>
+                                          <span className="text-danger">*</span>
                                         </th>
                                         <th className="">
                                           Qty{" "}
@@ -2301,6 +2314,8 @@ console.log("token----"+token)
                                                     : variantarray.unit ===
                                                       "piece"
                                                     ? variantarray.unit_quantity
+                                                    : variantarray.unit === ""
+                                                    ? ""
                                                     : null
                                                 }
                                                 type="number"
@@ -2325,6 +2340,8 @@ console.log("token----"+token)
                                                 value={
                                                   variantarray.unit === "pcs"
                                                     ? variantarray.size
+                                                    : variantarray.unit === ""
+                                                    ? ""
                                                     : null
                                                 }
                                                 type="text"
@@ -2347,8 +2364,11 @@ console.log("token----"+token)
                                             <InputGroup className="" size="sm">
                                               <Form.Control
                                                 type="number"
-                                            
                                                 sm="9"
+                                                maxLength={"5"}
+                                                minLength={"1"}
+                                                min="1"
+                                                max="50000"
                                                 // className={
                                                 //   customvalidated === true
                                                 //     ? "border-danger"
@@ -2370,7 +2390,8 @@ console.log("token----"+token)
                                               <Form.Control
                                                 type="number"
                                                 sm="9"
-                                               
+                                                min={"1"}
+                                                max={"100"}
                                                 onChange={(e) =>
                                                   onVariantChange(e)
                                                 }
@@ -2384,7 +2405,6 @@ console.log("token----"+token)
                                           <div className=" d-flex align-items-center">
                                             <InputGroup className="" size="sm">
                                               <Form.Control
-                                                
                                                 step={"any"}
                                                 type="number"
                                                 sm="9"
@@ -2393,9 +2413,9 @@ console.log("token----"+token)
                                                 //     ? "border-danger"
                                                 //     : null
                                                 // }
-                                                onChange={(e) =>
-                                                  onVariantChange(e)
-                                                }
+                                                // onChange={(e) =>
+                                                //   onVariantChange(e)
+                                                // }
                                                 name={"product_price"}
                                                 value={product_price}
                                                 required
@@ -2411,15 +2431,14 @@ console.log("token----"+token)
                                                 type="number"
                                                 step={"any"}
                                                 sm="9"
-                                              
                                                 // className={
                                                 //   customvalidated === true
                                                 //     ? "border-danger"
                                                 //     : null
                                                 // }
-                                                onChange={(e) =>
-                                                  onVariantChange(e)
-                                                }
+                                                // onChange={(e) =>
+                                                //   onVariantChange(e)
+                                                // }
                                                 name={"sale_price"}
                                                 value={(
                                                   product_price +
@@ -2487,6 +2506,9 @@ console.log("token----"+token)
                                                 type="date"
                                                 sm="9"
                                                 required
+                                                min={moment().format(
+                                                  "YYYY-MM-DD"
+                                                )}
                                                 // className={
                                                 //   customvalidated === true
                                                 //     ? "border-danger"
@@ -2509,13 +2531,17 @@ console.log("token----"+token)
                                               <Form.Control
                                                 type="date"
                                                 sm="9"
-                                                requ
+                                                required
                                                 // className={
                                                 //   customvalidated === true
                                                 //     ? "border-danger"
                                                 //     : null
                                                 // }
-                                                min={moment(variantarray.manufacturing_date).format("YYYY-MM-DD")}
+                                                min={moment(
+                                                  variantarray.manufacturing_date
+                                                )
+                                                  .add(1, "day")
+                                                  .format("YYYY-MM-DD")}
                                                 onChange={(e) =>
                                                   onVariantChange(e)
                                                 }
@@ -2568,50 +2594,77 @@ console.log("token----"+token)
                                         </td>
                                       </tr>
 
-                              <tr>
-                              {customvalidated === true ? (
-                                <p
-                                  className="mt-1 ms-2 text-danger"
-                                  type="invalid"
-                                >
-                                  Please fill Required fields
-                                </p>
-                                    ) : null}
+                                      <tr>
+                                        {customvalidated === true ? (
+                                          <p
+                                            className="mt-1 ms-2 text-danger"
+                                            type="invalid"
+                                          >
+                                            Please fill Required fields
+                                          </p>
+                                        ) : varietyValidation ===
+                                          "varietyadd" ? (
+                                          <p
+                                            className="mt-1 ms-2 text-danger"
+                                            type="invalid"
+                                          >
+                                            Please Click On Plus Button To Add
+                                            Variety
+                                          </p>
+                                        ) : null}
 
-
-                             {varietyUnitvalidation==="fillUnit&size&color"?
-                                <p
-                                  className="mt-1 ms-2 text-danger"
-                                  type="invalid"
-                                >
-                                  Please must be Fill size and colors
-                                </p>
-                                    :varietyUnitvalidation==="" ?null:null }
-
-
-                       {varietyUnitvalidation==="unitQwanity&size&color"?
-
-                          <p
-                            className="mt-1 ms-2 text-danger my-3"
-                            type="invalid"
-                             >
-                         Please fill weight
-                            </p>
-
-                             : varietyUnitvalidation==="" ?null:null}
-
-                            {varietyUnitvalidation==="QwanityValidation"?(
-                            
-                            <p
-                              className="mt-1 ms-2 text-danger my-3"
-                              type="invalid"
-                            >
-                              Quantity must be greater than 0
-                            </p>
-                        
-                             ) :varietyUnitvalidation==="" ?null: null }
-
-                               </tr>
+                                        {varietyUnitvalidation ===
+                                        "fillUnit&size&color" ? (
+                                          <p
+                                            className="mt-1 ms-2 text-danger"
+                                            type="invalid"
+                                          >
+                                            Please Fill size and colors
+                                          </p>
+                                        ) : varietyUnitvalidation ===
+                                          "fillUnit&color" ? (
+                                          <p
+                                            className="mt-1 ms-2 text-danger my-3"
+                                            type="invalid"
+                                          >
+                                            Please fill color
+                                          </p>
+                                        ) : varietyUnitvalidation ===
+                                          "unitQwanity&size&color" ? (
+                                          <p
+                                            className="mt-1 ms-2 text-danger my-3"
+                                            type="invalid"
+                                          >
+                                            Please fill weight
+                                          </p>
+                                        ) : varietyUnitvalidation ===
+                                          "discountmore" ? (
+                                          <p
+                                            className="mt-1 ms-2 text-danger my-3"
+                                            type="invalid"
+                                          >
+                                            Discount should be less then 100
+                                          </p>
+                                        ) : varietyUnitvalidation ===
+                                          "QwanityValidation" ? (
+                                          <p
+                                            className="mt-1 ms-2 text-danger my-3"
+                                            type="invalid"
+                                          >
+                                            Quantity must be greater than 0
+                                          </p>
+                                        ) : varietyUnitvalidation ===
+                                          "mrpmore" ? (
+                                          <p
+                                            className="mt-1 ms-2 text-danger my-3"
+                                            type="invalid"
+                                          >
+                                            Mrp must be lesser than 50000 and
+                                            greater than 0
+                                          </p>
+                                        ) : varietyUnitvalidation ===
+                                          "" ? null : null}
+                                      </tr>
 
                                       {(variantmainarray || []).map(
                                         (variantdata, i) => {
@@ -2671,7 +2724,6 @@ console.log("token----"+token)
                                               <td className="p-0 text-center">
                                                 {variantdata.quantity}
                                               </td>
-                                              <td className="p-0 text-center"></td>
                                               <td className="p-0 text-center">
                                                 <Button
                                                   variant="text-danger"
@@ -2692,7 +2744,6 @@ console.log("token----"+token)
                                       )}
                                     </tbody>
                                   </Table>
-                                  
                                 </div>
                               </div>
                             </div>
@@ -2747,8 +2798,9 @@ console.log("token----"+token)
                               : productdata.seo_tag}
                             <span
                               onClick={() => tagRemoveClick()}
-                              className={"addcategoryicon mx-2 text-light spanCurser " }
-                              
+                              className={
+                                "addcategoryicon mx-2 text-light spanCurser "
+                              }
                             >
                               {"x"}
                             </span>
@@ -2762,7 +2814,7 @@ console.log("token----"+token)
                     </Form.Group>
                   </div>
                 </div>
-               
+
                 {/* other info */}
                 <div className="my-3 inputsection_box">
                   <h5 className="m-0">Other Instruction</h5>
@@ -2907,6 +2959,14 @@ console.log("token----"+token)
                 btntext={modalshow === "add" ? "Add Product" : "Update Product"}
                 btnclass={"button main_button "}
               />
+              {/* {modalshow === "add" ? (
+                <Iconbutton
+                  // type={"submit"}
+                  onClick={() => AddMoreVariety()}
+                  btntext={"Add and Add More Variety"}
+                  btnclass={"button main_button "}
+                />
+              ) : null} */}
             </Modal.Footer>
           </Form>
         </Modal>
@@ -2934,21 +2994,35 @@ console.log("token----"+token)
                         <Table bordered className="align-middle my-2">
                           <thead className="align-middle">
                             <tr>
-                              <th>Variety <span className="text-danger">*</span></th>
-                                          
+                              <th>
+                                Variety <span className="text-danger">*</span>
+                              </th>
+
                               <th>Color</th>
                               <th>Weight/piece/Volume </th>
                               <th>Size </th>
-                              <th>Mrp <span className="text-danger">*</span></th>
+                              <th>
+                                Mrp <span className="text-danger">*</span>
+                              </th>
                               <th>Discount</th>
-                              <th>Price<span className="text-danger">*</span></th>
-                              <th>Sale Price<span className="text-danger">*</span></th>
+                              <th>
+                                Price<span className="text-danger">*</span>
+                              </th>
+                              <th>
+                                Sale Price<span className="text-danger">*</span>
+                              </th>
                               <th>Special Offer</th>
                               <th>Featured Product</th>
-                              <th className="manufacture_date">Mdate <span className="text-danger">*</span></th>
-                              <th className="manufacture_date">Edate <span className="text-danger">*</span></th>
+                              <th className="manufacture_date">
+                                Mdate <span className="text-danger">*</span>
+                              </th>
+                              <th className="manufacture_date">
+                                Edate <span className="text-danger">*</span>
+                              </th>
                               <th className="manufacture_date">Image</th>
-                              <th className="manufacture_date">Quantity<span className="text-danger">*</span></th>
+                              <th className="manufacture_date">
+                                Quantity<span className="text-danger">*</span>
+                              </th>
                               <th></th>
                             </tr>
                           </thead>
@@ -2968,6 +3042,7 @@ console.log("token----"+token)
                                       //     : null
                                       // }
                                     >
+                                      {/* <option value={""}>{"Select"}</option> */}
                                       <option
                                         value={
                                           variantarray.unit === "pcs"
@@ -2997,7 +3072,7 @@ console.log("token----"+token)
                                           ? "Select"
                                           : null}
                                       </option>
-                                     
+
                                       {(varietyy.variety || []).map(
                                         (vari, i) => {
                                           return (
@@ -3067,12 +3142,11 @@ console.log("token----"+token)
                                       }
                                       type="text"
                                       sm="9"
-                                      className={
-                                     
-                                        unitValidated === true
-                                          ? "border-danger"
-                                          : null
-                                      }
+                                      // className={
+                                      //   unitValidated === true
+                                      //     ? "border-danger"
+                                      //     : null
+                                      // }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"unit_quantity"}
                                     />
@@ -3119,7 +3193,7 @@ console.log("token----"+token)
                                       // }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"mrp"}
-                                      value={Number(variantarray.mrp)}
+                                      value={variantarray.mrp}
                                     />
                                   </InputGroup>
                                 </div>
@@ -3130,7 +3204,8 @@ console.log("token----"+token)
                                     <Form.Control
                                       type="number"
                                       sm="9"
-                                      min={1}
+                                      min={"1"}
+                                      max={"100"}
                                       onChange={(e) => onVariantChange(e)}
                                       name={"discount"}
                                       value={variantarray.discount}
@@ -3151,17 +3226,14 @@ console.log("token----"+token)
                                       //     ? "border-danger"
                                       //     : null
                                       // }
-                                      onChange={(e) => onVariantChange(e)}
+                                      // onChange={(e) => onVariantChange(e)}
                                       name={"product_price"}
                                       value={Number(variantarray.product_price)}
                                     />
                                   </InputGroup>
                                 </div>
                               </td>
-                              {/* {console.log(
-                                "sale price---" +
-                                  JSON.stringify(variantarray.sale_price)
-                              )} */}
+
                               <td className="p-0 text-center">
                                 <div className=" d-flex align-items-center">
                                   <InputGroup className="" size="sm">
@@ -3175,9 +3247,11 @@ console.log("token----"+token)
                                       //     ? "border-danger"
                                       //     : null
                                       // }
-                                      onChange={(e) => onVariantChange(e)}
+                                      // onChange={(e) => onVariantChange(e)}
                                       name={"sale_price"}
-                                      value={Number(variantarray.sale_price)}
+                                      value={Number(
+                                        variantarray.sale_price
+                                      ).toFixed(2)}
                                     />
                                   </InputGroup>
                                 </div>
@@ -3226,6 +3300,7 @@ console.log("token----"+token)
                                       //     ? "border-danger"
                                       //     : null
                                       // }
+                                      min={moment().format("YYYY-MM-DD")}
                                       onChange={(e) => onVariantChange(e)}
                                       name={"manufacturing_date"}
                                       value={moment(
@@ -3246,7 +3321,11 @@ console.log("token----"+token)
                                       //     ? "border-danger"
                                       //     : null
                                       // }
-                                      min={moment(variantarray.manufacturing_date).format("YYYY-MM-DD")}
+                                      min={moment(
+                                        variantarray.manufacturing_date
+                                      )
+                                        .add(1, "day")
+                                        .format("YYYY-MM-DD")}
                                       onChange={(e) => onVariantChange(e)}
                                       name={"expire_date"}
                                       value={moment(
@@ -3308,57 +3387,65 @@ console.log("token----"+token)
                                 </div>
                               </td>
                             </tr>
-                            {customvalidated === true ? (
-                              <tr>
+
+                            <tr>
+                              {customvalidated === true ? (
                                 <p
                                   className="mt-1 ms-2 text-danger"
                                   type="invalid"
                                 >
                                   Please fill Required fields
                                 </p>
-                              </tr>
-                            ) : null}
+                              ) : null}
 
-
-                          
-                              <tr>
-                              {varietyUnitvalidation==="fillUnit&size&color"?(
+                              {varietyUnitvalidation ===
+                              "fillUnit&size&color" ? (
                                 <p
                                   className="mt-1 ms-2 text-danger"
                                   type="invalid"
                                 >
-                                  Please must be Fill size and colors
+                                  Please Fill size and colors
                                 </p>
-                                   ) :varietyUnitvalidation==="" ?null:null}
-                                {varietyUnitvalidation==="unitQwanity&size&color"?(
-                            
+                              ) : varietyUnitvalidation === "fillUnit&color" ? (
+                                <p
+                                  className="mt-1 ms-2 text-danger my-3"
+                                  type="invalid"
+                                >
+                                  Please fill color
+                                </p>
+                              ) : varietyUnitvalidation ===
+                                "unitQwanity&size&color" ? (
                                 <p
                                   className="mt-1 ms-2 text-danger my-3"
                                   type="invalid"
                                 >
                                   Please fill weight
                                 </p>
-                            
-                                 ) :varietyUnitvalidation==="" ?null: null}
-
-                          {varietyUnitvalidation==="QwanityValidation"?(
-                            
-                            <p
-                              className="mt-1 ms-2 text-danger my-3"
-                              type="invalid"
-                            >
-                              Quantity must be greater than 0
-                            </p>
-                        
-                             ) :varietyUnitvalidation==="" ?null: null}
-
-
-                              </tr>
-                          
-
-
-                       
-
+                              ) : varietyUnitvalidation === "discountmore" ? (
+                                <p
+                                  className="mt-1 ms-2 text-danger my-3"
+                                  type="invalid"
+                                >
+                                  Discount should be less then 100
+                                </p>
+                              ) : varietyUnitvalidation ===
+                                "QwanityValidation" ? (
+                                <p
+                                  className="mt-1 ms-2 text-danger my-3"
+                                  type="invalid"
+                                >
+                                  Quantity must be greater than 0
+                                </p>
+                              ) : varietyUnitvalidation === "mrpmore" ? (
+                                <p
+                                  className="mt-1 ms-2 text-danger my-3"
+                                  type="invalid"
+                                >
+                                  Mrp must be lesser than 50000 and greater than
+                                  0
+                                </p>
+                              ) : varietyUnitvalidation === "" ? null : null}
+                            </tr>
 
                             {vdata === "" ||
                             vdata === null ||
@@ -3675,6 +3762,7 @@ console.log("token----"+token)
           text=" Product Updated"
           onConfirm={closeProductAlert}
         />
+
         {/* feature product modal */}
 
         <Modal show={featureshow} onHide={featureModalClose}>
@@ -3762,6 +3850,7 @@ console.log("token----"+token)
                             value={featuredata.start_date}
                             name={"start_date"}
                             required
+                            min={moment().format("YYYY-MM-DD")}
                           />
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill start date
@@ -3783,6 +3872,7 @@ console.log("token----"+token)
                             value={featuredata.end_date}
                             name={"end_date"}
                             required
+                            min={featuredata.start_date}
                           />
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill end date
