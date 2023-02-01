@@ -736,7 +736,10 @@ function Product() {
     setproductID(id);
     setvarietyShow(true);
   };
-
+  const AddMoreVariety = (e) => {
+    handleAddProduct(e);
+    // handlevarietyShow(id, variantid);
+  };
   const handlevarietyClose = (e) => {
     setvariantarray(veriantData);
     setVarietyUnitvalidation("");
@@ -1366,9 +1369,16 @@ function Product() {
     });
     productdataa.push(productdata);
     const form = e.currentTarget;
-    if (form.checkValidity() === false) {
-      setValidated(false);
+    if (
+      form.checkValidity() === false ||
+      productdata.variety === "" ||
+      variantmainarray === ""
+    ) {
+      e.stopPropagation();
       e.preventDefault();
+      setValidated(true);
+      setcustomValidated(false);
+      setvarietyValidated("varietyadd");
     } else {
       axios
         .post(`${process.env.REACT_APP_BASEURL}/products`, productdataa)
@@ -1382,7 +1392,11 @@ function Product() {
   const handleAddProduct = (e) => {
     productdataa.push(productdata);
     const form = e.currentTarget;
-    if (form.checkValidity() === false || productdata.variety === "") {
+    if (
+      form.checkValidity() === false ||
+      productdata.variety === "" ||
+      variantmainarray === ""
+    ) {
       e.stopPropagation();
       e.preventDefault();
       setValidated(true);
@@ -2937,6 +2951,14 @@ function Product() {
                 btntext={modalshow === "add" ? "Add Product" : "Update Product"}
                 btnclass={"button main_button "}
               />
+              {/* {modalshow === "add" ? (
+                <Iconbutton
+                  // type={"submit"}
+                  onClick={() => AddMoreVariety()}
+                  btntext={"Add and Add More Variety"}
+                  btnclass={"button main_button "}
+                />
+              ) : null} */}
             </Modal.Footer>
           </Form>
         </Modal>
