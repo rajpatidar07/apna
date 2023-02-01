@@ -39,6 +39,8 @@ const BlogList = () => {
     product_tag: "",
     publish_date: "",
   });
+
+
   const [searchdata, setsearchData] = useState([]);
 
   const [recent, setRecent] = useState("");
@@ -145,8 +147,9 @@ const BlogList = () => {
       });
   }, [apicall]);
 
-  const admid = localStorage.getItem("adminid");
   const AddBlog = (e, id) => {
+    const adminid = localStorage.getItem("encryptadminid");
+    console.log("0000888888655%%%%%%%%%%%0"+adminid)
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
       e.stopPropagation();
@@ -156,14 +159,16 @@ const BlogList = () => {
     if (form.checkValidity() === true) {
       e.preventDefault();
       const formData = new FormData();
+   
 
       formData.append("image", file);
       formData.append("filename", fileName);
-      formData.append("admin_id", admid);
+      formData.append("admin_id", adminid);
       formData.append("title", addblog.title);
       formData.append("description", addblog.description);
       formData.append("category", addblog.category);
       formData.append("product_tag", addblog.product_tag);
+      formData.append("publish_date",addblog.publish_date)
       axios
         .post(`${process.env.REACT_APP_BASEURL}/add_blog`, formData)
         .then((response) => {
@@ -179,11 +184,14 @@ const BlogList = () => {
       setValidated(false);
     }
   };
-  const UpdateBlog = (show) => {
+  const UpdateBlog = (show,id) => {
+    const adminid = localStorage.getItem("encryptadminid");
+    console.log("0000888888655%%%%%%%%%%%0"+adminid)
     const formData = new FormData();
+  
     formData.append("image", file);
     formData.append("filename", fileName);
-    formData.append("admin_id", admid);
+    formData.append("admin_id", adminid);
     formData.append("title", addblog.title);
     formData.append("description", addblog.description);
     formData.append("category", addblog.category);
@@ -205,7 +213,7 @@ const BlogList = () => {
     setValidated(false);
     show.preventDefault();
   };
-
+console.log("BLOGGGGGGGGGG----------"+JSON.stringify(addblog))
   const handleAlert = (id) => {
     setId(id);
     setAlert(true);

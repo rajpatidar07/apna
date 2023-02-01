@@ -26,6 +26,7 @@ import { downloadExcel } from "react-export-table-to-excel";
 
 const RevenueReport = () => {
 
+  const token = localStorage.getItem("token");
   
  
   const [filterchange,setFilterchange] = useState('')
@@ -627,8 +628,6 @@ const optionss = {
 
    fetchData()
       }
-
-      
       const fetchData=()=>{
         console.log( "from_date------------------------------------"+fromDate)
         console.log( "to_date---------------------------------------"+toDate)
@@ -637,12 +636,7 @@ const optionss = {
         // console.log("previous fromDate-"+moment(prevDate).startOf('weeks').format('YYYY-MM-DD'))
         console.log( "brand----"+brandName)
         console.log( "locations by name----"+location)
-
-
-       
-          axios.post(`${process.env.REACT_APP_BASEURL}/revenue`
-        ,
-        
+          axios.post(`${process.env.REACT_APP_BASEURL}/revenue`,
          {
            "from_date":fromDate,
               "to_date":toDate,
@@ -676,10 +670,6 @@ const optionss = {
              
            
             }
-       
-
-          
-
          
         }).catch(function (error) {
           console.log(error);
@@ -688,7 +678,14 @@ const optionss = {
        } 
 
        const VenderData= async()=>{
-          let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
+          let result=  await axios.post(`${process.env.REACT_APP_BASEURL}/vendors`,{
+            vendor_id: "all",
+          },
+            {
+              headers: {
+                admin_token: token,
+              },
+            })
           //  console.log("vendor----"+JSON.stringify(result.data))
           if(result.data){
             setVenderList(result.data)

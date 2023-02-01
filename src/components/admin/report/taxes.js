@@ -23,7 +23,9 @@ import "jspdf-autotable";
 import { downloadExcel } from "react-export-table-to-excel";
 
 const TaxesReport = () => {
- 
+  const token = localStorage.getItem("token");
+  
+
   const [filterchange,setFilterchange] = useState('')
   const [Taxesreport, setTaxesreport] = useState([])
   const [TaxesTable, setTaxesTable] = useState ([])
@@ -79,7 +81,14 @@ const TaxesReport = () => {
    }
 
    const VenderData= async()=>{
-    let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/vendors?id=all`)
+    let result=  await axios.post(`${process.env.REACT_APP_BASEURL}/vendors`,{
+      vendor_id: "all"
+    },
+    {
+      headers: {
+        admin_token: token,
+      },
+    })
     if(result.data){
       setVenderList(result.data)
     }
