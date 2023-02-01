@@ -276,7 +276,7 @@ function handleDownloadExcel() {
   // })
 
 
-
+// console.log("&&&&&&&&&&&&----"+JSON.stringify(tabledate))
 
     const options = {
         chart: {

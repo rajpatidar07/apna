@@ -80,7 +80,7 @@ const VendorsList = () => {
       setapicall(true);
     }
   };
-
+  
   const onSearchClick = () => {
     axios
       .post(`${process.env.REACT_APP_BASEURL}/vendor_list`, {
@@ -96,6 +96,8 @@ const VendorsList = () => {
         console.log(error);
       });
   };
+
+  console.log("&&&&&&&&&&&&&&&"+JSON.stringify(vendordata))
   const columns = [
     {
       name: "ID",
