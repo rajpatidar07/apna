@@ -76,6 +76,7 @@ const Featuredproduct = () => {
         });
     } catch (err) {}
   }, [apicall]);
+
   const columns = [
     {
       name: "ID",

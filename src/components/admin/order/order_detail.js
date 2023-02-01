@@ -244,7 +244,9 @@ const OrderDetail = () => {
                         src={
                           orderdata.all_images
                             ? orderdata.all_images
-                            : "https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
+                            : orderdata.all_images === "null"
+                            ? "https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
+                            : null
                         }
                         alt="apnaorganic"
                       />
