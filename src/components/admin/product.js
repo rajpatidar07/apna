@@ -798,7 +798,7 @@ function Product() {
     for (let i = 0; i < e.target.files.length; i++) {
       let coverimg;
 
-      if (newImageUrls.length === 0 && i === 0) {
+      if ((newImageUrls.length === 0 || newImageUrls.length === 1) && i === 0) {
         coverimg = "cover";
       } else {
         coverimg = `cover${i}`;
@@ -924,13 +924,15 @@ function Product() {
     });
   };
 
-  // console.log("product--" + JSON.stringify(productdata));
+  console.log("product--" + JSON.stringify(variantarray));
   const onVariantaddclick = (e, id) => {
     setunitValidated(false);
     // id.preventDefault();
     if (id == undefined || id == null || unitValidated == "false") {
       if (
         variantarray.unit == "" ||
+        variantarray.unit == null ||
+        variantarray.unit == "Select" ||
         variantarray.product_price == "" ||
         variantarray.mrp == "" ||
         variantarray.sale_price == "" ||
@@ -939,7 +941,7 @@ function Product() {
         variantarray.quantity == ""
       ) {
         setcustomValidated(true);
-      } else if (variantarray.quantity == 0) {
+      } else if (variantarray.quantity === 0 || variantarray.quantity < 1) {
         setVarietyUnitvalidation("QwanityValidation");
       } else if (
         vdata[0].product_type === "Cloths" &&
@@ -960,12 +962,17 @@ function Product() {
         setVarietyUnitvalidation("fillUnit&color");
       } else if (
         variantarray.unit !== "pcs" &&
-        variantarray.unit_quantity === ""
+        (variantarray.unit_quantity === "" ||
+          variantarray.unit_quantity === "null" ||
+          variantarray.unit_quantity === null)
       ) {
         setVarietyUnitvalidation("unitQwanity&size&color");
       } else if (Number(variantarray.discount) > 100) {
         setVarietyUnitvalidation("discountmore");
-      } else if (Number(variantarray.mrp) > 50000) {
+      } else if (
+        Number(variantarray.mrp) > 50000 ||
+        Number(variantarray.mrp) <= 0
+      ) {
         setVarietyUnitvalidation("mrpmore");
       } else {
         axios
@@ -1009,6 +1016,8 @@ function Product() {
     } else {
       if (
         variantarray.unit == "" ||
+        variantarray.unit == null ||
+        variantarray.unit == "Select" ||
         variantarray.product_price == "" ||
         variantarray.mrp == "" ||
         variantarray.sale_price == "" ||
@@ -1017,7 +1026,7 @@ function Product() {
         variantarray.quantity == ""
       ) {
         setcustomValidated(true);
-      } else if (variantarray.quantity == 0) {
+      } else if (variantarray.quantity === 0 || variantarray.quantity < 1) {
         setVarietyUnitvalidation("QwanityValidation");
       } else if (
         vdata[0].product_type === "Cloths" &&
@@ -1036,12 +1045,20 @@ function Product() {
         setVarietyUnitvalidation("fillUnit&color");
       } else if (
         variantarray.unit !== "pcs" &&
-        variantarray.unit_quantity === ""
+        (variantarray.unit_quantity === "" ||
+          variantarray.unit_quantity === "null" ||
+          variantarray.unit_quantity === null)
       ) {
         setVarietyUnitvalidation("unitQwanity&size&color");
-      } else if (Number(variantarray.discount) > 100) {
+      } else if (
+        Number(variantarray.discount) > 100 ||
+        Number(variantarray.discount) < 0
+      ) {
         setVarietyUnitvalidation("discountmore");
-      } else if (Number(variantarray.mrp) > 50000) {
+      } else if (
+        Number(variantarray.mrp) > 50000 ||
+        Number(variantarray.mrp) <= 0
+      ) {
         setVarietyUnitvalidation("mrpmore");
       } else {
         console.log("update veriant array---" + JSON.stringify(variantarray));
@@ -1095,6 +1112,8 @@ function Product() {
     });
     if (
       variantarray.unit == "" ||
+      variantarray.unit == null ||
+      variantarray.unit == "Select" ||
       variantarray.product_price == "" ||
       variantarray.mrp == "" ||
       variantarray.sale_price == "" ||
@@ -1103,7 +1122,7 @@ function Product() {
       variantarray.quantity == ""
     ) {
       setcustomValidated(true);
-    } else if (variantarray.quantity == 0) {
+    } else if (variantarray.quantity === 0 || variantarray.quantity < 1) {
       setVarietyUnitvalidation("QwanityValidation");
     } else if (
       productdata.product_type === "Cloths" &&
@@ -1120,14 +1139,19 @@ function Product() {
       setVarietyUnitvalidation("fillUnit&color");
     } else if (
       variantarray.unit !== "pcs" &&
-      variantarray.unit_quantity === ""
+      (variantarray.unit_quantity === "" ||
+        variantarray.unit_quantity === "null" ||
+        variantarray.unit_quantity === null)
     ) {
       setunitValidated(true);
       setVarietyUnitvalidation("unitQwanity&size&color");
     } else if (Number(variantarray.discount) > 100) {
       setunitValidated(true);
       setVarietyUnitvalidation("discountmore");
-    } else if (Number(variantarray.mrp) > 50000) {
+    } else if (
+      Number(variantarray.mrp) > 50000 ||
+      Number(variantarray.mrp) <= 0
+    ) {
       setunitValidated(true);
       setVarietyUnitvalidation("mrpmore");
     } else {
@@ -1623,9 +1647,11 @@ function Product() {
                             // onChange={(e) => handleInputFieldChange(e)}
                             name={"product_slug"}
                             value={
-                              productdata.product_title_name
-                                ? productdata.product_title_name + "_123"
-                                : null
+                              productdata.product_title_name === "" ||
+                              productdata.product_title_name === "null" ||
+                              productdata.product_title_name === null
+                                ? null
+                                : productdata.product_title_name + "_123"
                             }
                             required
                           />
@@ -2365,9 +2391,9 @@ function Product() {
                                                 //     ? "border-danger"
                                                 //     : null
                                                 // }
-                                                onChange={(e) =>
-                                                  onVariantChange(e)
-                                                }
+                                                // onChange={(e) =>
+                                                //   onVariantChange(e)
+                                                // }
                                                 name={"product_price"}
                                                 value={product_price}
                                                 required
@@ -2388,9 +2414,9 @@ function Product() {
                                                 //     ? "border-danger"
                                                 //     : null
                                                 // }
-                                                onChange={(e) =>
-                                                  onVariantChange(e)
-                                                }
+                                                // onChange={(e) =>
+                                                //   onVariantChange(e)
+                                                // }
                                                 name={"sale_price"}
                                                 value={(
                                                   product_price +
@@ -2458,6 +2484,9 @@ function Product() {
                                                 type="date"
                                                 sm="9"
                                                 required
+                                                min={moment().format(
+                                                  "YYYY-MM-DD"
+                                                )}
                                                 // className={
                                                 //   customvalidated === true
                                                 //     ? "border-danger"
@@ -2488,7 +2517,9 @@ function Product() {
                                                 // }
                                                 min={moment(
                                                   variantarray.manufacturing_date
-                                                ).format("YYYY-MM-DD")}
+                                                )
+                                                  .add(1, "day")
+                                                  .format("YYYY-MM-DD")}
                                                 onChange={(e) =>
                                                   onVariantChange(e)
                                                 }
@@ -2606,7 +2637,8 @@ function Product() {
                                             className="mt-1 ms-2 text-danger my-3"
                                             type="invalid"
                                           >
-                                            Mrp must be lesser than 50000
+                                            Mrp must be lesser than 50000 and
+                                            greater than 0
                                           </p>
                                         ) : varietyUnitvalidation ===
                                           "" ? null : null}
@@ -2980,6 +3012,7 @@ function Product() {
                                       //     : null
                                       // }
                                     >
+                                      {/* <option value={""}>{"Select"}</option> */}
                                       <option
                                         value={
                                           variantarray.unit === "pcs"
@@ -3163,17 +3196,14 @@ function Product() {
                                       //     ? "border-danger"
                                       //     : null
                                       // }
-                                      onChange={(e) => onVariantChange(e)}
+                                      // onChange={(e) => onVariantChange(e)}
                                       name={"product_price"}
                                       value={Number(variantarray.product_price)}
                                     />
                                   </InputGroup>
                                 </div>
                               </td>
-                              {/* {console.log(
-                                "sale price---" +
-                                  JSON.stringify(variantarray.sale_price)
-                              )} */}
+
                               <td className="p-0 text-center">
                                 <div className=" d-flex align-items-center">
                                   <InputGroup className="" size="sm">
@@ -3187,9 +3217,11 @@ function Product() {
                                       //     ? "border-danger"
                                       //     : null
                                       // }
-                                      onChange={(e) => onVariantChange(e)}
+                                      // onChange={(e) => onVariantChange(e)}
                                       name={"sale_price"}
-                                      value={Number(variantarray.sale_price).toFixed(2)}
+                                      value={Number(
+                                        variantarray.sale_price
+                                      ).toFixed(2)}
                                     />
                                   </InputGroup>
                                 </div>
@@ -3238,6 +3270,7 @@ function Product() {
                                       //     ? "border-danger"
                                       //     : null
                                       // }
+                                      min={moment().format("YYYY-MM-DD")}
                                       onChange={(e) => onVariantChange(e)}
                                       name={"manufacturing_date"}
                                       value={moment(
@@ -3260,7 +3293,9 @@ function Product() {
                                       // }
                                       min={moment(
                                         variantarray.manufacturing_date
-                                      ).format("YYYY-MM-DD")}
+                                      )
+                                        .add(1, "day")
+                                        .format("YYYY-MM-DD")}
                                       onChange={(e) => onVariantChange(e)}
                                       name={"expire_date"}
                                       value={moment(
@@ -3376,39 +3411,11 @@ function Product() {
                                   className="mt-1 ms-2 text-danger my-3"
                                   type="invalid"
                                 >
-                                  Mrp must be lesser than 50000
+                                  Mrp must be lesser than 50000 and greater than
+                                  0
                                 </p>
                               ) : varietyUnitvalidation === "" ? null : null}
                             </tr>
-                            {/* <tr>
-                              {varietyUnitvalidation ===
-                              "fillUnit&size&color" ? (
-                                <p
-                                  className="mt-1 ms-2 text-danger"
-                                  type="invalid"
-                                >
-                                  Please must be Fill size and colors
-                                </p>
-                              ) : varietyUnitvalidation === "" ? null : null}
-                              {varietyUnitvalidation ===
-                              "unitQwanity&size&color" ? (
-                                <p
-                                  className="mt-1 ms-2 text-danger my-3"
-                                  type="invalid"
-                                >
-                                  Please fill weight
-                                </p>
-                              ) : varietyUnitvalidation === "" ? null : null}
-
-                              {varietyUnitvalidation === "QwanityValidation" ? (
-                                <p
-                                  className="mt-1 ms-2 text-danger my-3"
-                                  type="invalid"
-                                >
-                                  Quantity must be greater than 0
-                                </p>
-                              ) : varietyUnitvalidation === "" ? null : null}
-                            </tr> */}
 
                             {vdata === "" ||
                             vdata === null ||
@@ -3813,6 +3820,7 @@ function Product() {
                             value={featuredata.start_date}
                             name={"start_date"}
                             required
+                            min={moment().format("YYYY-MM-DD")}
                           />
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill start date
@@ -3834,6 +3842,7 @@ function Product() {
                             value={featuredata.end_date}
                             name={"end_date"}
                             required
+                            min={featuredata.start_date}
                           />
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill end date
