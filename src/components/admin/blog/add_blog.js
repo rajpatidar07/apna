@@ -198,7 +198,8 @@ const BlogList = () => {
     formData.append("category", addblog.category);
     formData.append("product_tag", addblog.product_tag);
     formData.append("publish_date", addblog.publish_date);
-    formData.append("id", addblog.id);
+    formData.append("id",addblog.id);
+    console.log("kkkkkk"+id)
     axios
       .put(`${process.env.REACT_APP_BASEURL}/update_blog`, formData)
       .then((response) => {

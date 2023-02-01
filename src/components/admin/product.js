@@ -494,49 +494,49 @@ function Product() {
       ),
       sortable: true,
     },
-    // {
-    //   name: "Action",
-    //   width: "110px",
-    //   style: {
-    //     paddingRight: "12px",
-    //     paddingLeft: "0px",
-    //   },
-    //   center: true,
-    //   selector: (row) => (
-    //     <div className={"actioncolimn"}>
-    //       <div className="feature_product_dropdown_box">
-    //         <Form.Select
-    //           aria-label="Search by delivery"
-    //           size="sm"
-    //           className="w-100 feature_product_select"
-    //           onChange={(e) =>
-    //             OnProductOfferClick(e, row.product_id, row.product_title_name)
-    //           }
-    //         >
-    //           <option value="">Select</option>
-    //           <option value="special_offer">Special Offer</option>
-    //           <option value="featured_offer">Featured Offer </option>
-    //           <option value="promotional">Promotional </option>
-    //         </Form.Select>
-    //         <IoFilter  className="feature_product_ellipsis"/>
-    //         {/* <FaEllipsisV className="feature_product_ellipsis"/> */}
-    //       </div>
+    {
+      name: "Action",
+      width: "110px",
+      style: {
+        paddingRight: "12px",
+        paddingLeft: "0px",
+      },
+      center: true,
+      selector: (row) => (
+        <div className={"actioncolimn"}>
+          <div className="feature_product_dropdown_box">
+            <Form.Select
+              aria-label="Search by delivery"
+              size="sm"
+              className="w-100 feature_product_select"
+              onChange={(e) =>
+                OnProductOfferClick(e, row.product_id, row.product_title_name)
+              }
+            >
+              <option value="">Select</option>
+              <option value="special_offer">Special Offer</option>
+              <option value="featured_offer">Featured Offer </option>
+              <option value="promotional">Promotional </option>
+            </Form.Select>
+            <IoFilter  className="feature_product_ellipsis"/>
+            {/* <FaEllipsisV className="feature_product_ellipsis"/> */}
+          </div>
 
-    //       <BiEdit
-    //         className=" p-0 m-0  editiconn text-secondary"
-    //         onClick={handleShow.bind(this, row.product_id)}
-    //       />
-    //       <BsTrash
-    //         className=" p-0 m-0 editiconn text-danger"
-    //         onClick={handleAlert.bind(this, [
-    //           row.id,
-    //           row.product_id,
-    //           row.is_delete,
-    //         ])}
-    //       />
-    //     </div>
-    //   ),
-    // },
+          <BiEdit
+            className=" p-0 m-0  editiconn text-secondary"
+            onClick={handleShow.bind(this, row.product_id)}
+          />
+          <BsTrash
+            className=" p-0 m-0 editiconn text-danger"
+            onClick={handleAlert.bind(this, [
+              row.id,
+              row.product_id,
+              row.is_delete,
+            ])}
+          />
+        </div>
+      ),
+    },
   ];
   const categoryFormChange = (e, id) => {
     setIndVal(e.target.value);
