@@ -662,7 +662,8 @@ function Product() {
                       .then((response) => {
                         setSubCategory(response.data);
                       });
-                    seteditparentCategory(data.category_name);
+                    // seteditparentCategory(data.category_name);
+                    setCategoryEditparent(data.category_name);
                   } else if (i === 1) {
                     axios
                       .get(
@@ -671,7 +672,8 @@ function Product() {
                       .then((response) => {
                         setchildCategory(response.data);
                       });
-                    setCategoryEditparent(data.category_name);
+                    // setCategoryEditparent(data.category_name);
+                    setCategoryEditSubparent(data.category_name);
                   } else if (i === 2) {
                     axios
                       .get(
@@ -680,7 +682,8 @@ function Product() {
                       .then((response) => {
                         setgrandcCategory(response.data);
                       });
-                    setCategoryEditSubparent(data.category_name);
+                    // setCategoryEditSubparent(data.category_name);
+                    setCategoryEditChildparent(data.category_name);
                   } else if (i === 3) {
                     setCategoryEditChildparent(data.category_name);
                   }
@@ -776,10 +779,15 @@ function Product() {
     // setseoArray(seoarray.filter((item) => item !== e));
   };
   const ontagaddclick = (e) => {
-    setproductdata({
-      ...productdata,
-      seo_tag: addtag,
-    });
+    if (addtag === "") {
+      setunitValidated("seotagclick");
+    } else {
+      setunitValidated("");
+      setproductdata({
+        ...productdata,
+        seo_tag: addtag,
+      });
+    }
     setaddtag("");
   };
   // variant
@@ -931,10 +939,7 @@ function Product() {
   };
 
   console.log(
-    "product--" +
-      JSON.stringify(variantarray) +
-      variantarray.length +
-      variantmainarray.length
+    "product--" + JSON.stringify(variantarray) + productdata.product_type
   );
   const onVariantaddclick = (e, id) => {
     setunitValidated(false);
@@ -1864,9 +1869,9 @@ function Product() {
                         <Form.Select
                           aria-label="Search by status"
                           className="adminselectbox"
-                          required
                           onChange={(e, id) => categoryFormChange(e, id)}
                           name={"sub_category"}
+                          required
                         >
                           <option value={""}>Select Category </option>
                           {subCategory.map((cdata, i) => {
@@ -1902,7 +1907,6 @@ function Product() {
                         <Form.Select
                           aria-label="Search by status"
                           className="adminselectbox"
-                          required
                           onChange={(e, id) => categoryFormChange(e, id)}
                           name={"childcategory"}
                         >
@@ -1940,7 +1944,6 @@ function Product() {
                         <Form.Select
                           aria-label="Search by status"
                           className="adminselectbox"
-                          required
                           onChange={(e, id) => categoryFormChange(e, id)}
                           name={"gcategory"}
                         >
@@ -2315,7 +2318,7 @@ function Product() {
                                                       "piece"
                                                     ? variantarray.unit_quantity
                                                     : variantarray.unit === ""
-                                                    ? ""
+                                                    ? variantarray.unit_quantity
                                                     : null
                                                 }
                                                 type="number"
@@ -2338,7 +2341,7 @@ function Product() {
                                             <InputGroup className="" size="sm">
                                               <Form.Control
                                                 value={
-                                                  variantarray.unit === "pcs"
+                                                  variantarray.unit !== ""
                                                     ? variantarray.size
                                                     : variantarray.unit === ""
                                                     ? ""
@@ -2365,6 +2368,7 @@ function Product() {
                                               <Form.Control
                                                 type="number"
                                                 sm="9"
+                                                step="0.01"
                                                 maxLength={"5"}
                                                 minLength={"1"}
                                                 min="1"
@@ -2390,7 +2394,7 @@ function Product() {
                                               <Form.Control
                                                 type="number"
                                                 sm="9"
-                                                min={"1"}
+                                                min={"0"}
                                                 max={"100"}
                                                 onChange={(e) =>
                                                   onVariantChange(e)
@@ -2532,11 +2536,11 @@ function Product() {
                                                 type="date"
                                                 sm="9"
                                                 required
-                                                // className={
-                                                //   customvalidated === true
-                                                //     ? "border-danger"
-                                                //     : null
-                                                // }
+                                                disabled={
+                                                  variantarray.manufacturing_date
+                                                    ? false
+                                                    : true
+                                                }
                                                 min={moment(
                                                   variantarray.manufacturing_date
                                                 )
@@ -2635,7 +2639,7 @@ function Product() {
                                             className="mt-1 ms-2 text-danger my-3"
                                             type="invalid"
                                           >
-                                            Please fill weight
+                                            Please fill weight/volume/piece
                                           </p>
                                         ) : varietyUnitvalidation ===
                                           "discountmore" ? (
@@ -2692,9 +2696,7 @@ function Product() {
                                                   : null}
                                               </td>
                                               <td className="p-0 text-center ">
-                                                {variantdata.unit === "pcs"
-                                                  ? variantdata.size
-                                                  : ""}
+                                                {variantdata.size}
                                               </td>
                                               <td className="p-0 text-center ">
                                                 {variantdata.mrp}
@@ -2788,7 +2790,7 @@ function Product() {
                       </div>
 
                       <div className="d-flex align-items-center tagselectbox mt-2">
-                        {productdata.seo_tag == "" ? (
+                        {productdata.seo_tag == "" || addtag === "" ? (
                           ""
                         ) : (
                           <Badge className="tagselecttitle mb-0" bg="success">
@@ -3036,14 +3038,15 @@ function Product() {
                                       aria-label="Default select example"
                                       name="unit"
                                       onChange={(e) => onVariantChange(e)}
+                                      value={variantarray.unit}
                                       // className={
                                       //   customvalidated === true
                                       //     ? "border-danger"
                                       //     : null
                                       // }
                                     >
-                                      {/* <option value={""}>{"Select"}</option> */}
-                                      <option
+                                      <option value={""}>{"Select"}</option>
+                                      {/* <option
                                         value={
                                           variantarray.unit === "pcs"
                                             ? "color"
@@ -3071,7 +3074,7 @@ function Product() {
                                             variantarray.unit === null
                                           ? "Select"
                                           : null}
-                                      </option>
+                                      </option> */}
 
                                       {(varietyy.variety || []).map(
                                         (vari, i) => {
@@ -3158,7 +3161,7 @@ function Product() {
                                   <InputGroup className="" size="sm">
                                     <Form.Control
                                       value={
-                                        variantarray.unit === "pcs"
+                                        variantarray.unit !== ""
                                           ? variantarray.size
                                           : variantarray.unit === ""
                                           ? variantarray.size
@@ -3182,8 +3185,9 @@ function Product() {
                                 <div className=" d-flex align-items-center">
                                   <InputGroup className="" size="sm">
                                     <Form.Control
+                                      step="0.01"
                                       type="number"
-                                      step={"any"}
+                                      // step={"any"}
                                       min={1}
                                       sm="9"
                                       // className={
@@ -3326,6 +3330,11 @@ function Product() {
                                       )
                                         .add(1, "day")
                                         .format("YYYY-MM-DD")}
+                                      disabled={
+                                        variantarray.manufacturing_date
+                                          ? false
+                                          : true
+                                      }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"expire_date"}
                                       value={moment(
@@ -3419,7 +3428,7 @@ function Product() {
                                   className="mt-1 ms-2 text-danger my-3"
                                   type="invalid"
                                 >
-                                  Please fill weight
+                                  Please fill weight/volume/piece
                                 </p>
                               ) : varietyUnitvalidation === "discountmore" ? (
                                 <p
@@ -3484,9 +3493,7 @@ function Product() {
                                             : ""}
                                         </td>
                                         <td className="p-0 text-center ">
-                                          {variantdata.unit === "pcs"
-                                            ? variantdata.size
-                                            : ""}
+                                          {variantdata.size}
                                         </td>
                                         <td className="p-0 text-center ">
                                           {Number(variantdata.mrp).toFixed(2)}
