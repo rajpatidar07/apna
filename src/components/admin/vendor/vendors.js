@@ -416,6 +416,7 @@ const VendorsList = () => {
   };
 
   const imguploadchange = async (e) => {
+    
     if (e.target.files.length <= 5) {
       console.log("lemth------" + e.target.files.length);
 

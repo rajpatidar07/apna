@@ -103,7 +103,7 @@ const CategoryList = () => {
           .get(`${process.env.REACT_APP_BASEURL}/category_details?id=${e}`)
           .then((response) => {
             let data = response.data[0];
-            // console.log("data-------------" + JSON.stringify(data));
+             console.log("data-------------" + JSON.stringify(data));
             setCategoryEditData(data);
             setImagePath(response.data[0].image);
 

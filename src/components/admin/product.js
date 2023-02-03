@@ -149,8 +149,8 @@ function Product() {
     manufacturers_sales_tax: "0",
   });
   const [productID, setproductID] = useState("");
+ const[bulkProductError,setBulkProductError]=useState("")
 
-  const [ExcelFile, setExcelFile] = useState("");
 
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
@@ -605,6 +605,7 @@ function Product() {
           )
           .then((response) => {
             let cgory = response.data;
+           
             const result = cgory.filter(
               (thing, index, self) =>
                 index === self.findIndex((t) => t.shop_name == thing.shop_name)
@@ -623,12 +624,14 @@ function Product() {
           .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
           .then((response) => {
             let cgory = response.data;
-
+             console.log("cgory---"+JSON.stringify(cgory))
             if (indVal === 0) {
               setCategory(cgory);
+              // seteditparentCategory(response.data.category_name)
               setSubCategory("");
               setlevel(0);
             }
+            
           });
       } catch (err) {}
     };
@@ -641,9 +644,10 @@ function Product() {
         .get(`${process.env.REACT_APP_BASEURL}/product_details?id=${e}`)
         .then((response) => {
           let data = response.data;
+           console.log("data-----"+JSON.stringify(data))
           if (data != undefined || data != "" || data != null) {
             setproductdata(data);
-
+              
             // categoryedit
 
             const arr = data.parent_category.split(",");
@@ -660,9 +664,11 @@ function Product() {
                         `${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`
                       )
                       .then((response) => {
+                        console.log("subcetgorydata---"+JSON.stringify(response.data))
                         setSubCategory(response.data);
+                          
                       });
-                    // seteditparentCategory(data.category_name);
+                      seteditparentCategory(data.category_name)
                     setCategoryEditparent(data.category_name);
                   } else if (i === 1) {
                     axios
@@ -691,8 +697,11 @@ function Product() {
             }
             // end category edit api
           }
+           
           let customdatra = JSON.parse(response.data.add_custom_input);
+          // console.log("customdata---"+customdatra)
           setcustomarray(customdatra);
+    
         })
         .catch(function (error) {
           console.log(error);
@@ -938,9 +947,9 @@ function Product() {
     });
   };
 
-  console.log(
-    "product--" + JSON.stringify(variantarray) + productdata.product_type
-  );
+  // console.log(
+  //   "product--" + JSON.stringify(variantarray) + productdata.product_type
+  // );
   const onVariantaddclick = (e, id) => {
     setunitValidated(false);
     // id.preventDefault();
@@ -1457,42 +1466,42 @@ function Product() {
   //-----------------------Download excel sheet code start here---------------------------------------------------
 
   const header = [
-    "Product code",
-    "Product title name",
-    "Product slug",
-    "Store name",
-    "Product Description",
-    "Product Type",
-    "Brand",
-    "Category",
-    "Parent category",
-    "Seo tag",
-    "Other introduction",
-    "Add custom input",
-    "Wholesale sales tax",
-    "Manufacturers sales tax",
-    "Retails sales tax",
-    "Gst",
-    "Cgst",
-    "Sgst",
-    "Value added tax",
-    "Variety",
-    "Vendor id",
-    "Shop",
+    "product_code",
+    "product_title_name",
+    "product_slug",
+    "store_name",
+    "product_description",
+    "product_type",
+    "brand",
+    "category",
+    "parent_category",
+    "seo_tag",
+    "other_introduction",
+    "add_custom_input",
+    "wholesale_sales_tax",
+    "manufacturers_sales_tax",
+    "retails_sales_tax",
+    "gst",
+    "cgst",
+    "sgst",
+    "value_added_tax",
+    "variety",
+    "vendor_id",
+    "shop",
     "colors",
-    "Size",
-    "Mrp",
-    "Product price",
-    "Sale price",
-    "Discount",
-    "Manufacturing date",
-    "Expire date",
-    "Special offer",
-    "Featured product",
-    "Unit",
-    "Unit quantity",
-    "Quantity",
-    "Product Status",
+    "size",
+    "mrp",
+    "product_price",
+    "sale_price",
+    "discount",
+    "manufacturing_date",
+    "expire_date",
+    "special_offer",
+    "featured_product",
+    "unit",
+    "unit_quantity",
+    "quantity",
+    "product_status",
   ];
 
   function handleDownloadExcel() {
@@ -1507,22 +1516,39 @@ function Product() {
     });
   }
 
-  const saveFile = (e) => {
-    e.preventDefault();
-    setExcelFile(e.target.files[0]);
-    FileUploadAPI();
-  };
-  const FileUploadAPI = () => {
+  // const saveFile = (e) => {
+    
+  //   console.log(" lenght----"+JSON.stringify(e.target.files))
+  //     setExcelFile(e.target.files[0]);
+  //     // setExcelFilename(e.target.files[0]);
+  //     FileUploadAPI()
+  // };
+
+
+  const FileUploadAPI = (e) => {
     const formData = new FormData();
-    formData.append("bulk_xls", ExcelFile);
+    
+    formData.append("bulk_xls",e.target.files[0]);
+   
 
     axios
       .post(`${process.env.REACT_APP_BASEURL}/product_bulk_uploads`, formData)
-      .then((response) => {})
+      .then((response) => {
+        console.log("uploaddd---"+JSON.stringify(response))
+        if(response.status==200){
+          setProductAlert(true)
+          setapicall(true)
+        
+        }
+        else{
+          setBulkProductError("Error  in adding BulkProducts")
+        }
+        
+      })
       .catch(function (error) {
         console.log(error);
       });
-  };
+   };
 
   //-----------------------Download excel sheet code End  here---------------------------------------------------
   return (
@@ -1581,14 +1607,17 @@ function Product() {
 
         <div className="product_page_uploadbox my-4">
           <div className="product_page_uploadbox_one">
-            <Input type={"file"} inputclass={"hiddeninput"} />
+            <input type="file" className="product_page_uploadbox_button"   onChange={(e)=>{FileUploadAPI(e)}}/>
             <Iconbutton
               btntext={"Upload"}
               btnclass={"button main_outline_button"}
               Iconname={<AiOutlineCloudUpload />}
-              onChange={(e) => saveFile(e)}
+            
             />
           </div>
+          {bulkProductError==""?"":<p className="mt-1 ms-2 text-danger" type="invalid">
+                            {bulkProductError}
+                            </p>}
           <MainButton btntext={"Download"} onClick={handleDownloadExcel} />
 
           <Iconbutton
@@ -2772,11 +2801,11 @@ function Product() {
                             sm="9"
                             onChange={ontagchange}
                             value={addtag}
-                            onKeyPress={(event) => {
-                              if (event.key === "Enter") {
-                                ontagaddclick();
-                              }
-                            }}
+                            // onKeyPress={(event) => {
+                            //   if (event.key === "Enter") {
+                            //     ontagaddclick();
+                            //   }
+                            // }}
                           />
                           <Button
                             variant="outline-success"
@@ -2790,7 +2819,7 @@ function Product() {
                       </div>
 
                       <div className="d-flex align-items-center tagselectbox mt-2">
-                        {productdata.seo_tag == "" || addtag === "" ? (
+                        {productdata.seo_tag == "" && addtag === "" ? (
                           ""
                         ) : (
                           <Badge className="tagselecttitle mb-0" bg="success">
@@ -2884,7 +2913,7 @@ function Product() {
                           </td>
                         </tr>
                         {
-                          // paraddcustom === null || paraddcustom === undefined ? '' :
+                         
                           (customarray || []).map((variantdata, i) => {
                             // const arr = variantdata.split(',')
                             return (
@@ -2935,6 +2964,7 @@ function Product() {
                               </tr>
                             );
                           })
+                   
                         }
                       </tbody>
                     </Table>

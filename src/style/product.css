@@ -6,6 +6,7 @@
 }
 .product_page_uploadbox .product_page_uploadbox_one {
   position: relative;
+overflow: hidden;
 }
 .product_page_uploadbox .hiddeninput {
   position: absolute;
@@ -217,4 +218,11 @@ position: relative;
 .category_icon_box .category_icon{
 max-width: 50px;
 width: 100%;
+}
+
+.product_page_uploadbox_button{
+  position: absolute;
+  line-height: 35px;
+  opacity: 0;
+  border-radius: 10px;
 }
