@@ -2821,7 +2821,7 @@ function Product() {
                       <div className="d-flex align-items-center tagselectbox mt-2">
                         {productdata.seo_tag == "" && addtag === "" ? (
                           ""
-                        ) : (
+                        ) :productdata.seo_tag? (
                           <Badge className="tagselecttitle mb-0" bg="success">
                             {productdata.seo_tag === null ||
                             productdata.seo_tag === undefined
@@ -2836,7 +2836,7 @@ function Product() {
                               {"x"}
                             </span>
                           </Badge>
-                        )}
+                        ):null}
 
                         {/* )
 
