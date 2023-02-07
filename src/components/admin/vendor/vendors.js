@@ -15,7 +15,7 @@ import { GiCancel } from "react-icons/gi";
 
 const VendorsList = () => {
   const token = localStorage.getItem("token");
-
+  const [SocialLink,setSocialLink]=useState(false)
   const formRef = useRef();
   const [newImageUrls, setnewImageUrls] = useState([]);
   const [validated, setValidated] = useState(false);
@@ -42,13 +42,13 @@ const VendorsList = () => {
     geolocation: "",
     store_type: "",
     image: "",
-    status: "",
+    status: "active",
     image: "",
     document_name: [],
     availability: "",
     social_media_links: [],
   });
-
+console.log("hhhh---"+ JSON.stringify(addvendordata))
   let encoded;
   let ImgObj = [];
   let docuarr;
@@ -107,17 +107,22 @@ const VendorsList = () => {
   };
 
   const columns = [
+
     {
       name: "ID",
-      selector: (row) => row.id,
+      width: "60px",
+      selector: (row) => row.id  ,
       sortable: true,
+      
     },
     {
-      name: "#",
-      width: "250px",
+      name: "Shop Logo",
+      width: "120px",
       center: true,
       cell: (row) => (
+        
         <>
+     
           <img
             height="90px"
             width="75px"
@@ -140,8 +145,20 @@ const VendorsList = () => {
     },
     {
       name: "Shop Name",
-      selector: (row) => row.shop_name,
+      width: "120px",
+      selector: (row) =>(   
+         <p className="m-0">
+       {row.shop_name}
+      <br />
+      <b>Profile:</b> {(row.id==null||row.owner_name==null||row.shop_name==null||row.mobile==null || row.email==null || row.shop_address==null ||row.gstn==null || row.geolocation==null || row.store_type==null || row.document_name==null ||row.social_media_links==null|| row.shop_logo==null)?<span className="text-danger"><b>Not Complete</b></span>:<span className="text-success"><b>Complete</b></span>}
+    </p> ),
       sortable: true,
+    //   cell: (row) => (
+    //     <>
+    //   {   
+    //     (row.id=="" ||row.owner_name=="" )?"No":"Yes"
+    //  }
+    //  </>)
     },
     {
       name: "Owner Name",
@@ -278,6 +295,7 @@ const VendorsList = () => {
       )
       .then((response) => {
         setvendordata(response.data);
+       
         setCondition(false);
         setapicall(false);
       })
@@ -497,12 +515,14 @@ const VendorsList = () => {
   let returnarr = [];
   // social media link
   const oncustomheadChange = (e) => {
+    setSocialLink(false)
     setheaderval(e.target.value);
     // setAddCustom((AddCustom) =>{ return {...AddCustom,  e.target.value : e.target.value}});
   };
   // console.log("checkkkk"+JSON.stringify(AddCustom))
 
   const oncustomdescChange = (e) => {
+    setSocialLink(false)
     setdescval(e.target.value);
   };
   // console.log("--------uuuuuuu-------"+JSON.stringify(AddCustom))
@@ -523,9 +543,18 @@ const VendorsList = () => {
   // }
 
   const handleAddClick = (e) => {
-    let returnedTarget = Object.assign({}, { [headerval]: descval });
-    setAddCustom(...AddCustom, returnedTarget);
-    setsCall(true);
+    if(headerval ===""){
+      setSocialLink("HeaderBlank")
+    }
+    else if( descval===""){
+      setSocialLink("DesBlank")
+    }
+    else{
+      let returnedTarget = Object.assign({}, { [headerval]: descval });
+      setAddCustom(...AddCustom, returnedTarget);
+      setsCall(true);
+    }
+ 
   };
   // console.log("--------customarray-------"+JSON.stringify(customarray))
 
@@ -556,7 +585,7 @@ const VendorsList = () => {
       setValidated(true);
     } else {
       e.preventDefault();
-      console.log("arrruyau------" + addvendordata.document_name);
+   
       const formData = new FormData();
       let x = [addvendordata.document_name];
       let socialname = addvendordata.testjson;
@@ -565,8 +594,7 @@ const VendorsList = () => {
       // console.log("socialname----------"+socialname);
       // console.log("socialname----------"+socialname_new);
 
-      console.log(" before  xx-----------  ---" + x);
-      console.log(" before  file Name  ---" + fileName);
+
 
       formData.append("image", file);
       formData.append("filename", fileName);
@@ -630,7 +658,7 @@ const VendorsList = () => {
     // formData.append("image",fileDoc);
     // formData.append("filename", fileDocName);
     formData.append("document_name", x);
-    formData.append("status", addvendordata.status);
+    formData.append("status", "active");
     formData.append("social_media_links", socialname_new);
 
     // console.log("formdata----"+ JSON.stringify(formData))
@@ -876,7 +904,7 @@ const VendorsList = () => {
                   </Form.Control.Feedback>
                 </Form.Group>
               </div>
-              <div className="col-md-6">
+              {/* <div className="col-md-6">
                 <Form.Group
                   className="mb-3 aos_input"
                   controlId="validationCustom06"
@@ -931,7 +959,7 @@ const VendorsList = () => {
                     Please fill gstn
                   </Form.Control.Feedback>
                 </Form.Group>
-              </div>
+              </div> */}
               <div className="col-md-6">
                 <Form.Group
                   className="mb-3 aos_input"
@@ -1014,7 +1042,7 @@ const VendorsList = () => {
                         addvendordata.store_type === "shoese" ? true : false
                       }
                     >
-                      Pending
+                      Shoese
                     </option>
                     <option
                       value="Cloths"
@@ -1022,7 +1050,7 @@ const VendorsList = () => {
                         addvendordata.store_type === "Cloths" ? true : false
                       }
                     >
-                      Active
+                     Cloths
                     </option>
                   </Form.Select>
                   <Form.Control.Feedback type="invalid" className="h6">
@@ -1137,6 +1165,7 @@ const VendorsList = () => {
                               }
                             />
                           </InputGroup>
+                          
                         </td>
                         <td className="col-4">
                           <InputGroup className="">
@@ -1159,6 +1188,7 @@ const VendorsList = () => {
                               }}
                             />
                           </InputGroup>
+                        
                         </td>
                         <td className="">
                           <Button
@@ -1171,6 +1201,7 @@ const VendorsList = () => {
                           </Button>
                         </td>
                       </tr>
+                      <tr><td>{SocialLink=="HeaderBlank"?<span className="text-danger"> Please Fill ..!! </span>:SocialLink==false?"":null}</td><td>  {SocialLink=="DesBlank"?<span className="text-danger"> Please Fill..!! </span>:SocialLink==false?"":null}</td></tr>
                       {customarray
                         ? (customarray || []).map((variantdata, i) => {
                             let v = JSON.stringify(variantdata);
