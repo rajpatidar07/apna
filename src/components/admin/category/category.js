@@ -369,7 +369,8 @@ const CategoryList = () => {
     const form = e.currentTarget;
     e.preventDefault();
 
-    console.log("form.checkValidity() " + form.checkValidity() + newName);
+    // console.log("form.checkValidity() " + form.checkValidity() + newName);
+    
     if (form.checkValidity() === false && newName === "") {
       e.stopPropagation();
       setValidated(true);
