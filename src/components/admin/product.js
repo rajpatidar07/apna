@@ -624,7 +624,7 @@ function Product() {
           .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
           .then((response) => {
             let cgory = response.data;
-             console.log("cgory---"+JSON.stringify(cgory))
+           
             if (indVal === 0) {
               setCategory(cgory);
               // seteditparentCategory(response.data.category_name)
@@ -975,7 +975,6 @@ function Product() {
           variantarray.size === null ||
           variantarray.size === "")
       ) {
-        console.log("-----coth");
         setVarietyUnitvalidation("fillUnit&size&color");
       } else if (
         vdata[0].product_type !== "Cloths" &&
@@ -983,7 +982,7 @@ function Product() {
         variantarray.colors === "" &&
         (variantarray.size === null || variantarray.size === "")
       ) {
-        console.log("-----notlcoth");
+     
         setVarietyUnitvalidation("fillUnit&color");
       } else if (
         variantarray.unit !== "pcs" &&
@@ -1086,7 +1085,7 @@ function Product() {
       ) {
         setVarietyUnitvalidation("mrpmore");
       } else {
-        console.log("update veriant array---" + JSON.stringify(variantarray));
+     
         axios
           .put(
             `${process.env.REACT_APP_BASEURL}/products_varient_update`,
@@ -3069,11 +3068,7 @@ function Product() {
                                       name="unit"
                                       onChange={(e) => onVariantChange(e)}
                                       value={variantarray.unit}
-                                      // className={
-                                      //   customvalidated === true
-                                      //     ? "border-danger"
-                                      //     : null
-                                      // }
+                              
                                     >
                                       <option value={""}>{"Select"}</option>
                                       {/* <option
