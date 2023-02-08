@@ -185,7 +185,7 @@ const BlogList = () => {
       setValidated(false);
     }
   };
-  const UpdateBlog = (show,id) => {
+  const UpdateBlog = (show) => {
     const adminid = localStorage.getItem("encryptadminid");
     console.log("0000888888655%%%%%%%%%%%0"+adminid)
     const formData = new FormData();
@@ -198,7 +198,7 @@ const BlogList = () => {
     formData.append("category", addblog.category);
     formData.append("product_tag", addblog.product_tag);
     formData.append("publish_date", addblog.publish_date);
-    formData.append("id",addblog.id);
+    formData.append("id",`${id}`);
     console.log("kkkkkk"+id)
     axios
       .put(`${process.env.REACT_APP_BASEURL}/update_blog`, formData)

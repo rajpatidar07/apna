@@ -191,13 +191,13 @@ const Featuredproduct = () => {
       start_date:featuredData.start_date,
       end_date:featuredData.end_date
     }).then((response) => {
-      let data=response.data;
-      setValidated(false);
-       setapicall(true);
-       setShow(false)
-  });
+      let data = response.data;
+      setapicall(true);
+      setShow(false);
+      setUpdateAlert(true);
+    });
   formRef.current.reset();
-  setValidated(false);
+  // setValidated(false);
 }
 
 // const OnSearchChange = (e) => {
@@ -241,69 +241,61 @@ const Featuredproduct = () => {
         </div>
         </div>
 
-        <Modal size="lg" show={show} onHide={() => handleClose()}>
-    <Form className="" ref={formRef} validated={validated}>
-     <Modal.Header closeButton>
-        <Modal.Title>Featured Product</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <div className="row p-3 m-0">
-         <div className="col-md-6">
-          <Form.Group
-              className="mb-3 aos_input"
-              controlId="formBasicStartDate"
-            >
-              <Form.Label>Start Date</Form.Label>
-              <Form.Control
-                name="start_date"
-                value={featuredData.start_date}
-                onChange={(e) => handleFormChange(e)}
-                type="date"
-                placeholder="Coupon Start Date"
-              />
-            </Form.Group>
-          </div>
-          <div className="col-md-6">
-            <Form.Group
-              className="mb-3 aos_input"
-              controlId="formBasicStartDate"
-            >
-              <Form.Label>End Date</Form.Label>
-              <Form.Control
-                name="end_date"
-                value={featuredData.end_date}
-                onChange={(e) => handleFormChange(e)}
-                type="date"
-                placeholder="Coupon Start Date"
-              />
-            </Form.Group>
-          </div>
-        </div>
-      </Modal.Body>
-      <Modal.Footer>
-        <button
-          className="button main_outline_button"
-          onClick={() => handleClose()}
-        >
-          Cancel
-        </button>
-        <button
-          className="button main_outline_button"
-          onClick={UpdateFeaturedProduct}
-        >
-          Update
-        </button>
-        {/* <Iconbutton
-        type={"submit"}
-           
-        // btntext={show === "add" ? "Add Blog" : "Update Blog"}
-        // onClick={(show === 'add' ? AddVendorClick : UpdateVendorClick(show))}
-        btnclass={"button main_button "}
-      /> */}
-      </Modal.Footer>
-    </Form>
-  </Modal>
-
+        <Modal size="lg" show={show} onHide={() => setShow(false)}>
+          <Form className="" ref={formRef}>
+            <Modal.Header closeButton>
+              <Modal.Title></Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <div className="row p-3 m-0">
+                <div className="col-md-6">
+                  <Form.Group
+                    className="mb-3 aos_input"
+                    controlId="formBasicStartDate"
+                  >
+                    <Form.Label>Manufacturing Date</Form.Label>
+                    <Form.Control
+                      name="start_date"
+                      value={featuredData.start_date}
+                      onChange={(e) => handleFormChange(e)}
+                      type="date"
+                      placeholder="Coupon Start Date"
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-6">
+                  <Form.Group
+                    className="mb-3 aos_input"
+                    controlId="formBasicStartDate"
+                  >
+                    <Form.Label>Expire Date</Form.Label>
+                    <Form.Control
+                      name="end_date"
+                      value={featuredData.end_date}
+                      onChange={(e) => handleFormChange(e)}
+                      type="date"
+                      placeholder="Coupon Start Date"
+                    />
+                  </Form.Group>
+                </div>
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <button
+                className="button main_outline_button"
+                onClick={handleClose}
+              >
+                Cancel
+              </button>
+              <button
+                className="button main_outline_button"
+                onClick={UpdateFeaturedProduct}
+              >
+                Update
+              </button>
+            </Modal.Footer>
+          </Form>
+        </Modal>
         <DataTable
      columns={columns}
     data={featuredProductData}
