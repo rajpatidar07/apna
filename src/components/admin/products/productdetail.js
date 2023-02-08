@@ -87,7 +87,7 @@ quantity: "",
             if (data != undefined || data != "" || data != null) {
              
             setProductData(data);
-
+            console.log("data----"+JSON.stringify(data))
             setVariantdetail(data.product_verient)
             onImgView(vid,pid)
             }
