@@ -15,7 +15,7 @@ import { GiCancel } from "react-icons/gi";
 
 const VendorsList = () => {
   const token = localStorage.getItem("token");
-  const [SocialLink,setSocialLink]=useState(false)
+  const [SocialLink, setSocialLink] = useState(false);
   const formRef = useRef();
   const [newImageUrls, setnewImageUrls] = useState([]);
   const [validated, setValidated] = useState(false);
@@ -48,7 +48,7 @@ const VendorsList = () => {
     availability: "",
     social_media_links: [],
   });
-console.log("hhhh---"+ JSON.stringify(addvendordata))
+  console.log("hhhh---" + JSON.stringify(addvendordata));
   let encoded;
   let ImgObj = [];
   let docuarr;
@@ -81,7 +81,7 @@ console.log("hhhh---"+ JSON.stringify(addvendordata))
       setapicall(true);
     }
   };
-  
+
   const onSearchClick = () => {
     axios
       .post(`${process.env.REACT_APP_BASEURL}/vendor_list`, {
@@ -107,22 +107,18 @@ console.log("hhhh---"+ JSON.stringify(addvendordata))
   };
 
   const columns = [
-
     {
       name: "ID",
       width: "60px",
-      selector: (row) => row.id  ,
+      selector: (row) => row.id,
       sortable: true,
-      
     },
     {
       name: "Shop Logo",
       width: "120px",
       center: true,
       cell: (row) => (
-        
         <>
-     
           <img
             height="90px"
             width="75px"
@@ -146,19 +142,40 @@ console.log("hhhh---"+ JSON.stringify(addvendordata))
     {
       name: "Shop Name",
       width: "120px",
-      selector: (row) =>(   
-         <p className="m-0">
-       {row.shop_name}
-      <br />
-      <b>Profile:</b> {(row.id==null||row.owner_name==null||row.shop_name==null||row.mobile==null || row.email==null || row.shop_address==null ||row.gstn==null || row.geolocation==null || row.store_type==null || row.document_name==null ||row.social_media_links==null|| row.shop_logo==null)?<span className="text-danger"><b>Not Complete</b></span>:<span className="text-success"><b>Complete</b></span>}
-    </p> ),
+      selector: (row) => (
+        <p className="m-0">
+          {row.shop_name}
+          <br />
+          <b>Profile:</b>{" "}
+          {row.id == null ||
+          row.owner_name == null ||
+          row.shop_name == null ||
+          row.mobile == null ||
+          row.email == null ||
+          row.shop_address == null ||
+          row.gstn == null ||
+          row.geolocation == null ||
+          row.store_type == null ||
+          row.document_name == null ||
+          row.social_media_links == null ||
+          row.shop_logo == null ? (
+            <span className="text-danger">
+              <b>Not Complete</b>
+            </span>
+          ) : (
+            <span className="text-success">
+              <b>Complete</b>
+            </span>
+          )}
+        </p>
+      ),
       sortable: true,
-    //   cell: (row) => (
-    //     <>
-    //   {   
-    //     (row.id=="" ||row.owner_name=="" )?"No":"Yes"
-    //  }
-    //  </>)
+      //   cell: (row) => (
+      //     <>
+      //   {
+      //     (row.id=="" ||row.owner_name=="" )?"No":"Yes"
+      //  }
+      //  </>)
     },
     {
       name: "Owner Name",
@@ -295,7 +312,7 @@ console.log("hhhh---"+ JSON.stringify(addvendordata))
       )
       .then((response) => {
         setvendordata(response.data);
-       
+
         setCondition(false);
         setapicall(false);
       })
@@ -434,7 +451,6 @@ console.log("hhhh---"+ JSON.stringify(addvendordata))
   };
 
   const imguploadchange = async (e) => {
-    
     if (e.target.files.length <= 5) {
       console.log("lemth------" + e.target.files.length);
 
@@ -515,14 +531,14 @@ console.log("hhhh---"+ JSON.stringify(addvendordata))
   let returnarr = [];
   // social media link
   const oncustomheadChange = (e) => {
-    setSocialLink(false)
+    setSocialLink(false);
     setheaderval(e.target.value);
     // setAddCustom((AddCustom) =>{ return {...AddCustom,  e.target.value : e.target.value}});
   };
   // console.log("checkkkk"+JSON.stringify(AddCustom))
 
   const oncustomdescChange = (e) => {
-    setSocialLink(false)
+    setSocialLink(false);
     setdescval(e.target.value);
   };
   // console.log("--------uuuuuuu-------"+JSON.stringify(AddCustom))
@@ -543,18 +559,15 @@ console.log("hhhh---"+ JSON.stringify(addvendordata))
   // }
 
   const handleAddClick = (e) => {
-    if(headerval ===""){
-      setSocialLink("HeaderBlank")
-    }
-    else if( descval===""){
-      setSocialLink("DesBlank")
-    }
-    else{
+    if (headerval === "") {
+      setSocialLink("HeaderBlank");
+    } else if (descval === "") {
+      setSocialLink("DesBlank");
+    } else {
       let returnedTarget = Object.assign({}, { [headerval]: descval });
       setAddCustom(...AddCustom, returnedTarget);
       setsCall(true);
     }
- 
   };
   // console.log("--------customarray-------"+JSON.stringify(customarray))
 
@@ -585,7 +598,7 @@ console.log("hhhh---"+ JSON.stringify(addvendordata))
       setValidated(true);
     } else {
       e.preventDefault();
-   
+
       const formData = new FormData();
       let x = [addvendordata.document_name];
       let socialname = addvendordata.testjson;
@@ -593,8 +606,6 @@ console.log("hhhh---"+ JSON.stringify(addvendordata))
 
       // console.log("socialname----------"+socialname);
       // console.log("socialname----------"+socialname_new);
-
-
 
       formData.append("image", file);
       formData.append("filename", fileName);
@@ -1050,7 +1061,7 @@ console.log("hhhh---"+ JSON.stringify(addvendordata))
                         addvendordata.store_type === "Cloths" ? true : false
                       }
                     >
-                     Cloths
+                      Cloths
                     </option>
                   </Form.Select>
                   <Form.Control.Feedback type="invalid" className="h6">
@@ -1165,7 +1176,6 @@ console.log("hhhh---"+ JSON.stringify(addvendordata))
                               }
                             />
                           </InputGroup>
-                          
                         </td>
                         <td className="col-4">
                           <InputGroup className="">
@@ -1188,7 +1198,6 @@ console.log("hhhh---"+ JSON.stringify(addvendordata))
                               }}
                             />
                           </InputGroup>
-                        
                         </td>
                         <td className="">
                           <Button
@@ -1201,7 +1210,29 @@ console.log("hhhh---"+ JSON.stringify(addvendordata))
                           </Button>
                         </td>
                       </tr>
-                      <tr><td>{SocialLink=="HeaderBlank"?<span className="text-danger"> Please Fill ..!! </span>:SocialLink==false?"":null}</td><td>  {SocialLink=="DesBlank"?<span className="text-danger"> Please Fill..!! </span>:SocialLink==false?"":null}</td></tr>
+                      <tr>
+                        <td>
+                          {SocialLink == "HeaderBlank" ? (
+                            <span className="text-danger">
+                              {" "}
+                              Please Fill ..!!{" "}
+                            </span>
+                          ) : SocialLink == false ? (
+                            ""
+                          ) : null}
+                        </td>
+                        <td>
+                          {" "}
+                          {SocialLink == "DesBlank" ? (
+                            <span className="text-danger">
+                              {" "}
+                              Please Fill..!!{" "}
+                            </span>
+                          ) : SocialLink == false ? (
+                            ""
+                          ) : null}
+                        </td>
+                      </tr>
                       {customarray
                         ? (customarray || []).map((variantdata, i) => {
                             let v = JSON.stringify(variantdata);
