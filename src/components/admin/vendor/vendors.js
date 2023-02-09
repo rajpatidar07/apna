@@ -184,13 +184,17 @@ console.log("hhhh---"+ JSON.stringify(addvendordata))
         <span
           className={
             row.status === "pending"
-              ? "badge bg-secondary"
+              ? "badge bg-warning"
               : row.status === "active"
               ? "badge bg-success"
               : row.status === "blocked"
               ? "badge bg-danger"
               : row.status === "in progress"
               ? "badge bg-primary"
+              : row.status === "incomplete"
+              ? "badge bg-info"
+              : row.status === "return"
+              ? "badge bg-secondary"
               : "badge bg-dark"
           }
         >
@@ -202,6 +206,10 @@ console.log("hhhh---"+ JSON.stringify(addvendordata))
             ? "Blocked"
             : row.status === "in progress"
             ? "In Progress"
+            : row.status === "incomplete"
+            ? "In Complete"
+            : row.status === "return"
+            ? "Return"
             : "return"}
         </span>
       ),
@@ -247,6 +255,20 @@ console.log("hhhh---"+ JSON.stringify(addvendordata))
               selected={row.status === "in progress" ? true : false}
             >
               In Progress
+            </option>
+            <option
+              value="incomplete"
+              disabled={condition ? true : false}
+              selected={row.status === "incomplete" ? true : false}
+            >
+              In Complete
+            </option>
+            <option
+              value="return"
+              disabled={condition ? true : false}
+              selected={row.status === "return" ? true : false}
+            >
+              Return
             </option>
           </Form.Select>
         </Form.Group>
