@@ -677,7 +677,7 @@ function Product() {
                         setSubCategory(response.data);
                       });
                     seteditparentCategory(data.category_name);
-                    setCategoryEditparent(data.category_name);
+                    // setCategoryEditparent(data.category_name);
                   } else if (i === 1) {
                     axios
                       .get(
@@ -686,8 +686,8 @@ function Product() {
                       .then((response) => {
                         setchildCategory(response.data);
                       });
-                    // setCategoryEditparent(data.category_name);
-                    setCategoryEditSubparent(data.category_name);
+                    setCategoryEditparent(data.category_name);
+                    // setCategoryEditSubparent(data.category_name);
                   } else if (i === 2) {
                     axios
                       .get(
@@ -696,8 +696,8 @@ function Product() {
                       .then((response) => {
                         setgrandcCategory(response.data);
                       });
-                    // setCategoryEditSubparent(data.category_name);
-                    setCategoryEditChildparent(data.category_name);
+                    setCategoryEditSubparent(data.category_name);
+                    // setCategoryEditChildparent(data.category_name);
                   } else if (i === 3) {
                     setCategoryEditChildparent(data.category_name);
                   }
