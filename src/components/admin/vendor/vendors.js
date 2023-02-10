@@ -12,6 +12,7 @@ import Iconbutton from "../common/iconbutton";
 import axios from "axios";
 import { Badge, Button, InputGroup, Table } from "react-bootstrap";
 import { GiCancel } from "react-icons/gi";
+import storetype from "../json/storetype";
 
 const VendorsList = () => {
   const token = localStorage.getItem("token");
@@ -48,7 +49,6 @@ const VendorsList = () => {
     availability: "",
     social_media_links: [],
   });
-  console.log("hhhh---" + JSON.stringify(addvendordata));
   let encoded;
   let ImgObj = [];
   let docuarr;
@@ -57,7 +57,6 @@ const VendorsList = () => {
   const [apicall, setapicall] = useState(false);
   const [addtag, setaddtag] = useState();
   const [Docnamearray, setDocnameArray] = useState([]);
-
   const [headerval, setheaderval] = useState("");
   const [descval, setdescval] = useState("");
   const [customarray, setcustomarray] = useState([]);
@@ -68,7 +67,7 @@ const VendorsList = () => {
     store_type: "",
     owner_name: "",
   });
-
+  let admintoken = localStorage.getItem("token");
   const closeAddAlert = () => {
     setAddAlert(false);
   };
@@ -647,7 +646,11 @@ const VendorsList = () => {
       formData.append("social_media_links", socialname_new);
 
       axios
-        .post(`${process.env.REACT_APP_BASEURL}/vendor_register`, formData)
+        .post(`${process.env.REACT_APP_BASEURL}/vendor_register`, formData, {
+          headers: {
+            admin_token: admintoken,
+          },
+        })
         .then((response) => {
           setapicall(true);
           setShow(false);
@@ -1062,6 +1065,7 @@ const VendorsList = () => {
                     aria-label="Default select example"
                     onChange={(e) => handleFormChange(e)}
                     name="store_type"
+                    value={addvendordata.store_type}
                   >
                     <option
                       value=""
@@ -1069,22 +1073,13 @@ const VendorsList = () => {
                     >
                       Select
                     </option>
-                    <option
-                      value="shoese"
-                      selected={
-                        addvendordata.store_type === "shoese" ? true : false
-                      }
-                    >
-                      Shoese
-                    </option>
-                    <option
-                      value="Cloths"
-                      selected={
-                        addvendordata.store_type === "Cloths" ? true : false
-                      }
-                    >
-                      Cloths
-                    </option>
+                    {(storetype.storetype || []).map((data, i) => {
+                      return (
+                        <option key={i} value={data}>
+                          {data}
+                        </option>
+                      );
+                    })}
                   </Form.Select>
                   <Form.Control.Feedback type="invalid" className="h6">
                     Please fill gstn
