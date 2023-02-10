@@ -34,6 +34,9 @@ let encoded;
 let ImgObj = [];
 
 function Product() {
+  const [changeUnitproperty, setChangeUnitProperty] = useState(false);
+  const [selectproductData, setSelectProductData] = useState("");
+  const [checkProductType, setCheckProductType] = useState(false);
   const [error, setError] = useState(true);
   const [vendorid, setVendorId] = useState([]);
   const [category, setCategory] = useState([]);
@@ -87,6 +90,7 @@ function Product() {
     expire_date: "",
     quantity: "",
   };
+  const [productVeriantUnit, setProductveriantUnit] = useState("");
   const [variantarray, setvariantarray] = useState(veriantData);
   const [variantmainarray, setvariantmainarray] = useState([]);
   const [data1, setdata1] = useState("");
@@ -195,13 +199,13 @@ function Product() {
         `${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=500`,
         {
           product_search: {
-            search: `${searchdata.product_title_name}`,
+            search: "",
             price_from: "",
             price_to: "",
             latest_first: "",
-            product_title_name: "",
             sale_price: "",
             short_by_updated_on: "",
+            product_title_name: [`${searchdata.product_title_name}`],
             category: categoryArray,
             product_status: [`${searchdata.product_status}`],
             is_delete: ["1"],
@@ -214,6 +218,7 @@ function Product() {
       )
       .then((response) => {
         setpdata(response.data);
+        // console.log("jjjjjjj++++"+response.data)
         setCondition(false);
         setapicall(false);
       })
@@ -254,7 +259,7 @@ function Product() {
       product_id: `${productid}`,
       fetured_type: e.target.value,
     });
-    console.log("******__________========" + JSON.stringify(featuredata));
+
     setproductname(productname);
     setfeatureShow(true);
   };
@@ -265,6 +270,7 @@ function Product() {
   // end feature product
   //  json
   var varietyy = VariationJson;
+
   var categorytype = CategoryJson;
   const OnProductNameClick = (id) => {
     localStorage.setItem("variantid", id[0]);
@@ -542,7 +548,11 @@ function Product() {
     setScategory({ ...scategory, [e.target.name]: e.target.value });
   };
   useEffect(() => {
-    try {
+    if (indVal === "") {
+      setSubCategory("");
+      setchildCategory("");
+      setgrandcCategory("");
+    } else {
       axios
         .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
         .then((response) => {
@@ -582,8 +592,9 @@ function Product() {
             }
           }
         });
-    } catch (err) {}
+    }
   }, [scategory, indVal]);
+
   // modal
   const [editparentCategory, seteditparentCategory] = useState("");
 
@@ -603,16 +614,13 @@ function Product() {
             }
           )
           .then((response) => {
-            let cgory = response.data.filter(
-              (item) => item.status === "active"
-            );
-            console.log("data-----" + JSON.stringify(cgory));
-            console.log("response.data-----" + JSON.stringify(response.data));
+            let cgory = response.data;
 
             const result = cgory.filter(
               (thing, index, self) =>
                 index === self.findIndex((t) => t.shop_name == thing.shop_name)
             );
+
             setVendorId(result);
           });
       } catch (err) {}
@@ -735,6 +743,7 @@ function Product() {
       )
       .then((response) => {
         setvdata(response.data.results);
+
         settaxdata(response.data.results[0]);
         setvariantapicall(false);
       })
@@ -743,6 +752,33 @@ function Product() {
       });
   };
   const handlevarietyShow = (id, variantid) => {
+    // START GET THE SELECTED PRODUCT DATA------------------------------------------------------
+    axios
+      .get(`${process.env.REACT_APP_BASEURL}/product_details?id=${id}`)
+      .then((response) => {
+        let data = response.data;
+
+        if (data != undefined || data != "" || data != null) {
+          setSelectProductData(data.product_type);
+        }
+      });
+
+    // END GET THE SELECTED PRODUCT DATA------------------------------------------------------
+
+    // START GET THE SELECTED VARIENT DATA------------------------------------------------------
+    axios
+      .get(
+        `${process.env.REACT_APP_BASEURL}/products_pricing?id=${variantid}&product_id=${id}`
+      )
+      .then((response) => {
+        // console.log("unit-----"+response.data[0].unit)
+        setProductveriantUnit(response.data[0].unit);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    // END GET THE SELECTED VARIENT DATA------------------------------------------------------
+
     getProductVariant(id);
     onImgView(variantid, id);
     setvariantarray({
@@ -757,6 +793,7 @@ function Product() {
     // handlevarietyShow(id, variantid);
   };
   const handlevarietyClose = (e) => {
+    setChangeUnitProperty(false);
     setvariantarray(veriantData);
     setVarietyUnitvalidation("");
     setcustomValidated(false);
@@ -948,17 +985,15 @@ function Product() {
     });
   };
 
-  // console.log(
-  //   "product--" + JSON.stringify(variantarray) + productdata.product_type
-  // );
+  console.log("veiant array--" + JSON.stringify(variantarray));
   const onVariantaddclick = (e, id) => {
     setunitValidated(false);
     // id.preventDefault();
     if (id == undefined || id == null || unitValidated == "false") {
       if (
-        variantarray.unit == "" ||
-        variantarray.unit == null ||
-        variantarray.unit == "Select" ||
+        // variantarray.unit == "" ||
+        // variantarray.unit == null ||
+        // variantarray.unit == "Select" ||
         variantarray.product_price == "" ||
         variantarray.mrp == "" ||
         variantarray.sale_price == "" ||
@@ -969,6 +1004,8 @@ function Product() {
         setcustomValidated(true);
       } else if (variantarray.quantity === 0 || variantarray.quantity < 1) {
         setVarietyUnitvalidation("QwanityValidation");
+      } else if (variantarray.manufacturing_date > variantarray.expire_date) {
+        setVarietyUnitvalidation("ExpireDateValidation");
       } else if (
         vdata[0].product_type === "Cloths" &&
         variantarray.unit === "pcs" &&
@@ -1039,9 +1076,9 @@ function Product() {
       }
     } else {
       if (
-        variantarray.unit == "" ||
-        variantarray.unit == null ||
-        variantarray.unit == "Select" ||
+        // variantarray.unit == "" ||
+        // variantarray.unit == null ||
+        // variantarray.unit == "Select" ||
         variantarray.product_price == "" ||
         variantarray.mrp == "" ||
         variantarray.sale_price == "" ||
@@ -1052,6 +1089,8 @@ function Product() {
         setcustomValidated(true);
       } else if (variantarray.quantity === 0 || variantarray.quantity < 1) {
         setVarietyUnitvalidation("QwanityValidation");
+      } else if (variantarray.manufacturing_date > variantarray.expire_date) {
+        setVarietyUnitvalidation("ExpireDateValidation");
       } else if (
         vdata[0].product_type === "Cloths" &&
         variantarray.unit === "pcs" &&
@@ -1093,7 +1132,7 @@ function Product() {
           .then((response) => {
             setvariantarray({
               product_status: "",
-              unit: "",
+              // unit: "",
               colors: "",
               unit_quantity: "",
               size: "",
@@ -1133,77 +1172,88 @@ function Product() {
       ...productdata,
       variety: true,
     });
-    if (
-      variantarray.unit == "" ||
-      variantarray.unit == null ||
-      variantarray.unit == "Select" ||
-      variantarray.product_price == "" ||
-      variantarray.mrp == "" ||
-      variantarray.sale_price == "" ||
-      variantarray.manufacturing_date == "" ||
-      variantarray.expire_date == "" ||
-      variantarray.quantity == ""
-    ) {
-      setcustomValidated(true);
-    } else if (variantarray.quantity === 0 || variantarray.quantity < 1) {
-      setVarietyUnitvalidation("QwanityValidation");
-    } else if (
-      productdata.product_type === "Cloths" &&
-      variantarray.unit === "pcs" &&
-      (variantarray.colors === "" || variantarray.size === "")
-    ) {
-      setVarietyUnitvalidation("fillUnit&size&color");
-    } else if (
-      productdata.product_type !== "Cloths" &&
-      variantarray.unit === "pcs" &&
-      variantarray.colors === "" &&
-      variantarray.size === ""
-    ) {
-      setVarietyUnitvalidation("fillUnit&color");
-    } else if (
-      variantarray.unit !== "pcs" &&
-      (variantarray.unit_quantity === "" ||
-        variantarray.unit_quantity === "null" ||
-        variantarray.unit_quantity === null)
-    ) {
-      setunitValidated(true);
-      setVarietyUnitvalidation("unitQwanity&size&color");
-    } else if (Number(variantarray.discount) > 100) {
-      setunitValidated(true);
-      setVarietyUnitvalidation("discountmore");
-    } else if (
-      Number(variantarray.mrp) > 50000 ||
-      Number(variantarray.mrp) <= 0
-    ) {
-      setunitValidated(true);
-      setVarietyUnitvalidation("mrpmore");
+    if (productdata.product_type == "") {
+      setCheckProductType(true);
     } else {
-      setvariantmainarray((variantmainarray) => [
-        ...variantmainarray,
-        variantarray,
-      ]);
-      setVarietyUnitvalidation("");
-      setvarietyValidated(false);
-      setcustomValidated(false);
+      if (
+        variantarray.unit == "" ||
+        variantarray.unit == null ||
+        variantarray.unit == "Select" ||
+        variantarray.product_price == "" ||
+        variantarray.mrp == "" ||
+        variantarray.sale_price == "" ||
+        variantarray.manufacturing_date == "" ||
+        variantarray.expire_date == "" ||
+        variantarray.quantity == ""
+      ) {
+        setcustomValidated(true);
+      } else if (variantarray.quantity === 0 || variantarray.quantity < 1) {
+        setVarietyUnitvalidation("QwanityValidation");
+      } else if (variantarray.manufacturing_date > variantarray.expire_date) {
+        setVarietyUnitvalidation("ExpireDateValidation");
+      } else if (
+        productdata.product_type === "Cloths" &&
+        variantarray.unit === "pcs" &&
+        (variantarray.colors === "" ||
+          variantarray.size === null ||
+          variantarray.size === "")
+      ) {
+        console.log("fill the size and color");
+        setVarietyUnitvalidation("fillUnit&size&color");
+      } else if (
+        productdata.product_type !== "Cloths" &&
+        variantarray.unit === "pcs" &&
+        variantarray.colors === "" &&
+        (variantarray.size === "" || variantarray.size === null)
+      ) {
+        console.log("fill the  color");
+        setVarietyUnitvalidation("fillUnit&color");
+      } else if (
+        variantarray.unit !== "pcs" &&
+        (variantarray.unit_quantity === "" ||
+          variantarray.unit_quantity === "null" ||
+          variantarray.unit_quantity === null)
+      ) {
+        setunitValidated(true);
+        console.log("Unit qwanity--");
+        setVarietyUnitvalidation("unitQwanity&size&color");
+      } else if (Number(variantarray.discount) > 100) {
+        setunitValidated(true);
+        setVarietyUnitvalidation("discountmore");
+      } else if (
+        Number(variantarray.mrp) > 50000 ||
+        Number(variantarray.mrp) <= 0
+      ) {
+        setunitValidated(true);
+        setVarietyUnitvalidation("mrpmore");
+      } else {
+        setvariantmainarray((variantmainarray) => [
+          ...variantmainarray,
+          variantarray,
+        ]);
+        setVarietyUnitvalidation("");
+        setvarietyValidated(false);
+        setcustomValidated(false);
 
-      setvariantarray({
-        product_status: "",
-        unit: "",
-        colors: "",
-        unit_quantity: "",
-        size: "",
-        product_price: "",
-        mrp: "",
-        sale_price: "",
-        discount: "0",
-        special_offer: false,
-        featured_product: false,
-        manufacturing_date: "",
-        expire_date: "",
-        quantity: "",
-        product_id: productID,
-      });
-      // setcustomValidated(false);
+        setvariantarray({
+          product_status: "",
+          unit: "",
+          colors: "",
+          unit_quantity: "",
+          size: "",
+          product_price: "",
+          mrp: "",
+          sale_price: "",
+          discount: "0",
+          special_offer: false,
+          featured_product: false,
+          manufacturing_date: "",
+          expire_date: "",
+          quantity: "",
+          product_id: productID,
+        });
+        // setcustomValidated(false);
+      }
     }
   };
 
@@ -1219,7 +1269,6 @@ function Product() {
   };
 
   const hideAlert = () => {
-    // product delete
     if (vdata.length === 1) {
       setVerityAlert(false);
       setRestoreAlert(false);
@@ -1278,6 +1327,10 @@ function Product() {
   };
 
   const VariantEditClick = (id, productid) => {
+    console.log("product variant lenght---" + vdata.length);
+    if (vdata.length === 1) {
+      setChangeUnitProperty(true);
+    }
     setVarietyUnitvalidation("");
     axios
       .get(
@@ -1335,6 +1388,7 @@ function Product() {
   // end
 
   const handleInputFieldChange = (e) => {
+    setCheckProductType(false);
     setproductdata({
       ...productdata,
       [e.target.name]: e.target.value,
@@ -1844,7 +1898,7 @@ function Product() {
                           })}
                         </Form.Select>
                         <Form.Control.Feedback type="invalid" className="h6">
-                          Please select producttype
+                          Please select product type
                         </Form.Control.Feedback>
                       </Col>
                     </Form.Group>
@@ -2289,7 +2343,46 @@ function Product() {
                                                 </option>
                                                 {(varietyy.variety || []).map(
                                                   (vari, i) => {
-                                                    return (
+                                                    return changeUnitproperty ==
+                                                      true ? (
+                                                      <option
+                                                        value={
+                                                          vari === "color"
+                                                            ? "pcs"
+                                                            : vari === "weight"
+                                                            ? "gms"
+                                                            : vari === "volume"
+                                                            ? "ml"
+                                                            : vari === "piece"
+                                                            ? "piece"
+                                                            : ""
+                                                        }
+                                                        key={i}
+                                                      >
+                                                        {vari}
+                                                      </option>
+                                                    ) : productdata.product_type ===
+                                                        "Cloths" ||
+                                                      productdata.product_type ===
+                                                        "Fashion" ? (
+                                                      vari === "weight" ||
+                                                      vari ===
+                                                        "volume" ? null : (
+                                                        <option
+                                                          value={
+                                                            vari === "piece"
+                                                              ? "piece"
+                                                              : vari === "color"
+                                                              ? "pcs"
+                                                              : ""
+                                                          }
+                                                          key={i}
+                                                        >
+                                                          {vari}
+                                                        </option>
+                                                      )
+                                                    ) : vari ===
+                                                      "color" ? null : (
                                                       <option
                                                         value={
                                                           vari === "weight"
@@ -2298,8 +2391,6 @@ function Product() {
                                                             ? "ml"
                                                             : vari === "piece"
                                                             ? "piece"
-                                                            : vari === "color"
-                                                            ? "pcs"
                                                             : ""
                                                         }
                                                         key={i}
@@ -2317,20 +2408,36 @@ function Product() {
                                         <td className="p-0 text-center">
                                           <div className=" d-flex align-items-center">
                                             <InputGroup className="" size="sm">
-                                              <Form.Control
-                                                type="text"
+                                              <Form.Select
+                                                aria-label="Default select example"
+                                                required
                                                 sm="9"
-                                                // className={
-                                                //   customvalidated === true
-                                                //     ? "border-danger"
-                                                //     : null
-                                                // }
+                                                name="colors"
+                                                value={variantarray.colors}
                                                 onChange={(e) =>
                                                   onVariantChange(e)
                                                 }
-                                                name={"colors"}
-                                                value={variantarray.colors}
-                                              />
+                                              >
+                                                <option
+                                                  value={
+                                                    variantarray.colors == ""
+                                                  }
+                                                >
+                                                  Select
+                                                </option>
+                                                {(varietyy.color || []).map(
+                                                  (vari, i) => {
+                                                    return (
+                                                      <option
+                                                        value={vari}
+                                                        key={i}
+                                                      >
+                                                        {vari}
+                                                      </option>
+                                                    );
+                                                  }
+                                                )}
+                                              </Form.Select>
                                             </InputGroup>
                                           </div>
                                         </td>
@@ -2354,6 +2461,11 @@ function Product() {
                                                 }
                                                 type="number"
                                                 sm="9"
+                                                disabled={
+                                                  variantarray.unit == "pcs"
+                                                    ? true
+                                                    : false
+                                                }
                                                 // className={
                                                 //   customvalidated === true
                                                 //     ? "border-danger"
@@ -2367,29 +2479,50 @@ function Product() {
                                             </InputGroup>
                                           </div>
                                         </td>
+                                        {console.log(
+                                          "verity size==" + variantarray.size
+                                        )}
                                         <td className="p-0 text-center">
                                           <div className=" d-flex align-items-center">
                                             <InputGroup className="" size="sm">
-                                              <Form.Control
-                                                value={
-                                                  variantarray.unit !== ""
-                                                    ? variantarray.size
-                                                    : variantarray.unit === ""
-                                                    ? ""
-                                                    : null
-                                                }
-                                                type="text"
+                                              <Form.Select
+                                                aria-label="Default select example"
+                                                required
                                                 sm="9"
-                                                // className={
-                                                //   customvalidated === true
-                                                //     ? "border-danger"
-                                                //     : null
-                                                // }
+                                                name="size"
+                                                value={variantarray.size}
                                                 onChange={(e) =>
                                                   onVariantChange(e)
                                                 }
-                                                name={"size"}
-                                              />
+                                                disabled={
+                                                  variantarray.unit !== "pcs" &&
+                                                  variantarray.unit !== ""
+                                                    ? true
+                                                    : variantarray.unit == ""
+                                                    ? false
+                                                    : false
+                                                }
+                                              >
+                                                <option
+                                                  value={
+                                                    variantarray.size == ""
+                                                  }
+                                                >
+                                                  Select
+                                                </option>
+                                                {(varietyy.size || []).map(
+                                                  (vari, i) => {
+                                                    return (
+                                                      <option
+                                                        value={vari}
+                                                        key={i}
+                                                      >
+                                                        {vari}
+                                                      </option>
+                                                    );
+                                                  }
+                                                )}
+                                              </Form.Select>
                                             </InputGroup>
                                           </div>
                                         </td>
@@ -2628,6 +2761,31 @@ function Product() {
                                           </div>
                                         </td>
                                       </tr>
+                                      {checkProductType === true ? (
+                                        <tr>
+                                          <p
+                                            className="mt-1 ms-2 text-danger"
+                                            type="invalid"
+                                          >
+                                            Please the select the product type
+                                            first....!!!!
+                                          </p>
+                                        </tr>
+                                      ) : checkProductType ===
+                                        false ? null : null}
+
+                                      {varietyUnitvalidation ===
+                                      "ExpireDateValidation" ? (
+                                        <tr>
+                                          <p
+                                            className="mt-1 ms-2 text-danger"
+                                            type="invalid"
+                                          >
+                                            Please Expire date should be greater
+                                            than Manufacturing date
+                                          </p>
+                                        </tr>
+                                      ) : null}
 
                                       <tr>
                                         {customvalidated === true ? (
@@ -3055,6 +3213,7 @@ function Product() {
                             </tr>
                           </thead>
                           <tbody>
+                            {/* { console.log( "product   type----------"+JSON.stringify(vdata[0].unit))} */}
                             <tr>
                               <td className="p-0 text-center">
                                 <div className=" d-flex align-items-center">
@@ -3064,42 +3223,27 @@ function Product() {
                                       aria-label="Default select example"
                                       name="unit"
                                       onChange={(e) => onVariantChange(e)}
-                                      value={variantarray.unit}
+                                      value={productVeriantUnit}
+                                      //  selected={
+                                      //   variantarray.unit==="pcs"|| variantarray.unit==="gms"|| variantarray.unit==="ml"|| variantarray.unit==="pcs"|| variantarray.unit==="piece"
+                                      //     ? true
+                                      //     : false
+                                      // }
+                                      disabled={
+                                        productVeriantUnit &&
+                                        changeUnitproperty == false
+                                          ? true
+                                          : productVeriantUnit ||
+                                            changeUnitproperty == true
+                                          ? false
+                                          : true
+                                      }
                                     >
                                       <option value={""}>{"Select"}</option>
-                                      {/* <option
-                                        value={
-                                          variantarray.unit === "pcs"
-                                            ? "color"
-                                            : variantarray.unit === "gms"
-                                            ? "weight"
-                                            : variantarray.unit === "ml"
-                                            ? "volume"
-                                            : variantarray.unit === "piece"
-                                            ? "piece"
-                                            : variantarray.unit === "" ||
-                                              variantarray.unit === null
-                                            ? "Select"
-                                            : null
-                                        }
-                                      >
-                                        {variantarray.unit === "pcs"
-                                          ? "color"
-                                          : variantarray.unit === "gms"
-                                          ? "weight"
-                                          : variantarray.unit === "ml"
-                                          ? "volume"
-                                          : variantarray.unit === "piece"
-                                          ? "piece"
-                                          : variantarray.unit === "" ||
-                                            variantarray.unit === null
-                                          ? "Select"
-                                          : null}
-                                      </option> */}
 
                                       {(varietyy.variety || []).map(
                                         (vari, i) => {
-                                          return (
+                                          return selectproductData === "" ? (
                                             <option
                                               value={
                                                 vari === "color"
@@ -3110,6 +3254,40 @@ function Product() {
                                                   ? "ml"
                                                   : vari === "piece"
                                                   ? "piece"
+                                                  : ""
+                                              }
+                                              key={i}
+                                            >
+                                              {vari}
+                                            </option>
+                                          ) : selectproductData === "Cloths" ||
+                                            selectproductData === "Fashion" ? (
+                                            vari === "weight" ||
+                                            vari === "volume" ? null : (
+                                              <option
+                                                value={
+                                                  vari === "piece"
+                                                    ? "piece"
+                                                    : vari === "color"
+                                                    ? "pcs"
+                                                    : ""
+                                                }
+                                                key={i}
+                                              >
+                                                {vari}
+                                              </option>
+                                            )
+                                          ) : vari === "color" ? null : (
+                                            <option
+                                              value={
+                                                vari === "weight"
+                                                  ? "gms"
+                                                  : vari === "volume"
+                                                  ? "ml"
+                                                  : vari === "piece"
+                                                  ? "piece"
+                                                  : vari === "color"
+                                                  ? "pcs"
                                                   : ""
                                               }
                                               key={i}
@@ -3127,18 +3305,25 @@ function Product() {
                               <td className="p-0 text-center">
                                 <div className=" d-flex align-items-center">
                                   <InputGroup className="" size="sm">
-                                    <Form.Control
-                                      type="text"
+                                    <Form.Select
+                                      aria-label="Default select example"
+                                      required
                                       sm="9"
-                                      // className={
-                                      //   customvalidated === true
-                                      //     ? "border-danger"
-                                      //     : null
-                                      // }
-                                      onChange={(e) => onVariantChange(e)}
-                                      name={"colors"}
+                                      name="colors"
                                       value={variantarray.colors}
-                                    />
+                                      onChange={(e) => onVariantChange(e)}
+                                    >
+                                      <option value={variantarray.colors == ""}>
+                                        Select
+                                      </option>
+                                      {(varietyy.color || []).map((vari, i) => {
+                                        return (
+                                          <option value={vari} key={i}>
+                                            {vari}
+                                          </option>
+                                        );
+                                      })}
+                                    </Form.Select>
                                   </InputGroup>
                                 </div>
                               </td>
@@ -3157,6 +3342,12 @@ function Product() {
                                           : variantarray.unit === ""
                                           ? variantarray.unit_quantity
                                           : null
+                                      }
+                                      disabled={
+                                        productVeriantUnit == "pcs" ||
+                                        variantarray.unit == "pcs"
+                                          ? true
+                                          : false
                                       }
                                       required={
                                         variantarray.unit !== "pcs" &&
@@ -3180,24 +3371,34 @@ function Product() {
                               <td className="p-0 text-center">
                                 <div className=" d-flex align-items-center">
                                   <InputGroup className="" size="sm">
-                                    <Form.Control
-                                      value={
-                                        variantarray.unit !== ""
-                                          ? variantarray.size
-                                          : variantarray.unit === ""
-                                          ? variantarray.size
-                                          : null
-                                      }
-                                      type="text"
+                                    <Form.Select
+                                      aria-label="Default select example"
+                                      required
                                       sm="9"
-                                      // className={
-                                      //   customvalidated === true
-                                      //     ? "border-danger"
-                                      //     : null
-                                      // }
+                                      name="size"
+                                      value={variantarray.size}
                                       onChange={(e) => onVariantChange(e)}
-                                      name={"size"}
-                                    />
+                                      disabled={
+                                        productVeriantUnit !== "pcs" ||
+                                        (variantarray.unit !== "pcs" &&
+                                          variantarray.unit !== "")
+                                          ? true
+                                          : variantarray.unit == ""
+                                          ? false
+                                          : false
+                                      }
+                                    >
+                                      <option value={variantarray.size == ""}>
+                                        Select
+                                      </option>
+                                      {(varietyy.size || []).map((vari, i) => {
+                                        return (
+                                          <option value={vari} key={i}>
+                                            {vari}
+                                          </option>
+                                        );
+                                      })}
+                                    </Form.Select>
                                   </InputGroup>
                                 </div>
                               </td>
@@ -3417,6 +3618,18 @@ function Product() {
                                 </div>
                               </td>
                             </tr>
+                            {varietyUnitvalidation ===
+                            "ExpireDateValidation" ? (
+                              <tr>
+                                <p
+                                  className="mt-1 ms-2 text-danger"
+                                  type="invalid"
+                                >
+                                  Please Expire date should be greater than
+                                  Manufacturing date
+                                </p>
+                              </tr>
+                            ) : null}
 
                             <tr>
                               {customvalidated === true ? (

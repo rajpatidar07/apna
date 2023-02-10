@@ -73,8 +73,8 @@ const Offerproduct = () => {
       },
     },
     {
-      name: "Fetured_type",
-      selector: (row) => row.fetured_type,
+      name: "Product ID",
+      selector: (row) => row.product_id,
       sortable: true,
       width: "250px",
       center: true,
