@@ -149,8 +149,7 @@ function Product() {
     manufacturers_sales_tax: "0",
   });
   const [productID, setproductID] = useState("");
- const[bulkProductError,setBulkProductError]=useState("")
-
+  const [bulkProductError, setBulkProductError] = useState("");
 
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
@@ -255,7 +254,7 @@ function Product() {
       product_id: `${productid}`,
       fetured_type: e.target.value,
     });
-    console.log("******__________========"+JSON.stringify(featuredata))
+    console.log("******__________========" + JSON.stringify(featuredata));
     setproductname(productname);
     setfeatureShow(true);
   };
@@ -518,7 +517,7 @@ function Product() {
               <option value="featured_offer">Featured Offer </option>
               <option value="promotional">Promotional </option>
             </Form.Select>
-            <IoFilter  className="feature_product_ellipsis"/>
+            <IoFilter className="feature_product_ellipsis" />
             {/* <FaEllipsisV className="feature_product_ellipsis"/> */}
           </div>
 
@@ -604,8 +603,12 @@ function Product() {
             }
           )
           .then((response) => {
-            let cgory = response.data;
-           
+            let cgory = response.data.filter(
+              (item) => item.status === "active"
+            );
+            console.log("data-----" + JSON.stringify(cgory));
+            console.log("response.data-----" + JSON.stringify(response.data));
+
             const result = cgory.filter(
               (thing, index, self) =>
                 index === self.findIndex((t) => t.shop_name == thing.shop_name)
@@ -624,14 +627,13 @@ function Product() {
           .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
           .then((response) => {
             let cgory = response.data;
-           
+
             if (indVal === 0) {
               setCategory(cgory);
               // seteditparentCategory(response.data.category_name)
               setSubCategory("");
               setlevel(0);
             }
-            
           });
       } catch (err) {}
     };
@@ -644,10 +646,9 @@ function Product() {
         .get(`${process.env.REACT_APP_BASEURL}/product_details?id=${e}`)
         .then((response) => {
           let data = response.data;
-           console.log("data-----"+JSON.stringify(data))
           if (data != undefined || data != "" || data != null) {
             setproductdata(data);
-              
+
             // categoryedit
 
             const arr = data.parent_category.split(",");
@@ -664,11 +665,12 @@ function Product() {
                         `${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`
                       )
                       .then((response) => {
-                        console.log("subcetgorydata---"+JSON.stringify(response.data))
+                        console.log(
+                          "subcetgorydata---" + JSON.stringify(response.data)
+                        );
                         setSubCategory(response.data);
-                          
                       });
-                      seteditparentCategory(data.category_name)
+                    seteditparentCategory(data.category_name);
                     setCategoryEditparent(data.category_name);
                   } else if (i === 1) {
                     axios
@@ -697,11 +699,10 @@ function Product() {
             }
             // end category edit api
           }
-           
+
           let customdatra = JSON.parse(response.data.add_custom_input);
           // console.log("customdata---"+customdatra)
           setcustomarray(customdatra);
-    
         })
         .catch(function (error) {
           console.log(error);
@@ -982,7 +983,6 @@ function Product() {
         variantarray.colors === "" &&
         (variantarray.size === null || variantarray.size === "")
       ) {
-     
         setVarietyUnitvalidation("fillUnit&color");
       } else if (
         variantarray.unit !== "pcs" &&
@@ -1085,7 +1085,6 @@ function Product() {
       ) {
         setVarietyUnitvalidation("mrpmore");
       } else {
-     
         axios
           .put(
             `${process.env.REACT_APP_BASEURL}/products_varient_update`,
@@ -1516,38 +1515,33 @@ function Product() {
   }
 
   // const saveFile = (e) => {
-    
+
   //   console.log(" lenght----"+JSON.stringify(e.target.files))
   //     setExcelFile(e.target.files[0]);
   //     // setExcelFilename(e.target.files[0]);
   //     FileUploadAPI()
   // };
 
-
   const FileUploadAPI = (e) => {
     const formData = new FormData();
-    
-    formData.append("bulk_xls",e.target.files[0]);
-   
+
+    formData.append("bulk_xls", e.target.files[0]);
 
     axios
       .post(`${process.env.REACT_APP_BASEURL}/product_bulk_uploads`, formData)
       .then((response) => {
-        console.log("uploaddd---"+JSON.stringify(response))
-        if(response.status==200){
-          setProductAlert(true)
-          setapicall(true)
-        
+        console.log("uploaddd---" + JSON.stringify(response));
+        if (response.status == 200) {
+          setProductAlert(true);
+          setapicall(true);
+        } else {
+          setBulkProductError("Error  in adding BulkProducts");
         }
-        else{
-          setBulkProductError("Error  in adding BulkProducts")
-        }
-        
       })
       .catch(function (error) {
         console.log(error);
       });
-   };
+  };
 
   //-----------------------Download excel sheet code End  here---------------------------------------------------
   return (
@@ -1606,17 +1600,26 @@ function Product() {
 
         <div className="product_page_uploadbox my-4">
           <div className="product_page_uploadbox_one">
-            <input type="file" className="product_page_uploadbox_button"   onChange={(e)=>{FileUploadAPI(e)}}/>
+            <input
+              type="file"
+              className="product_page_uploadbox_button"
+              onChange={(e) => {
+                FileUploadAPI(e);
+              }}
+            />
             <Iconbutton
               btntext={"Upload"}
               btnclass={"button main_outline_button"}
               Iconname={<AiOutlineCloudUpload />}
-            
             />
           </div>
-          {bulkProductError==""?"":<p className="mt-1 ms-2 text-danger" type="invalid">
-                            {bulkProductError}
-                            </p>}
+          {bulkProductError == "" ? (
+            ""
+          ) : (
+            <p className="mt-1 ms-2 text-danger" type="invalid">
+              {bulkProductError}
+            </p>
+          )}
           <MainButton btntext={"Download"} onClick={handleDownloadExcel} />
 
           <Iconbutton
@@ -2820,7 +2823,7 @@ function Product() {
                       <div className="d-flex align-items-center tagselectbox mt-2">
                         {productdata.seo_tag == "" && addtag === "" ? (
                           ""
-                        ) :productdata.seo_tag? (
+                        ) : productdata.seo_tag ? (
                           <Badge className="tagselecttitle mb-0" bg="success">
                             {productdata.seo_tag === null ||
                             productdata.seo_tag === undefined
@@ -2835,7 +2838,7 @@ function Product() {
                               {"x"}
                             </span>
                           </Badge>
-                        ):null}
+                        ) : null}
 
                         {/* )
 
@@ -2911,60 +2914,54 @@ function Product() {
                             </Button>
                           </td>
                         </tr>
-                        {
-                         
-                          (customarray || []).map((variantdata, i) => {
-                            // const arr = variantdata.split(',')
-                            return (
-                              <tr className="">
-                                <td className=" text-center">
-                                  <InputGroup className="">
-                                    <Form.Control
-                                      value={variantdata.header}
-                                      type="text"
-                                      sm="9"
-                                      min={"1"}
-                                      onChange={oncustomheadChange}
-                                      name={"custom_input_header"}
-                                      required
-                                    />
-                                  </InputGroup>
-                                </td>
-                                <td className="text-center">
-                                  <InputGroup className="">
-                                    <Form.Control
-                                      required
-                                      value={variantdata.description}
-                                      name={"custom_input_desc"}
-                                      type="text"
-                                      sm="9"
-                                      min={"1"}
-                                      onChange={oncustomdescChange}
-                                      onKeyPress={(event) => {
-                                        if (event.key === "Enter") {
-                                          handleAddClick();
-                                        }
-                                      }}
-                                    />
-                                  </InputGroup>
-                                </td>
-                                <td className="">
-                                  <Button
-                                    variant="text-danger"
-                                    className="addcategoryicon text-danger"
-                                    onClick={() =>
-                                      handleRemoveClick(variantdata)
-                                    }
-                                    size="sm"
-                                  >
-                                    &times;
-                                  </Button>
-                                </td>
-                              </tr>
-                            );
-                          })
-                   
-                        }
+                        {(customarray || []).map((variantdata, i) => {
+                          // const arr = variantdata.split(',')
+                          return (
+                            <tr className="">
+                              <td className=" text-center">
+                                <InputGroup className="">
+                                  <Form.Control
+                                    value={variantdata.header}
+                                    type="text"
+                                    sm="9"
+                                    min={"1"}
+                                    onChange={oncustomheadChange}
+                                    name={"custom_input_header"}
+                                    required
+                                  />
+                                </InputGroup>
+                              </td>
+                              <td className="text-center">
+                                <InputGroup className="">
+                                  <Form.Control
+                                    required
+                                    value={variantdata.description}
+                                    name={"custom_input_desc"}
+                                    type="text"
+                                    sm="9"
+                                    min={"1"}
+                                    onChange={oncustomdescChange}
+                                    onKeyPress={(event) => {
+                                      if (event.key === "Enter") {
+                                        handleAddClick();
+                                      }
+                                    }}
+                                  />
+                                </InputGroup>
+                              </td>
+                              <td className="">
+                                <Button
+                                  variant="text-danger"
+                                  className="addcategoryicon text-danger"
+                                  onClick={() => handleRemoveClick(variantdata)}
+                                  size="sm"
+                                >
+                                  &times;
+                                </Button>
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </Table>
                   </div>
@@ -3068,7 +3065,6 @@ function Product() {
                                       name="unit"
                                       onChange={(e) => onVariantChange(e)}
                                       value={variantarray.unit}
-                              
                                     >
                                       <option value={""}>{"Select"}</option>
                                       {/* <option
