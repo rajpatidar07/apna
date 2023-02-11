@@ -18,9 +18,10 @@ let ImgObj = [];
 const Productdetail = () => {
   let vid = localStorage.getItem("variantid");
   let pid = localStorage.getItem("productid");
+  const [hideallData, setHideAlldata] = useState(false);
   const [variantremove, setVariantRemove] = useState([]);
   const [VerityAlert, setVerityAlert] = useState(false);
- 
+  const [categoryName, setCategoryName] = useState("");
   const [productdata, setProductData] = useState([]);
   const [validated, setValidated] = useState(false);
   const [vdata, setvdata] = useState([]);
@@ -30,24 +31,24 @@ const Productdetail = () => {
   const [varietyshow, setvarietyShow] = useState(false);
   const [ProductAlert, setProductAlert] = useState(false);
   const [UpdatetAlert, setUpdatetAlert] = useState(false);
-  const[viewImage,setViewImage]=useState("view")
-const veriantData={   
-product_status: "1",
-product_id: pid,
-unit: "",
-colors: "",
-unit_quantity: null,
-size: null,
-product_price: "",
-mrp: "",
-sale_price: "",
-discount: "0",
-special_offer: false,
-featured_product: false,
-manufacturing_date: "",
-expire_date: "",
-quantity: "",
-}
+  const [viewImage, setViewImage] = useState("view");
+  const veriantData = {
+    product_status: "1",
+    product_id: pid,
+    unit: "",
+    colors: "",
+    unit_quantity: null,
+    size: "",
+    product_price: "",
+    mrp: "",
+    sale_price: "",
+    discount: "0",
+    special_offer: false,
+    featured_product: false,
+    manufacturing_date: "",
+    expire_date: "",
+    quantity: "",
+  };
   const [variantarray, setvariantarray] = useState(veriantData);
 
   const [productalldata, setproductalldata] = useState({
@@ -67,40 +68,58 @@ quantity: "",
     other_introduction: "",
     is_active: "0",
   });
-  const [variantmainarray, setvariantmainarray] = useState([]);
+
   const [customvalidated, setcustomValidated] = useState(false);
   const [unitValidated, setunitValidated] = useState(false);
-  const[varietyUnitvalidation,setVarietyUnitvalidation]=useState("")
+  const [varietyUnitvalidation, setVarietyUnitvalidation] = useState("");
   const formRef = useRef();
-  const [newImageUrls,setnewImageUrls] = useState([])
-  const [variantdetail,setVariantdetail] = useState([])
-  const [editbutton , setEditButton]= useState(false)
+  const [newImageUrls, setnewImageUrls] = useState([]);
+  const [variantdetail, setVariantdetail] = useState([]);
+  const [editbutton, setEditButton] = useState(false);
+  const [changeUnitproperty, setChangeUnitProperty] = useState(false);
 
   useEffect(() => {
     function getProductDetails() {
       try {
         axios
-        .get(`${process.env.REACT_APP_BASEURL}/product_details?id=${pid}`)
-        .then((response) => {
+          .get(`${process.env.REACT_APP_BASEURL}/product_details?id=${pid}`)
+          .then((response) => {
             let data = response.data;
-           
             if (data != undefined || data != "" || data != null) {
-             
-            setProductData(data);
-
-            setVariantdetail(data.product_verient)
-            onImgView(vid,pid)
+              setProductData(data);
+              setVariantdetail(data.product_verient);
+              onImgView(vid, pid);
+              setvariantarray({
+                ...variantarray,
+                unit: response.data.product_verient[0].unit,
+                product_id: pid,
+              });
             }
             setvariantapicall(false);
           });
       } catch (err) {}
     }
+
     getProductDetails();
   }, [variantapicall]);
 
+  useEffect(() => {
+    getCategorydata();
+  }, [productdata.category]);
 
+  // api call for category details
+  const getCategorydata = () => {
+    axios
+      .get(
+        `${process.env.REACT_APP_BASEURL}/category_details?id=${productdata.category}`
+      )
+      .then((response) => {
+        let data = response.data;
+        setCategoryName(data[0].category_name);
+      });
+  };
+  // End of api call for category details
 
-  
   const onColorChange = (e, id) => {
     setcolorchange(e.target.value);
     vid = localStorage.setItem("variantid", id);
@@ -113,13 +132,12 @@ quantity: "",
 
   var varietyy = VariationJson;
 
-
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
-      const {  name } = file;
+      const { name } = file;
       fileReader.addEventListener("load", () => {
-        resolve({name: name,base64:fileReader.result});
+        resolve({ name: name, base64: fileReader.result });
       });
       fileReader.readAsDataURL(file);
       fileReader.onerror = (error) => {
@@ -127,20 +145,14 @@ quantity: "",
       };
     });
   };
-  
-  const imguploadchange = async (
-    e,
-    product_id,
-    id,
-    vendor_id,
-  ) => {
+
+  const imguploadchange = async (e, product_id, id, vendor_id) => {
     for (let i = 0; i < e.target.files.length; i++) {
       let coverimg;
-      if(newImageUrls.length === 0 && i===0){
-        coverimg = 'cover'
-      }
-      else{
-        coverimg = `cover${i}`
+      if (newImageUrls.length === 0 && i === 0) {
+        coverimg = "cover";
+      } else {
+        coverimg = `cover${i}`;
       }
       encoded = await convertToBase64(e.target.files[i]);
       const [first, ...rest] = encoded.base64.split(",");
@@ -160,103 +172,88 @@ quantity: "",
     axios
       .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
       .then((response) => {
-        onImgView(id,product_id);
+        onImgView(id, product_id);
       })
       .catch(function (error) {
         console.log(error);
       });
   };
 
-  const onImgRemove = (
-    id,
-    name,
-    vendor_id,
-    product_id,
-    product_verient_id
-    ) => {
-       axios
-    .put(`${process.env.REACT_APP_BASEURL}/product_image_delete`,{
-      "product_image_id":`${id}`,
-      "product_image_name": `${name}`,
-      "vendor_id": `${vendor_id}`
-    }
-    )
-    .then((response) => {
-      onImgView(product_verient_id,product_id);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });};
-    
-const onImgView = (id, productid) =>{
-  setViewImage("notview")
-  localStorage.setItem("variantid", id);
-  localStorage.setItem("productid", productid);
-  setEditButton(false)
-  axios
-      .get(`${process.env.REACT_APP_BASEURL}/product_images_get_singal_veriant?product_id=${productid}&product_verient_id=${id}`)
+  const onImgRemove = (id, name, vendor_id, product_id, product_verient_id) => {
+    axios
+      .put(`${process.env.REACT_APP_BASEURL}/product_image_delete`, {
+        product_image_id: `${id}`,
+        product_image_name: `${name}`,
+        vendor_id: `${vendor_id}`,
+      })
       .then((response) => {
-        setnewImageUrls(response.data)
+        onImgView(product_verient_id, product_id);
       })
       .catch(function (error) {
         console.log(error);
       });
-}
-const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
-  axios
-  .put(
-    `${process.env.REACT_APP_BASEURL}/change_porduct_cover_image`,
-    {
-    "product_image_id":`${imgid}`,
-    "product_id":`${productid}`,
-    "product_verient_id":`${productvariantid}`
-  }
-  )
-  .then((response) => {
-    onImgView(productvariantid,productid)
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-}
+  };
+
+  const onImgView = (id, productid) => {
+    setViewImage("notview");
+    localStorage.setItem("variantid", id);
+    localStorage.setItem("productid", productid);
+    setEditButton(false);
+    axios
+      .get(
+        `${process.env.REACT_APP_BASEURL}/product_images_get_singal_veriant?product_id=${productid}&product_verient_id=${id}`
+      )
+      .then((response) => {
+        setnewImageUrls(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  const onImgCoverEditClick = (imgid, productid, productvariantid) => {
+    axios
+      .put(`${process.env.REACT_APP_BASEURL}/change_porduct_cover_image`, {
+        product_image_id: `${imgid}`,
+        product_id: `${productid}`,
+        product_verient_id: `${productvariantid}`,
+      })
+      .then((response) => {
+        onImgView(productvariantid, productid);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
   const onVariantChange = (e) => {
-    setVarietyUnitvalidation("")
-    setcustomValidated(false)
+    setVarietyUnitvalidation("");
+    setcustomValidated(false);
     setvariantapicall(true);
-    setunitValidated(false)
+    setunitValidated(false);
     setvariantarray({
       ...variantarray,
       [e.target.name]: e.target.value,
     });
   };
 
-
-  let discountt= variantarray.mrp * variantarray.discount/100;
+  let discountt = (variantarray.mrp * variantarray.discount) / 100;
   let product_price = variantarray.mrp - discountt;
-  let saleprice =(product_price) 
-  + 
-  (
-    (product_price*(productdata.gst/100) )
-  +
-  (product_price*(productdata.wholesale_sales_tax/100))
-  +
-  (product_price*(productdata.retails_sales_tax/100))
-  +
-(product_price*(productdata.value_added_tax/100))
-+
-(product_price*(productdata.manufacturers_sales_tax/100))
-)
-
+  let saleprice =
+    product_price +
+    (product_price * (productdata.gst / 100) +
+      product_price * (productdata.wholesale_sales_tax / 100) +
+      product_price * (productdata.retails_sales_tax / 100) +
+      product_price * (productdata.value_added_tax / 100) +
+      product_price * (productdata.manufacturers_sales_tax / 100));
 
   useEffect(() => {
     setvariantarray({
       ...variantarray,
-      product_status:"pending",
+      product_status: "pending",
       product_price: `${product_price}`,
-      sale_price:`${saleprice}`
+      sale_price: `${saleprice}`,
     });
-  }, [variantarray.mrp,variantarray.discount,productdata,variantapicall]);
+  }, [variantarray.mrp, variantarray.discount, productdata, variantapicall]);
   const handleInputcheckboxChange = (e) => {
     const target = e.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
@@ -273,11 +270,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
     });
   };
 
-
-//  console.log("veriant data---"+JSON.stringify(variantarray))
-      console.log ("--------------------------"+productdata.product_type)
   const onVariantaddclick = (id) => {
- 
     if (id === "" || id === null || id === undefined) {
       if (
         variantarray.unit == "" ||
@@ -289,24 +282,20 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
         variantarray.manufacturing_date == "" ||
         variantarray.expire_date == "" ||
         variantarray.quantity == ""
-      ) 
-      {
+      ) {
         setcustomValidated(true);
-      } 
-      else if( variantarray.quantity==0 || variantarray.quantity < 1){
+      } else if (variantarray.quantity == 0 || variantarray.quantity < 1) {
         setVarietyUnitvalidation("QwanityValidation");
-      }
-      else if (
-       productdata.product_type !== "Cloths" &&
+      } else if (variantarray.manufacturing_date > variantarray.expire_date) {
+        setVarietyUnitvalidation("ExpireDateValidation");
+      } else if (
+        productdata.product_type !== "Cloths" &&
         variantarray.unit === "pcs" &&
         variantarray.colors === "" &&
         (variantarray.size === null || variantarray.size === "")
       ) {
-     
         setVarietyUnitvalidation("fillUnit&color");
-      }
-
-      else if (
+      } else if (
         productdata.product_type === "Cloths" &&
         variantarray.unit === "pcs" &&
         (variantarray.colors === "" ||
@@ -314,13 +303,12 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
           variantarray.size === "")
       ) {
         setVarietyUnitvalidation("fillUnit&size&color");
-      }
-     else if(
-      variantarray.unit !== "pcs" &&
-      (variantarray.unit_quantity === "" ||
-        variantarray.unit_quantity === "null" ||
-        variantarray.unit_quantity === null))
-      {
+      } else if (
+        variantarray.unit !== "pcs" &&
+        (variantarray.unit_quantity === "" ||
+          variantarray.unit_quantity === "null" ||
+          variantarray.unit_quantity === null)
+      ) {
         setunitValidated(true);
         setVarietyUnitvalidation("unitQwanity&size&color");
       } else if (Number(variantarray.discount) > 100) {
@@ -330,56 +318,49 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
         Number(variantarray.mrp) <= 0
       ) {
         setVarietyUnitvalidation("mrpmore");
-      }
-
-      else{
+      } else {
         axios
-        .post(
-          `${process.env.REACT_APP_BASEURL}/products_varient_add`,
-          variantarray
-        )
-        .then((response) => {
-         
-          if(response.affectedRows="1"){
-            setProductAlert(true);
+          .post(
+            `${process.env.REACT_APP_BASEURL}/products_varient_add`,
+            variantarray
+          )
+          .then((response) => {
+            if ((response.affectedRows = "1")) {
+              setProductAlert(true);
 
-            setvariantarray({
-              product_status: "",
-              unit: "",
-              colors: "",
-              unit_quantity: "",
-              size: "",
-              product_price: "",
-              mrp: "",
-              sale_price: "",
-              discount: "0",
-              special_offer: false,
-              featured_product: false,
-              manufacturing_date: "",
-              expire_date: "",
-              quantity: "",
-              product_id:"",
-            });
-            setvariantapicall(true);
-            setcustomValidated(false)
-            setVarietyUnitvalidation("")
-          }
-      
-          else if(response.errno==1064){
-            alert("Error in add product")
-           setProductAlert(false)}
-
-           else{setProductAlert(false);}
-         
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+              setvariantarray({
+                product_status: "",
+                // unit: "",
+                colors: "",
+                unit_quantity: "",
+                size: "",
+                product_price: "",
+                mrp: "",
+                sale_price: "",
+                discount: "0",
+                special_offer: false,
+                featured_product: false,
+                manufacturing_date: "",
+                expire_date: "",
+                quantity: "",
+                product_id: "",
+              });
+              setvariantapicall(true);
+              setcustomValidated(false);
+              setVarietyUnitvalidation("");
+            } else if (response.errno == 1064) {
+              alert("Error in add product");
+              setProductAlert(false);
+            } else {
+              setProductAlert(false);
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
       }
-  
     } else {
-       if(id){
-         
+      if (id) {
         if (
           variantarray.unit == "" ||
           variantarray.unit == null ||
@@ -390,38 +371,33 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
           variantarray.manufacturing_date == "" ||
           variantarray.expire_date == "" ||
           variantarray.quantity == ""
-        ) 
-        {
+        ) {
           setcustomValidated(true);
-        } 
-        else if( variantarray.quantity==0 || variantarray.quantity < 1){
+        } else if (variantarray.quantity == 0 || variantarray.quantity < 1) {
           setVarietyUnitvalidation("QwanityValidation");
-        }
-        else if (
+        } else if (variantarray.manufacturing_date > variantarray.expire_date) {
+          setVarietyUnitvalidation("ExpireDateValidation");
+        } else if (
           productdata.product_type !== "Cloths" &&
-           variantarray.unit === "pcs" &&
-           variantarray.colors === "" &&
-           (variantarray.size === null || variantarray.size === "")
-         ) {
-        
-           setVarietyUnitvalidation("fillUnit&color");
-         }
-   
-         else if (
-           productdata.product_type === "Cloths" &&
-           variantarray.unit === "pcs" &&
-           (variantarray.colors === "" ||
-             variantarray.size === null ||
-             variantarray.size === "")
-         ) {
-           setVarietyUnitvalidation("fillUnit&size&color");
-         }
-       else if(
-        variantarray.unit !== "pcs" &&
-        (variantarray.unit_quantity === "" ||
-          variantarray.unit_quantity === "null" ||
-          variantarray.unit_quantity === null))
-        {
+          variantarray.unit === "pcs" &&
+          variantarray.colors === "" &&
+          (variantarray.size === null || variantarray.size === "")
+        ) {
+          setVarietyUnitvalidation("fillUnit&color");
+        } else if (
+          productdata.product_type === "Cloths" &&
+          variantarray.unit === "pcs" &&
+          (variantarray.colors === "" ||
+            variantarray.size === null ||
+            variantarray.size === "")
+        ) {
+          setVarietyUnitvalidation("fillUnit&size&color");
+        } else if (
+          variantarray.unit !== "pcs" &&
+          (variantarray.unit_quantity === "" ||
+            variantarray.unit_quantity === "null" ||
+            variantarray.unit_quantity === null)
+        ) {
           setunitValidated(true);
           setVarietyUnitvalidation("unitQwanity&size&color");
         } else if (Number(variantarray.discount) > 100) {
@@ -431,101 +407,84 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
           Number(variantarray.mrp) <= 0
         ) {
           setVarietyUnitvalidation("mrpmore");
-        }
+        } else {
+          axios
+            .put(
+              `${process.env.REACT_APP_BASEURL}/products_varient_update`,
+              variantarray
+            )
+            .then((response) => {
+              if ((response.affectedRows = "1")) {
+                setUpdatetAlert(true);
 
-      else{
+                // setvariantarray(response.data);
 
-        axios
-        .put(
-          `${process.env.REACT_APP_BASEURL}/products_varient_update`,
-          variantarray
-        )
-        .then((response) => {
-
-          if(response.affectedRows="1"){
-            setUpdatetAlert(true);
-            
-            // setvariantarray(response.data);
-          
-            setvariantarray({
-              product_status: "",
-              unit: "",
-              colors: "",
-              unit_quantity: "",
-              size: "",
-              product_price: "",
-              mrp: "",
-              sale_price: "",
-              discount: "0",
-              special_offer: false,
-              featured_product: false,
-              manufacturing_date: "",
-              expire_date: "",
-              quantity: "",
-              product_id:"",
+                setvariantarray({
+                  product_status: "",
+                  // unit: "",
+                  colors: "",
+                  unit_quantity: "",
+                  size: "",
+                  product_price: "",
+                  mrp: "",
+                  sale_price: "",
+                  discount: "0",
+                  special_offer: false,
+                  featured_product: false,
+                  manufacturing_date: "",
+                  expire_date: "",
+                  quantity: "",
+                  product_id: "",
+                });
+                setvariantapicall(true);
+                setcustomValidated(false);
+                setVarietyUnitvalidation("");
+              } else if (response.errno == 1064) {
+                alert("Error in Update product");
+                setUpdatetAlert(false);
+              } else {
+                setUpdatetAlert(false);
+              }
+            })
+            .catch(function (error) {
+              console.log(error);
             });
-            setvariantapicall(true);
-            setcustomValidated(false)
-            setVarietyUnitvalidation("")
-          }
-      
-          else if(response.errno==1064){
-            alert("Error in Update product")
-            setUpdatetAlert(false)}
-
-           else{setUpdatetAlert(false);}
-
-       
-           })
-        .catch(function (error) {
-          console.log(error);
-        });
+        }
+      } else {
+        alert("Id not provide");
       }
-       
-
-       } 
-       else{
-        alert("Id not provide")
-       }
-
- 
     }
   };
-  const VariantAddProduct = () => {
-    setvariantmainarray((variantmainarray) => [
-      ...variantmainarray,
-      variantarray,
-    ]);
-    setcustomValidated(false);
-    formRef.current.reset();
-  };
-
-
-
 
   const VariantRemoveClick = (id, productid) => {
-      
     setVerityAlert(true);
-   
     setVariantRemove((variantremove) => {
       return { ...variantremove, id: id, productid: productid };
     });
-
-    
   };
 
   const closeAlert = () => {
-          setVerityAlert(false);
-          setProductAlert(false)
-          setUpdatetAlert(false)
-        };
+    setVerityAlert(false);
+    setProductAlert(false);
+    setUpdatetAlert(false);
+  };
 
+  console.log(
+    "veriant lenght--" + variantdetail.length + "ppp " + changeUnitproperty
+  );
 
-
-  const deleteProductVeriant=()=>{
+  const deleteProductVeriant = () => {
+    if (variantdetail.length === 0) {
+      setHideAlldata(true);
+      setVerityAlert(false);
+    }
+    if (variantdetail.length === 1) {
+      setChangeUnitProperty("editvariety");
+    }
+    console.log("veriant lenght--" + variantdetail.length);
     axios
       .put(`${process.env.REACT_APP_BASEURL}/products_delete_remove`, {
-        varient_id:  variantremove.id,
+        varient_id: variantremove.id,
         product_id: variantremove.productid,
         is_delete: "0",
       })
@@ -535,12 +494,14 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
       .catch(function (error) {
         console.log(error);
       });
-    setvdata(vdata.filter((item) => item !==  variantremove.id));
+    setvdata(vdata.filter((item) => item !== variantremove.id));
     setVerityAlert(false);
-  }
-
+  };
 
   const VariantEditClick = (id, productid) => {
+    if (variantdetail.length === 1) {
+      setChangeUnitProperty(true);
+    }
     axios
       .get(
         `${process.env.REACT_APP_BASEURL}/products_pricing?id=${id}&product_id=${productid}&user_id`
@@ -552,261 +513,290 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
         console.log(error);
       });
   };
-// useEffect((id, productid)=>{
-//   VariantEditClick(id, productid)
-// },[])
+  // useEffect((id, productid)=>{
+  //   VariantEditClick(id, productid)
+  // },[])
   return (
     <div>
-            <h2 className="productname mb-0">{productdata.product_title_name}</h2>
-              <div className="row mt-3">
-                <div className="productimg_box col-8">
-                  <Carousel
-                    autoPlay
-                    interval="3000"
-                    transitionTime="3000"
-                    infiniteLoop
-                    showIndicators={false}
-                    className={"productimg_carousel"}
-                    showStatus={false}
-                  >
-                 
+      {" "}
+      {hideallData == false ? (
+        <>
+          <h2 className="productname mb-0">{productdata.product_title_name}</h2>
+          <div className="row mt-3">
+            <div className="productimg_box col-8">
+              <Carousel
+                autoPlay
+                interval="3000"
+                transitionTime="3000"
+                infiniteLoop
+                showIndicators={false}
+                className={"productimg_carousel"}
+                showStatus={false}
+              >
+                {newImageUrls
+                  ? (newImageUrls || []).map((data, i) => {
+                      return data.product_verient_id == vid &&
+                        data.product_id == pid ? (
+                        <div className="w-100 h-50" key={i}>
+                          <img
+                            src={
+                              newImageUrls.length === 0
+                                ? "https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
+                                : data.product_image_path
+                                ? data.product_image_path
+                                : null
+                            }
+                            alt={data.product_image_name}
+                          />
+                        </div>
+                      ) : null;
+                    })
+                  : null}
 
-
-                    {
-                        newImageUrls?
-                      (newImageUrls || []).map((data,i)=>{
-              return(
-                data.product_verient_id == vid && data.product_id == pid ?
-                    <div className="w-100 h-50" key={i}>
-                      <img
-                        src={newImageUrls.length===0?"https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg":data.product_image_path?data.product_image_path:null}
-                        alt={data.product_image_name}
-                      />
-
-                    </div>
-                   : null
-                   )
-                 })
-                 : null
-               }
-               
                 {/* {
-               
-               newImageUrls!==[]? <img
-                    src="https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
-                  />:""} */}
-                    
-                  </Carousel>
-                </div>
+         
+         newImageUrls!==[]? <img
+              src="https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
+            />:""} */}
+              </Carousel>
+            </div>
 
-                <div className="product_detail_box col-4 mt-4 ">
-                  {/*  */}
-                  <div className="product_upper_section row">
-                    <div className="col-6">
-                      <b>
-                        <h5 className="statuslabeltext text-success">
-                          {productdata.product_title_name}
-                        </h5>
-                      </b>
-                      <div className="productstatus">
-                        <h5 className="statuslabeltext">Product ID:</h5>
-                        <b>
-                          <h6 className="text-secondary statuslabeltext">
-                            {productdata.id}
-                          </h6>
-                        </b>
-                      </div>
+            <div className="product_detail_box col-4 mt-4 ">
+              {/*  */}
+              <div className="product_upper_section row">
+                <div className="col-6">
+                  <b>
+                    <h5 className="statuslabeltext text-success">
+                      {productdata.product_title_name}
+                    </h5>
+                  </b>
+                  <div className="productstatus">
+                    <h5 className="statuslabeltext">
+                      Product ID: <b> {productdata.id}</b>
+                    </h5>
+                  </div>
 
-                      {/* price */}
+                  {/* price */}
 
-                      <div className="product_upper_section ">
-                      {
-                        variantdetail?
-                      (variantdetail || []).map((data,i)=>{
-              return(
-                data.id == vid && data.product_id == pid ?
-                        <div className="product_mid_section product_variety_section" key={i}>
-                          <h3 className="mb-0">{variantarray.product_price}</h3>
-                          <div className="priceboxx">
-                            <b>
-                              <p className="text-success mb-0">
-                                {variantarray.discount}% off{" "}
-                              </p>
-                            </b>
-                            <p className="mrprate text-danger">({variantarray.mrp})</p>
-                          </div>
-                          <div className="priceboxx">
-                            <b>
-                              {" "}
-                              <p className="text-secondary">Sale Price: </p>
-                            </b>
-                            <p className="">{variantarray.sale_price}</p>
-                          </div>
-                        </div>
-                        : null
-                        )
-                      })
-                      : null
-                    }
- 
-                        {/* store */}
-                        <div className="product_lower_section product_upper_section">
-                          <div className="productquantity productstatus">
-                            <h5 className=" mb-0">Store:</h5>
-                            <p className="statuslabeltext mb-0 text-primary">
-                              {productdata.store_name}
-                            </p>
-                          </div>
-                        </div>
-                        {/*  */}
-                        {/*description  */}
-                        <div>
-                          <h5 className="mb-1">Product Description:</h5>
-                          <ShowMoreText
-                            /* Default options */
-                            lines={5}
-                            more="Show more"
-                            less="...Show less"
-                            anchorclassName="oooeeer"
-                            expanded={false}
-                            width={500}
-                            className={"detailproduct"}
-                          >
-                            <div className="detailproduct statuslabeltext editor"  dangerouslySetInnerHTML={{ __html: productdata.product_description }}>
+                  <div className="product_upper_section ">
+                    {variantdetail
+                      ? (variantdetail || []).map((data, i) => {
+                          return data.id == vid && data.product_id == pid ? (
+                            <div
+                              className="product_mid_section product_variety_section"
+                              key={i}
+                            >
+                              <h3 className="mb-0">
+                                {" "}
+                                Price:{data.product_price.toFixed(2)}
+                              </h3>
+                              <div className="priceboxx">
+                                <b>
+                                  <p className="text-success mb-0">
+                                    {data.discount}% off
+                                  </p>
+                                </b>
+                                <p className="mrprate text-danger">
+                                  ({data.mrp.toFixed(2)})
+                                </p>
+                              </div>
+                              <div className="priceboxx">
+                                <b>
+                                  {" "}
+                                  <p className="text-secondary">
+                                    Sale Price: {data.sale_price}{" "}
+                                  </p>
+                                </b>
+                              </div>
                             </div>
-                          </ShowMoreText>
-                        </div>
-                        {/*  */}
+                          ) : null;
+                        })
+                      : null}
 
-                        {/* other instarusction */}
-                        <div>
-                          <h5 className="mb-1">Other Instruction:</h5>
-                          <ShowMoreText
-                            /* Default options */
-                            lines={5}
-                            more="Show more"
-                            less="...Show less"
-                            anchorclassName="oooeeer"
-                            expanded={false}
-                            width={500}
-                          >
-                            <div className="detailproduct statuslabeltext"  dangerouslySetInnerHTML={{ __html: productdata.product_description }}>
-                            </div>
-                          </ShowMoreText>
-                        </div>
-                      </div>
-                    </div>
-                    {/* category */}
-                    <div className="col-6">
-                      <div className="product_lower_section product_upper_section">
-                        <div className="productquantity productstatus">
-                          <h5 className="mb-0">Category:</h5>
-                          <p className="categorytext statuslabeltext mb-0">
-                            {productdata.category}
-                          </p>
-                        </div>
-                        <div className="productquantity productstatus">
-                          <h6 className="categorytext1">
-                            {productdata.parent_category}
-                          </h6>
-                          <h6 className="categorytext1">
-                            {productdata.parent_category}
-                          </h6>
-                        </div>
-                      </div>
-                      {/* tax */}
-                      <div className="product_mid_section product_variety_section">
-                        <h5 className="mb-0">Tax:</h5>
-                        <div className="productstatus">
-                          <div className="d-flex align-items-center">
-                          <h5 className="statuslabeltext">Gst:</h5>
-                          <b>
-                            <p className="text-secondary statuslabeltext mb-0  mx-2">
-                              {productdata.gst=="undefined"?0:productdata.gst}
-                            </p>
-                          </b>
-                          </div>
-                          <div className="d-flex align-items-center">
-                          <h5 className="statuslabeltext">Cgst:</h5>
-                          <b>
-                            <p className="text-secondary statuslabeltext mb-0 mx-2">
-                              {productdata.cgst=="undefined"?0:productdata.cgst}
-                            </p>
-                          </b>
-                          </div>
-                          <div className="d-flex align-items-center">
-                          <h5 className="statuslabeltext">Sgst:</h5>
-                          <b>
-                            <p className="text-secondary statuslabeltext mb-0 align-items-center mx-2">
-                              {productdata.sgst=="undefined" ?0:productdata.sgst}
-                            </p>
-                          </b>
-                          </div>
-                          <div  className="d-flex">
-                          <h5 className="statuslabeltext">
-                            Wholesale sales tax:
-                          </h5>
-                          <b>
-                            <p className="text-secondary statuslabeltext mx-2 mb-0">
-                              {productdata.wholesale_sales_tax}
-                            </p>
-                          </b>
-                          </div>
-                        </div>
-                        <div className="d-flex align-items-center">
-                          <h5 className="statuslabeltext">
-                            Manufacturers sales tax:
-                          </h5>
-                          <b>
-                            <p className="text-secondary statuslabeltext mx-2 mb-0">
-                              {productdata.manufacturers_sales_tax}
-                            </p>
-                          </b>
-                          </div>
-                          <div className="d-flex align-items-center">
-                          <h5 className="statuslabeltext">
-                            Retails sales tax:
-                          </h5>
-                          <b>
-                            <p className="text-secondary statuslabeltext mx-2 mb-0">
-                              {productdata.retails_sales_tax}
-                            </p>
-                          </b>
-                        </div>
+                    {/* store */}
+                    <div className="product_lower_section product_upper_section">
+                      <div className="productquantity productstatus">
+                        <h5 className=" mb-0">Store:</h5>
+                        <p className="statuslabeltext mb-0 text-primary">
+                          {productdata.store_name}
+                        </p>
                       </div>
                     </div>
                     {/*  */}
-                  </div>
-                  
-                </div>
-           
+                    {/*description  */}
+                    <div>
+                      <h5 className="mb-1">Product Description:</h5>
+                      <ShowMoreText
+                        /* Default options */
+                        lines={5}
+                        more="Show more"
+                        less="...Show less"
+                        anchorclassName="oooeeer"
+                        expanded={false}
+                        width={500}
+                        className={"detailproduct"}
+                      >
+                        <div
+                          className="detailproduct statuslabeltext editor"
+                          dangerouslySetInnerHTML={{
+                            __html: productdata.product_description,
+                          }}
+                        ></div>
+                      </ShowMoreText>
+                    </div>
+                    {/*  */}
 
-                <div className="variety_section_box col-12">
-                  <Form ref={formRef} validated={validated}>
-                    <Form.Group
-                      className=""
-                    >
-                         <div className="variation_box my-2">
+                    {/* other instarusction */}
+                    <div>
+                      <h5 className="mb-1">Other Instruction:</h5>
+                      <ShowMoreText
+                        /* Default options */
+                        lines={5}
+                        more="Show more"
+                        less="...Show less"
+                        anchorclassName="oooeeer"
+                        expanded={false}
+                        width={500}
+                      >
+                        <div
+                          className="detailproduct statuslabeltext"
+                          dangerouslySetInnerHTML={{
+                            __html: productdata.other_introduction,
+                          }}
+                        ></div>
+                      </ShowMoreText>
+                    </div>
+                  </div>
+                </div>
+                {/* category */}
+                <div className="col-6">
+                  <div className="product_lower_section product_upper_section">
+                    <div className="productquantity productstatus">
+                      <h5 className="mb-0">
+                        Product type: <b>{productdata.product_type}</b>{" "}
+                      </h5>
+                    </div>
+                    <div className="productquantity productstatus">
+                      <h5 className="mb-0">
+                        Category: <b>{categoryName}</b>{" "}
+                      </h5>
+                    </div>
+                  </div>
+                  {/* tax */}
+                  <div className="product_mid_section product_variety_section">
+                    <h5 className="mb-0">Tax:</h5>
+                    <div className="productstatus">
+                      <div className="d-flex align-items-center">
+                        <h5 className="statuslabeltext">
+                          Gst:{" "}
+                          <b>
+                            {productdata.gst == "undefined"
+                              ? 0
+                              : productdata.gst}{" "}
+                          </b>{" "}
+                        </h5>
+                        <b></b>
+                      </div>
+                      <div className="d-flex align-items-center">
+                        <h5 className="statuslabeltext">
+                          Cgst:{" "}
+                          <b>
+                            {productdata.cgst == "undefined"
+                              ? 0
+                              : productdata.cgst}{" "}
+                          </b>{" "}
+                        </h5>
+                      </div>
+                      <div className="d-flex align-items-center">
+                        <h5 className="statuslabeltext">
+                          Sgst:{" "}
+                          <b>
+                            {productdata.sgst == "undefined"
+                              ? 0
+                              : productdata.sgst}{" "}
+                          </b>
+                        </h5>
+                      </div>
+                      <div className="d-flex">
+                        <h5 className="statuslabeltext">
+                          Wholesale sales tax:{" "}
+                          <b>
+                            {productdata.wholesale_sales_tax == "" ||
+                            productdata.wholesale_sales_tax == "undefined"
+                              ? 0
+                              : productdata.wholesale_sales_tax}
+                          </b>
+                        </h5>
+                      </div>
+                    </div>
+                    <div className="d-flex align-items-center">
+                      <h5 className="statuslabeltext">
+                        Manufacturers sales tax:{" "}
+                        <b>
+                          {productdata.manufacturers_sales_tax == "" ||
+                          productdata.manufacturers_sales_tax == "undefined"
+                            ? 0
+                            : productdata.manufacturers_sales_tax}
+                        </b>
+                      </h5>
+                    </div>
+                    <div className="d-flex align-items-center">
+                      <h5 className="statuslabeltext">
+                        Retails sales tax:{" "}
+                        <b>
+                          {productdata.retails_sales_tax == "" ||
+                          productdata.retails_sales_tax == "undefined"
+                            ? 0
+                            : productdata.retails_sales_tax}
+                        </b>
+                      </h5>
+                    </div>
+                  </div>
+                </div>
+                {/*  */}
+              </div>
+            </div>
+
+            <div className="variety_section_box col-12">
+              <Form ref={formRef} validated={validated}>
+                <Form.Group className="">
+                  <div className="variation_box my-2">
                     <div className="row">
                       <div className="col-auto">
                         <div className="col-12">
                           <Table bordered className="align-middle my-2">
                             <thead className="align-middle">
                               <tr>
-                                <th>Variety <span className="text-danger">*</span></th>
+                                <th>
+                                  Variety <span className="text-danger">*</span>
+                                </th>
                                 <th>Color</th>
                                 <th>Weight/piece/Volume </th>
                                 <th>Size</th>
-                                <th>Mrp <span className="text-danger">*</span></th>
+                                <th>
+                                  Mrp <span className="text-danger">*</span>
+                                </th>
                                 <th>Discount</th>
-                                <th>Price <span className="text-danger">*</span></th>
-                                <th>Sale Price <span className="text-danger">*</span></th>
-                                <th>Special Offer</th>
-                                <th>Featured Product</th>
-                                <th className="manufacture_date">Mdate <span className="text-danger">*</span></th>
-                                <th className="manufacture_date">Edate <span className="text-danger">*</span></th>
+                                <th>
+                                  Price <span className="text-danger">*</span>
+                                </th>
+                                <th>
+                                  Sale Price{" "}
+                                  <span className="text-danger">*</span>
+                                </th>
+                                {/* <th>Special Offer</th>
+                                <th>Featured Product</th> */}
+                                <th className="manufacture_date">
+                                  Mdate <span className="text-danger">*</span>
+                                </th>
+                                <th className="manufacture_date">
+                                  Edate <span className="text-danger">*</span>
+                                </th>
                                 <th className="manufacture_date">Image</th>
-                                <th className="manufacture_date">Quantity <span className="text-danger">*</span></th>
+                                <th className="manufacture_date">
+                                  Quantity{" "}
+                                  <span className="text-danger">*</span>
+                                </th>
                                 <th></th>
                               </tr>
                             </thead>
@@ -819,30 +809,128 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                         aria-label="Default select example"
                                         name="unit"
                                         onChange={(e) => onVariantChange(e)}
+                                        disabled={
+                                          variantarray.unit &&
+                                          changeUnitproperty == false
+                                            ? true
+                                            : variantarray.unit ||
+                                              changeUnitproperty == true
+                                            ? false
+                                            : true
+                                        }
+                                        value={variantarray.unit}
                                         // className={
                                         //   customvalidated === true
                                         //     ? "border-danger"
                                         //     : null
                                         // }
-                                      >     <option value={""}>{"Select"}</option>
-                                          
+                                      >
+                                        {" "}
+                                        <option value={""}>{"Select"}</option>
                                         {(varietyy.variety || []).map(
+                                          (vari, i) => {
+                                            return changeUnitproperty ==
+                                              true ? (
+                                              <option
+                                                value={
+                                                  vari === "color"
+                                                    ? "pcs"
+                                                    : vari === "weight"
+                                                    ? "gms"
+                                                    : vari === "volume"
+                                                    ? "ml"
+                                                    : vari === "piece"
+                                                    ? "piece"
+                                                    : ""
+                                                }
+                                                key={i}
+                                              >
+                                                {vari}
+                                              </option>
+                                            ) : productdata.product_type ===
+                                                "Cloths" ||
+                                              productdata.product_type ===
+                                                "Fashion" ? (
+                                              vari === "weight" ||
+                                              vari === "volume" ? null : (
+                                                <option
+                                                  value={
+                                                    vari === "piece"
+                                                      ? "piece"
+                                                      : vari === "color"
+                                                      ? "pcs"
+                                                      : ""
+                                                  }
+                                                  key={i}
+                                                >
+                                                  {vari}
+                                                </option>
+                                              )
+                                            ) : vari === "color" ? null : (
+                                              <option
+                                                value={
+                                                  vari === "weight"
+                                                    ? "gms"
+                                                    : vari === "volume"
+                                                    ? "ml"
+                                                    : vari === "piece"
+                                                    ? "piece"
+                                                    : ""
+                                                }
+                                                key={i}
+                                              >
+                                                {vari}
+                                              </option>
+                                            );
+                                          }
+                                        )}
+                                        {/* {(varietyy.variety || []).map(
                                           (vari, i) => {
                                             return (
                                               <option
-                                              value={
-                                                vari === "color"
-                                                  ? "pcs"
-                                                  : vari === "weight"
-                                                  ? "gms"
-                                                  : vari === "volume"
-                                                  ? "ml"
-                                                  : vari === "piece"
-                                                  ? "piece"
-                                                  : ""
-                                              }
+                                                value={
+                                                  vari === "color"
+                                                    ? "pcs"
+                                                    : vari === "weight"
+                                                    ? "gms"
+                                                    : vari === "volume"
+                                                    ? "ml"
+                                                    : vari === "piece"
+                                                    ? "piece"
+                                                    : ""
+                                                }
                                                 key={i}
                                               >
+                                                {vari}
+                                              </option>
+                                            );
+                                          }
+                                        )} */}
+                                      </Form.Select>
+                                    </InputGroup>
+                                  </div>
+                                </td>
+
+                                <td className="p-0 text-center">
+                                  <div className=" d-flex align-items-center">
+                                    <InputGroup className="" size="sm">
+                                      <Form.Select
+                                        aria-label="Default select example"
+                                        required
+                                        sm="9"
+                                        name="colors"
+                                        value={variantarray.colors}
+                                        onChange={(e) => onVariantChange(e)}
+                                      >
+                                        <option
+                                          value={variantarray.colors == ""}
+                                        >
+                                          Select
+                                        </option>
+                                        {(varietyy.color || []).map(
+                                          (vari, i) => {
+                                            return (
+                                              <option value={vari} key={i}>
                                                 {vari}
                                               </option>
                                             );
@@ -857,42 +945,30 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                   <div className=" d-flex align-items-center">
                                     <InputGroup className="" size="sm">
                                       <Form.Control
-                                        type="text"
-                                        sm="9"
-                                        // className={
-                                        //   customvalidated === true
-                                        //     ? "border-danger"
-                                        //     : null
-                                        // }
-                                        onChange={(e) => onVariantChange(e)}
-                                        name={"colors"}
-                                        value={variantarray.colors}
-                                      />
-                                    </InputGroup>
-                                  </div>
-                                </td>
-
-                                <td className="p-0 text-center">
-                                  <div className=" d-flex align-items-center">
-                                    <InputGroup className="" size="sm">
-                                      <Form.Control
-                                           value={
-                                            variantarray.unit === "gms"
-                                              ? variantarray.unit_quantity
-                                              : variantarray.unit === "ml"
-                                              ? variantarray.unit_quantity
-                                              : variantarray.unit === "piece"
-                                              ? variantarray.unit_quantity
-                                              : variantarray.unit === ""
-                                              ? variantarray.unit_quantity
-                                              : null
-                                          }
-                                          required={
-                                            variantarray.unit !== "pcs" &&
-                                            variantarray.unit_quantity === ""
-                                              ? true
-                                              : false
-                                          }
+                                        value={
+                                          // variantarray.unit === "gms"
+                                          //   ? variantarray.unit_quantity
+                                          //   : variantarray.unit === "ml"
+                                          //   ? variantarray.unit_quantity
+                                          //   : variantarray.unit === "piece"
+                                          //   ? variantarray.unit_quantity
+                                          //   : variantarray.unit === ""
+                                          //   ?
+                                          variantarray.unit_quantity
+                                          // : null
+                                        }
+                                        required={
+                                          variantarray.unit !== "pcs" &&
+                                          variantarray.unit_quantity === ""
+                                            ? true
+                                            : false
+                                        }
+                                        disabled={
+                                          // productVeriantUnit == "pcs" ||
+                                          variantarray.unit == "pcs"
+                                            ? true
+                                            : false
+                                        }
                                         type="text"
                                         sm="9"
                                         className={
@@ -906,31 +982,44 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                     </InputGroup>
                                   </div>
                                 </td>
+
                                 <td className="p-0 text-center">
                                   <div className=" d-flex align-items-center">
                                     <InputGroup className="" size="sm">
-                                      <Form.Control
-                                            value={
-                                              variantarray.unit !== ""
-                                                ? variantarray.size
-                                                : variantarray.unit === ""
-                                                ? variantarray.size
-                                                : null
-                                            }
-                                        type="text"
+                                      <Form.Select
+                                        aria-label="Default select example"
+                                        required
                                         sm="9"
-                                        // className={
-                                        //   customvalidated === true
-                                        //     ? "border-danger"
-                                        //     : null
-                                        // }
+                                        name="size"
+                                        value={variantarray.size}
                                         onChange={(e) => onVariantChange(e)}
-                                        name={"size"}
-                                      />
+                                        disabled={
+                                          // productVeriantUnit !== "pcs" ||
+                                          variantarray.unit !== "pcs" &&
+                                          variantarray.unit !== ""
+                                            ? true
+                                            : variantarray.unit == ""
+                                            ? false
+                                            : false
+                                        }
+                                      >
+                                        <option value={variantarray.size == ""}>
+                                          Select
+                                        </option>
+                                        {(varietyy.size || []).map(
+                                          (vari, i) => {
+                                            return (
+                                              <option value={vari} key={i}>
+                                                {vari}
+                                              </option>
+                                            );
+                                          }
+                                        )}
+                                      </Form.Select>
                                     </InputGroup>
                                   </div>
                                 </td>
-                              
+
                                 <td className="p-0 text-center">
                                   <div className=" d-flex align-items-center">
                                     <InputGroup className="" size="sm">
@@ -971,7 +1060,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                     <InputGroup className="" size="sm">
                                       <Form.Control
                                         min={1}
-                                      step={0.01}
+                                        step={0.01}
                                         type="number"
                                         sm="9"
                                         // className={
@@ -981,7 +1070,9 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                         // }
                                         onChange={(e) => onVariantChange(e)}
                                         name={"product_price"}
-                                        value={Number(variantarray.product_price)}
+                                        value={Number(
+                                          variantarray.product_price
+                                        )}
                                       />
                                     </InputGroup>
                                   </div>
@@ -990,7 +1081,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                   <div className=" d-flex align-items-center">
                                     <InputGroup className="" size="sm">
                                       <Form.Control
-                                      step={0.01}
+                                        step={0.01}
                                         type="number"
                                         sm="9"
                                         min={1}
@@ -1006,8 +1097,8 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                     </InputGroup>
                                   </div>
                                 </td>
-                                
-                                <td className="p-0 text-center">
+
+                                {/* <td className="p-0 text-center">
                                   <div className="">
                                     <Form.Check
                                       onChange={(e) =>
@@ -1022,8 +1113,8 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                       }
                                     />
                                   </div>
-                                </td>
-                                <td className="p-0 text-center">
+                                </td> */}
+                                {/* <td className="p-0 text-center">
                                   <div className="">
                                     <Form.Check
                                       onChange={(e) =>
@@ -1038,7 +1129,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                       }
                                     />
                                   </div>
-                                </td>
+                                </td> */}
                                 <td className="p-0 text-center">
                                   <div className="manufacture_date">
                                     <InputGroup className="" size="sm">
@@ -1090,8 +1181,7 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                     </InputGroup>
                                   </div>
                                 </td>
-                                <td className="p-0 text-center">
-                                </td>
+                                <td className="p-0 text-center"></td>
                                 <td className="p-0">
                                   <div className="manufacture_date">
                                     <InputGroup className="" size="sm">
@@ -1123,7 +1213,10 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                       className="addcategoryicon"
                                       // type="submit"
                                       onClick={() =>
-                                        onVariantaddclick(variantarray.id,variantarray.product_id)
+                                        onVariantaddclick(
+                                          variantarray.id,
+                                          variantarray.product_id
+                                        )
                                       }
                                       size="sm"
                                     >
@@ -1133,334 +1226,371 @@ const onImgCoverEditClick = (imgid,productid,productvariantid)=>{
                                 </td>
                               </tr>
 
-                             
-                            {customvalidated === true ? (
+                              {customvalidated === true ? (
+                                <tr>
+                                  <p
+                                    className="mt-1 ms-2 text-danger"
+                                    type="invalid"
+                                  >
+                                    Please fill Required fields
+                                  </p>
+                                </tr>
+                              ) : null}
+
+                              {varietyUnitvalidation ===
+                              "ExpireDateValidation" ? (
+                                <tr>
+                                  <p
+                                    className="mt-1 ms-2 text-danger"
+                                    type="invalid"
+                                  >
+                                    Please Expire date should be greater than
+                                    Manufacturing date
+                                  </p>
+                                </tr>
+                              ) : null}
+
                               <tr>
-                                <p
-                                  className="mt-1 ms-2 text-danger"
-                                  type="invalid"
-                                >
-                                  Please fill Required fields
-                                </p>
-                              </tr>
-                            ) : null}
-
-                            
-<tr>
-{                               varietyUnitvalidation ===
-                              "fillUnit&size&color" ? (
-                                <p
-                                  className="mt-1 ms-2 text-danger"
-                                  type="invalid"
-                                >
-                                  Please Fill size and colors
-                                </p>
-                              ) : varietyUnitvalidation === "fillUnit&color" ? (
-                                <p
-                                  className="mt-1 ms-2 text-danger my-3"
-                                  type="invalid"
-                                >
-                                  Please fill color
-                                </p>
-                              ) : varietyUnitvalidation ===
-                                "unitQwanity&size&color" ? (
-                                <p
-                                  className="mt-1 ms-2 text-danger my-3"
-                                  type="invalid"
-                                >
-                                  Please fill weight/volume/piece
-                                </p>
-                              ) : varietyUnitvalidation === "discountmore" ? (
-                                <p
-                                  className="mt-1 ms-2 text-danger my-3"
-                                  type="invalid"
-                                >
-                                  Discount should be less then 100
-                                </p>
-                              ) : varietyUnitvalidation ===
-                                "QwanityValidation" ? (
-                                <p
-                                  className="mt-1 ms-2 text-danger my-3"
-                                  type="invalid"
-                                >
-                                  Quantity must be greater than 0
-                                </p>
-                              ) : varietyUnitvalidation === "mrpmore" ? (
-                                <p
-                                  className="mt-1 ms-2 text-danger my-3"
-                                  type="invalid"
-                                >
-                                  Mrp must be lesser than 50000 and greater than
-                                  0
-                                </p>
-                              ) : varietyUnitvalidation === "" ? null : null}
-
-
+                                {varietyUnitvalidation ===
+                                "fillUnit&size&color" ? (
+                                  <p
+                                    className="mt-1 ms-2 text-danger"
+                                    type="invalid"
+                                  >
+                                    Please Fill size and colors
+                                  </p>
+                                ) : varietyUnitvalidation ===
+                                  "fillUnit&color" ? (
+                                  <p
+                                    className="mt-1 ms-2 text-danger my-3"
+                                    type="invalid"
+                                  >
+                                    Please fill color
+                                  </p>
+                                ) : varietyUnitvalidation ===
+                                  "unitQwanity&size&color" ? (
+                                  <p
+                                    className="mt-1 ms-2 text-danger my-3"
+                                    type="invalid"
+                                  >
+                                    Please fill weight/volume/piece
+                                  </p>
+                                ) : varietyUnitvalidation === "discountmore" ? (
+                                  <p
+                                    className="mt-1 ms-2 text-danger my-3"
+                                    type="invalid"
+                                  >
+                                    Discount should be less then 100
+                                  </p>
+                                ) : varietyUnitvalidation ===
+                                  "QwanityValidation" ? (
+                                  <p
+                                    className="mt-1 ms-2 text-danger my-3"
+                                    type="invalid"
+                                  >
+                                    Quantity must be greater than 0
+                                  </p>
+                                ) : varietyUnitvalidation === "mrpmore" ? (
+                                  <p
+                                    className="mt-1 ms-2 text-danger my-3"
+                                    type="invalid"
+                                  >
+                                    Mrp must be lesser than 50000 and greater
+                                    than 0
+                                  </p>
+                                ) : varietyUnitvalidation === "" ? null : null}
                               </tr>
 
                               {productdata.product_verient === "" ||
                               productdata.product_verient === null ||
                               productdata.product_verient === undefined
                                 ? null
-                                : (productdata.product_verient || []).map((variantdata, i) => {
-                                    return variantdata.is_delete ===
-                                      "0" ? null : (
-                                      <>
-                                        <tr>
-                                          <td className="p-0 text-center ">
-                                            {variantdata.unit === "pcs"
-                                              ? "color"
-                                              : variantdata.unit === "piece"
-                                              ? "piece"
-                                              : variantdata.unit === "gms"
-                                              ? "weight"
-                                              : variantdata.unit === "l"
-                                              ? "volume"
-                                              : null}
-                                          </td>
-                                          <td className="p-0 text-center ">
-                                            {variantdata.colors}
-                                          </td>
-                                          <td className="p-0 text-center ">
-                                            {variantdata.unit === "gms"
-                                              ? variantdata.unit_quantity
-                                              : variantdata.unit === "l"
-                                              ? variantdata.unit_quantity
-                                              : variantdata.unit === "piece"
-                                              ? variantdata.unit_quantity
-                                              : null}
-                                          </td>
-                                          <td className="p-0 text-center ">
-                                            {variantdata.unit === "pcs"
-                                              ? variantdata.size
-                                              : null}
-                                          </td>
-                                          <td className="p-0 text-center ">
-                                            {variantdata.mrp}
-                                          </td>
-                                          <td className="p-0 text-center ">
-                                            {(variantdata.discount)}
-                                          </td>
-                                          <td className="p-0 text-center ">
-                                            {(variantdata.product_price).toFixed(2)}
-                                          </td>
-                                          <td className="p-0 text-center ">
-                                            {(variantdata.sale_price).toFixed(2)}
-                                          </td>
-                                          <td className="p-0 text-center ">
-                                            {variantdata.special_offer}
-                                          </td>
-                                          <td className="p-0 text-center ">
-                                            {variantdata.featured_product}
-                                          </td>
-                                          <td className="p-0 text-center ">
-                                            {moment(
-                                              variantdata.manufacturing_date
-                                            ).format("YYYY-MM-DD")}
-                                          </td>
-                                          <td className="p-0 text-center ">
-                                            {moment(
-                                              variantdata.expire_date
-                                            ).format("YYYY-MM-DD")}
-                                          </td>
-                                          <td className="p-0 text-center">
-                                            <div className="manufacture_date">
-                                              <InputGroup
-                                                className=""
+                                : (productdata.product_verient || []).map(
+                                    (variantdata, i) => {
+                                      return variantdata.is_delete ===
+                                        "0" ? null : (
+                                        <>
+                                          <tr>
+                                            <td className="p-0 text-center ">
+                                              {variantdata.unit === "pcs"
+                                                ? "color"
+                                                : variantdata.unit === "piece"
+                                                ? "piece"
+                                                : variantdata.unit === "gms"
+                                                ? "weight"
+                                                : variantdata.unit === "ml"
+                                                ? "volume"
+                                                : null}
+                                            </td>
+                                            <td className="p-0 text-center ">
+                                              {variantdata.colors}
+                                            </td>
+                                            <td className="p-0 text-center ">
+                                              {variantdata.unit === "gms"
+                                                ? variantdata.unit_quantity
+                                                : variantdata.unit === "ml"
+                                                ? variantdata.unit_quantity
+                                                : variantdata.unit === "piece"
+                                                ? variantdata.unit_quantity
+                                                : null}
+                                            </td>
+                                            <td className="p-0 text-center ">
+                                              {variantdata.unit === "pcs"
+                                                ? variantdata.size
+                                                : null}
+                                            </td>
+                                            <td className="p-0 text-center ">
+                                              {variantdata.mrp}
+                                            </td>
+                                            <td className="p-0 text-center ">
+                                              {variantdata.discount}
+                                            </td>
+                                            <td className="p-0 text-center ">
+                                              {variantdata.product_price.toFixed(
+                                                2
+                                              )}
+                                            </td>
+                                            <td className="p-0 text-center ">
+                                              {variantdata.sale_price.toFixed(
+                                                2
+                                              )}
+                                            </td>
+                                            {/* <td className="p-0 text-center ">
+                                              {variantdata.special_offer}
+                                            </td>
+                                            <td className="p-0 text-center ">
+                                              {variantdata.featured_product}
+                                            </td> */}
+                                            <td className="p-0 text-center ">
+                                              {moment(
+                                                variantdata.manufacturing_date
+                                              ).format("YYYY-MM-DD")}
+                                            </td>
+                                            <td className="p-0 text-center ">
+                                              {moment(
+                                                variantdata.expire_date
+                                              ).format("YYYY-MM-DD")}
+                                            </td>
+                                            <td className="p-0 text-center">
+                                              <div className="manufacture_date">
+                                                <InputGroup
+                                                  className=""
+                                                  size="sm"
+                                                >
+                                                  <Form.Control
+                                                    multiple
+                                                    type="file"
+                                                    sm="9"
+                                                    // className={
+                                                    //   customvalidated === true
+                                                    //     ? "border-danger"
+                                                    //     : null
+                                                    // }
+                                                    onChange={(e) =>
+                                                      imguploadchange(
+                                                        e,
+                                                        variantdata.product_id,
+                                                        variantdata.id,
+                                                        variantdata.vendor_id
+                                                      )
+                                                    }
+                                                    name={"img_64"}
+                                                  />
+                                                </InputGroup>
+                                                <p
+                                                  onClick={(id) =>
+                                                    onImgView(
+                                                      variantdata.id,
+                                                      variantdata.product_id
+                                                    )
+                                                  }
+                                                  className={
+                                                    "view_product_box my-2 text-primary"
+                                                  }
+                                                >
+                                                  View Image
+                                                </p>
+                                              </div>
+                                            </td>
+                                            <td className="p-0 text-center manufacture_date">
+                                              {variantdata.quantity}
+                                              <p
+                                                onClick={() =>
+                                                  setEditButton(true)
+                                                }
+                                                className={
+                                                  "view_product_box my-2 text-primary"
+                                                }
+                                              >
+                                                Edit Image
+                                              </p>
+                                            </td>
+                                            <td className="p-0 text-center">
+                                              <Button
+                                                variant="text-danger"
+                                                className="addcategoryicon text-danger"
+                                                onClick={(id) =>
+                                                  VariantRemoveClick(
+                                                    variantdata.id,
+                                                    variantdata.product_id
+                                                  )
+                                                }
                                                 size="sm"
                                               >
-                                                <Form.Control
-                                                  multiple
-                                                  type="file"
-                                                  sm="9"
-                                                  // className={
-                                                  //   customvalidated === true
-                                                  //     ? "border-danger"
-                                                  //     : null
-                                                  // }
-                                                  onChange={(e) =>
-                                                    imguploadchange(
-                                                      e,
-                                                      variantdata.product_id,
-                                                      variantdata.id,
-                                                      variantdata.vendor_id,
-                                                    )
-                                                  }
-                                                  name={"img_64"}
-                                                />
-                                              </InputGroup>
-                                              <p onClick={(id)=>onImgView(variantdata.id,
-                                                  variantdata.product_id)} className={'view_product_box my-2 text-primary'}>View Image</p>
-                                            </div>
-                                          </td>
-                                          <td className="p-0 text-center manufacture_date">
-                                            {variantdata.quantity}
-                                            <p onClick={()=>setEditButton(true)} className={'view_product_box my-2 text-primary'}>Edit Image</p>
-                                          </td>
-                                          <td className="p-0 text-center">
-                                            <Button
-                                              variant="text-danger"
-                                              className="addcategoryicon text-danger"
-                                              onClick={(id) =>
-                                                VariantRemoveClick(
-                                                  variantdata.id,
-                                                  variantdata.product_id
-                                                )
-                                              }
-                                              size="sm"
-                                            >
-                                              &times;
-                                            </Button>
-                                            <Button
-                                              variant="text-danger"
-                                              className="addcategoryicon text-danger"
-                                              onClick={(id) =>
-                                                VariantEditClick(
-                                                  variantdata.id,
-                                                  variantdata.product_id
-                                                )
-                                              }
-                                              size="sm"
-                                            >
-                                              <MdOutlineEdit />
-                                            </Button>
-                                          </td>
-                                        </tr>
+                                                &times;
+                                              </Button>
+                                              <Button
+                                                variant="text-danger"
+                                                className="addcategoryicon text-danger"
+                                                onClick={(id) =>
+                                                  VariantEditClick(
+                                                    variantdata.id,
+                                                    variantdata.product_id
+                                                  )
+                                                }
+                                                size="sm"
+                                              >
+                                                <MdOutlineEdit />
+                                              </Button>
+                                            </td>
+                                          </tr>
 
-                                        {newImageUrls ? (
-                                          <tr className="img_preview_boxx">
-                                            {newImageUrls.map((imgg, i) => {
-                                              
-                                              return (
-                                                `${variantdata.id}` === imgg.product_verient_id ?
-                                               
+                                          {newImageUrls ? (
+                                            <tr className="img_preview_boxx">
+                                              {newImageUrls.map((imgg, i) => {
+                                                return `${variantdata.id}` ===
+                                                  imgg.product_verient_id ? (
                                                   <td className="">
                                                     <div className="imgprivew_box">
-                                                      {imgg.image_position === 'cover' ? 
-                                                    <p className="cover_img">Cover</p> : null   
-                                                    }
-                                                      <img
-                                                        src={imgg.product_image_path}
-                                                        key={i}
-                                                        alt="apna_organic"
-                                                        width={80}
-                                                        height={100}
-                                                      />
-                                                      {editbutton === true ?
-                                                      <span
-                                                      className="cross_icon" 
-                                                      onClick={(id)=>onImgCoverEditClick(imgg.product_image_id,
-                                                        imgg.product_id,
-                                                        imgg.product_verient_id
-                                                        )}>
-                                                          -
-                                                      </span> :
-                                                      <span
-                                                        className="cross_icon"
-                                                        onClick={() =>
-                                                          onImgRemove(
-                                                            imgg.product_image_id,
-                                                            imgg.product_image_name,
-                                                            imgg.vendor_id,
-                                                            imgg.product_id,
-                                                            imgg.product_verient_id
-                                                          )
-                                                        }
-                                                      >
-                                                        x
-                                                      </span>
-                                            }
-                                                    </div>
-                                                  </td>
-                                                 
-                                                
-                                                 : null
-                                              );
-                                             
-                                            })}
-                                             <td className="imgprivew_div">
-                                                    <div className="imgprivew_box">
+                                                      {imgg.image_position ===
+                                                      "cover" ? (
+                                                        <p className="cover_img">
+                                                          Cover
+                                                        </p>
+                                                      ) : null}
                                                       <img
                                                         src={
-                                                          "https://i2.wp.com/asvs.in/wp-content/uploads/2017/08/dummy.png?fit=399%2C275&ssl=1"
+                                                          imgg.product_image_path
                                                         }
                                                         key={i}
                                                         alt="apna_organic"
                                                         width={80}
                                                         height={100}
                                                       />
-                                                       <Form.Control
-                                                  multiple
-                                                  type="file"
-                                                  sm="9"
-                                                  className={
-                                                   'img_add_button'
-                                                  }
-                                                  onChange={(e) =>
-                                                    imguploadchange(
-                                                      e,
-                                                      variantdata.product_id,
-                                                      variantdata.id,
-                                                     variantdata.vendor_id,
-                                                    )
-                                                  }
-                                                  name={"img_64"}
-                                                />
-                                                      <span
-                                                        className="plus_icon"
-                                                      >
-                                                       
-                                                        +
-                                                      </span>
+                                                      {editbutton === true ? (
+                                                        <span
+                                                          className="cross_icon"
+                                                          onClick={(id) =>
+                                                            onImgCoverEditClick(
+                                                              imgg.product_image_id,
+                                                              imgg.product_id,
+                                                              imgg.product_verient_id
+                                                            )
+                                                          }
+                                                        >
+                                                          -
+                                                        </span>
+                                                      ) : (
+                                                        <span
+                                                          className="cross_icon"
+                                                          onClick={() =>
+                                                            onImgRemove(
+                                                              imgg.product_image_id,
+                                                              imgg.product_image_name,
+                                                              imgg.vendor_id,
+                                                              imgg.product_id,
+                                                              imgg.product_verient_id
+                                                            )
+                                                          }
+                                                        >
+                                                          x
+                                                        </span>
+                                                      )}
                                                     </div>
                                                   </td>
-                                          </tr>
-                                        ) : null}
-                                      </>
-                                    );
-                                  })}
+                                                ) : null;
+                                              })}
+                                              <td className="imgprivew_div">
+                                                <div className="imgprivew_box">
+                                                  <img
+                                                    src={
+                                                      "https://i2.wp.com/asvs.in/wp-content/uploads/2017/08/dummy.png?fit=399%2C275&ssl=1"
+                                                    }
+                                                    key={i}
+                                                    alt="apna_organic"
+                                                    width={80}
+                                                    height={100}
+                                                  />
+                                                  <Form.Control
+                                                    multiple
+                                                    type="file"
+                                                    sm="9"
+                                                    className={"img_add_button"}
+                                                    onChange={(e) =>
+                                                      imguploadchange(
+                                                        e,
+                                                        variantdata.product_id,
+                                                        variantdata.id,
+                                                        variantdata.vendor_id
+                                                      )
+                                                    }
+                                                    name={"img_64"}
+                                                  />
+                                                  <span className="plus_icon">
+                                                    +
+                                                  </span>
+                                                </div>
+                                              </td>
+                                            </tr>
+                                          ) : null}
+                                        </>
+                                      );
+                                    }
+                                  )}
+                              {changeUnitproperty === "editvariety" ? (
+                                <tr className="text-primary text-center mx-5">
+                                  Now You can edit vareity type
+                                </tr>
+                              ) : null}
                             </tbody>
                           </Table>
                         </div>
                       </div>
                     </div>
                   </div>
-                     
-                    </Form.Group>
-                  </Form>
-                </div>
-              </div>
-        
-              <SAlert
-show={VerityAlert}
-title={"Product"}
-text="Are you Sure you want to delete"
-onConfirm={deleteProductVeriant}
-showCancelButton={true}
-onCancel={closeAlert}
-/>
-
+                </Form.Group>
+              </Form>
+            </div>
+          </div>
 
           <SAlert
-          show={ProductAlert}
-          title="Added Successfully"
-          text=" Product Added"
-          onConfirm={closeAlert}
-        />
+            show={VerityAlert}
+            title={"Product"}
+            text="Are you Sure you want to delete"
+            onConfirm={deleteProductVeriant}
+            showCancelButton={true}
+            onCancel={closeAlert}
+          />
 
-            <SAlert
-          show={UpdatetAlert}
-          title="Updated Successfully "
-          text=" Product Updated"
-          onConfirm={closeAlert}
-        />
-         </div>
+          <SAlert
+            show={ProductAlert}
+            title="Added Successfully"
+            text=" Product Added"
+            onConfirm={closeAlert}
+          />
+
+          <SAlert
+            show={UpdatetAlert}
+            title="Updated Successfully "
+            text=" Product Updated"
+            onConfirm={closeAlert}
+          />
+        </>
+      ) : hideallData == true ? (
+        <h1>No Record Found</h1>
+      ) : null}
+    </div>
   );
-
-
-
-
 };
-
 
 export default Productdetail;

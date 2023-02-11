@@ -1,21 +1,18 @@
 import React, { useEffect, useState, useRef } from "react";
 import Col from "react-bootstrap/Col";
 import Input from "./common/input";
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { Badge } from "react-bootstrap";
 import MainButton from "./common/button";
 import Modal from "react-bootstrap/Modal";
 import Iconbutton from "./common/iconbutton";
-import { MdOutlineEdit } from 'react-icons/md';
-import InputGroup from 'react-bootstrap/InputGroup';
-import VariationJson from './json/variation';
-import Table from 'react-bootstrap/Table';
-import Carousel from 'react-bootstrap/Carousel';
-import {
-  AiOutlinePlus,
-  AiOutlineCloudUpload,
-} from "react-icons/ai";
+import { MdOutlineEdit } from "react-icons/md";
+import InputGroup from "react-bootstrap/InputGroup";
+import VariationJson from "./json/variation";
+import Table from "react-bootstrap/Table";
+import Carousel from "react-bootstrap/Carousel";
+import { AiOutlinePlus, AiOutlineCloudUpload } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
@@ -31,8 +28,8 @@ import moment from "moment/moment";
 function Product_Old() {
   const [pdata, setpdata] = useState([]);
   const [proddata, setproddata] = useState([]);
-  const [variantid, setvariantid] = useState('');
-  const [productid, setproductid] = useState('');
+  const [variantid, setvariantid] = useState("");
+  const [productid, setproductid] = useState("");
   const [Alert, setAlert] = useState(false);
   const [apicall, setapicall] = useState(false);
   const [variantapicall, setvariantapicall] = useState(false);
@@ -42,10 +39,10 @@ function Product_Old() {
   const [customvalidated, setcustomValidated] = useState(false);
   const [modalshow, setmodalshow] = useState(false);
   const [seoarray, setseoArray] = useState([]);
-  const [varietyval, setvarietyval] = useState('');
+  const [varietyval, setvarietyval] = useState("");
   const [variantarray, setvariantarray] = useState({
     product_status: "1",
-    product_id:"",
+    product_id: "",
     unit: "",
     colors: "",
     unit_quantity: "",
@@ -58,13 +55,13 @@ function Product_Old() {
     featured_product: false,
     manufacturing_date: "",
     expire_date: "",
-    quantity: ""
+    quantity: "",
   });
   const [variantmainarray, setvariantmainarray] = useState([]);
-  const [data1, setdata1] = useState('');
-  const [otherintro, setotherintro] = useState('');
-  const [headerval, setheaderval] = useState('');
-  const [descval, setdescval] = useState('');
+  const [data1, setdata1] = useState("");
+  const [otherintro, setotherintro] = useState("");
+  const [headerval, setheaderval] = useState("");
+  const [descval, setdescval] = useState("");
   const [customarray, setcustomarray] = useState([]);
   const [vdata, setvdata] = useState([]);
   const [productdata, setproductdata] = useState({
@@ -82,64 +79,66 @@ function Product_Old() {
     variety: false,
     product_description: "",
     other_introduction: "",
-    is_active: "0"
+    is_active: "0",
   });
   const mainformRef = useRef();
   const formRef = useRef();
   const [searchdata, setsearchData] = useState({
     product_title_name: "",
     category: "",
-    status: ""
-
-  })
+    status: "",
+  });
 
   const OnSearchChange = (e) => {
-    setsearchData({ ...searchdata, [e.target.name]: e.target.value })
-  }
+    setsearchData({ ...searchdata, [e.target.name]: e.target.value });
+  };
   useEffect(() => {
-    axios.post("${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50", {
-      "product_search": {
-        "search": `${searchdata.product_title_name}`,
-        "category": `${searchdata.category}`,
-        "status": `${searchdata.status}`,
-        // "is_delete":"no",
-      }
-    }).then((response) => {
-      setpdata(response.data)
-      setapicall(false)
-    }).catch(function (error) {
-      console.log(error);
-    });
+    axios
+      .post("${process.env.REACT_APP_BASEURL}/home?page=0&per_page=400", {
+        product_search: {
+          search: `${searchdata.product_title_name}`,
+          category: `${searchdata.category}`,
+          status: `${searchdata.status}`,
+          // "is_delete":"no",
+        },
+      })
+      .then((response) => {
+        setpdata(response.data);
+        setapicall(false);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }, [apicall, searchdata, Alert]);
-  //  
+  //
   let filtered;
   const handleAlert = (id) => {
-    setvariantid(id[0])
-    setproductid(id[1])
+    setvariantid(id[0]);
+    setproductid(id[1]);
     setAlert(true);
-  }
+  };
   const hideAlert = () => {
-    axios.put("${process.env.REACT_APP_BASEURL}/products_delete", {
-      "varient_id": `${variantid}`,
-      "product_id": `${productid}`,
-      "is_delete": "0"
-    }).then((response) => {
-      console.log("---delete" + JSON.stringify(response.data))
-      setapicall(true)
-      // setpdata(response.data)
-    }).catch(function (error) {
-      console.log(error);
-    });
+    axios
+      .put("${process.env.REACT_APP_BASEURL}/products_delete", {
+        varient_id: `${variantid}`,
+        product_id: `${productid}`,
+        is_delete: "0",
+      })
+      .then((response) => {
+        console.log("---delete" + JSON.stringify(response.data));
+        setapicall(true);
+        // setpdata(response.data)
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     setAlert(false);
-  }
-
+  };
 
   //  json
   var varietyy = VariationJson;
 
-
   const columns = [
-
     {
       name: "#",
       width: "100px",
@@ -148,15 +147,13 @@ function Product_Old() {
         <img
           // height="90px"
           // width="75px"
-          alt={'apna_organic'}
-          src={
-            row.id
-          }
+          alt={"apna_organic"}
+          src={row.id}
           style={{
             padding: 10,
             textAlign: "right",
             maxHeight: "100px",
-            maxWidth: "100px"
+            maxWidth: "100px",
           }}
           onClick={handleClick}
         />
@@ -166,14 +163,24 @@ function Product_Old() {
       name: "Product Name",
       selector: (row) => (
         <div>
-          <p className="mb-1" onClick={() => {
-            navigate("/productdetail");
-          }}><b>{row.product_title_name}<br />SKU: {row.product_id} <br />
-              <div dangerouslySetInnerHTML={{ __html: pdata.product_description }} className='editor'></div>
+          <p
+            className="mb-1"
+            onClick={() => {
+              navigate("/productdetail");
+            }}
+          >
+            <b>
+              {row.product_title_name}
+              <br />
+              SKU: {row.product_id} <br />
+              <div
+                dangerouslySetInnerHTML={{ __html: pdata.product_description }}
+                className="editor"
+              ></div>
             </b>
-
           </p>
-        </div>),
+        </div>
+      ),
       sortable: true,
       width: "200px",
     },
@@ -236,15 +243,15 @@ function Product_Old() {
             row.status === 1
               ? "badge bg-success"
               : row.status === 2
-                ? "badge bg-danger"
-                : "badge bg-secondary"
+              ? "badge bg-danger"
+              : "badge bg-secondary"
           }
         >
           {row.status === 1
             ? "Pending"
             : row.status === 2
-              ? "Inactive"
-              : "Draft"}
+            ? "Inactive"
+            : "Draft"}
         </span>
       ),
       sortable: true,
@@ -254,28 +261,37 @@ function Product_Old() {
     {
       name: "Change Status",
       selector: (row) => (
-        <Form.Select aria-label="Search by delivery" size="sm" value={row.status} className="w-100" onChange={undefined}>
+        <Form.Select
+          aria-label="Search by delivery"
+          size="sm"
+          value={row.status}
+          className="w-100"
+          onChange={undefined}
+        >
           <option value="">Select</option>
           <option value="1">Pending</option>
           <option value="2">Draft</option>
           <option value="3">Expired</option>
           <option value="4">Special Offer</option>
-          <option value="5">Featured Offer  </option>
-          <option value="6">Promotional  </option>
+          <option value="5">Featured Offer </option>
+          <option value="6">Promotional </option>
         </Form.Select>
       ),
       sortable: true,
-
     },
     {
       name: "Variety",
       selector: (row) => (
         // (row.variety) ?
-        <Button size="sm" onClick={handlevarietyShow.bind(this, row.product_id)}>Add Variety</Button>
+        <Button
+          size="sm"
+          onClick={handlevarietyShow.bind(this, row.product_id)}
+        >
+          Add Variety
+        </Button>
         // : null
       ),
       sortable: true,
-
     },
     {
       name: "Action",
@@ -287,12 +303,18 @@ function Product_Old() {
       center: true,
       selector: (row) => (
         <div className={"actioncolimn"}>
-          <BiEdit className=" p-0 m-0  editiconn text-secondary" onClick={handleShow.bind(this, row.product_id)} />
+          <BiEdit
+            className=" p-0 m-0  editiconn text-secondary"
+            onClick={handleShow.bind(this, row.product_id)}
+          />
           <BsTrash
             className=" p-0 m-0 editiconn text-danger"
-            onClick={handleAlert.bind(this, [row.id, row.product_id, row.is_delete])}
+            onClick={handleAlert.bind(this, [
+              row.id,
+              row.product_id,
+              row.is_delete,
+            ])}
           />
-
         </div>
       ),
     },
@@ -301,52 +323,57 @@ function Product_Old() {
   // modal
 
   const handleShow = (e) => {
-    if (e === 'add') {
+    if (e === "add") {
       setmodalshow(e);
-    }
-    else {
-      console.log(JSON.stringify(e))
-      axios.get(`${process.env.REACT_APP_BASEURL}/product?id=${e}`).then((response) => {
-        setproductdata(response.data)
-      }).catch(function (error) {
-        console.log(error);
-      });
+    } else {
+      console.log(JSON.stringify(e));
+      axios
+        .get(`${process.env.REACT_APP_BASEURL}/product?id=${e}`)
+        .then((response) => {
+          setproductdata(response.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
       // setpdata(pdata[e])
       // setseoArray(pdata[e].seo_tag)
       setmodalshow(e);
-    setvariantapicall(false)
-
+      setvariantapicall(false);
     }
-  }
-  useEffect(()=>{
-    handleShow();
-  },[variantapicall])
-  const handlevarietyShow = (id) => {
-    axios.post("${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50", {
-      "product_search": {
-        "search": '',
-        "product_id": `${id}`,
-        "is_delete":"0"
-      }
-    }).then((response) => {
-      setvdata(response.data.results)
-      setvariantarray({
-        ...variantarray,
-        product_id : id
-      });
-      console.log("---variety" + JSON.stringify(response.data))
-    }).catch(function (error) {
-      console.log(error);
-    });
-    setvarietyShow(true)
-
   };
-  const handlevarietyClose = () => { setvarietyShow(false) }
+  useEffect(() => {
+    handleShow();
+  }, [variantapicall]);
+  const handlevarietyShow = (id) => {
+    axios
+      .post("${process.env.REACT_APP_BASEURL}/home?page=0&per_page=400", {
+        product_search: {
+          search: "",
+          product_id: `${id}`,
+          is_delete: "0",
+        },
+      })
+      .then((response) => {
+        setvdata(response.data.results);
+        setvariantarray({
+          ...variantarray,
+          product_id: id,
+        });
+        console.log("---variety" + JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    setvarietyShow(true);
+  };
+  const handlevarietyClose = () => {
+    setvarietyShow(false);
+  };
   const handleClose = () => {
     mainformRef.current.reset();
-    setValidated(false)
-    setmodalshow(false)
-  }
+    setValidated(false);
+    setmodalshow(false);
+  };
 
   // seotag
   let tagname;
@@ -356,16 +383,16 @@ function Product_Old() {
   };
 
   const tagRemoveClick = (e) => {
-    setseoArray(seoarray.filter(item => item !== e));
-  }
+    setseoArray(seoarray.filter((item) => item !== e));
+  };
   const ontagaddclick = (e) => {
     // e.preventDefault();
     setproductdata({
       ...productdata,
-      seo_tag: addtag
+      seo_tag: addtag,
     });
     // setseoArray(seoarray => [...seoarray, addtag]);
-    setaddtag('');
+    setaddtag("");
   };
 
   // useEffect(() => {
@@ -382,99 +409,129 @@ function Product_Old() {
   // variant
   const newImageUrls = [];
   const imguploadchange = (e) => {
-    ([...e.target.files]).forEach((image) => newImageUrls.push(URL.createObjectURL(image)));
-    setvariantarray((variantarray) => { return { ...variantarray, product_img: newImageUrls } });
-  }
+    [...e.target.files].forEach((image) =>
+      newImageUrls.push(URL.createObjectURL(image))
+    );
+    setvariantarray((variantarray) => {
+      return { ...variantarray, product_img: newImageUrls };
+    });
+  };
   const onVariantChange = (e) => {
     setvariantarray({
       ...variantarray,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
-  console.log("------addsinglevariant" + JSON.stringify(variantarray))
+  console.log("------addsinglevariant" + JSON.stringify(variantarray));
   const handleInputcheckboxChange = (e) => {
     const target = e.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value
+    const value = target.type === "checkbox" ? target.checked : target.value;
 
     setvariantarray({
       ...variantarray,
-      [e.target.name]: value
+      [e.target.name]: value,
     });
-  }
+  };
   const handleVarietyChange = (e) => {
     // const varietyvalue = e.target.type === 'radio' ? e.target.checked : e.target.value
-    console.log("varietyvalue --------->  " + e.target.type)
+    console.log("varietyvalue --------->  " + e.target.type);
     setproductdata({
       ...productdata,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
-  }
+  };
 
   const onVariantaddclick = (id) => {
-    console.log("----------productid"+"id--  "+id)
+    console.log("----------productid" + "id--  " + id);
     // id.preventDefault();
-    if(id === ''){
-      axios.post(`${process.env.REACT_APP_BASEURL}/products_varient_add`, variantarray).then((response) => {
-      setvdata(response.data.results)
-console.log("---addvariety"+JSON.stringify(response.data))
-        // setvariantarray(response.data)
-        setvariantapicall(true)
-        console.log("------changeediteddd---" + JSON.stringify(response.data))
-      }).catch(function (error) {
-        console.log(error);
-      });
+    if (id === "") {
+      axios
+        .post(
+          `${process.env.REACT_APP_BASEURL}/products_varient_add`,
+          variantarray
+        )
+        .then((response) => {
+          setvdata(response.data.results);
+          console.log("---addvariety" + JSON.stringify(response.data));
+          // setvariantarray(response.data)
+          setvariantapicall(true);
+          console.log(
+            "------changeediteddd---" + JSON.stringify(response.data)
+          );
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
+      axios
+        .put(
+          `${process.env.REACT_APP_BASEURL}/products_varient_update`,
+          variantarray
+        )
+        .then((response) => {
+          setvariantarray(response.data);
+          setvariantapicall(true);
+          console.log(
+            "------changeediteddd---" + JSON.stringify(response.data)
+          );
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
-    else{
-      axios.put(`${process.env.REACT_APP_BASEURL}/products_varient_update`, variantarray).then((response) => {
-        setvariantarray(response.data)
-        setvariantapicall(true)
-        console.log("------changeediteddd---" + JSON.stringify(response.data))
-      }).catch(function (error) {
-        console.log(error);
-      });
-    }
-  }
-const VariantAddProduct = () =>{
- // if (variantarray !== '') {
+  };
+  const VariantAddProduct = () => {
+    // if (variantarray !== '') {
     // e.preventDefault();
-    setvariantmainarray(variantmainarray => [...variantmainarray, variantarray]);
+    setvariantmainarray((variantmainarray) => [
+      ...variantmainarray,
+      variantarray,
+    ]);
     setcustomValidated(false);
     formRef.current.reset();
     // }
     // else {
     //   setcustomValidated(true);
     // }
-}
+  };
   const VariantRemoveClick = (id, productid) => {
-    axios.put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
-      id:`${id}`,
-      product_id:`${productid}`,
-      is_delete:"1"
-      }).then((response) => {
+    axios
+      .put(`${process.env.REACT_APP_BASEURL}/products_delete`, {
+        id: `${id}`,
+        product_id: `${productid}`,
+        is_delete: "1",
+      })
+      .then((response) => {
         // setvariantarray(response.data[0])
-        console.log("------changeediteddd---" + JSON.stringify(response.data))
-        setvariantapicall(true)
-      }).catch(function (error) {
+        console.log("------changeediteddd---" + JSON.stringify(response.data));
+        setvariantapicall(true);
+      })
+      .catch(function (error) {
         console.log(error);
       });
-    console.log("-----id" + id + 'productid' + productid)
-    setvdata(vdata.filter(item => item !== id));
-  }
+    console.log("-----id" + id + "productid" + productid);
+    setvdata(vdata.filter((item) => item !== id));
+  };
   const VariantEditClick = (id, productid) => {
-    axios.get(`${process.env.REACT_APP_BASEURL}/products_pricing?id=${id}&product_id=${productid}`).then((response) => {
-      setvariantarray(response.data[0])
-      console.log("------edit" + JSON.stringify(response.data[0]))
-    }).catch(function (error) {
-      console.log(error);
-    });
+    axios
+      .get(
+        `${process.env.REACT_APP_BASEURL}/products_pricing?id=${id}&product_id=${productid}`
+      )
+      .then((response) => {
+        setvariantarray(response.data[0]);
+        console.log("------edit" + JSON.stringify(response.data[0]));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     // console.log("-----singlevariant"+JSON.stringify(response.data))
     // setdata1(e)
     // setvariantmainarray(variantmainarray.filter(item => item !== e));
-  }
+  };
   useEffect(() => {
     setproductdata({
       ...productdata,
-      price: variantmainarray
+      price: variantmainarray,
     });
   }, [variantmainarray]);
   // varint end
@@ -487,34 +544,32 @@ const VariantAddProduct = () =>{
     setdescval(e.target.value);
   };
   const handleAddClick = (e) => {
-    customvalue = headerval + ',' + descval;
+    customvalue = headerval + "," + descval;
 
-    if (headerval !== '' && descval !== '') {
-      setcustomarray(customarray => [...customarray, customvalue]);
-      setheaderval('');
-      setdescval('');
+    if (headerval !== "" && descval !== "") {
+      setcustomarray((customarray) => [...customarray, customvalue]);
+      setheaderval("");
+      setdescval("");
       setcustomValidated(false);
-    }
-    else {
+    } else {
       setcustomValidated(true);
     }
-  }
+  };
   const handleRemoveClick = (e) => {
-    setcustomarray(customarray.filter(item => item !== e));
+    setcustomarray(customarray.filter((item) => item !== e));
   };
   useEffect(() => {
     setproductdata({
       ...productdata,
-      add_custom_input: customarray
+      add_custom_input: customarray,
     });
   }, [customarray]);
   // end
 
-
   const handleInputFieldChange = (e) => {
     setproductdata({
       ...productdata,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -523,9 +578,9 @@ const VariantAddProduct = () =>{
     console.log({ event, editor, data1 });
     setproductdata({
       ...productdata,
-      product_description: data1
+      product_description: data1,
     });
-  }
+  };
 
   const OtherDescription = (event, editor) => {
     setotherintro(editor.getData());
@@ -533,9 +588,9 @@ const VariantAddProduct = () =>{
     console.log(otherintro);
     setproductdata({
       ...productdata,
-      other_introduction: otherintro
+      other_introduction: otherintro,
     });
-  }
+  };
 
   //  const createMarkup = () => {
   //     return { __html: pdata.product_description };
@@ -544,51 +599,53 @@ const VariantAddProduct = () =>{
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
       setValidated(false);
-      e.preventDefault()
-      console.log("finallstart---" + JSON.stringify(productdataa))
+      e.preventDefault();
+      console.log("finallstart---" + JSON.stringify(productdataa));
     }
   };
 
-  let productdataa = []
+  let productdataa = [];
   const handleAddProduct = (e) => {
-    productdataa.push(productdata)
-    console.log("productdata---" + JSON.stringify(productdata))
-    console.log("productdataa---" + JSON.stringify(productdataa))
+    productdataa.push(productdata);
+    console.log("productdata---" + JSON.stringify(productdata));
+    console.log("productdataa---" + JSON.stringify(productdataa));
 
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
       e.stopPropagation();
-      e.preventDefault()
+      e.preventDefault();
     }
     setValidated(true);
     setcustomValidated(false);
-    axios.post('${process.env.REACT_APP_BASEURL}/products', productdataa).then((response) => {
-      console.log("finall---" + JSON.stringify(response.data))
-      setapicall(true)
-    });
+    axios
+      .post("${process.env.REACT_APP_BASEURL}/products", productdataa)
+      .then((response) => {
+        console.log("finall---" + JSON.stringify(response.data));
+        setapicall(true);
+      });
     e.preventDefault();
     // mainformRef.current.reset();
     // setpdata('');
     setValidated(false);
     // handleClose();
-  }
+  };
   // console.log("udhdfhkjsf   "+JSON.stringify(productdata))
   const handleUpdateProduct = (e) => {
     // setproductdata({ ...productdata, is_active: "0" })
     e.preventDefault();
-    axios.put("${process.env.REACT_APP_BASEURL}/products_update", productdata
-    ).then((response) => {
-      console.log("-----updatedata" + JSON.stringify(response.data))
-      setapicall(true)
-      setmodalshow(false)
-    }).catch(function (error) {
-      console.log(error);
-    });
-  }
+    axios
+      .put("${process.env.REACT_APP_BASEURL}/products_update", productdata)
+      .then((response) => {
+        console.log("-----updatedata" + JSON.stringify(response.data));
+        setapicall(true);
+        setmodalshow(false);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
 
-
-
-  const handleClick = () => { };
+  const handleClick = () => {};
   const navigate = useNavigate();
   return (
     <div className="App productlist_maindiv">
@@ -598,9 +655,13 @@ const VariantAddProduct = () =>{
       <div className="card mt-3 p-3 ">
         <div className="row">
           <div className="col-md-3 col-sm-6 aos_input">
-            <input type={"text"} placeholder={"Search by product name"} onChange={OnSearchChange} name='product_title_name'
+            <input
+              type={"text"}
+              placeholder={"Search by product name"}
+              onChange={OnSearchChange}
+              name="product_title_name"
               value={searchdata.product_title_name}
-              className={'adminsideinput'}
+              className={"adminsideinput"}
             />
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
@@ -609,9 +670,8 @@ const VariantAddProduct = () =>{
               className="adminselectbox"
               placeholder="Search by category"
               onChange={OnSearchChange}
-              name='category'
+              name="category"
               value={searchdata.category}
-
             >
               <option>Search by category</option>
               <option value="1">Food</option>
@@ -625,9 +685,8 @@ const VariantAddProduct = () =>{
               className="adminselectbox"
               placeholder="Search by status"
               onChange={OnSearchChange}
-              name='status'
+              name="status"
               value={searchdata.status}
-
             >
               <option>Search by status</option>
               <option value="1">Pending</option>
@@ -658,7 +717,9 @@ const VariantAddProduct = () =>{
           <MainButton btntext={"Download"} />
           <Iconbutton
             btntext={"Add Product"}
-            onClick={() => { handleShow('add') }}
+            onClick={() => {
+              handleShow("add");
+            }}
             Iconname={<AiOutlinePlus />}
             btnclass={"button main_button "}
           />
@@ -672,10 +733,19 @@ const VariantAddProduct = () =>{
           aria-labelledby="example-custom-modal-styling-title"
           centered
         >
-          <Form className="p-2 addproduct_form" validated={validated} ref={mainformRef} onSubmit={(modalshow === 'add' ? (e) => handleAddProduct(e) : (modalshow) => handleUpdateProduct(modalshow))}>
+          <Form
+            className="p-2 addproduct_form"
+            validated={validated}
+            ref={mainformRef}
+            onSubmit={
+              modalshow === "add"
+                ? (e) => handleAddProduct(e)
+                : (modalshow) => handleUpdateProduct(modalshow)
+            }
+          >
             <Modal.Header closeButton className="addproductheader">
               <Modal.Title id="example-custom-modal-styling-title">
-                {modalshow === 'add' ? 'Add Product' : 'Update Product'}
+                {modalshow === "add" ? "Add Product" : "Update Product"}
               </Modal.Title>
             </Modal.Header>
             <Modal.Body className="addproductbody p-2">
@@ -684,30 +754,57 @@ const VariantAddProduct = () =>{
                   <h5 className="m-0">Basic Info</h5>
                   <div className="d-flex product_basixinfo">
                     <div className="product_detail-box col-md-4">
-
-                      <Form.Group className="mx-3" controlId="validationCustom01">
+                      <Form.Group
+                        className="mx-3"
+                        controlId="validationCustom01"
+                      >
                         <Form.Label className="inputlabelheading" sm="12">
-                          Product Title/Name<span className="text-danger">*
-                            <Form.Control.Feedback type="invalid" className="h6">
+                          Product Title/Name
+                          <span className="text-danger">
+                            *
+                            <Form.Control.Feedback
+                              type="invalid"
+                              className="h6"
+                            >
                               Please fill productname
-                            </Form.Control.Feedback></span>
+                            </Form.Control.Feedback>
+                          </span>
                         </Form.Label>
                         <Col sm="12">
-                          <Form.Control type="text" placeholder="Product Title/Name" required onChange={(e) => handleInputFieldChange(e)} name={'product_title_name'} value={productdata.product_title_name} />
+                          <Form.Control
+                            type="text"
+                            placeholder="Product Title/Name"
+                            required
+                            onChange={(e) => handleInputFieldChange(e)}
+                            name={"product_title_name"}
+                            value={productdata.product_title_name}
+                          />
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill productname
                           </Form.Control.Feedback>
                         </Col>
                       </Form.Group>
-                      <Form.Group className="mx-3" controlId="validationCustom02">
+                      <Form.Group
+                        className="mx-3"
+                        controlId="validationCustom02"
+                      >
                         <Form.Label className="inputlabelheading" sm="12">
                           Product Slug<span className="text-danger">* </span>
                         </Form.Label>
                         <Col sm="12">
-                          <Form.Control type="text" placeholder="Product Slug" onChange={(e) => handleInputFieldChange(e)} name={'product_slug'} value={productdata.product_slug} />
+                          <Form.Control
+                            type="text"
+                            placeholder="Product Slug"
+                            onChange={(e) => handleInputFieldChange(e)}
+                            name={"product_slug"}
+                            value={productdata.product_slug}
+                          />
                         </Col>
                       </Form.Group>
-                      <Form.Group className="mx-3" controlId="validationCustomBrand">
+                      <Form.Group
+                        className="mx-3"
+                        controlId="validationCustomBrand"
+                      >
                         <Form.Label className="inputlabelheading" sm="12">
                           Product Brand
                         </Form.Label>
@@ -717,9 +814,14 @@ const VariantAddProduct = () =>{
                             className="adminselectbox"
                             name="brand"
                             onChange={(e) => handleInputFieldChange(e)}
-                            value={productdata.brand === null || productdata.brand === undefined ? '' : productdata.brand}
+                            value={
+                              productdata.brand === null ||
+                              productdata.brand === undefined
+                                ? ""
+                                : productdata.brand
+                            }
                           >
-                            <option value={''}>Select Brand</option>
+                            <option value={""}>Select Brand</option>
                             <option value="puma">Puma</option>
                             <option value="mamaearth">Mamaearth</option>
                             <option value="adidas">Adidas</option>
@@ -727,14 +829,31 @@ const VariantAddProduct = () =>{
                           </Form.Select>
                         </Col>
                       </Form.Group>
-                      <Form.Group className="mx-3" controlId="validationCustom03">
+                      <Form.Group
+                        className="mx-3"
+                        controlId="validationCustom03"
+                      >
                         <Form.Label className="inputlabelheading" sm="12">
-                          Store Name<span className="text-danger">* <Form.Control.Feedback type="invalid" className="h6">
-                            Please fill storename
-                          </Form.Control.Feedback></span>
+                          Store Name
+                          <span className="text-danger">
+                            *{" "}
+                            <Form.Control.Feedback
+                              type="invalid"
+                              className="h6"
+                            >
+                              Please fill storename
+                            </Form.Control.Feedback>
+                          </span>
                         </Form.Label>
                         <Col sm="12">
-                          <Form.Control type="text" placeholder=" Store Name" required onChange={(e) => handleInputFieldChange(e)} name={'store_name'} value={productdata.store_name} />
+                          <Form.Control
+                            type="text"
+                            placeholder=" Store Name"
+                            required
+                            onChange={(e) => handleInputFieldChange(e)}
+                            name={"store_name"}
+                            value={productdata.store_name}
+                          />
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill storename
                           </Form.Control.Feedback>
@@ -742,7 +861,10 @@ const VariantAddProduct = () =>{
                       </Form.Group>
                     </div>
                     <div className="col-md-8">
-                      <Form.Group className="mx-3" controlId="validationCustom04">
+                      <Form.Group
+                        className="mx-3"
+                        controlId="validationCustom04"
+                      >
                         <Form.Label className="inputlabelheading" sm="12">
                           Product Description
                         </Form.Label>
@@ -751,14 +873,13 @@ const VariantAddProduct = () =>{
                             editor={ClassicEditor}
                             data={productdata.product_description}
                             onChange={handledescription}
-                            name={'product_description'}
-                          // value={productdata.product_description}
+                            name={"product_description"}
+                            // value={productdata.product_description}
                           />
                         </Col>
                         {/* <div dangerouslySetInnerHTML={createMarkup()} className='editor'></div> */}
                       </Form.Group>
                     </div>
-
                   </div>
                 </div>
                 {/* category */}
@@ -770,16 +891,20 @@ const VariantAddProduct = () =>{
                         Product Type<span className="text-danger">* </span>
                       </Form.Label>
                       <Col sm="12">
-
                         <Form.Select
                           aria-label="Product Type"
                           className="adminselectbox"
                           required
                           name="product_type"
                           onChange={(e) => handleInputFieldChange(e)}
-                          value={productdata.product_type === null || productdata.product_type === undefined ? '' : productdata.product_type}
+                          value={
+                            productdata.product_type === null ||
+                            productdata.product_type === undefined
+                              ? ""
+                              : productdata.product_type
+                          }
                         >
-                          <option value={''}>Select Product Type</option>
+                          <option value={""}>Select Product Type</option>
                           <option value="cloths">cloths</option>
                           <option value="Foods">foods</option>
                           <option value="electronic">Electronic</option>
@@ -796,8 +921,20 @@ const VariantAddProduct = () =>{
                         Category<span className="text-danger">* </span>
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Select aria-label="Category" className="adminselectbox" required onChange={(e) => handleInputFieldChange(e)} name={'category'} value={productdata.category === null || productdata.category === undefined ? '' : productdata.category}>
-                          <option value={''}> Select Category</option>
+                        <Form.Select
+                          aria-label="Category"
+                          className="adminselectbox"
+                          required
+                          onChange={(e) => handleInputFieldChange(e)}
+                          name={"category"}
+                          value={
+                            productdata.category === null ||
+                            productdata.category === undefined
+                              ? ""
+                              : productdata.category
+                          }
+                        >
+                          <option value={""}> Select Category</option>
                           <option value="18">18</option>
                           <option value="Drinks">Two</option>
                           <option value="Cakes">Three</option>
@@ -813,13 +950,19 @@ const VariantAddProduct = () =>{
                       </Form.Label>
                       <Col sm="12">
                         <Form.Select
-                          onChange={(e) => handleInputFieldChange(e)} name={'parent_category'}
+                          onChange={(e) => handleInputFieldChange(e)}
+                          name={"parent_category"}
                           aria-label="Parent Category"
                           className="adminselectbox"
                           required
-                          value={productdata.parent_category === null || productdata.parent_category === undefined ? '' : productdata.parent_category}
+                          value={
+                            productdata.parent_category === null ||
+                            productdata.parent_category === undefined
+                              ? ""
+                              : productdata.parent_category
+                          }
                         >
-                          <option value={''}>Select Parent Category</option>
+                          <option value={""}>Select Parent Category</option>
                           <option value="5,18">5,18</option>
                           <option value="Fresh">Two</option>
                           <option value="Organic">Three</option>
@@ -844,7 +987,12 @@ const VariantAddProduct = () =>{
                           type="number"
                           placeholder="Wholesale Sales Tax"
                           name="wholesale_sales_tax"
-                          value={productdata.wholesale_sales_tax === null || productdata.wholesale_sales_tax === undefined ? '' : productdata.wholesale_sales_tax }
+                          value={
+                            productdata.wholesale_sales_tax === null ||
+                            productdata.wholesale_sales_tax === undefined
+                              ? ""
+                              : productdata.wholesale_sales_tax
+                          }
                           onChange={(e) => handleInputFieldChange(e)}
                         />
                       </Col>
@@ -858,7 +1006,12 @@ const VariantAddProduct = () =>{
                           type="number"
                           placeholder="Manufacturers’ Sales Tax "
                           name="manufacturers_sales_tax"
-                          value={productdata.manufacturers_sales_tax === null || productdata.manufacturers_sales_tax === undefined ? '' : productdata.manufacturers_sales_tax }
+                          value={
+                            productdata.manufacturers_sales_tax === null ||
+                            productdata.manufacturers_sales_tax === undefined
+                              ? ""
+                              : productdata.manufacturers_sales_tax
+                          }
                           onChange={(e) => handleInputFieldChange(e)}
                         />
                       </Col>
@@ -868,8 +1021,18 @@ const VariantAddProduct = () =>{
                         Retail Sales Tax
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Control type="number" placeholder="Retail Sales Tax" name="retails_sales_tax" value={productdata.retails_sales_tax === null || productdata.retails_sales_tax === undefined ? '' : productdata.retails_sales_tax}
-                          onChange={(e) => handleInputFieldChange(e)} />
+                        <Form.Control
+                          type="number"
+                          placeholder="Retail Sales Tax"
+                          name="retails_sales_tax"
+                          value={
+                            productdata.retails_sales_tax === null ||
+                            productdata.retails_sales_tax === undefined
+                              ? ""
+                              : productdata.retails_sales_tax
+                          }
+                          onChange={(e) => handleInputFieldChange(e)}
+                        />
                       </Col>
                     </Form.Group>
                     <Form.Group className="mx-3" controlId="validationCustom11">
@@ -877,7 +1040,14 @@ const VariantAddProduct = () =>{
                         Gst
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Control type="number" placeholder="Gst" required name="gst" value={productdata.gst} onChange={(e) => handleInputFieldChange(e)} />
+                        <Form.Control
+                          type="number"
+                          placeholder="Gst"
+                          required
+                          name="gst"
+                          value={productdata.gst}
+                          onChange={(e) => handleInputFieldChange(e)}
+                        />
                         <Form.Control.Feedback type="invalid">
                           Please choose a gst
                         </Form.Control.Feedback>
@@ -888,15 +1058,26 @@ const VariantAddProduct = () =>{
                         Value Added Tax
                       </Form.Label>
                       <Col sm="12">
-                        <Form.Control type="number" placeholder="Value Added Tax" name="value_added_tax" value={productdata.value_added_tax === null || productdata.value_added_tax === undefined ? '' : productdata.value_added_tax} onChange={(e) => handleInputFieldChange(e)} />
+                        <Form.Control
+                          type="number"
+                          placeholder="Value Added Tax"
+                          name="value_added_tax"
+                          value={
+                            productdata.value_added_tax === null ||
+                            productdata.value_added_tax === undefined
+                              ? ""
+                              : productdata.value_added_tax
+                          }
+                          onChange={(e) => handleInputFieldChange(e)}
+                        />
                       </Col>
                     </Form.Group>
                   </div>
                 </div>
                 {/*Date  */}
-               
+
                 {/* Variation */}
-                {(modalshow === 'add') ?
+                {modalshow === "add" ? (
                   <div className="my-3 inputsection_box">
                     <div className="productvariety_box">
                       <div className="productvariety">
@@ -908,7 +1089,17 @@ const VariantAddProduct = () =>{
                             className="inputlabelheading"
                             sm="12 d-flex align-itmes-center"
                           >
-                            <Form.Check type="radio" aria-label="radio 1" className="mx-2" onChange={handleVarietyChange} name='variety' value={false} checked={productdata.variety === false ? true : false} />
+                            <Form.Check
+                              type="radio"
+                              aria-label="radio 1"
+                              className="mx-2"
+                              onChange={handleVarietyChange}
+                              name="variety"
+                              value={false}
+                              checked={
+                                productdata.variety === false ? true : false
+                              }
+                            />
                             Single Product
                           </Form.Label>
                         </Form.Group>
@@ -920,37 +1111,54 @@ const VariantAddProduct = () =>{
                             className="inputlabelheading"
                             sm="12 d-flex align-itmes-center"
                           >
-
-                            <Form.Check type="radio" aria-label="radio 2" className="mx-2" onChange={handleVarietyChange} name='variety' checked={productdata.variety === true ? true : false} value={true} />
+                            <Form.Check
+                              type="radio"
+                              aria-label="radio 2"
+                              className="mx-2"
+                              onChange={handleVarietyChange}
+                              name="variety"
+                              checked={
+                                productdata.variety === true ? true : false
+                              }
+                              value={true}
+                            />
                             Multiple Variety
                           </Form.Label>
                         </Form.Group>
                       </div>
                       <div className="row">
-
                         <Form.Group
                           className="mx-3"
-                        // controlId="validationCustom13"
+                          // controlId="validationCustom13"
                         >
                           <div className="variation_box my-2">
                             <div className="row">
                               <div className="col-auto">
-                                <Table bordered className="align-middle my-2 aadvariety_table_">
+                                <Table
+                                  bordered
+                                  className="align-middle my-2 aadvariety_table_"
+                                >
                                   <thead className="align-middle">
                                     <tr>
-                                      <th >Variety</th>
-                                      <th >Color</th>
-                                      <th >Weight</th>
-                                      <th >Size</th>
-                                      <th >Price</th>
-                                      <th >Mrp</th>
-                                      <th >Sale Price</th>
-                                      <th >Discount</th>
-                                      <th >Special Offer</th>
-                                      <th >Featured Product</th>
-                                      <th className="manufacture_date">Mdate</th>
-                                      <th className="manufacture_date">Edate</th>
-                                      <th className="manufacture_date">Image</th>
+                                      <th>Variety</th>
+                                      <th>Color</th>
+                                      <th>Weight</th>
+                                      <th>Size</th>
+                                      <th>Price</th>
+                                      <th>Mrp</th>
+                                      <th>Sale Price</th>
+                                      <th>Discount</th>
+                                      <th>Special Offer</th>
+                                      <th>Featured Product</th>
+                                      <th className="manufacture_date">
+                                        Mdate
+                                      </th>
+                                      <th className="manufacture_date">
+                                        Edate
+                                      </th>
+                                      <th className="manufacture_date">
+                                        Image
+                                      </th>
                                       <th className="">Qty</th>
                                     </tr>
                                   </thead>
@@ -959,16 +1167,42 @@ const VariantAddProduct = () =>{
                                       <td className="p-0 text-center">
                                         <div className=" d-flex align-items-center">
                                           <InputGroup className="" size="sm">
-                                            <Form.Select aria-label="Default select example" name='unit' value={variantarray.unit}
-                                              onChange={(e) => onVariantChange(e)}
-                                              className={(customvalidated === true) ? 'border-danger' : null}
+                                            <Form.Select
+                                              aria-label="Default select example"
+                                              name="unit"
+                                              value={variantarray.unit}
+                                              onChange={(e) =>
+                                                onVariantChange(e)
+                                              }
+                                              className={
+                                                customvalidated === true
+                                                  ? "border-danger"
+                                                  : null
+                                              }
                                             >
-                                              <option value={''} >Select</option>
-                                              {(varietyy.variety || []).map((vari, i) => {
-                                                return (
-                                                  <option value={vari === 'weight' ? 'gm' : vari === 'volume' ? 'l' : vari === 'piece' ? 'pcs' : vari === 'color' ? 'pcs' : null} key={i}>{vari}</option>
-                                                );
-                                              })}
+                                              <option value={""}>Select</option>
+                                              {(varietyy.variety || []).map(
+                                                (vari, i) => {
+                                                  return (
+                                                    <option
+                                                      value={
+                                                        vari === "weight"
+                                                          ? "gm"
+                                                          : vari === "volume"
+                                                          ? "l"
+                                                          : vari === "piece"
+                                                          ? "pcs"
+                                                          : vari === "color"
+                                                          ? "pcs"
+                                                          : null
+                                                      }
+                                                      key={i}
+                                                    >
+                                                      {vari}
+                                                    </option>
+                                                  );
+                                                }
+                                              )}
                                             </Form.Select>
                                           </InputGroup>
                                         </div>
@@ -980,9 +1214,15 @@ const VariantAddProduct = () =>{
                                             <Form.Control
                                               type="text"
                                               sm="9"
-                                              className={(customvalidated === true) ? 'border-danger' : null}
-                                              onChange={(e) => onVariantChange(e)}
-                                              name={'colors'}
+                                              className={
+                                                customvalidated === true
+                                                  ? "border-danger"
+                                                  : null
+                                              }
+                                              onChange={(e) =>
+                                                onVariantChange(e)
+                                              }
+                                              name={"colors"}
                                               value={variantarray.colors}
                                             />
                                           </InputGroup>
@@ -993,30 +1233,54 @@ const VariantAddProduct = () =>{
                                         <div className=" d-flex align-items-center">
                                           <InputGroup className="" size="sm">
                                             <Form.Control
-                                              value={(variantarray.unit === 'weight' ? variantarray.unit_quantity : variantarray.unit === 'volume' ? variantarray.unit_quantity : variantarray.unit === 'piece' ? variantarray.unit_quantity : null)}
+                                              value={
+                                                variantarray.unit === "weight"
+                                                  ? variantarray.unit_quantity
+                                                  : variantarray.unit ===
+                                                    "volume"
+                                                  ? variantarray.unit_quantity
+                                                  : variantarray.unit ===
+                                                    "piece"
+                                                  ? variantarray.unit_quantity
+                                                  : null
+                                              }
                                               type="number"
                                               sm="9"
-                                              className={(customvalidated === true) ? 'border-danger' : null}
-                                              onChange={(e) => onVariantChange(e)}
-                                              name={'unit_quantity'}
+                                              className={
+                                                customvalidated === true
+                                                  ? "border-danger"
+                                                  : null
+                                              }
+                                              onChange={(e) =>
+                                                onVariantChange(e)
+                                              }
+                                              name={"unit_quantity"}
                                             />
                                           </InputGroup>
-
                                         </div>
                                       </td>
                                       <td className="p-0 text-center">
                                         <div className=" d-flex align-items-center">
                                           <InputGroup className="" size="sm">
                                             <Form.Control
-                                              value={variantarray.unit === 'color' ? variantarray.size : ''}
+                                              value={
+                                                variantarray.unit === "color"
+                                                  ? variantarray.size
+                                                  : ""
+                                              }
                                               type="text"
                                               sm="9"
-                                              className={(customvalidated === true) ? 'border-danger' : null}
-                                              onChange={(e) => onVariantChange(e)}
-                                              name={'size'}
+                                              className={
+                                                customvalidated === true
+                                                  ? "border-danger"
+                                                  : null
+                                              }
+                                              onChange={(e) =>
+                                                onVariantChange(e)
+                                              }
+                                              name={"size"}
                                             />
                                           </InputGroup>
-
                                         </div>
                                       </td>
                                       <td className="p-0 text-center">
@@ -1026,13 +1290,18 @@ const VariantAddProduct = () =>{
                                               min={1}
                                               type="number"
                                               sm="9"
-                                              className={(customvalidated === true) ? 'border-danger' : null}
-                                              onChange={(e) => onVariantChange(e)}
-                                              name={'product_price'}
+                                              className={
+                                                customvalidated === true
+                                                  ? "border-danger"
+                                                  : null
+                                              }
+                                              onChange={(e) =>
+                                                onVariantChange(e)
+                                              }
+                                              name={"product_price"}
                                               value={variantarray.product_price}
                                             />
                                           </InputGroup>
-
                                         </div>
                                       </td>
                                       <td className="p-0 text-center">
@@ -1042,14 +1311,18 @@ const VariantAddProduct = () =>{
                                               type="number"
                                               min={1}
                                               sm="9"
-                                              className={(customvalidated === true) ? 'border-danger' : null}
-                                              onChange={(e) => onVariantChange(e)}
-                                              name={'mrp'}
+                                              className={
+                                                customvalidated === true
+                                                  ? "border-danger"
+                                                  : null
+                                              }
+                                              onChange={(e) =>
+                                                onVariantChange(e)
+                                              }
+                                              name={"mrp"}
                                               value={variantarray.mrp}
-
                                             />
                                           </InputGroup>
-
                                         </div>
                                       </td>
                                       <td className="p-0 text-center">
@@ -1059,13 +1332,18 @@ const VariantAddProduct = () =>{
                                               type="number"
                                               sm="9"
                                               min={1}
-                                              className={(customvalidated === true) ? 'border-danger' : null}
-                                              onChange={(e) => onVariantChange(e)}
-                                              name={'sale_price'}
+                                              className={
+                                                customvalidated === true
+                                                  ? "border-danger"
+                                                  : null
+                                              }
+                                              onChange={(e) =>
+                                                onVariantChange(e)
+                                              }
+                                              name={"sale_price"}
                                               value={variantarray.sale_price}
                                             />
                                           </InputGroup>
-
                                         </div>
                                       </td>
                                       <td className="p-0 text-center">
@@ -1075,19 +1353,48 @@ const VariantAddProduct = () =>{
                                               type="number"
                                               sm="9"
                                               min={1}
-                                              onChange={(e) => onVariantChange(e)}
-                                              name={'discount'}
+                                              onChange={(e) =>
+                                                onVariantChange(e)
+                                              }
+                                              name={"discount"}
                                               value={variantarray.discount}
                                             />
                                           </InputGroup>
-
                                         </div>
                                       </td>
                                       <td className="p-0 text-center">
                                         <div className="">
-                                          {variantarray.special_offer === true ?
-                                            <Form.Check className="mx-2" onChange={handleInputcheckboxChange} name='special_offer' value={variantarray.special_offer === true ? true : false} checked /> :
-                                            <Form.Check className="mx-2" onChange={handleInputcheckboxChange} name='special_offer' value={variantarray.special_offer === true ? true : false} />}
+                                          {variantarray.special_offer ===
+                                          true ? (
+                                            <Form.Check
+                                              className="mx-2"
+                                              onChange={
+                                                handleInputcheckboxChange
+                                              }
+                                              name="special_offer"
+                                              value={
+                                                variantarray.special_offer ===
+                                                true
+                                                  ? true
+                                                  : false
+                                              }
+                                              checked
+                                            />
+                                          ) : (
+                                            <Form.Check
+                                              className="mx-2"
+                                              onChange={
+                                                handleInputcheckboxChange
+                                              }
+                                              name="special_offer"
+                                              value={
+                                                variantarray.special_offer ===
+                                                true
+                                                  ? true
+                                                  : false
+                                              }
+                                            />
+                                          )}
                                           {/* <Form.Check
                                             onChange={(e) => handleInputcheckboxChange(e)}
                                             name={'special_offer'}
@@ -1097,9 +1404,37 @@ const VariantAddProduct = () =>{
                                       </td>
                                       <td className="p-0 text-center">
                                         <div className="">
-                                          {variantarray.featured_product === true ?
-                                            <Form.Check className="mx-2" onChange={handleInputcheckboxChange} name={'featured_product'} value={variantarray.featured_product === true ? true : false} checked /> :
-                                            <Form.Check className="mx-2" onChange={handleInputcheckboxChange} name={'featured_product'} value={variantarray.featured_product === true ? true : false} />}
+                                          {variantarray.featured_product ===
+                                          true ? (
+                                            <Form.Check
+                                              className="mx-2"
+                                              onChange={
+                                                handleInputcheckboxChange
+                                              }
+                                              name={"featured_product"}
+                                              value={
+                                                variantarray.featured_product ===
+                                                true
+                                                  ? true
+                                                  : false
+                                              }
+                                              checked
+                                            />
+                                          ) : (
+                                            <Form.Check
+                                              className="mx-2"
+                                              onChange={
+                                                handleInputcheckboxChange
+                                              }
+                                              name={"featured_product"}
+                                              value={
+                                                variantarray.featured_product ===
+                                                true
+                                                  ? true
+                                                  : false
+                                              }
+                                            />
+                                          )}
                                           {/* <Form.Check
                                             onChange={(e) => handleInputcheckboxChange(e)}
                                             name={'featured_product'}
@@ -1108,33 +1443,45 @@ const VariantAddProduct = () =>{
                                         </div>
                                       </td>
                                       <td className="p-0 text-center">
-                                        <div className="manufacture_date" >
+                                        <div className="manufacture_date">
                                           <InputGroup className="" size="sm">
                                             <Form.Control
                                               type="date"
                                               sm="9"
-                                              className={(customvalidated === true) ? 'border-danger' : null}
-                                              onChange={(e) => onVariantChange(e)}
-                                              name={'manufacturing_date'}
-                                              value={variantarray.manufacturing_date}
+                                              className={
+                                                customvalidated === true
+                                                  ? "border-danger"
+                                                  : null
+                                              }
+                                              onChange={(e) =>
+                                                onVariantChange(e)
+                                              }
+                                              name={"manufacturing_date"}
+                                              value={
+                                                variantarray.manufacturing_date
+                                              }
                                             />
                                           </InputGroup>
-
                                         </div>
                                       </td>
                                       <td className="p-0 text-center">
-                                        <div className="manufacture_date" >
+                                        <div className="manufacture_date">
                                           <InputGroup className="" size="sm">
                                             <Form.Control
                                               type="date"
                                               sm="9"
-                                              className={(customvalidated === true) ? 'border-danger' : null}
-                                              onChange={(e) => onVariantChange(e)}
-                                              name={'expire_date'}
+                                              className={
+                                                customvalidated === true
+                                                  ? "border-danger"
+                                                  : null
+                                              }
+                                              onChange={(e) =>
+                                                onVariantChange(e)
+                                              }
+                                              name={"expire_date"}
                                               value={variantarray.expire_date}
                                             />
                                           </InputGroup>
-
                                         </div>
                                       </td>
                                       <td className="p-0 text-center">
@@ -1144,105 +1491,139 @@ const VariantAddProduct = () =>{
                                               multiple
                                               type="file"
                                               sm="9"
-                                              className={(customvalidated === true) ? 'border-danger' : null}
+                                              className={
+                                                customvalidated === true
+                                                  ? "border-danger"
+                                                  : null
+                                              }
                                               onChange={imguploadchange}
-                                              name={'product_img'}
-
+                                              name={"product_img"}
                                             />
                                           </InputGroup>
-
                                         </div>
                                       </td>
-
 
                                       <td className="p-0">
                                         <div className="">
                                           <InputGroup className="" size="sm">
                                             <Form.Control
-                                              name={'quantity'}
+                                              name={"quantity"}
                                               type="number"
                                               value={variantarray.quantity}
                                               sm="9"
-                                              min={'1'}
-                                              className={(customvalidated === true) ? 'border-danger' : null}
-                                              onChange={(e) => onVariantChange(e)}
-                                              onKeyPress={event => {
+                                              min={"1"}
+                                              className={
+                                                customvalidated === true
+                                                  ? "border-danger"
+                                                  : null
+                                              }
+                                              onChange={(e) =>
+                                                onVariantChange(e)
+                                              }
+                                              onKeyPress={(event) => {
                                                 if (event.key === "Enter") {
                                                   VariantAddProduct();
                                                 }
-                                              }
-                                              }
+                                              }}
                                             />
                                           </InputGroup>
                                         </div>
                                       </td>
                                       <td className="p-0">
                                         <div className=" d-flex align-items-center">
-                                          <Button variant="outline-success" className="addcategoryicon"
-                                            onClick={()=>VariantAddProduct()}
-                                            size="sm">
+                                          <Button
+                                            variant="outline-success"
+                                            className="addcategoryicon"
+                                            onClick={() => VariantAddProduct()}
+                                            size="sm"
+                                          >
                                             +
                                           </Button>
                                         </div>
                                       </td>
                                     </tr>
 
-                                    {
-              (variantmainarray || []).map((variantdata, i) => {
-                return (
-                  <tr >
-                    <td className="p-0 text-center ">
-                    {variantdata.unit === 'pcs' ? 'color' : variantdata.unit === 'gms' ? 'weight' : variantdata.unit === 'ml' ? 'volume' : null}
-                    </td>
-                    <td className="p-0 text-center ">
-                      {variantdata.colors}
-                    </td>
-                    <td className="p-0 text-center ">
-                      { variantdata.unit === 'gms' ? variantdata.unit_quantity: variantdata.unit === 'ml' ? variantdata.unit_quantity : variantdata.unit === 'pcs' ? variantdata.unit_quantity : null}
-                    </td>
-                    <td className="p-0 text-center ">
-                      {variantdata.unit === 'pcs' ? variantdata.size: null}
-                    </td>
-                    <td className="p-0 text-center ">
-                      {variantdata.product_price}
-                    </td>
-                    <td className="p-0 text-center ">
-                      {variantdata.mrp}
-                    </td>
-                    <td className="p-0 text-center ">
-                      {variantdata.sale_price}
-                    </td>
-                    <td className="p-0 text-center ">
-                      {variantdata.discount}
-                    </td>
-                    <td className="p-0 text-center ">
-                      {variantdata.special_offer}
-                    </td>
-                    <td className="p-0 text-center ">
-                      {variantdata.featured_product}
-                    </td>
-                    <td className="p-0 text-center ">
-                      {variantdata.manufacturing_date}
-                    </td>
-                    <td className="p-0 text-center ">
-                      {variantdata.expire_date}
-                    </td>
-                    <td className="p-0 text-center">
-                      <Carousel indicators={false} controls={false}>
-                        {(variantdata.product_img || []).map((data) => {
-                          return (
-                            <Carousel.Item interval={1000}>
-                              <img src={data} alt='apnaorganic' width={50} />
-                            </Carousel.Item>
-                          )
-                        })}
-                      </Carousel>
-                    </td>
-                    <td className="p-0 text-center">
-                      {variantdata.quantity}
-                    </td>
-                    <td className="p-0 text-center">
-                      {/* <Button variant="text-danger" className="addcategoryicon text-danger"
+                                    {(variantmainarray || []).map(
+                                      (variantdata, i) => {
+                                        return (
+                                          <tr>
+                                            <td className="p-0 text-center ">
+                                              {variantdata.unit === "pcs"
+                                                ? "color"
+                                                : variantdata.unit === "gms"
+                                                ? "weight"
+                                                : variantdata.unit === "ml"
+                                                ? "volume"
+                                                : null}
+                                            </td>
+                                            <td className="p-0 text-center ">
+                                              {variantdata.colors}
+                                            </td>
+                                            <td className="p-0 text-center ">
+                                              {variantdata.unit === "gms"
+                                                ? variantdata.unit_quantity
+                                                : variantdata.unit === "ml"
+                                                ? variantdata.unit_quantity
+                                                : variantdata.unit === "pcs"
+                                                ? variantdata.unit_quantity
+                                                : null}
+                                            </td>
+                                            <td className="p-0 text-center ">
+                                              {variantdata.unit === "pcs"
+                                                ? variantdata.size
+                                                : null}
+                                            </td>
+                                            <td className="p-0 text-center ">
+                                              {variantdata.product_price}
+                                            </td>
+                                            <td className="p-0 text-center ">
+                                              {variantdata.mrp}
+                                            </td>
+                                            <td className="p-0 text-center ">
+                                              {variantdata.sale_price}
+                                            </td>
+                                            <td className="p-0 text-center ">
+                                              {variantdata.discount}
+                                            </td>
+                                            <td className="p-0 text-center ">
+                                              {variantdata.special_offer}
+                                            </td>
+                                            <td className="p-0 text-center ">
+                                              {variantdata.featured_product}
+                                            </td>
+                                            <td className="p-0 text-center ">
+                                              {variantdata.manufacturing_date}
+                                            </td>
+                                            <td className="p-0 text-center ">
+                                              {variantdata.expire_date}
+                                            </td>
+                                            <td className="p-0 text-center">
+                                              <Carousel
+                                                indicators={false}
+                                                controls={false}
+                                              >
+                                                {(
+                                                  variantdata.product_img || []
+                                                ).map((data) => {
+                                                  return (
+                                                    <Carousel.Item
+                                                      interval={1000}
+                                                    >
+                                                      <img
+                                                        src={data}
+                                                        alt="apnaorganic"
+                                                        width={50}
+                                                      />
+                                                    </Carousel.Item>
+                                                  );
+                                                })}
+                                              </Carousel>
+                                            </td>
+                                            <td className="p-0 text-center">
+                                              {variantdata.quantity}
+                                            </td>
+                                            <td className="p-0 text-center">
+                                              {/* <Button variant="text-danger" className="addcategoryicon text-danger"
                         onClick={(id) => VariantRemoveClick(variantdata.id)} size="sm">
                         &times;
                       </Button>
@@ -1250,60 +1631,62 @@ const VariantAddProduct = () =>{
                         onClick={(id) => VariantEditClick(variantdata.id)} size="sm">
                         <MdOutlineEdit />
                       </Button> */}
-                    </td>
-                  </tr>
-                )
-              })
-            }
+                                            </td>
+                                          </tr>
+                                        );
+                                      }
+                                    )}
                                   </tbody>
-
                                 </Table>
-
                               </div>
                             </div>
                           </div>
                         </Form.Group>
-
                       </div>
-
                     </div>
                   </div>
-                  : null}
+                ) : null}
                 {/* Offer */}
-
 
                 {/* seo tag */}
                 <div className="my-3 inputsection_box">
                   <h5 className="m-0">Seo Tag</h5>
                   <div className="productvariety">
-                    <Form.Group className="mx-3" controlId="validationCustomSeo">
+                    <Form.Group
+                      className="mx-3"
+                      controlId="validationCustomSeo"
+                    >
                       <div className=" d-flex align-items-center my-2">
                         <InputGroup className="" size="sm">
                           <Form.Control
                             sm="9"
                             onChange={ontagchange}
                             value={addtag}
-                            onKeyPress={event => {
+                            onKeyPress={(event) => {
                               if (event.key === "Enter") {
-                                ontagaddclick()
+                                ontagaddclick();
                               }
-                            }
-                            }
+                            }}
                           />
-                          <Button variant="outline-success" className="addcategoryicon"
-                            onClick={() => ontagaddclick()} size="sm">
+                          <Button
+                            variant="outline-success"
+                            className="addcategoryicon"
+                            onClick={() => ontagaddclick()}
+                            size="sm"
+                          >
                             +
                           </Button>
                         </InputGroup>
-
                       </div>
 
-                      <div className="d-flex align-items-center tagselectbox mt-2" >
+                      <div className="d-flex align-items-center tagselectbox mt-2">
                         {/* {(seoarray || []).map((seotags, i) => {
                           return ( */}
-                        <Badge className="tagselecttitle mb-0" bg="success" >
-                        {productdata.seo_tag === null || productdata.seo_tag === undefined ? '' : productdata.seo_tag
-                        }
+                        <Badge className="tagselecttitle mb-0" bg="success">
+                          {productdata.seo_tag === null ||
+                          productdata.seo_tag === undefined
+                            ? ""
+                            : productdata.seo_tag}
                           <GiCancel
                             className=" mx-0 ms-1 btncancel"
                             onClick={() => tagRemoveClick(proddata.seo_tag)}
@@ -1314,7 +1697,6 @@ const VariantAddProduct = () =>{
 
                         })} */}
                       </div>
-
                     </Form.Group>
                   </div>
                 </div>
@@ -1327,22 +1709,20 @@ const VariantAddProduct = () =>{
                       editor={ClassicEditor}
                       data="<p>Hello from CKEditor 5!</p>"
                       onChange={OtherDescription}
-                      name={'other_introduction'}
-
+                      name={"other_introduction"}
                     />
-
                   </Col>
                 </div>
                 {/* input */}
                 <div className="my-3 inputsection_box">
                   <h5 className="m-0">Add Custom Input</h5>
                   <div className=" mt-0 mb-3">
-                    <Table className="align-middle" >
+                    <Table className="align-middle">
                       <thead>
                         <tr>
-                          <th >Heading</th>
-                          <th >Description</th>
-                          <th ></th>
+                          <th>Heading</th>
+                          <th>Description</th>
+                          <th></th>
                         </tr>
                       </thead>
                       <tbody>
@@ -1353,87 +1733,105 @@ const VariantAddProduct = () =>{
                                 value={headerval}
                                 type="text"
                                 sm="9"
-                                min={'1'}
+                                min={"1"}
                                 onChange={oncustomheadChange}
-                                name={'custom_input_header'}
-                                className={(customvalidated === true) ? 'border-danger' : null}
+                                name={"custom_input_header"}
+                                className={
+                                  customvalidated === true
+                                    ? "border-danger"
+                                    : null
+                                }
                               />
                             </InputGroup>
-
                           </td>
                           <td className="col-4">
                             <InputGroup className="">
                               <Form.Control
-                                className={(customvalidated === true) ? 'border-danger' : null}
+                                className={
+                                  customvalidated === true
+                                    ? "border-danger"
+                                    : null
+                                }
                                 value={descval}
-                                name={'custom_input_desc'}
+                                name={"custom_input_desc"}
                                 type="text"
                                 sm="9"
-                                min={'1'}
+                                min={"1"}
                                 onChange={oncustomdescChange}
-                                onKeyPress={event => {
+                                onKeyPress={(event) => {
                                   if (event.key === "Enter") {
                                     handleAddClick();
                                   }
-                                }
-                                }
+                                }}
                               />
                             </InputGroup>
                           </td>
                           <td className="">
-                            <Button variant="outline-success" className="addcategoryicon"
-                              onClick={() => handleAddClick()} size="sm">
+                            <Button
+                              variant="outline-success"
+                              className="addcategoryicon"
+                              onClick={() => handleAddClick()}
+                              size="sm"
+                            >
                               +
                             </Button>
                           </td>
                         </tr>
-                        {productdata.add_custom_input === null || productdata.add_custom_input === undefined ? '' : 
-                        (productdata.add_custom_input || []).map((variantdata, i) => {
-                          const arr = variantdata.split(',')
-                          return (
-                            <tr className="">
-                              <td className=" text-center">
-                                <InputGroup className="">
-                                  <Form.Control
-                                    value={arr[0]}
-                                    type="text"
-                                    sm="9"
-                                    min={'1'}
-                                    onChange={oncustomheadChange}
-                                    name={'custom_input_header'}
-                                    required
-                                  />
-                                </InputGroup>
-
-                              </td>
-                              <td className="text-center">
-                                <InputGroup className="">
-                                  <Form.Control
-                                    required
-                                    value={arr[1]}
-                                    name={'custom_input_desc'}
-                                    type="text"
-                                    sm="9"
-                                    min={'1'}
-                                    onChange={oncustomdescChange}
-                                    onKeyPress={event => {
-                                      if (event.key === "Enter") {
-                                        handleAddClick();
-                                      }
-                                    }
-                                    }
-                                  />
-                                </InputGroup>
-                              </td>
-                              <td className="">
-                                <Button variant="text-danger" className="addcategoryicon text-danger"
-                                  onClick={() => handleRemoveClick(variantdata)} size="sm">
-                                  &times;
-                                </Button>
-                              </td>
-                            </tr>
-                          )
-                        })}
+                        {productdata.add_custom_input === null ||
+                        productdata.add_custom_input === undefined
+                          ? ""
+                          : (productdata.add_custom_input || []).map(
+                              (variantdata, i) => {
+                                const arr = variantdata.split(",");
+                                return (
+                                  <tr className="">
+                                    <td className=" text-center">
+                                      <InputGroup className="">
+                                        <Form.Control
+                                          value={arr[0]}
+                                          type="text"
+                                          sm="9"
+                                          min={"1"}
+                                          onChange={oncustomheadChange}
+                                          name={"custom_input_header"}
+                                          required
+                                        />
+                                      </InputGroup>
+                                    </td>
+                                    <td className="text-center">
+                                      <InputGroup className="">
+                                        <Form.Control
+                                          required
+                                          value={arr[1]}
+                                          name={"custom_input_desc"}
+                                          type="text"
+                                          sm="9"
+                                          min={"1"}
+                                          onChange={oncustomdescChange}
+                                          onKeyPress={(event) => {
+                                            if (event.key === "Enter") {
+                                              handleAddClick();
+                                            }
+                                          }}
+                                        />
+                                      </InputGroup>
+                                    </td>
+                                    <td className="">
+                                      <Button
+                                        variant="text-danger"
+                                        className="addcategoryicon text-danger"
+                                        onClick={() =>
+                                          handleRemoveClick(variantdata)
+                                        }
+                                        size="sm"
+                                      >
+                                        &times;
+                                      </Button>
+                                    </td>
+                                  </tr>
+                                );
+                              }
+                            )}
                       </tbody>
                     </Table>
                   </div>
@@ -1441,7 +1839,6 @@ const VariantAddProduct = () =>{
                 })} */}
                   {/* --------------------------------------------- */}
                 </div>
-
               </div>
             </Modal.Body>
             <Modal.Footer className="addproductfooter">
@@ -1449,20 +1846,28 @@ const VariantAddProduct = () =>{
                 btntext={" Cancel"}
                 onClick={() => handleClose()}
                 btnclass={"button main_outline_button px-2"}
-              // Iconname={<GiCancel /> }
+                // Iconname={<GiCancel /> }
               />
-              <MainButton btntext={"Save as Draft"} onClick={() => handleSaveDraft()} />
+              <MainButton
+                btntext={"Save as Draft"}
+                onClick={() => handleSaveDraft()}
+              />
               <Iconbutton
-                type={'submit'}
-                btntext={(modalshow === 'add' ? "Add Product" : "Update Product")}
+                type={"submit"}
+                btntext={modalshow === "add" ? "Add Product" : "Update Product"}
                 btnclass={"button main_button "}
               />
             </Modal.Footer>
           </Form>
         </Modal>
         {/* variety */}
-        <Modal size="lg" show={varietyshow} onHide={() => handlevarietyClose()} dialogClassName="addproductmainmodal">
-          <Form ref={formRef} validated={validated} >
+        <Modal
+          size="lg"
+          show={varietyshow}
+          onHide={() => handlevarietyClose()}
+          dialogClassName="addproductmainmodal"
+        >
+          <Form ref={formRef} validated={validated}>
             <Modal.Header closeButton>
               <Modal.Title>Add Variety</Modal.Title>
             </Modal.Header>
@@ -1470,7 +1875,7 @@ const VariantAddProduct = () =>{
               <div className="row">
                 <Form.Group
                   className=""
-                // controlId="validationCustom13"
+                  // controlId="validationCustom13"
                 >
                   <div className="variation_box my-2">
                     <div className="row">
@@ -1478,21 +1883,21 @@ const VariantAddProduct = () =>{
                         <Table bordered className="align-middle my-2">
                           <thead className="align-middle">
                             <tr>
-                              <th >Variety</th>
-                              <th >Color</th>
-                              <th >Weight</th>
-                              <th >Size</th>
-                              <th >Price</th>
-                              <th >Mrp</th>
-                              <th >Sale Price</th>
-                              <th >Discount</th>
-                              <th >Special Offer</th>
-                              <th >Featured Product</th>
+                              <th>Variety</th>
+                              <th>Color</th>
+                              <th>Weight</th>
+                              <th>Size</th>
+                              <th>Price</th>
+                              <th>Mrp</th>
+                              <th>Sale Price</th>
+                              <th>Discount</th>
+                              <th>Special Offer</th>
+                              <th>Featured Product</th>
                               <th className="manufacture_date">Mdate</th>
                               <th className="manufacture_date">Edate</th>
                               <th className="manufacture_date">Image</th>
                               <th className="manufacture_date">Quantity</th>
-                              <th ></th>
+                              <th></th>
                             </tr>
                           </thead>
                           <tbody>
@@ -1500,16 +1905,35 @@ const VariantAddProduct = () =>{
                               <td className="p-0 text-center">
                                 <div className=" d-flex align-items-center">
                                   <InputGroup className="" size="sm">
-                                    <Form.Select aria-label="Default select example" name='unit' value={variantarray.unit === 'pcs' ? 'color' : variantarray.unit === 'gms' ? 'weight' : variantarray.unit === 'ml' ? 'volume' : null}
+                                    <Form.Select
+                                      aria-label="Default select example"
+                                      name="unit"
+                                      value={
+                                        variantarray.unit === "pcs"
+                                          ? "color"
+                                          : variantarray.unit === "gms"
+                                          ? "weight"
+                                          : variantarray.unit === "ml"
+                                          ? "volume"
+                                          : null
+                                      }
                                       onChange={(e) => onVariantChange(e)}
-                                      className={(customvalidated === true) ? 'border-danger' : null}
+                                      className={
+                                        customvalidated === true
+                                          ? "border-danger"
+                                          : null
+                                      }
                                     >
-                                      <option value={''} >Select</option>
-                                      {(varietyy.variety || []).map((vari, i) => {
-                                        return (
-                                          <option value={vari} key={i}>{vari}</option>
-                                        );
-                                      })}
+                                      <option value={""}>Select</option>
+                                      {(varietyy.variety || []).map(
+                                        (vari, i) => {
+                                          return (
+                                            <option value={vari} key={i}>
+                                              {vari}
+                                            </option>
+                                          );
+                                        }
+                                      )}
                                     </Form.Select>
                                   </InputGroup>
                                 </div>
@@ -1521,9 +1945,13 @@ const VariantAddProduct = () =>{
                                     <Form.Control
                                       type="text"
                                       sm="9"
-                                      className={(customvalidated === true) ? 'border-danger' : null}
+                                      className={
+                                        customvalidated === true
+                                          ? "border-danger"
+                                          : null
+                                      }
                                       onChange={(e) => onVariantChange(e)}
-                                      name={'colors'}
+                                      name={"colors"}
                                       value={variantarray.colors}
                                     />
                                   </InputGroup>
@@ -1534,30 +1962,48 @@ const VariantAddProduct = () =>{
                                 <div className=" d-flex align-items-center">
                                   <InputGroup className="" size="sm">
                                     <Form.Control
-                                      value={(variantarray.unit === 'gms' ? variantarray.unit_quantity : variantarray.unit === 'ml' ? variantarray.unit_quantity : variantarray.unit === 'pcs' ? variantarray.unit_quantity : null)}
+                                      value={
+                                        variantarray.unit === "gms"
+                                          ? variantarray.unit_quantity
+                                          : variantarray.unit === "ml"
+                                          ? variantarray.unit_quantity
+                                          : variantarray.unit === "pcs"
+                                          ? variantarray.unit_quantity
+                                          : null
+                                      }
                                       type="text"
                                       sm="9"
-                                      className={(customvalidated === true) ? 'border-danger' : null}
+                                      className={
+                                        customvalidated === true
+                                          ? "border-danger"
+                                          : null
+                                      }
                                       onChange={(e) => onVariantChange(e)}
-                                      name={'unit_quantity'}
+                                      name={"unit_quantity"}
                                     />
                                   </InputGroup>
-
                                 </div>
                               </td>
                               <td className="p-0 text-center">
                                 <div className=" d-flex align-items-center">
                                   <InputGroup className="" size="sm">
                                     <Form.Control
-                                      value={(variantarray.unit === 'pcs' ? variantarray.size : null)}
+                                      value={
+                                        variantarray.unit === "pcs"
+                                          ? variantarray.size
+                                          : null
+                                      }
                                       type="text"
                                       sm="9"
-                                      className={(customvalidated === true) ? 'border-danger' : null}
+                                      className={
+                                        customvalidated === true
+                                          ? "border-danger"
+                                          : null
+                                      }
                                       onChange={(e) => onVariantChange(e)}
-                                      name={'size'}
+                                      name={"size"}
                                     />
                                   </InputGroup>
-
                                 </div>
                               </td>
                               <td className="p-0 text-center">
@@ -1567,13 +2013,16 @@ const VariantAddProduct = () =>{
                                       min={1}
                                       type="number"
                                       sm="9"
-                                      className={(customvalidated === true) ? 'border-danger' : null}
+                                      className={
+                                        customvalidated === true
+                                          ? "border-danger"
+                                          : null
+                                      }
                                       onChange={(e) => onVariantChange(e)}
-                                      name={'product_price'}
+                                      name={"product_price"}
                                       value={variantarray.product_price}
                                     />
                                   </InputGroup>
-
                                 </div>
                               </td>
                               <td className="p-0 text-center">
@@ -1583,14 +2032,16 @@ const VariantAddProduct = () =>{
                                       type="number"
                                       min={1}
                                       sm="9"
-                                      className={(customvalidated === true) ? 'border-danger' : null}
+                                      className={
+                                        customvalidated === true
+                                          ? "border-danger"
+                                          : null
+                                      }
                                       onChange={(e) => onVariantChange(e)}
-                                      name={'mrp'}
+                                      name={"mrp"}
                                       value={variantarray.mrp}
-
                                     />
                                   </InputGroup>
-
                                 </div>
                               </td>
                               <td className="p-0 text-center">
@@ -1600,13 +2051,16 @@ const VariantAddProduct = () =>{
                                       type="number"
                                       sm="9"
                                       min={1}
-                                      className={(customvalidated === true) ? 'border-danger' : null}
+                                      className={
+                                        customvalidated === true
+                                          ? "border-danger"
+                                          : null
+                                      }
                                       onChange={(e) => onVariantChange(e)}
-                                      name={'sale_price'}
+                                      name={"sale_price"}
                                       value={variantarray.sale_price}
                                     />
                                   </InputGroup>
-
                                 </div>
                               </td>
                               <td className="p-0 text-center">
@@ -1617,18 +2071,17 @@ const VariantAddProduct = () =>{
                                       sm="9"
                                       min={1}
                                       onChange={(e) => onVariantChange(e)}
-                                      name={'discount'}
+                                      name={"discount"}
                                       value={variantarray.discount}
                                     />
                                   </InputGroup>
-
                                 </div>
                               </td>
                               <td className="p-0 text-center">
                                 <div className="">
                                   <Form.Check
                                     onChange={(e) => onVariantChange(e)}
-                                    name={'special_offer'}
+                                    name={"special_offer"}
                                     value={variantarray.special_offer}
                                   />
                                 </div>
@@ -1637,39 +2090,49 @@ const VariantAddProduct = () =>{
                                 <div className="">
                                   <Form.Check
                                     onChange={(e) => onVariantChange(e)}
-                                    name={'featured_product'}
+                                    name={"featured_product"}
                                     value={variantarray.featured_product}
                                   />
                                 </div>
                               </td>
                               <td className="p-0 text-center">
-                                <div className="manufacture_date" >
+                                <div className="manufacture_date">
                                   <InputGroup className="" size="sm">
                                     <Form.Control
                                       type="date"
                                       sm="9"
-                                      className={(customvalidated === true) ? 'border-danger' : null}
+                                      className={
+                                        customvalidated === true
+                                          ? "border-danger"
+                                          : null
+                                      }
                                       onChange={(e) => onVariantChange(e)}
-                                      name={'manufacturing_date'}
-                                      value={moment(variantarray.manufacturing_date).format('YYYY-MM-DD')}
+                                      name={"manufacturing_date"}
+                                      value={moment(
+                                        variantarray.manufacturing_date
+                                      ).format("YYYY-MM-DD")}
                                     />
                                   </InputGroup>
-
                                 </div>
                               </td>
                               <td className="p-0 text-center">
-                                <div className="manufacture_date" >
+                                <div className="manufacture_date">
                                   <InputGroup className="" size="sm">
                                     <Form.Control
                                       type="date"
                                       sm="9"
-                                      className={(customvalidated === true) ? 'border-danger' : null}
+                                      className={
+                                        customvalidated === true
+                                          ? "border-danger"
+                                          : null
+                                      }
                                       onChange={(e) => onVariantChange(e)}
-                                      name={'expire_date'}
-                                      value={moment(variantarray.expire_date).format('YYYY-MM-DD')}
+                                      name={"expire_date"}
+                                      value={moment(
+                                        variantarray.expire_date
+                                      ).format("YYYY-MM-DD")}
                                     />
                                   </InputGroup>
-
                                 </div>
                               </td>
                               <td className="p-0 text-center">
@@ -1679,67 +2142,91 @@ const VariantAddProduct = () =>{
                                       multiple
                                       type="file"
                                       sm="9"
-                                      className={(customvalidated === true) ? 'border-danger' : null}
+                                      className={
+                                        customvalidated === true
+                                          ? "border-danger"
+                                          : null
+                                      }
                                       onChange={imguploadchange}
-                                      name={'product_img'}
-
+                                      name={"product_img"}
                                     />
                                   </InputGroup>
-
                                 </div>
                               </td>
                               <td className="p-0">
                                 <div className="manufacture_date">
                                   <InputGroup className="" size="sm">
                                     <Form.Control
-                                      name={'quantity'}
+                                      name={"quantity"}
                                       type="number"
                                       value={variantarray.quantity}
                                       sm="9"
-                                      min={'1'}
-                                      className={(customvalidated === true) ? 'border-danger' : null}
+                                      min={"1"}
+                                      className={
+                                        customvalidated === true
+                                          ? "border-danger"
+                                          : null
+                                      }
                                       onChange={(e) => onVariantChange(e)}
-                                      onKeyPress={event => {
+                                      onKeyPress={(event) => {
                                         if (event.key === "Enter") {
-                                        onVariantaddclick();
+                                          onVariantaddclick();
                                         }
-                                      }
-                                      }
+                                      }}
                                     />
                                   </InputGroup>
                                 </div>
                               </td>
                               <td className="p-0">
                                 <div className=" d-flex align-items-center">
-                                  <Button variant="outline-success" className="addcategoryicon"
+                                  <Button
+                                    variant="outline-success"
+                                    className="addcategoryicon"
                                     // type="submit"
-                                    onClick={() => onVariantaddclick(variantarray.id)}
-                                    size="sm">
+                                    onClick={() =>
+                                      onVariantaddclick(variantarray.id)
+                                    }
+                                    size="sm"
+                                  >
                                     +
                                   </Button>
                                 </div>
                               </td>
                             </tr>
 
-                            {
-                              vdata === '' || vdata === null || vdata === undefined ?
-                                null
-                                : (vdata || []).map((variantdata, i) => {
-                                
-                                  return (
-                                    variantdata.is_delete === '1' ? null :
-                                    <tr >
+                            {vdata === "" ||
+                            vdata === null ||
+                            vdata === undefined
+                              ? null
+                              : (vdata || []).map((variantdata, i) => {
+                                  return variantdata.is_delete ===
+                                    "1" ? null : (
+                                    <tr>
                                       <td className="p-0 text-center ">
-                                        {variantdata.unit === 'pcs' ? 'color' : variantdata.unit === 'gms' ? 'weight' : variantdata.unit === 'ml' ? 'volume' : null}
+                                        {variantdata.unit === "pcs"
+                                          ? "color"
+                                          : variantdata.unit === "gms"
+                                          ? "weight"
+                                          : variantdata.unit === "ml"
+                                          ? "volume"
+                                          : null}
                                       </td>
                                       <td className="p-0 text-center ">
                                         {variantdata.colors}
                                       </td>
                                       <td className="p-0 text-center ">
-                                        {(variantdata.unit === 'gms' ? variantdata.unit_quantity : variantdata.unit === 'ml' ? variantdata.unit_quantity : variantdata.unit === 'pcs' ? variantdata.unit_quantity : null)}
+                                        {variantdata.unit === "gms"
+                                          ? variantdata.unit_quantity
+                                          : variantdata.unit === "ml"
+                                          ? variantdata.unit_quantity
+                                          : variantdata.unit === "pcs"
+                                          ? variantdata.unit_quantity
+                                          : null}
                                       </td>
                                       <td className="p-0 text-center ">
-                                        {(variantdata.unit === 'pcs' ? variantdata.size : null)}
+                                        {variantdata.unit === "pcs"
+                                          ? variantdata.size
+                                          : null}
                                       </td>
                                       <td className="p-0 text-center ">
                                         {variantdata.product_price}
@@ -1760,52 +2247,90 @@ const VariantAddProduct = () =>{
                                         {variantdata.featured_product}
                                       </td>
                                       <td className="p-0 text-center ">
-                                        {moment(variantdata.manufacturing_date).format('YYYY-MM-DD')}
+                                        {moment(
+                                          variantdata.manufacturing_date
+                                        ).format("YYYY-MM-DD")}
                                       </td>
                                       <td className="p-0 text-center ">
-                                        {moment(variantdata.expire_date).format('YYYY-MM-DD')}
+                                        {moment(variantdata.expire_date).format(
+                                          "YYYY-MM-DD"
+                                        )}
                                       </td>
                                       <td className="p-0 text-center">
-                                        <Carousel indicators={false} controls={false}>
-                                          {(variantdata.product_img || []).map((data) => {
-                                            return (
-                                              <Carousel.Item interval={1000}>
-                                                <img src={data} alt='apnaorganic' width={50} />
-                                              </Carousel.Item>
-                                            )
-                                          })}
+                                        <Carousel
+                                          indicators={false}
+                                          controls={false}
+                                        >
+                                          {(variantdata.product_img || []).map(
+                                            (data) => {
+                                              return (
+                                                <Carousel.Item interval={1000}>
+                                                  <img
+                                                    src={data}
+                                                    alt="apnaorganic"
+                                                    width={50}
+                                                  />
+                                                </Carousel.Item>
+                                              );
+                                            }
+                                          )}
                                         </Carousel>
                                       </td>
                                       <td className="p-0 text-center">
                                         {variantdata.quantity}
                                       </td>
                                       <td className="p-0 text-center">
-                                        <Button variant="text-danger" className="addcategoryicon text-danger"
-                                          onClick={(id) => VariantRemoveClick(variantdata.id, variantdata.product_id)} size="sm">
+                                        <Button
+                                          variant="text-danger"
+                                          className="addcategoryicon text-danger"
+                                          onClick={(id) =>
+                                            VariantRemoveClick(
+                                              variantdata.id,
+                                              variantdata.product_id
+                                            )
+                                          }
+                                          size="sm"
+                                        >
                                           &times;
                                         </Button>
-                                        <Button variant="text-danger" className="addcategoryicon text-danger"
-                                          onClick={(id) => VariantEditClick(variantdata.id, variantdata.product_id)} size="sm">
+                                        <Button
+                                          variant="text-danger"
+                                          className="addcategoryicon text-danger"
+                                          onClick={(id) =>
+                                            VariantEditClick(
+                                              variantdata.id,
+                                              variantdata.product_id
+                                            )
+                                          }
+                                          size="sm"
+                                        >
                                           <MdOutlineEdit />
                                         </Button>
                                       </td>
                                     </tr>
-                                        
-                                  )
-                                })
-                            }
+                                  );
+                                })}
                           </tbody>
                         </Table>
                       </div>
                     </div>
                   </div>
                 </Form.Group>
-
               </div>
             </Modal.Body>
             <Modal.Footer>
-              <button className='button main_outline_button' onClick={() => handlevarietyClose()}>Cancel</button>
-              <button className='button main_button' onClick={(e) => handlevarietyClose(e)}>Save</button>
+              <button
+                className="button main_outline_button"
+                onClick={() => handlevarietyClose()}
+              >
+                Cancel
+              </button>
+              <button
+                className="button main_button"
+                onClick={(e) => handlevarietyClose(e)}
+              >
+                Save
+              </button>
             </Modal.Footer>
           </Form>
         </Modal>
