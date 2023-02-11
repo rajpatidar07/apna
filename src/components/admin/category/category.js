@@ -103,7 +103,7 @@ const CategoryList = () => {
           .get(`${process.env.REACT_APP_BASEURL}/category_details?id=${e}`)
           .then((response) => {
             let data = response.data[0];
-             console.log("data-------------" + JSON.stringify(data));
+            console.log("data-------------" + JSON.stringify(data));
             setCategoryEditData(data);
             setImagePath(response.data[0].image);
 
@@ -138,16 +138,17 @@ const CategoryList = () => {
                   }
                 });
             }
+            setnewName(name);
+            setCid(e);
+            setParentid(parent_id);
+            setAllparentid(all_parent_id);
+            setlevel(level);
+            setType(category_type);
+            setShow(e);
+            setCategoryEditData(data);
+            console.log(data);
           });
       } catch (err) {}
-      setnewName(name);
-      setCid(e);
-      setParentid(parent_id);
-      setAllparentid(all_parent_id);
-      setlevel(level);
-      setType(category_type);
-      setShow(e);
-      setCategoryEditData(data);
     }
   };
 
@@ -370,7 +371,7 @@ const CategoryList = () => {
     e.preventDefault();
 
     // console.log("form.checkValidity() " + form.checkValidity() + newName);
-    
+
     if (form.checkValidity() === false && newName === "") {
       e.stopPropagation();
       setValidated(true);
@@ -410,6 +411,7 @@ const CategoryList = () => {
 
   const UpdateCategoryClick = (show) => {
     const form = show.currentTarget;
+    console.log(show);
 
     if (form.checkValidity() === true) {
       show.stopPropagation();
@@ -660,122 +662,122 @@ const CategoryList = () => {
                       aria-label="Select by category type"
                       className="adminselectbox"
                       onChange={(e) => handlChangeType(e)}
-                      value={type}
+                      defaultValue={CategoryEditdata.category_type}
                       required
                       name={"category_type"}
                     >
                       <option
-                        selected={
-                          (CategoryEditdata.category_type = "" ? true : false)
-                        }
+                        // selected={
+                        //   (CategoryEditdata.category_type = "" ? true : false)
+                        // }
                         value=""
                       >
                         Search by category type
                       </option>
                       <option
-                        selected={
-                          (CategoryEditdata.category_type = "Cloths"
-                            ? true
-                            : false)
-                        }
+                        // selected={
+                        //   (CategoryEditdata.category_type = "Cloths"
+                        //     ? true
+                        //     : false)
+                        // }
                         value="Cloths"
                       >
                         Cloths
                       </option>
                       <option
-                        selected={
-                          (CategoryEditdata.category_type = "Food"
-                            ? true
-                            : false)
-                        }
+                        // selected={
+                        //   (CategoryEditdata.category_type = "Food"
+                        //     ? true
+                        //     : false)
+                        // }
                         value="Food"
                       >
                         Food
                       </option>
                       <option
-                        selected={
-                          (CategoryEditdata.category_type =
-                            "Beauty & Personal care" ? true : false)
-                        }
+                        // selected={
+                        //   (CategoryEditdata.category_type =
+                        //     "Beauty & Personal care" ? true : false)
+                        // }
                         value="Beauty & Personal care"
                       >
                         Beauty & Personal care
                       </option>
                       <option
-                        selected={
-                          (CategoryEditdata.category_type = "Mobiles"
-                            ? true
-                            : false)
-                        }
+                        // selected={
+                        //   (CategoryEditdata.category_type = "Mobiles"
+                        //     ? true
+                        //     : false)
+                        // }
                         value="Mobiles"
                       >
                         Mobiles
                       </option>
                       <option
-                        selected={
-                          (CategoryEditdata.category_type = "Two wheelers"
-                            ? true
-                            : false)
-                        }
+                        // selected={
+                        //   (CategoryEditdata.category_type = "Two wheelers"
+                        //     ? true
+                        //     : false)
+                        // }
                         value="Two wheelers"
                       >
                         Two wheelers
                       </option>
                       <option
-                        selected={
-                          (CategoryEditdata.category_type = "Home Applience"
-                            ? true
-                            : false)
-                        }
+                        // selected={
+                        //   (CategoryEditdata.category_type = "Home Applience"
+                        //     ? true
+                        //     : false)
+                        // }
                         value="Home Applience"
                       >
                         Home Applience
                       </option>
                       <option
-                        selected={
-                          (CategoryEditdata.category_type = "Grocery"
-                            ? true
-                            : false)
-                        }
+                        // selected={
+                        //   (CategoryEditdata.category_type = "Grocery"
+                        //     ? true
+                        //     : false)
+                        // }
                         value="Grocery"
                       >
                         Grocery
                       </option>
                       <option
-                        selected={
-                          (CategoryEditdata.category_type = "Health"
-                            ? true
-                            : false)
-                        }
+                        // selected={
+                        //   (CategoryEditdata.category_type = "Health"
+                        //     ? true
+                        //     : false)
+                        // }
                         value="Health"
                       >
                         Health
                       </option>
                       <option
-                        selected={
-                          (CategoryEditdata.category_type = "Fashion"
-                            ? true
-                            : false)
-                        }
+                        // selected={
+                        //   (CategoryEditdata.category_type = "Fashion"
+                        //     ? true
+                        //     : false)
+                        // }
                         value="Fashion"
                       >
                         Fashion
                       </option>
                       <option
-                        selected={
-                          (CategoryEditdata.category_type = "Electronic"
-                            ? true
-                            : false)
-                        }
+                        // selected={
+                        //   (CategoryEditdata.category_type = "Electronic"
+                        //     ? true
+                        //     : false)
+                        // }
                         value="Electronic"
                       >
                         Electronic
                       </option>
                       <option
-                        selected={
-                          (CategoryEditdata.category_type =
-                            "Sports & Accessories" ? true : false)
-                        }
+                        // selected={
+                        //   (CategoryEditdata.category_type =
+                        //     "Sports & Accessories" ? true : false)
+                        // }
                         value="Sports & Accessories"
                       >
                         Sports & Accessories
@@ -801,8 +803,9 @@ const CategoryList = () => {
                       onChange={(e, id) => categoryFormChange(e, id)}
                       name={"category_name"}
                       placeholder={"Select by category"}
+                      // value={indVal}
                     >
-                      <option value={""}>Select Parent Category</option>
+                      <option value={"0"}>Select Parent Category</option>
                       {category.map((cdata, i) => {
                         return (
                           <option
@@ -824,7 +827,6 @@ const CategoryList = () => {
                     </Form.Control.Feedback>
                   </Form.Group>
                 </div>
-
                 {subCategory[0] === "" ||
                 subCategory[0] === null ||
                 subCategory[0] === undefined ? null : (

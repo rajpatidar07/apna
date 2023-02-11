@@ -34,9 +34,9 @@ let encoded;
 let ImgObj = [];
 
 function Product() {
-   const[changeUnitproperty,setChangeUnitProperty]=useState(false)
-  const[ selectproductData,setSelectProductData]=useState("")
-  const [checkProductType,setCheckProductType]=useState(false)
+  const [changeUnitproperty, setChangeUnitProperty] = useState(false);
+  const [selectproductData, setSelectProductData] = useState("");
+  const [checkProductType, setCheckProductType] = useState(false);
   const [error, setError] = useState(true);
   const [vendorid, setVendorId] = useState([]);
   const [category, setCategory] = useState([]);
@@ -90,7 +90,7 @@ function Product() {
     expire_date: "",
     quantity: "",
   };
-  const [productVeriantUnit,setProductveriantUnit]=useState("")
+  const [productVeriantUnit, setProductveriantUnit] = useState("");
   const [variantarray, setvariantarray] = useState(veriantData);
   const [variantmainarray, setvariantmainarray] = useState([]);
   const [data1, setdata1] = useState("");
@@ -153,8 +153,7 @@ function Product() {
     manufacturers_sales_tax: "0",
   });
   const [productID, setproductID] = useState("");
- const[bulkProductError,setBulkProductError]=useState("")
-
+  const [bulkProductError, setBulkProductError] = useState("");
 
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
@@ -196,27 +195,25 @@ function Product() {
 
   const fetchdata = () => {
     axios
-      .post(
-        `${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=500`,
-        {
-          product_search: {
-            search: "",
-            price_from: "",
-            price_to: "",
-            latest_first: "",
-            sale_price: "",
-            short_by_updated_on: "",
-            product_title_name: [`${searchdata.product_title_name}`],
-            category: categoryArray,
-            product_status: [`${searchdata.product_status}`],
-            is_delete: ["1"],
-            colors: [],
-            size: [],
-            parent_category: [],
-            product_type: [],
-          },
-        }
-      )
+      .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=400`, {
+        product_search: {
+          search: "",
+          price_from: "",
+          price_to: "",
+          id: "",
+          sale_price: "",
+          short_by_updated_on: "",
+          product_title_name_asc_desc: "",
+          category: categoryArray,
+          product_status: [`${searchdata.product_status}`],
+          is_delete: ["1"],
+          colors: [],
+          size: [],
+          parent_category: [],
+          product_type: [],
+          product_title_name: [`${searchdata.product_title_name}`],
+        },
+      })
       .then((response) => {
         setpdata(response.data);
         // console.log("jjjjjjj++++"+response.data)
@@ -260,7 +257,7 @@ function Product() {
       product_id: `${productid}`,
       fetured_type: e.target.value,
     });
-   
+
     setproductname(productname);
     setfeatureShow(true);
   };
@@ -524,7 +521,7 @@ function Product() {
               <option value="featured_offer">Featured Offer </option>
               <option value="promotional">Promotional </option>
             </Form.Select>
-            <IoFilter  className="feature_product_ellipsis"/>
+            <IoFilter className="feature_product_ellipsis" />
             {/* <FaEllipsisV className="feature_product_ellipsis"/> */}
           </div>
 
@@ -549,18 +546,12 @@ function Product() {
     setScategory({ ...scategory, [e.target.name]: e.target.value });
   };
   useEffect(() => {
-
-    
-   
-      if(indVal === ""){
-       setSubCategory("")
-       setchildCategory("")
-       setgrandcCategory("")
-      
-       }
-      
-      else{
-        axios
+    if (indVal === "") {
+      setSubCategory("");
+      setchildCategory("");
+      setgrandcCategory("");
+    } else {
+      axios
         .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
         .then((response) => {
           if (response.data !== []) {
@@ -599,12 +590,8 @@ function Product() {
             }
           }
         });
-      }
-
-  
-  
+    }
   }, [scategory, indVal]);
-
 
   // modal
   const [editparentCategory, seteditparentCategory] = useState("");
@@ -626,14 +613,13 @@ function Product() {
           )
           .then((response) => {
             let cgory = response.data;
-         
+
             const result = cgory.filter(
               (thing, index, self) =>
                 index === self.findIndex((t) => t.shop_name == thing.shop_name)
             );
 
             setVendorId(result);
-          
           });
       } catch (err) {}
     };
@@ -647,14 +633,13 @@ function Product() {
           .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
           .then((response) => {
             let cgory = response.data;
-           
+
             if (indVal === 0) {
               setCategory(cgory);
               // seteditparentCategory(response.data.category_name)
               setSubCategory("");
               setlevel(0);
             }
-            
           });
       } catch (err) {}
     };
@@ -667,10 +652,9 @@ function Product() {
         .get(`${process.env.REACT_APP_BASEURL}/product_details?id=${e}`)
         .then((response) => {
           let data = response.data;
-           console.log("data-----"+JSON.stringify(data))
           if (data != undefined || data != "" || data != null) {
             setproductdata(data);
-              
+
             // categoryedit
 
             const arr = data.parent_category.split(",");
@@ -687,12 +671,13 @@ function Product() {
                         `${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`
                       )
                       .then((response) => {
-                        console.log("subcetgorydata---"+JSON.stringify(response.data))
+                        console.log(
+                          "subcetgorydata---" + JSON.stringify(response.data)
+                        );
                         setSubCategory(response.data);
-                          
                       });
-                      seteditparentCategory(data.category_name)
-                    setCategoryEditparent(data.category_name);
+                    seteditparentCategory(data.category_name);
+                    // setCategoryEditparent(data.category_name);
                   } else if (i === 1) {
                     axios
                       .get(
@@ -701,8 +686,8 @@ function Product() {
                       .then((response) => {
                         setchildCategory(response.data);
                       });
-                    // setCategoryEditparent(data.category_name);
-                    setCategoryEditSubparent(data.category_name);
+                    setCategoryEditparent(data.category_name);
+                    // setCategoryEditSubparent(data.category_name);
                   } else if (i === 2) {
                     axios
                       .get(
@@ -711,8 +696,8 @@ function Product() {
                       .then((response) => {
                         setgrandcCategory(response.data);
                       });
-                    // setCategoryEditSubparent(data.category_name);
-                    setCategoryEditChildparent(data.category_name);
+                    setCategoryEditSubparent(data.category_name);
+                    // setCategoryEditChildparent(data.category_name);
                   } else if (i === 3) {
                     setCategoryEditChildparent(data.category_name);
                   }
@@ -720,11 +705,9 @@ function Product() {
             }
             // end category edit api
           }
-           
+
           let customdatra = JSON.parse(response.data.add_custom_input);
-          // console.log("customdata---"+customdatra)
           setcustomarray(customdatra);
-    
         })
         .catch(function (error) {
           console.log(error);
@@ -735,93 +718,6 @@ function Product() {
   useEffect(() => {
     handleShow();
   }, []);
-
-  const getProductVariant = (id) => {
-    axios
-      .post(
-        `${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=500`,
-        {
-          product_search: {
-            search: "",
-            category: "",
-            price_from: "",
-            price_to: "",
-            latest_first: "",
-            product_title_name: "",
-            sale_price: "",
-            short_by_updated_on: "",
-            is_delete: ["1"],
-            product_id: [`${id}`],
-          },
-        }
-      )
-      .then((response) => {
-        setvdata(response.data.results);
-    
-        settaxdata(response.data.results[0]);
-        setvariantapicall(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-  const handlevarietyShow = (id, variantid) => {
-
-    // START GET THE SELECTED PRODUCT DATA------------------------------------------------------
-    axios
-    .get(`${process.env.REACT_APP_BASEURL}/product_details?id=${id}`)
-    .then((response) => {
-        let data = response.data;
-       
-        if (data != undefined || data != "" || data != null) {
-        
-         
-          setSelectProductData(data.product_type)
-    
-        }
-      
-      });
-
-// END GET THE SELECTED PRODUCT DATA------------------------------------------------------
-
-
-    // START GET THE SELECTED VARIENT DATA------------------------------------------------------
-    axios
-    .get(
-      `${process.env.REACT_APP_BASEURL}/products_pricing?id=${variantid}&product_id=${id}`
-    )
-    .then((response) => {
-      // console.log("unit-----"+response.data[0].unit)
-       setProductveriantUnit(response.data[0].unit)
-      
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-   // END GET THE SELECTED VARIENT DATA------------------------------------------------------
-
-    getProductVariant(id);
-    onImgView(variantid, id);
-    setvariantarray({
-      ...variantarray,
-      product_id: id,
-    });
-    setproductID(id);
-    setvarietyShow(true);
-  };
-  const AddMoreVariety = (e) => {
-    handleAddProduct(e);
-    // handlevarietyShow(id, variantid);
-  };
-  const handlevarietyClose = (e) => {
-    setChangeUnitProperty(false)
-    setvariantarray(veriantData);
-    setVarietyUnitvalidation("");
-    setcustomValidated(false);
-    // e.preventDefault();
-    // setValidated(false);
-    setvarietyShow(false);
-  };
 
   const handleClose = () => {
     setproductdata(data);
@@ -959,7 +855,6 @@ function Product() {
   };
 
   const onVariantChange = (e) => {
-  
     setValidated(false);
     setcustomValidated(false);
     setVarietyUnitvalidation("");
@@ -1007,11 +902,72 @@ function Product() {
     });
   };
 
-console.log("veiant array--"+JSON.stringify(variantarray))
+  const getProductVariant = (id) => {
+    axios
+      .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=400`, {
+        product_search: {
+          search: "",
+          category: "",
+          price_from: "",
+          price_to: "",
+          id: "",
+          product_title_name_asc_desc: "",
+          sale_price: "",
+          short_by_updated_on: "",
+          is_delete: ["1"],
+          product_id: [`${id}`],
+          product_title_name: [],
+        },
+      })
+      .then((response) => {
+        setvdata(response.data.results);
+        settaxdata(response.data.results[0]);
+        setvariantapicall(false);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  const handlevarietyShow = (id, variantid) => {
+    // START GET THE SELECTED VARIENT DATA------------------------------------------------------
+    axios
+      .get(
+        `${process.env.REACT_APP_BASEURL}/products_pricing?id=${variantid}&product_id=${id}`
+      )
+      .then((response) => {
+        setvariantarray({
+          ...variantarray,
+          unit: response.data[0].unit,
+          product_id: id,
+        });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    // END GET THE SELECTED VARIENT DATA------------------------------------------------------
+
+    getProductVariant(id);
+    onImgView(variantid, id);
+    setvariantarray({
+      ...variantarray,
+      product_id: id,
+    });
+    setproductID(id);
+    setvarietyShow(true);
+  };
+  const AddMoreVariety = (e) => {
+    handleAddProduct(e);
+    // handlevarietyShow(id, variantid);
+  };
+  const handlevarietyClose = (e) => {
+    setChangeUnitProperty(false);
+    setvariantarray(veriantData);
+    setVarietyUnitvalidation("");
+    setcustomValidated(false);
+    setvarietyShow(false);
+  };
   const onVariantaddclick = (e, id) => {
- 
     setunitValidated(false);
-    // id.preventDefault();
     if (id == undefined || id == null || unitValidated == "false") {
       if (
         // variantarray.unit == "" ||
@@ -1027,8 +983,8 @@ console.log("veiant array--"+JSON.stringify(variantarray))
         setcustomValidated(true);
       } else if (variantarray.quantity === 0 || variantarray.quantity < 1) {
         setVarietyUnitvalidation("QwanityValidation");
-      }else if (variantarray.manufacturing_date>variantarray.expire_date){
-        setVarietyUnitvalidation("ExpireDateValidation")
+      } else if (variantarray.manufacturing_date > variantarray.expire_date) {
+        setVarietyUnitvalidation("ExpireDateValidation");
       } else if (
         vdata[0].product_type === "Cloths" &&
         variantarray.unit === "pcs" &&
@@ -1043,7 +999,6 @@ console.log("veiant array--"+JSON.stringify(variantarray))
         variantarray.colors === "" &&
         (variantarray.size === null || variantarray.size === "")
       ) {
-     
         setVarietyUnitvalidation("fillUnit&color");
       } else if (
         variantarray.unit !== "pcs" &&
@@ -1070,7 +1025,6 @@ console.log("veiant array--"+JSON.stringify(variantarray))
               setProductAlert(true);
               setvariantarray({
                 product_status: "",
-                unit: "",
                 colors: "",
                 unit_quantity: "",
                 size: "",
@@ -1113,8 +1067,8 @@ console.log("veiant array--"+JSON.stringify(variantarray))
         setcustomValidated(true);
       } else if (variantarray.quantity === 0 || variantarray.quantity < 1) {
         setVarietyUnitvalidation("QwanityValidation");
-      }else if (variantarray.manufacturing_date>variantarray.expire_date){
-        setVarietyUnitvalidation("ExpireDateValidation")
+      } else if (variantarray.manufacturing_date > variantarray.expire_date) {
+        setVarietyUnitvalidation("ExpireDateValidation");
       } else if (
         vdata[0].product_type === "Cloths" &&
         variantarray.unit === "pcs" &&
@@ -1148,7 +1102,6 @@ console.log("veiant array--"+JSON.stringify(variantarray))
       ) {
         setVarietyUnitvalidation("mrpmore");
       } else {
-     
         axios
           .put(
             `${process.env.REACT_APP_BASEURL}/products_varient_update`,
@@ -1189,104 +1142,98 @@ console.log("veiant array--"+JSON.stringify(variantarray))
           });
       }
     }
-    // e.preventDefault()
   };
- 
-
+  // addproduct variant
   const VariantAddProduct = (e) => {
     setproductdata({
       ...productdata,
       variety: true,
     });
-    if (productdata.product_type=="")
-    { 
-      setCheckProductType(true)
-    }
- 
-   else{
-    if (
-      variantarray.unit == "" ||
-      variantarray.unit == null ||
-      variantarray.unit == "Select" ||
-      variantarray.product_price == "" ||
-      variantarray.mrp == "" ||
-      variantarray.sale_price == "" ||
-      variantarray.manufacturing_date == "" ||
-      variantarray.expire_date == "" ||
-      variantarray.quantity == ""
-    ) {
-      setcustomValidated(true);
-    } else if (variantarray.quantity === 0 || variantarray.quantity < 1) {
-      setVarietyUnitvalidation("QwanityValidation");
-    } else if (variantarray.manufacturing_date>variantarray.expire_date){
-      setVarietyUnitvalidation("ExpireDateValidation")
-    }else if (
-      productdata.product_type === "Cloths" &&
-      variantarray.unit === "pcs" &&
-      (variantarray.colors === "" || 
-      variantarray.size === null ||variantarray.size === "")
-    ) {
-       console.log("fill the size and color")
-      setVarietyUnitvalidation("fillUnit&size&color");
-    } else if (
-      productdata.product_type !== "Cloths" &&
-      variantarray.unit === "pcs" &&
-      variantarray.colors === "" &&
-     ( variantarray.size === ""|| 
-      variantarray.size === null )
-    ) {
-      console.log("fill the  color")
-      setVarietyUnitvalidation("fillUnit&color");
-    } else if (
-      variantarray.unit !== "pcs" &&
-      (variantarray.unit_quantity === "" ||
-        variantarray.unit_quantity === "null" ||
-        variantarray.unit_quantity === null)
-    ) {
-      setunitValidated(true);
-      console.log("Unit qwanity--")
-      setVarietyUnitvalidation("unitQwanity&size&color");
-    } else if (Number(variantarray.discount) > 100) {
-      setunitValidated(true);
-      setVarietyUnitvalidation("discountmore");
-    } else if (
-      Number(variantarray.mrp) > 50000 ||
-      Number(variantarray.mrp) <= 0
-    ) {
-      setunitValidated(true);
-      setVarietyUnitvalidation("mrpmore");
+    if (productdata.product_type == "") {
+      setCheckProductType(true);
     } else {
-      setvariantmainarray((variantmainarray) => [
-        ...variantmainarray,
-        variantarray,
-      ]);
-      setVarietyUnitvalidation("");
-      setvarietyValidated(false);
-      setcustomValidated(false);
+      if (
+        variantarray.unit == "" ||
+        variantarray.unit == null ||
+        variantarray.unit == "Select" ||
+        variantarray.product_price == "" ||
+        variantarray.mrp == "" ||
+        variantarray.sale_price == "" ||
+        variantarray.manufacturing_date == "" ||
+        variantarray.expire_date == "" ||
+        variantarray.quantity == ""
+      ) {
+        setcustomValidated(true);
+      } else if (variantarray.quantity === 0 || variantarray.quantity < 1) {
+        setVarietyUnitvalidation("QwanityValidation");
+      } else if (variantarray.manufacturing_date > variantarray.expire_date) {
+        setVarietyUnitvalidation("ExpireDateValidation");
+      } else if (
+        productdata.product_type === "Cloths" &&
+        variantarray.unit === "pcs" &&
+        (variantarray.colors === "" ||
+          variantarray.size === null ||
+          variantarray.size === "")
+      ) {
+        console.log("fill the size and color");
+        setVarietyUnitvalidation("fillUnit&size&color");
+      } else if (
+        productdata.product_type !== "Cloths" &&
+        variantarray.unit === "pcs" &&
+        variantarray.colors === "" &&
+        (variantarray.size === "" || variantarray.size === null)
+      ) {
+        console.log("fill the  color");
+        setVarietyUnitvalidation("fillUnit&color");
+      } else if (
+        variantarray.unit !== "pcs" &&
+        (variantarray.unit_quantity === "" ||
+          variantarray.unit_quantity === "null" ||
+          variantarray.unit_quantity === null)
+      ) {
+        setunitValidated(true);
+        console.log("Unit qwanity--");
+        setVarietyUnitvalidation("unitQwanity&size&color");
+      } else if (Number(variantarray.discount) > 100) {
+        setunitValidated(true);
+        setVarietyUnitvalidation("discountmore");
+      } else if (
+        Number(variantarray.mrp) > 50000 ||
+        Number(variantarray.mrp) <= 0
+      ) {
+        setunitValidated(true);
+        setVarietyUnitvalidation("mrpmore");
+      } else {
+        setvariantmainarray((variantmainarray) => [
+          ...variantmainarray,
+          variantarray,
+        ]);
+        setVarietyUnitvalidation("");
+        setvarietyValidated(false);
+        setcustomValidated(false);
 
-      setvariantarray({
-        product_status: "",
-        unit: "",
-        colors:"",
-        unit_quantity: "",
-        size: "",
-        product_price: "",
-        mrp: "",
-        sale_price: "",
-        discount: "0",
-        special_offer: false,
-        featured_product: false,
-        manufacturing_date: "",
-        expire_date: "",
-        quantity: "",
-        product_id: productID,
-      });
-      // setcustomValidated(false);
+        setvariantarray({
+          product_status: "",
+          unit: variantarray.unit,
+          colors: "",
+          unit_quantity: "",
+          size: "",
+          product_price: "",
+          mrp: "",
+          sale_price: "",
+          discount: "0",
+          special_offer: false,
+          featured_product: false,
+          manufacturing_date: "",
+          expire_date: "",
+          quantity: "",
+          product_id: productID,
+        });
+        // setcustomValidated(false);
+      }
     }
-   }
-   
   };
-
+  // addproduct variant end
   const VariantRemoveClick = (id, productid) => {
     setVerityAlert(true);
     setVariantRemove((variantremove) => {
@@ -1296,16 +1243,20 @@ console.log("veiant array--"+JSON.stringify(variantarray))
 
   const MainVariantRemoveClick = (e) => {
     setvariantmainarray(variantmainarray.filter((item) => item !== e));
+    // if ((variantmainarray.length = 1)) {
+    //   setvariantarray({ unit: "", mrp: 0, sale_price: "" });
+    // }
   };
-
+  console.log("--ff" + JSON.stringify(productdata));
   const hideAlert = () => {
-   
     if (vdata.length === 1) {
-
       setVerityAlert(false);
       setRestoreAlert(false);
       setvarietyShow(false);
       setapicall(true);
+    }
+    if (vdata.length === 2) {
+      setChangeUnitProperty("editvariety");
     }
     axios
       .put(`${process.env.REACT_APP_BASEURL}/products_delete_remove`, {
@@ -1359,10 +1310,8 @@ console.log("veiant array--"+JSON.stringify(variantarray))
   };
 
   const VariantEditClick = (id, productid) => {
-    console.log("product variant lenght---"+vdata.length)
     if (vdata.length === 1) {
-      setChangeUnitProperty(true)
-
+      setChangeUnitProperty(true);
     }
     setVarietyUnitvalidation("");
     axios
@@ -1421,7 +1370,7 @@ console.log("veiant array--"+JSON.stringify(variantarray))
   // end
 
   const handleInputFieldChange = (e) => {
-    setCheckProductType(false)
+    setCheckProductType(false);
     setproductdata({
       ...productdata,
       [e.target.name]: e.target.value,
@@ -1602,38 +1551,33 @@ console.log("veiant array--"+JSON.stringify(variantarray))
   }
 
   // const saveFile = (e) => {
-    
+
   //   console.log(" lenght----"+JSON.stringify(e.target.files))
   //     setExcelFile(e.target.files[0]);
   //     // setExcelFilename(e.target.files[0]);
   //     FileUploadAPI()
   // };
 
-
   const FileUploadAPI = (e) => {
     const formData = new FormData();
-    
-    formData.append("bulk_xls",e.target.files[0]);
-   
+
+    formData.append("bulk_xls", e.target.files[0]);
 
     axios
       .post(`${process.env.REACT_APP_BASEURL}/product_bulk_uploads`, formData)
       .then((response) => {
-        console.log("uploaddd---"+JSON.stringify(response))
-        if(response.status==200){
-          setProductAlert(true)
-          setapicall(true)
-        
+        console.log("uploaddd---" + JSON.stringify(response));
+        if (response.status == 200) {
+          setProductAlert(true);
+          setapicall(true);
+        } else {
+          setBulkProductError("Error  in adding BulkProducts");
         }
-        else{
-          setBulkProductError("Error  in adding BulkProducts")
-        }
-        
       })
       .catch(function (error) {
         console.log(error);
       });
-   };
+  };
 
   //-----------------------Download excel sheet code End  here---------------------------------------------------
   return (
@@ -1692,17 +1636,26 @@ console.log("veiant array--"+JSON.stringify(variantarray))
 
         <div className="product_page_uploadbox my-4">
           <div className="product_page_uploadbox_one">
-            <input type="file" className="product_page_uploadbox_button"   onChange={(e)=>{FileUploadAPI(e)}}/>
+            <input
+              type="file"
+              className="product_page_uploadbox_button"
+              onChange={(e) => {
+                FileUploadAPI(e);
+              }}
+            />
             <Iconbutton
               btntext={"Upload"}
               btnclass={"button main_outline_button"}
               Iconname={<AiOutlineCloudUpload />}
-            
             />
           </div>
-          {bulkProductError==""?"":<p className="mt-1 ms-2 text-danger" type="invalid">
-                            {bulkProductError}
-                            </p>}
+          {bulkProductError == "" ? (
+            ""
+          ) : (
+            <p className="mt-1 ms-2 text-danger" type="invalid">
+              {bulkProductError}
+            </p>
+          )}
           <MainButton btntext={"Download"} onClick={handleDownloadExcel} />
 
           <Iconbutton
@@ -2330,8 +2283,8 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                                           Sale Price{" "}
                                           <span className="text-danger">*</span>
                                         </th>
-                                        <th>Special Offer</th>
-                                        <th>Featured Product</th>
+                                        {/* <th>Special Offer</th>
+                                        <th>Featured Product</th> */}
                                         <th className="manufacture_date">
                                           Mdate
                                           <span className="text-danger">*</span>
@@ -2357,10 +2310,14 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                                                 aria-label="Default select example"
                                                 name="unit"
                                                 required
-                                                
                                                 value={variantarray.unit}
                                                 onChange={(e) =>
                                                   onVariantChange(e)
+                                                }
+                                                disabled={
+                                                  variantmainarray.length === 0
+                                                    ? false
+                                                    : true
                                                 }
                                                 // className={
                                                 //   customvalidated === true
@@ -2373,39 +2330,46 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                                                 </option>
                                                 {(varietyy.variety || []).map(
                                                   (vari, i) => {
-                                                    return (
-                                                      changeUnitproperty==true ?
+                                                    return changeUnitproperty ==
+                                                      true ? (
                                                       <option
-                                                      value={
-                                                        vari === "color"
-                                                        ? "pcs"
-                                                        : vari === "weight"
-                                                          ? "gms"
-                                                          : vari === "volume"
-                                                          ? "ml"
-                                                          : vari === "piece"
-                                                          ? "piece"
-                                                          : ""
-                                                      }
-                                                      key={i}
-                                                    >
-                                                      {vari}
-                                                    </option>    : productdata.product_type === "Cloths"|| productdata.product_type === "Fashion"?
-                                                      vari === "weight" || vari === "volume" ? null :
-                                                      <option
-                                                      value={
-                                                        vari === "piece"
-                                                          ? "piece"
-                                                          : vari === "color"
-                                                          ? "pcs"
-                                                          : ""
-                                                      }
-                                                      key={i}
-                                                    >
-                                                      {vari}
-                                                    </option>
-                                                      :
-                                                      vari === "color"  ? null : 
+                                                        value={
+                                                          vari === "color"
+                                                            ? "pcs"
+                                                            : vari === "weight"
+                                                            ? "gms"
+                                                            : vari === "volume"
+                                                            ? "ml"
+                                                            : vari === "piece"
+                                                            ? "piece"
+                                                            : ""
+                                                        }
+                                                        key={i}
+                                                      >
+                                                        {vari}
+                                                      </option>
+                                                    ) : productdata.product_type ===
+                                                        "Cloths" ||
+                                                      productdata.product_type ===
+                                                        "Fashion" ? (
+                                                      vari === "weight" ||
+                                                      vari ===
+                                                        "volume" ? null : (
+                                                        <option
+                                                          value={
+                                                            vari === "piece"
+                                                              ? "piece"
+                                                              : vari === "color"
+                                                              ? "pcs"
+                                                              : ""
+                                                          }
+                                                          key={i}
+                                                        >
+                                                          {vari}
+                                                        </option>
+                                                      )
+                                                    ) : vari ===
+                                                      "color" ? null : (
                                                       <option
                                                         value={
                                                           vari === "weight"
@@ -2419,7 +2383,7 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                                                         key={i}
                                                       >
                                                         {vari}
-                                                      </option> 
+                                                      </option>
                                                     );
                                                   }
                                                 )}
@@ -2431,65 +2395,54 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                                         <td className="p-0 text-center">
                                           <div className=" d-flex align-items-center">
                                             <InputGroup className="" size="sm">
-                                            <Form.Select
+                                              <Form.Select
                                                 aria-label="Default select example"
-                                                required 
+                                                required
                                                 sm="9"
                                                 name="colors"
                                                 value={variantarray.colors}
                                                 onChange={(e) =>
                                                   onVariantChange(e)
                                                 }
-                                               
                                               >
-                                                <option value={variantarray.colors==""}>
+                                                <option
+                                                  value={
+                                                    variantarray.colors == ""
+                                                  }
+                                                >
                                                   Select
                                                 </option>
                                                 {(varietyy.color || []).map(
                                                   (vari, i) => {
                                                     return (
-                                                     
                                                       <option
-                                                        value={
-                                                        vari
-                                                        }
+                                                        value={vari}
                                                         key={i}
                                                       >
                                                         {vari}
-                                                      </option> 
+                                                      </option>
                                                     );
                                                   }
                                                 )}
                                               </Form.Select>
-                                             
                                             </InputGroup>
                                           </div>
                                         </td>
-                                  
+
                                         <td className="p-0 text-center">
                                           <div className=" d-flex align-items-center">
                                             <InputGroup className="" size="sm">
                                               <Form.Control
                                                 value={
-                                                  variantarray.unit === "weight"
-                                                    ? variantarray.unit_quantity
-                                                    : variantarray.unit ===
-                                                      "volume"
-                                                    ? variantarray.unit_quantity
-                                                    : variantarray.unit ===
-                                                      "piece"
-                                                    ? variantarray.unit_quantity
-                                                    : variantarray.unit === ""
-                                                    ? variantarray.unit_quantity
-                                                    : null
+                                                  variantarray.unit_quantity
                                                 }
                                                 type="number"
                                                 sm="9"
                                                 disabled={
-                                                  variantarray.unit ==
-                                                     "pcs"
-                                                      ?true:false
-                                                 }
+                                                  variantarray.unit == "pcs"
+                                                    ? true
+                                                    : false
+                                                }
                                                 // className={
                                                 //   customvalidated === true
                                                 //     ? "border-danger"
@@ -2503,13 +2456,13 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                                             </InputGroup>
                                           </div>
                                         </td>
-                                        {console.log("verity size=="+variantarray.size)}
+
                                         <td className="p-0 text-center">
                                           <div className=" d-flex align-items-center">
-                                          <InputGroup className="" size="sm">
-                                          <Form.Select
+                                            <InputGroup className="" size="sm">
+                                              <Form.Select
                                                 aria-label="Default select example"
-                                                required 
+                                                required
                                                 sm="9"
                                                 name="size"
                                                 value={variantarray.size}
@@ -2517,27 +2470,30 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                                                   onVariantChange(e)
                                                 }
                                                 disabled={
-                                                  variantarray.unit !==
-                                                   "pcs" &&  variantarray.unit !== "" 
-                                                   ?true:variantarray.unit=="" ?false:false
-                                              }
-
-                                               >
-                                                <option value={variantarray.size==""}>
+                                                  variantarray.unit !== "pcs" &&
+                                                  variantarray.unit !== ""
+                                                    ? true
+                                                    : variantarray.unit == ""
+                                                    ? false
+                                                    : false
+                                                }
+                                              >
+                                                <option
+                                                  value={
+                                                    variantarray.size == ""
+                                                  }
+                                                >
                                                   Select
                                                 </option>
                                                 {(varietyy.size || []).map(
                                                   (vari, i) => {
                                                     return (
-                                                     
                                                       <option
-                                                        value={
-                                                        vari
-                                                        }
+                                                        value={vari}
                                                         key={i}
                                                       >
                                                         {vari}
-                                                      </option> 
+                                                      </option>
                                                     );
                                                   }
                                                 )}
@@ -2650,7 +2606,7 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                                           </div>
                                         </td>
 
-                                        <td className="p-0 text-center">
+                                        {/* <td className="p-0 text-center">
                                           <div className="">
                                             <Form.Check
                                               onChange={(e) =>
@@ -2685,7 +2641,7 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                                               }
                                             />
                                           </div>
-                                        </td>
+                                        </td> */}
                                         <td className="p-0 text-center">
                                           <div className="manufacture_date">
                                             <InputGroup className="" size="sm">
@@ -2780,26 +2736,32 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                                           </div>
                                         </td>
                                       </tr>
-                                      {checkProductType ===true? 
-                               <tr>
-                                <p
-                                  className="mt-1 ms-2 text-danger"
-                                  type="invalid"
-                                >
-                                  Please the select the product type first....!!!!
-                                </p>
-                              </tr>:checkProductType ===false?null:null}
+                                      {checkProductType === true ? (
+                                        <tr>
+                                          <p
+                                            className="mt-1 ms-2 text-danger"
+                                            type="invalid"
+                                          >
+                                            Please the select the product type
+                                            first....!!!!
+                                          </p>
+                                        </tr>
+                                      ) : checkProductType ===
+                                        false ? null : null}
 
-                           {varietyUnitvalidation ==="ExpireDateValidation"? 
-                            <tr>
-                                <p
-                                  className="mt-1 ms-2 text-danger"
-                                  type="invalid"
-                                >
-                                  Please Expire date should be greater than Manufacturing date
-                                </p>
-                              </tr>:null}
-                       
+                                      {varietyUnitvalidation ===
+                                      "ExpireDateValidation" ? (
+                                        <tr>
+                                          <p
+                                            className="mt-1 ms-2 text-danger"
+                                            type="invalid"
+                                          >
+                                            Please Expire date should be greater
+                                            than Manufacturing date
+                                          </p>
+                                        </tr>
+                                      ) : null}
+
                                       <tr>
                                         {customvalidated === true ? (
                                           <p
@@ -2883,6 +2845,8 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                                                   ? "weight"
                                                   : variantdata.unit === "ml"
                                                   ? "volume"
+                                                  : variantdata.unit === "piece"
+                                                  ? "piece"
                                                   : ""}
                                               </td>
                                               <td className="p-0 text-center ">
@@ -2913,12 +2877,12 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                                               <td className="p-0 text-center ">
                                                 {saleprice}
                                               </td>
-                                              <td className="p-0 text-center ">
+                                              {/* <td className="p-0 text-center ">
                                                 {`${variantdata.special_offer}`}
                                               </td>
                                               <td className="p-0 text-center ">
                                                 {`${variantdata.featured_product}`}
-                                              </td>
+                                              </td> */}
                                               <td className="p-0 text-center ">
                                                 {variantdata.manufacturing_date}
                                               </td>
@@ -2994,7 +2958,7 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                       <div className="d-flex align-items-center tagselectbox mt-2">
                         {productdata.seo_tag == "" && addtag === "" ? (
                           ""
-                        ) :productdata.seo_tag? (
+                        ) : productdata.seo_tag ? (
                           <Badge className="tagselecttitle mb-0" bg="success">
                             {productdata.seo_tag === null ||
                             productdata.seo_tag === undefined
@@ -3009,7 +2973,7 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                               {"x"}
                             </span>
                           </Badge>
-                        ):null}
+                        ) : null}
 
                         {/* )
 
@@ -3085,60 +3049,54 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                             </Button>
                           </td>
                         </tr>
-                        {
-                         
-                          (customarray || []).map((variantdata, i) => {
-                            // const arr = variantdata.split(',')
-                            return (
-                              <tr className="">
-                                <td className=" text-center">
-                                  <InputGroup className="">
-                                    <Form.Control
-                                      value={variantdata.header}
-                                      type="text"
-                                      sm="9"
-                                      min={"1"}
-                                      onChange={oncustomheadChange}
-                                      name={"custom_input_header"}
-                                      required
-                                    />
-                                  </InputGroup>
-                                </td>
-                                <td className="text-center">
-                                  <InputGroup className="">
-                                    <Form.Control
-                                      required
-                                      value={variantdata.description}
-                                      name={"custom_input_desc"}
-                                      type="text"
-                                      sm="9"
-                                      min={"1"}
-                                      onChange={oncustomdescChange}
-                                      onKeyPress={(event) => {
-                                        if (event.key === "Enter") {
-                                          handleAddClick();
-                                        }
-                                      }}
-                                    />
-                                  </InputGroup>
-                                </td>
-                                <td className="">
-                                  <Button
-                                    variant="text-danger"
-                                    className="addcategoryicon text-danger"
-                                    onClick={() =>
-                                      handleRemoveClick(variantdata)
-                                    }
-                                    size="sm"
-                                  >
-                                    &times;
-                                  </Button>
-                                </td>
-                              </tr>
-                            );
-                          })
-                   
-                        }
+                        {(customarray || []).map((variantdata, i) => {
+                          // const arr = variantdata.split(',')
+                          return (
+                            <tr className="">
+                              <td className=" text-center">
+                                <InputGroup className="">
+                                  <Form.Control
+                                    value={variantdata.header}
+                                    type="text"
+                                    sm="9"
+                                    min={"1"}
+                                    onChange={oncustomheadChange}
+                                    name={"custom_input_header"}
+                                    required
+                                  />
+                                </InputGroup>
+                              </td>
+                              <td className="text-center">
+                                <InputGroup className="">
+                                  <Form.Control
+                                    required
+                                    value={variantdata.description}
+                                    name={"custom_input_desc"}
+                                    type="text"
+                                    sm="9"
+                                    min={"1"}
+                                    onChange={oncustomdescChange}
+                                    onKeyPress={(event) => {
+                                      if (event.key === "Enter") {
+                                        handleAddClick();
+                                      }
+                                    }}
+                                  />
+                                </InputGroup>
+                              </td>
+                              <td className="">
+                                <Button
+                                  variant="text-danger"
+                                  className="addcategoryicon text-danger"
+                                  onClick={() => handleRemoveClick(variantdata)}
+                                  size="sm"
+                                >
+                                  &times;
+                                </Button>
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </Table>
                   </div>
@@ -3216,8 +3174,8 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                               <th>
                                 Sale Price<span className="text-danger">*</span>
                               </th>
-                              <th>Special Offer</th>
-                              <th>Featured Product</th>
+                              {/* <th>Special Offer</th>
+                              <th>Featured Product</th> */}
                               <th className="manufacture_date">
                                 Mdate <span className="text-danger">*</span>
                               </th>
@@ -3232,7 +3190,7 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                             </tr>
                           </thead>
                           <tbody>
-                        {/* { console.log( "product   type----------"+JSON.stringify(vdata[0].unit))} */}
+                            {/* { console.log( "product   type----------"+JSON.stringify(vdata[0].unit))} */}
                             <tr>
                               <td className="p-0 text-center">
                                 <div className=" d-flex align-items-center">
@@ -3242,27 +3200,34 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                                       aria-label="Default select example"
                                       name="unit"
                                       onChange={(e) => onVariantChange(e)}
-                                         value={ productVeriantUnit}
-                                        //  selected={
-                                        //   variantarray.unit==="pcs"|| variantarray.unit==="gms"|| variantarray.unit==="ml"|| variantarray.unit==="pcs"|| variantarray.unit==="piece"
-                                        //     ? true
-                                        //     : false
-                                        // }
-                                       disabled={  productVeriantUnit && changeUnitproperty==false ? true: productVeriantUnit || changeUnitproperty==true?false :true }
+                                      value={variantarray.unit}
+                                      //  selected={
+                                      //   variantarray.unit==="pcs"|| variantarray.unit==="gms"|| variantarray.unit==="ml"|| variantarray.unit==="pcs"|| variantarray.unit==="piece"
+                                      //     ? true
+                                      //     : false
+                                      // }
+                                      disabled={
+                                        variantarray.unit &&
+                                        changeUnitproperty == false
+                                          ? true
+                                          : variantarray.unit ||
+                                            changeUnitproperty == true
+                                          ? false
+                                          : true
+                                      }
                                     >
                                       <option value={""}>{"Select"}</option>
-                                  
 
                                       {(varietyy.variety || []).map(
                                         (vari, i) => {
-                                          return (
-                                         
-                                             selectproductData === ""?
-                                              <option
+                                          return vdata.length ===
+                                            0 ? null : vdata[0].product_type ===
+                                            "" ? (
+                                            <option
                                               value={
                                                 vari === "color"
-                                                ? "pcs"
-                                                : vari === "weight"
+                                                  ? "pcs"
+                                                  : vari === "weight"
                                                   ? "gms"
                                                   : vari === "volume"
                                                   ? "ml"
@@ -3273,11 +3238,35 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                                               key={i}
                                             >
                                               {vari}
-                                            </option>    : selectproductData === "Cloths"||selectproductData === "Fashion"?
-                                              vari === "weight" || vari === "volume" ? null :
+                                            </option>
+                                          ) : vdata.length ===
+                                            0 ? null : vdata[0].product_type ===
+                                              "Cloths" ||
+                                            vdata.length === 0 ? null : vdata[0]
+                                              .product_type === "Fashion" ? (
+                                            vari === "weight" ||
+                                            vari === "volume" ? null : (
                                               <option
+                                                value={
+                                                  vari === "piece"
+                                                    ? "piece"
+                                                    : vari === "color"
+                                                    ? "pcs"
+                                                    : ""
+                                                }
+                                                key={i}
+                                              >
+                                                {vari}
+                                              </option>
+                                            )
+                                          ) : vari === "color" ? null : (
+                                            <option
                                               value={
-                                                vari === "piece"
+                                                vari === "weight"
+                                                  ? "gms"
+                                                  : vari === "volume"
+                                                  ? "ml"
+                                                  : vari === "piece"
                                                   ? "piece"
                                                   : vari === "color"
                                                   ? "pcs"
@@ -3287,26 +3276,7 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                                             >
                                               {vari}
                                             </option>
-                                              :
-                                              vari === "color"  ? null : 
-                                              <option
-                                                value={
-                                                  vari === "weight"
-                                                    ? "gms"
-                                                    : vari === "volume"
-                                                    ? "ml"
-                                                    : vari === "piece"
-                                                    ? "piece"
-                                                    : vari === "color"
-                                                    ? "pcs"
-                                                    : ""
-                                                }
-                                                key={i}
-                                              >
-                                                {vari}
-                                              </option> 
-                                            );
-                                       
+                                          );
                                         }
                                       )}
                                     </Form.Select>
@@ -3317,37 +3287,25 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                               <td className="p-0 text-center">
                                 <div className=" d-flex align-items-center">
                                   <InputGroup className="" size="sm">
-                                  <Form.Select
-                                                aria-label="Default select example"
-                                                required 
-                                                sm="9"
-                                                name="colors"
-                                                value={variantarray.colors}
-                                                onChange={(e) =>
-                                                  onVariantChange(e)
-                                                }
-                                               
-                                              >
-                                                <option value={variantarray.colors==""}>
-                                                  Select
-                                                </option>
-                                                {(varietyy.color || []).map(
-                                                  (vari, i) => {
-                                                    return (
-                                                     
-                                                      <option
-                                                        value={
-                                                        vari
-                                                        }
-                                                        key={i}
-                                                      >
-                                                        {vari}
-                                                      </option> 
-                                                    );
-                                                  }
-                                                )}
-                                              </Form.Select>
-                                             
+                                    <Form.Select
+                                      aria-label="Default select example"
+                                      required
+                                      sm="9"
+                                      name="colors"
+                                      value={variantarray.colors}
+                                      onChange={(e) => onVariantChange(e)}
+                                    >
+                                      <option value={variantarray.colors == ""}>
+                                        Select
+                                      </option>
+                                      {(varietyy.color || []).map((vari, i) => {
+                                        return (
+                                          <option value={vari} key={i}>
+                                            {vari}
+                                          </option>
+                                        );
+                                      })}
+                                    </Form.Select>
                                   </InputGroup>
                                 </div>
                               </td>
@@ -3357,21 +3315,23 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                                   <InputGroup className="" size="sm">
                                     <Form.Control
                                       value={
-                                        variantarray.unit === "gms"
-                                          ? variantarray.unit_quantity
-                                          : variantarray.unit === "ml"
-                                          ? variantarray.unit_quantity
-                                          : variantarray.unit === "piece"
-                                          ? variantarray.unit_quantity
-                                          : variantarray.unit === ""
-                                          ? variantarray.unit_quantity
-                                          : null
+                                        // variantarray.unit === "gms"
+                                        //   ? variantarray.unit_quantity
+                                        //   : variantarray.unit === "ml"
+                                        //   ? variantarray.unit_quantity
+                                        //   : variantarray.unit === "piece"
+                                        //   ? variantarray.unit_quantity
+                                        //   : variantarray.unit === ""
+                                        //   ?
+                                        variantarray.unit_quantity
+                                        // : null
                                       }
                                       disabled={
-                                        productVeriantUnit=="pcs"|| variantarray.unit ==
-                                           "pcs"
-                                            ?true:false
-                                       }
+                                        // productVeriantUnit == "pcs" ||
+                                        variantarray.unit == "pcs"
+                                          ? true
+                                          : false
+                                      }
                                       required={
                                         variantarray.unit !== "pcs" &&
                                         variantarray.unit_quantity === ""
@@ -3394,41 +3354,34 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                               <td className="p-0 text-center">
                                 <div className=" d-flex align-items-center">
                                   <InputGroup className="" size="sm">
-                                  <Form.Select
-                                                aria-label="Default select example"
-                                                required 
-                                                sm="9"
-                                                name="size"
-                                                value={variantarray.size}
-                                                onChange={(e) =>
-                                                  onVariantChange(e)
-                                                }
-                                                disabled={
-                                                  productVeriantUnit!=="pcs"|| variantarray.unit !==
-                                                   "pcs" &&  variantarray.unit !== "" 
-                                                   ?true:variantarray.unit=="" ?false:false
-                                              }
-
-                                               >
-                                                <option value={variantarray.size==""}>
-                                                  Select
-                                                </option>
-                                                {(varietyy.size || []).map(
-                                                  (vari, i) => {
-                                                    return (
-                                                     
-                                                      <option
-                                                        value={
-                                                        vari
-                                                        }
-                                                        key={i}
-                                                      >
-                                                        {vari}
-                                                      </option> 
-                                                    );
-                                                  }
-                                                )}
-                                              </Form.Select>
+                                    <Form.Select
+                                      aria-label="Default select example"
+                                      required
+                                      sm="9"
+                                      name="size"
+                                      value={variantarray.size}
+                                      onChange={(e) => onVariantChange(e)}
+                                      disabled={
+                                        // productVeriantUnit !== "pcs" ||
+                                        variantarray.unit !== "pcs" &&
+                                        variantarray.unit !== ""
+                                          ? true
+                                          : variantarray.unit == ""
+                                          ? false
+                                          : false
+                                      }
+                                    >
+                                      <option value={variantarray.size == ""}>
+                                        Select
+                                      </option>
+                                      {(varietyy.size || []).map((vari, i) => {
+                                        return (
+                                          <option value={vari} key={i}>
+                                            {vari}
+                                          </option>
+                                        );
+                                      })}
+                                    </Form.Select>
                                   </InputGroup>
                                 </div>
                               </td>
@@ -3513,7 +3466,7 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                                 </div>
                               </td>
 
-                              <td className="p-0 text-center">
+                              {/* <td className="p-0 text-center">
                                 <div className="">
                                   <Form.Check
                                     onChange={(e) =>
@@ -3544,7 +3497,7 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                                     }
                                   />
                                 </div>
-                              </td>
+                              </td> */}
                               <td className="p-0 text-center">
                                 <div className="manufacture_date">
                                   <InputGroup className="" size="sm">
@@ -3648,15 +3601,18 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                                 </div>
                               </td>
                             </tr>
-                            {varietyUnitvalidation ==="ExpireDateValidation"? 
-                            <tr>
+                            {varietyUnitvalidation ===
+                            "ExpireDateValidation" ? (
+                              <tr>
                                 <p
                                   className="mt-1 ms-2 text-danger"
                                   type="invalid"
                                 >
-                                  Please Expire date should be greater than Manufacturing date
+                                  Please Expire date should be greater than
+                                  Manufacturing date
                                 </p>
-                              </tr>:null}
+                              </tr>
+                            ) : null}
 
                             <tr>
                               {customvalidated === true ? (
@@ -3773,12 +3729,12 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                                         <td className="p-0 text-center ">
                                           {variantdata.sale_price.toFixed(2)}
                                         </td>
-                                        <td className="p-0 text-center ">
+                                        {/* <td className="p-0 text-center ">
                                           {variantdata.special_offer}
                                         </td>
                                         <td className="p-0 text-center ">
                                           {variantdata.featured_product}
-                                        </td>
+                                        </td> */}
                                         <td className="p-0 text-center ">
                                           {moment(
                                             variantdata.manufacturing_date
@@ -3963,6 +3919,11 @@ console.log("veiant array--"+JSON.stringify(variantarray))
                                     </>
                                   );
                                 })}
+                            {changeUnitproperty === "editvariety" ? (
+                              <tr className="text-primary text-center mx-5">
+                                Now You can edit vareity type
+                              </tr>
+                            ) : null}
                           </tbody>
                         </Table>
                       </div>

@@ -32,23 +32,21 @@ const Expiredproduct = () => {
   };
   useEffect(() => {
     axios
-      .post(
-        `${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=50`,
-        {
-          product_search: {
-            search: `${searchdata.product_title_name}`,
-            category: `${searchdata.category}`,
-            price_from: "",
-            price_to: "",
-            latest_first: "",
-            product_title_name: "",
-            sale_price: "",
-            short_by_updated_on: "",
-            manufacturing_date: [`${searchdata.manufacturing_date}`],
-            expire_date: [`${currentdate}`],
-          },
-        }
-      )
+      .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=400`, {
+        product_search: {
+          search: "",
+          category: `${searchdata.category}`,
+          price_from: "",
+          price_to: "",
+          id: "",
+          product_title_name_asc_desc: "",
+          sale_price: "",
+          short_by_updated_on: "",
+          product_title_name: [`${searchdata.product_title_name}`],
+          manufacturing_date: [`${searchdata.manufacturing_date}`],
+          expire_date: [`${currentdate}`],
+        },
+      })
       .then((response) => {
         let data = response.data.results;
         setexpiredata(data);
