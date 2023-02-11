@@ -484,12 +484,11 @@ const Productdetail = () => {
   // );
 
   const deleteProductVeriant = () => {
-    console.log("//////////////");
     if (variantdetail.length === 0) {
       setHideAlldata(true);
       setVerityAlert(false);
     }
-    if (variantdetail.length === 1) {
+    if (variantdetail.length === 2) {
       setChangeUnitProperty("editvariety");
     }
     // console.log("veriant lenght--" + variantdetail.length);
@@ -500,7 +499,6 @@ const Productdetail = () => {
         is_delete: "0",
       })
       .then((response) => {
-        console.log(response);
         setvariantapicall(true);
       })
       .catch(function (error) {
