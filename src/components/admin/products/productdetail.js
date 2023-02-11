@@ -9,13 +9,14 @@ import Table from "react-bootstrap/Table";
 import VariationJson from "../json/variation";
 import { MdOutlineEdit } from "react-icons/md";
 import { Button } from "react-bootstrap";
-
+import { useNavigate } from "react-router-dom";
 import SAlert from "../../admin/common/salert";
 import moment from "moment/moment";
 import InputGroup from "react-bootstrap/InputGroup";
 let encoded;
 let ImgObj = [];
 const Productdetail = () => {
+  const navigate = useNavigate();
   let vid = localStorage.getItem("variantid");
   let pid = localStorage.getItem("productid");
   const [hideallData, setHideAlldata] = useState(false);
@@ -85,6 +86,9 @@ const Productdetail = () => {
           .get(`${process.env.REACT_APP_BASEURL}/product_details?id=${pid}`)
           .then((response) => {
             let data = response.data;
+            if (data === "error") {
+              navigate("/product");
+            }
             if (data != undefined || data != "" || data != null) {
               setProductData(data);
               setVariantdetail(data.product_verient);
@@ -95,9 +99,12 @@ const Productdetail = () => {
                 product_id: pid,
               });
             }
+
             setvariantapicall(false);
           });
-      } catch (err) {}
+      } catch (err) {
+        console.log(err);
+      }
     }
 
     getProductDetails();
@@ -116,6 +123,9 @@ const Productdetail = () => {
       .then((response) => {
         let data = response.data;
         setCategoryName(data[0].category_name);
+      })
+      .catch(function (error) {
+        console.log(error);
       });
   };
   // End of api call for category details
@@ -469,19 +479,19 @@ const Productdetail = () => {
     setUpdatetAlert(false);
   };
 
-  console.log(
-    "veriant lenght--" + variantdetail.length + "ppp " + changeUnitproperty
-  );
+  // console.log(
+  //   "veriant lenght--" + variantdetail.length + "ppp " + changeUnitproperty
+  // );
 
   const deleteProductVeriant = () => {
     if (variantdetail.length === 0) {
       setHideAlldata(true);
       setVerityAlert(false);
     }
-    if (variantdetail.length === 1) {
+    if (variantdetail.length === 2) {
       setChangeUnitProperty("editvariety");
     }
-    console.log("veriant lenght--" + variantdetail.length);
+    // console.log("veriant lenght--" + variantdetail.length);
     axios
       .put(`${process.env.REACT_APP_BASEURL}/products_delete_remove`, {
         varient_id: variantremove.id,

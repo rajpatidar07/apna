@@ -64,6 +64,7 @@ function AdminHeader() {
   const handleShow = () => setShow(true);
   const OnLogoutClick = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("vendor_token");
     localStorage.removeItem("encryptloginid");
     localStorage.removeItem("encryptpassword");
     localStorage.removeItem("encryptadminid");
