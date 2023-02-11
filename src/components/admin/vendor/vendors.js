@@ -23,6 +23,7 @@ const VendorsList = () => {
   const [show, setShow] = useState("");
   const [docsshow, setDocsShow] = useState(false);
   const [Alert, setAlert] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [vendordata, setvendordata] = useState([]);
   const [file, setFile] = useState();
   const [fileDoc, setFileDoc] = useState();
@@ -617,9 +618,10 @@ const VendorsList = () => {
       e.stopPropagation();
       console.log("falsecheckValidity----------");
       setValidated(true);
+      setLoading(false);
     } else {
       e.preventDefault();
-
+      setLoading(true);
       const formData = new FormData();
       let x = [addvendordata.document_name];
       let socialname = addvendordata.testjson;
@@ -655,9 +657,11 @@ const VendorsList = () => {
           setapicall(true);
           setShow(false);
           setAddAlert(true);
+          setLoading(false);
           // console.log("-------done"+response.data)
         })
         .catch(function (error) {
+          setLoading(false);
           console.log(error);
         });
       formRef.current.reset();
@@ -1113,6 +1117,7 @@ const VendorsList = () => {
                   <Form.Label>Document Name</Form.Label>
                   <InputGroup className="" size="sm">
                     <Form.Control
+                      required
                       onChange={(e) => onDocumentNamechange(e)}
                       value={addtag}
                       placeholder="document_name"
@@ -1122,7 +1127,10 @@ const VendorsList = () => {
                           onDocuAddclick();
                         }
                       }}
-                    />
+                    />{" "}
+                    <Form.Control.Feedback type="invalid" className="h6">
+                      Please fill Document
+                    </Form.Control.Feedback>
                     <Button
                       variant="outline-success"
                       className="addcategoryicon"
@@ -1345,12 +1353,23 @@ const VendorsList = () => {
             >
               Cancel
             </button>
-            <Iconbutton
-              type={"submit"}
-              btntext={show === "add" ? "Add Vendor" : "Update Vendor"}
-              // onClick={(show === 'add' ? AddVendorClick : UpdateVendorClick(show))}
-              btnclass={"button main_button "}
-            />
+            {loading == true ? (
+              <button type="submit" className="button main_button">
+                &nbsp;&nbsp;&nbsp; loading...
+                <span
+                  className="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+              </button>
+            ) : (
+              <Iconbutton
+                type={"submit"}
+                btntext={show === "add" ? "Add Vendor" : "Update Vendor"}
+                // onClick={(show === 'add' ? AddVendorClick : UpdateVendorClick(show))}
+                btnclass={"button main_button "}
+              />
+            )}
           </Modal.Footer>
         </Form>
       </Modal>

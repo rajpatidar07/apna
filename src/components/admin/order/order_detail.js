@@ -233,7 +233,7 @@ const OrderDetail = () => {
                   (Number(orderdata.product_price) * countAllText) / 100;
                 let total_price = orderdata.sale_price * orderdata.quantity;
                 total += Number(total_price);
-                sub_total += Number(orderdata.sale_price);
+                sub_total += Number(total_price);
                 total_tax += Number(tax);
                 return (
                   <div
@@ -309,7 +309,7 @@ const OrderDetail = () => {
                     <p>Speed post package</p>
                   </div>
                 </div>
-                <div className="delivery_payment">$20.00</div>
+                <div className="delivery_payment">00</div>
               </div>
             </div>
             <div className="payment_summary">
