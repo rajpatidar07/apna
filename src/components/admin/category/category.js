@@ -12,6 +12,7 @@ import { Badge } from "react-bootstrap";
 import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
 import axios from "axios";
+import categorytype from "../../admin/json/categorytype";
 var newImg = "";
 const CategoryList = () => {
   const formRef = useRef();
@@ -103,61 +104,70 @@ const CategoryList = () => {
           .get(`${process.env.REACT_APP_BASEURL}/category_details?id=${e}`)
           .then((response) => {
             let data = response.data[0];
-             console.log("data-------------" + JSON.stringify(data));
             setCategoryEditData(data);
             setImagePath(response.data[0].image);
 
             const arr = data.all_parent_id.split(",");
-            for (let i = 0; i < arr.length; i++) {
-              axios
-                .get(
-                  `${process.env.REACT_APP_BASEURL}/category_details?id=${arr[i]}`
-                )
-                .then((response) => {
-                  let data = response.data[0];
-                  if (i === 0) {
-                    axios
-                      .get(
-                        `${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`
-                      )
-                      .then((response) => {
-                        setSubCategory(response.data);
-                      });
-                    setCategoryEditparent(data.category_name);
-                  } else if (i === 1) {
-                    axios
-                      .get(
-                        `${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`
-                      )
-                      .then((response) => {
-                        setchildCategory(response.data);
-                      });
-                    setCategoryEditSubparent(data.category_name);
-                  } else if (i === 2) {
-                    setCategoryEditChildparent(data.category_name);
-                  }
-                });
+            if (arr[0] === "0" && arr.length === 1) {
+            } else {
+              for (let i = 0; i < arr.length; i++) {
+                axios
+                  .get(
+                    `${process.env.REACT_APP_BASEURL}/category_details?id=${arr[i]}`
+                  )
+                  .then((response) => {
+                    let data = response.data[0];
+                    if (i === 0) {
+                      axios
+                        .get(
+                          `${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`
+                        )
+                        .then((response) => {
+                          setSubCategory(response.data);
+                          // console.log(
+                          //   "subcat-------------" +
+                          //     JSON.stringify(response.data)
+                          // );
+                        });
+                      setCategoryEditparent(data.category_name);
+                    } else if (i === 1) {
+                      axios
+                        .get(
+                          `${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`
+                        )
+                        .then((response) => {
+                          setchildCategory(response.data);
+                          // console.log(
+                          //   "childcat-------------" +
+                          //     JSON.stringify(response.data)
+                          // );
+                        });
+                      setCategoryEditSubparent(data.category_name);
+                    } else if (i === 2) {
+                      setCategoryEditChildparent(data.category_name);
+                      // console.log(
+                      //   "grandfchildcat-------------" +
+                      //     JSON.stringify(response.data)
+                      // );
+                    }
+                  });
+              }
             }
+
+            setnewName(name);
+            setCid(e);
+            setParentid(parent_id);
+            setAllparentid(all_parent_id);
+            setlevel(level);
+            setType(category_type);
+            setShow(e);
+            setCategoryEditData(data);
           });
       } catch (err) {}
-      setnewName(name);
-      setCid(e);
-      setParentid(parent_id);
-      setAllparentid(all_parent_id);
-      setlevel(level);
-      setType(category_type);
-      setShow(e);
-      setCategoryEditData(data);
     }
   };
 
-  {
-    // console.log("image path---" + ImagePaht);
-  }
   newImg = ImagePaht.replace("public", "");
-  {
-    // console.log("image new path ---" + newImg);
-  }
 
   const handlChangeName = (e, id) => {
     setnewName(e.target.value);
@@ -369,8 +379,6 @@ const CategoryList = () => {
     const form = e.currentTarget;
     e.preventDefault();
 
-    // console.log("form.checkValidity() " + form.checkValidity() + newName);
-    
     if (form.checkValidity() === false && newName === "") {
       e.stopPropagation();
       setValidated(true);
@@ -454,8 +462,6 @@ const CategoryList = () => {
     setsearchValidated(false);
   };
 
-  // console.log("Search data------" + JSON.stringify(SearchCat));
-
   const SearchCategory = () => {
     if (
       SearchCat.category_name === "" ||
@@ -470,7 +476,6 @@ const CategoryList = () => {
           level: `${SearchCat.level}`,
         })
         .then((response) => {
-          // console.log(response);
           let data = response.data.filter((item) => item.is_active === "1");
           setData(data);
           setsearchValidated(false);
@@ -660,126 +665,26 @@ const CategoryList = () => {
                       aria-label="Select by category type"
                       className="adminselectbox"
                       onChange={(e) => handlChangeType(e)}
-                      value={type}
+                      defaultValue={CategoryEditdata.category_type}
                       required
                       name={"category_type"}
                     >
-                      <option
-                        selected={
-                          (CategoryEditdata.category_type = "" ? true : false)
-                        }
-                        value=""
-                      >
-                        Search by category type
-                      </option>
-                      <option
-                        selected={
-                          (CategoryEditdata.category_type = "Cloths"
-                            ? true
-                            : false)
-                        }
-                        value="Cloths"
-                      >
-                        Cloths
-                      </option>
-                      <option
-                        selected={
-                          (CategoryEditdata.category_type = "Food"
-                            ? true
-                            : false)
-                        }
-                        value="Food"
-                      >
-                        Food
-                      </option>
-                      <option
-                        selected={
-                          (CategoryEditdata.category_type =
-                            "Beauty & Personal care" ? true : false)
-                        }
-                        value="Beauty & Personal care"
-                      >
-                        Beauty & Personal care
-                      </option>
-                      <option
-                        selected={
-                          (CategoryEditdata.category_type = "Mobiles"
-                            ? true
-                            : false)
-                        }
-                        value="Mobiles"
-                      >
-                        Mobiles
-                      </option>
-                      <option
-                        selected={
-                          (CategoryEditdata.category_type = "Two wheelers"
-                            ? true
-                            : false)
-                        }
-                        value="Two wheelers"
-                      >
-                        Two wheelers
-                      </option>
-                      <option
-                        selected={
-                          (CategoryEditdata.category_type = "Home Applience"
-                            ? true
-                            : false)
-                        }
-                        value="Home Applience"
-                      >
-                        Home Applience
-                      </option>
-                      <option
-                        selected={
-                          (CategoryEditdata.category_type = "Grocery"
-                            ? true
-                            : false)
-                        }
-                        value="Grocery"
-                      >
-                        Grocery
-                      </option>
-                      <option
-                        selected={
-                          (CategoryEditdata.category_type = "Health"
-                            ? true
-                            : false)
-                        }
-                        value="Health"
-                      >
-                        Health
-                      </option>
-                      <option
-                        selected={
-                          (CategoryEditdata.category_type = "Fashion"
-                            ? true
-                            : false)
-                        }
-                        value="Fashion"
-                      >
-                        Fashion
-                      </option>
-                      <option
-                        selected={
-                          (CategoryEditdata.category_type = "Electronic"
-                            ? true
-                            : false)
-                        }
-                        value="Electronic"
-                      >
-                        Electronic
-                      </option>
-                      <option
-                        selected={
-                          (CategoryEditdata.category_type =
-                            "Sports & Accessories" ? true : false)
-                        }
-                        value="Sports & Accessories"
-                      >
-                        Sports & Accessories
-                      </option>
+                      <option value="">Search by category type</option>
+                      {(categorytype.categorytype || []).map((data, i) => {
+                        return (
+                          <option
+                            key={i}
+                            // selected={
+                            //   (CategoryEditdata.category_type = "Cloths"
+                            //     ? true
+                            //     : false)
+                            // }
+                            value={data}
+                          >
+                            {data}
+                          </option>
+                        );
+                      })}
                     </Form.Select>
 
                     <Form.Control.Feedback type="invalid" className="h6">
@@ -801,8 +706,9 @@ const CategoryList = () => {
                       onChange={(e, id) => categoryFormChange(e, id)}
                       name={"category_name"}
                       placeholder={"Select by category"}
+                      // value={indVal}
                     >
-                      <option value={""}>Select Parent Category</option>
+                      <option value={"0"}>Select Parent Category</option>
                       {category.map((cdata, i) => {
                         return (
                           <option
@@ -824,7 +730,6 @@ const CategoryList = () => {
                     </Form.Control.Feedback>
                   </Form.Group>
                 </div>
-
                 {subCategory[0] === "" ||
                 subCategory[0] === null ||
                 subCategory[0] === undefined ? null : (
@@ -924,7 +829,7 @@ const CategoryList = () => {
                         // value={newImg}
                       />
                     </div>
-                    {newImg === "" ? null : (
+                    {newImg === "" || newImg === "no image" ? null : (
                       <img
                         src={newImg}
                         alt={"apna_organic"}
