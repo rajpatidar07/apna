@@ -111,7 +111,7 @@ function Product() {
     product_slug: "",
     store_name: "",
     product_type: "",
-    category: "",
+    category: [],
     parent_category: "",
     wholesale_sales_tax: "0",
     gst: "0",
@@ -136,7 +136,7 @@ function Product() {
   const formRef = useRef();
   const [searchdata, setsearchData] = useState({
     product_title_name: "",
-    category: "",
+    category: [],
     product_status: "",
   });
 
@@ -907,7 +907,7 @@ function Product() {
       .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=400`, {
         product_search: {
           search: "",
-          category: "",
+          category: [],
           price_from: "",
           price_to: "",
           id: "",
