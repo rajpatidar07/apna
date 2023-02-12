@@ -80,7 +80,7 @@ const Soldproduct = () => {
           product_title_name: [`${searchdata.product_title_name}`],
           category: "",
           quantity: "",
-          is_delete: ["0"],
+          is_delete: ["1"],
         },
       })
       .then((response) => {
@@ -301,7 +301,7 @@ const Soldproduct = () => {
         />
         <SAlert
           show={UpdateAlert}
-          title="Updated Sold product Successfully "
+          title={"Update sucsessfully"}
           onConfirm={closeUpdateAlert}
         />
       </div>
