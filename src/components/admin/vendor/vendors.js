@@ -351,6 +351,7 @@ const VendorsList = () => {
   }, [Docnamearray]);
 
   const handleFormChange = (e) => {
+    setcustomValidated(false);
     setaddvendordata({
       ...addvendordata,
       [e.target.name]: e.target.value,
@@ -413,8 +414,11 @@ const VendorsList = () => {
     setaddtag(e.target.value);
   };
   const onDocuAddclick = (e) => {
-    setDocnameArray((Docnamearray) => [...Docnamearray, addtag]);
-    setaddtag("");
+    console.log("add " + addtag);
+    if (addtag !== "") {
+      setDocnameArray((Docnamearray) => [...Docnamearray, addtag]);
+      setaddtag("");
+    }
   };
   const DocuRemoveClick = (e) => {
     setDocnameArray(Docnamearray.filter((item) => item !== e));
@@ -627,9 +631,6 @@ const VendorsList = () => {
       let socialname = addvendordata.testjson;
       let socialname_new = JSON.stringify(socialname);
 
-      // console.log("socialname----------"+socialname);
-      // console.log("socialname----------"+socialname_new);
-
       formData.append("image", file);
       formData.append("filename", fileName);
       formData.append("owner_name", addvendordata.owner_name);
@@ -641,8 +642,6 @@ const VendorsList = () => {
       formData.append("geolocation", addvendordata.geolocation);
       formData.append("store_type", addvendordata.store_type);
       formData.append("availability", addvendordata.availability);
-      // formData.append("image",fileDoc);
-      // formData.append("filename", fileDocName);
       formData.append("document_name", x);
       formData.append("status", addvendordata.status);
       formData.append("social_media_links", socialname_new);
@@ -655,14 +654,13 @@ const VendorsList = () => {
         })
         .then((response) => {
           if (response.data.message === "vendor already exist") {
+            setcustomValidated("alreadyexist");
           } else {
             setapicall(true);
             setShow(false);
             setAddAlert(true);
             setLoading(false);
           }
-
-          // console.log("-------done"+response.data)
         })
         .catch(function (error) {
           setLoading(false);
@@ -888,6 +886,11 @@ const VendorsList = () => {
                     placeholder="Email"
                     name={"email"}
                   />
+                  {customvalidated === "alreadyexist" ? (
+                    <p className="text-danger mx-2">
+                      {"Vendore Already Exist"}
+                    </p>
+                  ) : null}
                   <Form.Control.Feedback type="invalid" className="h6">
                     Please fill email
                   </Form.Control.Feedback>
@@ -1129,11 +1132,12 @@ const VendorsList = () => {
                       +
                     </Button>
                   </InputGroup>
-                  {/* {console.log("ddddd--" + Docnamearray)} */}
+                  {console.log("ddddd--" + Docnamearray)}
 
                   {Docnamearray === undefined ||
                   Docnamearray === null ||
-                  Docnamearray === "" ? null : (
+                  Docnamearray === "" ||
+                  Docnamearray.length === 0 ? null : (
                     <div className="d-flex align-items-center tagselectbox mt-2">
                       {Docnamearray.map((seotags, i) => {
                         return (
