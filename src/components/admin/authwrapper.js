@@ -6,8 +6,6 @@ const AuthWrapper = () => {
 
   const adminLogged = localStorage.getItem("token");
   const VendorLogged = localStorage.getItem("vendor_token");
-  
-
 
   return adminLogged === null ||
     adminLogged === "" ||
@@ -20,18 +18,7 @@ const AuthWrapper = () => {
       replace
       state={{ from: location }} // <-- pass location in route state
     />
-  ) : VendorLogged === null ||
-  VendorLogged === "" ||
-  VendorLogged === undefined ||
-  VendorLogged === "null" ||
-  VendorLogged === true ||
-  VendorLogged === "true" ? (
-  <Navigate
-    to="/sellersignup"
-    replace
-    state={{ from: location }} // <-- pass location in route state
-  />
-) : (
+  ) : (
     <Outlet />
   );
 };

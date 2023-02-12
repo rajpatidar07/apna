@@ -654,10 +654,14 @@ const VendorsList = () => {
           },
         })
         .then((response) => {
-          setapicall(true);
-          setShow(false);
-          setAddAlert(true);
-          setLoading(false);
+          if (response.data.message === "vendor already exist") {
+          } else {
+            setapicall(true);
+            setShow(false);
+            setAddAlert(true);
+            setLoading(false);
+          }
+
           // console.log("-------done"+response.data)
         })
         .catch(function (error) {
@@ -671,18 +675,11 @@ const VendorsList = () => {
 
   const UpdateVendorClick = (e) => {
     let x = [addvendordata.document_name];
-    // console.log("update doc"+ x)
     e.preventDefault();
     const formData = new FormData();
 
     let socialname = addvendordata.testjson;
     let socialname_new = JSON.stringify(socialname);
-    //  console.log("se----------"+socialname);
-    //  console.log("seAAAAAAAAAAAAAaaa----------"+socialname_new);
-
-    console.log(" after bfile  ---" + file);
-    console.log(" after file Name  ---" + fileName);
-
     formData.append("id", addvendordata.id);
     formData.append("image", file);
     formData.append("filename", fileName);
@@ -695,20 +692,15 @@ const VendorsList = () => {
     formData.append("geolocation", addvendordata.geolocation);
     formData.append("store_type", addvendordata.store_type);
     formData.append("availability", addvendordata.availability);
-    // formData.append("image",fileDoc);
-    // formData.append("filename", fileDocName);
     formData.append("document_name", x);
     formData.append("status", "active");
     formData.append("social_media_links", socialname_new);
 
-    // console.log("formdata----"+ JSON.stringify(formData))
     axios
       .put(`${process.env.REACT_APP_BASEURL}/vendor_update`, formData)
       .then((response) => {
         let data = response.data;
         setUpdateAlert(true);
-        // console.log("formupdate----------   " + JSON.stringify(response.data));
-        // setvendordata(data)
         setapicall(true);
         setShow(false);
       })
@@ -716,8 +708,6 @@ const VendorsList = () => {
         console.log(error);
       });
   };
-
-  // console.log("VEDORR"+JSON.stringify(addvendordata))
 
   return (
     <div>
@@ -833,7 +823,6 @@ const VendorsList = () => {
                   className="mb-3 aos_input"
                   controlId="validationCustom01"
                 >
-                  {/* {console.log(addvendordata)} */}
                   <Form.Label>Owner Name</Form.Label>
                   <Form.Control
                     onChange={(e) => handleFormChange(e)}
