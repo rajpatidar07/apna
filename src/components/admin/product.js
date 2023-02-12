@@ -4130,7 +4130,7 @@ function Product() {
         </Modal>
         <SAlert
           show={RestoreAlert}
-          title="Offered Product Added  Sucessfully"
+          title={productname}
           onConfirm={() => setRestoreAlert(false)}
         />
       </div>
