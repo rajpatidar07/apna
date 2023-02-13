@@ -17,10 +17,12 @@ import status from "../json/Status";
 
 const VendorsList = () => {
   const token = localStorage.getItem("token");
+  const[AddtagError,setAddTagError]=useState("")
   const [SocialLink, setSocialLink] = useState(false);
   const formRef = useRef();
   const [newImageUrls, setnewImageUrls] = useState([]);
-  const [validated, setValidated] = useState(false);
+  const [customValidation, setCustomValidation] = useState(false);
+
   const [show, setShow] = useState("");
   const [docsshow, setDocsShow] = useState(false);
   const [Alert, setAlert] = useState(false);
@@ -35,7 +37,7 @@ const VendorsList = () => {
   const [UpdateAlert, setUpdateAlert] = useState(false);
   let [condition, setCondition] = useState(false);
   const [fileName, setFileName] = useState("");
-  const [addvendordata, setaddvendordata] = useState({
+  const vendorObject={
     owner_name: "",
     shop_name: "",
     mobile: "",
@@ -50,10 +52,12 @@ const VendorsList = () => {
     document_name: [],
     availability: "",
     social_media_links: [],
-  });
+  }
+  const [addvendordata, setaddvendordata] = useState(vendorObject);
   let encoded;
   let ImgObj = [];
   let docuarr;
+ var imgvalidate;
 
   const [changstatus, setchangstatus] = useState("");
   const [apicall, setapicall] = useState(false);
@@ -63,7 +67,7 @@ const VendorsList = () => {
   const [descval, setdescval] = useState("");
   const [customarray, setcustomarray] = useState([]);
   const [AddCustom, setAddCustom] = useState([]);
-  const [customvalidated, setcustomValidated] = useState(false);
+  // const [customvalidated, setcustomValidated] = useState(false);
   const [searchdata, setsearchData] = useState({
     status: "",
     store_type: "",
@@ -317,19 +321,20 @@ const VendorsList = () => {
   }, [Docnamearray]);
 
   const handleFormChange = (e) => {
-    setcustomValidated(false);
+
+    setCustomValidation(false)
     setaddvendordata({
       ...addvendordata,
       [e.target.name]: e.target.value,
     });
   };
   const handleClose = () => {
-    formRef.current.reset();
-    setValidated(false);
+   setCustomValidation(false)
+
     setcustomarray([]);
-    setcustomValidated("");
+  
     setaddtag("");
-    setaddvendordata("");
+    setaddvendordata(vendorObject);
     setDocnameArray("");
     setapicall(true);
     setShow(false);
@@ -380,12 +385,17 @@ const VendorsList = () => {
     setaddtag(e.target.value);
   };
   const onDocuAddclick = (e) => {
-    console.log("add " + addtag);
-    if (addtag !== "") {
+    if(addtag==""){
+      setAddTagError("addTagErorrr")
+    }
+    else{
       setDocnameArray((Docnamearray) => [...Docnamearray, addtag]);
       setaddtag("");
-    }
+      setAddTagError("")
+    } 
   };
+
+
   const DocuRemoveClick = (e) => {
     setDocnameArray(Docnamearray.filter((item) => item !== e));
   };
@@ -414,13 +424,18 @@ const VendorsList = () => {
       });
   };
 
+ 
+
   const ImgFormChange = (e) => {
     setFile(e.target.files[0]);
     setFileName(e.target.files[0].name);
-    setcustomValidated("imgformat");
+
+
+
   };
-  let imgvalidate = fileName.split(".").pop();
-  console.log("---image " + imgvalidate);
+  imgvalidate = fileName.split(".").pop();
+  console.log("---imagedd---"+imgvalidate);
+  
   //img code start-----------------------------------------------------------------------------------------------
 
   const [vendorID, setVendorId] = useState("");
@@ -586,23 +601,46 @@ const VendorsList = () => {
 
   const AddVendorClick = (e) => {
     e.preventDefault();
+    console.log("---imageddddddddd---"+imgvalidate);
+    
+    if (addvendordata.owner_name === "") {
+      setCustomValidation("ownernameEmpty");
+    } else if (addvendordata.shop_name === "") {
+      setCustomValidation("shopnameEmpty");
+    } else if (addvendordata.mobile === "") {
+      setCustomValidation("MobileEmpty");
+    }
+    else if ((addvendordata.mobile.length > 10)||(addvendordata.mobile.length<10)) {
+      setCustomValidation("10number");
+    }
+     else if (addvendordata.email === "") {
+      var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z]{2,4})+$/;
+      var rst = regex.test(addvendordata.email);
+      if (rst !== true) {
+        setCustomValidation("EmailEmpty");
+      }
+      setCustomValidation("EmailEmpty");
+    }
+    else if (addvendordata.shop_address === "") {
+      setCustomValidation("ShopAddressEmpty");
+    } else if (addvendordata.gstn === "") {
+      setCustomValidation("GSTEmpty");
+    } else if (addvendordata.geolocation === "") {
+      setCustomValidation("GeolocationEmpty");
+    } 
 
-    if (
-      imgvalidate !== "jpg" ||
-      imgvalidate !== "jpeg" ||
-      imgvalidate !== "png"
-    ) {
-      setcustomValidated("imgformat");
-    } else {
-      const form = e.currentTarget;
-      if (form.checkValidity() === false) {
+     else if (
+        imgvalidate !== "jpg" ||
+        imgvalidate !== "jpeg" ||
+        imgvalidate !== "png"
+      ) {
+        setCustomValidation("imgformat");
+      } 
+     
+       else {
+   
         e.preventDefault();
-        e.stopPropagation();
-        setValidated(true);
-        setLoading(false);
-      } else {
-        e.preventDefault();
-        setLoading(true);
+        // setLoading(true);
         const formData = new FormData();
         let x = [addvendordata.document_name];
         let socialname = addvendordata.testjson;
@@ -630,82 +668,116 @@ const VendorsList = () => {
             },
           })
           .then((response) => {
+            console.log("vendor data----"+JSON.stringify(response))
             if (response.data.message === "vendor already exist") {
-              setcustomValidated("alreadyexist");
+              setCustomValidation("alreadyexist");
               setLoading(false);
-            } else if (
-              response.data.message === "please Enter 10 digit number"
-            ) {
-              setcustomValidated("mobilenumber");
-            } else if (
+            }  else if (
               response.data.message === "Sent mail to super_admin Succesfully"
             ) {
               setapicall(true);
               setShow(false);
               setAddAlert(true);
-              setLoading(false);
-              setaddvendordata("");
+              // setLoading(false);
+              setaddvendordata(vendorObject);
             }
           })
           .catch(function (error) {
             setLoading(false);
             console.log(error);
           });
-        formRef.current.reset();
-        setValidated(false);
+        // formRef.current.reset();
+       
       }
-    }
+
+
+    // }
+
   };
 
   const UpdateVendorClick = (e) => {
-    let x = [addvendordata.document_name];
     e.preventDefault();
-    const formData = new FormData();
 
-    let socialname = addvendordata.testjson;
-    let socialname_new = JSON.stringify(socialname);
-    formData.append("id", addvendordata.id);
-    formData.append("image", file);
-    formData.append("filename", fileName);
-    formData.append("owner_name", addvendordata.owner_name);
-    formData.append("shop_name", addvendordata.shop_name);
-    formData.append("mobile", addvendordata.mobile);
-    formData.append("email", addvendordata.email);
-    formData.append("shop_address", addvendordata.shop_address);
-    formData.append("gstn", addvendordata.gstn);
-    formData.append("geolocation", addvendordata.geolocation);
-    formData.append("store_type", addvendordata.store_type);
-    formData.append("availability", addvendordata.availability);
-    formData.append("document_name", x);
-    formData.append("status", "active");
-    formData.append("social_media_links", socialname_new);
+   
+    if (addvendordata.owner_name === "") {
+      setCustomValidation("ownernameEmpty");
+    } else if (addvendordata.shop_name === "") {
+      setCustomValidation("shopnameEmpty");
+    } else if (addvendordata.mobile === "") {
+      setCustomValidation("MobileEmpty");
+    }
+    else if ((addvendordata.mobile.length > 10)||(addvendordata.mobile.length<10)) {
+      setCustomValidation("10number");
+    }
+     else if (addvendordata.email === "") {
+      var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z]{2,4})+$/;
+      var rst = regex.test(addvendordata.email);
+      if (rst !== true) {
+        setCustomValidation("EmailEmpty");
+      }
+      setCustomValidation("EmailEmpty");
+    }
+    else if (addvendordata.shop_address === "") {
+      setCustomValidation("ShopAddressEmpty");
+    } else if (addvendordata.gstn === "") {
+      setCustomValidation("GSTEmpty");
+    } else if (addvendordata.geolocation === "") {
+      setCustomValidation("GeolocationEmpty");
+    } 
 
-    axios
-      .put(`${process.env.REACT_APP_BASEURL}/vendor_update`, formData, {
-        headers: {
-          admin_token: token,
-        },
-      })
-      .then((response) => {
-        let data = response.data;
-        if (data.response === "header error") {
-          setLoading(false);
-        } else if (response.data.message === "vendor already exist") {
-          setcustomValidated("alreadyexist");
-          setLoading(false);
-        } else if (response.data.message === "please Enter 10 digit number") {
-          setcustomValidated("mobilenumber");
-        } else if (
-          response.data.message === "Sent mail to super_admin Succesfully"
-        ) {
-          setUpdateAlert(true);
-          setapicall(true);
-          setShow(false);
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+
+else{
+  let x = [addvendordata.document_name];
+ 
+  const formData = new FormData();
+
+  let socialname = addvendordata.testjson;
+  let socialname_new = JSON.stringify(socialname);
+  formData.append("id", addvendordata.id);
+  formData.append("image", file);
+  formData.append("filename", fileName);
+  formData.append("owner_name", addvendordata.owner_name);
+  formData.append("shop_name", addvendordata.shop_name);
+  formData.append("mobile", addvendordata.mobile);
+  formData.append("email", addvendordata.email);
+  formData.append("shop_address", addvendordata.shop_address);
+  formData.append("gstn", addvendordata.gstn);
+  formData.append("geolocation", addvendordata.geolocation);
+  formData.append("store_type", addvendordata.store_type);
+  formData.append("availability", addvendordata.availability);
+  formData.append("document_name", x);
+  formData.append("status", "active");
+  formData.append("social_media_links", socialname_new);
+
+  axios
+    .put(`${process.env.REACT_APP_BASEURL}/vendor_update`, formData, {
+      headers: {
+        admin_token: token,
+      },
+    })
+    .then((response) => {
+      let data = response.data;
+      if (data.response === "header error") {
+        setLoading(false);
+      } else if (response.data.message === "vendor already exist") {
+        setCustomValidation("alreadyexist");
+        setLoading(false);
+      } else if (response.data.message === "please Enter 10 digit number") {
+        setCustomValidation("mobilenumber");
+      } else if (
+        response.data.message === "Sent mail to super_admin Succesfully"
+      ) {
+        setUpdateAlert(true);
+        setapicall(true);
+        setShow(false);
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+    
+
   };
 
   return (
@@ -808,9 +880,9 @@ const VendorsList = () => {
       <Modal size="lg" show={show} onHide={() => handleClose()}>
         <Form
           className=""
-          noValidate
-          validated={validated}
-          ref={formRef}
+          // noValidate
+          // validated={validated}
+          // ref={formRef}
           onSubmit={
             show === "add"
               ? (e) => AddVendorClick(e)
@@ -827,98 +899,116 @@ const VendorsList = () => {
               <div className="col-md-6">
                 <Form.Group
                   className="mb-3 aos_input"
-                  controlId="validationCustom01"
+                
                 >
-                  <Form.Label>Owner Name</Form.Label>
+                  <Form.Label>Owner Name <span className="text-danger">* </span></Form.Label>
                   <Form.Control
                     onChange={(e) => handleFormChange(e)}
                     value={addvendordata.owner_name}
-                    required
+                    // required
                     type="text"
                     placeholder="Owner Name"
                     name={"owner_name"}
                   />
-                  <Form.Control.Feedback type="invalid" className="h6">
-                    Please fill owner name
-                  </Form.Control.Feedback>
+                     {customValidation === "ownernameEmpty" ? (
+                          <span className="text-danger">
+                            Please fill the Owner{" "}
+                          </span>
+                        ) : customValidation === false ? (
+                          ""
+                        ) : null}
                 </Form.Group>
               </div>
               <div className="col-md-6">
                 <Form.Group
                   className="mb-3 aos_input"
-                  controlId="validationCustom02"
+              
                 >
-                  <Form.Label>Shop Name</Form.Label>
+                  <Form.Label>Shop Name <span className="text-danger">* </span></Form.Label>
                   <Form.Control
                     onChange={(e) => handleFormChange(e)}
                     value={addvendordata.shop_name}
-                    required
+                    // required
                     type="text"
                     placeholder="Shop Name"
                     name={"shop_name"}
                   />
-                  <Form.Control.Feedback type="invalid" className="h6">
-                    Please fill shop name
-                  </Form.Control.Feedback>
+                    {customValidation === "shopnameEmpty" ? (
+                          <span className="text-danger">
+                            Please fill the Shop name
+                          </span>
+                        ) : customValidation === false ? (
+                          ""
+                        ) : null}
                 </Form.Group>
               </div>
               <div className="col-md-6">
                 <Form.Group
                   className="mb-3 aos_input"
-                  controlId="validationCustom03"
+                  
                 >
-                  <Form.Label>Mobile</Form.Label>
+                  <Form.Label>Mobile <span className="text-danger">* </span></Form.Label>
                   <Form.Control
                     onChange={(e) => handleFormChange(e)}
                     value={addvendordata.mobile}
-                    required
+                    // required
                     type="number"
-                    min={1}
+                    // min={1}
                     placeholder="Mobile"
                     name={"mobile"}
-                    maxLength={10}
-                    minLength={10}
+                    // maxLength={10}
+                    // minLength={10}
                   />
-                  {customvalidated === "mobilenumber" ? (
-                    <p className="text-danger mx-2">
-                      {
-                        "Mobile number should not be greater than or less than 10"
-                      }
-                    </p>
-                  ) : null}
-                  <Form.Control.Feedback type="invalid" className="h6">
-                    Please fill mobile
-                  </Form.Control.Feedback>
+                 {customValidation === "MobileEmpty" ? (
+                          <span className="text-danger">
+                            Please fill the Mobile{" "}
+                          </span>
+                        ) : customValidation === "10number" ? (
+                          <span className="text-danger">
+                            Mobile Number should not be greater then 10 and less
+                            than 10{" "}
+                          </span>
+                        ) : customValidation === false ? (
+                          ""
+                        ) : null}
+             
                 </Form.Group>
                 <Form.Group
                   className="mb-3 aos_input"
-                  controlId="validationCustom04"
+                 
                 >
-                  <Form.Label>Email</Form.Label>
+                  <Form.Label>Email <span className="text-danger">* </span></Form.Label>
                   <Form.Control
                     onChange={(e) => handleFormChange(e)}
                     value={addvendordata.email}
-                    required
+                    // required
                     type="email"
                     placeholder="Email"
                     name={"email"}
                   />
-                  {customvalidated === "alreadyexist" ? (
+                  {/* {customValidation === "alreadyexist" ? (
                     <p className="text-danger mx-2">
                       {"Vendore Already Exist"}
                     </p>
-                  ) : null}
-                  <Form.Control.Feedback type="invalid" className="h6">
-                    Please fill email
-                  </Form.Control.Feedback>
+                  ) : null} */}
+
+                    {customValidation === "EmailEmpty" ? (
+                              <span className="text-danger">
+                                Please fill the Email and valid email
+                              </span>
+                            ) : customValidation === "alreadyexist" ? (
+                              <span className="text-danger">
+                            Vendore Already Exist
+                            </span>
+                            ) : null}
                 </Form.Group>
               </div>
               <div className="col-md-6">
                 <Form.Group
                   className="mb-3 aos_input"
-                  controlId="validationCustom05"
+              
                 >
-                  <Form.Label>Shop Address</Form.Label>
+                  <Form.Label>Shop Address  <span className="text-danger">* </span> </Form.Label>
                   <Form.Control
                     className="vendor_address"
                     as="textarea"
@@ -928,43 +1018,47 @@ const VendorsList = () => {
                     name={"shop_address"}
                     onChange={(e) => handleFormChange(e)}
                     value={addvendordata.shop_address}
-                    required
+                    // required
                     maxLength={100}
                   />
-                  {customvalidated === "addresslong" ? (
-                    <p className="text-danger mx-2">
-                      {"Address Should not be contain more than 100 words"}
-                    </p>
-                  ) : null}
-                  <Form.Control.Feedback type="invalid" className="h6">
-                    Please fill address
-                  </Form.Control.Feedback>
+                      {customValidation === "ShopAddressEmpty" ? (
+                          <span className="text-danger">
+                            Please fill the Shop Address{" "}
+                          </span>
+                        ) : customValidation === false ? (
+                          ""
+                        ) : null}
+                
                 </Form.Group>
               </div>
               <div className="col-md-6">
                 <Form.Group
                   className="mb-3 aos_input"
-                  controlId="validationCustom06"
+               
                 >
-                  <Form.Label>GSTN</Form.Label>
+                  <Form.Label>GSTN  <span className="text-danger">* </span></Form.Label>
                   <Form.Control
                     onChange={(e) => handleFormChange(e)}
                     value={addvendordata.gstn}
-                    required
+                    // required
                     type="text"
                     placeholder="GSTN"
                     name={"gstn"}
                   />
-                  <Form.Control.Feedback type="invalid" className="h6">
-                    Please fill gstn
-                  </Form.Control.Feedback>
+                   {customValidation === "GSTEmpty" ? (
+                          <span className="text-danger">
+                            Please fill the GST NO.{" "}
+                          </span>
+                        ) : customValidation === false ? (
+                          ""
+                        ) : null}
                 </Form.Group>
               </div>
 
               <div className="col-md-6">
                 <Form.Group
                   className="mb-3 aos_input"
-                  controlId="validationCustom06"
+             
                 >
                   <Form.Label>Avaliable</Form.Label>
                   <Form.Select
@@ -1014,19 +1108,19 @@ const VendorsList = () => {
                       Delete
                     </option>
                   </Form.Select>
-                  <Form.Control.Feedback type="invalid" className="h6">
+                  {/* <Form.Control.Feedback type="invalid" className="h6">
                     Please fill gstn
-                  </Form.Control.Feedback>
+                  </Form.Control.Feedback> */}
                 </Form.Group>
               </div>
               <div className="col-md-6">
                 <Form.Group
                   className="mb-3 aos_input"
-                  controlId="validationCustom06"
+                  
                 >
-                  <Form.Label>Store Type</Form.Label>
+                  <Form.Label>Store Type  <span className="text-danger">* </span></Form.Label>
                   <Form.Select
-                    required
+                    // required
                     size="sm"
                     aria-label="Default select example"
                     onChange={(e) => handleFormChange(e)}
@@ -1047,34 +1141,36 @@ const VendorsList = () => {
                       );
                     })}
                   </Form.Select>
-                  <Form.Control.Feedback type="invalid" className="h6">
-                    Please fill store type
-                  </Form.Control.Feedback>
+            
                 </Form.Group>
               </div>
               <div className="col-md-6">
                 <Form.Group
                   className="mb-3 aos_input"
-                  controlId="validationCustom07"
+              
                 >
-                  <Form.Label>Geolocation</Form.Label>
+                  <Form.Label>Geolocation <span className="text-danger">* </span></Form.Label>
                   <Form.Control
                     onChange={(e) => handleFormChange(e)}
-                    required
+                    // required
                     type="location"
                     placeholder="Geolocation"
                     name={"geolocation"}
                     value={addvendordata.geolocation}
                   />
-                  <Form.Control.Feedback type="invalid" className="h6">
-                    Please fill name
-                  </Form.Control.Feedback>
+                    {customValidation === "GeolocationEmpty" ? (
+                          <span className="text-danger">
+                            Please fill the Location{" "}
+                          </span>
+                        ) : customValidation === false ? (
+                          ""
+                        ) : null}
                 </Form.Group>
               </div>
               <div className="col-md-6">
                 <Form.Group
                   className="mb-3 aos_input"
-                  controlId="validationCustom10"
+                 
                 >
                   <Form.Label>Document Name</Form.Label>
                   <InputGroup className="" size="sm">
@@ -1097,11 +1193,13 @@ const VendorsList = () => {
                     >
                       +
                     </Button>
-                    <Form.Control.Feedback type="invalid" className="h6">
-                      Please fill Document
-                    </Form.Control.Feedback>
+                    {AddtagError === "addTagErorrr" ? (
+                          <span className="text-danger">
+                            Please Add Document first...!!!
+                          </span>
+                        ) : null}
                   </InputGroup>
-                  {console.log("ddddd--" + Docnamearray.length)}
+                  {/* {console.log("ddddd--" + Docnamearray.length)} */}
 
                   {Docnamearray === undefined ||
                   Docnamearray === null ||
@@ -1126,9 +1224,7 @@ const VendorsList = () => {
                       })}
                     </div>
                   )}
-                  <Form.Control.Feedback type="invalid" className="h6">
-                    Please fill document name
-                  </Form.Control.Feedback>
+              
                 </Form.Group>
               </div>
 
@@ -1156,22 +1252,14 @@ const VendorsList = () => {
                               min={"1"}
                               onChange={oncustomheadChange}
                               name={"header"}
-                              className={
-                                customvalidated === true
-                                  ? "border-danger"
-                                  : null
-                              }
+                           
                             />
                           </InputGroup>
                         </td>
                         <td className="col-4">
                           <InputGroup className="">
                             <Form.Control
-                              className={
-                                customvalidated === true
-                                  ? "border-danger"
-                                  : null
-                              }
+                        
                               value={descval}
                               name={"description"}
                               type="text"
@@ -1300,12 +1388,12 @@ const VendorsList = () => {
                     name={"shop_logo"}
                     accept=".png, .jpg, .jpeg"
                   />
-                  {customvalidated === "imgformat" ? (
+                  {customValidation === "imgformat" ? (
                     <p className="text-danger mx-2">
                       {"Please Select Correct Image Format"}
                     </p>
                   ) : null}
-                  {/* {console.log("img---" + addvendordata.shop_logo)} */}
+               
                   {addvendordata.shop_logo ? (
                     <img src={addvendordata.shop_logo} width={"50px"} />
                   ) : null}
