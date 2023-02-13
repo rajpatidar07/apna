@@ -23,13 +23,25 @@ const Soldproduct = () => {
   const [apicall, setapicall] = useState([]);
   const [UpdateAlert, setUpdateAlert] = useState(false);
   let [searcherror, setsearcherror] = useState(false);
+  const [filtervategory, setfiltercategory] = useState([]);
   const [searchdata, setsearchData] = useState({
     product_title_name: "",
-    category: "",
+    category: [],
   });
   // console.log("*****************----------" + JSON.stringify(solddata));
   const closeUpdateAlert = () => {
     setUpdateAlert(false);
+  };
+  /*<---Category list api---> */
+  const getCategorydatafilter = () => {
+    try {
+      axios
+        .get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
+        .then((response) => {
+          let cgory = response.data;
+          setfiltercategory(cgory);
+        });
+    } catch (err) {}
   };
 
   const handleShow = (id, product_id) => {
@@ -51,10 +63,11 @@ const Soldproduct = () => {
   };
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
+    setsearcherror(false);
   };
 
   const onSearchClick = () => {
-    if (searchdata.product_title_name === "") {
+    if (searchdata.product_title_name === "" && searchdata.category === "") {
       setsearcherror(true);
     } else {
       setsearcherror(false);
@@ -63,7 +76,7 @@ const Soldproduct = () => {
   };
 
   const OnReset = () => {
-    setsearchData({ product_title_name: "", manufacturing_date: "" });
+    setsearchData({ product_title_name: "", category: "" });
     setapicall(true);
     setsearcherror(false);
   };
@@ -80,8 +93,8 @@ const Soldproduct = () => {
           product_title_name_asc_desc: "",
           short_by_updated_on: "",
           product_title_name: [`${searchdata.product_title_name}`],
-          category: "",
-          quantity: "",
+          category: [`${searchdata.category}`],
+          quantity: ["0"],
           is_delete: ["1"],
         },
       })
@@ -98,6 +111,7 @@ const Soldproduct = () => {
       .catch(function (error) {
         console.log(error);
       });
+    getCategorydatafilter();
   }, [apicall]);
 
   const columns = [
@@ -144,12 +158,12 @@ const Soldproduct = () => {
       sortable: true,
       width: "200px",
     },
-    {
-      name: "Quantity",
-      selector: (row) => row.quantity,
-      sortable: true,
-      width: "200px",
-    },
+    // {
+    //   name: "Quantity",
+    //   selector: (row) => row.quantity,
+    //   sortable: true,
+    //   width: "200px",
+    // },
     {
       name: "Price",
       selector: (row) => row.product_price,
@@ -222,6 +236,26 @@ const Soldproduct = () => {
               <small className="text-danger">please fill the feild</small>
             ) : null}
           </div>
+          <div className="col-md-2 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by status"
+              className="adminselectbox"
+              placeholder="Search by category"
+              onChange={OnSearchChange}
+              name="category"
+              value={String(searchdata.category)}
+            >
+              <option value={""}>Select Category</option>
+              {(filtervategory || []).map((data, i) => {
+                return (
+                  <option value={data.id} key={i}>
+                    {" "}
+                    {data.id}
+                  </option>
+                );
+              })}
+            </Form.Select>
+          </div>
           <div className="col-md-3 col-sm-6 aos_input">
             <MainButton
               btntext={"Search"}
@@ -254,7 +288,7 @@ const Soldproduct = () => {
                 >
                   <Form.Label>Product Id</Form.Label>
                   <Form.Control
-                    value={productData.id}
+                    defaultValue={productData.id}
                     type="text"
                     placeholder="Add Title"
                     name={"id"}
@@ -269,7 +303,7 @@ const Soldproduct = () => {
                   placeholder={"Select quantity"}
                   onChange={OnQuntityChange}
                   name="quantity"
-                  value={productData.quantity}
+                  defaultValue={productData.quantity}
                   className={"adminsideinput"}
                 />
               </div>
