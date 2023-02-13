@@ -389,7 +389,7 @@ const CategoryList = () => {
     if ((form.checkValidity() === false && newName === "")) {
       e.stopPropagation();
       setValidated(true);
-    }else if(vadi==="jpeg"||vadi==="jpg"||vadi==="png" || vadi === ""){
+    }else if(vadi==="jpeg"||vadi==="jpg"||vadi==="png" || vadi ===""){
       const formData = new FormData();
       formData.append("image", file);
       formData.append("filename", fileName);
