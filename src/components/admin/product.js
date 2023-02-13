@@ -402,39 +402,39 @@ function Product() {
       name: "Tax",
       selector: (row) => (
         <div className="d-flex flex-column">
-          <b>Total:</b>{" "}
-          {Number(row.gst) +
-            Number(row.cgst) +
-            Number(row.sgst) +
-            Number(row.wholesale_sales_tax) +
-            Number(row.retails_sales_tax) +
-            Number(row.manufacturers_sales_tax) +
-            Number(row.value_added_tax) +
-            "%"}{" "}
-          <br />
+          <b>
+            Total:
+            {Number(row.gst) +
+              Number(row.cgst) +
+              Number(row.sgst) +
+              Number(row.wholesale_sales_tax) +
+              Number(row.retails_sales_tax) +
+              Number(row.manufacturers_sales_tax) +
+              Number(row.value_added_tax) +
+              "%"}{" "}
+          </b>{" "}
           <div className="d-flex">
-            <b>Gst :</b>₹ {Number(row.gst).toFixed(2)}% <br />
-            <b>Cgst : </b>
+            <b>Gst :</b>₹ {Number(row.gst).toFixed(2)}%<b>Cgst : </b>
             {Number(row.cgst).toFixed(2)}%
             {/* {row.discount === "0" ? null : row.discount + "%"}{" "} */}
-            <br />
-            <b>Sgst:</b> {Number(row.sgst).toFixed(2)}% <br />
+            <b>Sgst:</b> {Number(row.sgst).toFixed(2)}%
           </div>
-          <div className="d-flex">
-            <b>wholesale_sales_tax:</b>{" "}
-            {Number(row.wholesale_sales_tax).toFixed(2)}% <br />
-            <b>retails_sales_tax:</b> {Number(row.retails_sales_tax).toFixed(2)}
-            % <br />
-            <b>value_added_tax:</b> {Number(row.value_added_tax).toFixed(2)}%{" "}
-            <br />
-            <b>manufacturers_sales_tax:</b>{" "}
-            {Number(row.manufacturers_sales_tax).toFixed(2)}% <br />
+          <div className="d-flex flex-column">
+            <b>
+              wholesale_sales_tax:{Number(row.wholesale_sales_tax).toFixed(2)}%
+            </b>{" "}
+            <b>retails_sales_tax:{Number(row.retails_sales_tax).toFixed(2)}%</b>{" "}
+            <b>value_added_tax:{Number(row.value_added_tax).toFixed(2)}% </b>
+            <b>
+              manufacturers_sales_tax:{" "}
+              {Number(row.manufacturers_sales_tax).toFixed(2)}%
+            </b>{" "}
           </div>
         </div>
       ),
 
       sortable: true,
-      width: "90px",
+      width: "200px",
       center: true,
       style: {
         paddingLeft: "0px",
