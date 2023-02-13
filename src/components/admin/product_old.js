@@ -57,6 +57,7 @@ function Product_Old() {
     expire_date: "",
     quantity: "",
   });
+  console.log("======="+productid)
   const [variantmainarray, setvariantmainarray] = useState([]);
   const [data1, setdata1] = useState("");
   const [otherintro, setotherintro] = useState("");
@@ -110,6 +111,8 @@ function Product_Old() {
         console.log(error);
       });
   }, [apicall, searchdata, Alert]);
+  console.log("----+++++++++++++++++++++++++++++++++++++++++"+pdata)
+
   //
   let filtered;
   const handleAlert = (id) => {
@@ -346,7 +349,7 @@ function Product_Old() {
   }, [variantapicall]);
   const handlevarietyShow = (id) => {
     axios
-      .post("${process.env.REACT_APP_BASEURL}/home?page=0&per_page=400", {
+      .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=400`, {
         product_search: {
           search: "",
           product_id: `${id}`,

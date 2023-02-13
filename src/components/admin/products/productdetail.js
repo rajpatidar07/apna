@@ -78,12 +78,12 @@ const Productdetail = () => {
   const [variantdetail, setVariantdetail] = useState([]);
   const [editbutton, setEditButton] = useState(false);
   const [changeUnitproperty, setChangeUnitProperty] = useState(false);
-
   useEffect(() => {
     function getProductDetails() {
       try {
         axios
           .get(`${process.env.REACT_APP_BASEURL}/product_details?id=${pid}`)
+
           .then((response) => {
             let data = response.data;
             if (data === "error") {
@@ -118,8 +118,9 @@ const Productdetail = () => {
   const getCategorydata = () => {
     axios
       .get(
-        `${process.env.REACT_APP_BASEURL}/category_details?id=${productdata.category}`
+        `${process.env.REACT_APP_BASEURL}/category_details?id=${productdata.id}`
       )
+
       .then((response) => {
         let data = response.data;
         setCategoryName(data[0].category_name);
@@ -128,6 +129,7 @@ const Productdetail = () => {
         console.log(error);
       });
   };
+
   // End of api call for category details
 
   const onColorChange = (e, id) => {

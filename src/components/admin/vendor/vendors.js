@@ -13,6 +13,7 @@ import axios from "axios";
 import { Badge, Button, InputGroup, Table } from "react-bootstrap";
 import { GiCancel } from "react-icons/gi";
 import storetype from "../json/storetype";
+import status from "../json/Status";
 
 const VendorsList = () => {
   const token = localStorage.getItem("token");
@@ -124,9 +125,9 @@ const VendorsList = () => {
             width="75px"
             alt={row.owner_name}
             src={
-              row.shop_logo
-                ? row.shop_logo
-                : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
+              row.shop_logo === "" || row.shop_logo === "no image"
+                ? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
+                : row.shop_logo
             }
             style={{
               borderRadius: 10,
@@ -170,16 +171,15 @@ const VendorsList = () => {
         </p>
       ),
       sortable: true,
-      //   cell: (row) => (
-      //     <>
-      //   {
-      //     (row.id=="" ||row.owner_name=="" )?"No":"Yes"
-      //  }
-      //  </>)
     },
     {
       name: "Owner Name",
       selector: (row) => row.owner_name,
+      sortable: true,
+    },
+    {
+      name: "Store Type",
+      selector: (row) => row.store_type,
       sortable: true,
     },
     {
@@ -241,52 +241,18 @@ const VendorsList = () => {
             aria-label="Search By status"
             onChange={(e) => handleStatusChnage(e, row.id)}
             name="status"
+            value={row.status}
+            disabled={condition === true ? true : false}
           >
-            <option value="" selected={row.status === "" ? true : false}>
-              select
-            </option>
-            <option
-              value="pending"
-              disabled={condition ? true : false}
-              selected={row.status === "pending" ? true : false}
-            >
-              Pending
-            </option>
-            <option
-              value="active"
-              disabled={condition ? true : false}
-              selected={row.status === "active" ? true : false}
-            >
-              Active
-            </option>
-            <option
-              value="blocked"
-              disabled={condition ? true : false}
-              selected={row.status === "blocked" ? true : false}
-            >
-              Block
-            </option>
-            <option
-              value="in progress"
-              disabled={condition ? true : false}
-              selected={row.status === "in progress" ? true : false}
-            >
-              In Progress
-            </option>
-            <option
-              value="incomplete"
-              disabled={condition ? true : false}
-              selected={row.status === "incomplete" ? true : false}
-            >
-              In Complete
-            </option>
-            <option
-              value="return"
-              disabled={condition ? true : false}
-              selected={row.status === "return" ? true : false}
-            >
-              Return
-            </option>
+            <option value={""}>Status</option>
+            {(status.vendorestatus || []).map((data, i) => {
+              return (
+                <option value={data} key={i}>
+                  {" "}
+                  {data}
+                </option>
+              );
+            })}
           </Form.Select>
         </Form.Group>
       ),
@@ -361,7 +327,7 @@ const VendorsList = () => {
     formRef.current.reset();
     setValidated(false);
     setcustomarray([]);
-
+    setcustomValidated("");
     setaddtag("");
     setaddvendordata("");
     setDocnameArray("");
@@ -435,8 +401,12 @@ const VendorsList = () => {
         id: `${id}`,
       })
       .then((response) => {
-        setCondition(false);
-        setapicall(true);
+        if (
+          response.data.status_message === "vendor status change succesfully "
+        ) {
+          setCondition(false);
+          setapicall(true);
+        }
       })
       .catch(function (error) {
         console.log(error);
@@ -447,8 +417,10 @@ const VendorsList = () => {
   const ImgFormChange = (e) => {
     setFile(e.target.files[0]);
     setFileName(e.target.files[0].name);
+    setcustomValidated("imgformat");
   };
-
+  let imgvalidate = fileName.split(".").pop();
+  console.log("---image " + imgvalidate);
   //img code start-----------------------------------------------------------------------------------------------
 
   const [vendorID, setVendorId] = useState("");
@@ -610,64 +582,78 @@ const VendorsList = () => {
   // end social media link
 
   let shoplogo = `${process.env.REACT_APP_BASEURL}/${addvendordata.shop_logo}`;
-  // let docsdata = `${process.env.REACT_APP_BASEURL}/${DocuImgarray}`
-  var Newshoplogo = shoplogo.replace("/public", "");
-  // var imgdata =docsdata.replace("/public", "");
   const handleClick = () => {};
 
   const AddVendorClick = (e) => {
-    const form = e.currentTarget;
-    if (form.checkValidity() === false) {
-      e.preventDefault();
-      e.stopPropagation();
-      console.log("falsecheckValidity----------");
-      setValidated(true);
-      setLoading(false);
+    e.preventDefault();
+
+    if (
+      imgvalidate !== "jpg" ||
+      imgvalidate !== "jpeg" ||
+      imgvalidate !== "png"
+    ) {
+      setcustomValidated("imgformat");
     } else {
-      e.preventDefault();
-      setLoading(true);
-      const formData = new FormData();
-      let x = [addvendordata.document_name];
-      let socialname = addvendordata.testjson;
-      let socialname_new = JSON.stringify(socialname);
+      const form = e.currentTarget;
+      if (form.checkValidity() === false) {
+        e.preventDefault();
+        e.stopPropagation();
+        setValidated(true);
+        setLoading(false);
+      } else {
+        e.preventDefault();
+        setLoading(true);
+        const formData = new FormData();
+        let x = [addvendordata.document_name];
+        let socialname = addvendordata.testjson;
+        let socialname_new = JSON.stringify(socialname);
 
-      formData.append("image", file);
-      formData.append("filename", fileName);
-      formData.append("owner_name", addvendordata.owner_name);
-      formData.append("shop_name", addvendordata.shop_name);
-      formData.append("mobile", addvendordata.mobile);
-      formData.append("email", addvendordata.email);
-      formData.append("shop_address", addvendordata.shop_address);
-      formData.append("gstn", addvendordata.gstn);
-      formData.append("geolocation", addvendordata.geolocation);
-      formData.append("store_type", addvendordata.store_type);
-      formData.append("availability", addvendordata.availability);
-      formData.append("document_name", x);
-      formData.append("status", addvendordata.status);
-      formData.append("social_media_links", socialname_new);
+        formData.append("image", file);
+        formData.append("filename", fileName);
+        formData.append("owner_name", addvendordata.owner_name);
+        formData.append("shop_name", addvendordata.shop_name);
+        formData.append("mobile", addvendordata.mobile);
+        formData.append("email", addvendordata.email);
+        formData.append("shop_address", addvendordata.shop_address);
+        formData.append("gstn", addvendordata.gstn);
+        formData.append("geolocation", addvendordata.geolocation);
+        formData.append("store_type", addvendordata.store_type);
+        formData.append("availability", addvendordata.availability);
+        formData.append("document_name", x);
+        formData.append("status", addvendordata.status);
+        formData.append("social_media_links", socialname_new);
 
-      axios
-        .post(`${process.env.REACT_APP_BASEURL}/vendor_register`, formData, {
-          headers: {
-            admin_token: admintoken,
-          },
-        })
-        .then((response) => {
-          if (response.data.message === "vendor already exist") {
-            setcustomValidated("alreadyexist");
-          } else {
-            setapicall(true);
-            setShow(false);
-            setAddAlert(true);
+        axios
+          .post(`${process.env.REACT_APP_BASEURL}/vendor_register`, formData, {
+            headers: {
+              admin_token: admintoken,
+            },
+          })
+          .then((response) => {
+            if (response.data.message === "vendor already exist") {
+              setcustomValidated("alreadyexist");
+              setLoading(false);
+            } else if (
+              response.data.message === "please Enter 10 digit number"
+            ) {
+              setcustomValidated("mobilenumber");
+            } else if (
+              response.data.message === "Sent mail to super_admin Succesfully"
+            ) {
+              setapicall(true);
+              setShow(false);
+              setAddAlert(true);
+              setLoading(false);
+              setaddvendordata("");
+            }
+          })
+          .catch(function (error) {
             setLoading(false);
-          }
-        })
-        .catch(function (error) {
-          setLoading(false);
-          console.log(error);
-        });
-      formRef.current.reset();
-      setValidated(false);
+            console.log(error);
+          });
+        formRef.current.reset();
+        setValidated(false);
+      }
     }
   };
 
@@ -695,12 +681,27 @@ const VendorsList = () => {
     formData.append("social_media_links", socialname_new);
 
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/vendor_update`, formData)
+      .put(`${process.env.REACT_APP_BASEURL}/vendor_update`, formData, {
+        headers: {
+          admin_token: token,
+        },
+      })
       .then((response) => {
         let data = response.data;
-        setUpdateAlert(true);
-        setapicall(true);
-        setShow(false);
+        if (data.response === "header error") {
+          setLoading(false);
+        } else if (response.data.message === "vendor already exist") {
+          setcustomValidated("alreadyexist");
+          setLoading(false);
+        } else if (response.data.message === "please Enter 10 digit number") {
+          setcustomValidated("mobilenumber");
+        } else if (
+          response.data.message === "Sent mail to super_admin Succesfully"
+        ) {
+          setUpdateAlert(true);
+          setapicall(true);
+          setShow(false);
+        }
       })
       .catch(function (error) {
         console.log(error);
@@ -732,12 +733,15 @@ const VendorsList = () => {
               name="status"
               value={searchdata.status}
             >
-              <option value={""}>-Status-</option>
-
-              <option value="pending"> Pending</option>
-              {/* <option value="approved">Approved</option> */}
-              <option value="blocked">Blocked</option>
-              <option value="in progress">In Progress</option>
+              <option value={""}>Status</option>
+              {(status.vendorestatus || []).map((data, i) => {
+                return (
+                  <option value={data} key={i}>
+                    {" "}
+                    {data}
+                  </option>
+                );
+              })}
             </Form.Select>
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
@@ -748,10 +752,14 @@ const VendorsList = () => {
               name="store_type"
               value={searchdata.store_type}
             >
-              <option value={""}>-Store Type-</option>
-              <option value="shoese">shoese</option>
-              <option value="Cloths">Cloths</option>
-              <option value="Food">Food</option>
+              <option value={""}>Store Type</option>
+              {(storetype.storetype || []).map((data, i) => {
+                return (
+                  <option key={i} value={data}>
+                    {data}
+                  </option>
+                );
+              })}
             </Form.Select>
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
@@ -868,7 +876,16 @@ const VendorsList = () => {
                     min={1}
                     placeholder="Mobile"
                     name={"mobile"}
+                    maxLength={10}
+                    minLength={10}
                   />
+                  {customvalidated === "mobilenumber" ? (
+                    <p className="text-danger mx-2">
+                      {
+                        "Mobile number should not be greater than or less than 10"
+                      }
+                    </p>
+                  ) : null}
                   <Form.Control.Feedback type="invalid" className="h6">
                     Please fill mobile
                   </Form.Control.Feedback>
@@ -906,12 +923,19 @@ const VendorsList = () => {
                     className="vendor_address"
                     as="textarea"
                     rows={3}
+                    id={"address"}
                     placeholder="Address"
                     name={"shop_address"}
                     onChange={(e) => handleFormChange(e)}
                     value={addvendordata.shop_address}
                     required
+                    maxLength={100}
                   />
+                  {customvalidated === "addresslong" ? (
+                    <p className="text-danger mx-2">
+                      {"Address Should not be contain more than 100 words"}
+                    </p>
+                  ) : null}
                   <Form.Control.Feedback type="invalid" className="h6">
                     Please fill address
                   </Form.Control.Feedback>
@@ -936,62 +960,7 @@ const VendorsList = () => {
                   </Form.Control.Feedback>
                 </Form.Group>
               </div>
-              {/* <div className="col-md-6">
-                <Form.Group
-                  className="mb-3 aos_input"
-                  controlId="validationCustom06"
-                >
-                  <Form.Label>Status</Form.Label>
-                  <Form.Select
-                    size="sm"
-                    aria-label="Default select example"
-                    onChange={(e) => handleFormChange(e)}
-                    name="status"
-                  >
-                    <option
-                      value=""
-                      selected={addvendordata.status === "" ? true : false}
-                    >
-                      Select
-                    </option>
-                    <option
-                      value="pending"
-                      selected={
-                        addvendordata.status === "pending" ? true : false
-                      }
-                    >
-                      Pending
-                    </option>
-                    <option
-                      value="active"
-                      selected={
-                        addvendordata.status === "active" ? true : false
-                      }
-                    >
-                      Active
-                    </option>
-                    <option
-                      value="blocked"
-                      selected={
-                        addvendordata.status === "blocked" ? true : false
-                      }
-                    >
-                      Block
-                    </option>
-                    <option
-                      value="in progress"
-                      selected={
-                        addvendordata.status === "in progress" ? true : false
-                      }
-                    >
-                      In Progress
-                    </option>
-                  </Form.Select>
-                  <Form.Control.Feedback type="invalid" className="h6">
-                    Please fill gstn
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </div> */}
+
               <div className="col-md-6">
                 <Form.Group
                   className="mb-3 aos_input"
@@ -1057,6 +1026,7 @@ const VendorsList = () => {
                 >
                   <Form.Label>Store Type</Form.Label>
                   <Form.Select
+                    required
                     size="sm"
                     aria-label="Default select example"
                     onChange={(e) => handleFormChange(e)}
@@ -1078,7 +1048,7 @@ const VendorsList = () => {
                     })}
                   </Form.Select>
                   <Form.Control.Feedback type="invalid" className="h6">
-                    Please fill gstn
+                    Please fill store type
                   </Form.Control.Feedback>
                 </Form.Group>
               </div>
@@ -1109,7 +1079,6 @@ const VendorsList = () => {
                   <Form.Label>Document Name</Form.Label>
                   <InputGroup className="" size="sm">
                     <Form.Control
-                      required
                       onChange={(e) => onDocumentNamechange(e)}
                       value={addtag}
                       placeholder="document_name"
@@ -1120,9 +1089,6 @@ const VendorsList = () => {
                         }
                       }}
                     />{" "}
-                    <Form.Control.Feedback type="invalid" className="h6">
-                      Please fill Document
-                    </Form.Control.Feedback>
                     <Button
                       variant="outline-success"
                       className="addcategoryicon"
@@ -1131,8 +1097,11 @@ const VendorsList = () => {
                     >
                       +
                     </Button>
+                    <Form.Control.Feedback type="invalid" className="h6">
+                      Please fill Document
+                    </Form.Control.Feedback>
                   </InputGroup>
-                  {console.log("ddddd--" + Docnamearray)}
+                  {console.log("ddddd--" + Docnamearray.length)}
 
                   {Docnamearray === undefined ||
                   Docnamearray === null ||
@@ -1316,18 +1285,26 @@ const VendorsList = () => {
                 {/* --------------------------------------------- */}
               </div>
               {/* end social media link */}
-              <div classImg="col-md-6">
+              <div className="col-md-6">
                 <Form.Group
                   className="mb-3 aos_input"
                   controlId="validationCustom08"
                 >
-                  <Form.Label>Shop Logo</Form.Label>
+                  <Form.Label>
+                    Shop Logo <b>(In .jpg, .jpeg, .png format)</b>
+                  </Form.Label>
                   <Form.Control
                     onChange={(e) => ImgFormChange(e)}
                     type="file"
                     placeholder="Shop_logo"
                     name={"shop_logo"}
+                    accept=".png, .jpg, .jpeg"
                   />
+                  {customvalidated === "imgformat" ? (
+                    <p className="text-danger mx-2">
+                      {"Please Select Correct Image Format"}
+                    </p>
+                  ) : null}
                   {/* {console.log("img---" + addvendordata.shop_logo)} */}
                   {addvendordata.shop_logo ? (
                     <img src={addvendordata.shop_logo} width={"50px"} />
@@ -1441,12 +1418,12 @@ const VendorsList = () => {
 
       <SAlert
         show={AddAlert}
-        title="Added Vender Successfully "
+        title=" Vender Added Successfully "
         onConfirm={closeAddAlert}
       />
       <SAlert
         show={UpdateAlert}
-        title="Updated Vender Successfully "
+        title=" Vender Updated Successfully "
         onConfirm={closeUpdateAlert}
       />
 

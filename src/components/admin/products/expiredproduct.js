@@ -45,6 +45,7 @@ const Expiredproduct = () => {
           product_title_name: [`${searchdata.product_title_name}`],
           manufacturing_date: [`${searchdata.manufacturing_date}`],
           expire_date: [`${currentdate}`],
+          
         },
       })
       .then((response) => {

@@ -111,6 +111,7 @@ const CategoryList = () => {
             let data = response.data[0];
             setCategoryEditData(data);
             setImagePath(response.data[0].image);
+
             const arr = data.all_parent_id.split(",");
             if (arr[0] === "0" && arr.length === 1) {
             } else {

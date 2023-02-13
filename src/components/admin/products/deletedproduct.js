@@ -31,7 +31,7 @@ const Deletedproduct = () => {
       .put(`${process.env.REACT_APP_BASEURL}/products_delete_remove`, {
         varient_id: id,
         product_id: productid,
-        is_delete: "0",
+        is_delete: "1",
       })
       .then((response) => {
         let data = response.data;
@@ -70,7 +70,7 @@ const Deletedproduct = () => {
           sale_price: "",
           short_by_updated_on: "",
           product_title_name: [`${searchdata.product_title_name}`],
-          is_delete: ["1"],
+          is_delete: ["0"],
           manufacturing_date: [`${searchdata.manufacturing_date}`],
         },
       })
