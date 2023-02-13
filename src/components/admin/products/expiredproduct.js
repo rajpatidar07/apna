@@ -235,7 +235,7 @@ const Expiredproduct = () => {
             maxHeight: "100px",
             maxWidth: "100px",
           }}
-          onClick={handleClick}
+          onClick={() => handleClick()}
         />
       ),
     },
@@ -243,7 +243,7 @@ const Expiredproduct = () => {
       name: "Product Name",
       selector: (row) => (
         <div>
-          <p className="mb-1" onClick={(row.id, row.product_id)}>
+          <p className="mb-1">
             <b>
               {row.product_title_name}
               <br />

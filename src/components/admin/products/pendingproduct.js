@@ -6,6 +6,7 @@ import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
 import axios from "axios";
 import moment from "moment";
+import BrandJson from "./../json/BrandJson";
 
 const Pendingproduct = () => {
   const handleAlert = () => setAlert(true);
@@ -15,15 +16,58 @@ const Pendingproduct = () => {
   let [searcherror, setsearcherror] = useState(false);
   const [pendingdata, setpendingdata] = useState([]);
   const currentdate = moment().format("YYYY-MM-DD");
+  const [filtervategory, setfiltercategory] = useState([]);
+  const [vendorid, setVendorId] = useState([]);
   const [searchdata, setsearchData] = useState({
     product_title_name: "",
-    category: "",
     manufacturing_date: "",
+    category: [],
+    vendor: [],
+    brand: [],
   });
+  let token = localStorage.getItem("token");
 
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
     setsearcherror(false);
+  };
+  /*<---Category list api---> */
+  const getCategorydatafilter = () => {
+    try {
+      axios
+        .get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
+        .then((response) => {
+          let cgory = response.data;
+          setfiltercategory(cgory);
+        });
+    } catch (err) {}
+  };
+  /*<---vendor list api---> */
+  const getVendorData = () => {
+    try {
+      axios
+        .post(
+          `${process.env.REACT_APP_BASEURL}/vendors`,
+          { vendor_id: "all" },
+          {
+            headers: { admin_token: `${token}` },
+          }
+        )
+        .then((response) => {
+          let cgory = response.data;
+
+          const result = cgory.filter(
+            (thing, index, self) =>
+              index === self.findIndex((t) => t.shop_name == thing.shop_name)
+          );
+          const result1 = result.filter(
+            (item) => item.status === "approved" || item.status === "active"
+          );
+          setVendorId(result1);
+        });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const OnDateChange = (e) => {
@@ -35,16 +79,19 @@ const Pendingproduct = () => {
     axios
       .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=400`, {
         product_search: {
-          search: "",
+          search: [`${searchdata.product_title_name}`],
           price_from: "",
           price_to: "",
           id: "",
           product_title_name_asc_desc: "",
           sale_price: "",
           short_by_updated_on: "",
-          product_title_name: [`${searchdata.product_title_name}`],
+          // product_title_name: ,
           product_status: ["pending"],
           manufacturing_date: [`${searchdata.manufacturing_date}`],
+          category: [`${searchdata.category}`],
+          brand: [`${searchdata.brand}`],
+          shop: [`${searchdata.vendor}`],
         },
       })
       .then((response) => {
@@ -55,10 +102,18 @@ const Pendingproduct = () => {
       .catch(function (error) {
         console.log(error);
       });
+    getCategorydatafilter();
+    getVendorData();
   }, [apicall]);
 
   const onSearchClick = () => {
-    if (searchdata.product_title_name === "") {
+    if (
+      searchdata.product_title_name === "" &&
+      searchdata.brand === "" &&
+      searchdata.category === "" &&
+      searchdata.vendor === "" &&
+      searchdata.manufacturing_date === ""
+    ) {
       setsearcherror(true);
     } else {
       setsearcherror(false);
@@ -67,7 +122,13 @@ const Pendingproduct = () => {
   };
 
   const OnReset = () => {
-    setsearchData({ product_title_name: "", manufacturing_date: "" });
+    setsearchData({
+      product_title_name: "",
+      manufacturing_date: "",
+      vendor: "",
+      category: "",
+      brand: "",
+    });
     setapicall(true);
     setsearcherror(false);
   };
@@ -222,28 +283,12 @@ const Pendingproduct = () => {
           size="sm"
           className="w-100"
           onChange={(e) => onProductStatusChange(e, row.id, row.product_id)}
+          value={row.product_status}
         >
-          <option selected={row.product_status === "" ? true : false} value="">
-            Select
-          </option>
-          <option
-            selected={row.product_status === "pending" ? true : false}
-            value="pending"
-          >
-            Pending
-          </option>
-          <option
-            selected={row.product_status === "draft" ? true : false}
-            value="draft"
-          >
-            Draft
-          </option>
-          <option
-            selected={row.product_status === "active" ? true : false}
-            value="active"
-          >
-            Active
-          </option>
+          <option value="">Select</option>
+          <option value="pending">Pending</option>
+          <option value="draft">Draft</option>
+          <option value="Approved">Approved</option>
         </Form.Select>
       ),
       sortable: true,
@@ -285,7 +330,66 @@ const Pendingproduct = () => {
               <small className="text-danger">please fill the feild</small>
             ) : null}
           </div>
-
+          <div className="col-md-2 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by status"
+              className="adminselectbox"
+              placeholder="Search by category"
+              onChange={OnSearchChange}
+              name="category"
+              value={String(searchdata.category)}
+            >
+              <option value={""}>Select Category</option>
+              {(filtervategory || []).map((data, i) => {
+                return (
+                  <option value={data.id} key={i}>
+                    {" "}
+                    {data.id}
+                  </option>
+                );
+              })}
+            </Form.Select>
+          </div>
+          <div className="col-md-2 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by status"
+              className="adminselectbox"
+              placeholder="Search by vendor"
+              onChange={OnSearchChange}
+              name="vendor"
+              value={String(searchdata.vendor)}
+            >
+              <option value={""}>Select Vendor</option>
+              {(vendorid || []).map((data, i) => {
+                return (
+                  <option value={data.shop_name} key={i}>
+                    {" "}
+                    {data.shop_name}
+                  </option>
+                );
+              })}
+            </Form.Select>
+          </div>
+          <div className="col-md-2 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by brand"
+              className="adminselectbox"
+              placeholder="Search by brand"
+              onChange={OnSearchChange}
+              name="brand"
+              value={String(searchdata.brand)}
+            >
+              <option value={""}>Select Brand</option>
+              {(BrandJson.BrandJson || []).map((data, i) => {
+                return (
+                  <option value={data} key={i}>
+                    {" "}
+                    {data}
+                  </option>
+                );
+              })}
+            </Form.Select>
+          </div>
           <div className="col-md-3 col-sm-6 aos_input value={}">
             <input
               type={"date"}
@@ -297,14 +401,14 @@ const Pendingproduct = () => {
               max={currentdate}
             />
           </div>
-          <div className="col-md-3 col-sm-6 aos_input">
+          <div className="col-md-3 col-sm-6 mt-2 aos_input">
             <MainButton
               onClick={onSearchClick}
               btntext={"Search"}
               btnclass={"button main_button w-100"}
             />
           </div>
-          <div className="col-md-3 col-sm-6 aos_input">
+          <div className="col-md-3 col-sm-6 mt-2 aos_input">
             <MainButton
               btntext={"Reset"}
               btnclass={"button main_button w-100"}
