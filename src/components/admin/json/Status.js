@@ -1,5 +1,5 @@
 const Status = {
   Status: ["pending", "delivered", "packed", "cancelled", "approved"],
-  vendorestatus: ["incomplete", "pending", "active", "blocked", "return"],
+  vendorestatus: ["incomplete", "pending", "approved", "blocked", "return"],
 };
 export default Status;
