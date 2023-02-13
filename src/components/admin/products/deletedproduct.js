@@ -28,7 +28,7 @@ const Deletedproduct = () => {
 
   const closeRestoreAlert = () => {
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/products_delete_remove`, {
+      .put(`${process.env.REACT_APP_BASEURL_0}/products_delete_remove`, {
         varient_id: id,
         product_id: productid,
         is_delete: "1",
@@ -59,7 +59,7 @@ const Deletedproduct = () => {
   };
   useEffect(() => {
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=400`, {
+      .post(`${process.env.REACT_APP_BASEURL_0}/home?page=0&per_page=400`, {
         product_search: {
           search: "",
           category: "",

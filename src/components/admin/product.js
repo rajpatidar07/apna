@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import Col from "react-bootstrap/Col";
-import Input from "./common/input";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { Badge } from "react-bootstrap";
@@ -13,7 +12,6 @@ import VariationJson from "./json/variation";
 import CategoryJson from "./json/categorytype";
 import Table from "react-bootstrap/Table";
 import { AiOutlinePlus, AiOutlineCloudUpload } from "react-icons/ai";
-import { FaEllipsisV } from "react-icons/fa";
 import { IoFilter } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { BsTrash } from "react-icons/bs";
@@ -23,22 +21,43 @@ import Form from "react-bootstrap/Form";
 import SAlert from "./common/salert";
 import axios from "axios";
 import { Button } from "react-bootstrap";
-import { GiCancel } from "react-icons/gi";
 import moment from "moment/moment";
 import BrandJson from "./json/BrandJson";
 import { downloadExcel } from "react-export-table-to-excel";
-import { Pointer } from "highcharts";
-
+import productstatus from "../admin/json/Status";
 let categoryArray = [];
 let encoded;
 let ImgObj = [];
 
 function Product() {
+  ClassicEditor.defaultConfig = {
+    toolbar: {
+      items: [
+        "heading",
+        "|",
+        "bold",
+        "italic",
+        "|",
+        "bulletedList",
+        "numberedList",
+        "|",
+        "insertTable",
+        "|",
+        "undo",
+        "redo",
+      ],
+    },
+    table: {
+      contentToolbar: ["tableColumn", "tableRow", "mergeTableCells"],
+    },
+    language: "en",
+  };
   const [changeUnitproperty, setChangeUnitProperty] = useState(false);
   const [selectproductData, setSelectProductData] = useState("");
   const [checkProductType, setCheckProductType] = useState(false);
   const [error, setError] = useState(true);
   const [vendorid, setVendorId] = useState([]);
+  const [filtervategory, setfiltercategory] = useState([]);
   const [category, setCategory] = useState([]);
   const [indVal, setIndVal] = useState(0);
   const [subCategory, setSubCategory] = useState([]);
@@ -136,6 +155,9 @@ function Product() {
   const formRef = useRef();
   const [searchdata, setsearchData] = useState({
     product_title_name: "",
+    vendor: [],
+    brand: [],
+    tag: [],
     category: [],
     product_status: "",
   });
@@ -204,7 +226,7 @@ function Product() {
           sale_price: "",
           short_by_updated_on: "",
           product_title_name_asc_desc: "",
-          category: categoryArray,
+          category: [`${searchdata.category}`],
           product_status: [`${searchdata.product_status}`],
           is_delete: ["1"],
           colors: [],
@@ -212,11 +234,12 @@ function Product() {
           parent_category: [],
           product_type: [],
           product_title_name: [`${searchdata.product_title_name}`],
+          brand: [`${searchdata.brand}`],
+          shop: [`${searchdata.vendor}`],
         },
       })
       .then((response) => {
         setpdata(response.data);
-        // console.log("jjjjjjj++++"+response.data)
         setCondition(false);
         setapicall(false);
       })
@@ -228,6 +251,8 @@ function Product() {
   useEffect(() => {
     const first = "";
     fetchdata();
+    getVendorData();
+    getCategorydatafilter();
   }, [apicall, Alert]);
   //
   let filtered;
@@ -309,12 +334,18 @@ function Product() {
             <b>
               {row.product_title_name}
               <br />
-              Product ID: {row.product_id} <br />
-              <div
-                dangerouslySetInnerHTML={{ __html: pdata.product_description }}
-                className="editor"
-              ></div>
             </b>
+            {/* Product ID: {row.product_id} <br /> */}
+            <div className="d-flex flex-column ">
+              {row.is_featured === 1 ? (
+                <span className={"badge bg-warning mt-1"}>
+                  {"featured product"}
+                </span>
+              ) : null}
+              {row.is_special_offer === 1 ? (
+                <span className={"badge bg-info mt-1"}>{"special offer"}</span>
+              ) : null}
+            </div>
           </p>
         </div>
       ),
@@ -328,38 +359,38 @@ function Product() {
       width: "90px",
     },
     {
+      name: "Vendor",
+      selector: (row) => row.shop,
+      sortable: true,
+      width: "90px",
+    },
+    {
       name: "Product Type",
       selector: (row) => row.product_type,
       sortable: true,
       width: "90px",
     },
     {
-      name: "Mrp",
-      selector: (row) => row.mrp.toFixed(2),
+      name: "Brand",
+      selector: (row) => row.brand,
       sortable: true,
       width: "100px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
     },
     {
-      name: "Dis(%)",
-      selector: (row) => row.discount + "%",
+      name: "Mrp",
+      selector: (row) => (
+        <p className="m-0">
+          <b>MRP :</b>₹ {Number(row.mrp).toFixed(2)} <br />
+          <b>Discount : </b>
+          {Number(row.discount).toFixed(2)}%
+          {/* {row.discount === "0" ? null : row.discount + "%"}{" "} */}
+          <br />
+          <b>Product Price:</b>₹ {Number(row.product_price).toFixed(2)} <br />
+          <b>Sale Price:</b>₹ {Number(row.sale_price).toFixed(2)} <br />
+        </p>
+      ),
       sortable: true,
       width: "130px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
-    },
-    {
-      name: "Price",
-      selector: (row) => row.product_price.toFixed(2),
-      sortable: true,
-      width: "100px",
       center: true,
       style: {
         paddingRight: "32px",
@@ -369,17 +400,41 @@ function Product() {
 
     {
       name: "Tax",
-      selector: (row) =>
-        Number(row.gst) +
-        Number(row.cgst) +
-        Number(row.sgst) +
-        Number(row.wholesale_sales_tax) +
-        Number(row.retails_sales_tax) +
-        Number(row.manufacturers_sales_tax) +
-        Number(row.value_added_tax) +
-        "%",
+      selector: (row) => (
+        <div className="d-flex flex-column">
+          <b>
+            Total:
+            {Number(row.gst) +
+              Number(row.cgst) +
+              Number(row.sgst) +
+              Number(row.wholesale_sales_tax) +
+              Number(row.retails_sales_tax) +
+              Number(row.manufacturers_sales_tax) +
+              Number(row.value_added_tax) +
+              "%"}{" "}
+          </b>{" "}
+          <div className="d-flex">
+            <b>Gst :</b>₹ {Number(row.gst).toFixed(2)}%<b>Cgst : </b>
+            {Number(row.cgst).toFixed(2)}%
+            {/* {row.discount === "0" ? null : row.discount + "%"}{" "} */}
+            <b>Sgst:</b> {Number(row.sgst).toFixed(2)}%
+          </div>
+          <div className="d-flex flex-column">
+            <b>
+              wholesale_sales_tax:{Number(row.wholesale_sales_tax).toFixed(2)}%
+            </b>{" "}
+            <b>retails_sales_tax:{Number(row.retails_sales_tax).toFixed(2)}%</b>{" "}
+            <b>value_added_tax:{Number(row.value_added_tax).toFixed(2)}% </b>
+            <b>
+              manufacturers_sales_tax:{" "}
+              {Number(row.manufacturers_sales_tax).toFixed(2)}%
+            </b>{" "}
+          </div>
+        </div>
+      ),
+
       sortable: true,
-      width: "90px",
+      width: "200px",
       center: true,
       style: {
         paddingLeft: "0px",
@@ -413,16 +468,12 @@ function Product() {
         <span
           className={
             row.product_status === "pending"
-              ? "badge bg-success"
-              : row.product_status === "approved"
-              ? "badge bg-danger"
-              : row.product_status === "special_offer"
-              ? "badge bg-info"
-              : row.product_status === "featured_offer"
               ? "badge bg-warning"
-              : row.product_status === "promotional"
-              ? "badge bg-primary"
+              : row.product_status === "approved"
+              ? "badge bg-success"
               : row.product_status === "draft"
+              ? "badge bg-info"
+              : row.product_status === ""
               ? "badge bg-secondary"
               : null
           }
@@ -432,12 +483,10 @@ function Product() {
             : row.product_status === "approved"
             ? "Approved"
             : row.product_status === ""
-            ? "Select"
-            : row.product_status === "featured_offer"
-            ? "Featured Offer"
+            ? "Status"
             : row.product_status === "draft"
             ? "Draft"
-            : "Select"}
+            : "Status"}
         </span>
       ),
       sortable: true,
@@ -452,35 +501,18 @@ function Product() {
           size="sm"
           className="w-100"
           onChange={(e) => onProductStatusChange(e, row.id, row.product_id)}
+          value={row.product_status}
+          disabled={condition === true ? true : false}
         >
-          <option
-            disabled={true}
-            selected={row.product_status === "" ? true : false}
-            value=""
-          >
-            Select
-          </option>
-          <option
-            disabled={condition ? true : false}
-            selected={row.product_status === "pending" ? true : false}
-            value="pending"
-          >
-            Pending
-          </option>
-          <option
-            disabled={condition ? true : false}
-            selected={row.product_status === "draft" ? true : false}
-            value="draft"
-          >
-            Draft
-          </option>
-          <option
-            disabled={condition ? true : false}
-            selected={row.product_status === "approved" ? true : false}
-            value="approved"
-          >
-            Approved
-          </option>
+          <option value={""}>Status</option>
+          {(productstatus.productstatus || []).map((data, i) => {
+            return (
+              <option value={data} key={i}>
+                {" "}
+                {data}
+              </option>
+            );
+          })}
         </Form.Select>
       ),
       sortable: true,
@@ -592,7 +624,45 @@ function Product() {
         });
     }
   }, [scategory, indVal]);
+  // vendor api for filter
+  const getVendorData = () => {
+    try {
+      axios
+        .post(
+          `${process.env.REACT_APP_BASEURL}/vendors`,
+          { vendor_id: "all" },
+          {
+            headers: { admin_token: `${token}` },
+          }
+        )
+        .then((response) => {
+          let cgory = response.data;
 
+          const result = cgory.filter(
+            (thing, index, self) =>
+              index === self.findIndex((t) => t.shop_name == thing.shop_name)
+          );
+          const result1 = result.filter(
+            (item) => item.status === "approved" || item.status === "active"
+          );
+          setVendorId(result1);
+        });
+    } catch (err) {}
+  };
+  // end vendor api
+
+  // category api for filter
+  const getCategorydatafilter = () => {
+    try {
+      axios
+        .get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
+        .then((response) => {
+          let cgory = response.data;
+          setfiltercategory(cgory);
+        });
+    } catch (err) {}
+  };
+  // end category aopi
   // modal
   const [editparentCategory, seteditparentCategory] = useState("");
 
@@ -601,38 +671,16 @@ function Product() {
   const handleShow = (e) => {
     setproductdata(data);
     // vendor
-    const getVendorData = () => {
-      try {
-        axios
-          .post(
-            `${process.env.REACT_APP_BASEURL}/vendors`,
-            { vendor_id: "all" },
-            {
-              headers: { admin_token: `${token}` },
-            }
-          )
-          .then((response) => {
-            let cgory = response.data;
-
-            const result = cgory.filter(
-              (thing, index, self) =>
-                index === self.findIndex((t) => t.shop_name == thing.shop_name)
-            );
-
-            setVendorId(result);
-          });
-      } catch (err) {}
-    };
     getVendorData();
-
     // end vendor api
+
     // category data
     const getCategorydata = () => {
       try {
         axios
           .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
           .then((response) => {
-            let cgory = response.data;
+            let cgory = response.data.filter((item) => item.is_active === "1");
 
             if (indVal === 0) {
               setCategory(cgory);
@@ -645,6 +693,7 @@ function Product() {
     };
     getCategorydata();
     // end category data
+
     if (e === "add") {
       setmodalshow(e);
     } else {
@@ -1247,7 +1296,6 @@ function Product() {
     //   setvariantarray({ unit: "", mrp: 0, sale_price: "" });
     // }
   };
-  console.log("--ff" + JSON.stringify(productdata));
   const hideAlert = () => {
     if (vdata.length === 1) {
       setVerityAlert(false);
@@ -1550,14 +1598,6 @@ function Product() {
     });
   }
 
-  // const saveFile = (e) => {
-
-  //   console.log(" lenght----"+JSON.stringify(e.target.files))
-  //     setExcelFile(e.target.files[0]);
-  //     // setExcelFilename(e.target.files[0]);
-  //     FileUploadAPI()
-  // };
-
   const FileUploadAPI = (e) => {
     const formData = new FormData();
 
@@ -1587,7 +1627,7 @@ function Product() {
       {/* search bar */}
       <div className="card mt-3 p-3 ">
         <div className="row">
-          <div className="col-md-3 col-sm-6 aos_input">
+          <div className="col-md-2 col-sm-6 aos_input">
             <input
               type={"text"}
               placeholder={"Search by product name"}
@@ -1597,8 +1637,87 @@ function Product() {
               className={"adminsideinput"}
             />
           </div>
-
-          <div className="col-md-3 col-sm-6 aos_input">
+          <div className="col-md-2 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by status"
+              className="adminselectbox"
+              placeholder="Search by category"
+              onChange={OnSearchChange}
+              name="category"
+              value={searchdata.category}
+            >
+              <option value={""}>Select Category</option>
+              {(filtervategory || []).map((data, i) => {
+                return (
+                  <option value={data.id} key={i}>
+                    {" "}
+                    {data.category_name}
+                  </option>
+                );
+              })}
+            </Form.Select>
+          </div>
+          <div className="col-md-2 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by status"
+              className="adminselectbox"
+              placeholder="Search by vendor"
+              onChange={OnSearchChange}
+              name="vendor"
+              value={searchdata.vendor}
+            >
+              <option value={""}>Select Vendor</option>
+              {(vendorid || []).map((data, i) => {
+                return (
+                  <option value={data.shop_name} key={i}>
+                    {" "}
+                    {data.shop_name}
+                  </option>
+                );
+              })}
+            </Form.Select>
+          </div>
+          <div className="col-md-2 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by brand"
+              className="adminselectbox"
+              placeholder="Search by brand"
+              onChange={OnSearchChange}
+              name="brand"
+              value={searchdata.brand}
+            >
+              <option value={""}>Select Brand</option>
+              {(BrandJson.BrandJson || []).map((data, i) => {
+                return (
+                  <option value={data} key={i}>
+                    {" "}
+                    {data}
+                  </option>
+                );
+              })}
+            </Form.Select>
+          </div>
+          <div className="col-md-2 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by status"
+              className="adminselectbox"
+              placeholder="Search by tag"
+              onChange={OnSearchChange}
+              name="tag"
+              value={searchdata.tag}
+            >
+              <option value={""}>Select Tag</option>
+              {(productstatus.productstatus || []).map((data, i) => {
+                return (
+                  <option value={data} key={i}>
+                    {" "}
+                    {data}
+                  </option>
+                );
+              })}
+            </Form.Select>
+          </div>
+          <div className="col-md-2 col-sm-6 aos_input">
             <Form.Select
               aria-label="Search by status"
               className="adminselectbox"
@@ -1607,14 +1726,19 @@ function Product() {
               name="product_status"
               value={searchdata.product_status}
             >
-              <option value="">Search by status</option>
-              <option value="pending">Pending</option>
-              <option value="draft">Draft</option>
-              <option value="approved ">Approved </option>
+              <option value={""}>Select Status</option>
+              {(productstatus.productstatus || []).map((data, i) => {
+                return (
+                  <option value={data} key={i}>
+                    {" "}
+                    {data}
+                  </option>
+                );
+              })}
             </Form.Select>
           </div>
 
-          <div className="col-md-3 col-sm-6 aos_input">
+          <div className="col-md-2 col-sm-6  mt-2 aos_input">
             <MainButton
               onClick={submitHandler}
               btntext={"Search"}
@@ -1622,7 +1746,7 @@ function Product() {
             />
           </div>
 
-          <div className="col-md-3 col-sm-6 aos_input">
+          <div className="col-md-2 col-sm-6  mt-2 aos_input">
             <MainButton
               btntext={"Reset"}
               btnclass={"button main_button w-100"}
@@ -1721,6 +1845,7 @@ function Product() {
                             onChange={(e) => handleInputFieldChange(e)}
                             name={"product_title_name"}
                             value={productdata.product_title_name}
+                            maxLength={20}
                           />
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill productname
@@ -4122,7 +4247,7 @@ function Product() {
               />
               <Iconbutton
                 onClick={OnSaveProduct}
-                btntext={"Save"}
+                btntext={"Added"}
                 btnclass={"button main_button "}
               />
             </Modal.Footer>
