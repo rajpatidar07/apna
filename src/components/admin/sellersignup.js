@@ -236,9 +236,14 @@ const SellerSignUp = () => {
   };
   // SIGNUP END
 
+
+
+
+
+
   //  LOGIN
   const OnVendorLoginClick = () => {
-    setloginpage(true);
+    navigate('/vendorUpdate')
   };
   const [credentailval, setcredentailval] = useState({
     email: "",
@@ -255,7 +260,7 @@ const SellerSignUp = () => {
   const onSubmitClick = (e) => {
  
     e.preventDefault();
-    console.log("email value---"+credentailval.email)
+
     if (
       credentailval.email === "" ||
       credentailval.email === null ||
@@ -275,7 +280,7 @@ const SellerSignUp = () => {
           password: credentailval.password.trim(),
         })
         .then((response) => {
-           console.log("data-------------"+JSON.stringify(response.data))
+        
           if (response.data.message === "email not matched") {
             setLoginemailerror("emailnotmatched");
             setError(true);
@@ -283,7 +288,7 @@ const SellerSignUp = () => {
             setLoginemailerror("passwordnotmatch");
             setError(true);
           } else if (response.data.status === "incomplete") {
-            navigate('/vendorUpdate')
+            // navigate('/vendorUpdate')
             // setHide(true);
             setvendorstatus("incomplete");
             localStorage.setItem("vendorid", response.data.id);
@@ -826,10 +831,14 @@ const SellerSignUp = () => {
                       className="btn btn-animation w-100 justify-content-center"
                       // type="submit"
                       onClick={
-                        (e) => onSubmitClick(e)
+                        vendorstatus === "incomplete"
+                          ? (e)=>{OnVendorLoginClick()}
+                          : (e) => onSubmitClick(e)
                       }
                     >
-                    
+                      {vendorstatus === "incomplete"
+                        ? "Update Profile"
+                        : "Log In"}
                     </button>
                   </div>
                   {/* </form> */}
