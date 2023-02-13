@@ -28,7 +28,7 @@ import moment from "moment/moment";
 import BrandJson from "./json/BrandJson";
 import { downloadExcel } from "react-export-table-to-excel";
 import { Pointer } from "highcharts";
-
+import productstatus from "../admin/json/Status";
 let categoryArray = [];
 let encoded;
 let ImgObj = [];
@@ -452,35 +452,17 @@ function Product() {
           size="sm"
           className="w-100"
           onChange={(e) => onProductStatusChange(e, row.id, row.product_id)}
+          value={row.product_status}
         >
-          <option
-            disabled={true}
-            selected={row.product_status === "" ? true : false}
-            value=""
-          >
-            Select
-          </option>
-          <option
-            disabled={condition ? true : false}
-            selected={row.product_status === "pending" ? true : false}
-            value="pending"
-          >
-            Pending
-          </option>
-          <option
-            disabled={condition ? true : false}
-            selected={row.product_status === "draft" ? true : false}
-            value="draft"
-          >
-            Draft
-          </option>
-          <option
-            disabled={condition ? true : false}
-            selected={row.product_status === "approved" ? true : false}
-            value="approved"
-          >
-            Approved
-          </option>
+          <option value={""}>Status</option>
+          {(productstatus.productstatus || []).map((data, i) => {
+            return (
+              <option value={data} key={i}>
+                {" "}
+                {data}
+              </option>
+            );
+          })}
         </Form.Select>
       ),
       sortable: true,
