@@ -95,7 +95,12 @@ const Soldproduct = () => {
   };
 
   const onSearchClick = () => {
-    if (searchdata.product_title_name === "" && searchdata.category === "") {
+    if (
+      searchdata.product_title_name === "" &&
+      searchdata.category === "" &&
+      searchdata.brand === "" &&
+      searchdata.vendor === ""
+    ) {
       setsearcherror(true);
     } else {
       setsearcherror(false);
