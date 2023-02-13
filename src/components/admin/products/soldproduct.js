@@ -27,7 +27,7 @@ const Soldproduct = () => {
     product_title_name: "",
     category: "",
   });
-  console.log("*****************----------" + JSON.stringify(solddata));
+  // console.log("*****************----------" + JSON.stringify(solddata));
   const closeUpdateAlert = () => {
     setUpdateAlert(false);
   };
@@ -43,7 +43,9 @@ const Soldproduct = () => {
           setProductData(data[0]);
           setId(data[0].id);
         });
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
 
     setShow(true);
   };
