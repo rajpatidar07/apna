@@ -53,6 +53,7 @@ const CategoryList = () => {
     s_category: "",
   });
   const [level, setlevel] = useState("");
+  const [imgerror, setimgerror] = useState("");
   const [cid, setCid] = useState();
   const [parentid, setParentid] = useState("");
   const [file, setFile] = useState();
@@ -72,10 +73,14 @@ const CategoryList = () => {
     level: "",
   });
 
+  /*<----Fumction to set the icon of the category---->*/
   const saveFile = (e) => {
     setFile(e.target.files[0]);
     setFileName(e.target.files[0].name);
+    setimgerror("")
   };
+ let vadi = fileName.split('.').pop();
+
 
   const closeAddAlert = () => {
     setAddAlert(false);
@@ -192,6 +197,7 @@ const CategoryList = () => {
     parentidddata.push(scategory.child_category);
   }
 
+  /*<---Function to get the all category list data---->*/
   function getUser() {
     try {
       axios
@@ -248,6 +254,7 @@ const CategoryList = () => {
       } catch (err) {}
     }
   };
+
 
   const columns = [
     {
@@ -375,14 +382,15 @@ const CategoryList = () => {
     },
   ];
 
+   /*<---Function to add category--->*/
   const AddCategoryClick = (e, id) => {
     const form = e.currentTarget;
     e.preventDefault();
-
-    if (form.checkValidity() === false && newName === "") {
+  console.log(vadi,';;;;;;;;;',fileName);
+    if ((form.checkValidity() === false && newName === "")) {
       e.stopPropagation();
       setValidated(true);
-    } else {
+    }else if(vadi==="jpeg"||vadi==="jpg"||vadi==="png" || vadi ===""){
       const formData = new FormData();
       formData.append("image", file);
       formData.append("filename", fileName);
@@ -412,10 +420,17 @@ const CategoryList = () => {
           setAddAlert(true);
           formRef.current.reset();
           setValidated(false);
+          setimgerror("")
         });
+        setimgerror("")
+      
+    }else { e.stopPropagation();
+      setimgerror("This image is not accetable")
+      
     }
   };
 
+   /*<---Function to update the category--->*/
   const UpdateCategoryClick = (show) => {
     const form = show.currentTarget;
 
@@ -457,15 +472,18 @@ const CategoryList = () => {
     setValidated(false);
   };
 
+  /*Onchange function of category search feilds */
   const onValueChange = (e) => {
     setSearchCat({ ...SearchCat, [e.target.name]: e.target.value });
     setsearchValidated(false);
   };
 
+  /*<---Function to search by category--->*/
   const SearchCategory = () => {
     if (
-      SearchCat.category_name === "" ||
-      SearchCat.category_name === undefined
+      SearchCat.category_name === "" &&
+      SearchCat.level === "" &&
+      SearchCat.category_type === ""
     ) {
       setsearchValidated(true);
     } else {
@@ -483,6 +501,7 @@ const CategoryList = () => {
         });
     }
   };
+   /*<---Function to reset the search feild--->*/
   const OnReset = () => {
     setsearchValidated(false);
     setSearchCat({
@@ -505,9 +524,11 @@ const CategoryList = () => {
       index === self.findIndex((t) => t.level == thing.level)
   );
 
+   /*<---Function to close the modal--->*/
   const handleClose = () => {
     setnewName(" ");
     setType("");
+    setCategoryEditData("")
     setCategoryEditparent("");
     setCategoryEditSubparent("");
     setCategoryEditChildparent("");
@@ -518,7 +539,9 @@ const CategoryList = () => {
     newImg = "";
     setValidated(false);
     setShow(false);
+    apicall(true)
   };
+  
   return (
     <div className="App productlist_maindiv">
       <h2>Category</h2>
@@ -550,7 +573,7 @@ const CategoryList = () => {
               onChange={(e) => onValueChange(e)}
               value={SearchCat.category_type}
             >
-              <option>Search by category</option>
+              <option value={''}>Search by category</option>
               {result1.map((lvl, i) => {
                 return (
                   <option value={lvl.category_type} key={i}>
@@ -569,7 +592,7 @@ const CategoryList = () => {
               onChange={(e) => onValueChange(e)}
               value={SearchCat.level}
             >
-              <option>Search by level</option>
+              <option value={''}>Search by level</option>
               {result2.map((lvl, i) => {
                 return (
                   <option value={lvl.level} key={i}>
@@ -706,6 +729,7 @@ const CategoryList = () => {
                       onChange={(e, id) => categoryFormChange(e, id)}
                       name={"category_name"}
                       placeholder={"Select by category"}
+                      disabled={CategoryEditdata.all_parent_id==="0"?true:false}
                       // value={indVal}
                     >
                       <option value={"0"}>Select Parent Category</option>
@@ -826,6 +850,7 @@ const CategoryList = () => {
                         placeholder="Category Icon"
                         onChange={(e) => saveFile(e)}
                         name={"category_icon"}
+                        accept="image/png,image/jpeg,image/jpg"
                         // value={newImg}
                       />
                     </div>
@@ -840,6 +865,7 @@ const CategoryList = () => {
                       />
                     )}
                   </Form.Group>
+                  <small className="text-danger">{imgerror}</small>
                 </div>
               </div>
             </Modal.Body>
