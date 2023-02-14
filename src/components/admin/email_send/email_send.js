@@ -254,6 +254,7 @@ const EmailSend = () => {
 
     setShow(false);
   };
+console.log("email_id "+emaildata.id);
 
   const fetchEmailData = () => {
     axios

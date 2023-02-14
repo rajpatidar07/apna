@@ -95,23 +95,6 @@ const VendorsList = () => {
       .catch(function (error) {
         console.log(error);
       });
-<<<<<<< HEAD
-    }
-    const columns = [
-      {
-        name: "ID",
-        selector: (row) => row.id,
-        sortable: true,
-      },
-      {
-        name: "#",
-        width: "250px",
-        center: true,
-        cell: (row) => 
-        
-        (
-          <div>
-=======
   };
 
   //To reset the search feild blank :-
@@ -132,8 +115,7 @@ const VendorsList = () => {
       width: "250px",
       center: true,
       cell: (row) => (
-        <>
->>>>>>> 56dc7395c1f11e4d3f1ef6161db522fb70133469
+        <div>
           <img
             height="90px"
             width="75px"
@@ -151,57 +133,7 @@ const VendorsList = () => {
             }}
             onClick={() => handleClick()}
           />
-<<<<<<< HEAD
-          </div>
-        ),
-      },
-      {
-        name: "Shop Name",
-        selector: (row) => row.shop_name,
-        sortable: true,
-      },
-      {
-        name: "Owner Name",
-        selector: (row) => row.owner_name,
-        sortable: true,
-      },
-      {
-        name: "Address",
-        selector: (row) => row.shop_address,
-        sortable: true,
-        center: true,
-      },
-      {
-        name: "Contact",
-        selector: (row) => row.mobile,
-        sortable: true,
-        center: true,
-      },
-     
-      {
-        name: "Status",
-        selector: (row) => (
-          <span
-            className={
-              row.status === "pending"
-                ? "badge bg-secondary"
-                : row.status === "active"
-                ? "badge bg-success"
-                : row.status === "blocked"
-                ? "badge bg-danger"
-                : row.status === "in progress"
-                ? "badge bg-primary"
-                : "badge bg-dark"
-            }
-          >
-            {row.status==="pending"
-            ?"Pending"
-            :row.status==="active"
-            ?"Active"
-            :row.status==="blocked"
-            ?"Blocked"
-=======
-        </>
+        </div>
       ),
     },
     {
@@ -249,7 +181,6 @@ const VendorsList = () => {
             ? "Active"
             : row.status === "blocked"
             ? "Blocked"
->>>>>>> 56dc7395c1f11e4d3f1ef6161db522fb70133469
             : row.status === "in progress"
             ? "In Progress"
             : "return"}
@@ -1114,52 +1045,6 @@ const VendorsList = () => {
                 >
                   <Form.Label>Document Name</Form.Label>
                   <InputGroup className="" size="sm">
-<<<<<<< HEAD
-                  <Form.Control
-                    onChange={(e) => onDocumentNamechange(e) }
-                    
-                    value={addtag}
-                    placeholder="document_name"
-                    name={"document_name"}
-                    onClick={(event) => {
-                      if (event.key === "Enter") {
-                      onDocuAddclick();
-                      }
-                    }}
-                  />
-                   <Button variant="outline-success" className="addcategoryicon"
-                            onClick={() => onDocuAddclick()} size="sm">
-                            +
-                          </Button>
-                          </InputGroup>
-                          {
-                            console.log("ddddd--"+Docnamearray)
-                          }
-                        
-
-                          {Docnamearray === undefined || Docnamearray === null || Docnamearray === '' ? null :
-                    <div className="d-flex align-items-center tagselectbox mt-2" >
-                                              
-                          { Docnamearray.map((seotags, i) => {
-                          return (
-                            <div>
-                             
-                        <Badge className="tagselecttitle mb-0" bg="success" >
-                        {seotags === null || seotags === undefined ? '' : seotags
-                        }
-                 
-                          <GiCancel
-                            className=" mx-0 ms-1 btncancel"
-                            onClick={() => DocuRemoveClick(seotags)}
-                          />
-                        </Badge>
-                            </div>
-                          )
-                         })}
-                        
-                      </div>
-                      }
-=======
                     <Form.Control
                       onChange={(e) => onDocumentNamechange(e)}
                       value={addtag}
@@ -1188,7 +1073,7 @@ const VendorsList = () => {
                     <div className="d-flex align-items-center tagselectbox mt-2">
                       {Docnamearray.map((seotags, i) => {
                         return (
-                          <>
+                          <div>
                             <Badge className="tagselecttitle mb-0" bg="success">
                               {seotags === null || seotags === undefined
                                 ? ""
@@ -1199,12 +1084,11 @@ const VendorsList = () => {
                                 onClick={() => DocuRemoveClick(seotags)}
                               />
                             </Badge>
-                          </>
+                          </div>
                         );
                       })}
                     </div>
                   )}
->>>>>>> 56dc7395c1f11e4d3f1ef6161db522fb70133469
                   <Form.Control.Feedback type="invalid" className="h6">
                     Please fill document name
                   </Form.Control.Feedback>
