@@ -8,6 +8,8 @@ import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 import moment from "moment";
 import SAlert from "../common/salert";
+import BrandJson from "./../json/BrandJson";
+import MainButton from "../common/button";
 
 const Offerproduct = () => {
   const formRef = useRef();
@@ -20,15 +22,86 @@ const Offerproduct = () => {
   const [searchdata, setsearchData] = useState({
     end_date: "",
     start_date: "",
-  });
+    category:[], 
+    brand:[],
+    vendor:[]
+});
+const [filtervategory, setfiltercategory] = useState([]);
+const [vendorid, setVendorId] = useState([]);
+const [searcherror,setsearcherror] = useState("")
+const [Alert, setAlert] = useState(false);
+const [apicall, setapicall] = useState(false);
+const [show, setShow] = useState(false);
+
+let token = localStorage.getItem("token");
+
+  /*<---Category list api---> */
+  const getCategorydatafilter = () => {
+    try {
+      axios
+        .get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
+        .then((response) => {
+          let cgory = response.data;
+          setfiltercategory(cgory);
+        });
+    } catch (err) {}
+  };
+  /*<---Category list api---> */
+  const getVendorData = () => {
+    try {
+      axios
+        .post(
+          `${process.env.REACT_APP_BASEURL}/vendors`,
+          { vendor_id: "all" },
+          {
+            headers: { admin_token: `${token}` },
+          }
+        )
+        .then((response) => {
+          let cgory = response.data;
+
+          const result = cgory.filter(
+            (thing, index, self) =>
+              index === self.findIndex((t) => t.shop_name == thing.shop_name)
+          );
+          const result1 = result.filter(
+            (item) => item.status === "approved" || item.status === "active"
+          );
+          setVendorId(result1);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   let closeUpdateAlert = () => {
     setUpdateAlert(false);
   };
 
-  const OnSearchChange = (e) => {
-    setsearchData({ ...searchdata, [e.target.name]: e.target.value });
-  };
+ /*<---Onchange function of search --->*/
+ const OnSearchChange = (e) => {
+  setsearchData({ ...searchdata, [e.target.name]: e.target.value });
+};
+/*<---Function to reset Search--->*/
+const OnReset = () => {
+  setsearchData({status :"", category:"", brand:"", vendor:""});
+  setsearcherror(false)
+  setapicall(true);
+
+};
+/*<---Onlick Function to Search--->*/
+const Search = () => {
+  if (
+    searchdata.vendor === "" &&
+    searchdata.brand === "" &&
+    searchdata.category === ""
+  ) {
+    setsearcherror(true);
+  } else {
+    setsearcherror(false);
+    setapicall(true);
+  }
+};
 
   const OnDateChange = (e) => {
     let mdate = moment(e.target.value).format("YYYY-MM-DD");
@@ -36,9 +109,6 @@ const Offerproduct = () => {
   };
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
-  const [Alert, setAlert] = useState(false);
-  const [apicall, setapicall] = useState(false);
-  const [show, setShow] = useState(false);
 
   const handleClose = (e) => {
     e.preventDefault();
@@ -49,18 +119,27 @@ const Offerproduct = () => {
   useEffect(() => {
     try {
       axios
-        .post(`${process.env.REACT_APP_BASEURL}/featured_list`, {
+        .post(`${process.env.REACT_APP_BASEURL_0}/fetured_product_search`, {
           product_id: "",
           fetured_type: "special_offer",
-          start_date: `${searchdata.start_date}`,
-          end_date: `${searchdata.end_date}`,
+          start_date: /*`${searchdata.start_date}`*/"",
+          end_date: /*`${searchdata.end_date}`*/"",
+          category: [`${searchdata.category}`],
+          brand: [`${searchdata.brand}`],
+          shop: [`${searchdata.vendor}`],
+        },
+        {
+          headers: { admin_token: `${token}` },
         })
         .then((response) => {
           setOfferProductData(response.data);
           setapicall(false);
         });
     } catch (err) {}
+    getCategorydatafilter();
+    getVendorData();
   }, [apicall]);
+
   const columns = [
     {
       name: "ID",
@@ -73,16 +152,87 @@ const Offerproduct = () => {
       },
     },
     {
-      name: "Product ID",
-      selector: (row) => row.product_id,
-      sortable: true,
-      width: "250px",
+      name: "#",
+      width: "100px",
       center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
+      cell: (row) => (
+        <img
+          alt={"apna_organic"}
+          src={
+            row.all_images
+              ? row.all_images
+              : "https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
+          }
+          style={{
+            padding: 10,
+            textAlign: "right",
+            maxHeight: "100px",
+            maxWidth: "100px",
+          }}
+        />
+      ),
     },
+    {
+      name: "Product Name",
+      selector: (row) => (
+        <div>
+          <p className="mb-1">
+            <b>
+              {row.product_title_name}
+              <br />
+            </b>
+            {/* Product ID: {row.product_id} <br /> */}
+            <span className="d-flex flex-column ">
+              {row.is_featured === 1 ? (
+                <span className={"badge bg-warning mt-1"}>
+                  {"featured product"}
+                </span>
+              ) : null}
+              {row.is_special_offer === 1 ? (
+                <span className={"badge bg-info mt-1"}>{"special offer"}</span>
+              ) : null}
+            </span>
+          </p>
+        </div>
+      ),
+      sortable: true,
+      width: "200px",
+    },
+    {
+      name: "Category",
+      selector: (row) => row.category,
+      sortable: true,
+      width: "90px",
+    },
+    {
+      name: "Vendor",
+      selector: (row) => row.shop,
+      sortable: true,
+      width: "90px",
+    },
+    {
+      name: "Product Type",
+      selector: (row) => row.product_type,
+      sortable: true,
+      width: "90px",
+    },
+    {
+      name: "Brand",
+      selector: (row) => row.brand,
+      sortable: true,
+      width: "100px",
+    },
+    // {
+    //   name: "Product ID",
+    //   selector: (row) => row.product_id,
+    //   sortable: true,
+    //   width: "250px",
+    //   center: true,
+    //   style: {
+    //     paddingRight: "32px",
+    //     paddingLeft: "0px",
+    //   },
+    // },
     {
       name: "Fetured_type",
       selector: (row) => row.fetured_type,
@@ -162,6 +312,7 @@ const Offerproduct = () => {
       ),
     },
   ];
+
   const handleFormChange = (e) => {
     setFeaturetData({ ...featuredData, [e.target.name]: e.target.value });
   };
@@ -169,11 +320,14 @@ const Offerproduct = () => {
   const handleShow = (product_id) => {
     try {
       axios
-        .post(`${process.env.REACT_APP_BASEURL}/featured_list`, {
+        .post(`${process.env.REACT_APP_BASEURL_0}/fetured_product_search`, {
           product_id: product_id,
           fetured_type: "special_offer",
           start_date: "",
           end_date: "",
+        },
+        {
+          headers: { admin_token: `${token}` },
         })
         .then((response) => {
           setId(response.data[0].id);
@@ -192,10 +346,13 @@ const Offerproduct = () => {
   const UpdateOfferProduct = (e) => {
     e.preventDefault();
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/update_fetured_product`, {
+      .put(`${process.env.REACT_APP_BASEURL_0}/update_fetured_product`, {
         id: id,
         start_date: featuredData.start_date,
         end_date: featuredData.end_date,
+      },
+      {
+        headers: { admin_token: `${token}` },
       })
       .then((response) => {
         let data = response.data;
@@ -209,18 +366,13 @@ const Offerproduct = () => {
   const submitHandler = () => {
     setapicall(true);
   };
-
-  const OnReset = () => {
-    setsearchData({ start_date: "", end_date: "" });
-    setapicall(true);
-  };
   return (
     <div>
       <h2> Special Offer Products</h2>
 
       {/* search bar */}
       <div className="card mt-3 p-3 ">
-        <div className="row pb-3">
+        {/* <div className="row pb-3"> */}
           {/* <div className="col-md-3 col-sm-6 aos_input">
             <input onChange={OnSearchChange} name='product_title_name'
               value={searchdata.product_title_name}
@@ -259,7 +411,87 @@ const Offerproduct = () => {
               onClick={OnReset}
             />
           </div> */}
-        </div>
+        {/* </div> */}
+        <div className="card mt-3 p-3">
+        <div className="row pb-3">
+        <div className="col-md-3 col-sm-6 aos_input">
+  <input type={"text"}  onChange={OnSearchChange} name='product_title_name'
+        value={searchdata.status} placeholder={"Search by status"} className={'adminsideinput'}/>
+        {searcherror === true ?<small className="text-danger">This feild is required</small>:null}
+  </div>
+  <div className="col-md-2 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by status"
+              className="adminselectbox"
+              placeholder="Search by category"
+              onChange={OnSearchChange}
+              name="category"
+              value={String(searchdata.category)}
+            >
+              <option value={""}>Select Category</option>
+              {(filtervategory || []).map((data, i) => {
+                return (
+                  <option value={data.id} key={i}>
+                    {" "}
+                    {data.id}
+                  </option>
+                );
+              })}
+            </Form.Select>
+          </div>
+          <div className="col-md-2 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by status"
+              className="adminselectbox"
+              placeholder="Search by vendor"
+              onChange={OnSearchChange}
+              name="vendor"
+              value={String(searchdata.vendor)}
+            >
+              <option value={""}>Select Vendor</option>
+              {(vendorid || []).map((data, i) => {
+                return (
+                  <option value={data.shop_name} key={i}>
+                    {" "}
+                    {data.shop_name}
+                  </option>
+                );
+              })}
+            </Form.Select>
+          </div>
+          <div className="col-md-2 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by brand"
+              className="adminselectbox"
+              placeholder="Search by brand"
+              onChange={OnSearchChange}
+              name="brand"
+              value={String(searchdata.brand)}
+            >
+              <option value={""}>Select Brand</option>
+              {(BrandJson.BrandJson || []).map((data, i) => {
+                return (
+                  <option value={data} key={i}>
+                    {" "}
+                    {data}
+                  </option>
+                );
+              })}
+            </Form.Select>
+          </div>
+          <div className="col-md-3 col-sm-6 aos_input">
+<MainButton btntext={"Search"} btnclass={'button main_button w-100'} onClick={Search} />
+  </div>
+  <div className="col-md-3 col-sm-6 aos_input mt-2">
+     <MainButton
+        btntext={"Reset"}
+        btnclass={"button main_button w-100"}
+        type="reset"
+         onClick={OnReset}
+       />
+    </div>
+          </div>
+          </div>
 
         {/* upload */}
 
@@ -275,7 +507,7 @@ const Offerproduct = () => {
                     className="mb-3 aos_input"
                     controlId="formBasicStartDate"
                   >
-                    <Form.Label>Manufacturing Date</Form.Label>
+                    <Form.Label>Start Date</Form.Label>
                     <Form.Control
                       name="start_date"
                       value={featuredData.start_date}
@@ -290,7 +522,7 @@ const Offerproduct = () => {
                     className="mb-3 aos_input"
                     controlId="formBasicStartDate"
                   >
-                    <Form.Label>Expire Date</Form.Label>
+                    <Form.Label>End Date</Form.Label>
                     <Form.Control
                       name="end_date"
                       value={featuredData.end_date}

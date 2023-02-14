@@ -381,31 +381,15 @@ code {
   }
 }
 
-.spanText{
-  white-space: nowrap; 
+.spanText {
+  white-space: nowrap;
   /* width:100px;  */
   overflow: hidden;
-   text-overflow:ellipsis ellipsis ; 
+  text-overflow: ellipsis ellipsis;
 
-  display:block;
- 
-}
-.imgprivew_box{
-  position: relative;
-}
-.cross_icon{
-  position: absolute;
-    font-size: 25px;
-    border: 1px solid #198754;
-    border-radius: 50%;
-    padding: 0 8px;
-    background: #fff;
-    color: #198754;
-    right: -7px;
-    top: -5px;
-  
+  display: block;
 }
 
-.spanCurser{
+.spanCurser {
   cursor: pointer;
 }
