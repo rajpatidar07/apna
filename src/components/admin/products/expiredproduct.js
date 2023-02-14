@@ -113,110 +113,6 @@ const Expiredproduct = () => {
     getVendorData();
   }, [apicall]);
   const columns = [
-    // {
-    //   name: "Id",
-    //   selector: (row) => <p>{row.id}</p>,
-    //   sortable: true,
-    //   width: "70px",
-    //   center: true,
-    // },
-    // {
-    //   name: "#",
-    //   width: "120px",
-    //   center: true,
-    //   cell: (row) => (
-    //     <img
-    //       alt={"apna_organic"}
-    //       src={
-    //         row.all_images
-    //           ? row.all_images
-    //           : "https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
-    //       }
-    //       style={{
-    //         padding: 10,
-    //         textAlign: "right",
-    //         maxHeight: "100px",
-    //         maxWidth: "100px",
-    //       }}
-    //       onClick={handleClick}
-    //     />
-    //   ),
-    // },
-    // {
-    //   name: "Product Name",
-    //   selector: (row) => row.product_title_name,
-    //   sortable: true,
-    //   width: "200px",
-    // },
-    // {
-    //   name: "Category",
-    //   selector: (row) => row.category,
-    //   sortable: true,
-    //   width: "100px",
-    // },
-    // {
-    //   name: "Mrp",
-    //   selector: (row) => row.mrp.toFixed(2),
-    //   sortable: true,
-    //   width: "100px",
-    //   center: true,
-    //   style: {
-    //     paddingRight: "32px",
-    //     paddingLeft: "0px",
-    //   },
-    // },
-    // {
-    //   name: "Dis(%)",
-    //   selector: (row) => row.discount + "%",
-    //   sortable: true,
-    //   width: "130px",
-    //   center: true,
-    //   style: {
-    //     paddingRight: "32px",
-    //     paddingLeft: "0px",
-    //   },
-    // },
-    // {
-    //   name: "Price",
-    //   selector: (row) => row.product_price.toFixed(2),
-    //   sortable: true,
-    //   width: "100px",
-    //   center: true,
-    //   style: {
-    //     paddingRight: "32px",
-    //     paddingLeft: "0px",
-    //   },
-    // },
-
-    // {
-    //   name: "Tax",
-    //   selector: (row) =>
-    //     Number(row.gst) +
-    //     Number(row.cgst) +
-    //     Number(row.sgst) +
-    //     Number(row.wholesale_sales_tax) +
-    //     Number(row.retails_sales_tax) +
-    //     Number(row.manufacturers_sales_tax) +
-    //     Number(row.value_added_tax) +
-    //     "%",
-    //   sortable: true,
-    //   width: "90px",
-    //   center: true,
-    //   style: {
-    //     paddingLeft: "0px",
-    //   },
-    // },
-    // {
-    //   name: "SP",
-    //   selector: (row) => row.sale_price.toFixed(2),
-    //   sortable: true,
-    //   width: "100px",
-    //   center: true,
-    //   style: {
-    //     paddingRight: "32px",
-    //     paddingLeft: "0px",
-    //   },
-    // },
     {
       name: "#",
       width: "100px",
@@ -249,7 +145,7 @@ const Expiredproduct = () => {
               <br />
             </b>
             {/* Product ID: {row.product_id} <br /> */}
-            <div className="d-flex flex-column ">
+            <span className="d-flex flex-column ">
               {row.is_featured === 1 ? (
                 <span className={"badge bg-warning mt-1"}>
                   {"featured product"}
@@ -258,7 +154,7 @@ const Expiredproduct = () => {
               {row.is_special_offer === 1 ? (
                 <span className={"badge bg-info mt-1"}>{"special offer"}</span>
               ) : null}
-            </div>
+            </span>
           </p>
         </div>
       ),
@@ -514,14 +410,14 @@ const Expiredproduct = () => {
               className={"adminsideinput"}
             />
             </div>*/}
-          <div className="col-md-3 col-sm-6 aos_input">
+          <div className="col-md-3 col-sm-6 aos_input ">
             <MainButton
               onClick={onSearchClick}
               btntext={"Search"}
               btnclass={"button main_button w-100"}
             />
           </div>
-          <div className="col-md-3 col-sm-6 aos_input">
+          <div className="col-md-3 col-sm-6 aos_input mt-2">
             <MainButton
               btntext={"Reset"}
               btnclass={"button main_button w-100"}
