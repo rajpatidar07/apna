@@ -182,13 +182,13 @@ const Soldproduct = () => {
       name: "Product Name",
       selector: (row) => (
         <div>
-          <p className="mb-1" onClick={(row.id, row.product_id)}>
+          <p className="mb-1" >
             <b>
               {row.product_title_name}
               <br />
             </b>
             {/* Product ID: {row.product_id} <br /> */}
-            <div className="d-flex flex-column ">
+            <span className="d-flex flex-column ">
               {row.is_featured === 1 ? (
                 <span className={"badge bg-warning mt-1"}>
                   {"featured product"}
@@ -197,7 +197,7 @@ const Soldproduct = () => {
               {row.is_special_offer === 1 ? (
                 <span className={"badge bg-info mt-1"}>{"special offer"}</span>
               ) : null}
-            </div>
+            </span>
           </p>
         </div>
       ),
@@ -424,14 +424,14 @@ const Soldproduct = () => {
               })}
             </Form.Select>
           </div>
-          <div className="col-md-3 col-sm-6 aos_input">
+          <div className="col-md-3 col-sm-6 aos_input ">
             <MainButton
               btntext={"Search"}
               btnclass={"button main_button w-100"}
               onClick={onSearchClick}
             />
           </div>
-          <div className="col-md-3 col-sm-6 aos_input">
+          <div className="col-md-3 col-sm-6 aos_input mt-2">
             <MainButton
               btntext={"Reset"}
               btnclass={"button main_button w-100 mt-2"}

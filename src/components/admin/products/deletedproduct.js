@@ -33,11 +33,17 @@ const Deletedproduct = () => {
   let token = localStorage.getItem("token");
   const closeRestoreAlert = () => {
     axios
-      .put(`${process.env.REACT_APP_BASEURL_0}/products_delete_remove`, {
-        varient_id: id,
-        product_id: productid,
-        is_delete: "1",
-      })
+      .put(
+        `${process.env.REACT_APP_BASEURL_0}/products_delete_remove`,
+        {
+          varient_id: id,
+          product_id: productid,
+          is_delete: "1",
+        },
+        {
+          headers: { admin_token: `${token}` },
+        }
+      )
       .then((response) => {
         let data = response.data;
         setapicall(true);
@@ -117,7 +123,6 @@ const Deletedproduct = () => {
       .post(`${process.env.REACT_APP_BASEURL_0}/home?page=0&per_page=400`, {
         product_search: {
           search: [`${searchdata.product_title_name}`],
-          category: "",
           price_from: "",
           price_to: "",
           id: "",
@@ -185,6 +190,18 @@ const Deletedproduct = () => {
     {
       name: "Category",
       selector: (row) => row.category,
+      sortable: true,
+      width: "100px",
+    },
+    {
+      name: "Vendor",
+      selector: (row) => row.shop,
+      sortable: true,
+      width: "90px",
+    },
+    {
+      name: "Brand",
+      selector: (row) => row.brand,
       sortable: true,
       width: "100px",
     },
