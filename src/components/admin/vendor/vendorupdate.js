@@ -7,7 +7,7 @@ import { Badge, Button, InputGroup, Table } from "react-bootstrap";
 import { GiCancel } from "react-icons/gi";
 // import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
-
+import storetype from "../json/storetype";
 
  const VendorUpdate = () => {
     let vendorid = localStorage.getItem("vendorid");
@@ -18,20 +18,7 @@ import Modal from "react-bootstrap/Modal";
     const [customValidation, setCustomValidation] = useState(false);
     const [SocialLink, setSocialLink] = useState(false);
     const [show, setShow] = useState(false);
-    // const formRef = useRef();
-    // const [show, setShow] = useState(false);
-    // const [spinner, setSpinner] = useState(false);
-    // const [otp, setotp] = useState(0);
-    // const [emailVal, setemailVal] = useState("");
-    // const [forgotemail, setforgotemail] = useState("");
-    // let [formshow, setformShow] = useState(true);
-    // let [hide, setHide] = useState(false);
-    // const [emailerror, setemailerror] = useState("");
-    // const [Signup, setSignup] = useState(false);
-    // const [otperror, setOtperror] = useState(false);
-    // const [passval, setpassval] = useState("");
     const [newImageUrls, setnewImageUrls] = useState([]);
-    // const [validated, setValidated] = useState(false);
     const [scall, setsCall] = useState(false);
     const [addvendordata, setaddvendordata] = useState({
       owner_name: "",
@@ -52,6 +39,7 @@ import Modal from "react-bootstrap/Modal";
   
     let encoded;
     let ImgObj = [];
+    var imgvalidate;
     const [addtag, setaddtag] = useState();
     const [Docnamearray, setDocnameArray] = useState([]);
     const [headerval, setheaderval] = useState("");
@@ -62,15 +50,7 @@ import Modal from "react-bootstrap/Modal";
     const [file, setFile] = useState();
     const [fileName, setFileName] = useState("");
     const [apicall, setapicall] = useState(false);
-    // const [loginpage, setloginpage] = useState(false);
-    // const [forgotpage, setforgotpage] = useState(false);
-    // const [forgototp, setforgototp] = useState(0);
-    // const [forgotpassval, setforgotpassval] = useState("");
-    // const navigate = useNavigate();
-    // const [error, setError] = useState(true);
-    // const [loginemailerror, setLoginemailerror] = useState(true);
-    // const [vendorstatus, setvendorstatus] = useState(false);
-    // const { state } = useLocation();
+   ;
     const navigate = useNavigate();
 
 
@@ -190,7 +170,7 @@ const ImgFormChange = (e) => {
   setFile(e.target.files[0]);
   setFileName(e.target.files[0].name);
 };
-
+imgvalidate = fileName.split(".").pop();
 const convertToBase64 = (file) => {
   return new Promise((resolve, reject) => {
     const fileReader = new FileReader();
@@ -311,6 +291,7 @@ const handleAddClick = (e) => {
     setsCall(true);
   }
 };
+
 const handleRemoveClick = (e) => {
   setcustomarray(customarray.filter((item) => item !== e));
 };
@@ -319,7 +300,7 @@ const handleRemoveClick = (e) => {
 useEffect(() => {
   setaddvendordata({
     ...addvendordata,
-    social_media_links: customarray,
+    testjson: customarray,
   });
 }, [customarray]);
 
@@ -360,21 +341,27 @@ useEffect(() => {
           setCustomValidation("ShopAddressEmpty");
         } else if (addvendordata.gstn === ""|| addvendordata.gstn === null) {
           setCustomValidation("GSTEmpty");
-        } else if (addvendordata.geolocation === ""|| addvendordata.geolocation === null) {
+          
+        }else if (addvendordata.store_type === ""|| addvendordata.store_type === null) {
+          setCustomValidation("storeTypeEmpty");
+
+        }  else if (addvendordata.geolocation === ""|| addvendordata.geolocation === null) {
           setCustomValidation("GeolocationEmpty");
         } 
-        else if (Docnamearray.length===0) {
-          setAddTagError("addTagErorrr")
-        } 
-        else {
-    alert("kk")
+         
+        else if (
+          imgvalidate == "jpg" ||
+          imgvalidate == "jpeg" ||
+          imgvalidate == "png"||imgvalidate == ""
+        ){
           // e.stopPropagation();
           let x = [addvendordata.document_name];
           // e.preventDefault();
           const formData = new FormData();
     
-          let socialname = addvendordata.social_media_links;
+          let socialname = addvendordata.testjson;
           let socialname_new = JSON.stringify(socialname);
+
           formData.append("id", vendorid);
           formData.append("image", file);
           formData.append("filename", fileName);
@@ -406,6 +393,10 @@ useEffect(() => {
             .catch(function (error) {
               console.log(error);
             });
+        }
+        else {
+          setCustomValidation("imgformat");
+          
         }
       };
   return (
@@ -653,7 +644,7 @@ useEffect(() => {
                         className="mb-3 aos_input"
                         // controlId="validationCustom06"
                       >
-                        <Form.Label>Store Type</Form.Label>
+                        <Form.Label>Store Type <span className="text-danger">* </span></Form.Label>
                         <Form.Select
                           size="sm"
                           aria-label="Default select example"
@@ -669,14 +660,21 @@ useEffect(() => {
                           >
                             Select
                           </option>
-                          {/* {(storetype.storetype || []).map((data, i) => {
+                          {(storetype.storetype || []).map((data, i) => {
                             return (
                               <option key={i} value={data}>
                                 {data}
                               </option>
                             );
-                          })} */}
+                          })}
                         </Form.Select>
+                        {customValidation === "storeTypeEmpty" ? (
+                          <span className="text-danger">
+                            Please fill the Store type...
+                          </span>
+                        ) : customValidation === false ? (
+                          ""
+                        ) : null}
                       </Form.Group>
                     </div>
                     <div className="col-md-6">
@@ -913,13 +911,19 @@ useEffect(() => {
                         className="mb-3 aos_input"
                         // controlId="validationCustom08"
                       >
-                        <Form.Label>Shop Logo</Form.Label>
+                        <Form.Label>Shop Logo <b>(In .jpg, .jpeg, .png format)</b></Form.Label>
                         <Form.Control
                           onChange={(e) => ImgFormChange(e)}
                           type="file"
                           placeholder="Shop_logo"
                           name={"shop_logo"}
+                          accept=".png, .jpg, .jpeg"
                         />
+                           {customValidation === "imgformat" ? (
+                    <p className="text-danger mx-2">
+                      {"Please Select Correct Image Format"}
+                    </p>
+                    ) : null}
                         {addvendordata.shop_logo ? (
                           <img src={addvendordata.shop_logo} width={"50px"} />
                         ) : null}

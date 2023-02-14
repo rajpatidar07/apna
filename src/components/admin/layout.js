@@ -50,7 +50,10 @@ import EmailSend from "./email_send/email_send";
 import Notification from "./notification/Notification";
 import AuthWrapper from "./authwrapper";
 import SellerSignUp from "./sellersignup";
-import VendorUpdate from "./vendorupdate";
+
+import SellerSignupp from "./vendor/sellersignupp";
+
+import VendorUpdate from "./vendor/vendorupdate";
 function AdminLayout() {
   // const location = useLocation();
   const [adminLogged, setadminLogged] = useState(localStorage.getItem("token"));
@@ -70,6 +73,10 @@ function AdminLayout() {
           <Route path="/login" element={<Login />} />
           <Route path="/change_password" element={<ChangePassword />} />
           <Route path="/forgot" element={<Forgot />} />
+    
+          <Route path="/sellersignupp" element={<SellerSignupp/>}/>
+
+
         
         </Routes>
 

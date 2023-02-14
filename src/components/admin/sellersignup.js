@@ -4,7 +4,7 @@ import React, { Fragment } from "react";
 
 import axios from "axios";
 import Form from "react-bootstrap/Form";
-// import "../../CSS/style.css";
+  // import "../../style/style.css";
 import { useState, useEffect, useRef } from "react";
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { Badge, Button, InputGroup, Table } from "react-bootstrap";
@@ -16,53 +16,19 @@ import Modal from "react-bootstrap/Modal";
 
 const SellerSignUp = () => {
   
-//   const[AddtagError,setAddTagError]=useState("")
-//   const [customValidation, setCustomValidation] = useState(false);
-//   const [SocialLink, setSocialLink] = useState(false);
-//   const formRef = useRef();
+
   const [show, setShow] = useState(false);
   const [spinner, setSpinner] = useState(false);
   const [otp, setotp] = useState(0);
   const [emailVal, setemailVal] = useState("");
   const [forgotemail, setforgotemail] = useState("");
   let [formshow, setformShow] = useState(true);
-//   let [hide, setHide] = useState(false);
+
   const [emailerror, setemailerror] = useState("");
   const [Signup, setSignup] = useState(false);
   const [otperror, setOtperror] = useState(false);
   const [passval, setpassval] = useState("");
-//   const [newImageUrls, setnewImageUrls] = useState([]);
-//   const [validated, setValidated] = useState(false);
-//   const [scall, setsCall] = useState(false);
-//   const [addvendordata, setaddvendordata] = useState({
-//     owner_name: "",
-//     shop_name: "",
-//     mobile: "",
-//     email: "",
-//     shop_address: "",
-//     gstn: "",
-//     geolocation: "",
-//     store_type: "",
-//     image: "",
-//     status: "",
-//     image: "",
-//     document_name: [],
-//     availability: "",
-//     social_media_links: [],
-//   });
 
-//   let encoded;
-//   let ImgObj = [];
-//   const [addtag, setaddtag] = useState();
-//   const [Docnamearray, setDocnameArray] = useState([]);
-//   const [headerval, setheaderval] = useState("");
-//   const [descval, setdescval] = useState("");
-//   const [customarray, setcustomarray] = useState([]);
-//   const [AddCustom, setAddCustom] = useState([]);
-//   const [customvalidated, setcustomValidated] = useState(false);
-//   const [file, setFile] = useState();
-//   const [fileName, setFileName] = useState("");
-//   const [apicall, setapicall] = useState(false);
   const [loginpage, setloginpage] = useState(false);
   const [forgotpage, setforgotpage] = useState(false);
   const [forgototp, setforgototp] = useState(0);
@@ -76,23 +42,7 @@ const SellerSignUp = () => {
   //for close the   vendor request model
   const handleClose = () => {
     setShow(false);
-    // setaddvendordata({
-    //   owner_name: "",
-    //   shop_name: "",
-    //   mobile: "",
-    //   email: "",
-    //   shop_address: "",
-    //   gstn: "",
-    //   geolocation: "",
-    //   store_type: "",
-    //   image: "",
-    //   status: "",
-    //   image: "",
-    //   document_name: [],
-    //   availability: "",
-    //   social_media_links: [],
-    // });
-    // setnewImageUrls([]);
+   
     navigate("/");
   };
 // for close the reqest apporove model
@@ -145,40 +95,6 @@ const SellerSignUp = () => {
   };
 
 
-  //for get the vendor details
-//   const OnVendorDetail = () => {
-//     // setHide(true);
-//     if (
-//       vendortoken === null ||
-//       vendortoken === "undefined" ||
-//       vendortoken === ""
-//     ) {
-//     } else {
-//       axios
-//         .post(
-//           `${process.env.REACT_APP_BASEURL}/vendors`,
-//           {
-//             vendor_id: "",
-//           },
-//           {
-//             headers: {
-//               vendor_token: vendortoken,
-//             },
-//           }
-//         )
-//         .then((response) => {
-//           setaddvendordata(response.data[0]);
-//           setFile("");
-//           setFileName("");
-//           setcustomarray(response.data[0].social_media_links);
-//           let strCopy = response.data[0].document_name.split(",");
-//           setDocnameArray(strCopy);
-//         })
-//         .catch(function (error) {
-//           console.log(error);
-//         });
-//     }
-//   };
 
   // click the otp verification ------
   const VerifyOTP = (e) => {
@@ -207,28 +123,10 @@ const SellerSignUp = () => {
             // setHide(true);
             setformShow(false);
             setotp(1);
-            // setaddvendordata({
-            //   owner_name: "",
-            //   shop_name: "",
-            //   mobile: "",
-            //   email: "",
-            //   shop_address: "",
-            //   gstn: "",
-            //   geolocation: "",
-            //   store_type: "",
-            //   image: "",
-            //   status: "",
-            //   image: "",
-            //   document_name: [],
-            //   availability: "",
-            //   social_media_links: [],
-            // });
-            // setnewImageUrls([]);
+       
             localStorage.setItem("vendorid", response.insertId);
             localStorage.setItem("vendor_token", vendor_token);
-            // OnVendorDetail();
-            // localStorage.setItem("upassword", passval);
-            // navigate("/your_account");
+         
           }
         })
         .catch((error) => {});
@@ -296,11 +194,11 @@ const SellerSignUp = () => {
             // setError(true);
           }
           else if (response.data.status === "return") {
-            // setHide(true);
+           
             setvendorstatus("return");
             localStorage.setItem("vendorid", response.data.id);
             localStorage.setItem("vendor_token", response.data.vendor_token);
-            // setError(true);
+          
           } else if (
             response.data.status === "pending" ||
             response.data.message === undefined
@@ -361,8 +259,7 @@ const SellerSignUp = () => {
         email: `${forgotemail}`,
       })
       .then((response) => {
-        // console.log("Email-----"+JSON.stringify(response))
-        // console.log("Email---retrfgrf--"+JSON.stringify(response.data.message))
+    
           
         if(response.data.message === "User Not Exist"){
           setSpinner(false);
@@ -436,270 +333,7 @@ const SellerSignUp = () => {
 
   // END FORGOT PASSWORD
 
-  // VENDOR
-//   useEffect(() => {
-//     setaddvendordata({
-//       ...addvendordata,
-//       document_name: Docnamearray,
-//     });
-//   }, [Docnamearray]);
 
-  // get the value of vendor input field
-//   const handleFormChange = (e) => {
-//     setCustomValidation(false);
-
-//     setaddvendordata({
-//       ...addvendordata,
-//       [e.target.name]: e.target.value,
-//     });
-//   };
-
-
-  // onchange of add tag
-//   const onDocumentNamechange = (e) => {
-//     setAddTagError("")
-//     setaddtag(e.target.value);
-//   };
-//   const onDocuAddclick = (e) => {
-//       if(addtag==""){
-//         setAddTagError("addTagErorrr")
-//       }
-//       else{
-//         setDocnameArray((Docnamearray) => [...Docnamearray, addtag]);
-//         setaddtag("");
-//         setAddTagError("")
-//       }
-  
-//   };
-//   const DocuRemoveClick = (e) => {
-//     setDocnameArray(Docnamearray.filter((item) => item !== e));
-//   };
-//   const ImgFormChange = (e) => {
-//     setFile(e.target.files[0]);
-//     setFileName(e.target.files[0].name);
-//   };
-
-//   const convertToBase64 = (file) => {
-//     return new Promise((resolve, reject) => {
-//       const fileReader = new FileReader();
-//       const { name } = file;
-//       fileReader.addEventListener("load", () => {
-//         resolve({ name: name, base64: fileReader.result });
-//       });
-//       fileReader.readAsDataURL(file);
-//       fileReader.onerror = (error) => {
-//         reject(error);
-//       };
-//     });
-//   };
-
-//   const imguploadchange = async (e) => {
-//     // e.preventDefault()
-//     for (let i = 0; i < e.target.files.length; i++) {
-//       encoded = await convertToBase64(e.target.files[i]);
-//       const [first, ...rest] = encoded.base64.split(",");
-//       const [nameimg, ext] = encoded.name.split(".");
-//       const vendorimg = rest.join("-");
-//       let imar = {
-//         vendor_id: `${vendorid}`,
-//         documents_name: `${encoded.name}${i}${vendorid}`,
-//         documents_position: `position${i}`,
-//         type_of_file: `${ext}`,
-//         img_64: vendorimg,
-//       };
-//       ImgObj.push(imar);
-//     }
-//     // image
-//     if (newImageUrls.length <= 5) {
-//       axios
-//         .post(
-//           `${process.env.REACT_APP_BASEURL}/vendor_documents_upload`,
-//           ImgObj
-//         )
-//         .then((response) => {
-//           setapicall(true);
-//         })
-//         .catch(function (error) {
-//           console.log(error);
-//         });
-//     } else {
-//       alert("Cannot upload more than 6 image");
-//     }
-//   };
-
-//   const onImgRemove = (id, vendor_id) => {
-//     axios
-//       .put(`${process.env.REACT_APP_BASEURL}/vendor_document_delete`, {
-//         vendor_doc_id: `${id}`,
-//         vendor_id: `${vendor_id}`,
-//       })
-//       .then((response) => {
-//         onImgView(vendor_id);
-//       })
-//       .catch(function (error) {
-//         console.log(error);
-//       });
-//   };
-//   useEffect(() => {
-//     onImgView();
-//     // OnVendorDetail();
-//   }, [apicall]);
-//   const onImgView = () => {
-//     if (
-//       vendorid === null ||
-//       vendorid === "undefined" ||
-//       vendorid === "null" ||
-//       vendorid === undefined
-//     ) {
-//     } else {
-//       axios
-//         .get(
-//           `${process.env.REACT_APP_BASEURL}/vendor_documents_get?vendor_id=${vendorid}`
-//         )
-//         .then((response) => {
-//           setnewImageUrls(response.data);
-//           setapicall(false);
-//         })
-//         .catch(function (error) {
-//           console.log(error);
-//         });
-//     }
-//   };
-  //img code end-------------------------------------------------------------------------------------------------
-  // social media link
-//   const oncustomheadChange = (e) => {
-//     setSocialLink(false);
-//     setheaderval(e.target.value);
-//   };
-
-//   const oncustomdescChange = (e) => {
-//     setSocialLink(false);
-//     setdescval(e.target.value);
-//   };
-//   useEffect(() => {
-//     if (headerval !== "" && descval !== "") {
-//       setcustomarray((customarray) => [...customarray, AddCustom]);
-//       setheaderval("");
-//       setdescval("");
-//       setAddCustom("");
-//       // setcustomValidated(false);
-//       setsCall(false);
-//     }
-//   }, [scall]);
-
-  // validation on social media link
-//   const handleAddClick = (e) => {
-//     if (headerval === "") {
-//       setSocialLink("HeaderBlank");
-//     } else if (descval === "") {
-//       setSocialLink("DesBlank");
-//     } else {
-//       let returnedTarget = Object.assign({}, { [headerval]: descval });
-//       setAddCustom(...AddCustom, returnedTarget);
-//       setsCall(true);
-//     }
-//   };
-//   const handleRemoveClick = (e) => {
-//     setcustomarray(customarray.filter((item) => item !== e));
-//   };
-
-
-//   useEffect(() => {
-//     setaddvendordata({
-//       ...addvendordata,
-//       social_media_links: customarray,
-//     });
-//   }, [customarray]);
-
-  // end social media link
-
-
-
-  // click the vandor update button------
-//   const UpdateVendorClick = (e) => {
-//     // const form = e.currentTarget;
-//     e.preventDefault();
-//     // if (form.checkValidity() === false) {
-
-//     //     setValidated(true);
-//     // }
-//     if (addvendordata.owner_name === "") {
-//       setCustomValidation("ownernameEmpty");
-//     } else if (addvendordata.shop_name === "") {
-//       setCustomValidation("shopnameEmpty");
-//     } else if (addvendordata.mobile === "") {
-//       setCustomValidation("MobileEmpty");
-//     }
-//     else if ((addvendordata.mobile.length > 10)||(addvendordata.mobile.length<10)) {
-//       setCustomValidation("10number");
-//     }
-//      else if (addvendordata.email === "") {
-//       var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z]{2,4})+$/;
-//       var rst = regex.test(addvendordata.email);
-//       if (rst !== true) {
-//         setCustomValidation("EmailEmpty");
-//       }
-//       setCustomValidation("EmailEmpty");
-//     }
-//     else if (addvendordata.shop_address === "") {
-//       setCustomValidation("ShopAddressEmpty");
-//     } else if (addvendordata.gstn === "") {
-//       setCustomValidation("GSTEmpty");
-//     } else if (addvendordata.geolocation === "") {
-//       setCustomValidation("GeolocationEmpty");
-//     } 
-//     else if (Docnamearray.length==0) {
-//       setAddTagError("addTagErorrr")
-//     } 
-//     else {
-
-//       // e.stopPropagation();
-//       let x = [addvendordata.document_name];
-//       // e.preventDefault();
-//       const formData = new FormData();
-
-//       let socialname = addvendordata.social_media_links;
-//       let socialname_new = JSON.stringify(socialname);
-//       formData.append("id", vendorid);
-//       formData.append("image", file);
-//       formData.append("filename", fileName);
-//       formData.append("owner_name", addvendordata.owner_name);
-//       formData.append("shop_name", addvendordata.shop_name);
-//       formData.append("mobile", addvendordata.mobile);
-//       formData.append("email", emailVal);
-//       formData.append("shop_address", addvendordata.shop_address);
-//       formData.append("gstn", addvendordata.gstn);
-//       formData.append("geolocation", addvendordata.geolocation);
-//       formData.append("store_type", addvendordata.store_type);
-//       formData.append("availability", addvendordata.availability);
-//       formData.append("document_name", x);
-//       formData.append("status", "pending");
-//       formData.append("social_media_links", socialname_new);
-
-//       axios
-//         .put(`${process.env.REACT_APP_BASEURL}/vendor_update`, formData, {
-//           headers: {
-//             vendor_token: vendortoken,
-//           },
-//         })
-//         .then((response) => {
-//           let data = response.data;
-//           if (data.message === "Updated Vendor Profile") {
-//              setShow(true);
-//           }
-//         })
-//         .catch(function (error) {
-//           console.log(error);
-//         });
-//     }
-//   };
-  // console.log(
-  //   "--custom " +
-  //     JSON.stringify(customarray) +
-  //     "[[[ " +
-  //     JSON.stringify(AddCustom)
-  // );
-  // END VENDOR
   return (
     <Fragment>
    
@@ -753,14 +387,6 @@ const SellerSignUp = () => {
                         <p className="mt-1 ms-2 text-danger" type="invalid">
                           Please Fill Email
                         </p>
-                      ) : loginemailerror === "passwordblank" ? (
-                        <p className="mt-1 ms-2 text-danger" type="invalid">
-                          Please Fill Password
-                        </p>
-                      ) : loginemailerror === "passwordnotmatch" ? (
-                        <p className="mt-1 ms-2 text-danger" type="invalid">
-                          Please Fill Correct Password
-                        </p>
                       ) : null}
                     </div>
                   </div>
@@ -777,14 +403,19 @@ const SellerSignUp = () => {
                         onChange={(e) => onCredentialChange(e)}
                         value={credentailval.password}
                       />
-                      {error === false ? (
-                        <p className="mt-1 ms-2 text-danger" type="invalid">
-                          Please Enter Correct Password
-                        </p>
-                      ) : null}
+                
                       <label htmlFor="password" className="bg-transparent">
                         Password
                       </label>
+                       {loginemailerror === "passwordblank" ? (
+                        <p className="mt-1 ms-2 text-danger" type="invalid">
+                          Please Fill Password
+                        </p>
+                      ) : loginemailerror === "passwordnotmatch" ? (
+                        <p className="mt-1 ms-2 text-danger" type="invalid">
+                          Please Fill Correct Password
+                        </p>
+                      ) :null}
                     </div>
                   </div>
                   {vendorstatus === "incomplete" ? (
