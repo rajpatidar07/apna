@@ -419,9 +419,10 @@ const CategoryList = () => {
     e.preventDefault();
     let regex_num = /^[^\d]+$/;
     let num = regex_num.test(newName);
-    const regex_spc = /^[^']+$/;
-    let spc = regex_spc.test(newName);
-    if (newName === "" || num === false || spc === true) {
+    // const regex_spc = /^[^']+$/;
+    // let spc = regex_spc.test(newName);
+    // console.log(num, spc);
+    if (newName === "" || num === false /* || spc === false*/) {
       setCateName(true);
     } else if (type === "") {
       setCateType(true);

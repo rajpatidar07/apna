@@ -103,6 +103,7 @@ import Modal from "react-bootstrap/Modal";
     setShow(false);
   };
 
+
     const OnVendorDetail = () => {
   
         if (
@@ -115,7 +116,7 @@ import Modal from "react-bootstrap/Modal";
             .post(
               `${process.env.REACT_APP_BASEURL}/vendors`,
               {
-                vendor_id: "",
+                vendor_id: vendorid,
               },
               {
                 headers: {
@@ -124,6 +125,7 @@ import Modal from "react-bootstrap/Modal";
               }
             )
             .then((response) => {
+              console.log("res-----"+JSON.stringify(response.data))
               setaddvendordata(response.data[0]);
               setFile("");
               setFileName("");
@@ -136,6 +138,13 @@ import Modal from "react-bootstrap/Modal";
             });
         }
       };
+
+
+      useEffect(()=>{
+        OnVendorDetail()
+      },[])
+
+
 
       useEffect(() => {
         setaddvendordata({
@@ -325,24 +334,21 @@ useEffect(() => {
 
    
     const UpdateVendorClick = (e) => {
-        
-        // const form = e.currentTarget;
+       
+
         e.preventDefault();
-        // if (form.checkValidity() === false) {
-    
-        //     setValidated(true);
-        // }
-        if (addvendordata.owner_name === "") {
+      
+        if (addvendordata.owner_name === ""||addvendordata.owner_name === null) {
           setCustomValidation("ownernameEmpty");
-        } else if (addvendordata.shop_name === "") {
+        } else if (addvendordata.shop_name === ""||addvendordata.shop_name === null) {
           setCustomValidation("shopnameEmpty");
-        } else if (addvendordata.mobile === "") {
+        } else if (addvendordata.mobile === "" ||addvendordata.mobile === null) {
           setCustomValidation("MobileEmpty");
         }
         else if ((addvendordata.mobile.length > 10)||(addvendordata.mobile.length<10)) {
           setCustomValidation("10number");
         }
-         else if (addvendordata.email === "") {
+         else if (addvendordata.email === "" ||addvendordata.email === null) {
           var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z]{2,4})+$/;
           var rst = regex.test(addvendordata.email);
           if (rst !== true) {
@@ -350,11 +356,11 @@ useEffect(() => {
           }
           setCustomValidation("EmailEmpty");
         }
-        else if (addvendordata.shop_address === "") {
+        else if (addvendordata.shop_address === "" || addvendordata.shop_address === null) {
           setCustomValidation("ShopAddressEmpty");
-        } else if (addvendordata.gstn === "") {
+        } else if (addvendordata.gstn === ""|| addvendordata.gstn === null) {
           setCustomValidation("GSTEmpty");
-        } else if (addvendordata.geolocation === "") {
+        } else if (addvendordata.geolocation === ""|| addvendordata.geolocation === null) {
           setCustomValidation("GeolocationEmpty");
         } 
         else if (Docnamearray.length===0) {
