@@ -136,6 +136,26 @@
 .img_preview_boxx .imgprivew_box {
   position: relative;
 }
+.add_variety_list_box .action_btn_box .variety_edit_action_btn {
+  font-size: 22px;
+  cursor: pointer;
+}
+.img_preview_boxx .imgprivew_box .cover_icon {
+  display: none;
+  position: absolute;
+  bottom: 40%;
+  text-align: center;
+  width: 100%;
+  cursor: pointer;
+  color: #fff;
+  font-weight: 600;
+  background: #0d6efd;
+  transition: all 0.2s;
+}
+.img_preview_boxx .imgprivew_box:hover .cover_icon {
+  display: block;
+  transition: all 0.2s;
+}
 .img_preview_boxx .imgprivew_box .cross_icon {
   position: absolute;
   font-size: 20px;

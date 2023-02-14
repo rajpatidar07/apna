@@ -2,16 +2,21 @@ import React, { useEffect, useState, useRef } from "react";
 import Col from "react-bootstrap/Col";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { Accordion, Badge, Collapse } from "react-bootstrap";
+import { Badge, Collapse } from "react-bootstrap";
 import MainButton from "./common/button";
 import Modal from "react-bootstrap/Modal";
 import Iconbutton from "./common/iconbutton";
 import { MdOutlineEdit } from "react-icons/md";
+import { RiImageAddLine } from "react-icons/ri";
 import InputGroup from "react-bootstrap/InputGroup";
 import VariationJson from "./json/variation";
 import CategoryJson from "./json/categorytype";
 import Table from "react-bootstrap/Table";
-import { AiOutlinePlus, AiOutlineCloudUpload } from "react-icons/ai";
+import {
+  AiOutlinePlus,
+  AiOutlineCloudUpload,
+  AiOutlineEdit,
+} from "react-icons/ai";
 import { IoFilter } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { BsTrash } from "react-icons/bs";
@@ -98,8 +103,8 @@ function Product() {
     product_id: "",
     unit: "",
     colors: "",
-    unit_quantity: null,
-    size: null,
+    unit_quantity: "",
+    size: "",
     product_price: "",
     mrp: "",
     sale_price: "",
@@ -248,7 +253,7 @@ function Product() {
         console.log(error);
       });
   };
-  console.log("--pr" + JSON.stringify(productdata));
+
   useEffect(() => {
     const first = "";
     fetchdata();
@@ -466,7 +471,7 @@ function Product() {
       ),
 
       sortable: true,
-      width: "200px",
+      width: "250px",
       center: true,
       style: {
         paddingLeft: "0px",
@@ -947,20 +952,15 @@ function Product() {
   };
 
   let discountt = (variantarray.mrp * variantarray.discount) / 100;
-  let product_price = variantarray.mrp - discountt;
-  let totaltax =
+  let saleprice = variantarray.mrp - discountt;
+  let totaltaxpercent =
     Number(taxdata.gst) +
     Number(taxdata.wholesale_sales_tax) +
     Number(taxdata.retails_sales_tax) +
     Number(taxdata.manufacturers_sales_tax) +
     Number(taxdata.value_added_tax);
-  let saleprice;
-  let original_cost = product_price / (1 + totaltax / 100);
-
-  if (taxdata) {
-    saleprice = original_cost + original_cost * (totaltax / 100);
-  }
-
+  let totaltax = (saleprice * totaltaxpercent) / 100;
+  let product_price = saleprice - totaltax;
   useEffect(() => {
     setvariantarray({
       ...variantarray,
@@ -1038,10 +1038,7 @@ function Product() {
     setproductID(id);
     setvarietyShow(true);
   };
-  const AddMoreVariety = (e) => {
-    handleAddProduct(e);
-    // handlevarietyShow(id, variantid);
-  };
+
   const handlevarietyClose = (e) => {
     setChangeUnitProperty(false);
     setvariantarray(veriantData);
@@ -1053,9 +1050,6 @@ function Product() {
     setunitValidated(false);
     if (id == undefined || id == null || unitValidated == "false") {
       if (
-        // variantarray.unit == "" ||
-        // variantarray.unit == null ||
-        // variantarray.unit == "Select" ||
         variantarray.product_price == "" ||
         variantarray.mrp == "" ||
         variantarray.sale_price == "" ||
@@ -1258,7 +1252,6 @@ function Product() {
           variantarray.size === null ||
           variantarray.size === "")
       ) {
-        console.log("fill the size and color");
         setVarietyUnitvalidation("fillUnit&size&color");
       } else if (
         productdata.product_type !== "Cloths" &&
@@ -1266,7 +1259,6 @@ function Product() {
         variantarray.colors === "" &&
         (variantarray.size === "" || variantarray.size === null)
       ) {
-        console.log("fill the  color");
         setVarietyUnitvalidation("fillUnit&color");
       } else if (
         variantarray.unit !== "pcs" &&
@@ -1275,7 +1267,6 @@ function Product() {
           variantarray.unit_quantity === null)
       ) {
         setunitValidated(true);
-        console.log("Unit qwanity--");
         setVarietyUnitvalidation("unitQwanity&size&color");
       } else if (Number(variantarray.discount) > 100) {
         setunitValidated(true);
@@ -1322,13 +1313,26 @@ function Product() {
     setVariantRemove((variantremove) => {
       return { ...variantremove, id: id, productid: productid };
     });
+    setvariantarray({
+      product_status: "",
+      colors: "",
+      unit_quantity: "",
+      size: "",
+      product_price: "",
+      mrp: "",
+      sale_price: "",
+      discount: "0",
+      special_offer: false,
+      featured_product: false,
+      manufacturing_date: "",
+      expire_date: "",
+      quantity: "",
+      product_id: productID,
+    });
   };
 
   const MainVariantRemoveClick = (e) => {
     setvariantmainarray(variantmainarray.filter((item) => item !== e));
-    // if ((variantmainarray.length = 1)) {
-    //   setvariantarray({ unit: "", mrp: 0, sale_price: "" });
-    // }
   };
   const hideAlert = () => {
     if (vdata.length === 1) {
@@ -1998,10 +2002,6 @@ function Product() {
                         className="mx-3"
                         controlId="validationCustom04"
                       >
-                        {/* {console.log(
-                          "product description-------" +
-                            productdata.product_description
-                        )} */}
                         <Form.Label className="inputlabelheading" sm="12">
                           Product Description
                         </Form.Label>
@@ -2424,11 +2424,6 @@ function Product() {
                                                     ? false
                                                     : true
                                                 }
-                                                // className={
-                                                //   customvalidated === true
-                                                //     ? "border-danger"
-                                                //     : null
-                                                // }
                                               >
                                                 <option value={""}>
                                                   Select
@@ -2657,7 +2652,49 @@ function Product() {
                                                 type="number"
                                                 sm="9"
                                                 name={"product_price"}
-                                                value={original_cost.toFixed(2)}
+                                                onChange={() =>
+                                                  setvariantarray({
+                                                    ...variantarray,
+                                                    product_price: (
+                                                      saleprice -
+                                                      (saleprice *
+                                                        (Number(
+                                                          productdata.gst
+                                                        ) +
+                                                          Number(
+                                                            productdata.wholesale_sales_tax
+                                                          ) +
+                                                          Number(
+                                                            productdata.retails_sales_tax
+                                                          ) +
+                                                          Number(
+                                                            productdata.manufacturers_sales_tax
+                                                          ) +
+                                                          Number(
+                                                            productdata.value_added_tax
+                                                          ))) /
+                                                        100
+                                                    ).toFixed(2),
+                                                  })
+                                                }
+                                                value={(
+                                                  saleprice -
+                                                  (saleprice *
+                                                    (Number(productdata.gst) +
+                                                      Number(
+                                                        productdata.wholesale_sales_tax
+                                                      ) +
+                                                      Number(
+                                                        productdata.retails_sales_tax
+                                                      ) +
+                                                      Number(
+                                                        productdata.manufacturers_sales_tax
+                                                      ) +
+                                                      Number(
+                                                        productdata.value_added_tax
+                                                      ))) /
+                                                    100
+                                                ).toFixed(2)}
                                                 required
                                               />
                                             </InputGroup>
@@ -2670,38 +2707,29 @@ function Product() {
                                                 step={"any"}
                                                 type="number"
                                                 sm="9"
-                                                name={"product_price"}
+                                                name={"totaltax"}
                                                 value={(
-                                                  original_cost *
-                                                  (totaltax / 100)
+                                                  (saleprice *
+                                                    (Number(productdata.gst) +
+                                                      Number(
+                                                        productdata.wholesale_sales_tax
+                                                      ) +
+                                                      Number(
+                                                        productdata.retails_sales_tax
+                                                      ) +
+                                                      Number(
+                                                        productdata.manufacturers_sales_tax
+                                                      ) +
+                                                      Number(
+                                                        productdata.value_added_tax
+                                                      ))) /
+                                                  100
                                                 ).toFixed(2)}
                                                 required
                                               />
                                             </InputGroup>
                                           </div>
                                         </td>
-                                        {/* <td className="p-0 text-center">
-                                          <div className=" d-flex align-items-center">
-                                            <InputGroup className="" size="sm">
-                                              <Form.Control
-                                                step={"any"}
-                                                type="number"
-                                                sm="9"
-                                                // className={
-                                                //   customvalidated === true
-                                                //     ? "border-danger"
-                                                //     : null
-                                                // }
-                                                // onChange={(e) =>
-                                                //   onVariantChange(e)
-                                                // }
-                                                name={"product_price"}
-                                                value={product_price}
-                                                required
-                                              />
-                                            </InputGroup>
-                                          </div>
-                                        </td> */}
 
                                         <td className="p-0 text-center">
                                           <div className=" d-flex align-items-center">
@@ -2712,47 +2740,17 @@ function Product() {
                                                 sm="9"
                                                 name={"sale_price"}
                                                 value={saleprice.toFixed(2)}
+                                                onChange={() =>
+                                                  setvariantarray({
+                                                    ...variantarray,
+                                                    sale_price:
+                                                      saleprice.toFixed(2),
+                                                  })
+                                                }
                                               />
                                             </InputGroup>
                                           </div>
                                         </td>
-
-                                        {/* <td className="p-0 text-center">
-                                          <div className="">
-                                            <Form.Check
-                                              onChange={(e) =>
-                                                handleInputcheckboxChange(e)
-                                              }
-                                              name={"special_offer"}
-                                              checked={
-                                                variantarray.special_offer ===
-                                                  1 ||
-                                                variantarray.special_offer ===
-                                                  true
-                                                  ? true
-                                                  : false
-                                              }
-                                            />
-                                          </div>
-                                        </td>
-                                        <td className="p-0 text-center">
-                                          <div className="">
-                                            <Form.Check
-                                              onChange={(e) =>
-                                                handleInputcheckboxChange(e)
-                                              }
-                                              name={"featured_product"}
-                                              checked={
-                                                variantarray.featured_product ===
-                                                  1 ||
-                                                variantarray.featured_product ===
-                                                  true
-                                                  ? true
-                                                  : false
-                                              }
-                                            />
-                                          </div>
-                                        </td> */}
                                         <td className="p-0 text-center">
                                           <div className="manufacture_date">
                                             <InputGroup className="" size="sm">
@@ -2984,16 +2982,28 @@ function Product() {
                                               <td className="p-0 text-center ">
                                                 {variantdata.product_price}
                                               </td>
-
                                               <td className="p-0 text-center ">
-                                                {saleprice}
-                                              </td>
-                                              {/* <td className="p-0 text-center ">
-                                                {`${variantdata.special_offer}`}
+                                                {(
+                                                  (variantdata.sale_price *
+                                                    (Number(productdata.gst) +
+                                                      Number(
+                                                        productdata.wholesale_sales_tax
+                                                      ) +
+                                                      Number(
+                                                        productdata.retails_sales_tax
+                                                      ) +
+                                                      Number(
+                                                        productdata.manufacturers_sales_tax
+                                                      ) +
+                                                      Number(
+                                                        productdata.value_added_tax
+                                                      ))) /
+                                                  100
+                                                ).toFixed(2)}
                                               </td>
                                               <td className="p-0 text-center ">
-                                                {`${variantdata.featured_product}`}
-                                              </td> */}
+                                                {variantdata.sale_price}
+                                              </td>
                                               <td className="p-0 text-center ">
                                                 {variantdata.manufacturing_date}
                                               </td>
@@ -3459,7 +3469,6 @@ function Product() {
                                 value={variantarray.size}
                                 onChange={(e) => onVariantChange(e)}
                                 disabled={
-                                  // productVeriantUnit !== "pcs" ||
                                   variantarray.unit !== "pcs" &&
                                   variantarray.unit !== ""
                                     ? true
@@ -3564,7 +3573,9 @@ function Product() {
                                 type="number"
                                 sm="9"
                                 name={"product_price"}
-                                value={Number(variantarray.product_price)}
+                                value={Number(
+                                  variantarray.product_price
+                                ).toFixed(2)}
                               />
                             </InputGroup>
                           </Col>
@@ -3593,7 +3604,7 @@ function Product() {
                                 sm="9"
                                 min={1}
                                 name={"totaltax"}
-                                value={Number(variantarray.totaltax).toFixed(2)}
+                                value={Number(totaltax).toFixed(2)}
                               />
                             </InputGroup>
                           </Col>
@@ -3716,13 +3727,8 @@ function Product() {
                                 value={variantarray.quantity}
                                 sm="9"
                                 min={"1"}
-                                // className={
-                                //   customvalidated === true
-                                //     ? "border-danger"
-                                //     : null
-                                // }
                                 onChange={(e) => onVariantChange(e)}
-                                onKeyPress={(event) => {
+                                onKeyUp={(event) => {
                                   if (event.key === "Enter") {
                                     onVariantaddclick();
                                   }
@@ -3751,8 +3757,68 @@ function Product() {
                         </Button>
                       </div>
                     </div>
+                    <div className="col-md-3 col-sm-4 p-2 text-center">
+                      {varietyUnitvalidation === "ExpireDateValidation" ? (
+                        <tr>
+                          <p className="mt-1 ms-2 text-danger" type="invalid">
+                            Please Expire date should be greater than
+                            Manufacturing date
+                          </p>
+                        </tr>
+                      ) : null}
+                      <tr>
+                        {customvalidated === true ? (
+                          <p className="mt-1 ms-2 text-danger" type="invalid">
+                            Please fill Required fields
+                          </p>
+                        ) : null}
+
+                        {varietyUnitvalidation === "fillUnit&size&color" ? (
+                          <p className="mt-1 ms-2 text-danger" type="invalid">
+                            Please Fill size and colors
+                          </p>
+                        ) : varietyUnitvalidation === "fillUnit&color" ? (
+                          <p
+                            className="mt-1 ms-2 text-danger my-3"
+                            type="invalid"
+                          >
+                            Please fill color
+                          </p>
+                        ) : varietyUnitvalidation ===
+                          "unitQwanity&size&color" ? (
+                          <p
+                            className="mt-1 ms-2 text-danger my-3"
+                            type="invalid"
+                          >
+                            Please fill weight/volume/piece
+                          </p>
+                        ) : varietyUnitvalidation === "discountmore" ? (
+                          <p
+                            className="mt-1 ms-2 text-danger my-3"
+                            type="invalid"
+                          >
+                            Discount should be less then 100
+                          </p>
+                        ) : varietyUnitvalidation === "QwanityValidation" ? (
+                          <p
+                            className="mt-1 ms-2 text-danger my-3"
+                            type="invalid"
+                          >
+                            Quantity must be greater than 0
+                          </p>
+                        ) : varietyUnitvalidation === "mrpmore" ? (
+                          <p
+                            className="mt-1 ms-2 text-danger my-3"
+                            type="invalid"
+                          >
+                            Mrp must be lesser than 50000 and greater than 0
+                          </p>
+                        ) : varietyUnitvalidation === "" ? null : null}
+                      </tr>
+                    </div>
+
                     <p className="mt-2   text-center fs-6" type="invalid">
-                      Select Image This (height-156px * width-136px)
+                      Image Size should be (height-156px * width-136px)
                     </p>
                     <div className="col-12">
                       <Table bordered className="align-middle my-2">
@@ -3773,6 +3839,9 @@ function Product() {
                               Price<span className="text-danger">*</span>
                             </th>
                             <th>
+                              Total Tax<span className="text-danger">*</span>
+                            </th>
+                            <th>
                               Sale Price<span className="text-danger">*</span>
                             </th>
                             <th className="manufacture_date">
@@ -3788,82 +3857,13 @@ function Product() {
                           </tr>
                         </thead>
                         <tbody>
-                          {varietyUnitvalidation === "ExpireDateValidation" ? (
-                            <tr>
-                              <p
-                                className="mt-1 ms-2 text-danger"
-                                type="invalid"
-                              >
-                                Please Expire date should be greater than
-                                Manufacturing date
-                              </p>
-                            </tr>
-                          ) : null}
-
-                          <tr>
-                            {customvalidated === true ? (
-                              <p
-                                className="mt-1 ms-2 text-danger"
-                                type="invalid"
-                              >
-                                Please fill Required fields
-                              </p>
-                            ) : null}
-
-                            {varietyUnitvalidation === "fillUnit&size&color" ? (
-                              <p
-                                className="mt-1 ms-2 text-danger"
-                                type="invalid"
-                              >
-                                Please Fill size and colors
-                              </p>
-                            ) : varietyUnitvalidation === "fillUnit&color" ? (
-                              <p
-                                className="mt-1 ms-2 text-danger my-3"
-                                type="invalid"
-                              >
-                                Please fill color
-                              </p>
-                            ) : varietyUnitvalidation ===
-                              "unitQwanity&size&color" ? (
-                              <p
-                                className="mt-1 ms-2 text-danger my-3"
-                                type="invalid"
-                              >
-                                Please fill weight/volume/piece
-                              </p>
-                            ) : varietyUnitvalidation === "discountmore" ? (
-                              <p
-                                className="mt-1 ms-2 text-danger my-3"
-                                type="invalid"
-                              >
-                                Discount should be less then 100
-                              </p>
-                            ) : varietyUnitvalidation ===
-                              "QwanityValidation" ? (
-                              <p
-                                className="mt-1 ms-2 text-danger my-3"
-                                type="invalid"
-                              >
-                                Quantity must be greater than 0
-                              </p>
-                            ) : varietyUnitvalidation === "mrpmore" ? (
-                              <p
-                                className="mt-1 ms-2 text-danger my-3"
-                                type="invalid"
-                              >
-                                Mrp must be lesser than 50000 and greater than 0
-                              </p>
-                            ) : varietyUnitvalidation === "" ? null : null}
-                          </tr>
-
                           {vdata === "" || vdata === null || vdata === undefined
                             ? null
                             : (vdata || []).map((variantdata, i) => {
                                 return variantdata.is_delete === "0" ? null : (
                                   <>
-                                    <tr>
-                                      <td className="p-0 text-center ">
+                                    <tr className="add_variety_list_box">
+                                      <td className="p-0 py-3 text-center ">
                                         {variantdata.unit === "pcs"
                                           ? "color"
                                           : variantdata.unit === "piece"
@@ -3874,10 +3874,10 @@ function Product() {
                                           ? "volume"
                                           : ""}
                                       </td>
-                                      <td className="p-0 text-center ">
+                                      <td className="p-0 py-3 text-center ">
                                         {variantdata.colors}
                                       </td>
-                                      <td className="p-0 text-center ">
+                                      <td className="p-0 py-3 text-center ">
                                         {variantdata.unit === "gms"
                                           ? variantdata.unit_quantity
                                           : variantdata.unit === "ml"
@@ -3886,140 +3886,95 @@ function Product() {
                                           ? variantdata.unit_quantity
                                           : ""}
                                       </td>
-                                      <td className="p-0 text-center ">
+                                      <td className="p-0 py-3 text-center ">
                                         {variantdata.size}
                                       </td>
-                                      <td className="p-0 text-center ">
+                                      <td className="p-0 py-3 text-center ">
                                         {Number(variantdata.mrp).toFixed(2)}
                                       </td>
-                                      <td className="p-0 text-center ">
+                                      <td className="p-0 py-3 text-center ">
                                         {Number(variantdata.discount).toFixed(
                                           2
                                         )}
                                       </td>
-                                      <td className="p-0 text-center ">
+
+                                      <td className="p-0 py-3 text-center ">
                                         {Number(
                                           variantdata.product_price
                                         ).toFixed(2)}
                                       </td>
-
-                                      <td className="p-0 text-center ">
+                                      <td className="p-0 py-3 text-center ">
+                                        {Number(
+                                          (Number(variantdata.sale_price) *
+                                            Number(taxdata.gst) +
+                                            Number(
+                                              taxdata.wholesale_sales_tax
+                                            ) +
+                                            Number(taxdata.retails_sales_tax) +
+                                            Number(
+                                              taxdata.manufacturers_sales_tax
+                                            ) +
+                                            Number(taxdata.value_added_tax)) /
+                                            100
+                                        ).toFixed(2)}
+                                      </td>
+                                      <td className="p-0 py-3 text-center ">
                                         {variantdata.sale_price.toFixed(2)}
                                       </td>
-                                      <td className="p-0 text-center ">
+                                      <td className="p-0 py-3 text-center ">
                                         {moment(
                                           variantdata.manufacturing_date
                                         ).format("YYYY-MM-DD")}
                                       </td>
-                                      <td className="p-0 text-center ">
+                                      <td className="p-0 py-3 text-center ">
                                         {moment(variantdata.expire_date).format(
                                           "YYYY-MM-DD"
                                         )}
                                       </td>
-                                      {/* <td className="p-0 text-center">
-                                        <div className="manufacture_date">
-                                          <InputGroup className="" size="sm">
-                                            <Form.Control
-                                              multiple
-                                              type="file"
-                                              sm="9"
-                                              onChange={(e) =>
-                                                imguploadchange(
-                                                  e,
-                                                  variantdata.product_id,
-                                                  variantdata.id,
-                                                  variantdata.vendor_id
-                                                )
-                                              }
-                                              name={"img_64"}
-                                            />
-                                          </InputGroup>
-                                          <p
-                                            onClick={(id) =>
-                                              onImgView(
-                                                variantdata.id,
-                                                variantdata.product_id
-                                              )
-                                            }
-                                            className={
-                                              "view_product_box my-2 text-primary"
-                                            }
-                                          >
-                                            View Image
-                                          </p>
-                                        </div>
-                                      </td> */}
-                                      <td className="p-0 text-center manufacture_date">
+                                      <td className="p-0 py-3 text-center manufacture_date">
                                         {variantdata.quantity}
                                       </td>
-                                      <td className="p-0 text-center">
-                                        <div className="manufacture_date">
-                                          <Button
-                                            onClick={() => setOpen(!open)}
-                                            aria-controls="example-collapse-text"
-                                            aria-expanded={open}
-                                          >
-                                            click
-                                          </Button>
-                                          {/* <Button
-                                            onClick={(id) =>
-                                              onImgView(
-                                                variantdata.id,
-                                                variantdata.product_id
-                                              )
-                                            }
-                                            className={
-                                              "view_product_box my-2 text-primary"
-                                            }
-                                          >
-                                            View Image
-                                          </Button> */}
-                                        </div>
-                                        <p
-                                          onClick={(id) =>
-                                            onCoverImgButtonCLick(
+                                      <td className="p-0 py-3 text-center action_btn_box">
+                                        <RiImageAddLine
+                                          className="variety_edit_action_btn  text-success"
+                                          onClick={(id) => (
+                                            onImgView(
                                               variantdata.id,
                                               variantdata.product_id
-                                            )
+                                            ),
+                                            setOpen(!open)
+                                          )}
+                                          aria-controls={
+                                            "variantimgbox" + variantdata.id
                                           }
-                                          className={
-                                            "view_product_box my-2 text-primary"
-                                          }
-                                        >
-                                          Edit Image
-                                        </p>
-                                        <Button
-                                          variant="text-danger"
-                                          className="addcategoryicon text-danger"
-                                          onClick={(id) =>
-                                            VariantRemoveClick(
-                                              variantdata.id,
-                                              variantdata.product_id
-                                            )
-                                          }
-                                          size="sm"
-                                        >
-                                          &times;
-                                        </Button>
-
-                                        <Button
-                                          variant="text-danger"
-                                          className="addcategoryicon text-danger"
+                                          aria-expanded={open}
+                                        />
+                                        <BiEdit
+                                          className="variety_edit_action_btn text-primary mx-2"
                                           onClick={(id) =>
                                             VariantEditClick(
                                               variantdata.id,
                                               variantdata.product_id
                                             )
                                           }
-                                          size="sm"
-                                        >
-                                          <MdOutlineEdit />
-                                        </Button>
+                                        />
+                                        <BsTrash
+                                          className="variety_edit_action_btn text-danger"
+                                          onClick={(id) =>
+                                            VariantRemoveClick(
+                                              variantdata.id,
+                                              variantdata.product_id
+                                            )
+                                          }
+                                        />
                                       </td>
                                     </tr>
                                     <Collapse in={open}>
                                       {newImageUrls ? (
-                                        <tr className="img_preview_boxx">
+                                        <tr
+                                          className="img_preview_boxx"
+                                          id={"variantimgbox" + variantdata.id}
+                                        >
                                           <td className="" colSpan={"12"}>
                                             <div className="image_box">
                                               {newImageUrls.map((imgg, i) => {
@@ -4040,42 +3995,35 @@ function Product() {
                                                       alt="apna_organic"
                                                       height={120}
                                                     />
-                                                    {editbutton === true ? (
-                                                      <span
-                                                        className="cross_icon"
-                                                        onClick={(id) =>
-                                                          onImgCoverEditClick(
-                                                            imgg.product_image_id,
-                                                            imgg.product_id,
-                                                            imgg.product_verient_id
-                                                          )
-                                                        }
-                                                      >
-                                                        -
-                                                      </span>
-                                                    ) : (
-                                                      <span
-                                                        className="cross_icon"
-                                                        onClick={() =>
-                                                          onImgRemove(
-                                                            imgg.product_image_id,
-                                                            imgg.product_image_name,
-                                                            imgg.vendor_id,
-                                                            imgg.product_id,
-                                                            imgg.product_verient_id
-                                                          )
-                                                        }
-                                                      >
-                                                        &times;
-                                                      </span>
-                                                    )}
+                                                    <span
+                                                      className="cover_icon"
+                                                      onClick={(id) =>
+                                                        onImgCoverEditClick(
+                                                          imgg.product_image_id,
+                                                          imgg.product_id,
+                                                          imgg.product_verient_id
+                                                        )
+                                                      }
+                                                    >
+                                                      Set Cover
+                                                    </span>
+                                                    <span
+                                                      className="cross_icon"
+                                                      onClick={() =>
+                                                        onImgRemove(
+                                                          imgg.product_image_id,
+                                                          imgg.product_image_name,
+                                                          imgg.vendor_id,
+                                                          imgg.product_id,
+                                                          imgg.product_verient_id
+                                                        )
+                                                      }
+                                                    >
+                                                      &times;
+                                                    </span>
                                                   </div>
                                                 ) : null;
                                               })}
-                                              {/* <td
-                                            className="imgprivew_div"
-                                            colSpan={"12"}
-                                          > */}
                                               <div className="imgprivew_box">
                                                 <img
                                                   src={
@@ -4113,8 +4061,13 @@ function Product() {
                                 );
                               })}
                           {changeUnitproperty === "editvariety" ? (
-                            <tr className="text-primary text-center mx-5">
-                              Now You can edit vareity type
+                            <tr>
+                              <td
+                                className="text-primary text-center mx-5"
+                                colSpan={12}
+                              >
+                                Now You can edit vareity type
+                              </td>
                             </tr>
                           ) : null}
                         </tbody>

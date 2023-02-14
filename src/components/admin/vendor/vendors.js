@@ -83,8 +83,8 @@ const VendorsList = () => {
   const closeUpdateAlert = () => {
     setLoading(false);
     setUpdateAlert(false);
-    setErrorUpdateAlert(false)
-    setErrorAddAlert(false)
+    setErrorUpdateAlert(false);
+    setErrorAddAlert(false);
     setShow(false);
   };
   const OnSearchChange = (e) => {
@@ -328,29 +328,18 @@ const VendorsList = () => {
   }, [Docnamearray]);
 
   const handleFormChange = (e) => {
-<<<<<<< HEAD
     setCustomValidation(false);
-=======
-    setCustomValidation(false)
->>>>>>> efb128b9f7d93ee7173c6979d72e6964c70dc81f
     setaddvendordata({
       ...addvendordata,
       [e.target.name]: e.target.value,
     });
   };
   const handleClose = () => {
-<<<<<<< HEAD
-    setCustomValidation(false);
-
-    setcustomarray([]);
-
-=======
     // setLoading(false);
-   setCustomValidation(false)
-   setSocialLink(false)
+    setCustomValidation(false);
+    setSocialLink(false);
     setcustomarray([]);
-    setAddTagError("")
->>>>>>> efb128b9f7d93ee7173c6979d72e6964c70dc81f
+    setAddTagError("");
     setaddtag("");
     setaddvendordata(vendorObject);
     setDocnameArray("");
@@ -359,9 +348,9 @@ const VendorsList = () => {
   };
 
   const handleShow = (e) => {
-     setLoading(false);
-     setCustomValidation(false)
-    setAddTagError("")
+    setLoading(false);
+    setCustomValidation(false);
+    setAddTagError("");
     setaddtag("");
     setDocnameArray("");
 
@@ -417,9 +406,9 @@ const VendorsList = () => {
       setAddTagError("");
     }
   };
-const CreateTimeout=()=>{
-  setCondition(false)
-}
+  const CreateTimeout = () => {
+    setCondition(false);
+  };
 
   const DocuRemoveClick = (e) => {
     setDocnameArray(Docnamearray.filter((item) => item !== e));
@@ -430,14 +419,13 @@ const CreateTimeout=()=>{
   const handleStatusChnage = (e, id) => {
     setchangstatus(e.target.value);
     setCondition(true);
-     setTimeout( CreateTimeout, 50000)
+    setTimeout(CreateTimeout, 50000);
     axios
       .put(`${process.env.REACT_APP_BASEURL}/vendor_status_change`, {
         status_change: e.target.value,
         id: `${id}`,
       })
       .then((response) => {
-   
         if (
           response.data.status_message === "vendor status change succesfully "
         ) {
@@ -456,13 +444,7 @@ const CreateTimeout=()=>{
     setFileName(e.target.files[0].name);
   };
   imgvalidate = fileName.split(".").pop();
-<<<<<<< HEAD
-  console.log("---imagedd---" + imgvalidate);
 
-=======
-
-  
->>>>>>> efb128b9f7d93ee7173c6979d72e6964c70dc81f
   //img code start-----------------------------------------------------------------------------------------------
 
   const [vendorID, setVendorId] = useState("");
@@ -492,16 +474,10 @@ const CreateTimeout=()=>{
 
   const imguploadchange = async (e) => {
     if (e.target.files.length <= 5) {
-
-
       // e.preventDefault()
-   
+
       for (let i = 0; i < e.target.files.length; i++) {
-
-
         encoded = await convertToBase64(e.target.files[i]);
-
-       
 
         const [first, ...rest] = encoded.base64.split(",");
         const [nameimg, ext] = encoded.name.split(".");
@@ -628,11 +604,6 @@ const CreateTimeout=()=>{
 
   const AddVendorClick = (e) => {
     e.preventDefault();
-<<<<<<< HEAD
-    console.log("---imageddddddddd---" + imgvalidate);
-=======
-
->>>>>>> efb128b9f7d93ee7173c6979d72e6964c70dc81f
 
     if (addvendordata.owner_name === "") {
       setCustomValidation("ownernameEmpty");
@@ -656,23 +627,18 @@ const CreateTimeout=()=>{
       setCustomValidation("ShopAddressEmpty");
     } else if (addvendordata.gstn === "") {
       setCustomValidation("GSTEmpty");
-
     } else if (addvendordata.store_type === "") {
       setCustomValidation("storeTypeEmpty");
-    } 
-    
-    else if (addvendordata.geolocation === "") {
+    } else if (addvendordata.geolocation === "") {
       setCustomValidation("GeolocationEmpty");
-<<<<<<< HEAD
     } else if (
-      imgvalidate !== "jpg" ||
-      imgvalidate !== "jpeg" ||
-      imgvalidate !== "png"
+      imgvalidate == "jpg" ||
+      imgvalidate == "jpeg" ||
+      imgvalidate == "png" ||
+      imgvalidate === ""
     ) {
-      setCustomValidation("imgformat");
-    } else {
       e.preventDefault();
-      // setLoading(true);
+      setLoading(true);
       const formData = new FormData();
       let x = [addvendordata.document_name];
       let socialname = addvendordata.testjson;
@@ -710,95 +676,28 @@ const CreateTimeout=()=>{
             setapicall(true);
             setShow(false);
             setAddAlert(true);
-            // setLoading(false);
+            setLoading(false);
             setaddvendordata(vendorObject);
+
+            setCustomValidation(false);
+
+            setcustomarray([]);
+            setAddTagError("");
+            setaddtag("");
+
+            setDocnameArray("");
           }
         })
         .catch(function (error) {
           setLoading(false);
+          setErrorAddAlert(true);
           console.log(error);
         });
+    } else {
+      setCustomValidation("imgformat");
+
       // formRef.current.reset();
     }
-=======
-    } 
-
-     else if (
-        imgvalidate == "jpg" ||
-        imgvalidate == "jpeg" ||
-        imgvalidate == "png"||imgvalidate === ""
-      ) {
-        e.preventDefault();
-        setLoading(true);
-       const formData = new FormData();
-       let x = [addvendordata.document_name];
-       let socialname = addvendordata.testjson;
-       let socialname_new = JSON.stringify(socialname);
-
-       formData.append("image", file);
-       formData.append("filename", fileName);
-       formData.append("owner_name", addvendordata.owner_name);
-       formData.append("shop_name", addvendordata.shop_name);
-       formData.append("mobile", addvendordata.mobile);
-       formData.append("email", addvendordata.email);
-       formData.append("shop_address", addvendordata.shop_address);
-       formData.append("gstn", addvendordata.gstn);
-       formData.append("geolocation", addvendordata.geolocation);
-       formData.append("store_type", addvendordata.store_type);
-       formData.append("availability", addvendordata.availability);
-       formData.append("document_name", x);
-       formData.append("status", addvendordata.status);
-       formData.append("social_media_links", socialname_new);
-
-       axios
-         .post(`${process.env.REACT_APP_BASEURL}/vendor_register`, formData, {
-           headers: {
-             admin_token: admintoken,
-           },
-         })
-         .then((response) => {
-           console.log("vendor data----"+JSON.stringify(response))
-           if (response.data.message === "vendor already exist") {
-             setCustomValidation("alreadyexist");
-             setLoading(false);
-           }  else if (
-             response.data.message === "Sent mail to super_admin Succesfully"
-           ) {
-             setapicall(true);
-             setShow(false);
-             setAddAlert(true);
-              setLoading(false);
-             setaddvendordata(vendorObject);
-
-             setCustomValidation(false)
-          
-              setcustomarray([]);
-              setAddTagError("")
-              setaddtag("");
-    
-              setDocnameArray("");
-          
-          
-
-
-           }
-         })
-         .catch(function (error) {
-        
-           setLoading(false);
-           setErrorAddAlert(true)
-           console.log(error);
-         });
-      } 
-     
-       else {
-        setCustomValidation("imgformat");
-       
-        // formRef.current.reset();
-       
-      }
-
->>>>>>> efb128b9f7d93ee7173c6979d72e6964c70dc81f
 
     // }
   };
@@ -806,74 +705,58 @@ const CreateTimeout=()=>{
   const UpdateVendorClick = (e) => {
     e.preventDefault();
 
-<<<<<<< HEAD
-    if (addvendordata.owner_name === "") {
-=======
-   
-    if (addvendordata.owner_name === ""||addvendordata.owner_name === null) {
->>>>>>> efb128b9f7d93ee7173c6979d72e6964c70dc81f
+    if (addvendordata.owner_name === "" || addvendordata.owner_name === null) {
       setCustomValidation("ownernameEmpty");
-    } else if (addvendordata.shop_name === ""||addvendordata.shop_name === null) {
+    } else if (
+      addvendordata.shop_name === "" ||
+      addvendordata.shop_name === null
+    ) {
       setCustomValidation("shopnameEmpty");
-    } else if (addvendordata.mobile === ""||addvendordata.mobile === null) {
+    } else if (addvendordata.mobile === "" || addvendordata.mobile === null) {
       setCustomValidation("MobileEmpty");
     } else if (
       addvendordata.mobile.length > 10 ||
       addvendordata.mobile.length < 10
     ) {
       setCustomValidation("10number");
-<<<<<<< HEAD
-    } else if (addvendordata.email === "") {
-=======
-    }
-     else if (addvendordata.email === ""||addvendordata.email === null) {
->>>>>>> efb128b9f7d93ee7173c6979d72e6964c70dc81f
+    } else if (addvendordata.email === "" || addvendordata.email === null) {
       var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z]{2,4})+$/;
       var rst = regex.test(addvendordata.email);
       if (rst !== true) {
         setCustomValidation("EmailEmpty");
       }
       setCustomValidation("EmailEmpty");
-<<<<<<< HEAD
-    } else if (addvendordata.shop_address === "") {
-=======
-    }
-    else if (addvendordata.shop_address === ""|| addvendordata.shop_address === null) {
->>>>>>> efb128b9f7d93ee7173c6979d72e6964c70dc81f
+    } else if (
+      addvendordata.shop_address === "" ||
+      addvendordata.shop_address === null
+    ) {
       setCustomValidation("ShopAddressEmpty");
     } else if (addvendordata.gstn === "" || addvendordata.gstn === null) {
       setCustomValidation("GSTEmpty");
-    } 
-    else if (addvendordata.store_type === ""|| addvendordata.store_type === null ) {
+    } else if (
+      addvendordata.store_type === "" ||
+      addvendordata.store_type === null
+    ) {
       setCustomValidation("storeTypeEmpty");
-    }
-    else if (addvendordata.geolocation === "" || addvendordata.geolocation === null) {
+    } else if (
+      addvendordata.geolocation === "" ||
+      addvendordata.geolocation === null
+    ) {
       setCustomValidation("GeolocationEmpty");
-<<<<<<< HEAD
-    } else {
-      let x = [addvendordata.document_name];
-
-      const formData = new FormData();
-
-      let socialname = addvendordata.testjson;
-      let socialname_new = JSON.stringify(socialname);
-      formData.append("id", addvendordata.id);
-=======
-    } 
-    else if (
+    } else if (
       imgvalidate == "jpg" ||
       imgvalidate == "jpeg" ||
-      imgvalidate == "png"||imgvalidate == ""
+      imgvalidate == "png" ||
+      imgvalidate == ""
     ) {
       setLoading(true);
       let x = [addvendordata.document_name];
- 
+
       const formData = new FormData();
-    
+
       let socialname = addvendordata.testjson;
       let socialname_new = JSON.stringify(socialname);
       formData.append("vendor_id", addvendordata.id);
->>>>>>> efb128b9f7d93ee7173c6979d72e6964c70dc81f
       formData.append("image", file);
       formData.append("filename", fileName);
       formData.append("owner_name", addvendordata.owner_name);
@@ -888,9 +771,7 @@ const CreateTimeout=()=>{
       formData.append("document_name", x);
       formData.append("status", "active");
       formData.append("social_media_links", socialname_new);
-<<<<<<< HEAD
-=======
-    
+
       axios
         .put(`${process.env.REACT_APP_BASEURL_0}/vendor_update`, formData, {
           headers: {
@@ -901,55 +782,20 @@ const CreateTimeout=()=>{
           let data = response.data;
           if (data.response === "header error") {
             setLoading(false);
-          } else if (
-            response.data.message === "Updated Vendor Profile"
-          ) {
+          } else if (response.data.message === "Updated Vendor Profile") {
             setUpdateAlert(true);
             setLoading(false);
             setapicall(true);
-            setShow(false);  
+            setShow(false);
             setaddvendordata(vendorObject);
           }
         })
         .catch(function (error) {
-          setErrorUpdateAlert(true)
+          setErrorUpdateAlert(true);
           console.log(error);
         });
-    }
-
-
-else{
-  setCustomValidation("imgformat");
-}
-    
->>>>>>> efb128b9f7d93ee7173c6979d72e6964c70dc81f
-
-      axios
-        .put(`${process.env.REACT_APP_BASEURL}/vendor_update`, formData, {
-          headers: {
-            admin_token: token,
-          },
-        })
-        .then((response) => {
-          let data = response.data;
-          if (data.response === "header error") {
-            setLoading(false);
-          } else if (response.data.message === "vendor already exist") {
-            setCustomValidation("alreadyexist");
-            setLoading(false);
-          } else if (response.data.message === "please Enter 10 digit number") {
-            setCustomValidation("mobilenumber");
-          } else if (
-            response.data.message === "Sent mail to super_admin Succesfully"
-          ) {
-            setUpdateAlert(true);
-            setapicall(true);
-            setShow(false);
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+    } else {
+      setCustomValidation("imgformat");
     }
   };
 
@@ -1148,7 +994,7 @@ else{
                     // required
                     type="email"
                     placeholder="Email"
-                    disabled={   show=="add"?false:true}
+                    disabled={show == "add" ? false : true}
                     name={"email"}
                   />
                   {/* {customValidation === "alreadyexist" ? (
@@ -1297,16 +1143,13 @@ else{
                       );
                     })}
                   </Form.Select>
-<<<<<<< HEAD
-=======
                   {customValidation === "storeTypeEmpty" ? (
-                          <span className="text-danger">
-                            Please fill the Store type...
-                          </span>
-                        ) : customValidation === false ? (
-                          ""
-                        ) : null}
->>>>>>> efb128b9f7d93ee7173c6979d72e6964c70dc81f
+                    <span className="text-danger">
+                      Please fill the Store type...
+                    </span>
+                  ) : customValidation === false ? (
+                    ""
+                  ) : null}
                 </Form.Group>
               </div>
               <div className="col-md-6">
@@ -1360,28 +1203,33 @@ else{
                       </span>
                     ) : null}
                   </InputGroup>
-             
-                
- {console.log("document array--"+Docnamearray)} 
+
+                  {console.log("document array--" + Docnamearray)}
                   {Docnamearray === undefined ||
                   Docnamearray === null ||
-                  Docnamearray === ""||
-                                  
+                  Docnamearray === "" ||
                   Docnamearray.length === 0 ? null : (
                     <div className="d-flex align-items-center tagselectbox mt-2">
                       {Docnamearray.map((seotags, i) => {
                         return (
-                          <>{seotags=="\"\""?null:  <Badge className="tagselecttitle mb-0" bg="success">
-                          {seotags === null || seotags === undefined||seotags=="\"\""
-                            ? null
-                            : seotags}
+                          <>
+                            {seotags == '""' ? null : (
+                              <Badge
+                                className="tagselecttitle mb-0"
+                                bg="success"
+                              >
+                                {seotags === null ||
+                                seotags === undefined ||
+                                seotags == '""'
+                                  ? null
+                                  : seotags}
 
-                          <GiCancel
-                            className=" mx-0 ms-1 btncancel"
-                            onClick={() => DocuRemoveClick(seotags)}
-                          />
-                        </Badge>}
-                          
+                                <GiCancel
+                                  className=" mx-0 ms-1 btncancel"
+                                  onClick={() => DocuRemoveClick(seotags)}
+                                />
+                              </Badge>
+                            )}
                           </>
                         );
                       })}
@@ -1471,7 +1319,7 @@ else{
                       {customarray
                         ? (customarray || []).map((variantdata, i) => {
                             let v = JSON.stringify(variantdata);
-                        
+
                             let st = v.split(":");
                             let pro = st[0].replace(/[{}]/g, "");
                             let link = st[1].replace(/[{}]/g, "");
@@ -1674,17 +1522,16 @@ else{
         title=" Vender Updated Successfully "
         onConfirm={closeUpdateAlert}
       />
-        <SAlert
+      <SAlert
         show={ErrorUpdateAlert}
         title=" Vender Not Updated  "
         onConfirm={closeUpdateAlert}
       />
-         <SAlert
+      <SAlert
         show={ErrorAddAlert}
         title=" Vender Not Added...!!!  "
         onConfirm={closeUpdateAlert}
       />
-
 
       {/* /End add docs model/ */}
     </div>
