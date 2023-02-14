@@ -37,6 +37,9 @@ const Deletedproduct = () => {
         varient_id: id,
         product_id: productid,
         is_delete: "1",
+      },
+      {
+        headers: { admin_token: `${token}` },
       })
       .then((response) => {
         let data = response.data;
@@ -117,7 +120,6 @@ const Deletedproduct = () => {
       .post(`${process.env.REACT_APP_BASEURL_0}/home?page=0&per_page=400`, {
         product_search: {
           search: [`${searchdata.product_title_name}`],
-          category: "",
           price_from: "",
           price_to: "",
           id: "",
@@ -189,6 +191,17 @@ const Deletedproduct = () => {
       width: "100px",
     },
     {
+      name: "Vendor",
+      selector: (row) => row.shop,
+      sortable: true,
+      width: "90px",
+    },
+    {
+      name: "Brand",
+      selector: (row) => row.brand,
+      sortable: true,
+      width: "100px",
+    },{
       name: "Mrp",
       selector: (row) => row.mrp.toFixed(2),
       sortable: true,
@@ -388,14 +401,14 @@ const Deletedproduct = () => {
               name="manufacturing_date"
             />
           </div>
-          <div className="col-md-3 col-sm-6 aos_input">
+          <div className="col-md-3 col-sm-6 aos_input mt-2">
             <MainButton
               btntext={"Search"}
               onClick={onSearchClick}
               btnclass={"button main_button w-100"}
             />
           </div>
-          <div className="col-md-3 col-sm-6 aos_input">
+          <div className="col-md-3 col-sm-6 aos_input mt-2">
             <MainButton
               btntext={"Reset"}
               btnclass={"button main_button w-100"}
