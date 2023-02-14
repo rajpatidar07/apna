@@ -10,6 +10,12 @@ import axios from "axios";
 
 const SellerLogin = () => {
 
+
+  // const [sellerLoginshow, setSellerLoginShow] = useState(false);
+  // const [sellerForgetpasswordshow, setSellerForgetpasswordshow] = useState(false);
+  // const [otpverificationshow, setOtpverificationShow] = useState(false);
+  // const[sellersignupshow,setSellerSignUpShow]=useState(true)
+
   const [show, setShow] = useState(false);
   const [spinner, setSpinner] = useState(false);
   const [otp, setotp] = useState(0);
@@ -204,9 +210,13 @@ const SellerLogin = () => {
                               Remember me
                             </label>
                           </div>
-                          <NavLink to="/forgot" className="forgot">
-                            Forgot Password?
-                          </NavLink>
+                          {/* <div
+                         onClick={sellerForgetPasswordFunction}
+                       className="sign-up-box"
+
+                     > 
+                          Forget password?
+                     </div> */}
                         </div>
                       </div>
 

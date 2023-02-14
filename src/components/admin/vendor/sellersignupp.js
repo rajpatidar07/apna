@@ -17,6 +17,7 @@ const SellerSignupp = () => {
 
 
   const [sellerLoginshow, setSellerLoginShow] = useState(false);
+  const [sellerForgetpasswordshow, setSellerForgetpasswordshow] = useState(false);
   const [otpverificationshow, setOtpverificationShow] = useState(false);
   const[sellersignupshow,setSellerSignUpShow]=useState(true)
   const [spinner, setSpinner] = useState(false);
@@ -44,6 +45,11 @@ const sellerloginfunction=()=>{
   setSellerSignUpShow(false)
 }
 
+const sellerForgetPasswordFunction=()=>{
+  setSellerForgetpasswordshow(true)
+  setSellerLoginShow(false)
+  setSellerSignUpShow(false)
+}
 
 
   const onEmailChange=(e)=>{
@@ -164,16 +170,16 @@ const sellerloginfunction=()=>{
                               Remember me
                             </label>
                           </div>
-                          <NavLink to="/forgot" className="forgot">
+                          {/* <NavLink to="/forgot" className="forgot">
                             Forgot Password?
-                          </NavLink>
-                          {/* <button
-                      onClick={sellerloginfunction}
-                     className="forgot"
-                     >
-                           
-                          Log In
-                     </button> */}
+                          </NavLink> */}
+                          <div
+                      onClick={sellerForgetPasswordFunction}
+                       className="sign-up-box"
+
+                     > 
+                          Forget password?
+                     </div> 
                         </div>
                       </div>
                   
@@ -264,7 +270,9 @@ const sellerloginfunction=()=>{
            
               {/* seller login end here */}
 
-              <SellerForgertPassword/>
+            {/* seller forget password start here */}
+         {sellerForgetpasswordshow===true?<SellerForgertPassword/>:sellerForgetpasswordshow===false?null:null}
+                {/* seller forget password start here */}
 
               <SallerChangePassword/>
             </div>
