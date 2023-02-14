@@ -17,9 +17,6 @@ const Promotionproduct = () => {
   const formRef = useRef();
   let userid = localStorage.getItem("userid");
   const [promotionProductData, setpromotionProductData] = useState([]);
-
-  const handleAlert = () => setAlert(true);
-  const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
   const [apicall, setapicall] = useState(false);
   const [show, setShow] = useState(false);
@@ -28,19 +25,21 @@ const Promotionproduct = () => {
   const [UpdateAlert, setUpdateAlert] = useState(false);
   const currentdate = moment().format("");
   const [searchdata, setsearchData] = useState({
-        start_date: "",
-        end_date: "",
-        status :"",
-        category:[], 
-        brand:[],
-        vendor:[]
+    start_date: "",
+    end_date: "",
+    status :"",
+    category:[], 
+    brand:[],
+    vendor:[]
   });
   const [filtervategory, setfiltercategory] = useState([]);
   const [vendorid, setVendorId] = useState([]);
   const [searcherror,setsearcherror] = useState("")
   
   let token = localStorage.getItem("token");
-
+  
+  const handleAlert = () => setAlert(true);
+  const hideAlert = () => setAlert(false);
   /*<---Category list api---> */
   const getCategorydatafilter = () => {
     try {
@@ -364,7 +363,6 @@ const Promotionproduct = () => {
   /*<---Onlick Function to Search--->*/
   const Search = () => {
     if (
-      searchdata.status === "" && 
       searchdata.vendor === "" &&
       searchdata.brand === "" &&
       searchdata.category === ""

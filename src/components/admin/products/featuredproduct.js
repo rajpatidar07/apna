@@ -86,7 +86,6 @@ let token = localStorage.getItem("token");
 //   console.log("oooooo--------"+JSON.stringify(featuredProductData))
 /*<----Function to get the data---->*/
   const handleShow = (product_id) => {
-    console.log('ddddddddddd');
     try {
       axios
         .post(`${process.env.REACT_APP_BASEURL_0}/fetured_product_search`, {
