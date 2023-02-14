@@ -29,6 +29,7 @@ const BlogList = () => {
   const [status, setStatus] = useState("");
   const [AddAlert, setAddAlert] = useState(false);
   const [UpdateAlert, setUpdateAlert] = useState(false);
+  let [condition, setCondition] = useState(false);
   const [blog, setBlog] = useState([]);
   const [addblog, setaddBlog] = useState({
     admin_id: "",
@@ -39,6 +40,8 @@ const BlogList = () => {
     product_tag: "",
     publish_date: "",
   });
+
+
   const [searchdata, setsearchData] = useState([]);
 
   const [recent, setRecent] = useState("");
@@ -78,6 +81,7 @@ const BlogList = () => {
       .then((response) => {
         let data = response.data;
         setBlog(response.data);
+        setCondition(false);
         // setsearchBlog('')
         categoryArray = [];
         setapicall(false);
@@ -87,10 +91,9 @@ const BlogList = () => {
     setFile(e.target.files[0]);
     setFileName(e.target.files[0].name);
   };
- 
+
   const handleFormChange = (e) => {
     setaddBlog({ ...addblog, [e.target.name]: e.target.value });
-
   };
 
   const handleClose = () => {
@@ -100,7 +103,6 @@ const BlogList = () => {
   };
 
   const handleShow = (e, id) => {
-
     if (e === "add") {
       setShow(e);
     } else {
@@ -141,12 +143,14 @@ const BlogList = () => {
         setBlog(response.data);
         setaddBlog(response.data);
         setsearchData(data);
+        setCondition(false);
         setapicall(false);
       });
   }, [apicall]);
 
-  const admid = localStorage.getItem("adminid");
   const AddBlog = (e, id) => {
+    const adminid = localStorage.getItem("encryptadminid");
+    console.log("0000888888655%%%%%%%%%%%0"+adminid)
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
       e.stopPropagation();
@@ -156,14 +160,16 @@ const BlogList = () => {
     if (form.checkValidity() === true) {
       e.preventDefault();
       const formData = new FormData();
+   
 
       formData.append("image", file);
       formData.append("filename", fileName);
-      formData.append("admin_id", admid);
+      formData.append("admin_id", adminid);
       formData.append("title", addblog.title);
       formData.append("description", addblog.description);
       formData.append("category", addblog.category);
       formData.append("product_tag", addblog.product_tag);
+      formData.append("publish_date",addblog.publish_date)
       axios
         .post(`${process.env.REACT_APP_BASEURL}/add_blog`, formData)
         .then((response) => {
@@ -180,16 +186,20 @@ const BlogList = () => {
     }
   };
   const UpdateBlog = (show) => {
+    const adminid = localStorage.getItem("encryptadminid");
+    console.log("0000888888655%%%%%%%%%%%0"+adminid)
     const formData = new FormData();
+  
     formData.append("image", file);
     formData.append("filename", fileName);
-    formData.append("admin_id", admid);
+    formData.append("admin_id", adminid);
     formData.append("title", addblog.title);
     formData.append("description", addblog.description);
     formData.append("category", addblog.category);
     formData.append("product_tag", addblog.product_tag);
     formData.append("publish_date", addblog.publish_date);
-    formData.append("id", addblog.id);
+    formData.append("id",`${id}`);
+    console.log("kkkkkk"+id)
     axios
       .put(`${process.env.REACT_APP_BASEURL}/update_blog`, formData)
       .then((response) => {
@@ -205,7 +215,7 @@ const BlogList = () => {
     setValidated(false);
     show.preventDefault();
   };
-
+console.log("BLOGGGGGGGGGG----------"+JSON.stringify(addblog))
   const handleAlert = (id) => {
     setId(id);
     setAlert(true);
@@ -221,7 +231,7 @@ const BlogList = () => {
     setAlert(false);
   };
 
-  // to cancel in the delete alert :-
+  // To cancel in the delete alert :-
 
   const CancelAlert = () => {
     setAlert(false);
@@ -318,18 +328,21 @@ const BlogList = () => {
         >
           <option
             value="pending"
+            disabled={condition ? true : false}
             selected={row.status === "pending" ? true : false}
           >
             Pending
           </option>
           <option
             value="published"
+            disabled={condition ? true : false}
             selected={row.status === "published" ? true : false}
           >
             Published
           </option>
           <option
             value="approved"
+            disabled={condition ? true : false}
             selected={row.status === "approved" ? true : false}
           >
             Approved{" "}
@@ -375,6 +388,7 @@ const BlogList = () => {
   const handleClick = () => {};
   const onStatusChange = (e, id) => {
     setchangstatus(e.target.value);
+    setCondition(true);
     axios
       .put(`${process.env.REACT_APP_BASEURL}/update_blog_status`, {
         status: e.target.value,
@@ -384,10 +398,12 @@ const BlogList = () => {
       .then((response) => {
         let data = response.data;
         setStatus(data);
+        setCondition(false);
         setapicall(true);
       })
       .catch(function (error) {
         console.log(error);
+        setCondition(false);
       });
   };
 
@@ -452,7 +468,6 @@ const BlogList = () => {
               })}
             </Form.Select>
           </div>
-         
 
           <div className="col-md-3 col-sm-6 aos_input">
             <button
@@ -626,13 +641,11 @@ const BlogList = () => {
                     placeholder="Shop_logo"
                     name={"image"}
                   />
-                 <p className="mt-2 text-danger  fs-6" type="invalid">
-                            Select Image This (height-198px * width-198px)
-                            </p>
+                  <p className="mt-2 text-danger  fs-6" type="invalid">
+                    Select Image This (height-198px * width-198px)
+                  </p>
                 </Form.Group>
-              
               </div>
-             
             </div>
           </Modal.Body>
           <Modal.Footer>

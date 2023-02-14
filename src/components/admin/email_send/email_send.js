@@ -26,6 +26,7 @@ const EmailSend = () => {
 
   const [AddAlert, setAddAlert] = useState(false);
   const [UpdateAlert, setUpdateAlert] = useState(false);
+  let [condition, setCondition] = useState(false);
   const [emailText, setEmailText] = useState("");
   const [getEmaildata, setGetEmaildata] = useState([]);
   const [apicall, setapicall] = useState(false);
@@ -144,17 +145,23 @@ const EmailSend = () => {
         >
           <option
             value="pending"
+            disabled={condition ? true : false}
             selected={row.status === "pending" ? true : false}
           >
             Pending
           </option>
           <option
             value="active"
+            disabled={condition ? true : false}
             selected={row.status === "active" ? true : false}
           >
             Active
           </option>
-          <option value="hold" selected={row.status === "hold" ? true : false}>
+          <option
+            value="hold"
+            disabled={condition ? true : false}
+            selected={row.status === "hold" ? true : false}
+          >
             Hold
           </option>
         </Form.Select>
@@ -216,7 +223,7 @@ const EmailSend = () => {
           console.log(response);
           setAddAlert(true);
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
 
@@ -244,7 +251,7 @@ const EmailSend = () => {
       .then((response) => {
         setUpdateAlert(true);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
 
@@ -267,25 +274,29 @@ console.log("email_id "+emaildata.id);
         let data = response.data.filter((item) => item.is_deleted === 1);
 
         setGetEmaildata(data);
+        setCondition(false);
         setapicall(false);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
 
   const onStatusChange = (e, id) => {
-    setchangstatus("ssssssssss" + e.target.value);
+    setchangstatus(e.target.value);
+    setCondition(true);
     axios
       .put(`${process.env.REACT_APP_BASEURL}/email_template_status`, {
         status: e.target.value,
         id: `${id}`,
       })
       .then((response) => {
+        setCondition(false);
         setapicall(true);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
+        setCondition(false);
       });
   };
 
@@ -298,7 +309,7 @@ console.log("email_id "+emaildata.id);
       .then((response) => {
         setapicall(true);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };

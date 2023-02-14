@@ -104,6 +104,7 @@ const OrderDetail = () => {
   var total = 0;
   var sub_total = 0;
   var total_tax = 0;
+
   return (
     <div className="order_detail_page">
       <div className="order_detail">
@@ -232,7 +233,7 @@ const OrderDetail = () => {
                   (Number(orderdata.product_price) * countAllText) / 100;
                 let total_price = orderdata.sale_price * orderdata.quantity;
                 total += Number(total_price);
-                sub_total += Number(orderdata.sale_price);
+                sub_total += Number(total_price);
                 total_tax += Number(tax);
                 return (
                   <div
@@ -244,7 +245,9 @@ const OrderDetail = () => {
                         src={
                           orderdata.all_images
                             ? orderdata.all_images
-                            : "https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
+                            : orderdata.all_images === "null"
+                            ? "https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
+                            : null
                         }
                         alt="apnaorganic"
                       />
@@ -306,7 +309,7 @@ const OrderDetail = () => {
                     <p>Speed post package</p>
                   </div>
                 </div>
-                <div className="delivery_payment">$20.00</div>
+                <div className="delivery_payment">00</div>
               </div>
             </div>
             <div className="payment_summary">

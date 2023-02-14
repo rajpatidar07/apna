@@ -49,6 +49,8 @@ import BlogList from "./blog/add_blog";
 import EmailSend from "./email_send/email_send";
 import Notification from "./notification/Notification";
 import AuthWrapper from "./authwrapper";
+import SellerSignUp from "./sellersignup";
+import VendorUpdate from "./vendorupdate";
 function AdminLayout() {
   // const location = useLocation();
   const [adminLogged, setadminLogged] = useState(localStorage.getItem("token"));
@@ -61,6 +63,7 @@ function AdminLayout() {
     <div className="container-fluid p-0">
       <Router>
         <Routes>
+          <Route path="/sellersignup" element={<SellerSignUp />} />
           <Route path="/login" element={<Login />} />
           <Route path="/change_password" element={<ChangePassword />} />
           <Route path="/forgot" element={<Forgot />} />
@@ -76,6 +79,7 @@ function AdminLayout() {
               <Routes>
                 <Route element={<AuthWrapper />}>
                   <Route path="/" element={<Dashboard />} />
+                  <Route path="/vendorupdate" element={<VendorUpdate />} />
                   <Route path="/product" element={<Product />} />
                   <Route path="/orders" element={<Orders />} />
                   <Route path="/addproduct" element={<Addproduct />} />
@@ -95,6 +99,7 @@ function AdminLayout() {
                   <Route path="/order_detail" element={<OrderDetail />} />
                   <Route path="/footer" element={<Footer />} />
                   <Route path="/vendors" element={<VendorsList />} />
+
                   <Route path="/add_blog" element={<BlogList />} />
                   <Route path="/notification" element={<Notification />} />
                   <Route path="/components" element={<AdminComponents />} />

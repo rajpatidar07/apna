@@ -146,12 +146,6 @@ const Review = () => {
       width: "180px",
     },
     {
-      name: "Category Type",
-      selector: (row) => row.category_type,
-      sortable: true,
-      width: "150px",
-    },
-    {
       name: "Review Date",
       selector: (row) => moment(row.review_date).format("YYYY-MM-DD"),
       sortable: true,
@@ -166,6 +160,8 @@ const Review = () => {
       name: "Comment",
       selector: (row) => row.comment,
       sortable: true,
+      width: "150px",
+
       style: {
         paddingRight: "12px",
         paddingLeft: "12px",
@@ -232,21 +228,6 @@ const Review = () => {
               value={searchdata.product_name}
               className={"adminsideinput"}
             />
-          </div>
-          <div className="col-md-3 col-sm-6 aos_input">
-            <Form.Select
-              aria-label="Search by category"
-              className="adminselectbox"
-              placeholder="Search by category"
-              onChange={(e) => OnSearchChange(e)}
-              name={"category_type"}
-              value={searchdata.category_type}
-            >
-              <option value={""}>Search by category</option>
-              <option value="cloth">Clothes</option>
-              <option value="food">Fish & Meat</option>
-              <option value="baby care">Baby Care</option>
-            </Form.Select>
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
             <Form.Select

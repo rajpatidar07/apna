@@ -191,9 +191,8 @@ const InvoiceList = () => {
     },
   ];
   const [filterText, setFilterText] = React.useState("");
-  const [resetPaginationToggle, setResetPaginationToggle] = React.useState(
-    false
-  );
+  const [resetPaginationToggle, setResetPaginationToggle] =
+    React.useState(false);
   const subHeaderComponent = useMemo(() => {
     const handleClear = () => {
       if (filterText) {

@@ -7,6 +7,9 @@ import axios from "axios";
 
 const ChangePassword = () => {
   const navigate = useNavigate();
+  const [PasswordError, setPasswordError] = useState("");
+  const [passval, setpassval] = useState("");
+
   const [password, setpassword] = useState({
     email: "",
     current_password: "",
@@ -16,22 +19,45 @@ const ChangePassword = () => {
   const [validation, setValidation] = useState(false);
   const onPasswordChange = (e) => {
     setpassword({ ...password, [e.target.name]: e.target.value });
+    setPasswordError("")
     setValidation(false);
   };
-  console.log("fff" + JSON.stringify(password));
+
+  const PasswordChange=(e)=>{
+    setpassval(e.target.value)
+      setPasswordError("")
+  }
   const LoginForm = (e) => {
     if (
-      password.new_password !== password.confirm_password &&
-      password.new_password !== "" &&
+      passval.new_password !== password.confirm_password &&
+      passval.new_password !== "" &&
       password.confirm_password !== ""
-    ) {
-      setValidation("not same");
-    } else if (
-      password.new_password === "" ||
+    ) 
+    if (!passval) {
+      setPasswordError("New password is required");
+    }
+    else if (
+      passval < 8 ||
+      passval !== /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/
+    )
+    {
+      setPasswordError(
+        "New password must be at least 8 characters, 1 lowercase letter, 1 uppercase letter and 1 digit"
+      );
+    }
+    else if (
+      passval.new_password === "" ||
       password.confirm_password === ""
     ) {
       setValidation("please fill all input");
-    } else {
+    } 
+    else
+    {
+      setValidation("not same");
+      setPasswordError("");
+    } 
+  if (passval.length>=8){
+    {
       axios
         .put(`${process.env.REACT_APP_BASEURL}/update_password`, {
           admin_email: password.email,
@@ -46,13 +72,14 @@ const ChangePassword = () => {
           } else if (response.data.response === "password not matched") {
             setValidation("password not matched");
           } else if (
-            password.new_password === password.confirm_password &&
+            passval.new_password === password.confirm_password &&
             response.data.response === "password_updated"
           ) {
             navigate("/login");
           }
         });
     }
+  }
     e.preventDefault();
   };
 
@@ -112,14 +139,17 @@ const ChangePassword = () => {
                         <div className="form-floating theme-form-floating log-in-form">
                           <input
                             required
-                            value={password.new_password}
+                            value={passval.new_password}
                             name={"new_password"}
-                            onChange={(e) => onPasswordChange(e)}
+                            onChange={(e) => PasswordChange(e)}
                             type="password"
                             className="form-control"
                             id="new password"
                             placeholder="New Password"
                           />
+                          {PasswordError && (
+                    <p className="error-message text-danger">{PasswordError}</p>
+                  )}
                           <label for="new password">New Password</label>
                         </div>
                       </div>

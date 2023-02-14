@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import Col from "react-bootstrap/Col";
-import Input from "./common/input";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { Badge } from "react-bootstrap";
@@ -13,7 +12,7 @@ import VariationJson from "./json/variation";
 import CategoryJson from "./json/categorytype";
 import Table from "react-bootstrap/Table";
 import { AiOutlinePlus, AiOutlineCloudUpload } from "react-icons/ai";
-import { FaEllipsisV } from "react-icons/fa";
+import { IoFilter } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
@@ -22,19 +21,43 @@ import Form from "react-bootstrap/Form";
 import SAlert from "./common/salert";
 import axios from "axios";
 import { Button } from "react-bootstrap";
-import { GiCancel } from "react-icons/gi";
 import moment from "moment/moment";
 import BrandJson from "./json/BrandJson";
 import { downloadExcel } from "react-export-table-to-excel";
-import { Pointer } from "highcharts";
-
+import productstatus from "../admin/json/Status";
 let categoryArray = [];
 let encoded;
 let ImgObj = [];
 
 function Product() {
+  ClassicEditor.defaultConfig = {
+    toolbar: {
+      items: [
+        "heading",
+        "|",
+        "bold",
+        "italic",
+        "|",
+        "bulletedList",
+        "numberedList",
+        "|",
+        "insertTable",
+        "|",
+        "undo",
+        "redo",
+      ],
+    },
+    table: {
+      contentToolbar: ["tableColumn", "tableRow", "mergeTableCells"],
+    },
+    language: "en",
+  };
+  const [changeUnitproperty, setChangeUnitProperty] = useState(false);
+  const [selectproductData, setSelectProductData] = useState("");
+  const [checkProductType, setCheckProductType] = useState(false);
   const [error, setError] = useState(true);
   const [vendorid, setVendorId] = useState([]);
+  const [filtervategory, setfiltercategory] = useState([]);
   const [category, setCategory] = useState([]);
   const [indVal, setIndVal] = useState(0);
   const [subCategory, setSubCategory] = useState([]);
@@ -55,6 +78,7 @@ function Product() {
   const [productid, setproductid] = useState("");
   const [Alert, setAlert] = useState(false);
   const [VerityAlert, setVerityAlert] = useState(false);
+  const [varietyValidation, setvarietyValidated] = useState(false);
   const [ProductDraftAlert, setProductDraftAlert] = useState(false);
   const [UpdatetAlert, setUpdatetAlert] = useState(false);
   const [ProductAlert, setProductAlert] = useState(false);
@@ -67,7 +91,7 @@ function Product() {
   const [modalshow, setmodalshow] = useState(false);
   const [seoarray, setseoArray] = useState([]);
   const [unitValidated, setunitValidated] = useState(false);
-  const[varietyUnitvalidation,setVarietyUnitvalidation]=useState("")
+  const [varietyUnitvalidation, setVarietyUnitvalidation] = useState("");
   var veriantData = {
     product_status: "",
     product_id: "",
@@ -85,6 +109,7 @@ function Product() {
     expire_date: "",
     quantity: "",
   };
+  const [productVeriantUnit, setProductveriantUnit] = useState("");
   const [variantarray, setvariantarray] = useState(veriantData);
   const [variantmainarray, setvariantmainarray] = useState([]);
   const [data1, setdata1] = useState("");
@@ -97,6 +122,7 @@ function Product() {
     description: [],
   });
   const [vdata, setvdata] = useState([]);
+  let [condition, setCondition] = useState(false);
 
   var data = {
     add_custom_input: [],
@@ -104,7 +130,7 @@ function Product() {
     product_slug: "",
     store_name: "",
     product_type: "",
-    category: "",
+    category: [],
     parent_category: "",
     wholesale_sales_tax: "0",
     gst: "0",
@@ -116,7 +142,7 @@ function Product() {
     manufacturing_date: "",
     expire_date: "",
     seo_tag: "",
-    variety: false,
+    variety: "",
     product_description: "",
     other_introduction: "",
     vendor_id: "",
@@ -129,7 +155,10 @@ function Product() {
   const formRef = useRef();
   const [searchdata, setsearchData] = useState({
     product_title_name: "",
-    category: "",
+    vendor: [],
+    brand: [],
+    tag: [],
+    category: [],
     product_status: "",
   });
 
@@ -146,8 +175,7 @@ function Product() {
     manufacturers_sales_tax: "0",
   });
   const [productID, setproductID] = useState("");
-
-  const [ExcelFile, setExcelFile] = useState("");
+  const [bulkProductError, setBulkProductError] = useState("");
 
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
@@ -170,6 +198,7 @@ function Product() {
       });
   };
   const onProductStatusChange = (e, id, productid) => {
+    setCondition(true);
     axios
       .put(`${process.env.REACT_APP_BASEURL}/product_status_update`, {
         id: `${id}`,
@@ -177,39 +206,41 @@ function Product() {
         product_status: e.target.value,
       })
       .then((response) => {
+        setCondition(false);
         setapicall(true);
       })
       .catch(function (error) {
         console.log(error);
+        setCondition(false);
       });
   };
 
   const fetchdata = () => {
     axios
-      .post(
-        `${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=500`,
-        {
-          product_search: {
-            search: `${searchdata.product_title_name}`,
-            price_from: "",
-            price_to: "",
-            latest_first: "",
-            product_title_name: "",
-            sale_price: "",
-            short_by_updated_on: "",
-            category: categoryArray,
-            product_status: [`${searchdata.product_status}`],
-            is_delete: ["1"],
-            colors: [],
-            size: [],
-            parent_category: [],
-            product_type: [],
-          },
-        }
-      )
+      .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=400`, {
+        product_search: {
+          search: "",
+          price_from: "",
+          price_to: "",
+          id: "",
+          sale_price: "",
+          short_by_updated_on: "",
+          product_title_name_asc_desc: "",
+          category: [`${searchdata.category}`],
+          product_status: [`${searchdata.product_status}`],
+          is_delete: ["1"],
+          colors: [],
+          size: [],
+          parent_category: [],
+          product_type: [],
+          product_title_name: [`${searchdata.product_title_name}`],
+          brand: [`${searchdata.brand}`],
+          shop: [`${searchdata.vendor}`],
+        },
+      })
       .then((response) => {
         setpdata(response.data);
-
+        setCondition(false);
         setapicall(false);
       })
       .catch(function (error) {
@@ -220,6 +251,8 @@ function Product() {
   useEffect(() => {
     const first = "";
     fetchdata();
+    getVendorData();
+    getCategorydatafilter();
   }, [apicall, Alert]);
   //
   let filtered;
@@ -249,6 +282,7 @@ function Product() {
       product_id: `${productid}`,
       fetured_type: e.target.value,
     });
+
     setproductname(productname);
     setfeatureShow(true);
   };
@@ -259,6 +293,7 @@ function Product() {
   // end feature product
   //  json
   var varietyy = VariationJson;
+
   var categorytype = CategoryJson;
   const OnProductNameClick = (id) => {
     localStorage.setItem("variantid", id[0]);
@@ -299,12 +334,18 @@ function Product() {
             <b>
               {row.product_title_name}
               <br />
-              Product ID: {row.product_id} <br />
-              <div
-                dangerouslySetInnerHTML={{ __html: pdata.product_description }}
-                className="editor"
-              ></div>
             </b>
+            {/* Product ID: {row.product_id} <br /> */}
+            <div className="d-flex flex-column ">
+              {row.is_featured === 1 ? (
+                <span className={"badge bg-warning mt-1"}>
+                  {"featured product"}
+                </span>
+              ) : null}
+              {row.is_special_offer === 1 ? (
+                <span className={"badge bg-info mt-1"}>{"special offer"}</span>
+              ) : null}
+            </div>
           </p>
         </div>
       ),
@@ -318,32 +359,38 @@ function Product() {
       width: "90px",
     },
     {
-      name: "Mrp",
-      selector: (row) => row.mrp.toFixed(2),
+      name: "Vendor",
+      selector: (row) => row.shop,
       sortable: true,
-      width: "100px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
+      width: "90px",
     },
     {
-      name: "Dis(%)",
-      selector: (row) => row.discount + "%",
+      name: "Product Type",
+      selector: (row) => row.product_type,
+      sortable: true,
+      width: "90px",
+    },
+    {
+      name: "Brand",
+      selector: (row) => row.brand,
+      sortable: true,
+      width: "100px",
+    },
+    {
+      name: "Mrp",
+      selector: (row) => (
+        <p className="m-0">
+          <b>MRP :</b>₹ {Number(row.mrp).toFixed(2)} <br />
+          <b>Discount : </b>
+          {Number(row.discount).toFixed(2)}%
+          {/* {row.discount === "0" ? null : row.discount + "%"}{" "} */}
+          <br />
+          <b>Product Price:</b>₹ {Number(row.product_price).toFixed(2)} <br />
+          <b>Sale Price:</b>₹ {Number(row.sale_price).toFixed(2)} <br />
+        </p>
+      ),
       sortable: true,
       width: "130px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
-    },
-    {
-      name: "Price",
-      selector: (row) => row.product_price.toFixed(2),
-      sortable: true,
-      width: "100px",
       center: true,
       style: {
         paddingRight: "32px",
@@ -353,17 +400,41 @@ function Product() {
 
     {
       name: "Tax",
-      selector: (row) =>
-        Number(row.gst) +
-        Number(row.cgst) +
-        Number(row.sgst) +
-        Number(row.wholesale_sales_tax) +
-        Number(row.retails_sales_tax) +
-        Number(row.manufacturers_sales_tax) +
-        Number(row.value_added_tax) +
-        "%",
+      selector: (row) => (
+        <div className="d-flex flex-column">
+          <b>
+            Total:
+            {Number(row.gst) +
+              Number(row.cgst) +
+              Number(row.sgst) +
+              Number(row.wholesale_sales_tax) +
+              Number(row.retails_sales_tax) +
+              Number(row.manufacturers_sales_tax) +
+              Number(row.value_added_tax) +
+              "%"}{" "}
+          </b>{" "}
+          <div className="d-flex">
+            <b>Gst :</b>₹ {Number(row.gst).toFixed(2)}%<b>Cgst : </b>
+            {Number(row.cgst).toFixed(2)}%
+            {/* {row.discount === "0" ? null : row.discount + "%"}{" "} */}
+            <b>Sgst:</b> {Number(row.sgst).toFixed(2)}%
+          </div>
+          <div className="d-flex flex-column">
+            <b>
+              wholesale_sales_tax:{Number(row.wholesale_sales_tax).toFixed(2)}%
+            </b>{" "}
+            <b>retails_sales_tax:{Number(row.retails_sales_tax).toFixed(2)}%</b>{" "}
+            <b>value_added_tax:{Number(row.value_added_tax).toFixed(2)}% </b>
+            <b>
+              manufacturers_sales_tax:{" "}
+              {Number(row.manufacturers_sales_tax).toFixed(2)}%
+            </b>{" "}
+          </div>
+        </div>
+      ),
+
       sortable: true,
-      width: "90px",
+      width: "200px",
       center: true,
       style: {
         paddingLeft: "0px",
@@ -397,16 +468,12 @@ function Product() {
         <span
           className={
             row.product_status === "pending"
-              ? "badge bg-success"
-              : row.product_status === "approved"
-              ? "badge bg-danger"
-              : row.product_status === "special_offer"
-              ? "badge bg-info"
-              : row.product_status === "featured_offer"
               ? "badge bg-warning"
-              : row.product_status === "promotional"
-              ? "badge bg-primary"
+              : row.product_status === "approved"
+              ? "badge bg-success"
               : row.product_status === "draft"
+              ? "badge bg-info"
+              : row.product_status === ""
               ? "badge bg-secondary"
               : null
           }
@@ -415,13 +482,11 @@ function Product() {
             ? "Pending"
             : row.product_status === "approved"
             ? "Approved"
-            : row.product_status === "special_offer"
-            ? "Special Offer"
-            : row.product_status === "featured_offer"
-            ? "Featured Offer"
-            : row.product_status === "promotional"
-            ? "Promotional"
-            : "Draft"}
+            : row.product_status === ""
+            ? "Status"
+            : row.product_status === "draft"
+            ? "Draft"
+            : "Status"}
         </span>
       ),
       sortable: true,
@@ -436,28 +501,18 @@ function Product() {
           size="sm"
           className="w-100"
           onChange={(e) => onProductStatusChange(e, row.id, row.product_id)}
+          value={row.product_status}
+          disabled={condition === true ? true : false}
         >
-          <option selected={row.product_status === "" ? true : false} value="">
-            Select
-          </option>
-          <option
-            selected={row.product_status === "pending" ? true : false}
-            value="pending"
-          >
-            Pending
-          </option>
-          <option
-            selected={row.product_status === "draft" ? true : false}
-            value="draft"
-          >
-            Draft
-          </option>
-          <option
-            selected={row.product_status === "approved" ? true : false}
-            value="approved"
-          >
-            Approved
-          </option>
+          <option value={""}>Status</option>
+          {(productstatus.productstatus || []).map((data, i) => {
+            return (
+              <option value={data} key={i}>
+                {" "}
+                {data}
+              </option>
+            );
+          })}
         </Form.Select>
       ),
       sortable: true,
@@ -498,7 +553,8 @@ function Product() {
               <option value="featured_offer">Featured Offer </option>
               <option value="promotional">Promotional </option>
             </Form.Select>
-            <FaEllipsisV className="feature_product_ellipsis" />
+            <IoFilter className="feature_product_ellipsis" />
+            {/* <FaEllipsisV className="feature_product_ellipsis"/> */}
           </div>
 
           <BiEdit
@@ -522,7 +578,11 @@ function Product() {
     setScategory({ ...scategory, [e.target.name]: e.target.value });
   };
   useEffect(() => {
-    try {
+    if (indVal === "") {
+      setSubCategory("");
+      setchildCategory("");
+      setgrandcCategory("");
+    } else {
       axios
         .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
         .then((response) => {
@@ -562,50 +622,69 @@ function Product() {
             }
           }
         });
-    } catch (err) {}
+    }
   }, [scategory, indVal]);
+  // vendor api for filter
+  const getVendorData = () => {
+    try {
+      axios
+        .post(
+          `${process.env.REACT_APP_BASEURL}/vendors`,
+          { vendor_id: "all" },
+          {
+            headers: { admin_token: `${token}` },
+          }
+        )
+        .then((response) => {
+          let cgory = response.data;
+
+          const result = cgory.filter(
+            (thing, index, self) =>
+              index === self.findIndex((t) => t.shop_name == thing.shop_name)
+          );
+          const result1 = result.filter(
+            (item) => item.status === "approved" || item.status === "active"
+          );
+          setVendorId(result1);
+        });
+    } catch (err) {}
+  };
+  // end vendor api
+
+  // category api for filter
+  const getCategorydatafilter = () => {
+    try {
+      axios
+        .get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
+        .then((response) => {
+          let cgory = response.data;
+          setfiltercategory(cgory);
+        });
+    } catch (err) {}
+  };
+  // end category aopi
   // modal
   const [editparentCategory, seteditparentCategory] = useState("");
 
-let token=localStorage.getItem("token");
+  let token = localStorage.getItem("token");
 
-console.log("token----"+token)
   const handleShow = (e) => {
     setproductdata(data);
     // vendor
-    const getVendorData = () => {
-      try {
-        axios
-          .post(`${process.env.REACT_APP_BASEURL}/vendors`,
-          {"vendor_id":"all"},
-          {
-            headers: { admin_token:`${token}`} 
-              
-         })
-          .then((response) => {
-            console.log("vendor data----"+ JSON.stringify (response.data))
-            let cgory = response.data;
-            const result = cgory.filter(
-              (thing, index, self) =>
-                index === self.findIndex((t) => t.shop_name == thing.shop_name)
-            );
-            setVendorId(result);
-          });
-      } catch (err) {}
-    };
     getVendorData();
-
     // end vendor api
+
     // category data
     const getCategorydata = () => {
       try {
         axios
           .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
           .then((response) => {
-            let cgory = response.data;
+            let cgory = response.data.filter((item) => item.is_active === "1");
 
             if (indVal === 0) {
               setCategory(cgory);
+              // seteditparentCategory(response.data.category_name)
               setSubCategory("");
               setlevel(0);
             }
@@ -614,6 +693,7 @@ console.log("token----"+token)
     };
     getCategorydata();
     // end category data
+
     if (e === "add") {
       setmodalshow(e);
     } else {
@@ -640,10 +720,13 @@ console.log("token----"+token)
                         `${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`
                       )
                       .then((response) => {
+                        console.log(
+                          "subcetgorydata---" + JSON.stringify(response.data)
+                        );
                         setSubCategory(response.data);
                       });
                     seteditparentCategory(data.category_name);
-                    // console.log("---first"+data.category_name)
+                    // setCategoryEditparent(data.category_name);
                   } else if (i === 1) {
                     axios
                       .get(
@@ -653,6 +736,7 @@ console.log("token----"+token)
                         setchildCategory(response.data);
                       });
                     setCategoryEditparent(data.category_name);
+                    // setCategoryEditSubparent(data.category_name);
                   } else if (i === 2) {
                     axios
                       .get(
@@ -662,6 +746,7 @@ console.log("token----"+token)
                         setgrandcCategory(response.data);
                       });
                     setCategoryEditSubparent(data.category_name);
+                    // setCategoryEditChildparent(data.category_name);
                   } else if (i === 3) {
                     setCategoryEditChildparent(data.category_name);
                   }
@@ -669,6 +754,7 @@ console.log("token----"+token)
             }
             // end category edit api
           }
+
           let customdatra = JSON.parse(response.data.add_custom_input);
           setcustomarray(customdatra);
         })
@@ -682,75 +768,16 @@ console.log("token----"+token)
     handleShow();
   }, []);
 
-  const getProductVariant = (id) => {
-    axios
-      .post(
-        `${process.env.REACT_APP_BASEURL}/products_search?page=0&per_page=500`,
-        {
-          product_search: {
-            search: "",
-            category: "",
-            price_from: "",
-            price_to: "",
-            latest_first: "",
-            product_title_name: "",
-            sale_price: "",
-            short_by_updated_on: "",
-            is_delete: ["1"],
-            product_id: [`${id}`],
-          },
-        }
-      )
-      .then((response) => {
-        setvdata(response.data.results);
-        settaxdata(response.data.results[0]);
-        setvariantapicall(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-  const handlevarietyShow = (id, variantid) => {
-    getProductVariant(id);
-    onImgView(variantid, id);
-    setvariantarray({
-      ...variantarray,
-      product_id: id,
-    });
-    setproductID(id);
-    setvarietyShow(true);
-  };
-
-  const handlevarietyClose = (e) => {
-    setvariantarray(veriantData)
-    setVarietyUnitvalidation("")
-    setcustomValidated(false);
-    e.preventDefault();
-    // setValidated(false);
-    setvarietyShow(false);
-  };
-
-
-
   const handleClose = () => {
-    // setproductdata({
-    //   ...productdata,
-    //   other_introduction:""
-    // })
-
     setproductdata(data);
-
-    // setproductdata({
-    //   ...productdata,
-    //   product_description:""
-    // })
-
     setcustomarray([]);
     setvariantarray(veriantData);
     setvariantmainarray([]);
     setcustomValidated(false);
     setValidated(false);
     setmodalshow(false);
+    setVarietyUnitvalidation("");
+    setvarietyValidated(false);
   };
 
   // seotag
@@ -765,10 +792,15 @@ console.log("token----"+token)
     // setseoArray(seoarray.filter((item) => item !== e));
   };
   const ontagaddclick = (e) => {
-    setproductdata({
-      ...productdata,
-      seo_tag: addtag,
-    });
+    if (addtag === "") {
+      setunitValidated("seotagclick");
+    } else {
+      setunitValidated("");
+      setproductdata({
+        ...productdata,
+        seo_tag: addtag,
+      });
+    }
     setaddtag("");
   };
   // variant
@@ -790,52 +822,28 @@ console.log("token----"+token)
     onImgView(product_id, id);
     console.log("imge newImageUrlse" + newImageUrls.length);
     console.log("imge lenth--" + e.target.files.length);
-    // if (e.target.files.length <= 10) {
+    for (let i = 0; i < e.target.files.length; i++) {
+      let coverimg;
 
-      for (let i = 0; i < e.target.files.length; i++) {
-        let coverimg;
-
-        if (newImageUrls.length === 0 && i === 0) {
-          coverimg = "cover";
-        } else {
-          coverimg = `cover${i}`;
-        }
-        encoded = await convertToBase64(e.target.files[i]);
-        const [first, ...rest] = encoded.base64.split(",");
-        const productimg = rest.join("-");
-        let imar = {
-          product_id: `${product_id}`,
-          product_verient_id: `${id}`,
-          vendor_id: `${vendor_id}`,
-          product_image_name: `${encoded.name}${i}${id}`,
-          image_position: coverimg,
-          img_64: productimg,
-        };
-        ImgObj.push(imar);
+      if ((newImageUrls.length === 0 || newImageUrls.length === 1) && i === 0) {
+        coverimg = "cover";
+      } else {
+        coverimg = `cover${i}`;
       }
+      encoded = await convertToBase64(e.target.files[i]);
+      const [first, ...rest] = encoded.base64.split(",");
+      const productimg = rest.join("-");
+      let imar = {
+        product_id: `${product_id}`,
+        product_verient_id: `${id}`,
+        vendor_id: `${vendor_id}`,
+        product_image_name: `${encoded.name}${i}${id}`,
+        image_position: coverimg,
+        img_64: productimg,
+      };
+      ImgObj.push(imar);
+    }
 
-      // if (newImageUrls.length <= 9) {
-
-        axios
-          .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
-          .then((response) => {
-            ImgObj = [];
-            onImgView(id, product_id);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-
-      // } else {
-      //   alert("More than 10 Pics are allowedd");
-      // }
-      // image
-    // } 
-    // else {
-    //   alert("More than 10 Pics are allowed");
-    // }
-
-    // image
     axios
       .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
       .then((response) => {
@@ -896,8 +904,10 @@ console.log("token----"+token)
   };
 
   const onVariantChange = (e) => {
+    setValidated(false);
     setcustomValidated(false);
-    setVarietyUnitvalidation("")
+    setVarietyUnitvalidation("");
+    setvarietyValidated(false);
     setvariantarray({
       ...variantarray,
       [e.target.name]: e.target.value,
@@ -905,15 +915,8 @@ console.log("token----"+token)
   };
 
   let discountt = (variantarray.mrp * variantarray.discount) / 100;
-  // console.log("Discounttt-----"+ JSON.stringify(discountt))
   let product_price = variantarray.mrp - discountt;
-  // console.log("Product prieccc-----"+ JSON.stringify(product_price))
   let saleprice;
-  //  console.log("tdaxxxxxxxx--"+ JSON.stringify(taxdata))
-  //  console.log("GST--"+ JSON.stringify(taxdata.gst))
-
-  // const  saleeprice=variantarray.sale_price
-
   if (taxdata) {
     saleprice =
       product_price +
@@ -923,7 +926,6 @@ console.log("token----"+token)
         product_price * (taxdata.value_added_tax / 100) +
         product_price * (taxdata.manufacturers_sales_tax / 100));
   }
-  // console.log("saleeee-----"+ JSON.stringify(saleprice))
 
   useEffect(() => {
     setvariantarray({
@@ -949,70 +951,129 @@ console.log("token----"+token)
     });
   };
 
+  const getProductVariant = (id) => {
+    axios
+      .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=400`, {
+        product_search: {
+          search: "",
+          category: [],
+          price_from: "",
+          price_to: "",
+          id: "",
+          product_title_name_asc_desc: "",
+          sale_price: "",
+          short_by_updated_on: "",
+          is_delete: ["1"],
+          product_id: [`${id}`],
+          product_title_name: [],
+        },
+      })
+      .then((response) => {
+        setvdata(response.data.results);
+        settaxdata(response.data.results[0]);
+        setvariantapicall(false);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  const handlevarietyShow = (id, variantid) => {
+    // START GET THE SELECTED VARIENT DATA------------------------------------------------------
+    axios
+      .get(
+        `${process.env.REACT_APP_BASEURL}/products_pricing?id=${variantid}&product_id=${id}`
+      )
+      .then((response) => {
+        setvariantarray({
+          ...variantarray,
+          unit: response.data[0].unit,
+          product_id: id,
+        });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    // END GET THE SELECTED VARIENT DATA------------------------------------------------------
 
-  console.log("new veriant array---"+JSON.stringify(variantarray))
- 
+    getProductVariant(id);
+    onImgView(variantid, id);
+    setvariantarray({
+      ...variantarray,
+      product_id: id,
+    });
+    setproductID(id);
+    setvarietyShow(true);
+  };
+  const AddMoreVariety = (e) => {
+    handleAddProduct(e);
+    // handlevarietyShow(id, variantid);
+  };
+  const handlevarietyClose = (e) => {
+    setChangeUnitProperty(false);
+    setvariantarray(veriantData);
+    setVarietyUnitvalidation("");
+    setcustomValidated(false);
+    setvarietyShow(false);
+  };
   const onVariantaddclick = (e, id) => {
-    setunitValidated(false)
-    // id.preventDefault();
-    if (id == undefined || id == null || unitValidated== "false" ) {
+    setunitValidated(false);
+    if (id == undefined || id == null || unitValidated == "false") {
       if (
-        variantarray.unit == "" ||
+        // variantarray.unit == "" ||
+        // variantarray.unit == null ||
+        // variantarray.unit == "Select" ||
         variantarray.product_price == "" ||
         variantarray.mrp == "" ||
         variantarray.sale_price == "" ||
         variantarray.manufacturing_date == "" ||
         variantarray.expire_date == "" ||
-        variantarray.quantity == "" 
-      ) 
-      {
+        variantarray.quantity == ""
+      ) {
         setcustomValidated(true);
-      } 
-     else if( variantarray.quantity==0){
+      } else if (variantarray.quantity === 0 || variantarray.quantity < 1) {
         setVarietyUnitvalidation("QwanityValidation");
-      }
-      else if (
+      } else if (variantarray.manufacturing_date > variantarray.expire_date) {
+        setVarietyUnitvalidation("ExpireDateValidation");
+      } else if (
+        vdata[0].product_type === "Cloths" &&
         variantarray.unit === "pcs" &&
-        variantarray.colors === ""  || 
-        variantarray.size === null )
-       
-      {
-   
+        (variantarray.colors === "" ||
+          variantarray.size === null ||
+          variantarray.size === "")
+      ) {
         setVarietyUnitvalidation("fillUnit&size&color");
-      } 
-    
-      else if (
-        (variantarray.unit === "gms" ||  variantarray.unit === "ml"  ||  variantarray.unit === "piece")&&
-       ( variantarray.unit_quantity === null) 
-
-        // variantarray.unit !== "pcs" &&
-        // variantarray.unit_quantity === null
-        // &&
-        // variantarray.size === null
-        
-      ) 
-
-
-      {
-        setunitValidated(true);
+      } else if (
+        vdata[0].product_type !== "Cloths" &&
+        variantarray.unit === "pcs" &&
+        variantarray.colors === "" &&
+        (variantarray.size === null || variantarray.size === "")
+      ) {
+        setVarietyUnitvalidation("fillUnit&color");
+      } else if (
+        variantarray.unit !== "pcs" &&
+        (variantarray.unit_quantity === "" ||
+          variantarray.unit_quantity === "null" ||
+          variantarray.unit_quantity === null)
+      ) {
         setVarietyUnitvalidation("unitQwanity&size&color");
-      } 
-    
-      else {
-        console.log("new veriant array---"+JSON.stringify(variantarray))
+      } else if (Number(variantarray.discount) > 100) {
+        setVarietyUnitvalidation("discountmore");
+      } else if (
+        Number(variantarray.mrp) > 50000 ||
+        Number(variantarray.mrp) <= 0
+      ) {
+        setVarietyUnitvalidation("mrpmore");
+      } else {
         axios
           .post(
             `${process.env.REACT_APP_BASEURL}/products_varient_add`,
             variantarray
           )
           .then((response) => {
-           
-            console.log("respo----" + JSON.stringify(response));
-            if(response.affectedRows="1"){
+            if ((response.affectedRows = "1")) {
               setProductAlert(true);
               setvariantarray({
                 product_status: "",
-                unit: "",
                 colors: "",
                 unit_quantity: "",
                 size: "",
@@ -1027,13 +1088,12 @@ console.log("token----"+token)
                 quantity: "",
                 product_id: productID,
               });
+            } else if (response.errno == 1064) {
+              alert("Error in add product");
+              setProductAlert(false);
+            } else {
+              setProductAlert(false);
             }
-            else if(response.errno==1064){
-               alert("Error in add product")
-              setProductAlert(false)}
-
-            else{setProductAlert(false);}
-             
 
             // formRef.reset();
           })
@@ -1041,168 +1101,188 @@ console.log("token----"+token)
             console.log(error);
           });
       }
-    }
-     else {
-      // console.log("variantarray.unit------------"+variantarray.unit)
-      // console.log("variantarray.colors-----------"+variantarray.colors)
-      // console.log("variantarray.size---------------"+variantarray.size)
+    } else {
       if (
-        variantarray.unit == "" ||
+        // variantarray.unit == "" ||
+        // variantarray.unit == null ||
+        // variantarray.unit == "Select" ||
         variantarray.product_price == "" ||
         variantarray.mrp == "" ||
         variantarray.sale_price == "" ||
         variantarray.manufacturing_date == "" ||
         variantarray.expire_date == "" ||
-        variantarray.quantity == "" 
-      ) 
-      {
+        variantarray.quantity == ""
+      ) {
         setcustomValidated(true);
-      } 
-      
-      else if
-       (
-        
+      } else if (variantarray.quantity === 0 || variantarray.quantity < 1) {
+        setVarietyUnitvalidation("QwanityValidation");
+      } else if (variantarray.manufacturing_date > variantarray.expire_date) {
+        setVarietyUnitvalidation("ExpireDateValidation");
+      } else if (
+        vdata[0].product_type === "Cloths" &&
         variantarray.unit === "pcs" &&
-        variantarray.colors === ""  ||
-       variantarray.size === null ||  variantarray.size === ""
-      )
-       {
-              
-
+        (variantarray.colors === "" ||
+          variantarray.size === null ||
+          variantarray.size === "")
+      ) {
         setVarietyUnitvalidation("fillUnit&size&color");
-      } 
-      else if (
+      } else if (
+        vdata[0].product_type !== "Cloths" &&
+        variantarray.unit === "pcs" &&
+        variantarray.colors === "" &&
+        (variantarray.size === null || variantarray.size === "")
+      ) {
+        setVarietyUnitvalidation("fillUnit&color");
+      } else if (
         variantarray.unit !== "pcs" &&
-        variantarray.unit_quantity === ""
-        &&
-        variantarray.size === ""
-   
-      )
-       {
-
+        (variantarray.unit_quantity === "" ||
+          variantarray.unit_quantity === "null" ||
+          variantarray.unit_quantity === null)
+      ) {
         setVarietyUnitvalidation("unitQwanity&size&color");
-      }
-      else{
-    
-        console.log("update veriant array---"+JSON.stringify(variantarray))
+      } else if (
+        Number(variantarray.discount) > 100 ||
+        Number(variantarray.discount) < 0
+      ) {
+        setVarietyUnitvalidation("discountmore");
+      } else if (
+        Number(variantarray.mrp) > 50000 ||
+        Number(variantarray.mrp) <= 0
+      ) {
+        setVarietyUnitvalidation("mrpmore");
+      } else {
         axios
-        .put(
-          `${process.env.REACT_APP_BASEURL}/products_varient_update`,
-          variantarray
-        )
-        .then((response) => {
+          .put(
+            `${process.env.REACT_APP_BASEURL}/products_varient_update`,
+            variantarray
+          )
+          .then((response) => {
+            setvariantarray({
+              product_status: "",
+              // unit: "",
+              colors: "",
+              unit_quantity: "",
+              size: "",
+              product_price: "",
+              mrp: "",
+              sale_price: "",
+              discount: "0",
+              special_offer: false,
+              featured_product: false,
+              manufacturing_date: "",
+              expire_date: "",
+              quantity: "",
+              product_id: productID,
+            });
 
-          setvariantarray({
-            product_status: "",
-            unit: "",
-            colors: "",
-            unit_quantity: "",
-            size: "",
-            product_price: "",
-            mrp: "",
-            sale_price: "",
-            discount: "0",
-            special_offer: false,
-            featured_product: false,
-            manufacturing_date: "",
-            expire_date: "",
-            quantity: "",
-            product_id: productID,
+            if ((response.affectedRows = "1")) {
+              setUpdatetAlert(true);
+            } else if (response.error) {
+              alert("Error in add product");
+              setUpdatetAlert(false);
+            } else {
+              setUpdatetAlert(false);
+            }
+
+            getProductVariant(productID);
+          })
+          .catch(function (error) {
+            console.log(error);
           });
-
-
-          if(response.affectedRows="1"){
-            setUpdatetAlert(true);
-           
-          }else if(response.error){
-             alert("Error in add product")
-             setUpdatetAlert(false)}
-
-          else{setUpdatetAlert(false);}
-
-           
-          getProductVariant(productID);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
       }
     }
-      // e.preventDefault()
-    
-    
   };
-
-
+  // addproduct variant
   const VariantAddProduct = (e) => {
-    if (
-      variantarray.unit == "" ||
-      variantarray.product_price == "" ||
-      variantarray.mrp == "" ||
-      variantarray.sale_price == "" ||
-      variantarray.manufacturing_date == "" ||
-      variantarray.expire_date == "" ||
-      variantarray.quantity == "" 
-    ) 
-    {
-      setcustomValidated(true);
-    } 
-    else if(variantarray.quantity ==0 ){
-      setVarietyUnitvalidation("QwanityValidation")
+    setproductdata({
+      ...productdata,
+      variety: true,
+    });
+    if (productdata.product_type == "") {
+      setCheckProductType(true);
+    } else {
+      if (
+        variantarray.unit == "" ||
+        variantarray.unit == null ||
+        variantarray.unit == "Select" ||
+        variantarray.product_price == "" ||
+        variantarray.mrp == "" ||
+        variantarray.sale_price == "" ||
+        variantarray.manufacturing_date == "" ||
+        variantarray.expire_date == "" ||
+        variantarray.quantity == ""
+      ) {
+        setcustomValidated(true);
+      } else if (variantarray.quantity === 0 || variantarray.quantity < 1) {
+        setVarietyUnitvalidation("QwanityValidation");
+      } else if (variantarray.manufacturing_date > variantarray.expire_date) {
+        setVarietyUnitvalidation("ExpireDateValidation");
+      } else if (
+        productdata.product_type === "Cloths" &&
+        variantarray.unit === "pcs" &&
+        (variantarray.colors === "" ||
+          variantarray.size === null ||
+          variantarray.size === "")
+      ) {
+        console.log("fill the size and color");
+        setVarietyUnitvalidation("fillUnit&size&color");
+      } else if (
+        productdata.product_type !== "Cloths" &&
+        variantarray.unit === "pcs" &&
+        variantarray.colors === "" &&
+        (variantarray.size === "" || variantarray.size === null)
+      ) {
+        console.log("fill the  color");
+        setVarietyUnitvalidation("fillUnit&color");
+      } else if (
+        variantarray.unit !== "pcs" &&
+        (variantarray.unit_quantity === "" ||
+          variantarray.unit_quantity === "null" ||
+          variantarray.unit_quantity === null)
+      ) {
+        setunitValidated(true);
+        console.log("Unit qwanity--");
+        setVarietyUnitvalidation("unitQwanity&size&color");
+      } else if (Number(variantarray.discount) > 100) {
+        setunitValidated(true);
+        setVarietyUnitvalidation("discountmore");
+      } else if (
+        Number(variantarray.mrp) > 50000 ||
+        Number(variantarray.mrp) <= 0
+      ) {
+        setunitValidated(true);
+        setVarietyUnitvalidation("mrpmore");
+      } else {
+        setvariantmainarray((variantmainarray) => [
+          ...variantmainarray,
+          variantarray,
+        ]);
+        setVarietyUnitvalidation("");
+        setvarietyValidated(false);
+        setcustomValidated(false);
+
+        setvariantarray({
+          product_status: "",
+          unit: variantarray.unit,
+          colors: "",
+          unit_quantity: "",
+          size: "",
+          product_price: "",
+          mrp: "",
+          sale_price: "",
+          discount: "0",
+          special_offer: false,
+          featured_product: false,
+          manufacturing_date: "",
+          expire_date: "",
+          quantity: "",
+          product_id: productID,
+        });
+        // setcustomValidated(false);
+      }
     }
-    else if (
-      variantarray.unit === "pcs" &&
-      variantarray.colors === ""  ||
-     variantarray.size === null 
-    //  ||  variantarray.size === ""
-    ) 
-    {
- 
-      setVarietyUnitvalidation("fillUnit&size&color");
-    } 
-    else if (
-      variantarray.unit !== "pcs" &&
-      variantarray.unit_quantity === ""  
-      // ||
-    //  variantarray.size === null ||  variantarray.size === ""
-       
-    ) 
-    {
-      setunitValidated(true);
-      setVarietyUnitvalidation("unitQwanity&size&color");
-    }
-    
-   
-    else {
-      setvariantmainarray((variantmainarray) => [
-        ...variantmainarray,
-        variantarray,
-      ]);
-
-
-
-      setvariantarray({
-        product_status: "",
-        unit: "",
-        colors: "",
-        unit_quantity: "",
-        size: "",
-        product_price: "",
-        mrp: "",
-        sale_price: "",
-        discount: "0",
-        special_offer: false,
-        featured_product: false,
-        manufacturing_date: "",
-        expire_date: "",
-        quantity: "",
-        product_id: productID,
-      });
-      // setcustomValidated(false);
-    }
-
   };
-
+  // addproduct variant end
   const VariantRemoveClick = (id, productid) => {
     setVerityAlert(true);
     setVariantRemove((variantremove) => {
@@ -1212,10 +1292,20 @@ console.log("token----"+token)
 
   const MainVariantRemoveClick = (e) => {
     setvariantmainarray(variantmainarray.filter((item) => item !== e));
+    // if ((variantmainarray.length = 1)) {
+    //   setvariantarray({ unit: "", mrp: 0, sale_price: "" });
+    // }
   };
-
   const hideAlert = () => {
-    // product delete
+    if (vdata.length === 1) {
+      setVerityAlert(false);
+      setRestoreAlert(false);
+      setvarietyShow(false);
+      setapicall(true);
+    }
+    if (vdata.length === 2) {
+      setChangeUnitProperty("editvariety");
+    }
     axios
       .put(`${process.env.REACT_APP_BASEURL}/products_delete_remove`, {
         varient_id: variantremove.id,
@@ -1268,15 +1358,16 @@ console.log("token----"+token)
   };
 
   const VariantEditClick = (id, productid) => {
-    setVarietyUnitvalidation("")
+    if (vdata.length === 1) {
+      setChangeUnitProperty(true);
+    }
+    setVarietyUnitvalidation("");
     axios
       .get(
         `${process.env.REACT_APP_BASEURL}/products_pricing?id=${id}&product_id=${productid}`
       )
       .then((response) => {
         setvariantarray(response.data[0]);
-        console.log("setvariantarray after get data")
-    
       })
       .catch(function (error) {
         console.log(error);
@@ -1286,6 +1377,7 @@ console.log("token----"+token)
   useEffect(() => {
     setproductdata({
       ...productdata,
+      product_slug: productdata.product_title_name + "_123",
       price: variantmainarray,
     });
   }, [variantmainarray]);
@@ -1326,6 +1418,7 @@ console.log("token----"+token)
   // end
 
   const handleInputFieldChange = (e) => {
+    setCheckProductType(false);
     setproductdata({
       ...productdata,
       [e.target.name]: e.target.value,
@@ -1347,7 +1440,7 @@ console.log("token----"+token)
 
   const handledescription = (event, editor) => {
     setdata1(editor.getData());
-    console.log({ event, editor, data1 });
+    // console.log({ event, editor, data1 });
 
     let productdesc;
     if (editor.getData() != undefined) {
@@ -1361,7 +1454,7 @@ console.log("token----"+token)
 
   const OtherDescription = (event, editor) => {
     setotherintro(editor.getData());
-    console.log({ event, editor, otherintro });
+    // console.log({ event, editor, otherintro });
     let otherinstrction;
     if (editor.getData() != undefined) {
       otherinstrction = editor.getData().replaceAll(/"/g, "'");
@@ -1380,9 +1473,16 @@ console.log("token----"+token)
     });
     productdataa.push(productdata);
     const form = e.currentTarget;
-    if (form.checkValidity() === false) {
-      setValidated(false);
+    if (
+      form.checkValidity() === false ||
+      productdata.variety === "" ||
+      variantmainarray.length === 0
+    ) {
+      e.stopPropagation();
       e.preventDefault();
+      setValidated(true);
+      setcustomValidated(false);
+      setvarietyValidated("varietyadd");
     } else {
       axios
         .post(`${process.env.REACT_APP_BASEURL}/products`, productdataa)
@@ -1396,22 +1496,28 @@ console.log("token----"+token)
   const handleAddProduct = (e) => {
     productdataa.push(productdata);
     const form = e.currentTarget;
-    if (form.checkValidity() === false) {
+    if (
+      form.checkValidity() === false ||
+      productdata.variety === "" ||
+      variantmainarray.length === 0
+    ) {
       e.stopPropagation();
       e.preventDefault();
+      setValidated(true);
+      setcustomValidated(false);
+      setvarietyValidated("varietyadd");
+    } else {
+      axios
+        .post(`${process.env.REACT_APP_BASEURL}/products`, productdataa)
+        .then((response) => {
+          setapicall(true);
+        });
+      e.preventDefault();
+      setValidated(false);
+      setcustomValidated(true);
+      setProductAlert(true);
+      handleClose();
     }
-    setValidated(true);
-    setcustomValidated(false);
-    axios
-      .post(`${process.env.REACT_APP_BASEURL}/products`, productdataa)
-      .then((response) => {
-        setapicall(true);
-      });
-    e.preventDefault();
-    setValidated(false);
-    setProductAlert(true);
-
-    handleClose();
   };
   const handleUpdateProduct = (e) => {
     e.preventDefault();
@@ -1442,42 +1548,42 @@ console.log("token----"+token)
   //-----------------------Download excel sheet code start here---------------------------------------------------
 
   const header = [
-    "Product code",
-    "Product title name",
-    "Product slug",
-    "Store name",
-    "Product Description",
-    "Product Type",
-    "Brand",
-    "Category",
-    "Parent category",
-    "Seo tag",
-    "Other introduction",
-    "Add custom input",
-    "Wholesale sales tax",
-    "Manufacturers sales tax",
-    "Retails sales tax",
-    "Gst",
-    "Cgst",
-    "Sgst",
-    "Value added tax",
-    "Variety",
-    "Vendor id",
-    "Shop",
+    "product_code",
+    "product_title_name",
+    "product_slug",
+    "store_name",
+    "product_description",
+    "product_type",
+    "brand",
+    "category",
+    "parent_category",
+    "seo_tag",
+    "other_introduction",
+    "add_custom_input",
+    "wholesale_sales_tax",
+    "manufacturers_sales_tax",
+    "retails_sales_tax",
+    "gst",
+    "cgst",
+    "sgst",
+    "value_added_tax",
+    "variety",
+    "vendor_id",
+    "shop",
     "colors",
-    "Size",
-    "Mrp",
-    "Product price",
-    "Sale price",
-    "Discount",
-    "Manufacturing date",
-    "Expire date",
-    "Special offer",
-    "Featured product",
-    "Unit",
-    "Unit quantity",
-    "Quantity",
-    "Product Status",
+    "size",
+    "mrp",
+    "product_price",
+    "sale_price",
+    "discount",
+    "manufacturing_date",
+    "expire_date",
+    "special_offer",
+    "featured_product",
+    "unit",
+    "unit_quantity",
+    "quantity",
+    "product_status",
   ];
 
   function handleDownloadExcel() {
@@ -1492,19 +1598,21 @@ console.log("token----"+token)
     });
   }
 
-  const saveFile = (e) => {
-    e.preventDefault();
-    setExcelFile(e.target.files[0]);
-    FileUploadAPI();
-  };
-  const FileUploadAPI = () => {
+  const FileUploadAPI = (e) => {
     const formData = new FormData();
-    formData.append("bulk_xls", ExcelFile);
+
+    formData.append("bulk_xls", e.target.files[0]);
 
     axios
       .post(`${process.env.REACT_APP_BASEURL}/product_bulk_uploads`, formData)
       .then((response) => {
-        console.log("response-------------" + response);
+        console.log("uploaddd---" + JSON.stringify(response));
+        if (response.status == 200) {
+          setProductAlert(true);
+          setapicall(true);
+        } else {
+          setBulkProductError("Error  in adding BulkProducts");
+        }
       })
       .catch(function (error) {
         console.log(error);
@@ -1519,7 +1627,7 @@ console.log("token----"+token)
       {/* search bar */}
       <div className="card mt-3 p-3 ">
         <div className="row">
-          <div className="col-md-3 col-sm-6 aos_input">
+          <div className="col-md-2 col-sm-6 aos_input">
             <input
               type={"text"}
               placeholder={"Search by product name"}
@@ -1529,8 +1637,87 @@ console.log("token----"+token)
               className={"adminsideinput"}
             />
           </div>
-
-          <div className="col-md-3 col-sm-6 aos_input">
+          <div className="col-md-2 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by status"
+              className="adminselectbox"
+              placeholder="Search by category"
+              onChange={OnSearchChange}
+              name="category"
+              value={searchdata.category}
+            >
+              <option value={""}>Select Category</option>
+              {(filtervategory || []).map((data, i) => {
+                return (
+                  <option value={data.id} key={i}>
+                    {" "}
+                    {data.category_name}
+                  </option>
+                );
+              })}
+            </Form.Select>
+          </div>
+          <div className="col-md-2 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by status"
+              className="adminselectbox"
+              placeholder="Search by vendor"
+              onChange={OnSearchChange}
+              name="vendor"
+              value={searchdata.vendor}
+            >
+              <option value={""}>Select Vendor</option>
+              {(vendorid || []).map((data, i) => {
+                return (
+                  <option value={data.shop_name} key={i}>
+                    {" "}
+                    {data.shop_name}
+                  </option>
+                );
+              })}
+            </Form.Select>
+          </div>
+          <div className="col-md-2 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by brand"
+              className="adminselectbox"
+              placeholder="Search by brand"
+              onChange={OnSearchChange}
+              name="brand"
+              value={searchdata.brand}
+            >
+              <option value={""}>Select Brand</option>
+              {(BrandJson.BrandJson || []).map((data, i) => {
+                return (
+                  <option value={data} key={i}>
+                    {" "}
+                    {data}
+                  </option>
+                );
+              })}
+            </Form.Select>
+          </div>
+          <div className="col-md-2 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by status"
+              className="adminselectbox"
+              placeholder="Search by tag"
+              onChange={OnSearchChange}
+              name="tag"
+              value={searchdata.tag}
+            >
+              <option value={""}>Select Tag</option>
+              {(productstatus.productstatus || []).map((data, i) => {
+                return (
+                  <option value={data} key={i}>
+                    {" "}
+                    {data}
+                  </option>
+                );
+              })}
+            </Form.Select>
+          </div>
+          <div className="col-md-2 col-sm-6 aos_input">
             <Form.Select
               aria-label="Search by status"
               className="adminselectbox"
@@ -1539,14 +1726,19 @@ console.log("token----"+token)
               name="product_status"
               value={searchdata.product_status}
             >
-              <option value="">Search by status</option>
-              <option value="pending">Pending</option>
-              <option value="draft">Draft</option>
-              <option value="approved ">Approved </option>
+              <option value={""}>Select Status</option>
+              {(productstatus.productstatus || []).map((data, i) => {
+                return (
+                  <option value={data} key={i}>
+                    {" "}
+                    {data}
+                  </option>
+                );
+              })}
             </Form.Select>
           </div>
 
-          <div className="col-md-3 col-sm-6 aos_input">
+          <div className="col-md-2 col-sm-6  mt-2 aos_input">
             <MainButton
               onClick={submitHandler}
               btntext={"Search"}
@@ -1554,7 +1746,7 @@ console.log("token----"+token)
             />
           </div>
 
-          <div className="col-md-3 col-sm-6 aos_input">
+          <div className="col-md-2 col-sm-6  mt-2 aos_input">
             <MainButton
               btntext={"Reset"}
               btnclass={"button main_button w-100"}
@@ -1568,14 +1760,26 @@ console.log("token----"+token)
 
         <div className="product_page_uploadbox my-4">
           <div className="product_page_uploadbox_one">
-            <Input type={"file"} inputclass={"hiddeninput"} />
+            <input
+              type="file"
+              className="product_page_uploadbox_button"
+              onChange={(e) => {
+                FileUploadAPI(e);
+              }}
+            />
             <Iconbutton
               btntext={"Upload"}
               btnclass={"button main_outline_button"}
               Iconname={<AiOutlineCloudUpload />}
-              onChange={(e) => saveFile(e)}
             />
           </div>
+          {bulkProductError == "" ? (
+            ""
+          ) : (
+            <p className="mt-1 ms-2 text-danger" type="invalid">
+              {bulkProductError}
+            </p>
+          )}
           <MainButton btntext={"Download"} onClick={handleDownloadExcel} />
 
           <Iconbutton
@@ -1641,6 +1845,7 @@ console.log("token----"+token)
                             onChange={(e) => handleInputFieldChange(e)}
                             name={"product_title_name"}
                             value={productdata.product_title_name}
+                            maxLength={20}
                           />
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill productname
@@ -1658,9 +1863,15 @@ console.log("token----"+token)
                           <Form.Control
                             type="text"
                             placeholder="Product Slug"
-                            onChange={(e) => handleInputFieldChange(e)}
+                            // onChange={(e) => handleInputFieldChange(e)}
                             name={"product_slug"}
-                            value={productdata.product_slug}
+                            value={
+                              productdata.product_title_name === "" ||
+                              productdata.product_title_name === "null" ||
+                              productdata.product_title_name === null
+                                ? null
+                                : productdata.product_title_name + "_123"
+                            }
                             required
                           />
                         </Col>
@@ -1794,7 +2005,7 @@ console.log("token----"+token)
                           })}
                         </Form.Select>
                         <Form.Control.Feedback type="invalid" className="h6">
-                          Please select producttype
+                          Please select product type
                         </Form.Control.Feedback>
                       </Col>
                     </Form.Group>
@@ -1814,7 +2025,7 @@ console.log("token----"+token)
                         className="adminselectbox"
                         required
                       >
-                        <option value={""}>Select category Type</option>
+                        <option value={""}>Select Parent Category </option>
                         {category.map((cdata, i) => {
                           return (
                             <option
@@ -1844,14 +2055,17 @@ console.log("token----"+token)
                         className=" aos_input"
                         controlId="formBasicParentCategory"
                       >
-                        <Form.Label>Sub Category <span className="text-danger">* </span></Form.Label>
+                        <Form.Label>
+                          Sub Category <span className="text-danger">* </span>
+                        </Form.Label>
                         <Form.Select
                           aria-label="Search by status"
                           className="adminselectbox"
-                          required
                           onChange={(e, id) => categoryFormChange(e, id)}
                           name={"sub_category"}
+                          required
                         >
+                          <option value={""}>Select Category </option>
                           {subCategory.map((cdata, i) => {
                             return (
                               <option
@@ -1885,10 +2099,10 @@ console.log("token----"+token)
                         <Form.Select
                           aria-label="Search by status"
                           className="adminselectbox"
-                          required
                           onChange={(e, id) => categoryFormChange(e, id)}
                           name={"childcategory"}
                         >
+                          <option value={""}>Select Category </option>
                           {childCategory.map((cdata, i) => {
                             return (
                               <option
@@ -1922,10 +2136,10 @@ console.log("token----"+token)
                         <Form.Select
                           aria-label="Search by status"
                           className="adminselectbox"
-                          required
                           onChange={(e, id) => categoryFormChange(e, id)}
                           name={"gcategory"}
                         >
+                          <option value={""}>Select Category </option>
                           {grandcCategory.map((cdata, i) => {
                             return (
                               <option
@@ -2091,7 +2305,7 @@ console.log("token----"+token)
                     </Form.Group>
                   </div>
                 </div>
-                {/*Date  */}
+                {/*single variety  */}
                 <Form
                   className="p-2 addproduct_form"
                   validated={validated}
@@ -2190,22 +2404,19 @@ console.log("token----"+token)
                                         </th>
                                         <th>Discount</th>
                                         <th>Price</th>
-                                        <th>Sale Price <span className="text-danger">
-                                            *
-                                          </span></th>
-                                        <th>Special Offer</th>
-                                        <th>Featured Product</th>
+                                        <th>
+                                          Sale Price{" "}
+                                          <span className="text-danger">*</span>
+                                        </th>
+                                        {/* <th>Special Offer</th>
+                                        <th>Featured Product</th> */}
                                         <th className="manufacture_date">
                                           Mdate
-                                          <span className="text-danger">
-                                            *
-                                          </span>
+                                          <span className="text-danger">*</span>
                                         </th>
                                         <th className="manufacture_date">
                                           Edate{" "}
-                                          <span className="text-danger">
-                                            *
-                                          </span>
+                                          <span className="text-danger">*</span>
                                         </th>
                                         <th className="">
                                           Qty{" "}
@@ -2228,6 +2439,11 @@ console.log("token----"+token)
                                                 onChange={(e) =>
                                                   onVariantChange(e)
                                                 }
+                                                disabled={
+                                                  variantmainarray.length === 0
+                                                    ? false
+                                                    : true
+                                                }
                                                 // className={
                                                 //   customvalidated === true
                                                 //     ? "border-danger"
@@ -2239,7 +2455,46 @@ console.log("token----"+token)
                                                 </option>
                                                 {(varietyy.variety || []).map(
                                                   (vari, i) => {
-                                                    return (
+                                                    return changeUnitproperty ==
+                                                      true ? (
+                                                      <option
+                                                        value={
+                                                          vari === "color"
+                                                            ? "pcs"
+                                                            : vari === "weight"
+                                                            ? "gms"
+                                                            : vari === "volume"
+                                                            ? "ml"
+                                                            : vari === "piece"
+                                                            ? "piece"
+                                                            : ""
+                                                        }
+                                                        key={i}
+                                                      >
+                                                        {vari}
+                                                      </option>
+                                                    ) : productdata.product_type ===
+                                                        "Cloths" ||
+                                                      productdata.product_type ===
+                                                        "Fashion" ? (
+                                                      vari === "weight" ||
+                                                      vari ===
+                                                        "volume" ? null : (
+                                                        <option
+                                                          value={
+                                                            vari === "piece"
+                                                              ? "piece"
+                                                              : vari === "color"
+                                                              ? "pcs"
+                                                              : ""
+                                                          }
+                                                          key={i}
+                                                        >
+                                                          {vari}
+                                                        </option>
+                                                      )
+                                                    ) : vari ===
+                                                      "color" ? null : (
                                                       <option
                                                         value={
                                                           vari === "weight"
@@ -2248,8 +2503,6 @@ console.log("token----"+token)
                                                             ? "ml"
                                                             : vari === "piece"
                                                             ? "piece"
-                                                            : vari === "color"
-                                                            ? "pcs"
                                                             : ""
                                                         }
                                                         key={i}
@@ -2267,20 +2520,36 @@ console.log("token----"+token)
                                         <td className="p-0 text-center">
                                           <div className=" d-flex align-items-center">
                                             <InputGroup className="" size="sm">
-                                              <Form.Control
-                                                type="text"
+                                              <Form.Select
+                                                aria-label="Default select example"
+                                                required
                                                 sm="9"
-                                                // className={
-                                                //   customvalidated === true
-                                                //     ? "border-danger"
-                                                //     : null
-                                                // }
+                                                name="colors"
+                                                value={variantarray.colors}
                                                 onChange={(e) =>
                                                   onVariantChange(e)
                                                 }
-                                                name={"colors"}
-                                                value={variantarray.colors}
-                                              />
+                                              >
+                                                <option
+                                                  value={
+                                                    variantarray.colors == ""
+                                                  }
+                                                >
+                                                  Select
+                                                </option>
+                                                {(varietyy.color || []).map(
+                                                  (vari, i) => {
+                                                    return (
+                                                      <option
+                                                        value={vari}
+                                                        key={i}
+                                                      >
+                                                        {vari}
+                                                      </option>
+                                                    );
+                                                  }
+                                                )}
+                                              </Form.Select>
                                             </InputGroup>
                                           </div>
                                         </td>
@@ -2290,18 +2559,15 @@ console.log("token----"+token)
                                             <InputGroup className="" size="sm">
                                               <Form.Control
                                                 value={
-                                                  variantarray.unit === "weight"
-                                                    ? variantarray.unit_quantity
-                                                    : variantarray.unit ===
-                                                      "volume"
-                                                    ? variantarray.unit_quantity
-                                                    : variantarray.unit ===
-                                                      "piece"
-                                                    ? variantarray.unit_quantity
-                                                    : null
+                                                  variantarray.unit_quantity
                                                 }
                                                 type="number"
                                                 sm="9"
+                                                disabled={
+                                                  variantarray.unit == "pcs"
+                                                    ? true
+                                                    : false
+                                                }
                                                 // className={
                                                 //   customvalidated === true
                                                 //     ? "border-danger"
@@ -2315,27 +2581,48 @@ console.log("token----"+token)
                                             </InputGroup>
                                           </div>
                                         </td>
+
                                         <td className="p-0 text-center">
                                           <div className=" d-flex align-items-center">
                                             <InputGroup className="" size="sm">
-                                              <Form.Control
-                                                value={
-                                                  variantarray.unit === "pcs"
-                                                    ? variantarray.size
-                                                    : null
-                                                }
-                                                type="text"
+                                              <Form.Select
+                                                aria-label="Default select example"
+                                                required
                                                 sm="9"
-                                                // className={
-                                                //   customvalidated === true
-                                                //     ? "border-danger"
-                                                //     : null
-                                                // }
+                                                name="size"
+                                                value={variantarray.size}
                                                 onChange={(e) =>
                                                   onVariantChange(e)
                                                 }
-                                                name={"size"}
-                                              />
+                                                disabled={
+                                                  variantarray.unit !== "pcs" &&
+                                                  variantarray.unit !== ""
+                                                    ? true
+                                                    : variantarray.unit == ""
+                                                    ? false
+                                                    : false
+                                                }
+                                              >
+                                                <option
+                                                  value={
+                                                    variantarray.size == ""
+                                                  }
+                                                >
+                                                  Select
+                                                </option>
+                                                {(varietyy.size || []).map(
+                                                  (vari, i) => {
+                                                    return (
+                                                      <option
+                                                        value={vari}
+                                                        key={i}
+                                                      >
+                                                        {vari}
+                                                      </option>
+                                                    );
+                                                  }
+                                                )}
+                                              </Form.Select>
                                             </InputGroup>
                                           </div>
                                         </td>
@@ -2344,8 +2631,12 @@ console.log("token----"+token)
                                             <InputGroup className="" size="sm">
                                               <Form.Control
                                                 type="number"
-                                            
                                                 sm="9"
+                                                step="0.01"
+                                                maxLength={"5"}
+                                                minLength={"1"}
+                                                min="1"
+                                                max="50000"
                                                 // className={
                                                 //   customvalidated === true
                                                 //     ? "border-danger"
@@ -2367,7 +2658,8 @@ console.log("token----"+token)
                                               <Form.Control
                                                 type="number"
                                                 sm="9"
-                                               
+                                                min={"0"}
+                                                max={"100"}
                                                 onChange={(e) =>
                                                   onVariantChange(e)
                                                 }
@@ -2381,7 +2673,6 @@ console.log("token----"+token)
                                           <div className=" d-flex align-items-center">
                                             <InputGroup className="" size="sm">
                                               <Form.Control
-                                                
                                                 step={"any"}
                                                 type="number"
                                                 sm="9"
@@ -2390,9 +2681,9 @@ console.log("token----"+token)
                                                 //     ? "border-danger"
                                                 //     : null
                                                 // }
-                                                onChange={(e) =>
-                                                  onVariantChange(e)
-                                                }
+                                                // onChange={(e) =>
+                                                //   onVariantChange(e)
+                                                // }
                                                 name={"product_price"}
                                                 value={product_price}
                                                 required
@@ -2408,15 +2699,14 @@ console.log("token----"+token)
                                                 type="number"
                                                 step={"any"}
                                                 sm="9"
-                                              
                                                 // className={
                                                 //   customvalidated === true
                                                 //     ? "border-danger"
                                                 //     : null
                                                 // }
-                                                onChange={(e) =>
-                                                  onVariantChange(e)
-                                                }
+                                                // onChange={(e) =>
+                                                //   onVariantChange(e)
+                                                // }
                                                 name={"sale_price"}
                                                 value={(
                                                   product_price +
@@ -2441,7 +2731,7 @@ console.log("token----"+token)
                                           </div>
                                         </td>
 
-                                        <td className="p-0 text-center">
+                                        {/* <td className="p-0 text-center">
                                           <div className="">
                                             <Form.Check
                                               onChange={(e) =>
@@ -2476,7 +2766,7 @@ console.log("token----"+token)
                                               }
                                             />
                                           </div>
-                                        </td>
+                                        </td> */}
                                         <td className="p-0 text-center">
                                           <div className="manufacture_date">
                                             <InputGroup className="" size="sm">
@@ -2484,6 +2774,9 @@ console.log("token----"+token)
                                                 type="date"
                                                 sm="9"
                                                 required
+                                                min={moment().format(
+                                                  "YYYY-MM-DD"
+                                                )}
                                                 // className={
                                                 //   customvalidated === true
                                                 //     ? "border-danger"
@@ -2506,13 +2799,17 @@ console.log("token----"+token)
                                               <Form.Control
                                                 type="date"
                                                 sm="9"
-                                                requ
-                                                // className={
-                                                //   customvalidated === true
-                                                //     ? "border-danger"
-                                                //     : null
-                                                // }
-                                                min={moment(variantarray.manufacturing_date).format("YYYY-MM-DD")}
+                                                required
+                                                disabled={
+                                                  variantarray.manufacturing_date
+                                                    ? false
+                                                    : true
+                                                }
+                                                min={moment(
+                                                  variantarray.manufacturing_date
+                                                )
+                                                  .add(1, "day")
+                                                  .format("YYYY-MM-DD")}
                                                 onChange={(e) =>
                                                   onVariantChange(e)
                                                 }
@@ -2564,51 +2861,103 @@ console.log("token----"+token)
                                           </div>
                                         </td>
                                       </tr>
+                                      {checkProductType === true ? (
+                                        <tr>
+                                          <p
+                                            className="mt-1 ms-2 text-danger"
+                                            type="invalid"
+                                          >
+                                            Please the select the product type
+                                            first....!!!!
+                                          </p>
+                                        </tr>
+                                      ) : checkProductType ===
+                                        false ? null : null}
 
-                              <tr>
-                              {customvalidated === true ? (
-                                <p
-                                  className="mt-1 ms-2 text-danger"
-                                  type="invalid"
-                                >
-                                  Please fill Required fields
-                                </p>
-                                    ) : null}
+                                      {varietyUnitvalidation ===
+                                      "ExpireDateValidation" ? (
+                                        <tr>
+                                          <p
+                                            className="mt-1 ms-2 text-danger"
+                                            type="invalid"
+                                          >
+                                            Please Expire date should be greater
+                                            than Manufacturing date
+                                          </p>
+                                        </tr>
+                                      ) : null}
 
+                                      <tr>
+                                        {customvalidated === true ? (
+                                          <p
+                                            className="mt-1 ms-2 text-danger"
+                                            type="invalid"
+                                          >
+                                            Please fill Required fields
+                                          </p>
+                                        ) : varietyValidation ===
+                                          "varietyadd" ? (
+                                          <p
+                                            className="mt-1 ms-2 text-danger"
+                                            type="invalid"
+                                          >
+                                            Please Click On Plus Button To Add
+                                            Variety
+                                          </p>
+                                        ) : null}
 
-                             {varietyUnitvalidation==="fillUnit&size&color"?
-                                <p
-                                  className="mt-1 ms-2 text-danger"
-                                  type="invalid"
-                                >
-                                  Please must be Fill size and colors
-                                </p>
-                                    :varietyUnitvalidation==="" ?null:null }
-
-
-                       {varietyUnitvalidation==="unitQwanity&size&color"?
-
-                          <p
-                            className="mt-1 ms-2 text-danger my-3"
-                            type="invalid"
-                             >
-                         Please fill weight
-                            </p>
-
-                             : varietyUnitvalidation==="" ?null:null}
-
-                            {varietyUnitvalidation==="QwanityValidation"?(
-                            
-                            <p
-                              className="mt-1 ms-2 text-danger my-3"
-                              type="invalid"
-                            >
-                              Quantity must be greater than 0
-                            </p>
-                        
-                             ) :varietyUnitvalidation==="" ?null: null }
-
-                               </tr>
+                                        {varietyUnitvalidation ===
+                                        "fillUnit&size&color" ? (
+                                          <p
+                                            className="mt-1 ms-2 text-danger"
+                                            type="invalid"
+                                          >
+                                            Please Fill size and colors
+                                          </p>
+                                        ) : varietyUnitvalidation ===
+                                          "fillUnit&color" ? (
+                                          <p
+                                            className="mt-1 ms-2 text-danger my-3"
+                                            type="invalid"
+                                          >
+                                            Please fill color
+                                          </p>
+                                        ) : varietyUnitvalidation ===
+                                          "unitQwanity&size&color" ? (
+                                          <p
+                                            className="mt-1 ms-2 text-danger my-3"
+                                            type="invalid"
+                                          >
+                                            Please fill weight/volume/piece
+                                          </p>
+                                        ) : varietyUnitvalidation ===
+                                          "discountmore" ? (
+                                          <p
+                                            className="mt-1 ms-2 text-danger my-3"
+                                            type="invalid"
+                                          >
+                                            Discount should be less then 100
+                                          </p>
+                                        ) : varietyUnitvalidation ===
+                                          "QwanityValidation" ? (
+                                          <p
+                                            className="mt-1 ms-2 text-danger my-3"
+                                            type="invalid"
+                                          >
+                                            Quantity must be greater than 0
+                                          </p>
+                                        ) : varietyUnitvalidation ===
+                                          "mrpmore" ? (
+                                          <p
+                                            className="mt-1 ms-2 text-danger my-3"
+                                            type="invalid"
+                                          >
+                                            Mrp must be lesser than 50000 and
+                                            greater than 0
+                                          </p>
+                                        ) : varietyUnitvalidation ===
+                                          "" ? null : null}
+                                      </tr>
 
                                       {(variantmainarray || []).map(
                                         (variantdata, i) => {
@@ -2621,6 +2970,8 @@ console.log("token----"+token)
                                                   ? "weight"
                                                   : variantdata.unit === "ml"
                                                   ? "volume"
+                                                  : variantdata.unit === "piece"
+                                                  ? "piece"
                                                   : ""}
                                               </td>
                                               <td className="p-0 text-center ">
@@ -2636,9 +2987,7 @@ console.log("token----"+token)
                                                   : null}
                                               </td>
                                               <td className="p-0 text-center ">
-                                                {variantdata.unit === "pcs"
-                                                  ? variantdata.size
-                                                  : ""}
+                                                {variantdata.size}
                                               </td>
                                               <td className="p-0 text-center ">
                                                 {variantdata.mrp}
@@ -2653,12 +3002,12 @@ console.log("token----"+token)
                                               <td className="p-0 text-center ">
                                                 {saleprice}
                                               </td>
-                                              <td className="p-0 text-center ">
+                                              {/* <td className="p-0 text-center ">
                                                 {`${variantdata.special_offer}`}
                                               </td>
                                               <td className="p-0 text-center ">
                                                 {`${variantdata.featured_product}`}
-                                              </td>
+                                              </td> */}
                                               <td className="p-0 text-center ">
                                                 {variantdata.manufacturing_date}
                                               </td>
@@ -2668,7 +3017,6 @@ console.log("token----"+token)
                                               <td className="p-0 text-center">
                                                 {variantdata.quantity}
                                               </td>
-                                              <td className="p-0 text-center"></td>
                                               <td className="p-0 text-center">
                                                 <Button
                                                   variant="text-danger"
@@ -2689,7 +3037,6 @@ console.log("token----"+token)
                                       )}
                                     </tbody>
                                   </Table>
-                                  
                                 </div>
                               </div>
                             </div>
@@ -2716,11 +3063,11 @@ console.log("token----"+token)
                             sm="9"
                             onChange={ontagchange}
                             value={addtag}
-                            onKeyPress={(event) => {
-                              if (event.key === "Enter") {
-                                ontagaddclick();
-                              }
-                            }}
+                            // onKeyPress={(event) => {
+                            //   if (event.key === "Enter") {
+                            //     ontagaddclick();
+                            //   }
+                            // }}
                           />
                           <Button
                             variant="outline-success"
@@ -2734,9 +3081,9 @@ console.log("token----"+token)
                       </div>
 
                       <div className="d-flex align-items-center tagselectbox mt-2">
-                        {productdata.seo_tag == "" ? (
+                        {productdata.seo_tag == "" && addtag === "" ? (
                           ""
-                        ) : (
+                        ) : productdata.seo_tag ? (
                           <Badge className="tagselecttitle mb-0" bg="success">
                             {productdata.seo_tag === null ||
                             productdata.seo_tag === undefined
@@ -2744,13 +3091,14 @@ console.log("token----"+token)
                               : productdata.seo_tag}
                             <span
                               onClick={() => tagRemoveClick()}
-                              className={"addcategoryicon mx-2 text-light spanCurser " }
-                              
+                              className={
+                                "addcategoryicon mx-2 text-light spanCurser "
+                              }
                             >
                               {"x"}
                             </span>
                           </Badge>
-                        )}
+                        ) : null}
 
                         {/* )
 
@@ -2759,7 +3107,7 @@ console.log("token----"+token)
                     </Form.Group>
                   </div>
                 </div>
-               
+
                 {/* other info */}
                 <div className="my-3 inputsection_box">
                   <h5 className="m-0">Other Instruction</h5>
@@ -2826,59 +3174,54 @@ console.log("token----"+token)
                             </Button>
                           </td>
                         </tr>
-                        {
-                          // paraddcustom === null || paraddcustom === undefined ? '' :
-                          (customarray || []).map((variantdata, i) => {
-                            // const arr = variantdata.split(',')
-                            return (
-                              <tr className="">
-                                <td className=" text-center">
-                                  <InputGroup className="">
-                                    <Form.Control
-                                      value={variantdata.header}
-                                      type="text"
-                                      sm="9"
-                                      min={"1"}
-                                      onChange={oncustomheadChange}
-                                      name={"custom_input_header"}
-                                      required
-                                    />
-                                  </InputGroup>
-                                </td>
-                                <td className="text-center">
-                                  <InputGroup className="">
-                                    <Form.Control
-                                      required
-                                      value={variantdata.description}
-                                      name={"custom_input_desc"}
-                                      type="text"
-                                      sm="9"
-                                      min={"1"}
-                                      onChange={oncustomdescChange}
-                                      onKeyPress={(event) => {
-                                        if (event.key === "Enter") {
-                                          handleAddClick();
-                                        }
-                                      }}
-                                    />
-                                  </InputGroup>
-                                </td>
-                                <td className="">
-                                  <Button
-                                    variant="text-danger"
-                                    className="addcategoryicon text-danger"
-                                    onClick={() =>
-                                      handleRemoveClick(variantdata)
-                                    }
-                                    size="sm"
-                                  >
-                                    &times;
-                                  </Button>
-                                </td>
-                              </tr>
-                            );
-                          })
-                        }
+                        {(customarray || []).map((variantdata, i) => {
+                          // const arr = variantdata.split(',')
+                          return (
+                            <tr className="">
+                              <td className=" text-center">
+                                <InputGroup className="">
+                                  <Form.Control
+                                    value={variantdata.header}
+                                    type="text"
+                                    sm="9"
+                                    min={"1"}
+                                    onChange={oncustomheadChange}
+                                    name={"custom_input_header"}
+                                    required
+                                  />
+                                </InputGroup>
+                              </td>
+                              <td className="text-center">
+                                <InputGroup className="">
+                                  <Form.Control
+                                    required
+                                    value={variantdata.description}
+                                    name={"custom_input_desc"}
+                                    type="text"
+                                    sm="9"
+                                    min={"1"}
+                                    onChange={oncustomdescChange}
+                                    onKeyPress={(event) => {
+                                      if (event.key === "Enter") {
+                                        handleAddClick();
+                                      }
+                                    }}
+                                  />
+                                </InputGroup>
+                              </td>
+                              <td className="">
+                                <Button
+                                  variant="text-danger"
+                                  className="addcategoryicon text-danger"
+                                  onClick={() => handleRemoveClick(variantdata)}
+                                  size="sm"
+                                >
+                                  &times;
+                                </Button>
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </Table>
                   </div>
@@ -2904,6 +3247,14 @@ console.log("token----"+token)
                 btntext={modalshow === "add" ? "Add Product" : "Update Product"}
                 btnclass={"button main_button "}
               />
+              {/* {modalshow === "add" ? (
+                <Iconbutton
+                  // type={"submit"}
+                  onClick={() => AddMoreVariety()}
+                  btntext={"Add and Add More Variety"}
+                  btnclass={"button main_button "}
+                />
+              ) : null} */}
             </Modal.Footer>
           </Form>
         </Modal>
@@ -2931,25 +3282,40 @@ console.log("token----"+token)
                         <Table bordered className="align-middle my-2">
                           <thead className="align-middle">
                             <tr>
-                              <th>Variety <span className="text-danger">*</span></th>
-                                          
+                              <th>
+                                Variety <span className="text-danger">*</span>
+                              </th>
+
                               <th>Color</th>
                               <th>Weight/piece/Volume </th>
                               <th>Size </th>
-                              <th>Mrp <span className="text-danger">*</span></th>
+                              <th>
+                                Mrp <span className="text-danger">*</span>
+                              </th>
                               <th>Discount</th>
-                              <th>Price<span className="text-danger">*</span></th>
-                              <th>Sale Price<span className="text-danger">*</span></th>
-                              <th>Special Offer</th>
-                              <th>Featured Product</th>
-                              <th className="manufacture_date">Mdate <span className="text-danger">*</span></th>
-                              <th className="manufacture_date">Edate <span className="text-danger">*</span></th>
+                              <th>
+                                Price<span className="text-danger">*</span>
+                              </th>
+                              <th>
+                                Sale Price<span className="text-danger">*</span>
+                              </th>
+                              {/* <th>Special Offer</th>
+                              <th>Featured Product</th> */}
+                              <th className="manufacture_date">
+                                Mdate <span className="text-danger">*</span>
+                              </th>
+                              <th className="manufacture_date">
+                                Edate <span className="text-danger">*</span>
+                              </th>
                               <th className="manufacture_date">Image</th>
-                              <th className="manufacture_date">Quantity<span className="text-danger">*</span></th>
+                              <th className="manufacture_date">
+                                Quantity<span className="text-danger">*</span>
+                              </th>
                               <th></th>
                             </tr>
                           </thead>
                           <tbody>
+                            {/* { console.log( "product   type----------"+JSON.stringify(vdata[0].unit))} */}
                             <tr>
                               <td className="p-0 text-center">
                                 <div className=" d-flex align-items-center">
@@ -2959,45 +3325,29 @@ console.log("token----"+token)
                                       aria-label="Default select example"
                                       name="unit"
                                       onChange={(e) => onVariantChange(e)}
-                                      // className={
-                                      //   customvalidated === true
-                                      //     ? "border-danger"
-                                      //     : null
+                                      value={variantarray.unit}
+                                      //  selected={
+                                      //   variantarray.unit==="pcs"|| variantarray.unit==="gms"|| variantarray.unit==="ml"|| variantarray.unit==="pcs"|| variantarray.unit==="piece"
+                                      //     ? true
+                                      //     : false
                                       // }
+                                      disabled={
+                                        variantarray.unit &&
+                                        changeUnitproperty == false
+                                          ? true
+                                          : variantarray.unit ||
+                                            changeUnitproperty == true
+                                          ? false
+                                          : true
+                                      }
                                     >
-                                      <option
-                                        value={
-                                          variantarray.unit === "pcs"
-                                            ? "color"
-                                            : variantarray.unit === "gms"
-                                            ? "weight"
-                                            : variantarray.unit === "ml"
-                                            ? "volume"
-                                            : variantarray.unit === "piece"
-                                            ? "piece"
-                                            : variantarray.unit === "" ||
-                                              variantarray.unit === null
-                                            ? "Select"
-                                            : null
-                                        }
-                                      >
-                                        {variantarray.unit === "pcs"
-                                          ? "color"
-                                          : variantarray.unit === "gms"
-                                          ? "weight"
-                                          : variantarray.unit === "ml"
-                                          ? "volume"
-                                          : variantarray.unit === "piece"
-                                          ? "piece"
-                                          : variantarray.unit === "" ||
-                                            variantarray.unit === null
-                                          ? "Select"
-                                          : null}
-                                      </option>
-                                     
+                                      <option value={""}>{"Select"}</option>
+
                                       {(varietyy.variety || []).map(
                                         (vari, i) => {
-                                          return (
+                                          return vdata.length ===
+                                            0 ? null : vdata[0].product_type ===
+                                            "" ? (
                                             <option
                                               value={
                                                 vari === "color"
@@ -3008,6 +3358,43 @@ console.log("token----"+token)
                                                   ? "ml"
                                                   : vari === "piece"
                                                   ? "piece"
+                                                  : ""
+                                              }
+                                              key={i}
+                                            >
+                                              {vari}
+                                            </option>
+                                          ) : vdata.length ===
+                                            0 ? null : vdata[0].product_type ===
+                                              "Cloths" ||
+                                            vdata.length === 0 ? null : vdata[0]
+                                              .product_type === "Fashion" ? (
+                                            vari === "weight" ||
+                                            vari === "volume" ? null : (
+                                              <option
+                                                value={
+                                                  vari === "piece"
+                                                    ? "piece"
+                                                    : vari === "color"
+                                                    ? "pcs"
+                                                    : ""
+                                                }
+                                                key={i}
+                                              >
+                                                {vari}
+                                              </option>
+                                            )
+                                          ) : vari === "color" ? null : (
+                                            <option
+                                              value={
+                                                vari === "weight"
+                                                  ? "gms"
+                                                  : vari === "volume"
+                                                  ? "ml"
+                                                  : vari === "piece"
+                                                  ? "piece"
+                                                  : vari === "color"
+                                                  ? "pcs"
                                                   : ""
                                               }
                                               key={i}
@@ -3025,18 +3412,25 @@ console.log("token----"+token)
                               <td className="p-0 text-center">
                                 <div className=" d-flex align-items-center">
                                   <InputGroup className="" size="sm">
-                                    <Form.Control
-                                      type="text"
+                                    <Form.Select
+                                      aria-label="Default select example"
+                                      required
                                       sm="9"
-                                      // className={
-                                      //   customvalidated === true
-                                      //     ? "border-danger"
-                                      //     : null
-                                      // }
-                                      onChange={(e) => onVariantChange(e)}
-                                      name={"colors"}
+                                      name="colors"
                                       value={variantarray.colors}
-                                    />
+                                      onChange={(e) => onVariantChange(e)}
+                                    >
+                                      <option value={variantarray.colors == ""}>
+                                        Select
+                                      </option>
+                                      {(varietyy.color || []).map((vari, i) => {
+                                        return (
+                                          <option value={vari} key={i}>
+                                            {vari}
+                                          </option>
+                                        );
+                                      })}
+                                    </Form.Select>
                                   </InputGroup>
                                 </div>
                               </td>
@@ -3046,15 +3440,22 @@ console.log("token----"+token)
                                   <InputGroup className="" size="sm">
                                     <Form.Control
                                       value={
-                                        variantarray.unit === "gms"
-                                          ? variantarray.unit_quantity
-                                          : variantarray.unit === "ml"
-                                          ? variantarray.unit_quantity
-                                          : variantarray.unit === "piece"
-                                          ? variantarray.unit_quantity
-                                          : variantarray.unit === ""
-                                          ? variantarray.unit_quantity
-                                          : null
+                                        // variantarray.unit === "gms"
+                                        //   ? variantarray.unit_quantity
+                                        //   : variantarray.unit === "ml"
+                                        //   ? variantarray.unit_quantity
+                                        //   : variantarray.unit === "piece"
+                                        //   ? variantarray.unit_quantity
+                                        //   : variantarray.unit === ""
+                                        //   ?
+                                        variantarray.unit_quantity
+                                        // : null
+                                      }
+                                      disabled={
+                                        // productVeriantUnit == "pcs" ||
+                                        variantarray.unit == "pcs"
+                                          ? true
+                                          : false
                                       }
                                       required={
                                         variantarray.unit !== "pcs" &&
@@ -3064,12 +3465,11 @@ console.log("token----"+token)
                                       }
                                       type="text"
                                       sm="9"
-                                      className={
-                                     
-                                        unitValidated === true
-                                          ? "border-danger"
-                                          : null
-                                      }
+                                      // className={
+                                      //   unitValidated === true
+                                      //     ? "border-danger"
+                                      //     : null
+                                      // }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"unit_quantity"}
                                     />
@@ -3079,24 +3479,34 @@ console.log("token----"+token)
                               <td className="p-0 text-center">
                                 <div className=" d-flex align-items-center">
                                   <InputGroup className="" size="sm">
-                                    <Form.Control
-                                      value={
-                                        variantarray.unit === "pcs"
-                                          ? variantarray.size
-                                          : variantarray.unit === ""
-                                          ? variantarray.size
-                                          : null
-                                      }
-                                      type="text"
+                                    <Form.Select
+                                      aria-label="Default select example"
+                                      required
                                       sm="9"
-                                      // className={
-                                      //   customvalidated === true
-                                      //     ? "border-danger"
-                                      //     : null
-                                      // }
+                                      name="size"
+                                      value={variantarray.size}
                                       onChange={(e) => onVariantChange(e)}
-                                      name={"size"}
-                                    />
+                                      disabled={
+                                        // productVeriantUnit !== "pcs" ||
+                                        variantarray.unit !== "pcs" &&
+                                        variantarray.unit !== ""
+                                          ? true
+                                          : variantarray.unit == ""
+                                          ? false
+                                          : false
+                                      }
+                                    >
+                                      <option value={variantarray.size == ""}>
+                                        Select
+                                      </option>
+                                      {(varietyy.size || []).map((vari, i) => {
+                                        return (
+                                          <option value={vari} key={i}>
+                                            {vari}
+                                          </option>
+                                        );
+                                      })}
+                                    </Form.Select>
                                   </InputGroup>
                                 </div>
                               </td>
@@ -3105,8 +3515,9 @@ console.log("token----"+token)
                                 <div className=" d-flex align-items-center">
                                   <InputGroup className="" size="sm">
                                     <Form.Control
+                                      step="0.01"
                                       type="number"
-                                      step={"any"}
+                                      // step={"any"}
                                       min={1}
                                       sm="9"
                                       // className={
@@ -3116,7 +3527,7 @@ console.log("token----"+token)
                                       // }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"mrp"}
-                                      value={Number(variantarray.mrp)}
+                                      value={variantarray.mrp}
                                     />
                                   </InputGroup>
                                 </div>
@@ -3127,7 +3538,8 @@ console.log("token----"+token)
                                     <Form.Control
                                       type="number"
                                       sm="9"
-                                      min={1}
+                                      min={"1"}
+                                      max={"100"}
                                       onChange={(e) => onVariantChange(e)}
                                       name={"discount"}
                                       value={variantarray.discount}
@@ -3148,17 +3560,14 @@ console.log("token----"+token)
                                       //     ? "border-danger"
                                       //     : null
                                       // }
-                                      onChange={(e) => onVariantChange(e)}
+                                      // onChange={(e) => onVariantChange(e)}
                                       name={"product_price"}
                                       value={Number(variantarray.product_price)}
                                     />
                                   </InputGroup>
                                 </div>
                               </td>
-                              {/* {console.log(
-                                "sale price---" +
-                                  JSON.stringify(variantarray.sale_price)
-                              )} */}
+
                               <td className="p-0 text-center">
                                 <div className=" d-flex align-items-center">
                                   <InputGroup className="" size="sm">
@@ -3172,15 +3581,17 @@ console.log("token----"+token)
                                       //     ? "border-danger"
                                       //     : null
                                       // }
-                                      onChange={(e) => onVariantChange(e)}
+                                      // onChange={(e) => onVariantChange(e)}
                                       name={"sale_price"}
-                                      value={Number(variantarray.sale_price)}
+                                      value={Number(
+                                        variantarray.sale_price
+                                      ).toFixed(2)}
                                     />
                                   </InputGroup>
                                 </div>
                               </td>
 
-                              <td className="p-0 text-center">
+                              {/* <td className="p-0 text-center">
                                 <div className="">
                                   <Form.Check
                                     onChange={(e) =>
@@ -3211,7 +3622,7 @@ console.log("token----"+token)
                                     }
                                   />
                                 </div>
-                              </td>
+                              </td> */}
                               <td className="p-0 text-center">
                                 <div className="manufacture_date">
                                   <InputGroup className="" size="sm">
@@ -3223,6 +3634,7 @@ console.log("token----"+token)
                                       //     ? "border-danger"
                                       //     : null
                                       // }
+                                      min={moment().format("YYYY-MM-DD")}
                                       onChange={(e) => onVariantChange(e)}
                                       name={"manufacturing_date"}
                                       value={moment(
@@ -3243,7 +3655,16 @@ console.log("token----"+token)
                                       //     ? "border-danger"
                                       //     : null
                                       // }
-                                      min={moment(variantarray.manufacturing_date).format("YYYY-MM-DD")}
+                                      min={moment(
+                                        variantarray.manufacturing_date
+                                      )
+                                        .add(1, "day")
+                                        .format("YYYY-MM-DD")}
+                                      disabled={
+                                        variantarray.manufacturing_date
+                                          ? false
+                                          : true
+                                      }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"expire_date"}
                                       value={moment(
@@ -3305,57 +3726,77 @@ console.log("token----"+token)
                                 </div>
                               </td>
                             </tr>
-                            {customvalidated === true ? (
+                            {varietyUnitvalidation ===
+                            "ExpireDateValidation" ? (
                               <tr>
+                                <p
+                                  className="mt-1 ms-2 text-danger"
+                                  type="invalid"
+                                >
+                                  Please Expire date should be greater than
+                                  Manufacturing date
+                                </p>
+                              </tr>
+                            ) : null}
+
+                            <tr>
+                              {customvalidated === true ? (
                                 <p
                                   className="mt-1 ms-2 text-danger"
                                   type="invalid"
                                 >
                                   Please fill Required fields
                                 </p>
-                              </tr>
-                            ) : null}
+                              ) : null}
 
-
-                          
-                              <tr>
-                              {varietyUnitvalidation==="fillUnit&size&color"?(
+                              {varietyUnitvalidation ===
+                              "fillUnit&size&color" ? (
                                 <p
                                   className="mt-1 ms-2 text-danger"
                                   type="invalid"
                                 >
-                                  Please must be Fill size and colors
+                                  Please Fill size and colors
                                 </p>
-                                   ) :varietyUnitvalidation==="" ?null:null}
-                                {varietyUnitvalidation==="unitQwanity&size&color"?(
-                            
+                              ) : varietyUnitvalidation === "fillUnit&color" ? (
                                 <p
                                   className="mt-1 ms-2 text-danger my-3"
                                   type="invalid"
                                 >
-                                  Please fill weight
+                                  Please fill color
                                 </p>
-                            
-                                 ) :varietyUnitvalidation==="" ?null: null}
-
-                          {varietyUnitvalidation==="QwanityValidation"?(
-                            
-                            <p
-                              className="mt-1 ms-2 text-danger my-3"
-                              type="invalid"
-                            >
-                              Quantity must be greater than 0
-                            </p>
-                        
-                             ) :varietyUnitvalidation==="" ?null: null}
-
-
-                              </tr>
-                          
-
-
-                       
-
+                              ) : varietyUnitvalidation ===
+                                "unitQwanity&size&color" ? (
+                                <p
+                                  className="mt-1 ms-2 text-danger my-3"
+                                  type="invalid"
+                                >
+                                  Please fill weight/volume/piece
+                                </p>
+                              ) : varietyUnitvalidation === "discountmore" ? (
+                                <p
+                                  className="mt-1 ms-2 text-danger my-3"
+                                  type="invalid"
+                                >
+                                  Discount should be less then 100
+                                </p>
+                              ) : varietyUnitvalidation ===
+                                "QwanityValidation" ? (
+                                <p
+                                  className="mt-1 ms-2 text-danger my-3"
+                                  type="invalid"
+                                >
+                                  Quantity must be greater than 0
+                                </p>
+                              ) : varietyUnitvalidation === "mrpmore" ? (
+                                <p
+                                  className="mt-1 ms-2 text-danger my-3"
+                                  type="invalid"
+                                >
+                                  Mrp must be lesser than 50000 and greater than
+                                  0
+                                </p>
+                              ) : varietyUnitvalidation === "" ? null : null}
+                            </tr>
 
                             {vdata === "" ||
                             vdata === null ||
@@ -3394,9 +3835,7 @@ console.log("token----"+token)
                                             : ""}
                                         </td>
                                         <td className="p-0 text-center ">
-                                          {variantdata.unit === "pcs"
-                                            ? variantdata.size
-                                            : ""}
+                                          {variantdata.size}
                                         </td>
                                         <td className="p-0 text-center ">
                                           {Number(variantdata.mrp).toFixed(2)}
@@ -3415,12 +3854,12 @@ console.log("token----"+token)
                                         <td className="p-0 text-center ">
                                           {variantdata.sale_price.toFixed(2)}
                                         </td>
-                                        <td className="p-0 text-center ">
+                                        {/* <td className="p-0 text-center ">
                                           {variantdata.special_offer}
                                         </td>
                                         <td className="p-0 text-center ">
                                           {variantdata.featured_product}
-                                        </td>
+                                        </td> */}
                                         <td className="p-0 text-center ">
                                           {moment(
                                             variantdata.manufacturing_date
@@ -3605,6 +4044,11 @@ console.log("token----"+token)
                                     </>
                                   );
                                 })}
+                            {changeUnitproperty === "editvariety" ? (
+                              <tr className="text-primary text-center mx-5">
+                                Now You can edit vareity type
+                              </tr>
+                            ) : null}
                           </tbody>
                         </Table>
                       </div>
@@ -3672,6 +4116,7 @@ console.log("token----"+token)
           text=" Product Updated"
           onConfirm={closeProductAlert}
         />
+
         {/* feature product modal */}
 
         <Modal show={featureshow} onHide={featureModalClose}>
@@ -3759,6 +4204,7 @@ console.log("token----"+token)
                             value={featuredata.start_date}
                             name={"start_date"}
                             required
+                            min={moment().format("YYYY-MM-DD")}
                           />
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill start date
@@ -3780,6 +4226,7 @@ console.log("token----"+token)
                             value={featuredata.end_date}
                             name={"end_date"}
                             required
+                            min={featuredata.start_date}
                           />
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill end date
@@ -3800,7 +4247,7 @@ console.log("token----"+token)
               />
               <Iconbutton
                 onClick={OnSaveProduct}
-                btntext={"Save"}
+                btntext={"Added"}
                 btnclass={"button main_button "}
               />
             </Modal.Footer>
@@ -3808,7 +4255,7 @@ console.log("token----"+token)
         </Modal>
         <SAlert
           show={RestoreAlert}
-          title="Offered Product Added  Sucessfully"
+          title={productname}
           onConfirm={() => setRestoreAlert(false)}
         />
       </div>

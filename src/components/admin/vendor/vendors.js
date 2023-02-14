@@ -12,16 +12,21 @@ import Iconbutton from "../common/iconbutton";
 import axios from "axios";
 import { Badge, Button, InputGroup, Table } from "react-bootstrap";
 import { GiCancel } from "react-icons/gi";
+import storetype from "../json/storetype";
+import status from "../json/Status";
 
 const VendorsList = () => {
   const token = localStorage.getItem("token");
-
+  const [AddtagError, setAddTagError] = useState("");
+  const [SocialLink, setSocialLink] = useState(false);
   const formRef = useRef();
   const [newImageUrls, setnewImageUrls] = useState([]);
-  const [validated, setValidated] = useState(false);
+  const [customValidation, setCustomValidation] = useState(false);
+
   const [show, setShow] = useState("");
   const [docsshow, setDocsShow] = useState(false);
   const [Alert, setAlert] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [vendordata, setvendordata] = useState([]);
   const [file, setFile] = useState();
   const [fileDoc, setFileDoc] = useState();
@@ -29,9 +34,12 @@ const VendorsList = () => {
   const [call, setCall] = useState(false);
   const [scall, setsCall] = useState(false);
   const [AddAlert, setAddAlert] = useState(false);
+  const [ErrorAddAlert, setErrorAddAlert] = useState(false);
   const [UpdateAlert, setUpdateAlert] = useState(false);
+  const [ErrorUpdateAlert, setErrorUpdateAlert] = useState(false);
+  let [condition, setCondition] = useState(false);
   const [fileName, setFileName] = useState("");
-  const [addvendordata, setaddvendordata] = useState({
+  const vendorObject = {
     owner_name: "",
     shop_name: "",
     mobile: "",
@@ -41,38 +49,43 @@ const VendorsList = () => {
     geolocation: "",
     store_type: "",
     image: "",
-    status: "",
+    status: "active",
     image: "",
     document_name: [],
     availability: "",
     social_media_links: [],
-  });
-
+  };
+  const [addvendordata, setaddvendordata] = useState(vendorObject);
   let encoded;
   let ImgObj = [];
   let docuarr;
+  var imgvalidate;
 
   const [changstatus, setchangstatus] = useState("");
   const [apicall, setapicall] = useState(false);
   const [addtag, setaddtag] = useState();
   const [Docnamearray, setDocnameArray] = useState([]);
-
   const [headerval, setheaderval] = useState("");
   const [descval, setdescval] = useState("");
   const [customarray, setcustomarray] = useState([]);
   const [AddCustom, setAddCustom] = useState([]);
-  const [customvalidated, setcustomValidated] = useState(false);
+  // const [customvalidated, setcustomValidated] = useState(false);
   const [searchdata, setsearchData] = useState({
     status: "",
     store_type: "",
     owner_name: "",
   });
-
+  let admintoken = localStorage.getItem("token");
   const closeAddAlert = () => {
+    setLoading(false);
     setAddAlert(false);
   };
   const closeUpdateAlert = () => {
+    setLoading(false);
     setUpdateAlert(false);
+    setErrorUpdateAlert(false);
+    setErrorAddAlert(false);
+    setShow(false);
   };
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
@@ -90,6 +103,7 @@ const VendorsList = () => {
       })
       .then((response) => {
         setvendordata(response.data);
+        setCondition(false);
         setapicall(false);
       })
       .catch(function (error) {
@@ -107,12 +121,13 @@ const VendorsList = () => {
   const columns = [
     {
       name: "ID",
+      width: "60px",
       selector: (row) => row.id,
       sortable: true,
     },
     {
-      name: "#",
-      width: "250px",
+      name: "Shop Logo",
+      width: "120px",
       center: true,
       cell: (row) => (
         <div>
@@ -121,9 +136,9 @@ const VendorsList = () => {
             width="75px"
             alt={row.owner_name}
             src={
-              row.shop_logo
-                ? row.shop_logo
-                : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
+              row.shop_logo === "" || row.shop_logo === "no image"
+                ? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
+                : row.shop_logo
             }
             style={{
               borderRadius: 10,
@@ -138,12 +153,44 @@ const VendorsList = () => {
     },
     {
       name: "Shop Name",
-      selector: (row) => row.shop_name,
+      width: "120px",
+      selector: (row) => (
+        <p className="m-0">
+          {row.shop_name}
+          <br />
+          <b>Profile:</b>{" "}
+          {row.id == null ||
+          row.owner_name == null ||
+          row.shop_name == null ||
+          row.mobile == null ||
+          row.email == null ||
+          row.shop_address == null ||
+          row.gstn == null ||
+          row.geolocation == null ||
+          row.store_type == null ||
+          row.document_name == null ||
+          row.social_media_links == null ||
+          row.shop_logo == null ? (
+            <span className="text-danger">
+              <b>Not Complete</b>
+            </span>
+          ) : (
+            <span className="text-success">
+              <b>Complete</b>
+            </span>
+          )}
+        </p>
+      ),
       sortable: true,
     },
     {
       name: "Owner Name",
       selector: (row) => row.owner_name,
+      sortable: true,
+    },
+    {
+      name: "Store Type",
+      selector: (row) => row.store_type,
       sortable: true,
     },
     {
@@ -165,24 +212,32 @@ const VendorsList = () => {
         <span
           className={
             row.status === "pending"
-              ? "badge bg-secondary"
-              : row.status === "active"
+              ? "badge bg-warning"
+              : row.status === "approved"
               ? "badge bg-success"
               : row.status === "blocked"
               ? "badge bg-danger"
               : row.status === "in progress"
               ? "badge bg-primary"
+              : row.status === "incomplete"
+              ? "badge bg-info"
+              : row.status === "return"
+              ? "badge bg-secondary"
               : "badge bg-dark"
           }
         >
           {row.status === "pending"
             ? "Pending"
-            : row.status === "active"
-            ? "Active"
+            : row.status === "approved"
+            ? "Approved"
             : row.status === "blocked"
             ? "Blocked"
             : row.status === "in progress"
             ? "In Progress"
+            : row.status === "incomplete"
+            ? "In Complete"
+            : row.status === "return"
+            ? "Return"
             : "return"}
         </span>
       ),
@@ -197,34 +252,18 @@ const VendorsList = () => {
             aria-label="Search By status"
             onChange={(e) => handleStatusChnage(e, row.id)}
             name="status"
+            value={row.status}
+            disabled={condition === true ? true : false}
           >
-            <option value="" selected={row.status === "" ? true : false}>
-              select
-            </option>
-            <option
-              value="pending"
-              selected={row.status === "pending" ? true : false}
-            >
-              Pending
-            </option>
-            <option
-              value="active"
-              selected={row.status === "active" ? true : false}
-            >
-              Active
-            </option>
-            <option
-              value="blocked"
-              selected={row.status === "blocked" ? true : false}
-            >
-              Block
-            </option>
-            <option
-              value="in progress"
-              selected={row.status === "in progress" ? true : false}
-            >
-              In Progress
-            </option>
+            <option value={""}>Status</option>
+            {(status.vendorestatus || []).map((data, i) => {
+              return (
+                <option value={data} key={i}>
+                  {" "}
+                  {data}
+                </option>
+              );
+            })}
           </Form.Select>
         </Form.Group>
       ),
@@ -272,6 +311,8 @@ const VendorsList = () => {
       )
       .then((response) => {
         setvendordata(response.data);
+
+        setCondition(false);
         setapicall(false);
       })
       .catch(function (error) {
@@ -287,25 +328,33 @@ const VendorsList = () => {
   }, [Docnamearray]);
 
   const handleFormChange = (e) => {
+    setCustomValidation(false);
     setaddvendordata({
       ...addvendordata,
       [e.target.name]: e.target.value,
     });
   };
   const handleClose = () => {
-    formRef.current.reset();
-    setValidated(false);
+    // setLoading(false);
+    setCustomValidation(false);
+    setSocialLink(false);
     setcustomarray([]);
-
+    setAddTagError("");
     setaddtag("");
-    setaddvendordata("");
+    setaddvendordata(vendorObject);
     setDocnameArray("");
     setapicall(true);
     setShow(false);
   };
 
   const handleShow = (e) => {
-    console.log(e);
+    setLoading(false);
+    setCustomValidation(false);
+    setAddTagError("");
+    setaddtag("");
+    setDocnameArray("");
+
+    // console.log(e);
     if (e === "add") {
       setShow(e);
     }
@@ -349,9 +398,18 @@ const VendorsList = () => {
     setaddtag(e.target.value);
   };
   const onDocuAddclick = (e) => {
-    setDocnameArray((Docnamearray) => [...Docnamearray, addtag]);
-    setaddtag("");
+    if (addtag == "") {
+      setAddTagError("addTagErorrr");
+    } else {
+      setDocnameArray((Docnamearray) => [...Docnamearray, addtag]);
+      setaddtag("");
+      setAddTagError("");
+    }
   };
+  const CreateTimeout = () => {
+    setCondition(false);
+  };
+
   const DocuRemoveClick = (e) => {
     setDocnameArray(Docnamearray.filter((item) => item !== e));
   };
@@ -360,16 +418,24 @@ const VendorsList = () => {
 
   const handleStatusChnage = (e, id) => {
     setchangstatus(e.target.value);
+    setCondition(true);
+    setTimeout(CreateTimeout, 50000);
     axios
       .put(`${process.env.REACT_APP_BASEURL}/vendor_status_change`, {
         status_change: e.target.value,
         id: `${id}`,
       })
       .then((response) => {
-        setapicall(true);
+        if (
+          response.data.status_message === "vendor status change succesfully "
+        ) {
+          setCondition(false);
+          setapicall(true);
+        }
       })
       .catch(function (error) {
         console.log(error);
+        setCondition(false);
       });
   };
 
@@ -377,6 +443,7 @@ const VendorsList = () => {
     setFile(e.target.files[0]);
     setFileName(e.target.files[0].name);
   };
+  imgvalidate = fileName.split(".").pop();
 
   //img code start-----------------------------------------------------------------------------------------------
 
@@ -407,16 +474,10 @@ const VendorsList = () => {
 
   const imguploadchange = async (e) => {
     if (e.target.files.length <= 5) {
-      console.log("lemth------" + e.target.files.length);
-
       // e.preventDefault()
-      console.log("Out id--" + vendorID);
+
       for (let i = 0; i < e.target.files.length; i++) {
-        console.log("i   -- " + i);
-
         encoded = await convertToBase64(e.target.files[i]);
-
-        console.log("encoded--" + encoded);
 
         const [first, ...rest] = encoded.base64.split(",");
         const [nameimg, ext] = encoded.name.split(".");
@@ -486,12 +547,14 @@ const VendorsList = () => {
   let returnarr = [];
   // social media link
   const oncustomheadChange = (e) => {
+    setSocialLink(false);
     setheaderval(e.target.value);
     // setAddCustom((AddCustom) =>{ return {...AddCustom,  e.target.value : e.target.value}});
   };
   // console.log("checkkkk"+JSON.stringify(AddCustom))
 
   const oncustomdescChange = (e) => {
+    setSocialLink(false);
     setdescval(e.target.value);
   };
   // console.log("--------uuuuuuu-------"+JSON.stringify(AddCustom))
@@ -512,9 +575,15 @@ const VendorsList = () => {
   // }
 
   const handleAddClick = (e) => {
-    let returnedTarget = Object.assign({}, { [headerval]: descval });
-    setAddCustom(...AddCustom, returnedTarget);
-    setsCall(true);
+    if (headerval === "") {
+      setSocialLink("HeaderBlank");
+    } else if (descval === "") {
+      setSocialLink("DesBlank");
+    } else {
+      let returnedTarget = Object.assign({}, { [headerval]: descval });
+      setAddCustom(...AddCustom, returnedTarget);
+      setsCall(true);
+    }
   };
   // console.log("--------customarray-------"+JSON.stringify(customarray))
 
@@ -531,31 +600,49 @@ const VendorsList = () => {
   // end social media link
 
   let shoplogo = `${process.env.REACT_APP_BASEURL}/${addvendordata.shop_logo}`;
-  // let docsdata = `${process.env.REACT_APP_BASEURL}/${DocuImgarray}`
-  var Newshoplogo = shoplogo.replace("/public", "");
-  // var imgdata =docsdata.replace("/public", "");
   const handleClick = () => {};
 
   const AddVendorClick = (e) => {
-    const form = e.currentTarget;
-    if (form.checkValidity() === false) {
+    e.preventDefault();
+
+    if (addvendordata.owner_name === "") {
+      setCustomValidation("ownernameEmpty");
+    } else if (addvendordata.shop_name === "") {
+      setCustomValidation("shopnameEmpty");
+    } else if (addvendordata.mobile === "") {
+      setCustomValidation("MobileEmpty");
+    } else if (
+      addvendordata.mobile.length > 10 ||
+      addvendordata.mobile.length < 10
+    ) {
+      setCustomValidation("10number");
+    } else if (addvendordata.email === "") {
+      var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z]{2,4})+$/;
+      var rst = regex.test(addvendordata.email);
+      if (rst !== true) {
+        setCustomValidation("EmailEmpty");
+      }
+      setCustomValidation("EmailEmpty");
+    } else if (addvendordata.shop_address === "") {
+      setCustomValidation("ShopAddressEmpty");
+    } else if (addvendordata.gstn === "") {
+      setCustomValidation("GSTEmpty");
+    } else if (addvendordata.store_type === "") {
+      setCustomValidation("storeTypeEmpty");
+    } else if (addvendordata.geolocation === "") {
+      setCustomValidation("GeolocationEmpty");
+    } else if (
+      imgvalidate == "jpg" ||
+      imgvalidate == "jpeg" ||
+      imgvalidate == "png" ||
+      imgvalidate === ""
+    ) {
       e.preventDefault();
-      e.stopPropagation();
-      console.log("falsecheckValidity----------");
-      setValidated(true);
-    } else {
-      e.preventDefault();
-      console.log("arrruyau------" + addvendordata.document_name);
+      setLoading(true);
       const formData = new FormData();
       let x = [addvendordata.document_name];
       let socialname = addvendordata.testjson;
       let socialname_new = JSON.stringify(socialname);
-
-      // console.log("socialname----------"+socialname);
-      // console.log("socialname----------"+socialname_new);
-
-      console.log(" before  xx-----------  ---" + x);
-      console.log(" before  file Name  ---" + fileName);
 
       formData.append("image", file);
       formData.append("filename", fileName);
@@ -568,77 +655,149 @@ const VendorsList = () => {
       formData.append("geolocation", addvendordata.geolocation);
       formData.append("store_type", addvendordata.store_type);
       formData.append("availability", addvendordata.availability);
-      // formData.append("image",fileDoc);
-      // formData.append("filename", fileDocName);
       formData.append("document_name", x);
       formData.append("status", addvendordata.status);
       formData.append("social_media_links", socialname_new);
 
       axios
-        .post(`${process.env.REACT_APP_BASEURL}/vendor_register`, formData)
+        .post(`${process.env.REACT_APP_BASEURL}/vendor_register`, formData, {
+          headers: {
+            admin_token: admintoken,
+          },
+        })
         .then((response) => {
-          setapicall(true);
-          setShow(false);
-          setAddAlert(true);
-          // console.log("-------done"+response.data)
+          console.log("vendor data----" + JSON.stringify(response));
+          if (response.data.message === "vendor already exist") {
+            setCustomValidation("alreadyexist");
+            setLoading(false);
+          } else if (
+            response.data.message === "Sent mail to super_admin Succesfully"
+          ) {
+            setapicall(true);
+            setShow(false);
+            setAddAlert(true);
+            setLoading(false);
+            setaddvendordata(vendorObject);
+
+            setCustomValidation(false);
+
+            setcustomarray([]);
+            setAddTagError("");
+            setaddtag("");
+
+            setDocnameArray("");
+          }
         })
         .catch(function (error) {
+          setLoading(false);
+          setErrorAddAlert(true);
           console.log(error);
         });
-      formRef.current.reset();
-      setValidated(false);
+    } else {
+      setCustomValidation("imgformat");
+
+      // formRef.current.reset();
     }
+
+    // }
   };
 
   const UpdateVendorClick = (e) => {
-    let x = [addvendordata.document_name];
-    // console.log("update doc"+ x)
     e.preventDefault();
-    const formData = new FormData();
 
-    let socialname = addvendordata.testjson;
-    let socialname_new = JSON.stringify(socialname);
-    //  console.log("se----------"+socialname);
-    //  console.log("seAAAAAAAAAAAAAaaa----------"+socialname_new);
+    if (addvendordata.owner_name === "" || addvendordata.owner_name === null) {
+      setCustomValidation("ownernameEmpty");
+    } else if (
+      addvendordata.shop_name === "" ||
+      addvendordata.shop_name === null
+    ) {
+      setCustomValidation("shopnameEmpty");
+    } else if (addvendordata.mobile === "" || addvendordata.mobile === null) {
+      setCustomValidation("MobileEmpty");
+    } else if (
+      addvendordata.mobile.length > 10 ||
+      addvendordata.mobile.length < 10
+    ) {
+      setCustomValidation("10number");
+    } else if (addvendordata.email === "" || addvendordata.email === null) {
+      var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z]{2,4})+$/;
+      var rst = regex.test(addvendordata.email);
+      if (rst !== true) {
+        setCustomValidation("EmailEmpty");
+      }
+      setCustomValidation("EmailEmpty");
+    } else if (
+      addvendordata.shop_address === "" ||
+      addvendordata.shop_address === null
+    ) {
+      setCustomValidation("ShopAddressEmpty");
+    } else if (addvendordata.gstn === "" || addvendordata.gstn === null) {
+      setCustomValidation("GSTEmpty");
+    } else if (
+      addvendordata.store_type === "" ||
+      addvendordata.store_type === null
+    ) {
+      setCustomValidation("storeTypeEmpty");
+    } else if (
+      addvendordata.geolocation === "" ||
+      addvendordata.geolocation === null
+    ) {
+      setCustomValidation("GeolocationEmpty");
+    } else if (
+      imgvalidate == "jpg" ||
+      imgvalidate == "jpeg" ||
+      imgvalidate == "png" ||
+      imgvalidate == ""
+    ) {
+      setLoading(true);
+      let x = [addvendordata.document_name];
 
-    console.log(" after bfile  ---" + file);
-    console.log(" after file Name  ---" + fileName);
+      const formData = new FormData();
 
-    formData.append("id", addvendordata.id);
-    formData.append("image", file);
-    formData.append("filename", fileName);
-    formData.append("owner_name", addvendordata.owner_name);
-    formData.append("shop_name", addvendordata.shop_name);
-    formData.append("mobile", addvendordata.mobile);
-    formData.append("email", addvendordata.email);
-    formData.append("shop_address", addvendordata.shop_address);
-    formData.append("gstn", addvendordata.gstn);
-    formData.append("geolocation", addvendordata.geolocation);
-    formData.append("store_type", addvendordata.store_type);
-    formData.append("availability", addvendordata.availability);
-    // formData.append("image",fileDoc);
-    // formData.append("filename", fileDocName);
-    formData.append("document_name", x);
-    formData.append("status", addvendordata.status);
-    formData.append("social_media_links", socialname_new);
+      let socialname = addvendordata.testjson;
+      let socialname_new = JSON.stringify(socialname);
+      formData.append("vendor_id", addvendordata.id);
+      formData.append("image", file);
+      formData.append("filename", fileName);
+      formData.append("owner_name", addvendordata.owner_name);
+      formData.append("shop_name", addvendordata.shop_name);
+      formData.append("mobile", addvendordata.mobile);
+      formData.append("email", addvendordata.email);
+      formData.append("shop_address", addvendordata.shop_address);
+      formData.append("gstn", addvendordata.gstn);
+      formData.append("geolocation", addvendordata.geolocation);
+      formData.append("store_type", addvendordata.store_type);
+      formData.append("availability", addvendordata.availability);
+      formData.append("document_name", x);
+      formData.append("status", "active");
+      formData.append("social_media_links", socialname_new);
 
-    // console.log("formdata----"+ JSON.stringify(formData))
-    axios
-      .put(`${process.env.REACT_APP_BASEURL}/vendor_update`, formData)
-      .then((response) => {
-        let data = response.data;
-        setUpdateAlert(true);
-        // console.log("formupdate----------   " + JSON.stringify(response.data));
-        // setvendordata(data)
-        setapicall(true);
-        setShow(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+      axios
+        .put(`${process.env.REACT_APP_BASEURL_0}/vendor_update`, formData, {
+          headers: {
+            admin_token: token,
+          },
+        })
+        .then((response) => {
+          let data = response.data;
+          if (data.response === "header error") {
+            setLoading(false);
+          } else if (response.data.message === "Updated Vendor Profile") {
+            setUpdateAlert(true);
+            setLoading(false);
+            setapicall(true);
+            setShow(false);
+            setaddvendordata(vendorObject);
+          }
+        })
+        .catch(function (error) {
+          setErrorUpdateAlert(true);
+          console.log(error);
+        });
+    } else {
+      setCustomValidation("imgformat");
+    }
   };
-
-  // console.log("VEDORR"+JSON.stringify(addvendordata))
 
   return (
     <div>
@@ -665,12 +824,15 @@ const VendorsList = () => {
               name="status"
               value={searchdata.status}
             >
-              <option value={""}>-Status-</option>
-
-              <option value="pending"> Pending</option>
-              {/* <option value="approved">Approved</option> */}
-              <option value="blocked">Blocked</option>
-              <option value="in progress">In Progress</option>
+              <option value={""}>Status</option>
+              {(status.vendorestatus || []).map((data, i) => {
+                return (
+                  <option value={data} key={i}>
+                    {" "}
+                    {data}
+                  </option>
+                );
+              })}
             </Form.Select>
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
@@ -681,10 +843,14 @@ const VendorsList = () => {
               name="store_type"
               value={searchdata.store_type}
             >
-              <option value={""}>-Store Type-</option>
-              <option value="shoese">shoese</option>
-              <option value="Cloths">Cloths</option>
-              <option value="Food">Food</option>
+              <option value={""}>Store Type</option>
+              {(storetype.storetype || []).map((data, i) => {
+                return (
+                  <option key={i} value={data}>
+                    {data}
+                  </option>
+                );
+              })}
             </Form.Select>
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
@@ -733,9 +899,9 @@ const VendorsList = () => {
       <Modal size="lg" show={show} onHide={() => handleClose()}>
         <Form
           className=""
-          noValidate
-          validated={validated}
-          ref={formRef}
+          // noValidate
+          // validated={validated}
+          // ref={formRef}
           onSubmit={
             show === "add"
               ? (e) => AddVendorClick(e)
@@ -750,182 +916,153 @@ const VendorsList = () => {
           <Modal.Body>
             <div className="row p-3 m-0">
               <div className="col-md-6">
-                <Form.Group
-                  className="mb-3 aos_input"
-                  controlId="validationCustom01"
-                >
-                  {/* {console.log(addvendordata)} */}
-                  <Form.Label>Owner Name</Form.Label>
+                <Form.Group className="mb-3 aos_input">
+                  <Form.Label>
+                    Owner Name <span className="text-danger">* </span>
+                  </Form.Label>
                   <Form.Control
                     onChange={(e) => handleFormChange(e)}
                     value={addvendordata.owner_name}
-                    required
+                    // required
                     type="text"
                     placeholder="Owner Name"
                     name={"owner_name"}
                   />
-                  <Form.Control.Feedback type="invalid" className="h6">
-                    Please fill owner name
-                  </Form.Control.Feedback>
+                  {customValidation === "ownernameEmpty" ? (
+                    <span className="text-danger">Please fill the Owner </span>
+                  ) : customValidation === false ? (
+                    ""
+                  ) : null}
                 </Form.Group>
               </div>
               <div className="col-md-6">
-                <Form.Group
-                  className="mb-3 aos_input"
-                  controlId="validationCustom02"
-                >
-                  <Form.Label>Shop Name</Form.Label>
+                <Form.Group className="mb-3 aos_input">
+                  <Form.Label>
+                    Shop Name <span className="text-danger">* </span>
+                  </Form.Label>
                   <Form.Control
                     onChange={(e) => handleFormChange(e)}
                     value={addvendordata.shop_name}
-                    required
+                    // required
                     type="text"
                     placeholder="Shop Name"
                     name={"shop_name"}
                   />
-                  <Form.Control.Feedback type="invalid" className="h6">
-                    Please fill shop name
-                  </Form.Control.Feedback>
+                  {customValidation === "shopnameEmpty" ? (
+                    <span className="text-danger">
+                      Please fill the Shop name
+                    </span>
+                  ) : customValidation === false ? (
+                    ""
+                  ) : null}
                 </Form.Group>
               </div>
               <div className="col-md-6">
-                <Form.Group
-                  className="mb-3 aos_input"
-                  controlId="validationCustom03"
-                >
-                  <Form.Label>Mobile</Form.Label>
+                <Form.Group className="mb-3 aos_input">
+                  <Form.Label>
+                    Mobile <span className="text-danger">* </span>
+                  </Form.Label>
                   <Form.Control
                     onChange={(e) => handleFormChange(e)}
                     value={addvendordata.mobile}
-                    required
+                    // required
                     type="number"
-                    min={1}
+                    // min={1}
                     placeholder="Mobile"
                     name={"mobile"}
+                    // maxLength={10}
+                    // minLength={10}
                   />
-                  <Form.Control.Feedback type="invalid" className="h6">
-                    Please fill mobile
-                  </Form.Control.Feedback>
+                  {customValidation === "MobileEmpty" ? (
+                    <span className="text-danger">Please fill the Mobile </span>
+                  ) : customValidation === "10number" ? (
+                    <span className="text-danger">
+                      Mobile Number should not be greater then 10 and less than
+                      10{" "}
+                    </span>
+                  ) : customValidation === false ? (
+                    ""
+                  ) : null}
                 </Form.Group>
-                <Form.Group
-                  className="mb-3 aos_input"
-                  controlId="validationCustom04"
-                >
-                  <Form.Label>Email</Form.Label>
+                <Form.Group className="mb-3 aos_input">
+                  <Form.Label>
+                    Email <span className="text-danger">* </span>
+                  </Form.Label>
                   <Form.Control
                     onChange={(e) => handleFormChange(e)}
                     value={addvendordata.email}
-                    required
+                    // required
                     type="email"
                     placeholder="Email"
+                    disabled={show == "add" ? false : true}
                     name={"email"}
                   />
-                  <Form.Control.Feedback type="invalid" className="h6">
-                    Please fill email
-                  </Form.Control.Feedback>
+                  {/* {customValidation === "alreadyexist" ? (
+                    <p className="text-danger mx-2">
+                      {"Vendore Already Exist"}
+                    </p>
+                  ) : null} */}
+
+                  {customValidation === "EmailEmpty" ? (
+                    <span className="text-danger">
+                      Please fill the Email and valid email
+                    </span>
+                  ) : customValidation === "alreadyexist" ? (
+                    <span className="text-danger">Vendore Already Exist</span>
+                  ) : null}
                 </Form.Group>
               </div>
               <div className="col-md-6">
-                <Form.Group
-                  className="mb-3 aos_input"
-                  controlId="validationCustom05"
-                >
-                  <Form.Label>Shop Address</Form.Label>
+                <Form.Group className="mb-3 aos_input">
+                  <Form.Label>
+                    Shop Address <span className="text-danger">* </span>{" "}
+                  </Form.Label>
                   <Form.Control
                     className="vendor_address"
                     as="textarea"
                     rows={3}
+                    id={"address"}
                     placeholder="Address"
                     name={"shop_address"}
                     onChange={(e) => handleFormChange(e)}
                     value={addvendordata.shop_address}
-                    required
+                    // required
+                    maxLength={100}
                   />
-                  <Form.Control.Feedback type="invalid" className="h6">
-                    Please fill address
-                  </Form.Control.Feedback>
+                  {customValidation === "ShopAddressEmpty" ? (
+                    <span className="text-danger">
+                      Please fill the Shop Address{" "}
+                    </span>
+                  ) : customValidation === false ? (
+                    ""
+                  ) : null}
                 </Form.Group>
               </div>
               <div className="col-md-6">
-                <Form.Group
-                  className="mb-3 aos_input"
-                  controlId="validationCustom06"
-                >
-                  <Form.Label>GSTN</Form.Label>
+                <Form.Group className="mb-3 aos_input">
+                  <Form.Label>
+                    GSTN <span className="text-danger">* </span>
+                  </Form.Label>
                   <Form.Control
                     onChange={(e) => handleFormChange(e)}
                     value={addvendordata.gstn}
-                    required
+                    // required
                     type="text"
                     placeholder="GSTN"
                     name={"gstn"}
                   />
-                  <Form.Control.Feedback type="invalid" className="h6">
-                    Please fill gstn
-                  </Form.Control.Feedback>
+                  {customValidation === "GSTEmpty" ? (
+                    <span className="text-danger">
+                      Please fill the GST NO.{" "}
+                    </span>
+                  ) : customValidation === false ? (
+                    ""
+                  ) : null}
                 </Form.Group>
               </div>
+
               <div className="col-md-6">
-                <Form.Group
-                  className="mb-3 aos_input"
-                  controlId="validationCustom06"
-                >
-                  <Form.Label>Status</Form.Label>
-                  <Form.Select
-                    size="sm"
-                    aria-label="Default select example"
-                    onChange={(e) => handleFormChange(e)}
-                    name="status"
-                  >
-                    <option
-                      value=""
-                      selected={addvendordata.status === "" ? true : false}
-                    >
-                      Select
-                    </option>
-                    <option
-                      value="pending"
-                      selected={
-                        addvendordata.status === "pending" ? true : false
-                      }
-                    >
-                      Pending
-                    </option>
-                    <option
-                      value="active"
-                      selected={
-                        addvendordata.status === "active" ? true : false
-                      }
-                    >
-                      Active
-                    </option>
-                    <option
-                      value="blocked"
-                      selected={
-                        addvendordata.status === "blocked" ? true : false
-                      }
-                    >
-                      Block
-                    </option>
-                    <option
-                      value="in progress"
-                      selected={
-                        addvendordata.status === "in progress" ? true : false
-                      }
-                    >
-                      In Progress
-                    </option>
-                  </Form.Select>
-                  <Form.Control.Feedback type="invalid" className="h6">
-                    Please fill gstn
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </div>
-              <div className="col-md-6">
-                <Form.Group
-                  className="mb-3 aos_input"
-                  controlId="validationCustom06"
-                >
+                <Form.Group className="mb-3 aos_input">
                   <Form.Label>Avaliable</Form.Label>
                   <Form.Select
                     size="sm"
@@ -974,22 +1111,23 @@ const VendorsList = () => {
                       Delete
                     </option>
                   </Form.Select>
-                  <Form.Control.Feedback type="invalid" className="h6">
+                  {/* <Form.Control.Feedback type="invalid" className="h6">
                     Please fill gstn
-                  </Form.Control.Feedback>
+                  </Form.Control.Feedback> */}
                 </Form.Group>
               </div>
               <div className="col-md-6">
-                <Form.Group
-                  className="mb-3 aos_input"
-                  controlId="validationCustom06"
-                >
-                  <Form.Label>Store Type</Form.Label>
+                <Form.Group className="mb-3 aos_input">
+                  <Form.Label>
+                    Store Type <span className="text-danger">* </span>
+                  </Form.Label>
                   <Form.Select
+                    // required
                     size="sm"
                     aria-label="Default select example"
                     onChange={(e) => handleFormChange(e)}
                     name="store_type"
+                    value={addvendordata.store_type}
                   >
                     <option
                       value=""
@@ -997,52 +1135,47 @@ const VendorsList = () => {
                     >
                       Select
                     </option>
-                    <option
-                      value="shoese"
-                      selected={
-                        addvendordata.store_type === "shoese" ? true : false
-                      }
-                    >
-                      Pending
-                    </option>
-                    <option
-                      value="Cloths"
-                      selected={
-                        addvendordata.store_type === "Cloths" ? true : false
-                      }
-                    >
-                      Active
-                    </option>
+                    {(storetype.storetype || []).map((data, i) => {
+                      return (
+                        <option key={i} value={data}>
+                          {data}
+                        </option>
+                      );
+                    })}
                   </Form.Select>
-                  <Form.Control.Feedback type="invalid" className="h6">
-                    Please fill gstn
-                  </Form.Control.Feedback>
+                  {customValidation === "storeTypeEmpty" ? (
+                    <span className="text-danger">
+                      Please fill the Store type...
+                    </span>
+                  ) : customValidation === false ? (
+                    ""
+                  ) : null}
                 </Form.Group>
               </div>
               <div className="col-md-6">
-                <Form.Group
-                  className="mb-3 aos_input"
-                  controlId="validationCustom07"
-                >
-                  <Form.Label>Geolocation</Form.Label>
+                <Form.Group className="mb-3 aos_input">
+                  <Form.Label>
+                    Geolocation <span className="text-danger">* </span>
+                  </Form.Label>
                   <Form.Control
                     onChange={(e) => handleFormChange(e)}
-                    required
+                    // required
                     type="location"
                     placeholder="Geolocation"
                     name={"geolocation"}
                     value={addvendordata.geolocation}
                   />
-                  <Form.Control.Feedback type="invalid" className="h6">
-                    Please fill name
-                  </Form.Control.Feedback>
+                  {customValidation === "GeolocationEmpty" ? (
+                    <span className="text-danger">
+                      Please fill the Location{" "}
+                    </span>
+                  ) : customValidation === false ? (
+                    ""
+                  ) : null}
                 </Form.Group>
               </div>
               <div className="col-md-6">
-                <Form.Group
-                  className="mb-3 aos_input"
-                  controlId="validationCustom10"
-                >
+                <Form.Group className="mb-3 aos_input">
                   <Form.Label>Document Name</Form.Label>
                   <InputGroup className="" size="sm">
                     <Form.Control
@@ -1055,7 +1188,7 @@ const VendorsList = () => {
                           onDocuAddclick();
                         }
                       }}
-                    />
+                    />{" "}
                     <Button
                       variant="outline-success"
                       className="addcategoryicon"
@@ -1064,12 +1197,18 @@ const VendorsList = () => {
                     >
                       +
                     </Button>
+                    {AddtagError === "addTagErorrr" ? (
+                      <span className="text-danger">
+                        Please Add Document first...!!!
+                      </span>
+                    ) : null}
                   </InputGroup>
-                  {/* {console.log("ddddd--" + Docnamearray)} */}
 
+                  {console.log("document array--" + Docnamearray)}
                   {Docnamearray === undefined ||
                   Docnamearray === null ||
-                  Docnamearray === "" ? null : (
+                  Docnamearray === "" ||
+                  Docnamearray.length === 0 ? null : (
                     <div className="d-flex align-items-center tagselectbox mt-2">
                       {Docnamearray.map((seotags, i) => {
                         return (
@@ -1089,9 +1228,6 @@ const VendorsList = () => {
                       })}
                     </div>
                   )}
-                  <Form.Control.Feedback type="invalid" className="h6">
-                    Please fill document name
-                  </Form.Control.Feedback>
                 </Form.Group>
               </div>
 
@@ -1119,22 +1255,12 @@ const VendorsList = () => {
                               min={"1"}
                               onChange={oncustomheadChange}
                               name={"header"}
-                              className={
-                                customvalidated === true
-                                  ? "border-danger"
-                                  : null
-                              }
                             />
                           </InputGroup>
                         </td>
                         <td className="col-4">
                           <InputGroup className="">
                             <Form.Control
-                              className={
-                                customvalidated === true
-                                  ? "border-danger"
-                                  : null
-                              }
                               value={descval}
                               name={"description"}
                               type="text"
@@ -1160,10 +1286,33 @@ const VendorsList = () => {
                           </Button>
                         </td>
                       </tr>
+                      <tr>
+                        <td>
+                          {SocialLink == "HeaderBlank" ? (
+                            <span className="text-danger">
+                              {" "}
+                              Please Fill ..!!{" "}
+                            </span>
+                          ) : SocialLink == false ? (
+                            ""
+                          ) : null}
+                        </td>
+                        <td>
+                          {" "}
+                          {SocialLink == "DesBlank" ? (
+                            <span className="text-danger">
+                              {" "}
+                              Please Fill..!!{" "}
+                            </span>
+                          ) : SocialLink == false ? (
+                            ""
+                          ) : null}
+                        </td>
+                      </tr>
                       {customarray
                         ? (customarray || []).map((variantdata, i) => {
                             let v = JSON.stringify(variantdata);
-                            console.log("v__________________" + v);
+
                             let st = v.split(":");
                             let pro = st[0].replace(/[{}]/g, "");
                             let link = st[1].replace(/[{}]/g, "");
@@ -1225,19 +1374,27 @@ const VendorsList = () => {
                 {/* --------------------------------------------- */}
               </div>
               {/* end social media link */}
-              <div classImg="col-md-6">
+              <div className="col-md-6">
                 <Form.Group
                   className="mb-3 aos_input"
                   controlId="validationCustom08"
                 >
-                  <Form.Label>Shop Logo</Form.Label>
+                  <Form.Label>
+                    Shop Logo <b>(In .jpg, .jpeg, .png format)</b>
+                  </Form.Label>
                   <Form.Control
                     onChange={(e) => ImgFormChange(e)}
                     type="file"
                     placeholder="Shop_logo"
                     name={"shop_logo"}
+                    accept=".png, .jpg, .jpeg"
                   />
-                  {/* {console.log("img---" + addvendordata.shop_logo)} */}
+                  {customValidation === "imgformat" ? (
+                    <p className="text-danger mx-2">
+                      {"Please Select Correct Image Format"}
+                    </p>
+                  ) : null}
+
                   {addvendordata.shop_logo ? (
                     <img src={addvendordata.shop_logo} width={"50px"} />
                   ) : null}
@@ -1255,12 +1412,23 @@ const VendorsList = () => {
             >
               Cancel
             </button>
-            <Iconbutton
-              type={"submit"}
-              btntext={show === "add" ? "Add Vendor" : "Update Vendor"}
-              // onClick={(show === 'add' ? AddVendorClick : UpdateVendorClick(show))}
-              btnclass={"button main_button "}
-            />
+            {loading == true ? (
+              <button type="submit" className="button main_button">
+                &nbsp;&nbsp;&nbsp; loading...
+                <span
+                  className="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+              </button>
+            ) : (
+              <Iconbutton
+                type={"submit"}
+                btntext={show === "add" ? "Add Vendor" : "Update Vendor"}
+                // onClick={(show === 'add' ? AddVendorClick : UpdateVendorClick(show))}
+                btnclass={"button main_button "}
+              />
+            )}
           </Modal.Footer>
         </Form>
       </Modal>
@@ -1339,12 +1507,22 @@ const VendorsList = () => {
 
       <SAlert
         show={AddAlert}
-        title="Added Vender Successfully "
+        title=" Vender Added Successfully "
         onConfirm={closeAddAlert}
       />
       <SAlert
         show={UpdateAlert}
-        title="Updated Vender Successfully "
+        title=" Vender Updated Successfully "
+        onConfirm={closeUpdateAlert}
+      />
+      <SAlert
+        show={ErrorUpdateAlert}
+        title=" Vender Not Updated  "
+        onConfirm={closeUpdateAlert}
+      />
+      <SAlert
+        show={ErrorAddAlert}
+        title=" Vender Not Added...!!!  "
         onConfirm={closeUpdateAlert}
       />
 

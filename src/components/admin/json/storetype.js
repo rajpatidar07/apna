@@ -1,5 +1,5 @@
-const CategoryJson = {
-  categorytype: [
+const StoreTypeJson = {
+  storetype: [
     "Cloths",
     "Food",
     "Electronics",
@@ -12,4 +12,4 @@ const CategoryJson = {
     "Two wheelers",
   ],
 };
-export default CategoryJson;
+export default StoreTypeJson;
