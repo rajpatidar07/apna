@@ -9,29 +9,37 @@ import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
 import axios from "axios";
 import moment from "moment";
+import BrandJson from "./../json/BrandJson";
 
 const Deletedproduct = () => {
   const [id, setId] = useState();
   const [productid, setProductId] = useState();
   let [searcherror, setsearcherror] = useState(false);
   const [RestoreAlert, setRestoreAlert] = useState(false);
-
+  const [filtervategory, setfiltercategory] = useState([]);
+  const [vendorid, setVendorId] = useState([]);
   const [Alert, setAlert] = useState(false);
   const [apicall, setapicall] = useState(false);
   const [deletedata, setdeletedata] = useState([]);
   const [searchdata, setsearchData] = useState({
     product_title_name: "",
     manufacturing_date: "",
+    category: [],
+    vendor: [],
+    brand: [],
   });
 
   const hideAlert = () => setRestoreAlert(false);
-
+  let token = localStorage.getItem("token");
   const closeRestoreAlert = () => {
     axios
       .put(`${process.env.REACT_APP_BASEURL_0}/products_delete_remove`, {
         varient_id: id,
         product_id: productid,
         is_delete: "1",
+      },
+      {
+        headers: { admin_token: `${token}` },
       })
       .then((response) => {
         let data = response.data;
@@ -40,12 +48,56 @@ const Deletedproduct = () => {
       });
   };
 
+  /*<---Category list api---> */
+  const getCategorydatafilter = () => {
+    try {
+      axios
+        .get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
+        .then((response) => {
+          let cgory = response.data;
+          setfiltercategory(cgory);
+        });
+    } catch (err) {}
+  };
+  /*<---vendor list api---> */
+  const getVendorData = () => {
+    try {
+      axios
+        .post(
+          `${process.env.REACT_APP_BASEURL}/vendors`,
+          { vendor_id: "all" },
+          {
+            headers: { admin_token: `${token}` },
+          }
+        )
+        .then((response) => {
+          let cgory = response.data;
+
+          const result = cgory.filter(
+            (thing, index, self) =>
+              index === self.findIndex((t) => t.shop_name == thing.shop_name)
+          );
+          const result1 = result.filter(
+            (item) => item.status === "approved" || item.status === "active"
+          );
+          setVendorId(result1);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
     setsearcherror(false);
   };
   const onSearchClick = () => {
-    if (searchdata.product_title_name === "") {
+    if (
+      searchdata.product_title_name === "" &&
+      searchdata.manufacturing_date === "" &&
+      searchdata.brand === "" &&
+      searchdata.category === "" &&
+      searchdata.vendor === ""
+    ) {
       setsearcherror(true);
     } else {
       setsearcherror(false);
@@ -53,7 +105,13 @@ const Deletedproduct = () => {
     }
   };
   const OnReset = () => {
-    setsearchData({ product_title_name: "", manufacturing_date: "" });
+    setsearchData({
+      product_title_name: "",
+      manufacturing_date: "",
+      brand: "",
+      category: "",
+      vendor: "",
+    });
     setapicall(true);
     setsearcherror(false);
   };
@@ -61,15 +119,17 @@ const Deletedproduct = () => {
     axios
       .post(`${process.env.REACT_APP_BASEURL_0}/home?page=0&per_page=400`, {
         product_search: {
-          search: "",
-          category: "",
+          search: [`${searchdata.product_title_name}`],
           price_from: "",
           price_to: "",
           id: "",
           product_title_name_asc_desc: "",
           sale_price: "",
           short_by_updated_on: "",
-          product_title_name: [`${searchdata.product_title_name}`],
+          // product_title_name: ,
+          category: [`${searchdata.category}`],
+          brand: [`${searchdata.brand}`],
+          shop: [`${searchdata.vendor}`],
           is_delete: ["0"],
           manufacturing_date: [`${searchdata.manufacturing_date}`],
         },
@@ -82,6 +142,8 @@ const Deletedproduct = () => {
       .catch(function (error) {
         console.log(error);
       });
+    getVendorData();
+    getCategorydatafilter();
   }, [apicall]);
 
   const columns = [
@@ -129,6 +191,17 @@ const Deletedproduct = () => {
       width: "100px",
     },
     {
+      name: "Vendor",
+      selector: (row) => row.shop,
+      sortable: true,
+      width: "90px",
+    },
+    {
+      name: "Brand",
+      selector: (row) => row.brand,
+      sortable: true,
+      width: "100px",
+    },{
       name: "Mrp",
       selector: (row) => row.mrp.toFixed(2),
       sortable: true,
@@ -258,6 +331,66 @@ const Deletedproduct = () => {
               <small className="text-danger">please fill the feild</small>
             ) : null}
           </div>
+          <div className="col-md-2 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by status"
+              className="adminselectbox"
+              placeholder="Search by category"
+              onChange={OnSearchChange}
+              name="category"
+              value={String(searchdata.category)}
+            >
+              <option value={""}>Select Category</option>
+              {(filtervategory || []).map((data, i) => {
+                return (
+                  <option value={data.id} key={i}>
+                    {" "}
+                    {data.id}
+                  </option>
+                );
+              })}
+            </Form.Select>
+          </div>
+          <div className="col-md-2 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by status"
+              className="adminselectbox"
+              placeholder="Search by vendor"
+              onChange={OnSearchChange}
+              name="vendor"
+              value={String(searchdata.vendor)}
+            >
+              <option value={""}>Select Vendor</option>
+              {(vendorid || []).map((data, i) => {
+                return (
+                  <option value={data.shop_name} key={i}>
+                    {" "}
+                    {data.shop_name}
+                  </option>
+                );
+              })}
+            </Form.Select>
+          </div>
+          <div className="col-md-2 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by brand"
+              className="adminselectbox"
+              placeholder="Search by brand"
+              onChange={OnSearchChange}
+              name="brand"
+              value={String(searchdata.brand)}
+            >
+              <option value={""}>Select Brand</option>
+              {(BrandJson.BrandJson || []).map((data, i) => {
+                return (
+                  <option value={data} key={i}>
+                    {" "}
+                    {data}
+                  </option>
+                );
+              })}
+            </Form.Select>
+          </div>
           <div className="col-md-3 col-sm-6 aos_input">
             <input
               type={"date"}
@@ -268,14 +401,14 @@ const Deletedproduct = () => {
               name="manufacturing_date"
             />
           </div>
-          <div className="col-md-3 col-sm-6 aos_input">
+          <div className="col-md-3 col-sm-6 aos_input mt-2">
             <MainButton
               btntext={"Search"}
               onClick={onSearchClick}
               btnclass={"button main_button w-100"}
             />
           </div>
-          <div className="col-md-3 col-sm-6 aos_input">
+          <div className="col-md-3 col-sm-6 aos_input mt-2">
             <MainButton
               btntext={"Reset"}
               btnclass={"button main_button w-100"}
