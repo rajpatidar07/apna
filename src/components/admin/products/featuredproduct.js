@@ -34,9 +34,10 @@ let token = localStorage.getItem("token");
   const hideAlert = () => setAlert(false);
 
   const handleClose = () => {
-    formRef.current.reset();
+    // formRef.current.reset();
     setValidated(false);
     setShow(false);
+    setapicall(true)
   };
 
   let closeUpdateAlert = () => {
@@ -83,7 +84,9 @@ let token = localStorage.getItem("token");
     }
   };
 //   console.log("oooooo--------"+JSON.stringify(featuredProductData))
+/*<----Function to get the data---->*/
   const handleShow = (product_id) => {
+    console.log('ddddddddddd');
     try {
       axios
         .post(`${process.env.REACT_APP_BASEURL_0}/fetured_product_search`, {
@@ -97,6 +100,7 @@ let token = localStorage.getItem("token");
           })
         .then((response) => {
           setId(response.data[0].id);
+          console.log(response);
           setFeaturetData({
             ...featuredData,
             start_date: response.data[0].start_date,
@@ -128,7 +132,7 @@ let token = localStorage.getItem("token");
             headers: { admin_token: `${token}` },
           })
         .then((response) => {
-console.log(response);          setFeatureProductData(response.data);
+        setFeatureProductData(response.data);
           setapicall(false);
         });
     } catch (err) {console.log(err);}
@@ -147,6 +151,27 @@ console.log(response);          setFeatureProductData(response.data);
       style: {
         paddingLeft: 0,
       },
+    },
+    {
+      name: "#",
+      width: "100px",
+      center: true,
+      cell: (row) => (
+        <img
+          alt={"apna_organic"}
+          src={
+            row.all_images
+              ? row.all_images
+              : "https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
+          }
+          style={{
+            padding: 10,
+            textAlign: "right",
+            maxHeight: "100px",
+            maxWidth: "100px",
+          }}
+        />
+      ),
     },
     {
       name: "Product Name",
@@ -288,16 +313,21 @@ console.log(response);          setFeatureProductData(response.data);
     },
   ];
 
+/*<----Onchange function of Feature---->*/
   const handleFormChange = (e) => {
     setFeaturetData({ ...featuredData, [e.target.name]: e.target.value });
   };
 
+  /*<----Function to update feature product---->*/
   const UpdateFeaturedProduct = (e) => {
     e.preventDefault();
     axios.put(`${process.env.REACT_APP_BASEURL_0}/update_fetured_product`,{
       id:id,
       start_date:featuredData.start_date,
       end_date:featuredData.end_date
+    },
+    {
+      headers: { admin_token: `${token}` },
     }).then((response) => {
       let data = response.data;
       setapicall(true);
@@ -309,18 +339,21 @@ console.log(response);          setFeatureProductData(response.data);
 }
 
 const OnDateChange = (e) => {}
-
+const submitHandler = () => {
+  setapicall(true);
+};
+/*<---Onchange function of search --->*/
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
   };
-  const submitHandler = () => {
-    setapicall(true);
-  };
-
+/*<---Function to reset Search--->*/
   const OnReset = () => {
     setsearchData({status :"", category:"", brand:"", vendor:""});
     setapicall(true);
+    setsearcherror(false)
+
   };
+  /*<---Onlick Function to Search--->*/
   const Search = () => {
     if (
       searchdata.status === "" && 
@@ -343,7 +376,7 @@ const OnDateChange = (e) => {}
         <div className="col-md-3 col-sm-6 aos_input">
   <input type={"text"}  onChange={OnSearchChange} name='product_title_name'
         value={searchdata.status} placeholder={"Search by status"} className={'adminsideinput'}/>
-        {searcherror === true ?<small>This feild is required</small>:null}
+        {searcherror === true ?<small className="text-danger">This feild is required</small>:null}
   </div>
   <div className="col-md-2 col-sm-6 aos_input">
             <Form.Select
@@ -432,7 +465,7 @@ const OnDateChange = (e) => {}
                     className="mb-3 aos_input"
                     controlId="formBasicStartDate"
                   >
-                    <Form.Label>Manufacturing Date</Form.Label>
+                    <Form.Label>Start Date</Form.Label>
                     <Form.Control
                       name="start_date"
                       value={featuredData.start_date}
@@ -447,7 +480,7 @@ const OnDateChange = (e) => {}
                     className="mb-3 aos_input"
                     controlId="formBasicStartDate"
                   >
-                    <Form.Label>Expire Date</Form.Label>
+                    <Form.Label>End Date</Form.Label>
                     <Form.Control
                       name="end_date"
                       value={featuredData.end_date}
@@ -494,7 +527,7 @@ const OnDateChange = (e) => {}
   />
   <SAlert
     show={UpdateAlert}
-    title="Updated Sold product Successfully "
+    title=" Sold product Updated Successfully "
     onConfirm={closeUpdateAlert}
   />
     </div>     
