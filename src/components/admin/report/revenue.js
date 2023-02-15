@@ -634,8 +634,8 @@ const optionss = {
         console.log( "Previous  Todate---------------------------------------"+prevTodate)
         console.log( "Previous fromdate---------------------------------------"+prevFromdate)
         // console.log("previous fromDate-"+moment(prevDate).startOf('weeks').format('YYYY-MM-DD'))
-        console.log( "brand----"+brandName)
-        console.log( "locations by name----"+location)
+        // console.log( "brand----"+brandName)
+        // console.log( "locations by name----"+location)
           axios.post(`${process.env.REACT_APP_BASEURL}/revenue`,
          {
            "from_date":fromDate,
@@ -664,11 +664,11 @@ const optionss = {
 
 
               setRevenueError('')
-              console.log("data=="+JSON.stringify(response.data[0]))
+              // console.log("data=="+JSON.stringify(response.data[0]))
                setGetRevenue(response.data[0])
               setTabledata(response.data[0].ravenue_date_data)
              
-           
+              setapicall(false)
             }
          
         }).catch(function (error) {
@@ -686,9 +686,21 @@ const optionss = {
                 admin_token: token,
               },
             })
-          //  console.log("vendor----"+JSON.stringify(result.data))
+       
           if(result.data){
-            setVenderList(result.data)
+
+
+
+            const filterUnwanted = (arr) => {
+              const required = arr.filter(el => {
+                 return el.shop_name;
+              });
+              return required;
+           };
+
+
+     
+            setVenderList(filterUnwanted(result.data))
           }
           
        }
@@ -707,7 +719,7 @@ const optionss = {
      const BrandData= async()=>{
       let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/brand_list`)
 
-       console.log("Brand data-----"+ JSON.stringify(result.data))
+      //  console.log("Brand data-----"+ JSON.stringify(result.data))
       if(result.data){
         setBrand(result.data)
       }
@@ -746,6 +758,21 @@ const optionss = {
 
 
 
+      const OnReset =()=>{
+
+        setpreviousStateChange('')
+  setFromDate(moment().format("YYYY-MM-DD"));
+setToDate(moment().format("YYYY-MM-DD"))
+setprevFromdate(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'))
+  setprevTodate(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'))
+        setBrandName([])
+        setLocation([])
+        setCategoryId("")
+        setVendorId("")
+        fetchData()
+         setapicall(true)
+       
+    }
 
 
       // console.log("get revenue------"+JSON.stringify(getRevenue))
@@ -819,6 +846,7 @@ const optionss = {
 
     const options2 = [
       venderList.map((item)=>(
+        
         { value: `${item.id}` ,label:`${item.shop_name}` }
       ))
     ]
@@ -837,7 +865,7 @@ const optionss = {
       
       }
 
- console.log("$$$$$$------"+JSON.stringify(vendorId[0]))
+
 
 
  
@@ -1024,12 +1052,16 @@ const SearchHandler=(e)=>{
        
         </div> : null}
         
-        
+           
+      
         <div className="col-md-auto col-sm-6 mt-3  aos_input">
         <MainButton btntext={"Search"} btnclass={'button main_button'} onClick={submitHandler} />
         </div>
-       
-   
+    
+        <div className="col-md-auto col-sm-6 mt-3 aos_input">
+        <MainButton btntext={"Reset"} btnclass={'button main_button'} type="reset" onClick={OnReset}/>
+        </div>
+
         <div className="col-md-auto col-sm-6 mt-3 aos_input">
         <DropdownButton id="dropdown-variant-success" title="Download" variant="button main_button">
       <Dropdown.Item onClick={handleDownloadExcel}>Excel</Dropdown.Item>

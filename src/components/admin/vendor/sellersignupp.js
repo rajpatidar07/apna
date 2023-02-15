@@ -12,12 +12,13 @@ import Sellerverifyotp from "./sellerverifyotp";
 import SellerLogin from "./sellerlogin";
 import SellerForgertPassword from "./sellerforgetpassword";
 import SallerChangePassword from "./sellerchangepassword";
-
+import VendorResetPassword from './vendorresetpassword'
 const SellerSignupp = () => {
 
-
+  const [vendorResetpasswordshow, setVendorResetpasswordshow] = useState(false);
   const [sellerLoginshow, setSellerLoginShow] = useState(false);
   const [sellerForgetpasswordshow, setSellerForgetpasswordshow] = useState(false);
+  const [sellerChangepasswordshow, setSellerChangepasswordshow] = useState(false);
   const [otpverificationshow, setOtpverificationShow] = useState(false);
   const[sellersignupshow,setSellerSignUpShow]=useState(true)
   const [spinner, setSpinner] = useState(false);
@@ -35,9 +36,14 @@ const SellerSignupp = () => {
 
   const { state } = useLocation();
 
+  const [emailvaluebyforget,setEmailvaluebyforget]=useState()
 
+const getdatafromForgetpassword=(data)=>{
+  setEmailvaluebyforget(data)
+ 
 
-
+}
+// console.log("email---------"+emailvaluebyforget,otpmsg)
 
 
 const sellerloginfunction=()=>{
@@ -45,11 +51,11 @@ const sellerloginfunction=()=>{
   setSellerSignUpShow(false)
 }
 
-const sellerForgetPasswordFunction=()=>{
-  setSellerForgetpasswordshow(true)
-  setSellerLoginShow(false)
-  setSellerSignUpShow(false)
-}
+// const sellerForgetPasswordFunction=()=>{
+//   setSellerForgetpasswordshow(true)
+//   setSellerLoginShow(false)
+//   setSellerSignUpShow(false)
+// }
 
 
   const onEmailChange=(e)=>{
@@ -157,29 +163,34 @@ const sellerForgetPasswordFunction=()=>{
 
                       <div className="col-12 py-2">
                         <div className="forgot-box d-flex justify-content-between">
+                        <div className="forgot-box">
                           <div className="form-check ps-0 m-0 remember-box">
                             <input
                               className="checkbox_animated check-box"
                               type="checkbox"
                               id="flexCheckDefault"
+                              name="termscheck"
+                              required
                             />
                             <label
                               className="form-check-label"
                               htmlFor="flexCheckDefault"
                             >
-                              Remember me
+                              I agree with
+                              <span>Terms</span> and <span>Privacy</span>
                             </label>
                           </div>
+                        </div>
                           {/* <NavLink to="/forgot" className="forgot">
                             Forgot Password?
                           </NavLink> */}
-                          <div
+                          {/* <div
                       onClick={sellerForgetPasswordFunction}
                        className="sign-up-box"
 
                      > 
                           Forget password?
-                     </div> 
+                     </div>  */}
                         </div>
                       </div>
                   
@@ -249,9 +260,7 @@ const sellerForgetPasswordFunction=()=>{
               </div>
                   <div className="other-log-in"></div>
 
-                  <div className="sign-up-box">
-                    <NavLink to="/change_password">Reset Password</NavLink>
-                  </div>
+                 
                 </div>
               </div>:sellersignupshow===false?null:null}
              
@@ -266,15 +275,26 @@ const sellerForgetPasswordFunction=()=>{
               
 
               {/* seller Login start here */}
-              {sellerLoginshow===true?  <SellerLogin/>:sellerLoginshow==false?null:null}
+              {sellerLoginshow===true?  <SellerLogin forgetpassword= {setSellerForgetpasswordshow}  showsellerlogin={setSellerLoginShow}  sellersign={setSellerSignUpShow} sellerChangePsword={setSellerChangepasswordshow}   vendorResetPsword={setVendorResetpasswordshow} />:sellerLoginshow==false?null:null}
            
               {/* seller login end here */}
 
             {/* seller forget password start here */}
-         {sellerForgetpasswordshow===true?<SellerForgertPassword/>:sellerForgetpasswordshow===false?null:null}
+         {sellerForgetpasswordshow===true?<SellerForgertPassword changePasswordProp={setSellerChangepasswordshow} forgetpassword= {setSellerForgetpasswordshow}  getdatafromchild={getdatafromForgetpassword} />:sellerForgetpasswordshow===false?null:null}
                 {/* seller forget password start here */}
 
-              <SallerChangePassword/>
+
+         {/* seller change password start here */}
+         {sellerChangepasswordshow===true? <SallerChangePassword sendEmailValue={emailvaluebyforget} forgetpassword= {setSellerForgetpasswordshow} showsellerlogin={setSellerLoginShow}  sellersign={setSellerSignUpShow}  sellerChangePsword={setSellerChangepasswordshow} />:sellerChangepasswordshow===false?null:null}
+             
+         {/* seller change password end here */}
+
+
+
+         {/* vendor reset password start here */}
+         {vendorResetpasswordshow===true?<VendorResetPassword />:vendorResetpasswordshow===false?null:null}
+         
+            {/* vendor reset password End here */}
             </div>
           </div>
         </div>

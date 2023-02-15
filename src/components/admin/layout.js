@@ -54,6 +54,8 @@ import SellerSignUp from "./sellersignup";
 import SellerSignupp from "./vendor/sellersignupp";
 
 import VendorUpdate from "./vendor/vendorupdate";
+import VendorEmailLogin from "./vendor/vendoremaillogin";
+
 function AdminLayout() {
   // const location = useLocation();
   const [adminLogged, setadminLogged] = useState(localStorage.getItem("token"));
@@ -68,7 +70,8 @@ function AdminLayout() {
       <Router>
     
         <Routes>
-     
+       
+        <Route path="/vendoremaillogin" element={<VendorEmailLogin/>}/>
           <Route path="/sellersignup" element={<SellerSignUp/>}/>
           <Route path="/login" element={<Login />} />
           <Route path="/change_password" element={<ChangePassword />} />

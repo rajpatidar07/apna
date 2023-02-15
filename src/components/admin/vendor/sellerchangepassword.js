@@ -4,85 +4,105 @@ import { useNavigate } from "react-router-dom";
 import MainButton from "../common/button";
 import Logo from "../../../images/logo.png";
 import axios from "axios";
+import Spinner from "react-bootstrap/Spinner";
+import SAlert from "../common/salert";
+const SallerChangePassword = (props) => {
 
-const SallerChangePassword = () => {
+
+
+  const [showalert, setShowshowAlert] = useState(false);
+  const [spinner, setSpinner] = useState(false);
+
+
+  const [emailerror, setemailerror] = useState("");
+ 
+  const [otperror, setOtperror] = useState(false);
+ 
+
+
+  const [forgototp, setforgototp] = useState(0);
+  const [forgotpassval, setforgotpassval] = useState("");
   const navigate = useNavigate();
-  const [PasswordError, setPasswordError] = useState("");
-  const [passval, setpassval] = useState("");
+  
+  // const { state } = useLocation();
 
-  const [password, setpassword] = useState({
-    email: "",
-    current_password: "",
-    new_password: "",
-    confirm_password: "",
-  });
-  const [validation, setValidation] = useState(false);
-  const onPasswordChange = (e) => {
-    setpassword({ ...password, [e.target.name]: e.target.value });
-    setPasswordError("")
-    setValidation(false);
+
+  const closePasswordAlert=()=>{
+    setShowshowAlert(false)
+  }
+
+
+
+  const onfORGOTPasswordChange = (e) => {
+    setemailerror("")
+    setOtperror(false)
+    setforgotpassval(e.target.value);
   };
 
-  const PasswordChange=(e)=>{
-    setpassval(e.target.value)
-      setPasswordError("")
-  }
-  const LoginForm = (e) => {
-    if (
-      passval.new_password !== password.confirm_password &&
-      passval.new_password !== "" &&
-      password.confirm_password !== ""
-    ) 
-    if (!passval) {
-      setPasswordError("New password is required");
-    }
-    else if (
-      passval < 8 ||
-      passval !== /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/
-    )
-    {
-      setPasswordError(
-        "New password must be at least 8 characters, 1 lowercase letter, 1 uppercase letter and 1 digit"
-      );
-    }
-    else if (
-      passval.new_password === "" ||
-      password.confirm_password === ""
-    ) {
-      setValidation("please fill all input");
-    } 
-    else
-    {
-      setValidation("not same");
-      setPasswordError("");
-    } 
-  if (passval.length>=8){
-    {
-      axios
-        .put(`${process.env.REACT_APP_BASEURL}/update_password`, {
-          admin_email: password.email,
-          admin_password: password.current_password,
-          new_admin_password: password.confirm_password,
-        })
-        .then((response) => {
-          if (response.data.response === "please fill all input") {
-            setValidation("please fill all input");
-          } else if (response.data.response === "email not matched") {
-            setValidation("email not matched");
-          } else if (response.data.response === "password not matched") {
-            setValidation("password not matched");
-          } else if (
-            passval.new_password === password.confirm_password &&
-            response.data.response === "password_updated"
-          ) {
-            navigate("/login");
-          }
-        });
-    }
-  }
-    e.preventDefault();
+  // const handlefORGOTFormChange = (e) => {
+  //   setemailerror("")
+  //   setforgotemail(e.target.value);
+  // };
+
+
+
+  const OnOtpChange = (e) => {
+    setOtperror(false)
+    setforgototp(e.target.value);
   };
 
+  const VerifyfORGOTOTP = (e) => {
+
+
+    // if(forgototp==0||forgototp==""){
+    //    setOtperror("OtpisEmpty")
+ 
+    //  } else {
+    //    setOtperror("")
+    //  }
+      if(forgotpassval==""){
+          
+       setemailerror("forgetPasswordEmpty")
+     }else {
+       setemailerror("")
+     }
+ 
+   
+   if(forgototp!=="" && forgotpassval!==""){
+ 
+     e.preventDefault();
+     setSpinner("spinner1");
+ 
+  axios
+    .post(`${process.env.REACT_APP_BASEURL}/vendor_otp_verify`, {
+      email: props.sendEmailValue,
+      otp: Number(forgototp),
+      password: forgotpassval,
+    })
+    .then((response) => {
+      setSpinner(false);
+        
+        
+      if (response.data.message === "otp not matched") {
+        setOtperror("otpNotMatched");
+      } 
+      if (response.data.message === "succecfully forget password") {
+        setSpinner(false);
+        setShowshowAlert(true)
+        props.showsellerlogin(true)
+        props.sellersign(false)
+        props.forgetpassword(false)
+        props.sellerChangePsword(false)
+      } 
+      
+        
+      
+    })
+    .catch((error) => {});
+ 
+   }
+    
+   };
   return (
     <Fragment>
   
@@ -98,14 +118,15 @@ const SallerChangePassword = () => {
                         <div className="form-floating theme-form-floating log-in-form">
                           <input
                             required
-                            value={password.email}
+                            value={props.sendEmailValue}
                             name={"email"}
-                            onChange={(e) => onPasswordChange(e)}
+                           disabled
                             type="email"
                             className="form-control"
                             id="email"
                             placeholder="Email"
                           />
+                          
                           <label for="currentpassword">Email</label>
                         </div>
                       </div>
@@ -113,80 +134,80 @@ const SallerChangePassword = () => {
                         <div className="form-floating theme-form-floating log-in-form">
                           <input
                             required
-                            value={password.current_password}
-                            name={"current_password"}
-                            onChange={(e) => onPasswordChange(e)}
-                            type="password"
+                        // value={forgototp}
+                            name="otp"
+                            onChange={(e) => OnOtpChange(e)}
+                            type="number"
                             className="form-control"
                             id="currentpassword"
-                            placeholder="Current Password"
+                            placeholder="Enter Otp"
                           />
-                          <label for="currentpassword">Current Password</label>
+                          {otperror === "otpNotMatched" ? (
+                      <p className="text-danger">Invalid Otp....!!!</p>
+                                ) : otperror === "OtpisEmpty" ? (
+                      <p className="mt-1 ms-2 text-danger" type="invalid">
+                          Please Enter Otp First
+                            </p>
+                         ) : null}
+                          <label for="currentpassword">One Time Password</label>
                         </div>
                       </div>
                       <div className="col-12">
                         <div className="form-floating theme-form-floating log-in-form">
                           <input
                             required
-                            value={passval.new_password}
-                            name={"new_password"}
-                            onChange={(e) => PasswordChange(e)}
+                            value={forgotpassval}
+                            name="password"
+                          onChange={(e) => onfORGOTPasswordChange(e)}
                             type="password"
                             className="form-control"
-                            id="new password"
+                            id="password"
                             placeholder="New Password"
                           />
-                          {PasswordError && (
-                    <p className="error-message text-danger">{PasswordError}</p>
-                  )}
+                        { emailerror === "forgetPasswordEmpty" ?(
+                        <p className="mt-1 ms-2 text-danger" type="invalid">
+                              Enter password First
+                            </p> 
+                          ):null}
                           <label for="new password">New Password</label>
                         </div>
                       </div>
 
+               
+                   
                       <div className="col-12">
-                        <div className="form-floating theme-form-floating log-in-form">
-                          <input
-                            required
-                            value={password.confirm_password}
-                            name={"confirm_password"}
-                            onChange={(e) => onPasswordChange(e)}
-                            type="password"
-                            className="form-control"
-                            id="confirm password"
-                            placeholder="Confirm Password"
-                          />
-                          <label for="confirm password">Confirm Password</label>
-                        </div>
-                      </div>
-                      {validation === "please fill all input" ? (
-                        <p className="mt-2 ms-2 text-danger" type="invalid">
-                          Please Fill All Fields
-                        </p>
-                      ) : validation === "email not matched" ? (
-                        <p className="mt-2 ms-2 text-danger" type="invalid">
-                          Please Fill Correct Email
-                        </p>
-                      ) : validation === "password not matched" ? (
-                        <p className="mt-2 ms-2 text-danger" type="invalid">
-                          Please Fill Correct Password
-                        </p>
-                      ) : validation === "not same" ? (
-                        <p className="mt-2 ms-2 text-danger" type="invalid">
-                          New Password And Confirm Password Should Be Same
-                        </p>
-                      ) : null}
-                      <div className="col-12">
-                        <MainButton
-                          btntext={"Change Password"}
-                          btnclass={"w-100 btn-success btn"}
-                          onClick={LoginForm}
-                        />
+
+
+                        
+                      {  spinner === "spinner1"?  
+                       <MainButton
+                       btntext={ <Spinner animation="border" role="status">
+                       <span className="visually-hidden">
+                     
+                       Change Password
+                       </span>
+                     </Spinner>}
+                        onClick={VerifyfORGOTOTP}
+                        btnclass={"w-100 btn-success btn"}
+                        > 
+                       </MainButton> :  
+                      <MainButton
+                        btntext={" Change Password"}
+                        btnclass={"w-100 btn-success btn"}
+                        onClick={VerifyfORGOTOTP}
+                      ></MainButton>}
+
                       </div>
                     </form>
                   </div>
                 </div>
               </div>
-           
+          <SAlert
+          show={showalert}
+          title=" Success "
+          text="Pasword Change Successfully"
+          onConfirm={closePasswordAlert}
+        />
     </Fragment>
   );
 };

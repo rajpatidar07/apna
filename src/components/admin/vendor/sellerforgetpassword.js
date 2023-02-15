@@ -2,62 +2,83 @@ import React, { Fragment, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import MainButton from "../common/button";
-import Logo from "../../../images/logo.png";
+import Spinner from "react-bootstrap/Spinner";
 import axios from "axios";
-import Countdown from "react-countdown";
 
 
 
-const SellerForgertPassword = () => {
-  const [email, setEmail] = useState("");
-  const [emailerror, setemailerror] = useState(false);
-  const [timer, settimer] = useState(false);
-  const [loading, setLoading] = useState(false);
+
+const SellerForgertPassword = (props) => {
+ 
+  const [show, setShow] = useState(false);
+  const [spinner, setSpinner] = useState(false);
+  const [otp, setotp] = useState(0);
+  const [emailVal, setemailVal] = useState("");
+  const [forgotemail, setforgotemail] = useState("");
+  let [formshow, setformShow] = useState(true);
+
+  const [emailerror, setemailerror] = useState("");
+  const [Signup, setSignup] = useState(false);
+  const [otperror, setOtperror] = useState(false);
+  const [passval, setpassval] = useState("");
+
+  const [loginpage, setloginpage] = useState(false);
+  const [forgotpage, setforgotpage] = useState(false);
+  const [forgototp, setforgototp] = useState(0);
+  const [forgotpassval, setforgotpassval] = useState("");
   const navigate = useNavigate();
-  const forgotInfo = (e) => {
-    if (email === "") {
-      setemailerror("null");
-      setLoading(false);
-    } else {
-      settimer(true);
-      setLoading(true);
+  const [error, setError] = useState(true);
+  const [loginemailerror, setLoginemailerror] = useState(true);
+  const [vendorstatus, setvendorstatus] = useState(false);
+  // const { state } = useLocation();
 
+  const handlefORGOTFormChange = (e) => {
+    setemailerror("")
+    setforgotemail(e.target.value);
+  };
+
+
+  const forgotPassword = (e) => {
+
+    var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z]{2,4})+$/;
+    var rst = regex.test(forgotemail);
+    if(rst==false){
+         
+       setemailerror("ForgetEmailEmpty")
+    }
+    else{
+        setSpinner("spinner");
+        e.preventDefault()
       axios
-        .put(`${process.env.REACT_APP_BASEURL}/admin_forget_password`, {
-          admin_email: email,
-        })
-        .then((response) => {
-          if (response.data.response === "invalid_mail") {
-            settimer(false);
-            setemailerror(response.data.response);
-            setLoading(false);
-          } else {
-            navigate("/login");
-          }
-        });
+      .post(`http://192.168.29.108:5000/vendor_forgot_password`, {
+        email: `${forgotemail}`,
+      })
+      .then((response) => {
+    
+          
+        if(response.data.message === "User Not Exist"){
+          setSpinner(false);
+          setemailerror("usernotFound")
+        } else if(response.data.message === "Send otp in Gmail Succesfully"){
+          setSpinner(false);
+          props.changePasswordProp(true)
+          props.forgetpassword(false)
+          setemailerror("otpsend")
+          props.getdatafromchild(forgotemail,"otpsend")
+        } else{
+
+        }
+
+      
+        
+
+      });
     }
-    e.preventDefault();
-  };
-  const handleFormChange = (e) => {
-    setEmail(e.target.value);
-    setemailerror(false);
+    
+ 
   };
 
-  // countdown
-  const renderer = ({ hours, minutes, seconds, completed }) => {
-    if (completed) {
-      // Render a complete state
-      // return <Completionist />;
-    } else {
-      // Render a countdown
-      return (
-        <h4 className="mt-2 ms-2 text-danger mx-3">
-          {hours}:{minutes}:{seconds}
-        </h4>
-      );
-    }
-  };
-  // end countdown
+
   return (
     <Fragment>
      
@@ -76,50 +97,52 @@ const SellerForgertPassword = () => {
                             type="email"
                             className="form-control"
                             id="email"
-                            onChange={(e) => handleFormChange(e)}
-                            value={email}
-                            name={"admin_email"}
+                            onChange={(e) => handlefORGOTFormChange(e)}
+                            value={forgotemail}
+                            name={"email"}
                             placeholder="Email Address"
                           />
                           <label for="email">Email Address</label>
                         </div>
-                        {timer === true ? (
-                          <Countdown
-                            date={Date.now() + 30000}
-                            renderer={renderer}
-                          />
-                        ) : null}
-                        {emailerror === "null" ? (
-                          <p className="mt-1 ms-2 text-danger" type="invalid">
-                            Please Enter Email
-                          </p>
-                        ) : emailerror === "invalid_mail" ? (
-                          <p className="mt-1 ms-2 text-danger" type="invalid">
-                            Please Enter Valid Email
-                          </p>
-                        ) : null}
+                   
+                        {   emailerror === "ForgetEmailEmpty" ? (
+                            <p className="mt-1 ms-2 text-danger" type="invalid">
+                              Please Enter Correct Email
+                            </p> 
+                          ) : emailerror === "usernotFound" ?(
+                            <p className="mt-1 ms-2 text-danger" type="invalid">
+                              Email Address not Found
+                            </p> 
+                          ):null}
                       </div>
 
                       <div className="col-12">
-                        {loading == true ? (
-                          <button
-                            type="submit"
-                            className="w-100 btn-success btn"
-                          >
-                            &nbsp;&nbsp;&nbsp; sending...
-                            <span
-                              className="spinner-border spinner-border-sm"
-                              role="status"
-                              aria-hidden="true"
-                            ></span>
-                          </button>
-                        ) : (
-                          <MainButton
-                            btntext={"Forgot password"}
-                            btnclass={"w-100 btn-success btn"}
-                            onClick={forgotInfo}
-                          />
-                        )}
+                    
+
+
+
+                      {  spinner === "spinner"?  
+                       <MainButton
+                       btntext={ <Spinner animation="border" role="status">
+                       <span className="visually-hidden">
+                     
+                       Forgot password
+                       </span>
+                     </Spinner>}
+                       onClick={(e)=>{forgotPassword(e)} }
+                        btnclass={"w-100 btn-success btn"}
+                        > 
+                       </MainButton> :  
+                      <MainButton
+                        btntext={" Forgot password"}
+                        btnclass={"w-100 btn-success btn"}
+                        onClick={(e)=>{forgotPassword(e)}}
+                      ></MainButton>}
+                         
+
+
+                        
+                       
                       </div>
                     </form>
                   </div>

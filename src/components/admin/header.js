@@ -26,7 +26,13 @@ function AdminHeader() {
   let loginid = localStorage.getItem("encryptloginid");
   let pass = localStorage.getItem("encryptpassword");
   // console.log(loginid, pass);
+  let vendoremail = localStorage.getItem("vendor_email");
+  let vendorToken = localStorage.getItem("vendor_token");
+  let Token = localStorage.getItem("token");
 
+  // console.log("vendor_Email---"+vendoremail)
+  // console.log("vendor_token---"+vendorToken)
+  // console.log("token---"+Token)
   const onPasswordChange = (e) => {
     setPassword(e.target.value);
   };
@@ -40,8 +46,30 @@ function AdminHeader() {
 
   const LoginForm = (e) => {
     e.preventDefault();
-    // console.log("1");
-    axios
+    if(vendorToken!==null){
+      axios
+      .post(`${process.env.REACT_APP_BASEURL}/change_vendor_password`, {
+        headers: {
+          vendor_token: vendorToken,
+        },
+      }, {
+        email: vendoremail,
+        password: pass,
+        new_password: newpassword,
+      })
+      .then((response) => {
+        // console.log("possttttttt------" + JSON.stringify(response));
+        setShow(false);
+        setUpdateAlert(true);
+        setPassword("");
+        setnewPassword("");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+      e.preventDefault();
+    }else {
+      axios
       .put(`${process.env.REACT_APP_BASEURL}/update_password`, {
         admin_email: loginid,
         admin_password: pass,
@@ -57,7 +85,10 @@ function AdminHeader() {
       .catch((err) => {
         console.log(err);
       });
-    e.preventDefault();
+      e.preventDefault();
+    }
+
+   
   };
 
   const handleClose = () => setShow(false);
@@ -68,6 +99,7 @@ function AdminHeader() {
     localStorage.removeItem("encryptloginid");
     localStorage.removeItem("encryptpassword");
     localStorage.removeItem("encryptadminid");
+    localStorage.removeItem("vendor_email");
     navigate("/");
   };
   return (
@@ -200,7 +232,7 @@ function AdminHeader() {
                   <Form.Control
                     required
                     name={"admin_email"}
-                    value={loginid}
+                    value={loginid?loginid:vendoremail?vendoremail:null}
                     type="email"
                     disabled
                   />

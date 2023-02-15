@@ -8,13 +8,13 @@ import MainButton from "../common/button";
 import axios from "axios";
 
 
-const SellerLogin = () => {
+const SellerLogin = (props) => {
 
 
-  // const [sellerLoginshow, setSellerLoginShow] = useState(false);
-  // const [sellerForgetpasswordshow, setSellerForgetpasswordshow] = useState(false);
-  // const [otpverificationshow, setOtpverificationShow] = useState(false);
-  // const[sellersignupshow,setSellerSignUpShow]=useState(true)
+  const [sellerLoginshow, setSellerLoginShow] = useState(false);
+  const [sellerForgetpasswordshow, setSellerForgetpasswordshow] = useState(false);
+  const [otpverificationshow, setOtpverificationShow] = useState(false);
+  const[sellersignupshow,setSellerSignUpShow]=useState(true)
 
   const [show, setShow] = useState(false);
   const [spinner, setSpinner] = useState(false);
@@ -38,8 +38,27 @@ const SellerLogin = () => {
   const [vendorstatus, setvendorstatus] = useState(false);
   // const { state } = useLocation();
 
+const sellersignupshowFunction=()=>{
+  props.forgetpassword(false)
+  props.showsellerlogin(false)
+  props.sellersign(true)
+  props.sellerChangePsword(false)
+}  
+const vendorResetPasswordShowFunction=()=>{
+  props.forgetpassword(false)
+  props.showsellerlogin(false)
+  props.sellersign(false)
+   props.vendorResetPsword(true)
+   props.sellerChangePsword(false)
+  }
 
 
+
+  const sellerForgetPasswordFunction=()=>{
+       props.forgetpassword(true)
+       props.showsellerlogin(false)
+       props.sellersign(false)
+  }  
 
   const [credentailval, setcredentailval] = useState({
     email: "",
@@ -90,6 +109,7 @@ const SellerLogin = () => {
             // navigate('/vendorUpdate')
             // setHide(true);
             setvendorstatus("incomplete");
+            localStorage.setItem("vendor_email", credentailval.email.trim())
             localStorage.setItem("vendorid", response.data.id);
             localStorage.setItem("vendor_token", response.data.vendor_token);
             // setError(true);
@@ -105,6 +125,7 @@ const SellerLogin = () => {
             response.data.message === undefined
           ) {
             setvendorstatus("pending");
+            localStorage.setItem("vendor_email", credentailval.email.trim())
             localStorage.setItem("vendorid", response.data.id);
             localStorage.setItem("vendor_token", response.data.vendor_token);
             // setError(true);
@@ -114,6 +135,7 @@ const SellerLogin = () => {
             response.data.status === "approve" &&
             response.data.message === undefined
           ) {
+            localStorage.setItem("vendor_email", credentailval.email.trim())
             localStorage.setItem("vendorid", response.data.id);
             localStorage.setItem("vendor_token", response.data.vendor_token);
             navigate("/");
@@ -210,16 +232,16 @@ const SellerLogin = () => {
                               Remember me
                             </label>
                           </div>
-                          {/* <div
+                          <span
                          onClick={sellerForgetPasswordFunction}
                        className="sign-up-box"
-
+                         style={{cursor:"pointer" ,color:"blue"}}
                      > 
                           Forget password?
-                     </div> */}
+                     </span>
                         </div>
                       </div>
-
+                      {vendorstatus === "return"?<span className="text-denger">Your request is Return please fullfill currect documents </span>:vendorstatus === "pending"?<span className="text-denger">Your request is Pending please wait for approval </span>:vendorstatus===false?null:null}
                       <div className="col-12">
                         <MainButton
                           btntext={vendorstatus === "incomplete"?"Update Profile":" Log In"}
@@ -262,8 +284,22 @@ const SellerLogin = () => {
                   <div className="other-log-in"></div>
 
                   <div className="sign-up-box">
-                    <NavLink to="/change_password">Reset Password</NavLink>
-                  </div>
+                 <h4>Create New Account?</h4>
+              
+                     <button
+                       onClick={sellersignupshowFunction}
+               className="btn btn-success my-1"
+                     >
+                           
+                          Signup
+                     </button>
+                     <div className="other-log-in"></div>
+
+               {/* <span className="sign-up-box"  style={{cursor:"pointer" ,color:"red"}} onClick={vendorResetPasswordShowFunction}>
+                Reset Password
+                    </span> */}
+                 
+              </div>
                 </div>
               </div>
               {/* seller login end here */}

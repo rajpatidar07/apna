@@ -240,6 +240,7 @@ function handleDownloadExcel() {
         <div className="col-md-auto col-sm-6 aos_input">
         <MainButton btntext={"Reset"} btnclass={'button main_button'} type="reset" onClick={OnReset}/>
         </div>
+        
         <div className="col-md-auto col-sm-6 aos_input">
         <DropdownButton id="dropdown-variant-success" title="Download" variant="button main_button">
         <Dropdown.Item onClick={handleDownloadExcel}>Excel</Dropdown.Item>
