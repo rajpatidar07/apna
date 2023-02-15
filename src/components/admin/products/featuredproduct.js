@@ -23,9 +23,9 @@ const Featuredproduct = () => {
   const [filtervategory, setfiltercategory] = useState([]);
   const [vendorid, setVendorId] = useState([]);
   const [searchdata, setsearchData] = useState({ status:"",
-  category: [],
-  vendor: [],
-  brand: [], });
+  category: "",
+  vendor: "",
+  brand: "", });
 const [searcherror,setsearcherror] = useState("")
 
 let token = localStorage.getItem("token");

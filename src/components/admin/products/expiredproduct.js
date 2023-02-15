@@ -22,12 +22,16 @@ const Expiredproduct = () => {
   const [searchdata, setsearchData] = useState({
     product_title_name: "",
     manufacturing_date: "",
-    category: [],
-    vendor: [],
-    brand: [],
+    category: "",
+    vendor: "",
+    brand: "",
   });
   let token = localStorage.getItem("token");
-
+  // console.log('title:', searchdata.product_title_name,
+  // 'category:',searchdata.category,
+  // 'vendot:',searchdata.vendor, 
+  // 'brand:',searchdata.brand,
+  // 'error:',searcherror);
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
     setsearcherror(false);
@@ -298,7 +302,9 @@ const Expiredproduct = () => {
     if (
       searchdata.product_title_name === "" &&
       searchdata.category === "" &&
-      searchdata.manufacturing_date === ""
+      searchdata.manufacturing_date === "" &&
+      searchdata.brand === "" &&
+      searchdata.vendor === ""
     ) {
       setsearcherror(true);
     } else {
