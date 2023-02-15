@@ -21,9 +21,9 @@ const Pendingproduct = () => {
   const [searchdata, setsearchData] = useState({
     product_title_name: "",
     manufacturing_date: "",
-    category: [],
-    vendor: [],
-    brand: [],
+    category: "",
+    vendor: "",
+    brand: "",
   });
   let token = localStorage.getItem("token");
 
@@ -174,6 +174,12 @@ const Pendingproduct = () => {
     {
       name: "Category",
       selector: (row) => row.category,
+      sortable: true,
+      width: "100px",
+    },
+    {
+      name: "Brand",
+      selector: (row) => row.brand,
       sortable: true,
       width: "100px",
     },

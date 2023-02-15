@@ -26,9 +26,9 @@ const Soldproduct = () => {
   const [vendorid, setVendorId] = useState([]);
   const [searchdata, setsearchData] = useState({
     product_title_name: "",
-    category: [],
-    vendor: [],
-    brand: [],
+    category:"",
+    vendor:"",
+    brand:"",
   });
   // console.log("*****************----------" + JSON.stringify(solddata));
   const closeUpdateAlert = () => {

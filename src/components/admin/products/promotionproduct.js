@@ -28,9 +28,9 @@ const Promotionproduct = () => {
     start_date: "",
     end_date: "",
     status :"",
-    category:[], 
-    brand:[],
-    vendor:[]
+    category:"", 
+    brand:"",
+    vendor:""
   });
   const [filtervategory, setfiltercategory] = useState([]);
   const [vendorid, setVendorId] = useState([]);

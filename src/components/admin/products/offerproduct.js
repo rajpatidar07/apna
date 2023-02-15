@@ -22,9 +22,9 @@ const Offerproduct = () => {
   const [searchdata, setsearchData] = useState({
     end_date: "",
     start_date: "",
-    category:[], 
-    brand:[],
-    vendor:[]
+    category:"", 
+    brand:"",
+    vendor:""
 });
 const [filtervategory, setfiltercategory] = useState([]);
 const [vendorid, setVendorId] = useState([]);
