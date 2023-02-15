@@ -18,6 +18,7 @@ function Orders() {
   const [changstatus, setchangstatus] = useState("");
   const [apicall, setapicall] = useState(false);
   let [condition, setCondition] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [searchdata, setsearchData] = useState({
     status: "",
     created_on: "",
@@ -69,6 +70,7 @@ function Orders() {
     // e.prevantDefault();
     setchangstatus(e.target.value);
     setCondition(true);
+    setLoading(true)
     axios
       .put(
         `${process.env.REACT_APP_BASEURL}/order_status_change`,
@@ -84,12 +86,14 @@ function Orders() {
       )
       .then((response) => {
         console.log(response.data);
-        setapicall(true);
         setCondition(false);
+        setLoading(false)
+        setapicall(true);
       })
       .catch(function (error) {
         console.log(error);
         setCondition(false);
+        setLoading(false)
       });
   };
 
@@ -222,21 +226,35 @@ function Orders() {
     {
       name: "Change Status",
       selector: (row) => (
-        <Form.Select
+        loading === true ?    
+         <select
+        size="sm"
+        className="w-100"
+      > 
+         <option>
+         &nbsp;&nbsp;&nbsp; loading...
+          <span
+            className="spinner-border spinner-border-sm"
+            role="status"
+            aria-hidden="true"
+          ></span>
+          </option>  
+      </select>:
+       <Form.Select
           aria-label="Search by delivery"
           size="sm"
           className="w-100"
           onChange={(e) => onStatusChange(e, row.order_id)}
           name="status"
           // value={row.product_status}
-        >
+        > 
             <option selected={row.product_status === "" ? true : false} value="">
             Select
           </option>
           <option
             value="placed"
             selected={row.status === "placed" ? true : false}
-            disabled={condition ? `true` : false}
+            disabled={condition ? true : false}
           >
             Placed
           </option>
@@ -356,6 +374,7 @@ function Orders() {
           className={"table_body order_table"}
         />
       </div>
+      
     </div>
   );
 }

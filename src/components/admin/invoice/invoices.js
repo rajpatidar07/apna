@@ -17,6 +17,7 @@ const InvoiceList = () => {
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
   const [invoice, setInvoice] = useState([]);
+  let [searcherror, setsearcherror] = useState(false);
   const [SearchInvo, setSearchInvo] = useState({
     search: "",
     from_date: "",
@@ -41,7 +42,9 @@ const InvoiceList = () => {
             let data = response.data;
             setInvoice(data);
           });
-      } catch (err) {}
+      } catch (err) {
+        console.log(err);
+      }
     }
 
     getInvoiceList();
@@ -49,6 +52,7 @@ const InvoiceList = () => {
 
   const onValueChange = (e) => {
     setSearchInvo({ ...SearchInvo, [e.target.name]: e.target.value });
+    setsearcherror(false)
   };
   const onDateChange = (e) => {
     let mdate = moment(e.target.value).format("YYYY-MM-DD");
@@ -58,7 +62,13 @@ const InvoiceList = () => {
     });
   };
   const SearchInvoices = () => {
-    {
+    if(
+      SearchInvo.search === "" &&
+      SearchInvo.from_date === "" &&
+      SearchInvo.to_date === "" )
+      {setsearcherror(true)}
+      else
+     {
       axios
         .post(`${process.env.REACT_APP_BASEURL}/invoice_search`, {
           search: `${SearchInvo.search}`,
@@ -68,6 +78,7 @@ const InvoiceList = () => {
         .then((response) => {
           setInvoice(response.data);
           setSearchInvo("");
+          setsearcherror(false)
         });
     }
   };
@@ -81,8 +92,22 @@ const InvoiceList = () => {
     {
       name: "Invoice Number",
       selector: (row) => (
-        <p onClick={InvoiceCheck.bind(this, [row.invoice_no, row.vendor_id])}>
+        <p onClick={() => InvoiceCheck.bind(this, [row.invoice_no, row.id])}>
           {row.invoice_no}
+        </p>
+      ),
+      sortable: true,
+      width: "150px",
+      center: true,
+      style: {
+        paddingRight: "32px",
+        paddingLeft: "0px",
+      },
+    }, {
+      name: "Vendor Id",
+      selector: (row) => (
+        <p >
+          {row.vendor_id}
         </p>
       ),
       sortable: true,
@@ -212,7 +237,6 @@ const InvoiceList = () => {
 
   let date = moment();
   let currentDate = date.format("YYYY-MM-DD");
-  console.log(currentDate);
   return (
     <div className="App productlist_maindiv">
       <h2>Invoice</h2>
@@ -229,6 +253,9 @@ const InvoiceList = () => {
               name={"search"}
               onChange={(e) => onValueChange(e)}
             />
+             {searcherror === true ? (
+              <small className="text-danger">please fill the feild</small>
+            ) : null}
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
             <input
