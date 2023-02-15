@@ -104,7 +104,7 @@ const OrderDetail = () => {
   var total = 0;
   var sub_total = 0;
   var total_tax = 0;
-
+  let qty = 0;
   return (
     <div className="order_detail_page">
       <div className="order_detail">
@@ -132,53 +132,54 @@ const OrderDetail = () => {
                     aria-label="Floating label select example"
                     onChange={onStatusChangee}
                     name="status"
+                    value={order.status}
                   >
                     <option>Select Order Status</option>
                     <option
                       value="placed"
-                      selected={order.status === "placed" ? true : false}
+                      // selected={order.status === "placed" ? true : false}
                     >
                       Placed
                     </option>
                     <option
                       value="shipped"
-                      selected={order.status === "shipped" ? true : false}
+                      // selected={order.status === "shipped" ? true : false}
                     >
                       Shipped
                     </option>
                     <option
                       value="delivered"
-                      selected={order.status === "delivered" ? true : false}
+                      // selected={order.status === "delivered" ? true : false}
                     >
                       Delivered
                     </option>
                     <option
                       value="pending"
-                      selected={order.status === "pending" ? true : false}
+                      // selected={order.status === "pending" ? true : false}
                     >
                       Pending
                     </option>
                     <option
                       value="approved"
-                      selected={order.status === "approved" ? true : false}
+                      // selected={order.status === "approved" ? true : false}
                     >
                       Approved
                     </option>
                     <option
                       value="packed"
-                      selected={order.status === "packed" ? true : false}
+                      // selected={order.status === "packed" ? true : false}
                     >
                       Packed
                     </option>
                     <option
                       value="return"
-                      selected={order.status === "return" ? true : false}
+                      // selected={order.status === "return" ? true : false}
                     >
                       Return
                     </option>
                     <option
                       value="cancel"
-                      selected={order.status === "cancel" ? true : false}
+                      // selected={order.status === "cancel" ? true : false}
                     >
                       Cancel
                     </option>
@@ -186,7 +187,7 @@ const OrderDetail = () => {
                 </div>
                 <div className="d-flex flex-column text-center">
                   <div className="order_info_heading">Order Date & Time</div>
-                  <div className="date_time">{order.order_date}</div>
+                  <div className="date_time">{moment(order.order_date).format('YYYY-MM-DD')}</div>
                 </div>
 
                 <div className="d-flex flex-column text-center">
@@ -222,16 +223,15 @@ const OrderDetail = () => {
                   : Number(orderdata.mrp);
                 let countAllText =
                   Number(orderdata.gst) +
-                  Number(orderdata.cgst) +
-                  Number(orderdata.sgst) +
                   Number(orderdata.wholesale_sales_tax) +
                   Number(orderdata.manufacturers_sales_tax) +
                   Number(orderdata.retails_sales_tax) +
                   Number(orderdata.value_added_tax);
                 let discont = (orderdata.mrp * orderdata.discount) / 100;
                 let tax =
-                  (Number(orderdata.product_price) * countAllText) / 100;
-                let total_price = orderdata.sale_price * orderdata.quantity;
+                  (Number(orderdata.sale_price) * countAllText) / 100;
+                   qty =  orderdata.order_quantity
+                let total_price = orderdata.sale_price * qty;
                 total += Number(total_price);
                 sub_total += Number(total_price);
                 total_tax += Number(tax);
@@ -280,14 +280,13 @@ const OrderDetail = () => {
                     </div>
 
                     <div className="product_quantity">
-                      QTY-{orderdata.quantity}
+                      QTY-{orderdata.order_quantity}
                     </div>
                     <div className="total_amount">
                       {" "}
                       Total Price- <br />
                       {(
-                        Number(orderdata.sale_price) *
-                        Number(orderdata.quantity)
+                        Number(sub_total)
                       ).toFixed(2)}
                       ₹
                     </div>
@@ -316,6 +315,14 @@ const OrderDetail = () => {
               <h5 className="pb-3">Payment Summary</h5>
               <div className="payment_summary_total d-flex justify-content-between align-items-center">
                 <div className="Subtotal">
+                  <p> Total Tax</p>
+                </div>
+                <div className="">{total_tax.toFixed(2)} ₹ x {qty} Qty 
+                <span className=""> = {total_tax.toFixed(2)*qty}</span>
+               </div>
+              </div>
+              <div className="payment_summary_total d-flex justify-content-between align-items-center">
+                <div className="Subtotal">
                   <p>
                     Subtotal
                     <span>
@@ -337,12 +344,6 @@ const OrderDetail = () => {
                   <p> Discont Coupon Ammount </p>
                 </div>
                 <div className="">{Number(order.discount_coupon_value)}₹</div>
-              </div>
-              <div className="payment_summary_total d-flex justify-content-between align-items-center">
-                <div className="Subtotal">
-                  <p> Total Tax</p>
-                </div>
-                <div className="">{total_tax.toFixed(2)}₹</div>
               </div>
               <div className="payment_summary_total d-flex justify-content-between align-items-center">
                 <div className="Subtotal">
@@ -372,13 +373,13 @@ const OrderDetail = () => {
                           {userdata.first_name} {userdata.last_name}
                         </div>
                       </div>
-                      <div className="customer_orders d-flex py-3">
+                      {/* <div className="customer_orders d-flex py-3">
                         <AiOutlineFileText className="order_icon p-1" />
 
                         <div className="customer_orders_no ps-4 my-auto">
                           {order.total_quantity}
                         </div>
-                      </div>
+                      </div> */}
                     </div>
                     <div className="contact py-3">
                       <div className="contact_heading pb-3">
