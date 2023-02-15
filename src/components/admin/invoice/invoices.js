@@ -81,7 +81,7 @@ const InvoiceList = () => {
     {
       name: "Invoice Number",
       selector: (row) => (
-        <p onClick={InvoiceCheck.bind(this, [row.invoice_no, row.id])}>
+        <p onClick={InvoiceCheck.bind(this, [row.invoice_no, row.vendor_id])}>
           {row.invoice_no}
         </p>
       ),

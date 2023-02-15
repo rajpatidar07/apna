@@ -228,63 +228,63 @@ function Orders() {
           className="w-100"
           onChange={(e) => onStatusChange(e, row.order_id)}
           name="status"
-          value={row.product_status}
+          // value={row.product_status}
         >
-            <option /*selected={row.product_status === "" ? true : false}*/ value="">
+            <option selected={row.product_status === "" ? true : false} value="">
             Select
           </option>
           <option
             value="placed"
-            /*selected={row.status === "placed" ? true : false}*/
+            selected={row.status === "placed" ? true : false}
             disabled={condition ? `true` : false}
           >
             Placed
           </option>
           <option
             value="pending"
-            /*selected={row.status === "pending" ? true : false}*/
+            selected={row.status === "pending" ? true : false}
             disabled={condition ? true : false}
           >
             Pending
           </option>
           <option
             value="shipped"
-            /*selected={row.status === "shipped" ? true : false}*/
+            selected={row.status === "shipped" ? true : false}
             disabled={condition ? true : false}
           >
             Shipped
           </option>
           <option
             value="delivered"
-            /*selected={row.status === "delivered" ? true : false}*/
+            selected={row.status === "delivered" ? true : false}
             disabled={condition ? true : false}
           >
             Delivered
           </option>
           <option
             value="packed"
-            /*selected={row.status === "packed" ? true : false}*/
+            selected={row.status === "packed" ? true : false}
             disabled={condition ? true : false}
           >
             Packed
           </option>
           <option
             value="cancel"
-            /*selected={row.status === "cancel" ? true : false}*/
+            selected={row.status === "cancel" ? true : false}
             disabled={condition ? true : false}
           >
             Cancel
           </option>
           <option
             value="approved"
-            /*selected={row.status === "approved" ? true : false}*/
+           selected={row.status === "approved" ? true : false}
             disabled={condition ? true : false}
           >
             Approved{" "}
           </option>
           <option
             value="return"
-            /*selected={row.status === "return" ? true : false}*/
+            selected={row.status === "return" ? true : false}
             disabled={condition ? true : false}
           >
             Return{" "}
