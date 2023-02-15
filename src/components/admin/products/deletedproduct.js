@@ -24,9 +24,9 @@ const Deletedproduct = () => {
   const [searchdata, setsearchData] = useState({
     product_title_name: "",
     manufacturing_date: "",
-    category: [],
-    vendor: [],
-    brand: [],
+    category: "",
+    vendor: "",
+    brand: "",
   });
 
   const hideAlert = () => setRestoreAlert(false);

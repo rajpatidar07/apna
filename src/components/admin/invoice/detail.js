@@ -3,6 +3,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import moment from "moment";
 
 const Invoice = () => {
   let invoice_no = localStorage.getItem("invoice_no");
@@ -14,8 +15,6 @@ const Invoice = () => {
         `${process.env.REACT_APP_BASEURL}/invoice_details?invoice_no=${invoice_no}`
       )
       .then((response) => {
-        console.log(response);
-
         setInvoiceDetails(response.data);
         setpDetails(response.data.product_types);
       });
@@ -55,6 +54,7 @@ const Invoice = () => {
             <div className="card-body">
               <div className="table-responsive-sm p-3">
                 <table className="invoice_header w-100">
+                  <thead>
                   <tr className="border-bottom">
                     <td className="align-bottom" width={"50%"}>
                       <h2 className="m-0 mt-2">
@@ -73,6 +73,7 @@ const Invoice = () => {
                       <p className="m-0">1234567890</p>
                     </td>
                   </tr>
+                  </thead>
                 </table>
                 <div className="pb-4 pt-4">
                   <table className="invoice_header w-100">
@@ -83,24 +84,24 @@ const Invoice = () => {
                             <b>Order Detail:</b>
                           </h5>
                           <p className="m-0">
-                            <b>Invoice No:</b>
+                            <b>Invoice No : </b>
                             {invoicedetails.invoice_no}
                           </p>
 
                           <p className="m-0">
-                            <b>Order Id:</b> {invoicedetails.id}
+                            <b>Order Id : </b> {invoicedetails.id}
                           </p>
                           <p className="m-0">
-                            <b>Order Date:</b>
-                            {invoicedetails.order_date}
+                            <b>Order Date : </b>
+                            {moment(invoicedetails.order_date).format("YYYY-MM-DD")}
                           </p>
                           <p className="m-0">
-                            <b>Invoice Date:</b> {invoicedetails.invoice_date}
+                            <b>Invoice Date : </b> {moment(invoicedetails.invoice_date).format("YYYY-MM-DD")}
                           </p>
                         </td>
                         <td className="">
                           <h5 className="text-uppercase m-0">
-                            <b>Bill to:</b>
+                            <b>Bill to: </b>
                           </h5>
                           <p className="m-0">
                             Plot No. 45 Universal Tower ,2nd Floor,
@@ -132,15 +133,12 @@ const Invoice = () => {
                   <thead>
                     <tr>
                       <th className="center">Product</th>
-
                       <th> ₹ MRP </th>
                       <th> ₹ Discount (10%)</th>
-
                       <th className="center">₹ Taxable Price </th>
                       <th className="center"> ₹ Tax </th>
                       <th>Qty</th>
                       <th className="right">₹ Sale Price </th>
-
                       <th className="right">₹ Total amount </th>
                     </tr>
                   </thead>
@@ -148,19 +146,18 @@ const Invoice = () => {
                   <tbody>
                     {pdetails.map((invodetails) => {
                       invodetails.discount = "0";
+                      qty += Number(invodetails.order_quantity);
                       let discont = (invodetails.mrp * 10) / 100;
                       let taxeble_price = invodetails.mrp - discont;
                       let tax =
-                        (taxeble_price *
-                          (Number(invodetails.gst) +
-                            Number(invodetails.cgst) +
-                            Number(invodetails.sgst))) /
-                        100;
-                      let salePrice = taxeble_price + tax;
+                        (taxeble_price * (Number(invodetails.gst) + 
+                        Number(invodetails.retails_sales_tax) +
+                        Number(invodetails.manufacturers_sales_tax) +
+                        Number(invodetails.value_added_tax) +
+                        Number(invodetails.wholesale_sales_tax)) / 100 )
+                      let salePrice = Number(invodetails.sale_price)
                       let totalAmmount = (
-                        parseInt(invodetails.quantity) * salePrice
-                      ).toFixed(2);
-                      qty += Number(invodetails.quantity);
+                        qty * salePrice ).toFixed(2);
                       mrpTotal += Number(invodetails.mrp);
                       disCountTotal += Number(discont);
                       taxable_value_total += taxeble_price;
@@ -171,11 +168,10 @@ const Invoice = () => {
                       totalSGST += Number(invodetails.sgst);
                       GrandTotal += Number(totalAmmount);
                       return (
-                        <tr>
+                        <tr key={invodetails.id}>
                           <td className="center">
                             <b> {invodetails.product_title_name}</b>
                             <br />
-
                             <small>GST: {invodetails.gst} %</small>
                             <br />
                             <small>CGST: {invodetails.cgst} %</small>
@@ -191,9 +187,8 @@ const Invoice = () => {
                             ₹ {taxeble_price.toFixed(2)} <br />
                           </td>
                           <td className="left">₹ {tax.toFixed(2)}</td>
-                          <td className="">{invodetails.quantity}</td>
+                          <td className="">{invodetails.order_quantity}</td>
                           <td className="left">{salePrice.toFixed(2)}</td>
-
                           <td className="left">{totalAmmount}</td>
                         </tr>
                       );
@@ -202,14 +197,12 @@ const Invoice = () => {
                       <th className="font-weight-bold">
                         <b>Total</b>
                       </th>
-
                       <th className="">
                         <b> ₹ {mrpTotal} </b>
                       </th>
                       <th className="">
                         <b>₹ {disCountTotal} </b>
                       </th>
-
                       <th className="">
                         <b> ₹ {taxable_value_total.toFixed(2)} </b>
                       </th>
@@ -222,12 +215,10 @@ const Invoice = () => {
                       <th className="">
                         <b> ₹ {salePrice_total.toFixed(2)}</b>
                       </th>
-
                       <th className="">
                         <b> ₹ {GrandTotal}</b>
                       </th>
                     </tr>
-
                     <tr>
                       <th
                         colSpan={"7"}

@@ -18,6 +18,7 @@ function Orders() {
   const [changstatus, setchangstatus] = useState("");
   const [apicall, setapicall] = useState(false);
   let [condition, setCondition] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [searchdata, setsearchData] = useState({
     status: "",
     created_on: "",
@@ -69,6 +70,7 @@ function Orders() {
     // e.prevantDefault();
     setchangstatus(e.target.value);
     setCondition(true);
+    setLoading(true)
     axios
       .put(
         `${process.env.REACT_APP_BASEURL}/order_status_change`,
@@ -84,12 +86,14 @@ function Orders() {
       )
       .then((response) => {
         console.log(response.data);
-        setapicall(true);
         setCondition(false);
+        setLoading(false)
+        setapicall(true);
       })
       .catch(function (error) {
         console.log(error);
         setCondition(false);
+        setLoading(false)
       });
   };
 
@@ -156,7 +160,7 @@ function Orders() {
       selector: (row) => (
         <p className="m-0">
           <b>Sale Price X Quantity</b>
-          <br />₹{(Number(row.sale_price) * Number(row.quantity)).toFixed(2)}
+          <br />₹{(Number(row.total_amount))}
           <br />
         </p>
       ),
@@ -222,20 +226,35 @@ function Orders() {
     {
       name: "Change Status",
       selector: (row) => (
-        <Form.Select
+        loading === true ?    
+         <select
+        size="sm"
+        className="w-100"
+      > 
+         <option>
+         &nbsp;&nbsp;&nbsp; loading...
+          <span
+            className="spinner-border spinner-border-sm"
+            role="status"
+            aria-hidden="true"
+          ></span>
+          </option>  
+      </select>:
+       <Form.Select
           aria-label="Search by delivery"
           size="sm"
           className="w-100"
           onChange={(e) => onStatusChange(e, row.order_id)}
           name="status"
-        >
+          // value={row.product_status}
+        > 
             <option selected={row.product_status === "" ? true : false} value="">
             Select
           </option>
           <option
             value="placed"
             selected={row.status === "placed" ? true : false}
-            disabled={condition ? `true` : false}
+            disabled={condition ? true : false}
           >
             Placed
           </option>
@@ -276,7 +295,7 @@ function Orders() {
           </option>
           <option
             value="approved"
-            selected={row.status === "approved" ? true : false}
+           selected={row.status === "approved" ? true : false}
             disabled={condition ? true : false}
           >
             Approved{" "}
@@ -293,7 +312,7 @@ function Orders() {
       sortable: true,
     },
   ];
-console.log("--------==========="+JSON.stringify(orderdata))
+// console.log("--------==========="+JSON.stringify(orderdata))
   return (
     <div className="App">
       <h2>Orders</h2>
@@ -306,13 +325,14 @@ console.log("--------==========="+JSON.stringify(orderdata))
                 className="adminselectbox"
                 onChange={OnSearchChange}
                 name="status"
-                value={searchdata.status}
+                value={String(searchdata.status)}
               >
-                <option>Delivery status</option>
+                <option value="">Delivery status</option>
                 <option value="delivered">Delivered</option>
                 <option value="pending">Pending</option>
                 <option value="approved">Approved</option>
-                <option value="packed">Processing</option>
+                <option value="packed">Packed</option>
+                <option value="placed">Placed</option>
                 <option value="return">Return</option>
                 <option value="cancel">Cancel</option>
               </Form.Select>
@@ -323,9 +343,9 @@ console.log("--------==========="+JSON.stringify(orderdata))
                 className="adminselectbox"
                 onChange={OnSearchChange}
                 name="created_on"
-                value={searchdata.created_on}
+                value={String(searchdata.created_on)}
               >
-                <option>Order limits</option>
+                <option value="">Order limits</option>
                 <option value="one">Today</option>
                 <option value="1">Yesterday</option>
                 <option value="15">Last 15 days orders</option>
@@ -334,11 +354,13 @@ console.log("--------==========="+JSON.stringify(orderdata))
                 <option value="180">Last 6 month orders</option>
               </Form.Select>
             </div>
-            <div className="col-md-1 col-sm-6 mx-3  ">
-              <MainButton btntext={"Search"} onClick={onSearchClick} />
+            <div className="col-md-3 col-sm-6 aos_input ">
+              <MainButton btntext={"Search"} onClick={onSearchClick}
+               btnclass={"button main_button w-100"} />
             </div>
-            <div className="col-md-1 col-sm-6 mx-3  ">
-              <MainButton btntext={"Reset"} onClick={OnReset} />
+            <div className="col-md-3 col-sm-6 aos_input ">
+              <MainButton btntext={"Reset"} onClick={OnReset} 
+               btnclass={"button main_button w-100"} />
             </div>
           </div>
         </div>
@@ -352,6 +374,7 @@ console.log("--------==========="+JSON.stringify(orderdata))
           className={"table_body order_table"}
         />
       </div>
+      
     </div>
   );
 }

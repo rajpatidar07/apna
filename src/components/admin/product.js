@@ -167,7 +167,9 @@ function Product() {
     category: "",
     product_status: "",
   });
-
+  console.log(
+    "productdataproductdataproductdata" + JSON.stringify(variantmainarray)
+  );
   const [newImageUrls, setnewImageUrls] = useState([]);
   const [variantremove, setVariantRemove] = useState([]);
   const [editbutton, setEditButton] = useState(false);
@@ -225,7 +227,7 @@ function Product() {
     axios
       .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=400`, {
         product_search: {
-          search: "",
+          search: [`${searchdata.product_title_name}`],
           price_from: "",
           price_to: "",
           id: "",
@@ -959,9 +961,11 @@ function Product() {
     Number(taxdata.retails_sales_tax) +
     Number(taxdata.manufacturers_sales_tax) +
     Number(taxdata.value_added_tax);
-  let totaltax = (saleprice * totaltaxpercent) / 100;
-  let product_price = saleprice - totaltax;
+  let totaltax;
+  let product_price;
   useEffect(() => {
+    totaltax = (saleprice * totaltaxpercent) / 100;
+    product_price = saleprice - totaltax;
     setvariantarray({
       ...variantarray,
       product_status: "pending",
@@ -969,6 +973,7 @@ function Product() {
       sale_price: `${saleprice}`,
     });
   }, [variantarray.mrp, variantarray.discount, taxdata]);
+
   const handleInputcheckboxChange = (e) => {
     setcustomValidated(false);
     const target = e.target;
@@ -1334,6 +1339,7 @@ function Product() {
   const MainVariantRemoveClick = (e) => {
     setvariantmainarray(variantmainarray.filter((item) => item !== e));
   };
+
   const hideAlert = () => {
     if (vdata.length === 1) {
       setVerityAlert(false);
@@ -1663,7 +1669,41 @@ function Product() {
         console.log(error);
       });
   };
-
+  useEffect(() => {
+    setvariantarray({
+      ...variantarray,
+      product_price: (
+        saleprice -
+        (saleprice *
+          (Number(productdata.gst) +
+            Number(productdata.wholesale_sales_tax) +
+            Number(productdata.retails_sales_tax) +
+            Number(productdata.manufacturers_sales_tax) +
+            Number(productdata.value_added_tax))) /
+          100
+      ).toFixed(2),
+      sale_price: saleprice,
+    });
+  }, [
+    variantarray.mrp,
+    variantarray.discount,
+    productdata.value_added_tax,
+    productdata.gst,
+    productdata.wholesale_sales_tax,
+    productdata.retails_sales_tax,
+    productdata.manufacturers_sales_tax,
+  ]);
+  console.log(
+    "ariantarray.product_price" +
+      variantarray.product_price +
+      productdata.value_added_tax,
+    productdata.gst,
+    productdata.wholesale_sales_tax,
+    productdata.retails_sales_tax,
+    productdata.manufacturers_sales_tax,
+    variantarray.sale_price,
+    saleprice
+  );
   //-----------------------Download excel sheet code End  here---------------------------------------------------
   return (
     <div className="App productlist_maindiv">
@@ -1837,7 +1877,7 @@ function Product() {
           />
         </div>
 
-        {/* datatable */}
+        {/* main product datatable */}
         <Modal
           show={modalshow}
           onHide={() => handleClose()}
@@ -2646,55 +2686,17 @@ function Product() {
                                         </td>
                                         <td className="p-0 text-center">
                                           <div className=" d-flex align-items-center">
+                                            {/* PRODUCT ORIGINAL PRICE */}
+                                            {saleprice}
                                             <InputGroup className="" size="sm">
                                               <Form.Control
                                                 step={"any"}
                                                 type="number"
                                                 sm="9"
                                                 name={"product_price"}
-                                                onChange={() =>
-                                                  setvariantarray({
-                                                    ...variantarray,
-                                                    product_price: (
-                                                      saleprice -
-                                                      (saleprice *
-                                                        (Number(
-                                                          productdata.gst
-                                                        ) +
-                                                          Number(
-                                                            productdata.wholesale_sales_tax
-                                                          ) +
-                                                          Number(
-                                                            productdata.retails_sales_tax
-                                                          ) +
-                                                          Number(
-                                                            productdata.manufacturers_sales_tax
-                                                          ) +
-                                                          Number(
-                                                            productdata.value_added_tax
-                                                          ))) /
-                                                        100
-                                                    ).toFixed(2),
-                                                  })
+                                                value={
+                                                  variantarray.product_price
                                                 }
-                                                value={(
-                                                  saleprice -
-                                                  (saleprice *
-                                                    (Number(productdata.gst) +
-                                                      Number(
-                                                        productdata.wholesale_sales_tax
-                                                      ) +
-                                                      Number(
-                                                        productdata.retails_sales_tax
-                                                      ) +
-                                                      Number(
-                                                        productdata.manufacturers_sales_tax
-                                                      ) +
-                                                      Number(
-                                                        productdata.value_added_tax
-                                                      ))) /
-                                                    100
-                                                ).toFixed(2)}
                                                 required
                                               />
                                             </InputGroup>
@@ -2739,14 +2741,14 @@ function Product() {
                                                 step={"any"}
                                                 sm="9"
                                                 name={"sale_price"}
-                                                value={saleprice.toFixed(2)}
-                                                onChange={() =>
-                                                  setvariantarray({
-                                                    ...variantarray,
-                                                    sale_price:
-                                                      saleprice.toFixed(2),
-                                                  })
-                                                }
+                                                value={variantarray.sale_price}
+                                                // onChange={() =>
+                                                //   setvariantarray({
+                                                //     ...variantarray,
+                                                //     sale_price:
+                                                //       saleprice.toFixed(2),
+                                                //   })
+                                                // }
                                               />
                                             </InputGroup>
                                           </div>
@@ -3255,7 +3257,7 @@ function Product() {
           </Form>
         </Modal>
 
-        {/* variety */}
+        {/* Variety CRUD Modal */}
         <Modal
           size="lg"
           show={varietyshow}
@@ -3515,7 +3517,7 @@ function Product() {
                                 // step={"any"}
                                 min={1}
                                 sm="9"
-                                onChange={(e) => onVariantChange(e)}
+                                onChange={(e) => onVariantChange(e)} //setmrp
                                 name={"mrp"}
                                 value={variantarray.mrp}
                               />
