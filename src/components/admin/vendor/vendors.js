@@ -22,7 +22,7 @@ const VendorsList = () => {
   const formRef = useRef();
   const [newImageUrls, setnewImageUrls] = useState([]);
   const [customValidation, setCustomValidation] = useState(false);
-
+  const [loading_status, setLoading_status] = useState(false);
   const [show, setShow] = useState("");
   const [docsshow, setDocsShow] = useState(false);
   const [Alert, setAlert] = useState(false);
@@ -55,12 +55,8 @@ const VendorsList = () => {
     availability: "",
     social_media_links: [],
   };
+  const [vendorID, setVendorId] = useState("");
   const [addvendordata, setaddvendordata] = useState(vendorObject);
-  let encoded;
-  let ImgObj = [];
-  let docuarr;
-  var imgvalidate;
-
   const [changstatus, setchangstatus] = useState("");
   const [apicall, setapicall] = useState(false);
   const [addtag, setaddtag] = useState();
@@ -75,6 +71,11 @@ const VendorsList = () => {
     store_type: "",
     owner_name: "",
   });
+  let encoded;
+  let ImgObj = [];
+  let docuarr;
+  var imgvalidate;
+
   let admintoken = localStorage.getItem("token");
   const closeAddAlert = () => {
     setLoading(false);
@@ -246,6 +247,20 @@ const VendorsList = () => {
     {
       name: "Change Status",
       selector: (row) => (
+        loading_status === true ?    
+        <select
+       size="sm"
+       className="w-100"
+     > 
+        <option>
+        &nbsp;&nbsp;&nbsp; loading...
+         <span
+           className="spinner-border spinner-border-sm"
+           role="status"
+           aria-hidden="true"
+         ></span>
+         </option>  
+     </select>:
         <Form.Group className="" controlId="formBasicEmail">
           <Form.Select
             size="sm"
@@ -420,6 +435,7 @@ const VendorsList = () => {
     setchangstatus(e.target.value);
     setCondition(true);
     setTimeout(CreateTimeout, 50000);
+    setLoading_status(true)
     axios
       .put(`${process.env.REACT_APP_BASEURL}/vendor_status_change`, {
         status_change: e.target.value,
@@ -430,11 +446,13 @@ const VendorsList = () => {
           response.data.status_message === "vendor status change succesfully "
         ) {
           setCondition(false);
+          setLoading_status(false)
           setapicall(true);
         }
       })
       .catch(function (error) {
         console.log(error);
+        setLoading_status(false)
         setCondition(false);
       });
   };
@@ -447,7 +465,6 @@ const VendorsList = () => {
 
   //img code start-----------------------------------------------------------------------------------------------
 
-  const [vendorID, setVendorId] = useState("");
   const handleDocsShow = (id) => {
     setVendorId(id);
     setDocsShow(true);
