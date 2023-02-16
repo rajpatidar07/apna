@@ -115,9 +115,11 @@ function Product() {
     expire_date: "",
     quantity: "",
   };
-  const [productVeriantUnit, setProductveriantUnit] = useState("");
+  const [totaltax, settotaltax] = useState("");
   const [variantarray, setvariantarray] = useState(veriantData);
   const [variantmainarray, setvariantmainarray] = useState([]);
+  const [productvariantarray, setproductvariantarray] = useState(veriantData);
+
   const [data1, setdata1] = useState("");
   const [otherintro, setotherintro] = useState("");
   const [headerval, setheaderval] = useState("");
@@ -167,9 +169,7 @@ function Product() {
     category: "",
     product_status: "",
   });
-  console.log(
-    "productdataproductdataproductdata" + JSON.stringify(variantmainarray)
-  );
+
   const [newImageUrls, setnewImageUrls] = useState([]);
   const [variantremove, setVariantRemove] = useState([]);
   const [editbutton, setEditButton] = useState(false);
@@ -241,7 +241,7 @@ function Product() {
           size: [],
           parent_category: [],
           product_type: [],
-          product_title_name: [`${searchdata.product_title_name}`],
+          // product_title_name: [],
           brand: [`${searchdata.brand}`],
           shop: [`${searchdata.vendor}`],
         },
@@ -492,7 +492,12 @@ function Product() {
     },
     {
       name: "Qty",
-      selector: (row) => row.quantity,
+      selector: (row) =>
+        row.quantity === "0" || row.quantity === 0 ? (
+          <span className="text-danger">Out Of Stock</span>
+        ) : (
+          row.quantity
+        ),
       sortable: true,
       width: "100px",
       center: true,
@@ -953,19 +958,18 @@ function Product() {
     });
   };
 
-  let discountt = (variantarray.mrp * variantarray.discount) / 100;
-  let saleprice = variantarray.mrp - discountt;
-  let totaltaxpercent =
-    Number(taxdata.gst) +
-    Number(taxdata.wholesale_sales_tax) +
-    Number(taxdata.retails_sales_tax) +
-    Number(taxdata.manufacturers_sales_tax) +
-    Number(taxdata.value_added_tax);
-  let totaltax;
-  let product_price;
   useEffect(() => {
-    totaltax = (saleprice * totaltaxpercent) / 100;
-    product_price = saleprice - totaltax;
+    let discountt = (variantarray.mrp * variantarray.discount) / 100;
+    let saleprice = variantarray.mrp - discountt;
+    let totaltaxpercent =
+      Number(taxdata.gst) +
+      Number(taxdata.wholesale_sales_tax) +
+      Number(taxdata.retails_sales_tax) +
+      Number(taxdata.manufacturers_sales_tax) +
+      Number(taxdata.value_added_tax);
+    let totaltaxx = (saleprice * totaltaxpercent) / 100;
+    settotaltax(totaltaxx);
+    let product_price = saleprice - totaltaxx;
     setvariantarray({
       ...variantarray,
       product_status: "pending",
@@ -973,7 +977,7 @@ function Product() {
       sale_price: `${saleprice}`,
     });
   }, [variantarray.mrp, variantarray.discount, taxdata]);
-
+  console.log("---totltax " + totaltax, taxdata);
   const handleInputcheckboxChange = (e) => {
     setcustomValidated(false);
     const target = e.target;
@@ -984,8 +988,12 @@ function Product() {
     });
   };
   const handleVarietyChange = (e) => {
-    setproductdata({
-      ...productdata,
+    setValidated(false);
+    setcustomValidated(false);
+    setVarietyUnitvalidation("");
+    setvarietyValidated(false);
+    setproductvariantarray({
+      ...productvariantarray,
       [e.target.name]: e.target.value,
     });
   };
@@ -1235,65 +1243,70 @@ function Product() {
       setCheckProductType(true);
     } else {
       if (
-        variantarray.unit == "" ||
-        variantarray.unit == null ||
-        variantarray.unit == "Select" ||
-        variantarray.product_price == "" ||
-        variantarray.mrp == "" ||
-        variantarray.sale_price == "" ||
-        variantarray.manufacturing_date == "" ||
-        variantarray.expire_date == "" ||
-        variantarray.quantity == ""
+        productvariantarray.unit == "" ||
+        productvariantarray.unit == null ||
+        productvariantarray.unit == "Select" ||
+        productvariantarray.product_price == "" ||
+        productvariantarray.mrp == "" ||
+        productvariantarray.sale_price == "" ||
+        productvariantarray.manufacturing_date == "" ||
+        productvariantarray.expire_date == "" ||
+        productvariantarray.quantity == ""
       ) {
         setcustomValidated(true);
-      } else if (variantarray.quantity === 0 || variantarray.quantity < 1) {
+      } else if (
+        productvariantarray.quantity === 0 ||
+        productvariantarray.quantity < 1
+      ) {
         setVarietyUnitvalidation("QwanityValidation");
-      } else if (variantarray.manufacturing_date > variantarray.expire_date) {
+      } else if (
+        productvariantarray.manufacturing_date > productvariantarray.expire_date
+      ) {
         setVarietyUnitvalidation("ExpireDateValidation");
       } else if (
         productdata.product_type === "Cloths" &&
-        variantarray.unit === "pcs" &&
-        (variantarray.colors === "" ||
-          variantarray.size === null ||
-          variantarray.size === "")
+        productvariantarray.unit === "pcs" &&
+        (productvariantarray.colors === "" ||
+          productvariantarray.size === null ||
+          productvariantarray.size === "")
       ) {
         setVarietyUnitvalidation("fillUnit&size&color");
       } else if (
         productdata.product_type !== "Cloths" &&
-        variantarray.unit === "pcs" &&
-        variantarray.colors === "" &&
-        (variantarray.size === "" || variantarray.size === null)
+        productvariantarray.unit === "pcs" &&
+        productvariantarray.colors === "" &&
+        (productvariantarray.size === "" || productvariantarray.size === null)
       ) {
         setVarietyUnitvalidation("fillUnit&color");
       } else if (
-        variantarray.unit !== "pcs" &&
-        (variantarray.unit_quantity === "" ||
-          variantarray.unit_quantity === "null" ||
-          variantarray.unit_quantity === null)
+        productvariantarray.unit !== "pcs" &&
+        (productvariantarray.unit_quantity === "" ||
+          productvariantarray.unit_quantity === "null" ||
+          productvariantarray.unit_quantity === null)
       ) {
         setunitValidated(true);
         setVarietyUnitvalidation("unitQwanity&size&color");
-      } else if (Number(variantarray.discount) > 100) {
+      } else if (Number(productvariantarray.discount) > 100) {
         setunitValidated(true);
         setVarietyUnitvalidation("discountmore");
       } else if (
-        Number(variantarray.mrp) > 50000 ||
-        Number(variantarray.mrp) <= 0
+        Number(productvariantarray.mrp) > 50000 ||
+        Number(productvariantarray.mrp) <= 0
       ) {
         setunitValidated(true);
         setVarietyUnitvalidation("mrpmore");
       } else {
         setvariantmainarray((variantmainarray) => [
           ...variantmainarray,
-          variantarray,
+          productvariantarray,
         ]);
         setVarietyUnitvalidation("");
         setvarietyValidated(false);
         setcustomValidated(false);
 
-        setvariantarray({
+        setproductvariantarray({
           product_status: "",
-          unit: variantarray.unit,
+          unit: productvariantarray.unit,
           colors: "",
           unit_quantity: "",
           size: "",
@@ -1511,8 +1524,8 @@ function Product() {
   let productdataa = [];
 
   const handleSaveDraft = (e) => {
-    setvariantarray({
-      ...variantarray,
+    setproductvariantarray({
+      ...productvariantarray,
       product_status: "draft",
     });
     productdataa.push(productdata);
@@ -1560,6 +1573,7 @@ function Product() {
       setValidated(false);
       setcustomValidated(true);
       setProductAlert(true);
+      setapicall(true);
       handleClose();
     }
   };
@@ -1670,8 +1684,11 @@ function Product() {
       });
   };
   useEffect(() => {
-    setvariantarray({
-      ...variantarray,
+    let discountt =
+      (productvariantarray.mrp * productvariantarray.discount) / 100;
+    let saleprice = productvariantarray.mrp - discountt;
+    setproductvariantarray({
+      ...productvariantarray,
       product_price: (
         saleprice -
         (saleprice *
@@ -1685,8 +1702,8 @@ function Product() {
       sale_price: saleprice,
     });
   }, [
-    variantarray.mrp,
-    variantarray.discount,
+    productvariantarray.mrp,
+    productvariantarray.discount,
     productdata.value_added_tax,
     productdata.gst,
     productdata.wholesale_sales_tax,
@@ -1694,23 +1711,20 @@ function Product() {
     productdata.manufacturers_sales_tax,
   ]);
   console.log(
-    "ariantarray.product_price" +
-      variantarray.product_price +
-      productdata.value_added_tax,
-    productdata.gst,
-    productdata.wholesale_sales_tax,
-    productdata.retails_sales_tax,
-    productdata.manufacturers_sales_tax,
-    variantarray.sale_price,
-    saleprice
+    "ariantarray.product_price" + taxdata.value_added_tax,
+    taxdata.gst,
+    taxdata.wholesale_sales_tax,
+    taxdata.retails_sales_tax,
+    taxdata.manufacturers_sales_tax,
+    variantarray,
+    vdata
   );
   //-----------------------Download excel sheet code End  here---------------------------------------------------
   return (
     <div className="App productlist_maindiv">
       <h2>Products</h2>
-
-      {/* search bar */}
       <div className="card mt-3 p-3 ">
+        {/* search bar */}
         <div className="row">
           <div className="col-md-2 col-sm-6 aos_input">
             <input
@@ -1782,26 +1796,7 @@ function Product() {
               })}
             </Form.Select>
           </div>
-          <div className="col-md-2 col-sm-6 aos_input">
-            <Form.Select
-              aria-label="Search by status"
-              className="adminselectbox"
-              placeholder="Search by tag"
-              onChange={OnSearchChange}
-              name="tag"
-              value={searchdata.tag}
-            >
-              <option value={""}>Select Tag</option>
-              {(productstatus.productstatus || []).map((data, i) => {
-                return (
-                  <option value={data} key={i}>
-                    {" "}
-                    {data}
-                  </option>
-                );
-              })}
-            </Form.Select>
-          </div>
+
           <div className="col-md-2 col-sm-6 aos_input">
             <Form.Select
               aria-label="Search by status"
@@ -2455,9 +2450,9 @@ function Product() {
                                                 aria-label="Default select example"
                                                 name="unit"
                                                 required
-                                                value={variantarray.unit}
+                                                value={productvariantarray.unit}
                                                 onChange={(e) =>
-                                                  onVariantChange(e)
+                                                  handleVarietyChange(e)
                                                 }
                                                 disabled={
                                                   variantmainarray.length === 0
@@ -2540,14 +2535,17 @@ function Product() {
                                                 required
                                                 sm="9"
                                                 name="colors"
-                                                value={variantarray.colors}
+                                                value={
+                                                  productvariantarray.colors
+                                                }
                                                 onChange={(e) =>
-                                                  onVariantChange(e)
+                                                  handleVarietyChange(e)
                                                 }
                                               >
                                                 <option
                                                   value={
-                                                    variantarray.colors == ""
+                                                    productvariantarray.colors ==
+                                                    ""
                                                   }
                                                 >
                                                   Select
@@ -2574,12 +2572,13 @@ function Product() {
                                             <InputGroup className="" size="sm">
                                               <Form.Control
                                                 value={
-                                                  variantarray.unit_quantity
+                                                  productvariantarray.unit_quantity
                                                 }
                                                 type="number"
                                                 sm="9"
                                                 disabled={
-                                                  variantarray.unit == "pcs"
+                                                  productvariantarray.unit ==
+                                                  "pcs"
                                                     ? true
                                                     : false
                                                 }
@@ -2589,7 +2588,7 @@ function Product() {
                                                 //     : null
                                                 // }
                                                 onChange={(e) =>
-                                                  onVariantChange(e)
+                                                  handleVarietyChange(e)
                                                 }
                                                 name={"unit_quantity"}
                                               />
@@ -2605,22 +2604,26 @@ function Product() {
                                                 required
                                                 sm="9"
                                                 name="size"
-                                                value={variantarray.size}
+                                                value={productvariantarray.size}
                                                 onChange={(e) =>
-                                                  onVariantChange(e)
+                                                  handleVarietyChange(e)
                                                 }
                                                 disabled={
-                                                  variantarray.unit !== "pcs" &&
-                                                  variantarray.unit !== ""
+                                                  productvariantarray.unit !==
+                                                    "pcs" &&
+                                                  productvariantarray.unit !==
+                                                    ""
                                                     ? true
-                                                    : variantarray.unit == ""
+                                                    : productvariantarray.unit ==
+                                                      ""
                                                     ? false
                                                     : false
                                                 }
                                               >
                                                 <option
                                                   value={
-                                                    variantarray.size == ""
+                                                    productvariantarray.size ==
+                                                    ""
                                                   }
                                                 >
                                                   Select
@@ -2652,15 +2655,10 @@ function Product() {
                                                 minLength={"1"}
                                                 min="1"
                                                 max="50000"
-                                                // className={
-                                                //   customvalidated === true
-                                                //     ? "border-danger"
-                                                //     : null
-                                                // }
                                                 name="mrp"
-                                                value={variantarray.mrp}
+                                                value={productvariantarray.mrp}
                                                 onChange={(e) =>
-                                                  onVariantChange(e)
+                                                  handleVarietyChange(e)
                                                 }
                                                 required
                                               />
@@ -2676,10 +2674,12 @@ function Product() {
                                                 min={"0"}
                                                 max={"100"}
                                                 onChange={(e) =>
-                                                  onVariantChange(e)
+                                                  handleVarietyChange(e)
                                                 }
                                                 name={"discount"}
-                                                value={variantarray.discount}
+                                                value={
+                                                  productvariantarray.discount
+                                                }
                                               />
                                             </InputGroup>
                                           </div>
@@ -2687,7 +2687,6 @@ function Product() {
                                         <td className="p-0 text-center">
                                           <div className=" d-flex align-items-center">
                                             {/* PRODUCT ORIGINAL PRICE */}
-                                            {saleprice}
                                             <InputGroup className="" size="sm">
                                               <Form.Control
                                                 step={"any"}
@@ -2695,7 +2694,7 @@ function Product() {
                                                 sm="9"
                                                 name={"product_price"}
                                                 value={
-                                                  variantarray.product_price
+                                                  productvariantarray.product_price
                                                 }
                                                 required
                                               />
@@ -2711,7 +2710,7 @@ function Product() {
                                                 sm="9"
                                                 name={"totaltax"}
                                                 value={(
-                                                  (saleprice *
+                                                  (productvariantarray.sale_price *
                                                     (Number(productdata.gst) +
                                                       Number(
                                                         productdata.wholesale_sales_tax
@@ -2741,10 +2740,12 @@ function Product() {
                                                 step={"any"}
                                                 sm="9"
                                                 name={"sale_price"}
-                                                value={variantarray.sale_price}
+                                                value={
+                                                  productvariantarray.sale_price
+                                                }
                                                 // onChange={() =>
-                                                //   setvariantarray({
-                                                //     ...variantarray,
+                                                //   setproductvariantarray({
+                                                //     ...productvariantarray,
                                                 //     sale_price:
                                                 //       saleprice.toFixed(2),
                                                 //   })
@@ -2769,11 +2770,11 @@ function Product() {
                                                 //     : null
                                                 // }
                                                 onChange={(e) =>
-                                                  onVariantChange(e)
+                                                  handleVarietyChange(e)
                                                 }
                                                 name={"manufacturing_date"}
                                                 value={
-                                                  variantarray.manufacturing_date
+                                                  productvariantarray.manufacturing_date
                                                 }
                                               />
                                             </InputGroup>
@@ -2787,20 +2788,22 @@ function Product() {
                                                 sm="9"
                                                 required
                                                 disabled={
-                                                  variantarray.manufacturing_date
+                                                  productvariantarray.manufacturing_date
                                                     ? false
                                                     : true
                                                 }
                                                 min={moment(
-                                                  variantarray.manufacturing_date
+                                                  productvariantarray.manufacturing_date
                                                 )
                                                   .add(1, "day")
                                                   .format("YYYY-MM-DD")}
                                                 onChange={(e) =>
-                                                  onVariantChange(e)
+                                                  handleVarietyChange(e)
                                                 }
                                                 name={"expire_date"}
-                                                value={variantarray.expire_date}
+                                                value={
+                                                  productvariantarray.expire_date
+                                                }
                                               />
                                             </InputGroup>
                                           </div>
@@ -2811,7 +2814,9 @@ function Product() {
                                               <Form.Control
                                                 name={"quantity"}
                                                 type="number"
-                                                value={variantarray.quantity}
+                                                value={
+                                                  productvariantarray.quantity
+                                                }
                                                 sm="9"
                                                 min={"1"}
                                                 required
@@ -2821,7 +2826,7 @@ function Product() {
                                                 //     : null
                                                 // }
                                                 onChange={(e) =>
-                                                  onVariantChange(e)
+                                                  handleVarietyChange(e)
                                                 }
                                                 onKeyPress={(event) => {
                                                   if (event.key === "Enter") {
@@ -3236,10 +3241,10 @@ function Product() {
                 btnclass={"button main_outline_button px-2"}
                 // Iconname={<GiCancel /> }
               />
-              <MainButton
+              {/* <MainButton
                 btntext={"Save as Draft"}
                 onClick={() => handleSaveDraft()}
-              />
+              /> */}
               <Iconbutton
                 type={"submit"}
                 btntext={modalshow === "add" ? "Add Product" : "Update Product"}
@@ -3265,7 +3270,7 @@ function Product() {
           dialogClassName="addproductmainmodal"
         >
           <Form ref={formRef}>
-            <Modal.Header>
+            <Modal.Header closeButton>
               <Modal.Title>Add Variety</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -3479,9 +3484,7 @@ function Product() {
                                     : false
                                 }
                               >
-                                <option value={variantarray.size == ""}>
-                                  Select
-                                </option>
+                                <option value={""}>Select</option>
                                 {(varietyy.size || []).map((vari, i) => {
                                   return (
                                     <option value={vari} key={i}>
@@ -3907,16 +3910,20 @@ function Product() {
                                       </td>
                                       <td className="p-0 py-3 text-center ">
                                         {Number(
-                                          (Number(variantdata.sale_price) *
-                                            Number(taxdata.gst) +
-                                            Number(
-                                              taxdata.wholesale_sales_tax
-                                            ) +
-                                            Number(taxdata.retails_sales_tax) +
-                                            Number(
-                                              taxdata.manufacturers_sales_tax
-                                            ) +
-                                            Number(taxdata.value_added_tax)) /
+                                          (variantdata.sale_price *
+                                            (Number(taxdata.gst) +
+                                              Number(
+                                                taxdata.wholesale_sales_tax
+                                              ) +
+                                              Number(
+                                                taxdata.retails_sales_tax
+                                              ) +
+                                              Number(
+                                                taxdata.manufacturers_sales_tax
+                                              ) +
+                                              Number(
+                                                taxdata.value_added_tax
+                                              ))) /
                                             100
                                         ).toFixed(2)}
                                       </td>
@@ -4085,7 +4092,7 @@ function Product() {
                 className="button main_outline_button"
                 onClick={handlevarietyClose}
               >
-                Cancel
+                Close
               </button>
             </Modal.Footer>
           </Form>
