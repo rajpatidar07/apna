@@ -67,22 +67,16 @@ function AdminLayout() {
 
   return (
     <div className="container-fluid p-0">
-
       <Router>
-    
         <Routes>
-       
-        <Route path="/vendoremaillogin" element={<VendorEmailLogin/>}/>
-          <Route path="/sellersignup" element={<SellerSignUp/>}/>
+          <Route path="/vendoremaillogin" element={<VendorEmailLogin />} />
+          <Route path="/sellersignup" element={<SellerSignUp />} />
           <Route path="/login" element={<Login />} />
           <Route path="/change_password" element={<ChangePassword />} />
           <Route path="/forgot" element={<Forgot />} />
           <Route path="/loginn" element={<Loginn />} />
-    
-          <Route path="/sellersignupp" element={<SellerSignupp/>}/>
 
-
-        
+          <Route path="/sellersignupp" element={<SellerSignupp />} />
         </Routes>
 
         <div className="row m-0 page_main_row">
@@ -95,7 +89,7 @@ function AdminLayout() {
               <Routes>
                 <Route element={<AuthWrapper />}>
                   <Route path="/" element={<Dashboard />} />
-                  <Route path="/vendorupdate" element = {<VendorUpdate/>}/>
+                  <Route path="/vendorupdate" element={<VendorUpdate />} />
                   <Route path="/product" element={<Product />} />
                   <Route path="/orders" element={<Orders />} />
                   <Route path="/addproduct" element={<Addproduct />} />
@@ -115,7 +109,7 @@ function AdminLayout() {
                   <Route path="/order_detail" element={<OrderDetail />} />
                   <Route path="/footer" element={<Footer />} />
                   <Route path="/vendors" element={<VendorsList />} />
-              
+
                   <Route path="/add_blog" element={<BlogList />} />
                   <Route path="/notification" element={<Notification />} />
                   <Route path="/components" element={<AdminComponents />} />
