@@ -66,7 +66,7 @@ function Orders() {
       });
   }, [apicall, changstatus]);
 
-  const onStatusChange = (e, id) => {
+  const onStatusChange = (e, id,user_id) => {
     // e.prevantDefault();
     setchangstatus(e.target.value);
     setCondition(true);
@@ -77,6 +77,7 @@ function Orders() {
         {
           status_change: e.target.value,
           id: id,
+          user_id:user_id,
         },
         {
           headers: {
@@ -244,7 +245,7 @@ function Orders() {
           aria-label="Search by delivery"
           size="sm"
           className="w-100"
-          onChange={(e) => onStatusChange(e, row.order_id)}
+          onChange={(e) => onStatusChange(e, row.order_id,row.user_id)}
           name="status"
           // value={row.product_status}
         > 

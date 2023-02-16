@@ -105,7 +105,7 @@ import storetype from "../json/storetype";
               }
             )
             .then((response) => {
-              console.log("res-----"+JSON.stringify(response.data))
+              // console.log("res-----"+JSON.stringify(response.data))
               setaddvendordata(response.data[0]);
               setFile("");
               setFileName("");
