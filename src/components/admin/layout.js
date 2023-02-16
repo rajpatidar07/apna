@@ -54,12 +54,9 @@ import SellerSignUp from "./sellersignup";
 import SellerSignupp from "./vendor/sellersignupp";
 
 import VendorUpdate from "./vendor/vendorupdate";
-<<<<<<< HEAD
 import VendorEmailLogin from "./vendor/vendoremaillogin";
 
-=======
 import Loginn from "./loginn";
->>>>>>> dff170d18ca588d66a0c0f461613ac9c80a9687f
 function AdminLayout() {
   // const location = useLocation();
   const [adminLogged, setadminLogged] = useState(localStorage.getItem("token"));
