@@ -6,6 +6,8 @@ import { Badge, Collapse } from "react-bootstrap";
 import MainButton from "./common/button";
 import Modal from "react-bootstrap/Modal";
 import Iconbutton from "./common/iconbutton";
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
 import { MdOutlineEdit } from "react-icons/md";
 import { RiImageAddLine } from "react-icons/ri";
 import InputGroup from "react-bootstrap/InputGroup";
@@ -57,9 +59,9 @@ function Product() {
     },
     language: "en",
   };
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [changeUnitproperty, setChangeUnitProperty] = useState(false);
-  const [selectproductData, setSelectProductData] = useState("");
   const [checkProductType, setCheckProductType] = useState(false);
   const [error, setError] = useState(true);
   const [vendorid, setVendorId] = useState([]);
@@ -99,7 +101,7 @@ function Product() {
   const [unitValidated, setunitValidated] = useState(false);
   const [varietyUnitvalidation, setVarietyUnitvalidation] = useState("");
   var veriantData = {
-    product_status: "",
+    product_status: "pending",
     product_id: "",
     unit: "",
     colors: "",
@@ -119,7 +121,6 @@ function Product() {
   const [variantarray, setvariantarray] = useState(veriantData);
   const [variantmainarray, setvariantmainarray] = useState([]);
   const [productvariantarray, setproductvariantarray] = useState(veriantData);
-
   const [data1, setdata1] = useState("");
   const [otherintro, setotherintro] = useState("");
   const [headerval, setheaderval] = useState("");
@@ -131,7 +132,6 @@ function Product() {
   });
   const [vdata, setvdata] = useState([]);
   let [condition, setCondition] = useState(false);
-
   var data = {
     add_custom_input: [],
     product_title_name: "",
@@ -185,10 +185,17 @@ function Product() {
   const [productID, setproductID] = useState("");
   const [bulkProductError, setBulkProductError] = useState("");
 
-  const OnSearchChange = (e) => {
-    setsearchData({ ...searchdata, [e.target.name]: e.target.value });
-  };
-  const OnSaveProduct = (e) => {
+  // OFFER ADD MODAL
+  const [featureshow, setfeatureShow] = useState(false);
+  const [featuredata, setfeaturedata] = useState({
+    start_date: "",
+    end_date: "",
+    product_id: "",
+    fetured_type: "",
+  });
+  const [productname, setproductname] = useState("");
+
+  const OnOfferProductAdd = (e) => {
     e.preventDefault();
     axios
       .post(`${process.env.REACT_APP_BASEURL}/add_fetured_product`, featuredata)
@@ -199,12 +206,40 @@ function Product() {
           setRestoreAlert(true);
           setapicall(true);
           setfeatureShow(false);
+          setfeaturedata({
+            start_date: "",
+            end_date: "",
+          });
         }
       })
       .catch(function (error) {
         console.log(error);
       });
   };
+
+  const featureModalClose = (e) => {
+    setfeatureShow(false);
+    setfeaturedata({ start_date: "", end_date: "" });
+  };
+  const featureModalShow = () => setfeatureShow(true);
+  const OnProductOfferClick = (e, productid, productname) => {
+    console.log("----------------------OFFER");
+    setfeaturedata({
+      ...featuredata,
+      product_id: `${productid}`,
+      fetured_type: e.target.value,
+    });
+
+    setproductname(productname);
+    setfeatureShow(true);
+  };
+  const OnFeatureDateChaneg = (e) => {
+    setfeaturedata({ ...featuredata, [e.target.name]: e.target.value });
+  };
+
+  // OFFER ADD MODAL END
+
+  // PRODUCT STATUS CHANGE API
   const onProductStatusChange = (e, id, productid) => {
     setCondition(true);
     axios
@@ -222,7 +257,9 @@ function Product() {
         setCondition(false);
       });
   };
+  // PRODUCT STATUS CHANGE API END
 
+  // MAIN PRODUCT LIST API
   const fetchdata = () => {
     axios
       .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=400`, {
@@ -262,7 +299,10 @@ function Product() {
     getVendorData();
     getCategorydatafilter();
   }, [apicall, Alert]);
-  //
+
+  //MAIN PRODUCT LIST API END
+
+  // PRODUCT DELETE ALERT
   let filtered;
   const handleAlert = (id) => {
     setAlert(true);
@@ -270,35 +310,8 @@ function Product() {
     setvariantid(id[0]);
     setproductid(id[1]);
   };
-  const [featureshow, setfeatureShow] = useState(false);
-  const [featuredata, setfeaturedata] = useState({
-    start_date: "",
-    end_date: "",
-    product_id: "",
-    fetured_type: "",
-  });
-  const [productname, setproductname] = useState("");
+  // END PRODUCT DELETE ALERT
 
-  const featureModalClose = (e) => {
-    setfeatureShow(false);
-    setfeaturedata({ start_date: "", end_date: "" });
-  };
-  const featureModalShow = () => setfeatureShow(true);
-  const OnProductOfferClick = (e, productid, productname) => {
-    setfeaturedata({
-      ...featuredata,
-      product_id: `${productid}`,
-      fetured_type: e.target.value,
-    });
-
-    setproductname(productname);
-    setfeatureShow(true);
-  };
-  const OnFeatureDateChaneg = (e) => {
-    setfeaturedata({ ...featuredata, [e.target.name]: e.target.value });
-  };
-
-  // end feature product
   //  json
   var varietyy = VariationJson;
 
@@ -308,315 +321,7 @@ function Product() {
     localStorage.setItem("productid", id[1]);
     navigate("/productdetail");
   };
-  const columns = [
-    {
-      name: "#",
-      width: "100px",
-      center: true,
-      cell: (row) => (
-        <img
-          alt={"apna_organic"}
-          src={
-            row.all_images
-              ? row.all_images
-              : "https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
-          }
-          style={{
-            padding: 10,
-            textAlign: "right",
-            maxHeight: "100px",
-            maxWidth: "100px",
-          }}
-          onClick={handleClick}
-        />
-      ),
-    },
-    {
-      name: "Product Name",
-      selector: (row) => (
-        <div>
-          <p
-            className="mb-1"
-            onClick={OnProductNameClick.bind(this, [row.id, row.product_id])}
-          >
-            <b>
-              {row.product_title_name}
-              <br />
-            </b>
-            {/* Product ID: {row.product_id} <br /> */}
-            <div className="d-flex flex-column ">
-              {row.is_featured === 1 ? (
-                <span className={"badge bg-warning mt-1"}>
-                  {"featured product"}
-                </span>
-              ) : null}
-              {row.is_special_offer === 1 ? (
-                <span className={"badge bg-info mt-1"}>{"special offer"}</span>
-              ) : null}
-            </div>
-          </p>
-        </div>
-      ),
-      sortable: true,
-      width: "200px",
-    },
-    {
-      name: "Category",
-      selector: (row) => row.category,
-      sortable: true,
-      width: "90px",
-    },
-    {
-      name: "Vendor",
-      selector: (row) => row.shop,
-      sortable: true,
-      width: "90px",
-    },
-    {
-      name: "Product Type",
-      selector: (row) => row.product_type,
-      sortable: true,
-      width: "90px",
-    },
-    {
-      name: "Brand",
-      selector: (row) => row.brand,
-      sortable: true,
-      width: "100px",
-    },
-    {
-      name: "Mrp",
-      selector: (row) => (
-        <p className="m-0">
-          <b>MRP :</b>₹ {Number(row.mrp).toFixed(2)} <br />
-          <b>Discount : </b>
-          {Number(row.discount).toFixed(2)}%
-          {/* {row.discount === "0" ? null : row.discount + "%"}{" "} */}
-          <br />
-          <b>Product Price:</b>₹ {Number(row.product_price).toFixed(2)} <br />
-          <b>Sale Price:</b>₹ {Number(row.sale_price).toFixed(2)} <br />
-        </p>
-      ),
-      sortable: true,
-      width: "130px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
-    },
 
-    {
-      name: "Tax",
-      selector: (row) => (
-        <div className="d-flex flex-column">
-          <b>
-            Total:
-            {Number(row.gst) +
-              Number(row.wholesale_sales_tax) +
-              Number(row.retails_sales_tax) +
-              Number(row.manufacturers_sales_tax) +
-              Number(row.value_added_tax) +
-              "%"}{" "}
-          </b>{" "}
-          <div className="d-flex">
-            {row.gst === "0" ? null : (
-              <p className="mb-0">
-                <b>Gst :</b>
-                {Number(row.gst).toFixed(1)}%
-              </p>
-            )}
-            {row.cgst === "0" ? null : (
-              <p className="mb-0 mx-1">
-                <b>Cgst : </b> {Number(row.cgst).toFixed(1)}%{" "}
-              </p>
-            )}
-            {row.sgst === "0" ? null : (
-              <p className="mb-0">
-                <b>Sgst:</b> {Number(row.sgst).toFixed(1)}%
-              </p>
-            )}
-          </div>
-          <div className="d-flex flex-column">
-            {row.wholesale_sales_tax === "0" ? null : (
-              <p className="mb-0">
-                <b>
-                  wholesale_sales_tax:
-                  {Number(row.wholesale_sales_tax).toFixed(1)}%
-                </b>{" "}
-              </p>
-            )}
-            {row.retails_sales_tax === "0" ? null : (
-              <p className="mb-0">
-                <b>
-                  retails_sales_tax:{Number(row.retails_sales_tax).toFixed(1)}%
-                </b>{" "}
-              </p>
-            )}
-            {row.value_added_tax === "0" ? null : (
-              <p className="mb-0">
-                <b>
-                  value_added_tax:{Number(row.value_added_tax).toFixed(1)}%{" "}
-                </b>
-              </p>
-            )}
-            {row.manufacturers_sales_tax === "0" ? null : (
-              <p className="mb-0">
-                <b>
-                  manufacturers_sales_tax:{" "}
-                  {Number(row.manufacturers_sales_tax).toFixed(1)}%
-                </b>{" "}
-              </p>
-            )}
-          </div>
-        </div>
-      ),
-
-      sortable: true,
-      width: "250px",
-      center: true,
-      style: {
-        paddingLeft: "0px",
-      },
-    },
-    {
-      name: "SP",
-      selector: (row) => row.sale_price.toFixed(2),
-      sortable: true,
-      width: "100px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
-    },
-    {
-      name: "Qty",
-      selector: (row) =>
-        row.quantity === "0" || row.quantity === 0 ? (
-          <span className="text-danger">Out Of Stock</span>
-        ) : (
-          row.quantity
-        ),
-      sortable: true,
-      width: "100px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
-    },
-    {
-      name: "Status",
-      selector: (row) => (
-        <span
-          className={
-            row.product_status === "pending"
-              ? "badge bg-warning"
-              : row.product_status === "approved"
-              ? "badge bg-success"
-              : row.product_status === "draft"
-              ? "badge bg-info"
-              : row.product_status === ""
-              ? "badge bg-secondary"
-              : null
-          }
-        >
-          {row.product_status === "pending"
-            ? "Pending"
-            : row.product_status === "approved"
-            ? "Approved"
-            : row.product_status === ""
-            ? "Status"
-            : row.product_status === "draft"
-            ? "Draft"
-            : "Status"}
-        </span>
-      ),
-      sortable: true,
-      width: "115px",
-      // center: true,
-    },
-    {
-      name: "Change Status",
-      selector: (row) => (
-        <Form.Select
-          aria-label="Search by delivery"
-          size="sm"
-          className="w-100"
-          onChange={(e) => onProductStatusChange(e, row.id, row.product_id)}
-          value={row.product_status}
-          disabled={condition === true ? true : false}
-        >
-          <option value={""}>Status</option>
-          {(productstatus.productstatus || []).map((data, i) => {
-            return (
-              <option value={data} key={i}>
-                {" "}
-                {data}
-              </option>
-            );
-          })}
-        </Form.Select>
-      ),
-      sortable: true,
-    },
-    {
-      name: "Variety",
-      selector: (row) => (
-        <Button
-          size="sm"
-          onClick={handlevarietyShow.bind(this, row.product_id, row.id)}
-        >
-          Add Variety
-        </Button>
-      ),
-      sortable: true,
-    },
-    {
-      name: "Action",
-      width: "110px",
-      style: {
-        paddingRight: "12px",
-        paddingLeft: "0px",
-      },
-      center: true,
-      selector: (row) => (
-        <div className={"actioncolimn"}>
-          <div className="feature_product_dropdown_box">
-            <Form.Select
-              aria-label="Search by delivery"
-              size="sm"
-              className="w-100 feature_product_select"
-              onChange={(e) =>
-                OnProductOfferClick(e, row.product_id, row.product_title_name)
-              }
-            >
-              <option value="">Select</option>
-              <option value="special_offer">Special Offer</option>
-              <option value="featured_offer">Featured Offer </option>
-              <option value="promotional">Promotional </option>
-            </Form.Select>
-            <IoFilter className="feature_product_ellipsis" />
-            {/* <FaEllipsisV className="feature_product_ellipsis"/> */}
-          </div>
-
-          <BiEdit
-            className=" p-0 m-0  editiconn text-secondary"
-            onClick={handleShow.bind(this, row.product_id)}
-          />
-          <BsTrash
-            className=" p-0 m-0 editiconn text-danger"
-            onClick={handleAlert.bind(this, [
-              row.id,
-              row.product_id,
-              row.is_delete,
-            ])}
-          />
-        </div>
-      ),
-    },
-  ];
   const categoryFormChange = (e, id) => {
     setIndVal(e.target.value);
     setScategory({ ...scategory, [e.target.name]: e.target.value });
@@ -668,6 +373,7 @@ function Product() {
         });
     }
   }, [scategory, indVal]);
+
   // vendor api for filter
   const getVendorData = () => {
     try {
@@ -706,12 +412,13 @@ function Product() {
         });
     } catch (err) {}
   };
-  // end category aopi
+  // end category api
+
   // modal
   const [editparentCategory, seteditparentCategory] = useState("");
 
   let token = localStorage.getItem("token");
-
+  // ADD AND EDIT PRODUCT MODAL
   const handleShow = (e) => {
     setproductdata(data);
     // vendor
@@ -811,7 +518,27 @@ function Product() {
   useEffect(() => {
     handleShow();
   }, []);
-
+  // ONADD PRODUCT INPUT  CHANGE
+  const handleInputFieldChange = (e) => {
+    setCheckProductType(false);
+    setproductdata({
+      ...productdata,
+      [e.target.name]: e.target.value,
+    });
+    settaxdata({
+      ...taxdata,
+      [e.target.name]: e.target.value,
+    });
+  };
+  const handleVendorNameChange = (e) => {
+    let arr = e.target.value.split(",");
+    setproductdata({
+      ...productdata,
+      store_name: arr[1],
+      vendor_id: arr[0],
+      shop: arr[1],
+    });
+  };
   const handleClose = () => {
     setproductdata(data);
     setcustomarray([]);
@@ -823,6 +550,7 @@ function Product() {
     setVarietyUnitvalidation("");
     setvarietyValidated(false);
   };
+  // END ADD AND EDIT PRODUCT MODAL
 
   // seotag
   let tagname;
@@ -847,7 +575,9 @@ function Product() {
     }
     setaddtag("");
   };
-  // variant
+  // END SEO TAG ADD
+
+  // IMAGE UPLOAD SECTION
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
@@ -863,40 +593,51 @@ function Product() {
   };
 
   const imguploadchange = async (e, product_id, id, vendor_id) => {
+    setcustomValidated("");
     onImgView(product_id, id);
-    console.log("imge newImageUrlse" + newImageUrls.length);
-    console.log("imge lenth--" + e.target.files.length);
     for (let i = 0; i < e.target.files.length; i++) {
       let coverimg;
 
-      if ((newImageUrls.length === 0 || newImageUrls.length === 1) && i === 0) {
+      if (newImageUrls.length === 0 && i === 0) {
         coverimg = "cover";
       } else {
         coverimg = `cover${i}`;
       }
       encoded = await convertToBase64(e.target.files[i]);
       const [first, ...rest] = encoded.base64.split(",");
-      const productimg = rest.join("-");
-      let imar = {
-        product_id: `${product_id}`,
-        product_verient_id: `${id}`,
-        vendor_id: `${vendor_id}`,
-        product_image_name: `${encoded.name}${i}${id}`,
-        image_position: coverimg,
-        img_64: productimg,
-      };
-      ImgObj.push(imar);
-    }
+      let imgvalidation = first.split("/").pop();
+      console.log("------img" + "ppppp" + imgvalidation);
 
-    axios
-      .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
-      .then((response) => {
-        ImgObj = [];
-        onImgView(id, product_id);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+      if (
+        imgvalidation === "jpeg:base64" ||
+        imgvalidation === "jpg:base64" ||
+        imgvalidation === "png:base64"
+      ) {
+        const productimg = rest.join("-");
+        let imar = {
+          product_id: `${product_id}`,
+          product_verient_id: `${id}`,
+          vendor_id: `${vendor_id}`,
+          product_image_name: `${encoded.name}${i}${id}`,
+          image_position: coverimg,
+          img_64: productimg,
+        };
+        ImgObj.push(imar);
+
+        axios
+          .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
+          .then((response) => {
+            ImgObj = [];
+            onImgView(id, product_id);
+            setcustomValidated("");
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      } else {
+        setcustomValidated("imgformat");
+      }
+    }
   };
 
   const onImgRemove = (id, name, vendor_id, product_id, product_verient_id) => {
@@ -929,9 +670,7 @@ function Product() {
         console.log(error);
       });
   };
-  const onCoverImgButtonCLick = (id, product_id) => {
-    setEditButton(true);
-  };
+
   const onImgCoverEditClick = (imgid, productid, productvariantid) => {
     axios
       .put(`${process.env.REACT_APP_BASEURL}/change_porduct_cover_image`, {
@@ -946,7 +685,9 @@ function Product() {
         console.log(error);
       });
   };
+  // END IMAGE UPLOAD SECTION
 
+  // ADD AND EDIT  VARIETY SECTION
   const onVariantChange = (e) => {
     setValidated(false);
     setcustomValidated(false);
@@ -977,7 +718,6 @@ function Product() {
       sale_price: `${saleprice}`,
     });
   }, [variantarray.mrp, variantarray.discount, taxdata]);
-  console.log("---totltax " + totaltax, taxdata);
   const handleInputcheckboxChange = (e) => {
     setcustomValidated(false);
     const target = e.target;
@@ -1024,6 +764,7 @@ function Product() {
         console.log(error);
       });
   };
+  // ADD VARIETY MODAL
   const handlevarietyShow = (id, variantid) => {
     // START GET THE SELECTED VARIENT DATA------------------------------------------------------
     axios
@@ -1439,6 +1180,7 @@ function Product() {
     });
   }, [variantmainarray]);
 
+  // ADD CUSTOM INPUT
   const oncustomheadChange = (e) => {
     setheaderval(e.target.value);
     setAddCustom((AddCustom) => {
@@ -1472,29 +1214,9 @@ function Product() {
       add_custom_input: customarray,
     });
   }, [customarray]);
-  // end
+  // END ADD CUSTOM INPUT
 
-  const handleInputFieldChange = (e) => {
-    setCheckProductType(false);
-    setproductdata({
-      ...productdata,
-      [e.target.name]: e.target.value,
-    });
-    settaxdata({
-      ...taxdata,
-      [e.target.name]: e.target.value,
-    });
-  };
-  const handleVendorNameChange = (e) => {
-    let arr = e.target.value.split(",");
-    setproductdata({
-      ...productdata,
-      store_name: arr[1],
-      vendor_id: arr[0],
-      shop: arr[1],
-    });
-  };
-
+  // CKEDITOR TEXT BOX
   const handledescription = (event, editor) => {
     setdata1(editor.getData());
     // console.log({ event, editor, data1 });
@@ -1521,13 +1243,46 @@ function Product() {
       other_introduction: otherinstrction,
     });
   };
+  // END CKEDITOR BOX
+
   let productdataa = [];
 
-  const handleSaveDraft = (e) => {
+  // ADD PRICES ON ADDPRODUCT BUTTON
+  useEffect(() => {
+    let discountt =
+      (productvariantarray.mrp * productvariantarray.discount) / 100;
+    let saleprice = productvariantarray.mrp - discountt;
     setproductvariantarray({
       ...productvariantarray,
-      product_status: "draft",
+      product_price: (
+        saleprice -
+        (saleprice *
+          (Number(productdata.gst) +
+            Number(productdata.wholesale_sales_tax) +
+            Number(productdata.retails_sales_tax) +
+            Number(productdata.manufacturers_sales_tax) +
+            Number(productdata.value_added_tax))) /
+          100
+      ).toFixed(2),
+      sale_price: saleprice,
     });
+  }, [
+    productvariantarray.mrp,
+    productvariantarray.discount,
+    productdata.value_added_tax,
+    productdata.gst,
+    productdata.wholesale_sales_tax,
+    productdata.retails_sales_tax,
+    productdata.manufacturers_sales_tax,
+  ]);
+  // END  ADD PRICES ON ADDPRODUCT BUTTON
+
+  // ADD PRODUCT AND SAVE TO DRAFT
+  const handleSaveDraft = (e) => {
+    // setproductvariantarray({
+    //   ...productvariantarray,
+    //   product_status: "draft",
+    // });
     productdataa.push(productdata);
     const form = e.currentTarget;
     if (
@@ -1549,7 +1304,6 @@ function Product() {
         });
     }
   };
-
   const handleAddProduct = (e) => {
     productdataa.push(productdata);
     const form = e.currentTarget;
@@ -1577,6 +1331,9 @@ function Product() {
       handleClose();
     }
   };
+  // END ADD PRODUCT AND SAVE TO DRAFT
+
+  // UPDATE PRODUCT COMMON DATA
   const handleUpdateProduct = (e) => {
     e.preventDefault();
     axios
@@ -1590,11 +1347,13 @@ function Product() {
         console.log(error);
       });
   };
+  // END UPDATE PRODUCT COMMON DATA
 
-  const handleClick = () => {};
-  const navigate = useNavigate();
-
-  const submitHandler = () => {
+  // PRODUCT SEARCH , FILTER  AND RESET
+  const OnSearchChange = (e) => {
+    setsearchData({ ...searchdata, [e.target.name]: e.target.value });
+  };
+  const onProductSearchClick = () => {
     setapicall(true);
   };
 
@@ -1609,6 +1368,7 @@ function Product() {
     });
     setapicall(true);
   };
+  // END PRODUCT SEARCH , FILTER  AND RESET
 
   //-----------------------Download excel sheet code start here---------------------------------------------------
 
@@ -1671,7 +1431,6 @@ function Product() {
     axios
       .post(`${process.env.REACT_APP_BASEURL}/product_bulk_uploads`, formData)
       .then((response) => {
-        console.log("uploaddd---" + JSON.stringify(response));
         if (response.status == 200) {
           setProductAlert(true);
           setapicall(true);
@@ -1683,43 +1442,344 @@ function Product() {
         console.log(error);
       });
   };
-  useEffect(() => {
-    let discountt =
-      (productvariantarray.mrp * productvariantarray.discount) / 100;
-    let saleprice = productvariantarray.mrp - discountt;
-    setproductvariantarray({
-      ...productvariantarray,
-      product_price: (
-        saleprice -
-        (saleprice *
-          (Number(productdata.gst) +
-            Number(productdata.wholesale_sales_tax) +
-            Number(productdata.retails_sales_tax) +
-            Number(productdata.manufacturers_sales_tax) +
-            Number(productdata.value_added_tax))) /
-          100
-      ).toFixed(2),
-      sale_price: saleprice,
-    });
-  }, [
-    productvariantarray.mrp,
-    productvariantarray.discount,
-    productdata.value_added_tax,
-    productdata.gst,
-    productdata.wholesale_sales_tax,
-    productdata.retails_sales_tax,
-    productdata.manufacturers_sales_tax,
-  ]);
-  console.log(
-    "ariantarray.product_price" + taxdata.value_added_tax,
-    taxdata.gst,
-    taxdata.wholesale_sales_tax,
-    taxdata.retails_sales_tax,
-    taxdata.manufacturers_sales_tax,
-    variantarray,
-    vdata
-  );
   //-----------------------Download excel sheet code End  here---------------------------------------------------
+
+  // DATATABLE COLUMN PRODUCT LIST
+  const columns = [
+    {
+      name: "#",
+      width: "100px",
+      center: true,
+      cell: (row) => (
+        <img
+          alt={"apna_organic"}
+          src={
+            row.all_images
+              ? row.all_images
+              : "https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
+          }
+          style={{
+            padding: 10,
+            textAlign: "right",
+            maxHeight: "100px",
+            maxWidth: "100px",
+          }}
+        />
+      ),
+    },
+    {
+      name: "Product Name",
+      selector: (row) => (
+        <div>
+          <p
+            className="mb-1"
+            onClick={OnProductNameClick.bind(this, [row.id, row.product_id])}
+          >
+            <b>
+              {row.product_title_name}
+              <br />
+            </b>
+            {/* Product ID: {row.product_id} <br /> */}
+            <div className="d-flex flex-column ">
+              {row.is_featured === 1 ? (
+                <span className={"badge bg-warning mt-1"}>
+                  {"featured product"}
+                </span>
+              ) : null}
+              {row.is_special_offer === 1 ? (
+                <span className={"badge bg-info mt-1"}>{"special offer"}</span>
+              ) : null}
+            </div>
+          </p>
+        </div>
+      ),
+      sortable: true,
+      width: "200px",
+    },
+    {
+      name: "Category",
+      selector: (row) => row.category,
+      sortable: true,
+      width: "90px",
+    },
+    {
+      name: "Vendor",
+      selector: (row) => row.shop,
+      sortable: true,
+      width: "90px",
+    },
+    {
+      name: "Product Type",
+      selector: (row) => row.product_type,
+      sortable: true,
+      width: "90px",
+    },
+    {
+      name: "Brand",
+      selector: (row) => row.brand,
+      sortable: true,
+      width: "100px",
+    },
+    {
+      name: "Mrp",
+      selector: (row) => (
+        <p className="m-0">
+          <b>MRP :</b>₹ {Number(row.mrp).toFixed(2)} <br />
+          <b>Discount : </b>
+          {Number(row.discount).toFixed(2)}%
+          {/* {row.discount === "0" ? null : row.discount + "%"}{" "} */}
+          <br />
+          <b>Product Price:</b>₹ {Number(row.product_price).toFixed(2)} <br />
+          <b>Sale Price:</b>₹ {Number(row.sale_price).toFixed(2)} <br />
+        </p>
+      ),
+      sortable: true,
+      width: "130px",
+      center: true,
+      style: {
+        paddingRight: "32px",
+        paddingLeft: "0px",
+      },
+    },
+
+    {
+      name: "Tax",
+      selector: (row) => (
+        <div className="d-flex flex-column">
+          <b>
+            Total:
+            {Number(row.gst) +
+              Number(row.wholesale_sales_tax) +
+              Number(row.retails_sales_tax) +
+              Number(row.manufacturers_sales_tax) +
+              Number(row.value_added_tax) +
+              "%"}{" "}
+          </b>{" "}
+          <div className="d-flex">
+            {row.gst === "0" ? null : (
+              <p className="mb-0">
+                <b>Gst :</b>
+                {Number(row.gst).toFixed(1)}%
+              </p>
+            )}
+            {row.cgst === "0" ? null : (
+              <p className="mb-0 mx-1">
+                <b>Cgst : </b> {Number(row.cgst).toFixed(1)}%{" "}
+              </p>
+            )}
+            {row.sgst === "0" ? null : (
+              <p className="mb-0">
+                <b>Sgst:</b> {Number(row.sgst).toFixed(1)}%
+              </p>
+            )}
+          </div>
+          <div className="d-flex flex-column">
+            {row.wholesale_sales_tax === "0" ? null : (
+              <p className="mb-0">
+                <b>
+                  wholesale_sales_tax:
+                  {Number(row.wholesale_sales_tax).toFixed(1)}%
+                </b>{" "}
+              </p>
+            )}
+            {row.retails_sales_tax === "0" ? null : (
+              <p className="mb-0">
+                <b>
+                  retails_sales_tax:{Number(row.retails_sales_tax).toFixed(1)}%
+                </b>{" "}
+              </p>
+            )}
+            {row.value_added_tax === "0" ? null : (
+              <p className="mb-0">
+                <b>
+                  value_added_tax:{Number(row.value_added_tax).toFixed(1)}%{" "}
+                </b>
+              </p>
+            )}
+            {row.manufacturers_sales_tax === "0" ? null : (
+              <p className="mb-0">
+                <b>
+                  manufacturers_sales_tax:{" "}
+                  {Number(row.manufacturers_sales_tax).toFixed(1)}%
+                </b>{" "}
+              </p>
+            )}
+          </div>
+        </div>
+      ),
+
+      sortable: true,
+      width: "250px",
+      center: true,
+      style: {
+        paddingLeft: "0px",
+      },
+    },
+    {
+      name: "SP",
+      selector: (row) => row.sale_price.toFixed(2),
+      sortable: true,
+      width: "100px",
+      center: true,
+      style: {
+        paddingRight: "32px",
+        paddingLeft: "0px",
+      },
+    },
+    {
+      name: "Qty",
+      selector: (row) =>
+        row.quantity === "0" || row.quantity === 0 ? (
+          <span className="text-danger">Out Of Stock</span>
+        ) : (
+          row.quantity
+        ),
+      sortable: true,
+      width: "100px",
+      center: true,
+      style: {
+        paddingRight: "32px",
+        paddingLeft: "0px",
+      },
+    },
+    {
+      name: "Status",
+      selector: (row) => (
+        <span
+          className={
+            row.product_status === "pending"
+              ? "badge bg-warning"
+              : row.product_status === "approved"
+              ? "badge bg-success"
+              : // ? "badge bg-info"
+              row.product_status === "draft"
+              ? "badge bg-secondary"
+              : "badge bg-secondary"
+          }
+        >
+          {row.product_status === "pending"
+            ? "Pending"
+            : row.product_status === "approved"
+            ? "Approved"
+            : // : row.product_status === ""
+            // ? "Status"
+            row.product_status === "draft"
+            ? "Draft"
+            : "Draft"}
+        </span>
+      ),
+      sortable: true,
+      width: "115px",
+      // center: true,
+    },
+    {
+      name: "Change Status",
+      selector: (row) => (
+        <Form.Select
+          aria-label="Search by delivery"
+          size="sm"
+          className="w-100"
+          onChange={(e) => onProductStatusChange(e, row.id, row.product_id)}
+          value={row.product_status}
+          disabled={condition === true ? true : false}
+        >
+          {/* <option value={""}>Status</option> */}
+          {(productstatus.productstatus || []).map((data, i) => {
+            return (
+              <option value={data} key={i}>
+                {" "}
+                {data}
+              </option>
+            );
+          })}
+        </Form.Select>
+      ),
+      sortable: true,
+    },
+    {
+      name: "Variety",
+      selector: (row) => (
+        <Button
+          size="sm"
+          onClick={handlevarietyShow.bind(this, row.product_id, row.id)}
+        >
+          Add Variety
+        </Button>
+      ),
+      sortable: true,
+    },
+    {
+      name: "Action",
+      width: "110px",
+      style: {
+        paddingRight: "12px",
+        paddingLeft: "0px",
+      },
+      center: true,
+      selector: (row) => (
+        <div className={"actioncolimn"}>
+          <div className="feature_product_dropdown_box">
+            <DropdownButton id="dropdown-basic-button" title="Dropdown button">
+              <Dropdown.Item value="">Select</Dropdown.Item>
+              <Dropdown.Item
+                value="special_offer"
+                onClick={(e) =>
+                  OnProductOfferClick(e, row.product_id, row.product_title_name)
+                }
+              >
+                Special Offer
+              </Dropdown.Item>
+              <Dropdown.Item
+                value="featured_offer"
+                onClick={(e) =>
+                  OnProductOfferClick(e, row.product_id, row.product_title_name)
+                }
+              >
+                Featured Offer
+              </Dropdown.Item>
+              <Dropdown.Item
+                value="promotional"
+                onClick={(e) =>
+                  OnProductOfferClick(e, row.product_id, row.product_title_name)
+                }
+              >
+                Promotional
+              </Dropdown.Item>
+            </DropdownButton>
+            {/* <Form.Select
+              aria-label="Search by delivery"
+              size="sm"
+              className="w-100 feature_product_select"
+              onChange={(e) =>
+                OnProductOfferClick(e, row.product_id, row.product_title_name)
+              }
+            >
+              <option value="">Select</option>
+              <option value="special_offer">Special Offer</option>
+              <option value="featured_offer">Featured Offer </option>
+              <option value="promotional">Promotional </option>
+            </Form.Select> */}
+
+            {/* <FaEllipsisV className="feature_product_ellipsis"/> */}
+          </div>
+
+          <BiEdit
+            className=" p-0 m-0  editiconn text-secondary"
+            onClick={handleShow.bind(this, row.product_id)}
+          />
+          <BsTrash
+            className=" p-0 m-0 editiconn text-danger"
+            onClick={handleAlert.bind(this, [
+              row.id,
+              row.product_id,
+              row.is_delete,
+            ])}
+          />
+        </div>
+      ),
+    },
+  ];
+  // END DATATABLE DATA
   return (
     <div className="App productlist_maindiv">
       <h2>Products</h2>
@@ -1820,7 +1880,7 @@ function Product() {
 
           <div className="col-md-2 col-sm-6  mt-2 aos_input">
             <MainButton
-              onClick={submitHandler}
+              onClick={onProductSearchClick}
               btntext={"Search"}
               btnclass={"button main_button w-100"}
             />
@@ -2761,7 +2821,7 @@ function Product() {
                                                 type="date"
                                                 sm="9"
                                                 required
-                                                min={moment().format(
+                                                max={moment().format(
                                                   "YYYY-MM-DD"
                                                 )}
                                                 // className={
@@ -2794,9 +2854,7 @@ function Product() {
                                                 }
                                                 min={moment(
                                                   productvariantarray.manufacturing_date
-                                                )
-                                                  .add(1, "day")
-                                                  .format("YYYY-MM-DD")}
+                                                ).format("YYYY-MM-DD")}
                                                 onChange={(e) =>
                                                   handleVarietyChange(e)
                                                 }
@@ -3664,7 +3722,7 @@ function Product() {
                               <Form.Control
                                 type="date"
                                 sm="9"
-                                min={moment().format("YYYY-MM-DD")}
+                                max={moment().format("YYYY-MM-DD")}
                                 onChange={(e) => onVariantChange(e)}
                                 name={"manufacturing_date"}
                                 value={moment(
@@ -3694,9 +3752,9 @@ function Product() {
                               <Form.Control
                                 type="date"
                                 sm="9"
-                                min={moment(variantarray.manufacturing_date)
-                                  .add(1, "day")
-                                  .format("YYYY-MM-DD")}
+                                min={moment(
+                                  variantarray.manufacturing_date
+                                ).format("YYYY-MM-DD")}
                                 disabled={
                                   variantarray.manufacturing_date ? false : true
                                 }
@@ -3822,9 +3880,6 @@ function Product() {
                       </tr>
                     </div>
 
-                    <p className="mt-2   text-center fs-6" type="invalid">
-                      Image Size should be (height-156px * width-136px)
-                    </p>
                     <div className="col-12">
                       <Table bordered className="align-middle my-2">
                         <thead className="align-middle">
@@ -3980,90 +4035,108 @@ function Product() {
                                     </tr>
                                     <Collapse in={open}>
                                       {newImageUrls ? (
-                                        <tr
-                                          className="img_preview_boxx"
-                                          id={"variantimgbox" + variantdata.id}
-                                        >
-                                          <td className="" colSpan={"12"}>
-                                            <div className="image_box">
-                                              {newImageUrls.map((imgg, i) => {
-                                                return `${variantdata.id}` ===
-                                                  imgg.product_verient_id ? (
-                                                  <div className="imgprivew_box">
-                                                    {imgg.image_position ===
-                                                    "cover" ? (
-                                                      <span className="cover_img">
-                                                        Cover
+                                        <>
+                                          <tr
+                                            className="img_preview_boxx"
+                                            id={
+                                              "variantimgbox" + variantdata.id
+                                            }
+                                          >
+                                            <td className="" colSpan={"12"}>
+                                              <div className="image_box">
+                                                {newImageUrls.map((imgg, i) => {
+                                                  return `${variantdata.id}` ===
+                                                    imgg.product_verient_id ? (
+                                                    <div className="imgprivew_box">
+                                                      {imgg.image_position ===
+                                                      "cover" ? (
+                                                        <span className="cover_img">
+                                                          Cover
+                                                        </span>
+                                                      ) : null}
+                                                      <img
+                                                        src={
+                                                          imgg.product_image_path
+                                                        }
+                                                        key={i}
+                                                        alt="apna_organic"
+                                                        height={120}
+                                                      />
+                                                      <span
+                                                        className="cover_icon"
+                                                        onClick={(id) =>
+                                                          onImgCoverEditClick(
+                                                            imgg.product_image_id,
+                                                            imgg.product_id,
+                                                            imgg.product_verient_id
+                                                          )
+                                                        }
+                                                      >
+                                                        Set Cover
                                                       </span>
-                                                    ) : null}
-                                                    <img
-                                                      src={
-                                                        imgg.product_image_path
-                                                      }
-                                                      key={i}
-                                                      alt="apna_organic"
-                                                      height={120}
-                                                    />
-                                                    <span
-                                                      className="cover_icon"
-                                                      onClick={(id) =>
-                                                        onImgCoverEditClick(
-                                                          imgg.product_image_id,
-                                                          imgg.product_id,
-                                                          imgg.product_verient_id
-                                                        )
-                                                      }
-                                                    >
-                                                      Set Cover
-                                                    </span>
-                                                    <span
-                                                      className="cross_icon"
-                                                      onClick={() =>
-                                                        onImgRemove(
-                                                          imgg.product_image_id,
-                                                          imgg.product_image_name,
-                                                          imgg.vendor_id,
-                                                          imgg.product_id,
-                                                          imgg.product_verient_id
-                                                        )
-                                                      }
-                                                    >
-                                                      &times;
-                                                    </span>
-                                                  </div>
-                                                ) : null;
-                                              })}
-                                              <div className="imgprivew_box">
-                                                <img
-                                                  src={
-                                                    "https://i2.wp.com/asvs.in/wp-content/uploads/2017/08/dummy.png?fit=399%2C275&ssl=1"
-                                                  }
-                                                  key={i}
-                                                  alt="apna_organic"
-                                                  height={120}
-                                                />
-                                                <Form.Control
-                                                  multiple
-                                                  type="file"
-                                                  sm="9"
-                                                  className={"img_add_button"}
-                                                  onChange={(e) =>
-                                                    imguploadchange(
-                                                      e,
-                                                      variantdata.product_id,
-                                                      variantdata.id,
-                                                      variantdata.vendor_id
-                                                    )
-                                                  }
-                                                  name={"img_64"}
-                                                />
-                                                <span className="plus_icon">
-                                                  +
-                                                </span>
+                                                      <span
+                                                        className="cross_icon"
+                                                        onClick={() =>
+                                                          onImgRemove(
+                                                            imgg.product_image_id,
+                                                            imgg.product_image_name,
+                                                            imgg.vendor_id,
+                                                            imgg.product_id,
+                                                            imgg.product_verient_id
+                                                          )
+                                                        }
+                                                      >
+                                                        &times;
+                                                      </span>
+                                                    </div>
+                                                  ) : null;
+                                                })}
+                                                <div className="imgprivew_box">
+                                                  <img
+                                                    src={
+                                                      "https://i2.wp.com/asvs.in/wp-content/uploads/2017/08/dummy.png?fit=399%2C275&ssl=1"
+                                                    }
+                                                    key={i}
+                                                    alt="apna_organic"
+                                                    height={120}
+                                                  />
+                                                  <Form.Control
+                                                    multiple
+                                                    type="file"
+                                                    sm="9"
+                                                    className={"img_add_button"}
+                                                    onChange={(e) =>
+                                                      imguploadchange(
+                                                        e,
+                                                        variantdata.product_id,
+                                                        variantdata.id,
+                                                        variantdata.vendor_id
+                                                      )
+                                                    }
+                                                    name={"img_64"}
+                                                  />
+                                                  <span className="plus_icon">
+                                                    +
+                                                  </span>
+                                                </div>
                                               </div>
-                                            </div>
-                                          </td>
-                                        </tr>
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td colSpan={"12"}>
+                                              {customvalidated ===
+                                              "imgformat" ? (
+                                                <span
+                                                  className="mt-2   text-center fs-6 text-danger"
+                                                  type="invalid"
+                                                >
+                                                  Image Format should be in jpg,
+                                                  jpeg or png
+                                                </span>
+                                              ) : null}
+                                            </td>
+                                          </tr>
+                                        </>
                                       ) : null}
                                     </Collapse>
                                   </>
@@ -4255,7 +4328,9 @@ function Product() {
                             value={featuredata.end_date}
                             name={"end_date"}
                             required
-                            min={featuredata.start_date}
+                            min={moment(featuredata.start_date).format(
+                              "YYYY-MM-DD"
+                            )}
                           />
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill end date
@@ -4275,7 +4350,7 @@ function Product() {
                 btnclass={"button main_outline_button "}
               />
               <Iconbutton
-                onClick={OnSaveProduct}
+                onClick={OnOfferProductAdd}
                 btntext={"Added"}
                 btnclass={"button main_button "}
               />
