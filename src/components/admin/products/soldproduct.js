@@ -323,6 +323,7 @@ const Soldproduct = () => {
   ];
 
   const OnQuntityChange = (e) => {
+
     setProductData({ ...productData, [e.target.name]: e.target.value });
   };
 
@@ -351,7 +352,7 @@ const Soldproduct = () => {
       {/* search bar */}
       <div className="card mt-3 p-3">
         <div className="row pb-3">
-          <div className="col-md-3 col-sm-6 aos_input">
+          <div className="col-md-3 col-sm-6 aos_input mb-2">
             <input
               type={"text"}
               placeholder={"Search by product name"}
@@ -364,7 +365,7 @@ const Soldproduct = () => {
               <small className="text-danger">please fill the feild</small>
             ) : null}
           </div>
-          <div className="col-md-2 col-sm-6 aos_input">
+          <div className="col-md-3 col-sm-6 aos_input mb-2">
             <Form.Select
               aria-label="Search by status"
               className="adminselectbox"
@@ -384,7 +385,7 @@ const Soldproduct = () => {
               })}
             </Form.Select>
           </div>
-          <div className="col-md-2 col-sm-6 aos_input">
+          <div className="col-md-3 col-sm-6 aos_input mb-2">
             <Form.Select
               aria-label="Search by status"
               className="adminselectbox"
@@ -404,7 +405,7 @@ const Soldproduct = () => {
               })}
             </Form.Select>
           </div>
-          <div className="col-md-2 col-sm-6 aos_input">
+          <div className="col-md-3 col-sm-6 aos_input mb-2">
             <Form.Select
               aria-label="Search by brand"
               className="adminselectbox"
@@ -424,14 +425,14 @@ const Soldproduct = () => {
               })}
             </Form.Select>
           </div>
-          <div className="col-md-3 col-sm-6 aos_input ">
+          <div className="col-md-3 col-sm-6 aos_input mb-2 ">
             <MainButton
               btntext={"Search"}
               btnclass={"button main_button w-100"}
               onClick={onSearchClick}
             />
           </div>
-          <div className="col-md-3 col-sm-6 aos_input mt-2">
+          <div className="col-md-3 col-sm-6 aos_input mb-2 ">
             <MainButton
               btntext={"Reset"}
               btnclass={"button main_button w-100"}
@@ -451,7 +452,7 @@ const Soldproduct = () => {
             <div className="row p-3 m-0">
               <div className="col-md-6">
                 <Form.Group
-                  className="mb-3 aos_input"
+                  className="mb-3 aos_input mb-2"
                   controlId="validationCustom01"
                 >
                   <Form.Label>Product Id</Form.Label>
@@ -460,19 +461,23 @@ const Soldproduct = () => {
                     type="text"
                     placeholder="Add Title"
                     name={"id"}
+                    disabled
                   />
                 </Form.Group>
               </div>
 
-              <div className="col-md-3 col-sm-6 aos_input">
-                <label>Quantity</label>
+              <div className="col-md-3 col-sm-6 aos_input mb-2">
+                <label for="quantity">Quantity</label>
                 <input
+                  id="quantity"
                   type={"number"}
                   placeholder={"Select quantity"}
                   onChange={OnQuntityChange}
                   name="quantity"
                   defaultValue={productData.quantity}
                   className={"adminsideinput"}
+                  max={10000}
+                  min={0}
                 />
               </div>
             </div>
@@ -485,6 +490,7 @@ const Soldproduct = () => {
               Cancel
             </button>
             <button
+               type="submit"
               className="button main_outline_button"
               onClick={() => OnProductQutUpdate()}
             >

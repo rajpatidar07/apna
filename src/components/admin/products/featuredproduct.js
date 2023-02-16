@@ -117,23 +117,29 @@ let token = localStorage.getItem("token");
   };
   /*<---Render feature data function--->*/
   useEffect(() => {
+    console.log(searchdata.product_title_name,);
     try {
       axios
         .post(`${process.env.REACT_APP_BASEURL_0}/fetured_product_search`, {
-          search: searchdata.product_title_name,
-          product_id: "",
-          fetured_type: "featured_offer",
-          start_date: "",
-          end_date: "",
-          category: [`${searchdata.category}`],
-          brand: [`${searchdata.brand}`],
-          shop: [`${searchdata.vendor}`],
-          status: searchdata.status,
+          // search: searchdata.product_title_name,
+          // product_id: "",
+          // fetured_type: "featured_offer",
+          // start_date: "",
+          // end_date: "",
+          // category: [`${searchdata.category}`],
+          // brand: [`${searchdata.brand}`],
+          // shop: [`${searchdata.vendor}`],
+          // status: searchdata.status,
+          product_title_name:[`${searchdata.product_title_name}`],
+          vendor_id:[`${searchdata.vendor}`],
+          status:searchdata.status,
+          category:[`${searchdata.category}`]
         },
           {
             headers: { admin_token: `${token}` },
           })
         .then((response) => {
+          console.log(response);
         setFeatureProductData(response.data);
           setapicall(false);
         });
@@ -205,7 +211,6 @@ let token = localStorage.getItem("token");
       name: "Category",
       selector: (row) => row.category,
       sortable: true,
-      width: "90px",
     },
     {
       name: "Vendor",
@@ -347,6 +352,8 @@ const submitHandler = () => {
 /*<---Onchange function of search --->*/
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
+    console.log(searchdata);
+    setsearcherror(false)
   };
 /*<---Function to reset Search--->*/
   const OnReset = () => {
@@ -358,7 +365,7 @@ const submitHandler = () => {
   /*<---Onlick Function to Search--->*/
   const Search = () => {
     if (
-      searchdata.product_title_name &&
+      searchdata.product_title_name === "" &&
       searchdata.status === "" && 
       searchdata.vendor === "" &&
       searchdata.brand === "" &&
@@ -376,7 +383,7 @@ const submitHandler = () => {
         <h2>Featured Products</h2>
         <div className="card mt-3 p-3">
         <div className="row pb-3">
-        <div className="col-md-3 col-sm-6 aos_input">
+        <div className="col-md-3 col-sm-6 aos_input mb-2">
             <input
               type={"text"}
               placeholder={"Search by product name"}
@@ -389,11 +396,11 @@ const submitHandler = () => {
               <small className="text-danger">please fill the feild</small>
             ) : null}
           </div>
-        {/* <div className="col-md-3 col-sm-6 aos_input">
+        {/* <div className="col-md-3 col-sm-6 aos_input mb-2">
   <input type={"text"}  onChange={OnSearchChange} name='product_title_name'
   value={searchdata.status} placeholder={"Search by status"} className={'adminsideinput'}/>
 </div> */}
-  <div className="col-md-2 col-sm-6 aos_input">
+  <div className="col-md-3 col-sm-6 aos_input mb-2">
             <Form.Select
               aria-label="Search by status"
               className="adminselectbox"
@@ -413,7 +420,7 @@ const submitHandler = () => {
               })}
             </Form.Select>
           </div>
-          <div className="col-md-2 col-sm-6 aos_input">
+          <div className="col-md-3 col-sm-6 aos_input mb-2">
             <Form.Select
               aria-label="Search by status"
               className="adminselectbox"
@@ -433,7 +440,7 @@ const submitHandler = () => {
               })}
             </Form.Select>
           </div>
-          <div className="col-md-2 col-sm-6 aos_input">
+          <div className="col-md-3 col-sm-6 aos_input mb-2">
             <Form.Select
               aria-label="Search by brand"
               className="adminselectbox"
@@ -468,10 +475,10 @@ const submitHandler = () => {
     </Form.Select>
   </div>
  
-    <div className="col-md-3 col-sm-6 aos_input mt-2">
+    <div className="col-md-3 col-sm-6 aos_input mb-2 ">
 <MainButton btntext={"Search"} btnclass={'button main_button w-100'} onClick={Search} />
   </div>
-  <div className="col-md-3 col-sm-6 aos_input mt-2">
+  <div className="col-md-3 col-sm-6 aos_input mb-2 ">
      <MainButton
         btntext={"Reset"}
         btnclass={"button main_button w-100"}

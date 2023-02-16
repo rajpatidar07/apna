@@ -18,11 +18,13 @@ const InvoiceList = () => {
   const [Alert, setAlert] = useState(false);
   const [invoice, setInvoice] = useState([]);
   let [searcherror, setsearcherror] = useState(false);
+  let [apicall,setapicall] = useState(false)
   const [SearchInvo, setSearchInvo] = useState({
     search: "",
     from_date: "",
     to_date: "",
   });
+  let token = localStorage.getItem("token");
 
   const InvoiceCheck = (id) => {
     localStorage.setItem("invoiceid", id[1]);
@@ -37,10 +39,13 @@ const InvoiceList = () => {
     function getInvoiceList() {
       try {
         axios
-          .get(`${process.env.REACT_APP_BASEURL}/invoice_list`)
+          .get(`${process.env.REACT_APP_BASEURL}/invoice_list`
+          )
           .then((response) => {
             let data = response.data;
             setInvoice(data);
+            setapicall(false)
+            console.log(response);
           });
       } catch (err) {
         console.log(err);
@@ -48,7 +53,7 @@ const InvoiceList = () => {
     }
 
     getInvoiceList();
-  }, []);
+  }, [apicall]);
 
   const onValueChange = (e) => {
     setSearchInvo({ ...SearchInvo, [e.target.name]: e.target.value });
@@ -60,6 +65,7 @@ const InvoiceList = () => {
       ...SearchInvo,
       [e.target.name]: mdate,
     });
+    setsearcherror(false)
   };
   const SearchInvoices = () => {
     if(
@@ -70,10 +76,12 @@ const InvoiceList = () => {
       else
      {
       axios
-        .post(`${process.env.REACT_APP_BASEURL}/invoice_search`, {
+        .post(`${process.env.REACT_APP_BASEURL_0}/invoice_search`, {
           search: `${SearchInvo.search}`,
           from_date: `${SearchInvo.from_date}`,
           to_date: `${SearchInvo.to_date}`,
+        }, {
+          headers: { admin_token: `${token}` },
         })
         .then((response) => {
           setInvoice(response.data);
@@ -235,6 +243,15 @@ const InvoiceList = () => {
   }, [filterText, resetPaginationToggle]);
   //
 
+  /*<---Function to reset Search--->*/
+  const OnReset = () => {
+    setSearchInvo({ search: "",
+    from_date: "",
+    to_date: ""});
+    setapicall(true);
+    setsearcherror(false)
+
+  };
   let date = moment();
   let currentDate = date.format("YYYY-MM-DD");
   return (
@@ -244,12 +261,12 @@ const InvoiceList = () => {
       {/* search bar */}
       <div className="card mt-3 p-3 ">
         <div className="row pb-3">
-          <div className="col-md-3 col-sm-6 aos_input ">
+          <div className="col-md-3 col-sm-6 aos_input mb-2 ">
             <input
               className="adminsideinput"
               type={"text"}
               placeholder="Search by Vendor_Id"
-              value={SearchInvo.search}
+              value={Number(SearchInvo.search)}
               name={"search"}
               onChange={(e) => onValueChange(e)}
             />
@@ -257,7 +274,7 @@ const InvoiceList = () => {
               <small className="text-danger">please fill the feild</small>
             ) : null}
           </div>
-          <div className="col-md-3 col-sm-6 aos_input">
+          <div className="col-md-3 col-sm-6 aos_input mb-2">
             <input
               type={"date"}
               max={currentDate}
@@ -268,7 +285,7 @@ const InvoiceList = () => {
               className={"adminsideinput"}
             />
           </div>
-          <div className="col-md-3 col-sm-6 aos_input">
+          <div className="col-md-3 col-sm-6 aos_input mb-2">
             <input
               type={"date"}
               max={currentDate}
@@ -279,14 +296,24 @@ const InvoiceList = () => {
               className={"adminsideinput"}
             />
           </div>
-          <div className="col-md-3 col-sm-6 aos_input">
-            <button
-              className="button main_button w-100"
+          <div className="col-md-3 col-sm-6 aos_input mb-2">
+            <MainButton
+              btntext={"Search"}
+              btnclass={"button main_button w-100"}
+              type="search"          
               onClick={() => SearchInvoices()}
             >
               Search
-            </button>
+            </MainButton>
           </div>
+          <div className="col-md-3 col-sm-6 aos_input mb-2 mb-2 ">
+            <MainButton
+                btntext={"Reset"}
+                btnclass={"button main_button w-100"}
+                type="reset"
+                onClick={OnReset}
+              />
+    </div>
         </div>
 
         {/* upload */}
