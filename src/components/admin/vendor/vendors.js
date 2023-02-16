@@ -247,20 +247,22 @@ const VendorsList = () => {
     {
       name: "Change Status",
       selector: (row) => (
-        loading_status === true ?    
-        <select
-       size="sm"
-       className="w-100"
-     > 
-        <option>
-        &nbsp;&nbsp;&nbsp; loading...
-         <span
-           className="spinner-border spinner-border-sm"
-           role="status"
-           aria-hidden="true"
-         ></span>
-         </option>  
-     </select>:
+    //     loading_status === true ?    
+    //    <Form.Group className="" controlId="formBasicEmail">
+    //       <Form.Select
+    //    size="sm"
+    //    className="w-100"
+    //  > 
+    //     <option>
+    //     &nbsp;&nbsp;&nbsp; loading...
+    //      <span
+    //        className="spinner-border spinner-border-sm"
+    //        role="status"
+    //        aria-hidden="true"
+    //      ></span>
+    //      </option>  
+    //  </Form.Select>
+    //     </Form.Group>:
         <Form.Group className="" controlId="formBasicEmail">
           <Form.Select
             size="sm"

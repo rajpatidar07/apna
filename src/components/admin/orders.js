@@ -227,20 +227,21 @@ function Orders() {
     {
       name: "Change Status",
       selector: (row) => (
-        loading === true ?    
-         <select
-        size="sm"
-        className="w-100"
-      > 
-         <option>
-         &nbsp;&nbsp;&nbsp; loading...
-          <span
-            className="spinner-border spinner-border-sm"
-            role="status"
-            aria-hidden="true"
-          ></span>
-          </option>  
-      </select>:
+      //   loading === true ?    
+      //    <Form.Select
+      //   size="sm"
+      //   className="w-100"
+      //   onChange={(e) => onStatusChange(e, row.order_id,row.user_id)}
+      // > 
+      //    <option>
+      //    &nbsp;&nbsp;&nbsp; loading...
+      //     <span
+      //       className="spinner-border spinner-border-sm"
+      //       role="status"
+      //       aria-hidden="true"
+      //     ></span>
+      //     </option>  
+      // </Form.Select>:
        <Form.Select
           aria-label="Search by delivery"
           size="sm"
@@ -249,9 +250,6 @@ function Orders() {
           name="status"
           // value={row.product_status}
         > 
-            <option selected={row.product_status === "" ? true : false} value="">
-            Select
-          </option>
           <option
             value="placed"
             selected={row.status === "placed" ? true : false}

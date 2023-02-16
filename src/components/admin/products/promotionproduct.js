@@ -30,6 +30,7 @@ const Promotionproduct = () => {
     status :"",
     category:"", 
     brand:"",
+    product_title_name:"",
     vendor:""
   });
   const [filtervategory, setfiltercategory] = useState([]);
@@ -309,6 +310,7 @@ const Promotionproduct = () => {
           category: [`${searchdata.category}`],
           brand: [`${searchdata.brand}`],
           shop: [`${searchdata.vendor}`],
+          product_title_name:[`${searchdata.product_title_name}`]
         },
         {
           headers: { admin_token: `${token}` },
@@ -355,7 +357,7 @@ const Promotionproduct = () => {
   };
   /*<---Function to reset Search--->*/
   const OnReset = () => {
-    setsearchData({status : "", category: "", brand: "", vendor: ""});
+    setsearchData({product_title_name :"" ,status : "", category: "", brand: "", vendor: ""});
     setapicall(true);
     setsearcherror(false)
   };
@@ -363,6 +365,7 @@ const Promotionproduct = () => {
   /*<---Onlick Function to Search--->*/
   const Search = () => {
     if (
+      searchdata.product_title_name ==="" &&
       searchdata.vendor === "" &&
       searchdata.brand === "" &&
       searchdata.category === ""
@@ -419,16 +422,25 @@ const Promotionproduct = () => {
             />
           </div> */}
         {/* </div> */}
-        <div className="card mt-3 p-3">
-        <div className="row pb-3">
-        <div className="col-md-3 col-sm-6 aos_input">
-  <input type={"text"}  onChange={OnSearchChange} name='product_title_name'
-        value={searchdata.status} placeholder={"Search by status"} className={'adminsideinput'}/>
-        {searcherror === true ?<small className="text-danger">This feild is required</small>:null}
-  </div>
-  <div className="col-md-2 col-sm-6 aos_input">
+    <div className="card mt-3 p-3">
+      <div className="row pb-3">
+        <div className="col-md-3 col-sm-6 aos_input mb-2">
+            <input
+              type={"text"}
+              placeholder={"Search by product name"}
+              onChange={OnSearchChange}
+              name="product_title_name"
+              value={searchdata.product_title_name}
+              className={"adminsideinput"}
+            />{" "}
+            {searcherror === true ? (
+              <small className="text-danger">please fill the feild</small>
+            ) : null}
+        </div>
+        
+         <div className="col-md-3 col-sm-6 aos_input mb-2">
             <Form.Select
-              aria-label="Search by status"
+              aria-label="Search by category"
               className="adminselectbox"
               placeholder="Search by category"
               onChange={OnSearchChange}
@@ -446,7 +458,7 @@ const Promotionproduct = () => {
               })}
             </Form.Select>
           </div>
-          <div className="col-md-2 col-sm-6 aos_input">
+          <div className="col-md-3 col-sm-6 aos_input mb-2">
             <Form.Select
               aria-label="Search by status"
               className="adminselectbox"
@@ -466,7 +478,7 @@ const Promotionproduct = () => {
               })}
             </Form.Select>
           </div>
-          <div className="col-md-2 col-sm-6 aos_input">
+          <div className="col-md-3 col-sm-6 aos_input mb-2">
             <Form.Select
               aria-label="Search by brand"
               className="adminselectbox"
@@ -486,20 +498,33 @@ const Promotionproduct = () => {
               })}
             </Form.Select>
           </div>
- 
-    <div className="col-md-3 col-sm-6 aos_input">
-<MainButton btntext={"Search"} btnclass={'button main_button w-100'} onClick={Search} />
-  </div>
-  <div className="col-md-3 col-sm-6 aos_input mt-2">
-     <MainButton
-        btntext={"Reset"}
-        btnclass={"button main_button w-100"}
-        type="reset"
-         onClick={OnReset}
-       />
+          <div className="col-md-3 col-sm-6 aos_input mb-2">
+            <Form.Select
+              aria-label="Search by delivery"
+              className="adminselectbox"
+              onChange={OnSearchChange}
+              name="status"
+              value={String(searchdata.status)}
+            >
+              <option value="">status</option>
+              <option value="Active">Active</option>
+              <option value="expired">Expired</option>
+              <option value="inactive">In active</option>
+            </Form.Select>
+        </div>
+         <div className="col-md-3 col-sm-6 aos_input mb-2 ">
+            <MainButton btntext={"Search"} btnclass={'button main_button w-100'} onClick={Search} />
+          </div>
+          <div className="col-md-3 col-sm-6 aos_input mb-2 ">
+            <MainButton
+              btntext={"Reset"}
+              btnclass={"button main_button w-100"}
+              type="reset"
+              onClick={OnReset}
+            />
+          </div>
+      </div>
     </div>
-        </div>
-        </div>
 
 
         {/* upload */}
