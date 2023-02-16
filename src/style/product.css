@@ -120,6 +120,11 @@
 .actioncolimn .feature_product_dropdown_box {
   position: relative;
 }
+ .yYwtp div:first-child {
+  white-space: nowrap;
+  overflow: unset !important;
+  text-overflow: ellipsis;
+}
 
 .actioncolimn .feature_product_dropdown_box .feature_product_select {
   position: absolute;
