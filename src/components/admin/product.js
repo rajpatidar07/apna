@@ -8,7 +8,7 @@ import Modal from "react-bootstrap/Modal";
 import Iconbutton from "./common/iconbutton";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
-import { MdOutlineEdit } from "react-icons/md";
+import { MdOutlineEdit, MdArrowDropDownCircle } from "react-icons/md";
 import { RiImageAddLine } from "react-icons/ri";
 import InputGroup from "react-bootstrap/InputGroup";
 import VariationJson from "./json/variation";
@@ -1719,7 +1719,7 @@ function Product() {
       selector: (row) => (
         <div className={"actioncolimn"}>
           <div className="feature_product_dropdown_box">
-            <DropdownButton id="dropdown-basic-button" title="Dropdown button">
+            <DropdownButton id="dropdown-basic-button" title="">
               <Dropdown.Item value="">Select</Dropdown.Item>
               <Dropdown.Item
                 value="special_offer"

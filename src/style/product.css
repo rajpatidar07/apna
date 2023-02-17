@@ -120,7 +120,7 @@
 .actioncolimn .feature_product_dropdown_box {
   position: relative;
 }
- .yYwtp div:first-child {
+.yYwtp div:first-child {
   white-space: nowrap;
   overflow: unset !important;
   text-overflow: ellipsis;
@@ -258,4 +258,10 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+.feature_product_dropdown_box .dropdown button {
+  color: #000 !important;
+  font-size: 30px !important;
+  background: #fff !important;
+  border: none;
 }
