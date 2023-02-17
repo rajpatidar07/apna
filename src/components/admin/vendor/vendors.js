@@ -23,7 +23,6 @@ const VendorsList = () => {
   const formRef = useRef();
   const [newImageUrls, setnewImageUrls] = useState([]);
   const [customValidation, setCustomValidation] = useState(false);
-  const [loading_status, setLoading_status] = useState(false);
   const [show, setShow] = useState("");
   const [docsshow, setDocsShow] = useState(false);
   const [Alert, setAlert] = useState(false);
@@ -38,7 +37,7 @@ const VendorsList = () => {
   const [ErrorAddAlert, setErrorAddAlert] = useState(false);
   const [UpdateAlert, setUpdateAlert] = useState(false);
   const [ErrorUpdateAlert, setErrorUpdateAlert] = useState(false);
-  // let [condition, setCondition] = useState(false);
+  const [docerror, setDocerror] = useState("");
   const [fileName, setFileName] = useState("");
   const vendorObject = {
     owner_name: "",
@@ -480,7 +479,7 @@ const VendorsList = () => {
 
         const [first, ...rest] = encoded.base64.split(",");
         const [nameimg, ext] = encoded.name.split(".");
-
+       console.log("------" + ext)
         const vendorimg = rest.join("-");
         let imar = {
           vendor_id: `${vendorID}`,
@@ -489,7 +488,15 @@ const VendorsList = () => {
           type_of_file: `${ext}`,
           img_64: vendorimg,
         };
-        ImgObj.push(imar);
+        if(
+          ext === "jpeg" ||
+          ext === "jpg" ||
+          ext === "png" ||
+          ext === "pdf" ||
+          ext === ""){
+          ImgObj.push(imar);
+        }else{   
+          setDocerror("This image / document is not accetable")}
       }
 
       if (newImageUrls.length <= 5) {
@@ -500,6 +507,7 @@ const VendorsList = () => {
           )
           .then((response) => {
             onImgView(vendorID);
+            setDocerror("")
           })
           .catch(function (error) {
             console.log(error);
@@ -1204,7 +1212,7 @@ const VendorsList = () => {
                     ) : null}
                   </InputGroup>
 
-                  {console.log("document array--" + Docnamearray)}
+                  {/* {console.log("document array--" + Docnamearray)} */}
                   {Docnamearray === undefined ||
                   Docnamearray === null ||
                   Docnamearray === "" ||
@@ -1450,15 +1458,18 @@ const VendorsList = () => {
                   className="mb-3 aos_input"
                   controlId="validationCustom09"
                 >
-                  <Form.Label>Documents Upload </Form.Label>
+                  <Form.Label>Documents Upload
+                  (In .jpg, .jpeg, .png , .pdf format) </Form.Label>
                   <Form.Control
                     multiple
                     type="file"
                     placeholder="multiple document upload"
                     name={"img_64"}
+                    accept="image/png,image/jpeg,image/jpg,document/pdf"
                     onChange={(e) => imguploadchange(e)}
                   />
                 </Form.Group>
+                    <small className="text-danger">{docerror}</small>
               </div>
             </div>
             <Table>

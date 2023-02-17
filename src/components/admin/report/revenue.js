@@ -640,7 +640,7 @@ const RevenueReport = () => {
           .format("YYYY-MM-DD")
       );
       // setPrevDate(moment(sixMonth).subtract(6, 'month').startOf('month').format('YYYY-MM-DD'))
-      // console.log("previou 6 month-"+prevDate)
+      // console.log("prevziou 6 month-"+prevDate)
       setpreviousStateChange(5);
     }
 
