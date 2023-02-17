@@ -33,14 +33,17 @@ const Deletedproduct = () => {
   let token = localStorage.getItem("token");
   const closeRestoreAlert = () => {
     axios
-      .put(`${process.env.REACT_APP_BASEURL_0}/products_delete_remove`, {
-        varient_id: id,
-        product_id: productid,
-        is_delete: "1",
-      },
-      {
-        headers: { admin_token: `${token}` },
-      })
+      .put(
+        `${process.env.REACT_APP_BASEURL_0}/products_delete_remove`,
+        {
+          varient_id: id,
+          product_id: productid,
+          is_delete: "1",
+        },
+        {
+          headers: { admin_token: `${token}` },
+        }
+      )
       .then((response) => {
         let data = response.data;
         setapicall(true);
@@ -52,7 +55,7 @@ const Deletedproduct = () => {
   const getCategorydatafilter = () => {
     try {
       axios
-        .get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
+        .get(`${process.env.REACT_APP_BASEURL_0}/category?category=all`)
         .then((response) => {
           let cgory = response.data;
           setfiltercategory(cgory);
@@ -64,7 +67,7 @@ const Deletedproduct = () => {
     try {
       axios
         .post(
-          `${process.env.REACT_APP_BASEURL}/vendors`,
+          `${process.env.REACT_APP_BASEURL_0}/vendors`,
           { vendor_id: "all" },
           {
             headers: { admin_token: `${token}` },
@@ -148,13 +151,6 @@ const Deletedproduct = () => {
 
   const columns = [
     {
-      name: "Id",
-      selector: (row) => <p>{row.id}</p>,
-      sortable: true,
-      width: "80px",
-      center: true,
-    },
-    {
       name: "#",
       width: "150px",
       center: true,
@@ -201,7 +197,8 @@ const Deletedproduct = () => {
       selector: (row) => row.brand,
       sortable: true,
       width: "100px",
-    },{
+    },
+    {
       name: "Mrp",
       selector: (row) => row.mrp.toFixed(2),
       sortable: true,
@@ -345,7 +342,7 @@ const Deletedproduct = () => {
                 return (
                   <option value={data.id} key={i}>
                     {" "}
-                    {data.id}
+                    {data.category_name}
                   </option>
                 );
               })}

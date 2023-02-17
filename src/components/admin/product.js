@@ -14,6 +14,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 import VariationJson from "./json/variation";
 import CategoryJson from "./json/categorytype";
 import Table from "react-bootstrap/Table";
+import Accordion from "react-bootstrap/Accordion";
 import {
   AiOutlinePlus,
   AiOutlineCloudUpload,
@@ -199,7 +200,13 @@ function Product() {
   const OnOfferProductAdd = (e) => {
     e.preventDefault();
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/add_fetured_product`, featuredata)
+      .post(
+        `${process.env.REACT_APP_BASEURL_0}/add_fetured_product`,
+        featuredata,
+        {
+          headers: { admin_token: `${token}` },
+        }
+      )
       .then((response) => {
         if (response.data.message === "Already_Exist") {
           setError(false);
@@ -211,6 +218,7 @@ function Product() {
             start_date: "",
             end_date: "",
           });
+          setError("");
         }
       })
       .catch(function (error) {
@@ -220,17 +228,16 @@ function Product() {
 
   const featureModalClose = (e) => {
     setfeatureShow(false);
+    setError("");
     setfeaturedata({ start_date: "", end_date: "" });
   };
   const featureModalShow = () => setfeatureShow(true);
   const OnProductOfferClick = (e, productid, productname) => {
-    console.log("----------------------OFFER");
     setfeaturedata({
       ...featuredata,
       product_id: `${productid}`,
-      fetured_type: e.target.value,
+      fetured_type: e,
     });
-
     setproductname(productname);
     setfeatureShow(true);
   };
@@ -244,11 +251,17 @@ function Product() {
   const onProductStatusChange = (e, id, productid) => {
     setLoading(true);
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/product_status_update`, {
-        id: `${id}`,
-        product_id: `${productid}`,
-        product_status: e.target.value,
-      })
+      .put(
+        `${process.env.REACT_APP_BASEURL_0}/product_status_update`,
+        {
+          id: `${id}`,
+          product_id: `${productid}`,
+          product_status: e.target.value,
+        },
+        {
+          headers: { admin_token: `${token}` },
+        }
+      )
       .then((response) => {
         setLoading(false);
         setapicall(true);
@@ -264,27 +277,33 @@ function Product() {
   const fetchdata = () => {
     setLoading(true)
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=400`, {
-        product_search: {
-          search: [`${searchdata.product_title_name}`],
-          price_from: "",
-          price_to: "",
-          id: "",
-          sale_price: "",
-          short_by_updated_on: "",
-          product_title_name_asc_desc: "",
-          category: [`${searchdata.category}`],
-          product_status: [`${searchdata.product_status}`],
-          is_delete: ["1"],
-          colors: [],
-          size: [],
-          parent_category: [],
-          product_type: [],
-          // product_title_name: [],
-          brand: [`${searchdata.brand}`],
-          shop: [`${searchdata.vendor}`],
+      .post(
+        `${process.env.REACT_APP_BASEURL_0}/home?page=0&per_page=400`,
+        {
+          product_search: {
+            search: [`${searchdata.product_title_name}`],
+            price_from: "",
+            price_to: "",
+            id: "",
+            sale_price: "",
+            short_by_updated_on: "",
+            product_title_name_asc_desc: "",
+            category: [`${searchdata.category}`],
+            product_status: [`${searchdata.product_status}`],
+            is_delete: ["1"],
+            colors: [],
+            size: [],
+            parent_category: [],
+            product_type: [],
+            // product_title_name: [],
+            brand: [`${searchdata.brand}`],
+            shop: [`${searchdata.vendor}`],
+          },
         },
-      })
+        {
+          headers: { admin_token: `${token}` },
+        }
+      )
       .then((response) => {
         setpdata(response.data);
         setLoading(false);
@@ -335,7 +354,7 @@ function Product() {
       setgrandcCategory("");
     } else {
       axios
-        .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
+        .get(`${process.env.REACT_APP_BASEURL_0}/category?category=${indVal}`)
         .then((response) => {
           if (response.data !== []) {
             let cgory = response.data;
@@ -381,7 +400,7 @@ function Product() {
     try {
       axios
         .post(
-          `${process.env.REACT_APP_BASEURL}/vendors`,
+          `${process.env.REACT_APP_BASEURL_0}/vendors`,
           { vendor_id: "all" },
           {
             headers: { admin_token: `${token}` },
@@ -389,7 +408,6 @@ function Product() {
         )
         .then((response) => {
           let cgory = response.data;
-
           const result = cgory.filter(
             (thing, index, self) =>
               index === self.findIndex((t) => t.shop_name == thing.shop_name)
@@ -407,7 +425,7 @@ function Product() {
   const getCategorydatafilter = () => {
     try {
       axios
-        .get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
+        .get(`${process.env.REACT_APP_BASEURL_0}/category?category=all`)
         .then((response) => {
           let cgory = response.data;
           setfiltercategory(cgory);
@@ -431,9 +449,9 @@ function Product() {
     const getCategorydata = () => {
       try {
         axios
-          .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
+          .get(`${process.env.REACT_APP_BASEURL_0}/category?category=${indVal}`)
           .then((response) => {
-            let cgory = response.data.filter((item) => item.is_active === "1");
+            let cgory = response.data;
 
             if (indVal === 0) {
               setCategory(cgory);
@@ -463,14 +481,14 @@ function Product() {
             for (let i = 0; i < arr.length; i++) {
               axios
                 .get(
-                  `${process.env.REACT_APP_BASEURL}/category_details?id=${arr[i]}`
+                  `${process.env.REACT_APP_BASEURL_0}/category_details?id=${arr[i]}`
                 )
                 .then((response) => {
                   let data = response.data[0];
                   if (i === 0) {
                     axios
                       .get(
-                        `${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`
+                        `${process.env.REACT_APP_BASEURL_0}/category?category=${arr[i]}`
                       )
                       .then((response) => {
                         console.log(
@@ -483,9 +501,12 @@ function Product() {
                   } else if (i === 1) {
                     axios
                       .get(
-                        `${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`
+                        `${process.env.REACT_APP_BASEURL_0}/category?category=${arr[i]}`
                       )
                       .then((response) => {
+                        console.log(
+                          "childcetgorydata---" + JSON.stringify(response.data)
+                        );
                         setchildCategory(response.data);
                       });
                     setCategoryEditparent(data.category_name);
@@ -493,9 +514,12 @@ function Product() {
                   } else if (i === 2) {
                     axios
                       .get(
-                        `${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`
+                        `${process.env.REACT_APP_BASEURL_0}/category?category=${arr[i]}`
                       )
                       .then((response) => {
+                        console.log(
+                          "sgrandcetgorydata---" + JSON.stringify(response.data)
+                        );
                         setgrandcCategory(response.data);
                       });
                     setCategoryEditSubparent(data.category_name);
@@ -542,6 +566,7 @@ function Product() {
     });
   };
   const handleClose = () => {
+    setIndVal(0);
     setproductdata(data);
     setcustomarray([]);
     setvariantarray(veriantData);
@@ -608,7 +633,6 @@ function Product() {
       encoded = await convertToBase64(e.target.files[i]);
       const [first, ...rest] = encoded.base64.split(",");
       let imgvalidation = first.split("/").pop();
-      console.log("------img" + "ppppp" + imgvalidation);
 
       if (
         imgvalidation === "jpeg;base64" ||
@@ -742,21 +766,27 @@ function Product() {
 
   const getProductVariant = (id) => {
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=400`, {
-        product_search: {
-          search: "",
-          category: [],
-          price_from: "",
-          price_to: "",
-          id: "",
-          product_title_name_asc_desc: "",
-          sale_price: "",
-          short_by_updated_on: "",
-          is_delete: ["1"],
-          product_id: [`${id}`],
-          product_title_name: [],
+      .post(
+        `${process.env.REACT_APP_BASEURL_0}/home?page=0&per_page=400`,
+        {
+          product_search: {
+            search: "",
+            category: [],
+            price_from: "",
+            price_to: "",
+            id: "",
+            product_title_name_asc_desc: "",
+            sale_price: "",
+            short_by_updated_on: "",
+            is_delete: ["1"],
+            product_id: [`${id}`],
+            product_title_name: [],
+          },
         },
-      })
+        {
+          headers: { admin_token: `${token}` },
+        }
+      )
       .then((response) => {
         setvdata(response.data.results);
         settaxdata(response.data.results[0]);
@@ -1048,7 +1078,7 @@ function Product() {
         setcustomValidated(false);
 
         setproductvariantarray({
-          product_status: "",
+          product_status: "pending",
           unit: productvariantarray.unit,
           colors: "",
           unit_quantity: "",
@@ -1064,7 +1094,7 @@ function Product() {
           quantity: "",
           product_id: productID,
         });
-        // setcustomValidated(false);
+        // setcustomValidated(false);setvariantmainarray
       }
     }
   };
@@ -1321,9 +1351,20 @@ function Product() {
       setvarietyValidated("varietyadd");
     } else {
       axios
-        .post(`${process.env.REACT_APP_BASEURL}/products`, productdataa)
+        .post(
+          `${process.env.REACT_APP_BASEURL_0}/products`,
+
+          productdataa,
+          {
+            headers: { admin_token: `${token}` },
+          }
+        )
         .then((response) => {
-          setapicall(true);
+          if (response.data.response === "please fill all input") {
+            setcustomValidated("plesefillall");
+          } else {
+            setapicall(true);
+          }
         });
       e.preventDefault();
       setValidated(false);
@@ -1339,7 +1380,9 @@ function Product() {
   const handleUpdateProduct = (e) => {
     e.preventDefault();
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/products_update`, productdata)
+      .put(`${process.env.REACT_APP_BASEURL_0}/products_update`, productdata, {
+        headers: { admin_token: `${token}` },
+      })
       .then((response) => {
         setapicall(true);
         setmodalshow(false);
@@ -1490,6 +1533,9 @@ function Product() {
               ) : null}
               {row.is_special_offer === 1 ? (
                 <span className={"badge bg-info mt-1"}>{"special offer"}</span>
+              ) : null}
+              {row.is_promotional === 1 ? (
+                <span className={"badge bg-primary mt-1"}>{"promotional"}</span>
               ) : null}
             </div>
           </p>
@@ -1649,7 +1695,7 @@ function Product() {
       selector: (row) => (
         <span
           className={
-            row.product_status === "pending"
+            row.product_status === "pending" || row.product_status === "1"
               ? "badge bg-warning"
               : row.product_status === "approved"
               ? "badge bg-success"
@@ -1659,7 +1705,7 @@ function Product() {
               : "badge bg-secondary"
           }
         >
-          {row.product_status === "pending"
+          {row.product_status === "pending" || row.product_status === "1"
             ? "Pending"
             : row.product_status === "approved"
             ? "Approved"
@@ -1725,7 +1771,11 @@ function Product() {
               <Dropdown.Item
                 value="special_offer"
                 onClick={(e) =>
-                  OnProductOfferClick(e, row.product_id, row.product_title_name)
+                  OnProductOfferClick(
+                    "special_offer",
+                    row.product_id,
+                    row.product_title_name
+                  )
                 }
               >
                 Special Offer
@@ -1733,7 +1783,11 @@ function Product() {
               <Dropdown.Item
                 value="featured_offer"
                 onClick={(e) =>
-                  OnProductOfferClick(e, row.product_id, row.product_title_name)
+                  OnProductOfferClick(
+                    "featured_offer",
+                    row.product_id,
+                    row.product_title_name
+                  )
                 }
               >
                 Featured Offer
@@ -1741,27 +1795,16 @@ function Product() {
               <Dropdown.Item
                 value="promotional"
                 onClick={(e) =>
-                  OnProductOfferClick(e, row.product_id, row.product_title_name)
+                  OnProductOfferClick(
+                    "promotional",
+                    row.product_id,
+                    row.product_title_name
+                  )
                 }
               >
                 Promotional
               </Dropdown.Item>
             </DropdownButton>
-            {/* <Form.Select
-              aria-label="Search by delivery"
-              size="sm"
-              className="w-100 feature_product_select"
-              onChange={(e) =>
-                OnProductOfferClick(e, row.product_id, row.product_title_name)
-              }
-            >
-              <option value="">Select</option>
-              <option value="special_offer">Special Offer</option>
-              <option value="featured_offer">Featured Offer </option>
-              <option value="promotional">Promotional </option>
-            </Form.Select> */}
-
-            {/* <FaEllipsisV className="feature_product_ellipsis"/> */}
           </div>
 
           <BiEdit
@@ -1781,1536 +1824,1644 @@ function Product() {
     },
   ];
   // END DATATABLE DATA
-  return (<>
-{loading === true ? <Loader/>:null}
-    <div className="App productlist_maindiv">
-      <h2>Products</h2>
-      <div className="card mt-3 p-3 ">
-        {/* search bar */}
-        <div className="row">
-          <div className="col-md-2 col-sm-6 aos_input">
-            <input
-              type={"text"}
-              placeholder={"Search by product name"}
-              onChange={OnSearchChange}
-              name="product_title_name"
-              value={searchdata.product_title_name}
-              className={"adminsideinput"}
-            />
-          </div>
-          <div className="col-md-2 col-sm-6 aos_input">
-            <Form.Select
-              aria-label="Search by status"
-              className="adminselectbox"
-              placeholder="Search by category"
-              onChange={OnSearchChange}
-              name="category"
-              value={searchdata.category}
-            >
-              <option value={""}>Select Category</option>
-              {(filtervategory || []).map((data, i) => {
-                return (
-                  <option value={data.id} key={i}>
-                    {" "}
-                    {data.category_name}
-                  </option>
-                );
-              })}
-            </Form.Select>
-          </div>
-          <div className="col-md-2 col-sm-6 aos_input">
-            <Form.Select
-              aria-label="Search by status"
-              className="adminselectbox"
-              placeholder="Search by vendor"
-              onChange={OnSearchChange}
-              name="vendor"
-              value={searchdata.vendor}
-            >
-              <option value={""}>Select Vendor</option>
-              {(vendorid || []).map((data, i) => {
-                return (
-                  <option value={data.shop_name} key={i}>
-                    {" "}
-                    {data.shop_name}
-                  </option>
-                );
-              })}
-            </Form.Select>
-          </div>
-          <div className="col-md-2 col-sm-6 aos_input">
-            <Form.Select
-              aria-label="Search by brand"
-              className="adminselectbox"
-              placeholder="Search by brand"
-              onChange={OnSearchChange}
-              name="brand"
-              value={searchdata.brand}
-            >
-              <option value={""}>Select Brand</option>
-              {(BrandJson.BrandJson || []).map((data, i) => {
-                return (
-                  <option value={data} key={i}>
-                    {" "}
-                    {data}
-                  </option>
-                );
-              })}
-            </Form.Select>
+  return (
+    <>
+      {loading === true ? <Loader /> : null}
+      <div className="App productlist_maindiv">
+        <h2>Products</h2>
+        <div className="card mt-3 p-3 ">
+          {/* search bar */}
+          <div className="row">
+            <div className="col-md-2 col-sm-6 aos_input">
+              <input
+                type={"text"}
+                placeholder={"Search by product name"}
+                onChange={OnSearchChange}
+                name="product_title_name"
+                value={searchdata.product_title_name}
+                className={"adminsideinput"}
+              />
+            </div>
+            <div className="col-md-2 col-sm-6 aos_input">
+              <Form.Select
+                aria-label="Search by status"
+                className="adminselectbox"
+                placeholder="Search by category"
+                onChange={OnSearchChange}
+                name="category"
+                value={searchdata.category}
+              >
+                <option value={""}>Select Category</option>
+                {(filtervategory || []).map((data, i) => {
+                  return (
+                    <option value={data.id} key={i}>
+                      {" "}
+                      {data.category_name}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </div>
+            <div className="col-md-2 col-sm-6 aos_input">
+              <Form.Select
+                aria-label="Search by status"
+                className="adminselectbox"
+                placeholder="Search by vendor"
+                onChange={OnSearchChange}
+                name="vendor"
+                value={searchdata.vendor}
+              >
+                <option value={""}>Select Vendor</option>
+                {(vendorid || []).map((data, i) => {
+                  return (
+                    <option value={data.shop_name} key={i}>
+                      {" "}
+                      {data.shop_name}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </div>
+            <div className="col-md-2 col-sm-6 aos_input">
+              <Form.Select
+                aria-label="Search by brand"
+                className="adminselectbox"
+                placeholder="Search by brand"
+                onChange={OnSearchChange}
+                name="brand"
+                value={searchdata.brand}
+              >
+                <option value={""}>Select Brand</option>
+                {(BrandJson.BrandJson || []).map((data, i) => {
+                  return (
+                    <option value={data} key={i}>
+                      {" "}
+                      {data}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </div>
+
+            <div className="col-md-2 col-sm-6 aos_input">
+              <Form.Select
+                aria-label="Search by status"
+                className="adminselectbox"
+                placeholder="Search by status"
+                onChange={OnSearchChange}
+                name="product_status"
+                value={searchdata.product_status}
+              >
+                <option value={""}>Select Status</option>
+                {(productstatus.productstatus || []).map((data, i) => {
+                  return (
+                    <option value={data} key={i}>
+                      {" "}
+                      {data}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </div>
+
+            <div className="col-md-2 col-sm-6  mt-2 aos_input">
+              <MainButton
+                onClick={onProductSearchClick}
+                btntext={"Search"}
+                btnclass={"button main_button w-100"}
+              />
+            </div>
+
+            <div className="col-md-2 col-sm-6  mt-2 aos_input">
+              <MainButton
+                btntext={"Reset"}
+                btnclass={"button main_button w-100"}
+                type="reset"
+                onClick={OnReset}
+              />
+            </div>
           </div>
 
-          <div className="col-md-2 col-sm-6 aos_input">
-            <Form.Select
-              aria-label="Search by status"
-              className="adminselectbox"
-              placeholder="Search by status"
-              onChange={OnSearchChange}
-              name="product_status"
-              value={searchdata.product_status}
-            >
-              <option value={""}>Select Status</option>
-              {(productstatus.productstatus || []).map((data, i) => {
-                return (
-                  <option value={data} key={i}>
-                    {" "}
-                    {data}
-                  </option>
-                );
-              })}
-            </Form.Select>
-          </div>
+          {/* upload */}
 
-          <div className="col-md-2 col-sm-6  mt-2 aos_input">
-            <MainButton
-              onClick={onProductSearchClick}
-              btntext={"Search"}
-              btnclass={"button main_button w-100"}
-            />
-          </div>
+          <div className="product_page_uploadbox my-4">
+            <div className="product_page_uploadbox_one">
+              <input
+                type="file"
+                className="product_page_uploadbox_button"
+                onChange={(e) => {
+                  FileUploadAPI(e);
+                }}
+              />
+              <Iconbutton
+                btntext={"Upload"}
+                btnclass={"button main_outline_button"}
+                Iconname={<AiOutlineCloudUpload />}
+              />
+            </div>
+            {bulkProductError == "" ? (
+              ""
+            ) : (
+              <p className="mt-1 ms-2 text-danger" type="invalid">
+                {bulkProductError}
+              </p>
+            )}
+            <MainButton btntext={"Download"} onClick={handleDownloadExcel} />
 
-          <div className="col-md-2 col-sm-6  mt-2 aos_input">
-            <MainButton
-              btntext={"Reset"}
-              btnclass={"button main_button w-100"}
-              type="reset"
-              onClick={OnReset}
-            />
-          </div>
-        </div>
-
-        {/* upload */}
-
-        <div className="product_page_uploadbox my-4">
-          <div className="product_page_uploadbox_one">
-            <input
-              type="file"
-              className="product_page_uploadbox_button"
-              onChange={(e) => {
-                FileUploadAPI(e);
-              }}
-            />
             <Iconbutton
-              btntext={"Upload"}
-              btnclass={"button main_outline_button"}
-              Iconname={<AiOutlineCloudUpload />}
+              btntext={"Add Product"}
+              onClick={() => {
+                handleShow("add");
+              }}
+              Iconname={<AiOutlinePlus />}
+              btnclass={"button main_button "}
             />
           </div>
-          {bulkProductError == "" ? (
-            ""
-          ) : (
-            <p className="mt-1 ms-2 text-danger" type="invalid">
-              {bulkProductError}
-            </p>
-          )}
-          <MainButton btntext={"Download"} onClick={handleDownloadExcel} />
 
-          <Iconbutton
-            btntext={"Add Product"}
-            onClick={() => {
-              handleShow("add");
-            }}
-            Iconname={<AiOutlinePlus />}
-            btnclass={"button main_button "}
-          />
-        </div>
-
-        {/* main product datatable */}
-        <Modal
-          show={modalshow}
-          onHide={() => handleClose()}
-          dialogClassName="addproductmainmodal"
-          aria-labelledby="example-custom-modal-styling-title"
-          centered
-        >
-          <Form
-            className="p-2 addproduct_form"
-            validated={validated}
-            ref={mainformRef}
-            onSubmit={
-              modalshow === "add"
-                ? (e) => handleAddProduct(e)
-                : (modalshow) => handleUpdateProduct(modalshow)
-            }
+          {/* main product datatable */}
+          <Modal
+            show={modalshow}
+            onHide={() => handleClose()}
+            dialogClassName="addproductmainmodal"
+            aria-labelledby="example-custom-modal-styling-title"
+            centered
           >
-            <Modal.Header closeButton className="addproductheader">
-              <Modal.Title id="example-custom-modal-styling-title">
-                {modalshow === "add" ? "Add Product" : "Update Product"}
-              </Modal.Title>
-            </Modal.Header>
-            <Modal.Body className="addproductbody p-2">
-              <div className=" addproduct_form_boxx p-0 m-0">
-                <div className="my-3 inputsection_box">
-                  <h5 className="m-0">Basic Info</h5>
-                  <div className="d-flex product_basixinfo">
-                    <div className="product_detail-box col-md-4">
-                      <Form.Group
-                        className="mx-3"
-                        controlId="validationCustom01"
-                      >
-                        <Form.Label className="inputlabelheading" sm="12">
-                          Product Title/Name
-                          <span className="text-danger">
-                            *
+            <Form
+              className="p-2 addproduct_form"
+              validated={validated}
+              ref={mainformRef}
+              onSubmit={
+                modalshow === "add"
+                  ? (e) => handleAddProduct(e)
+                  : (modalshow) => handleUpdateProduct(modalshow)
+              }
+            >
+              <Modal.Header closeButton className="addproductheader">
+                <Modal.Title id="example-custom-modal-styling-title">
+                  {modalshow === "add" ? "Add Product" : "Update Product"}
+                </Modal.Title>
+              </Modal.Header>
+              <Modal.Body className="addproductbody p-2">
+                <div className=" addproduct_form_boxx p-0 m-0">
+                  <div className="my-3 inputsection_box">
+                    <h5 className="m-0">Basic Info</h5>
+                    <div className="d-flex product_basixinfo">
+                      <div className="product_detail-box col-md-4">
+                        <Form.Group
+                          className="mx-3"
+                          controlId="validationCustom01"
+                        >
+                          <Form.Label className="inputlabelheading" sm="12">
+                            Product Title/Name
+                            <span className="text-danger">
+                              *
+                              <Form.Control.Feedback
+                                type="invalid"
+                                className="h6"
+                              >
+                                Please fill productname
+                              </Form.Control.Feedback>
+                            </span>
+                          </Form.Label>
+                          <Col sm="12">
+                            <Form.Control
+                              type="text"
+                              placeholder="Product Title/Name"
+                              required
+                              onChange={(e) => handleInputFieldChange(e)}
+                              name={"product_title_name"}
+                              value={productdata.product_title_name}
+                              maxLength={20}
+                            />
                             <Form.Control.Feedback
                               type="invalid"
                               className="h6"
                             >
                               Please fill productname
                             </Form.Control.Feedback>
-                          </span>
-                        </Form.Label>
-                        <Col sm="12">
-                          <Form.Control
-                            type="text"
-                            placeholder="Product Title/Name"
-                            required
-                            onChange={(e) => handleInputFieldChange(e)}
-                            name={"product_title_name"}
-                            value={productdata.product_title_name}
-                            maxLength={20}
-                          />
-                          <Form.Control.Feedback type="invalid" className="h6">
-                            Please fill productname
-                          </Form.Control.Feedback>
-                        </Col>
-                      </Form.Group>
-                      <Form.Group
-                        className="mx-3"
-                        controlId="validationProductName"
-                      >
-                        <Form.Label className="inputlabelheading" sm="12">
-                          Product Slug<span className="text-danger">* </span>
-                        </Form.Label>
-                        <Col sm="12">
-                          <Form.Control
-                            type="text"
-                            placeholder="Product Slug"
-                            // onChange={(e) => handleInputFieldChange(e)}
-                            name={"product_slug"}
-                            value={
-                              productdata.product_title_name === "" ||
-                              productdata.product_title_name === "null" ||
-                              productdata.product_title_name === null
-                                ? null
-                                : productdata.product_title_name + "_123"
-                            }
-                            required
-                          />
-                        </Col>
-                      </Form.Group>
-                      <Form.Group
-                        className="mx-3"
-                        controlId="validationProductslug"
-                      >
-                        <Form.Label className="inputlabelheading" sm="12">
-                          Product Brand <span className="text-danger">* </span>
-                        </Form.Label>
-                        <Col sm="12">
+                          </Col>
+                        </Form.Group>
+                        <Form.Group
+                          className="mx-3"
+                          controlId="validationProductName"
+                        >
+                          <Form.Label className="inputlabelheading" sm="12">
+                            Product Slug<span className="text-danger">* </span>
+                          </Form.Label>
+                          <Col sm="12">
+                            <Form.Control
+                              type="text"
+                              placeholder="Product Slug"
+                              // onChange={(e) => handleInputFieldChange(e)}
+                              name={"product_slug"}
+                              value={
+                                productdata.product_title_name === "" ||
+                                productdata.product_title_name === "null" ||
+                                productdata.product_title_name === null
+                                  ? null
+                                  : productdata.product_title_name + "_123"
+                              }
+                              required
+                            />
+                          </Col>
+                        </Form.Group>
+                        <Form.Group
+                          className="mx-3"
+                          controlId="validationProductslug"
+                        >
+                          <Form.Label className="inputlabelheading" sm="12">
+                            Product Brand{" "}
+                            <span className="text-danger">* </span>
+                          </Form.Label>
+                          <Col sm="12">
+                            <Form.Select
+                              aria-label="Product Type"
+                              className="adminselectbox"
+                              name="brand"
+                              required
+                              onChange={(e) => handleInputFieldChange(e)}
+                              value={
+                                productdata.brand === null ||
+                                productdata.brand === undefined
+                                  ? ""
+                                  : productdata.brand
+                              }
+                            >
+                              <option value={""}>Select Brand</option>
+                              {BrandJson.BrandJson.map((item, i) => {
+                                return (
+                                  <option value={item} key={i}>
+                                    {item}
+                                  </option>
+                                );
+                              })}
+                            </Form.Select>
+                          </Col>
+                        </Form.Group>
+                        <Form.Group
+                          className="mx-3"
+                          controlId="validationCustom03"
+                        >
+                          <Form.Label className="inputlabelheading" sm="12">
+                            Store Name
+                            <span className="text-danger">
+                              *
+                              <Form.Control.Feedback
+                                type="invalid"
+                                className="h6"
+                              >
+                                Please fill storename
+                              </Form.Control.Feedback>
+                            </span>
+                          </Form.Label>
                           <Form.Select
-                            aria-label="Product Type"
+                            onChange={handleVendorNameChange}
+                            aria-label="store_name"
                             className="adminselectbox"
-                            name="brand"
                             required
-                            onChange={(e) => handleInputFieldChange(e)}
-                            value={
-                              productdata.brand === null ||
-                              productdata.brand === undefined
-                                ? ""
-                                : productdata.brand
-                            }
                           >
-                            <option value={""}>Select Brand</option>
-                            {BrandJson.BrandJson.map((item) => {
-                              return <option value={item}>{item}</option>;
+                            {" "}
+                            <option value={""}> Select Store Name</option>
+                            {vendorid.map((cdata, i) => {
+                              return (
+                                <option
+                                  value={[cdata.id, cdata.shop_name]}
+                                  key={i}
+                                  selected={
+                                    (productdata.vendor_id,
+                                    productdata.store_name) ===
+                                    (cdata.id, cdata.shop_name)
+                                  }
+                                >
+                                  {cdata.shop_name}
+                                  {""}
+                                </option>
+                              );
                             })}
                           </Form.Select>
-                        </Col>
-                      </Form.Group>
-                      <Form.Group
-                        className="mx-3"
-                        controlId="validationCustom03"
-                      >
-                        <Form.Label className="inputlabelheading" sm="12">
-                          Store Name
-                          <span className="text-danger">
-                            *
+                          <Col sm="12">
                             <Form.Control.Feedback
                               type="invalid"
                               className="h6"
                             >
                               Please fill storename
                             </Form.Control.Feedback>
-                          </span>
+                          </Col>
+                        </Form.Group>
+                      </div>
+                      <div className="col-md-8">
+                        <Form.Group
+                          className="mx-3"
+                          controlId="validationCustom04"
+                        >
+                          <Form.Label className="inputlabelheading" sm="12">
+                            Product Description
+                          </Form.Label>
+                          <Col sm="12">
+                            <CKEditor
+                              editor={ClassicEditor}
+                              data={productdata.product_description}
+                              onChange={handledescription}
+                              name={"product_description"}
+                            />
+                          </Col>
+                        </Form.Group>
+                      </div>
+                    </div>
+                  </div>
+                  {/* category */}
+                  <div className="my-3 inputsection_box">
+                    <h5 className="m-0">Category Info</h5>
+                    <div className="productvariety">
+                      <Form.Group
+                        className="mx-3"
+                        controlId="validationCustom05"
+                      >
+                        <Form.Label className="inputlabelheading" sm="12">
+                          Product Type<span className="text-danger">* </span>
+                        </Form.Label>
+                        <Col sm="12">
+                          <Form.Select
+                            aria-label="Product Type"
+                            className="adminselectbox"
+                            required
+                            name="product_type"
+                            onChange={(e) => handleInputFieldChange(e)}
+                            value={
+                              productdata.product_type === null ||
+                              productdata.product_type === undefined
+                                ? ""
+                                : productdata.product_type
+                            }
+                          >
+                            <option value={""}>Select Product Type</option>
+
+                            {categorytype.categorytype.map((data, i) => {
+                              return (
+                                <option value={data} key={i}>
+                                  {data}
+                                </option>
+                              );
+                            })}
+                          </Form.Select>
+                          <Form.Control.Feedback type="invalid" className="h6">
+                            Please select product type
+                          </Form.Control.Feedback>
+                        </Col>
+                      </Form.Group>
+
+                      {/* category select */}
+                      <Form.Group
+                        className=" aos_input"
+                        controlId="validationCustom06"
+                      >
+                        <Form.Label className="inputlabelheading" sm="12">
+                          Parent Category{" "}
+                          <span className="text-danger">* </span>
                         </Form.Label>
                         <Form.Select
-                          onChange={handleVendorNameChange}
-                          aria-label="store_name"
+                          onChange={(e, id) => categoryFormChange(e, id)}
+                          name={"parent_category"}
+                          aria-label="Parent Category"
                           className="adminselectbox"
                           required
                         >
-                          {" "}
-                          <option value={""}> Select Store Name</option>
-                          {vendorid.map((cdata, i) => {
+                          <option value={""}>Select Parent Category </option>
+                          {category.map((cdata, i) => {
                             return (
                               <option
-                                value={[cdata.id, cdata.shop_name]}
+                                value={cdata.id}
+                                name="parent_category"
                                 key={i}
                                 selected={
-                                  (productdata.vendor_id,
-                                  productdata.store_name) ===
-                                  (cdata.id, cdata.shop_name)
+                                  editparentCategory == cdata.category_name
+                                    ? true
+                                    : false
                                 }
                               >
-                                {cdata.shop_name}
-                                {""}
+                                {cdata.category_name} {""}
                               </option>
                             );
                           })}
                         </Form.Select>
-                        <Col sm="12">
-                          <Form.Control.Feedback type="invalid" className="h6">
-                            Please fill storename
-                          </Form.Control.Feedback>
-                        </Col>
+                        <Form.Control.Feedback type="invalid" className="h6">
+                          Please select Category
+                        </Form.Control.Feedback>
                       </Form.Group>
+
+                      {subCategory === "" ||
+                      subCategory === null ||
+                      subCategory === undefined ? null : (
+                        <Form.Group
+                          className=" aos_input"
+                          controlId="formBasicParentCategory"
+                        >
+                          <Form.Label>
+                            Sub Category <span className="text-danger">* </span>
+                          </Form.Label>
+                          <Form.Select
+                            aria-label="Search by status"
+                            className="adminselectbox"
+                            onChange={(e, id) => categoryFormChange(e, id)}
+                            name={"sub_category"}
+                            required
+                          >
+                            <option value={""}>Select Category </option>
+                            {subCategory.map((cdata, i) => {
+                              return (
+                                <option
+                                  value={cdata.id}
+                                  key={i}
+                                  selected={
+                                    categoryeditparent === cdata.category_name
+                                      ? true
+                                      : false
+                                  }
+                                >
+                                  {cdata.category_name}{" "}
+                                </option>
+                              );
+                            })}
+                          </Form.Select>
+                          <Form.Control.Feedback type="invalid" className="h6">
+                            Please fill category
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      )}
+
+                      {childCategory[0] === "" ||
+                      childCategory[0] === null ||
+                      childCategory[0] === undefined ? null : (
+                        <Form.Group
+                          className="mb-3 aos_input"
+                          controlId="formBasicParentCategory"
+                        >
+                          <Form.Label> Child Category</Form.Label>
+                          <Form.Select
+                            aria-label="Search by status"
+                            className="adminselectbox"
+                            onChange={(e, id) => categoryFormChange(e, id)}
+                            name={"childcategory"}
+                          >
+                            <option value={""}>Select Category </option>
+                            {childCategory.map((cdata, i) => {
+                              return (
+                                <option
+                                  value={cdata.id}
+                                  key={i}
+                                  selected={
+                                    categoryeditsubparent ===
+                                    cdata.category_name
+                                      ? true
+                                      : false
+                                  }
+                                >
+                                  {cdata.category_name}{" "}
+                                </option>
+                              );
+                            })}
+                          </Form.Select>
+                          <Form.Control.Feedback type="invalid" className="h6">
+                            Please fill category
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      )}
+
+                      {grandcCategory[0] === "" ||
+                      grandcCategory[0] === null ||
+                      grandcCategory[0] === undefined ? null : (
+                        <Form.Group
+                          className="mb-3 aos_input"
+                          controlId="formBasicParentCategory"
+                        >
+                          <Form.Label> Inner Category</Form.Label>
+                          <Form.Select
+                            aria-label="Search by status"
+                            className="adminselectbox"
+                            onChange={(e, id) => categoryFormChange(e, id)}
+                            name={"gcategory"}
+                          >
+                            <option value={""}>Select Category </option>
+                            {grandcCategory.map((cdata, i) => {
+                              return (
+                                <option
+                                  value={cdata.id}
+                                  key={i}
+                                  selected={
+                                    categoryeditchildparent ===
+                                    cdata.category_name
+                                      ? true
+                                      : false
+                                  }
+                                >
+                                  {cdata.category_name}{" "}
+                                </option>
+                              );
+                            })}
+                          </Form.Select>
+                          <Form.Control.Feedback type="invalid" className="h6">
+                            Please fill category
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      )}
+
+                      {/* end category select */}
                     </div>
-                    <div className="col-md-8">
+                  </div>
+                  {/* Taxes */}
+                  <div className="my-3 inputsection_box">
+                    <h5 className="m-0">Taxes</h5>
+                    <div className="productvariety mt-0">
                       <Form.Group
                         className="mx-3"
-                        controlId="validationCustom04"
+                        controlId="validationCustom11"
                       >
                         <Form.Label className="inputlabelheading" sm="12">
-                          Product Description
+                          Wholesale Sales Tax
                         </Form.Label>
                         <Col sm="12">
-                          <CKEditor
-                            editor={ClassicEditor}
-                            data={productdata.product_description}
-                            onChange={handledescription}
-                            name={"product_description"}
+                          <Form.Control
+                            min={0}
+                            type="number"
+                            placeholder="Wholesale Sales Tax"
+                            name="wholesale_sales_tax"
+                            value={
+                              productdata.wholesale_sales_tax === null ||
+                              productdata.wholesale_sales_tax === undefined
+                                ? ""
+                                : productdata.wholesale_sales_tax
+                            }
+                            onChange={(e) => handleInputFieldChange(e)}
+                          />
+                        </Col>
+                      </Form.Group>
+                      <Form.Group
+                        className="mx-3"
+                        controlId="validationCustom11"
+                      >
+                        <Form.Label className="inputlabelheading" sm="12">
+                          Manufacturers’ Sales Tax
+                        </Form.Label>
+                        <Col sm="12">
+                          <Form.Control
+                            type="number"
+                            min={0}
+                            placeholder="Manufacturers’ Sales Tax "
+                            name="manufacturers_sales_tax"
+                            value={
+                              productdata.manufacturers_sales_tax === null ||
+                              productdata.manufacturers_sales_tax === undefined
+                                ? ""
+                                : productdata.manufacturers_sales_tax
+                            }
+                            onChange={(e) => handleInputFieldChange(e)}
+                          />
+                        </Col>
+                      </Form.Group>
+                      <Form.Group
+                        className="m-3"
+                        controlId="validationCustom11"
+                      >
+                        <Form.Label className="inputlabelheading" sm="12">
+                          Retail Sales Tax
+                        </Form.Label>
+                        <Col sm="12">
+                          <Form.Control
+                            type="number"
+                            min={0}
+                            placeholder="Retail Sales Tax"
+                            name="retails_sales_tax"
+                            value={
+                              productdata.retails_sales_tax === null ||
+                              productdata.retails_sales_tax === undefined
+                                ? ""
+                                : productdata.retails_sales_tax
+                            }
+                            onChange={(e) => handleInputFieldChange(e)}
+                          />
+                        </Col>
+                      </Form.Group>
+                      <Form.Group
+                        className="mx-3"
+                        controlId="validationCustom11"
+                      >
+                        <Form.Label className="inputlabelheading" sm="12">
+                          Value Added Tax
+                        </Form.Label>
+                        <Col sm="12">
+                          <Form.Control
+                            type="number"
+                            min={0}
+                            placeholder="Value Added Tax"
+                            name="value_added_tax"
+                            value={
+                              productdata.value_added_tax === null ||
+                              productdata.value_added_tax === undefined
+                                ? ""
+                                : productdata.value_added_tax
+                            }
+                            onChange={(e) => handleInputFieldChange(e)}
+                          />
+                        </Col>
+                      </Form.Group>
+                      <Form.Group
+                        className="mx-3"
+                        controlId="validationCustom11"
+                      >
+                        <Form.Label className="inputlabelheading" sm="12">
+                          Gst<span className="text-danger">* </span>
+                        </Form.Label>
+                        <Col sm="12">
+                          <Form.Control
+                            type="number"
+                            min={1}
+                            placeholder="Gst"
+                            name="gst"
+                            value={productdata.gst}
+                            onChange={(e) =>
+                              setproductdata({
+                                ...productdata,
+                                gst: e.target.value,
+                                cgst: e.target.value / 2,
+                                sgst: e.target.value / 2,
+                              })
+                            }
+                            required
+                          />
+                        </Col>
+                      </Form.Group>
+                      <Form.Group
+                        className="mx-3"
+                        controlId="validationCustom11"
+                      >
+                        <Form.Label className="inputlabelheading" sm="12">
+                          Sgst<span className="text-danger"> </span>
+                        </Form.Label>
+                        <Col sm="12">
+                          <Form.Control
+                            type="number"
+                            min={0}
+                            placeholder="Sgst"
+                            name="sgst"
+                            value={productdata.gst / 2}
+                            readOnly={true}
+                          />
+                        </Col>
+                      </Form.Group>
+                      <Form.Group
+                        className="mx-3"
+                        controlId="validationCustom11"
+                      >
+                        <Form.Label className="inputlabelheading" sm="12">
+                          Cgst<span className="text-danger"></span>
+                        </Form.Label>
+                        <Col sm="12">
+                          <Form.Control
+                            type="number"
+                            min={0}
+                            placeholder="Cgst"
+                            name="cgst"
+                            value={productdata.gst / 2}
+                            readOnly={true}
                           />
                         </Col>
                       </Form.Group>
                     </div>
                   </div>
-                </div>
-                {/* category */}
-                <div className="my-3 inputsection_box">
-                  <h5 className="m-0">Category Info</h5>
-                  <div className="productvariety">
-                    <Form.Group className="mx-3" controlId="validationCustom05">
-                      <Form.Label className="inputlabelheading" sm="12">
-                        Product Type<span className="text-danger">* </span>
-                      </Form.Label>
-                      <Col sm="12">
-                        <Form.Select
-                          aria-label="Product Type"
-                          className="adminselectbox"
-                          required
-                          name="product_type"
-                          onChange={(e) => handleInputFieldChange(e)}
-                          value={
-                            productdata.product_type === null ||
-                            productdata.product_type === undefined
-                              ? ""
-                              : productdata.product_type
-                          }
-                        >
-                          <option value={""}>Select Product Type</option>
-
-                          {categorytype.categorytype.map((data) => {
-                            return <option value={data}>{data}</option>;
-                          })}
-                        </Form.Select>
-                        <Form.Control.Feedback type="invalid" className="h6">
-                          Please select product type
-                        </Form.Control.Feedback>
-                      </Col>
-                    </Form.Group>
-
-                    {/* category select */}
-                    <Form.Group
-                      className=" aos_input"
-                      controlId="validationCustom06"
-                    >
-                      <Form.Label className="inputlabelheading" sm="12">
-                        Parent Category <span className="text-danger">* </span>
-                      </Form.Label>
-                      <Form.Select
-                        onChange={(e, id) => categoryFormChange(e, id)}
-                        name={"parent_category"}
-                        aria-label="Parent Category"
-                        className="adminselectbox"
-                        required
-                      >
-                        <option value={""}>Select Parent Category </option>
-                        {category.map((cdata, i) => {
-                          return (
-                            <option
-                              value={cdata.id}
-                              name="parent_category"
-                              key={i}
-                              selected={
-                                editparentCategory == cdata.category_name
-                                  ? true
-                                  : false
-                              }
-                            >
-                              {cdata.category_name} {""}
-                            </option>
-                          );
-                        })}
-                      </Form.Select>
-                      <Form.Control.Feedback type="invalid" className="h6">
-                        Please select Category
-                      </Form.Control.Feedback>
-                    </Form.Group>
-
-                    {subCategory === "" ||
-                    subCategory === null ||
-                    subCategory === undefined ? null : (
-                      <Form.Group
-                        className=" aos_input"
-                        controlId="formBasicParentCategory"
-                      >
-                        <Form.Label>
-                          Sub Category <span className="text-danger">* </span>
-                        </Form.Label>
-                        <Form.Select
-                          aria-label="Search by status"
-                          className="adminselectbox"
-                          onChange={(e, id) => categoryFormChange(e, id)}
-                          name={"sub_category"}
-                          required
-                        >
-                          <option value={""}>Select Category </option>
-                          {subCategory.map((cdata, i) => {
-                            return (
-                              <option
-                                value={cdata.id}
-                                key={i}
-                                selected={
-                                  categoryeditparent === cdata.category_name
-                                    ? true
-                                    : false
-                                }
-                              >
-                                {cdata.category_name}{" "}
-                              </option>
-                            );
-                          })}
-                        </Form.Select>
-                        <Form.Control.Feedback type="invalid" className="h6">
-                          Please fill category
-                        </Form.Control.Feedback>
-                      </Form.Group>
-                    )}
-
-                    {childCategory[0] === "" ||
-                    childCategory[0] === null ||
-                    childCategory[0] === undefined ? null : (
-                      <Form.Group
-                        className="mb-3 aos_input"
-                        controlId="formBasicParentCategory"
-                      >
-                        <Form.Label> Child Category</Form.Label>
-                        <Form.Select
-                          aria-label="Search by status"
-                          className="adminselectbox"
-                          onChange={(e, id) => categoryFormChange(e, id)}
-                          name={"childcategory"}
-                        >
-                          <option value={""}>Select Category </option>
-                          {childCategory.map((cdata, i) => {
-                            return (
-                              <option
-                                value={cdata.id}
-                                key={i}
-                                selected={
-                                  categoryeditsubparent === cdata.category_name
-                                    ? true
-                                    : false
-                                }
-                              >
-                                {cdata.category_name}{" "}
-                              </option>
-                            );
-                          })}
-                        </Form.Select>
-                        <Form.Control.Feedback type="invalid" className="h6">
-                          Please fill category
-                        </Form.Control.Feedback>
-                      </Form.Group>
-                    )}
-
-                    {grandcCategory[0] === "" ||
-                    grandcCategory[0] === null ||
-                    grandcCategory[0] === undefined ? null : (
-                      <Form.Group
-                        className="mb-3 aos_input"
-                        controlId="formBasicParentCategory"
-                      >
-                        <Form.Label> Inner Category</Form.Label>
-                        <Form.Select
-                          aria-label="Search by status"
-                          className="adminselectbox"
-                          onChange={(e, id) => categoryFormChange(e, id)}
-                          name={"gcategory"}
-                        >
-                          <option value={""}>Select Category </option>
-                          {grandcCategory.map((cdata, i) => {
-                            return (
-                              <option
-                                value={cdata.id}
-                                key={i}
-                                selected={
-                                  categoryeditchildparent ===
-                                  cdata.category_name
-                                    ? true
-                                    : false
-                                }
-                              >
-                                {cdata.category_name}{" "}
-                              </option>
-                            );
-                          })}
-                        </Form.Select>
-                        <Form.Control.Feedback type="invalid" className="h6">
-                          Please fill category
-                        </Form.Control.Feedback>
-                      </Form.Group>
-                    )}
-
-                    {/* end category select */}
-                  </div>
-                </div>
-                {/* Taxes */}
-                <div className="my-3 inputsection_box">
-                  <h5 className="m-0">Taxes</h5>
-                  <div className="productvariety mt-0">
-                    <Form.Group className="mx-3" controlId="validationCustom11">
-                      <Form.Label className="inputlabelheading" sm="12">
-                        Wholesale Sales Tax
-                      </Form.Label>
-                      <Col sm="12">
-                        <Form.Control
-                          min={0}
-                          type="number"
-                          placeholder="Wholesale Sales Tax"
-                          name="wholesale_sales_tax"
-                          value={
-                            productdata.wholesale_sales_tax === null ||
-                            productdata.wholesale_sales_tax === undefined
-                              ? ""
-                              : productdata.wholesale_sales_tax
-                          }
-                          onChange={(e) => handleInputFieldChange(e)}
-                        />
-                      </Col>
-                    </Form.Group>
-                    <Form.Group className="mx-3" controlId="validationCustom11">
-                      <Form.Label className="inputlabelheading" sm="12">
-                        Manufacturers’ Sales Tax
-                      </Form.Label>
-                      <Col sm="12">
-                        <Form.Control
-                          type="number"
-                          min={0}
-                          placeholder="Manufacturers’ Sales Tax "
-                          name="manufacturers_sales_tax"
-                          value={
-                            productdata.manufacturers_sales_tax === null ||
-                            productdata.manufacturers_sales_tax === undefined
-                              ? ""
-                              : productdata.manufacturers_sales_tax
-                          }
-                          onChange={(e) => handleInputFieldChange(e)}
-                        />
-                      </Col>
-                    </Form.Group>
-                    <Form.Group className="m-3" controlId="validationCustom11">
-                      <Form.Label className="inputlabelheading" sm="12">
-                        Retail Sales Tax
-                      </Form.Label>
-                      <Col sm="12">
-                        <Form.Control
-                          type="number"
-                          min={0}
-                          placeholder="Retail Sales Tax"
-                          name="retails_sales_tax"
-                          value={
-                            productdata.retails_sales_tax === null ||
-                            productdata.retails_sales_tax === undefined
-                              ? ""
-                              : productdata.retails_sales_tax
-                          }
-                          onChange={(e) => handleInputFieldChange(e)}
-                        />
-                      </Col>
-                    </Form.Group>
-                    <Form.Group className="mx-3" controlId="validationCustom11">
-                      <Form.Label className="inputlabelheading" sm="12">
-                        Value Added Tax
-                      </Form.Label>
-                      <Col sm="12">
-                        <Form.Control
-                          type="number"
-                          min={0}
-                          placeholder="Value Added Tax"
-                          name="value_added_tax"
-                          value={
-                            productdata.value_added_tax === null ||
-                            productdata.value_added_tax === undefined
-                              ? ""
-                              : productdata.value_added_tax
-                          }
-                          onChange={(e) => handleInputFieldChange(e)}
-                        />
-                      </Col>
-                    </Form.Group>
-                    <Form.Group className="mx-3" controlId="validationCustom11">
-                      <Form.Label className="inputlabelheading" sm="12">
-                        Gst<span className="text-danger">* </span>
-                      </Form.Label>
-                      <Col sm="12">
-                        <Form.Control
-                          type="number"
-                          min={1}
-                          placeholder="Gst"
-                          name="gst"
-                          value={productdata.gst}
-                          onChange={(e) =>
-                            setproductdata({
-                              ...productdata,
-                              gst: e.target.value,
-                              cgst: e.target.value / 2,
-                              sgst: e.target.value / 2,
-                            })
-                          }
-                          required
-                        />
-                      </Col>
-                    </Form.Group>
-                    <Form.Group className="mx-3" controlId="validationCustom11">
-                      <Form.Label className="inputlabelheading" sm="12">
-                        Sgst<span className="text-danger"> </span>
-                      </Form.Label>
-                      <Col sm="12">
-                        <Form.Control
-                          type="number"
-                          min={0}
-                          placeholder="Sgst"
-                          name="sgst"
-                          value={productdata.gst / 2}
-                          readOnly={true}
-                        />
-                      </Col>
-                    </Form.Group>
-                    <Form.Group className="mx-3" controlId="validationCustom11">
-                      <Form.Label className="inputlabelheading" sm="12">
-                        Cgst<span className="text-danger"></span>
-                      </Form.Label>
-                      <Col sm="12">
-                        <Form.Control
-                          type="number"
-                          min={0}
-                          placeholder="Cgst"
-                          name="cgst"
-                          value={productdata.gst / 2}
-                          readOnly={true}
-                        />
-                      </Col>
-                    </Form.Group>
-                  </div>
-                </div>
-                {/*single variety  */}
-                <Form
-                  className="p-2 addproduct_form"
-                  validated={validated}
-                  ref={mainformRef}
-                >
-                  {modalshow === "add" ? (
-                    <div className="my-3 inputsection_box">
-                      <div className="productvariety_box">
-                        <div className="row">
-                          <Form.Group className="mx-3">
-                            <div className="variation_box my-2">
-                              <div className="row">
-                                <div className="col-auto">
-                                  <Table
-                                    bordered
-                                    className="align-middle my-2 aadvariety_table_"
-                                  >
-                                    <thead className="align-middle">
-                                      <tr>
-                                        <th>
-                                          Variety
-                                          <span className="text-danger">
-                                            *{" "}
-                                          </span>
-                                        </th>
-                                        <th>Color</th>
-                                        <th>Weight/piece/Volume</th>
-                                        <th>Size</th>
-                                        <th>
-                                          Mrp{" "}
-                                          <span className="text-danger">
-                                            *{" "}
-                                          </span>
-                                        </th>
-                                        <th>Discount</th>
-                                        <th>Original Price</th>
-                                        <th>Total Tax</th>
-                                        <th>
-                                          Sale Price{" "}
-                                          <span className="text-danger">*</span>
-                                        </th>
-                                        {/* <th>Special Offer</th>
+                  {/*single variety  */}
+                  <Form
+                    className="p-2 addproduct_form"
+                    validated={validated}
+                    ref={mainformRef}
+                  >
+                    {modalshow === "add" ? (
+                      <div className="my-3 inputsection_box">
+                        <div className="productvariety_box">
+                          <div className="row">
+                            <Form.Group className="mx-3">
+                              <div className="variation_box my-2">
+                                <div className="row">
+                                  <div className="col-auto">
+                                    <Table
+                                      bordered
+                                      className="align-middle my-2 aadvariety_table_"
+                                    >
+                                      <thead className="align-middle">
+                                        <tr>
+                                          <th>
+                                            Variety
+                                            <span className="text-danger">
+                                              *{" "}
+                                            </span>
+                                          </th>
+                                          <th>Color</th>
+                                          <th>Weight/piece/Volume</th>
+                                          <th>Size</th>
+                                          <th>
+                                            Mrp{" "}
+                                            <span className="text-danger">
+                                              *{" "}
+                                            </span>
+                                          </th>
+                                          <th>Discount</th>
+                                          <th>Original Price</th>
+                                          <th>Total Tax</th>
+                                          <th>
+                                            Sale Price{" "}
+                                            <span className="text-danger">
+                                              *
+                                            </span>
+                                          </th>
+                                          {/* <th>Special Offer</th>
                                         <th>Featured Product</th> */}
-                                        <th className="manufacture_date">
-                                          Mdate
-                                          <span className="text-danger">*</span>
-                                        </th>
-                                        <th className="manufacture_date">
-                                          Edate{" "}
-                                          <span className="text-danger">*</span>
-                                        </th>
-                                        <th className="">
-                                          Qty{" "}
-                                          <span className="text-danger">
-                                            *{" "}
-                                          </span>
-                                        </th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      <tr>
-                                        <td className="p-0 text-center">
-                                          <div className="">
-                                            <InputGroup className="" size="sm">
-                                              <Form.Select
-                                                aria-label="Default select example"
-                                                name="unit"
-                                                required
-                                                value={productvariantarray.unit}
-                                                onChange={(e) =>
-                                                  handleVarietyChange(e)
-                                                }
-                                                disabled={
-                                                  variantmainarray.length === 0
-                                                    ? false
-                                                    : true
-                                                }
+                                          <th className="manufacture_date">
+                                            Mdate
+                                            <span className="text-danger">
+                                              *
+                                            </span>
+                                          </th>
+                                          <th className="manufacture_date">
+                                            Edate{" "}
+                                            <span className="text-danger">
+                                              *
+                                            </span>
+                                          </th>
+                                          <th className="">
+                                            Qty{" "}
+                                            <span className="text-danger">
+                                              *{" "}
+                                            </span>
+                                          </th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr>
+                                          <td className="p-0 text-center">
+                                            <div className="">
+                                              <InputGroup
+                                                className=""
+                                                size="sm"
                                               >
-                                                <option value={""}>
-                                                  Select
-                                                </option>
-                                                {(varietyy.variety || []).map(
-                                                  (vari, i) => {
-                                                    return changeUnitproperty ==
-                                                      true ? (
-                                                      <option
-                                                        value={
-                                                          vari === "color"
-                                                            ? "pcs"
-                                                            : vari === "weight"
-                                                            ? "gms"
-                                                            : vari === "volume"
-                                                            ? "ml"
-                                                            : vari === "piece"
-                                                            ? "piece"
-                                                            : ""
-                                                        }
-                                                        key={i}
-                                                      >
-                                                        {vari}
-                                                      </option>
-                                                    ) : productdata.product_type ===
-                                                        "Cloths" ||
-                                                      productdata.product_type ===
-                                                        "Fashion" ? (
-                                                      vari === "weight" ||
-                                                      vari ===
-                                                        "volume" ? null : (
+                                                <Form.Select
+                                                  aria-label="Default select example"
+                                                  name="unit"
+                                                  required
+                                                  value={
+                                                    productvariantarray.unit
+                                                  }
+                                                  onChange={(e) =>
+                                                    handleVarietyChange(e)
+                                                  }
+                                                  disabled={
+                                                    variantmainarray.length ===
+                                                    0
+                                                      ? false
+                                                      : true
+                                                  }
+                                                >
+                                                  <option value={""}>
+                                                    Select
+                                                  </option>
+                                                  {(varietyy.variety || []).map(
+                                                    (vari, i) => {
+                                                      return changeUnitproperty ==
+                                                        true ? (
                                                         <option
                                                           value={
-                                                            vari === "piece"
-                                                              ? "piece"
-                                                              : vari === "color"
+                                                            vari === "color"
                                                               ? "pcs"
+                                                              : vari ===
+                                                                "weight"
+                                                              ? "gms"
+                                                              : vari ===
+                                                                "volume"
+                                                              ? "ml"
+                                                              : vari === "piece"
+                                                              ? "piece"
                                                               : ""
                                                           }
                                                           key={i}
                                                         >
                                                           {vari}
                                                         </option>
-                                                      )
-                                                    ) : vari ===
-                                                      "color" ? null : (
-                                                      <option
-                                                        value={
-                                                          vari === "weight"
-                                                            ? "gms"
-                                                            : vari === "volume"
-                                                            ? "ml"
-                                                            : vari === "piece"
-                                                            ? "piece"
-                                                            : ""
-                                                        }
-                                                        key={i}
-                                                      >
-                                                        {vari}
-                                                      </option>
-                                                    );
-                                                  }
-                                                )}
-                                              </Form.Select>
-                                            </InputGroup>
-                                          </div>
-                                        </td>
+                                                      ) : productdata.product_type ===
+                                                          "Cloths" ||
+                                                        productdata.product_type ===
+                                                          "Fashion" ? (
+                                                        vari === "weight" ||
+                                                        vari ===
+                                                          "volume" ? null : (
+                                                          <option
+                                                            value={
+                                                              vari === "piece"
+                                                                ? "piece"
+                                                                : vari ===
+                                                                  "color"
+                                                                ? "pcs"
+                                                                : ""
+                                                            }
+                                                            key={i}
+                                                          >
+                                                            {vari}
+                                                          </option>
+                                                        )
+                                                      ) : vari ===
+                                                        "color" ? null : (
+                                                        <option
+                                                          value={
+                                                            vari === "weight"
+                                                              ? "gms"
+                                                              : vari ===
+                                                                "volume"
+                                                              ? "ml"
+                                                              : vari === "piece"
+                                                              ? "piece"
+                                                              : ""
+                                                          }
+                                                          key={i}
+                                                        >
+                                                          {vari}
+                                                        </option>
+                                                      );
+                                                    }
+                                                  )}
+                                                </Form.Select>
+                                              </InputGroup>
+                                            </div>
+                                          </td>
 
-                                        <td className="p-0 text-center">
-                                          <div className=" d-flex align-items-center">
-                                            <InputGroup className="" size="sm">
-                                              <Form.Select
-                                                aria-label="Default select example"
-                                                required
-                                                sm="9"
-                                                name="colors"
-                                                value={
-                                                  productvariantarray.colors
-                                                }
-                                                onChange={(e) =>
-                                                  handleVarietyChange(e)
-                                                }
+                                          <td className="p-0 text-center">
+                                            <div className=" d-flex align-items-center">
+                                              <InputGroup
+                                                className=""
+                                                size="sm"
                                               >
-                                                <option
+                                                <Form.Select
+                                                  aria-label="Default select example"
+                                                  required
+                                                  sm="9"
+                                                  name="colors"
                                                   value={
-                                                    productvariantarray.colors ==
-                                                    ""
+                                                    productvariantarray.colors
+                                                  }
+                                                  onChange={(e) =>
+                                                    handleVarietyChange(e)
                                                   }
                                                 >
-                                                  Select
-                                                </option>
-                                                {(varietyy.color || []).map(
-                                                  (vari, i) => {
-                                                    return (
-                                                      <option
-                                                        value={vari}
-                                                        key={i}
-                                                      >
-                                                        {vari}
-                                                      </option>
-                                                    );
-                                                  }
-                                                )}
-                                              </Form.Select>
-                                            </InputGroup>
-                                          </div>
-                                        </td>
-
-                                        <td className="p-0 text-center">
-                                          <div className=" d-flex align-items-center">
-                                            <InputGroup className="" size="sm">
-                                              <Form.Control
-                                                value={
-                                                  productvariantarray.unit_quantity
-                                                }
-                                                type="number"
-                                                sm="9"
-                                                disabled={
-                                                  productvariantarray.unit ==
-                                                  "pcs"
-                                                    ? true
-                                                    : false
-                                                }
-                                                // className={
-                                                //   customvalidated === true
-                                                //     ? "border-danger"
-                                                //     : null
-                                                // }
-                                                onChange={(e) =>
-                                                  handleVarietyChange(e)
-                                                }
-                                                name={"unit_quantity"}
-                                              />
-                                            </InputGroup>
-                                          </div>
-                                        </td>
-
-                                        <td className="p-0 text-center">
-                                          <div className=" d-flex align-items-center">
-                                            <InputGroup className="" size="sm">
-                                              <Form.Select
-                                                aria-label="Default select example"
-                                                required
-                                                sm="9"
-                                                name="size"
-                                                value={productvariantarray.size}
-                                                onChange={(e) =>
-                                                  handleVarietyChange(e)
-                                                }
-                                                disabled={
-                                                  productvariantarray.unit !==
-                                                    "pcs" &&
-                                                  productvariantarray.unit !==
-                                                    ""
-                                                    ? true
-                                                    : productvariantarray.unit ==
+                                                  <option
+                                                    value={
+                                                      productvariantarray.colors ==
                                                       ""
-                                                    ? false
-                                                    : false
-                                                }
+                                                    }
+                                                  >
+                                                    Select
+                                                  </option>
+                                                  {(varietyy.color || []).map(
+                                                    (vari, i) => {
+                                                      return (
+                                                        <option
+                                                          value={vari}
+                                                          key={i}
+                                                        >
+                                                          {vari}
+                                                        </option>
+                                                      );
+                                                    }
+                                                  )}
+                                                </Form.Select>
+                                              </InputGroup>
+                                            </div>
+                                          </td>
+
+                                          <td className="p-0 text-center">
+                                            <div className=" d-flex align-items-center">
+                                              <InputGroup
+                                                className=""
+                                                size="sm"
                                               >
-                                                <option
+                                                <Form.Control
                                                   value={
-                                                    productvariantarray.size ==
-                                                    ""
+                                                    productvariantarray.unit_quantity
+                                                  }
+                                                  type="number"
+                                                  sm="9"
+                                                  disabled={
+                                                    productvariantarray.unit ==
+                                                    "pcs"
+                                                      ? true
+                                                      : false
+                                                  }
+                                                  // className={
+                                                  //   customvalidated === true
+                                                  //     ? "border-danger"
+                                                  //     : null
+                                                  // }
+                                                  onChange={(e) =>
+                                                    handleVarietyChange(e)
+                                                  }
+                                                  name={"unit_quantity"}
+                                                />
+                                              </InputGroup>
+                                            </div>
+                                          </td>
+
+                                          <td className="p-0 text-center">
+                                            <div className=" d-flex align-items-center">
+                                              <InputGroup
+                                                className=""
+                                                size="sm"
+                                              >
+                                                <Form.Select
+                                                  aria-label="Default select example"
+                                                  required
+                                                  sm="9"
+                                                  name="size"
+                                                  value={
+                                                    productvariantarray.size
+                                                  }
+                                                  onChange={(e) =>
+                                                    handleVarietyChange(e)
+                                                  }
+                                                  disabled={
+                                                    productvariantarray.unit !==
+                                                      "pcs" &&
+                                                    productvariantarray.unit !==
+                                                      ""
+                                                      ? true
+                                                      : productvariantarray.unit ==
+                                                        ""
+                                                      ? false
+                                                      : false
                                                   }
                                                 >
-                                                  Select
-                                                </option>
-                                                {(varietyy.size || []).map(
-                                                  (vari, i) => {
-                                                    return (
-                                                      <option
-                                                        value={vari}
-                                                        key={i}
-                                                      >
-                                                        {vari}
-                                                      </option>
-                                                    );
+                                                  <option
+                                                    value={
+                                                      productvariantarray.size ==
+                                                      ""
+                                                    }
+                                                  >
+                                                    Select
+                                                  </option>
+                                                  {(varietyy.size || []).map(
+                                                    (vari, i) => {
+                                                      return (
+                                                        <option
+                                                          value={vari}
+                                                          key={i}
+                                                        >
+                                                          {vari}
+                                                        </option>
+                                                      );
+                                                    }
+                                                  )}
+                                                </Form.Select>
+                                              </InputGroup>
+                                            </div>
+                                          </td>
+                                          <td className="p-0 text-center">
+                                            <div className=" d-flex align-items-center">
+                                              <InputGroup
+                                                className=""
+                                                size="sm"
+                                              >
+                                                <Form.Control
+                                                  type="number"
+                                                  sm="9"
+                                                  step="0.01"
+                                                  maxLength={"5"}
+                                                  minLength={"1"}
+                                                  min="1"
+                                                  max="50000"
+                                                  name="mrp"
+                                                  value={
+                                                    productvariantarray.mrp
                                                   }
-                                                )}
-                                              </Form.Select>
-                                            </InputGroup>
-                                          </div>
-                                        </td>
-                                        <td className="p-0 text-center">
-                                          <div className=" d-flex align-items-center">
-                                            <InputGroup className="" size="sm">
-                                              <Form.Control
-                                                type="number"
-                                                sm="9"
-                                                step="0.01"
-                                                maxLength={"5"}
-                                                minLength={"1"}
-                                                min="1"
-                                                max="50000"
-                                                name="mrp"
-                                                value={productvariantarray.mrp}
-                                                onChange={(e) =>
-                                                  handleVarietyChange(e)
-                                                }
-                                                required
-                                              />
-                                            </InputGroup>
-                                          </div>
-                                        </td>
-                                        <td className="p-0 text-center">
-                                          <div className=" d-flex align-items-center">
-                                            <InputGroup className="" size="sm">
-                                              <Form.Control
-                                                type="number"
-                                                sm="9"
-                                                min={"0"}
-                                                max={"100"}
-                                                onChange={(e) =>
-                                                  handleVarietyChange(e)
-                                                }
-                                                name={"discount"}
-                                                value={
-                                                  productvariantarray.discount
-                                                }
-                                              />
-                                            </InputGroup>
-                                          </div>
-                                        </td>
-                                        <td className="p-0 text-center">
-                                          <div className=" d-flex align-items-center">
-                                            {/* PRODUCT ORIGINAL PRICE */}
-                                            <InputGroup className="" size="sm">
-                                              <Form.Control
-                                                step={"any"}
-                                                type="number"
-                                                sm="9"
-                                                name={"product_price"}
-                                                value={
-                                                  productvariantarray.product_price
-                                                }
-                                                required
-                                              />
-                                            </InputGroup>
-                                          </div>
-                                        </td>
-                                        <td className="p-0 text-center">
-                                          <div className=" d-flex align-items-center">
-                                            <InputGroup className="" size="sm">
-                                              <Form.Control
-                                                step={"any"}
-                                                type="number"
-                                                sm="9"
-                                                name={"totaltax"}
-                                                value={(
-                                                  (productvariantarray.sale_price *
-                                                    (Number(productdata.gst) +
-                                                      Number(
-                                                        productdata.wholesale_sales_tax
-                                                      ) +
-                                                      Number(
-                                                        productdata.retails_sales_tax
-                                                      ) +
-                                                      Number(
-                                                        productdata.manufacturers_sales_tax
-                                                      ) +
-                                                      Number(
-                                                        productdata.value_added_tax
-                                                      ))) /
-                                                  100
-                                                ).toFixed(2)}
-                                                required
-                                              />
-                                            </InputGroup>
-                                          </div>
-                                        </td>
+                                                  onChange={(e) =>
+                                                    handleVarietyChange(e)
+                                                  }
+                                                  required
+                                                />
+                                              </InputGroup>
+                                            </div>
+                                          </td>
+                                          <td className="p-0 text-center">
+                                            <div className=" d-flex align-items-center">
+                                              <InputGroup
+                                                className=""
+                                                size="sm"
+                                              >
+                                                <Form.Control
+                                                  type="number"
+                                                  sm="9"
+                                                  min={"0"}
+                                                  max={"100"}
+                                                  onChange={(e) =>
+                                                    handleVarietyChange(e)
+                                                  }
+                                                  name={"discount"}
+                                                  value={
+                                                    productvariantarray.discount
+                                                  }
+                                                />
+                                              </InputGroup>
+                                            </div>
+                                          </td>
+                                          <td className="p-0 text-center">
+                                            <div className=" d-flex align-items-center">
+                                              {/* PRODUCT ORIGINAL PRICE */}
+                                              <InputGroup
+                                                className=""
+                                                size="sm"
+                                              >
+                                                <Form.Control
+                                                  step={"any"}
+                                                  type="number"
+                                                  sm="9"
+                                                  name={"product_price"}
+                                                  value={
+                                                    productvariantarray.product_price
+                                                  }
+                                                  required
+                                                />
+                                              </InputGroup>
+                                            </div>
+                                          </td>
+                                          <td className="p-0 text-center">
+                                            <div className=" d-flex align-items-center">
+                                              <InputGroup
+                                                className=""
+                                                size="sm"
+                                              >
+                                                <Form.Control
+                                                  step={"any"}
+                                                  type="number"
+                                                  sm="9"
+                                                  name={"totaltax"}
+                                                  value={(
+                                                    (productvariantarray.sale_price *
+                                                      (Number(productdata.gst) +
+                                                        Number(
+                                                          productdata.wholesale_sales_tax
+                                                        ) +
+                                                        Number(
+                                                          productdata.retails_sales_tax
+                                                        ) +
+                                                        Number(
+                                                          productdata.manufacturers_sales_tax
+                                                        ) +
+                                                        Number(
+                                                          productdata.value_added_tax
+                                                        ))) /
+                                                    100
+                                                  ).toFixed(2)}
+                                                  required
+                                                />
+                                              </InputGroup>
+                                            </div>
+                                          </td>
 
-                                        <td className="p-0 text-center">
-                                          <div className=" d-flex align-items-center">
-                                            <InputGroup className="" size="sm">
-                                              <Form.Control
-                                                type="number"
-                                                step={"any"}
-                                                sm="9"
-                                                name={"sale_price"}
-                                                value={
-                                                  productvariantarray.sale_price
-                                                }
-                                                // onChange={() =>
-                                                //   setproductvariantarray({
-                                                //     ...productvariantarray,
-                                                //     sale_price:
-                                                //       saleprice.toFixed(2),
-                                                //   })
-                                                // }
-                                              />
-                                            </InputGroup>
-                                          </div>
-                                        </td>
-                                        <td className="p-0 text-center">
-                                          <div className="manufacture_date">
-                                            <InputGroup className="" size="sm">
-                                              <Form.Control
-                                                type="date"
-                                                sm="9"
-                                                required
-                                                max={moment().format(
-                                                  "YYYY-MM-DD"
-                                                )}
-                                                // className={
-                                                //   customvalidated === true
-                                                //     ? "border-danger"
-                                                //     : null
-                                                // }
-                                                onChange={(e) =>
-                                                  handleVarietyChange(e)
-                                                }
-                                                name={"manufacturing_date"}
-                                                value={
-                                                  productvariantarray.manufacturing_date
-                                                }
-                                              />
-                                            </InputGroup>
-                                          </div>
-                                        </td>
-                                        <td className="p-0 text-center">
-                                          <div className="manufacture_date">
-                                            <InputGroup className="" size="sm">
-                                              <Form.Control
-                                                type="date"
-                                                sm="9"
-                                                required
-                                                disabled={
-                                                  productvariantarray.manufacturing_date
-                                                    ? false
-                                                    : true
-                                                }
-                                                min={moment(
-                                                  productvariantarray.manufacturing_date
-                                                ).format("YYYY-MM-DD")}
-                                                onChange={(e) =>
-                                                  handleVarietyChange(e)
-                                                }
-                                                name={"expire_date"}
-                                                value={
-                                                  productvariantarray.expire_date
-                                                }
-                                              />
-                                            </InputGroup>
-                                          </div>
-                                        </td>
-                                        <td className="p-0">
-                                          <div className="">
-                                            <InputGroup className="" size="sm">
-                                              <Form.Control
-                                                name={"quantity"}
-                                                type="number"
-                                                value={
-                                                  productvariantarray.quantity
-                                                }
-                                                sm="9"
-                                                min={"1"}
-                                                required
-                                                // className={
-                                                //   customvalidated === true
-                                                //     ? "border-danger"
-                                                //     : null
-                                                // }
-                                                onChange={(e) =>
-                                                  handleVarietyChange(e)
-                                                }
-                                                onKeyPress={(event) => {
-                                                  if (event.key === "Enter") {
-                                                    VariantAddProduct();
+                                          <td className="p-0 text-center">
+                                            <div className=" d-flex align-items-center">
+                                              <InputGroup
+                                                className=""
+                                                size="sm"
+                                              >
+                                                <Form.Control
+                                                  type="number"
+                                                  step={"any"}
+                                                  sm="9"
+                                                  name={"sale_price"}
+                                                  value={
+                                                    productvariantarray.sale_price
                                                   }
-                                                }}
-                                              />
-                                            </InputGroup>
-                                          </div>
-                                        </td>
-                                        <td className="p-0">
-                                          <div className=" d-flex align-items-center">
-                                            <Button
-                                              variant="outline-success"
-                                              className="addcategoryicon"
-                                              onClick={() =>
-                                                VariantAddProduct()
-                                              }
-                                              size="sm"
+                                                  // onChange={() =>
+                                                  //   setproductvariantarray({
+                                                  //     ...productvariantarray,
+                                                  //     sale_price:
+                                                  //       saleprice.toFixed(2),
+                                                  //   })
+                                                  // }
+                                                />
+                                              </InputGroup>
+                                            </div>
+                                          </td>
+                                          <td className="p-0 text-center">
+                                            <div className="manufacture_date">
+                                              <InputGroup
+                                                className=""
+                                                size="sm"
+                                              >
+                                                <Form.Control
+                                                  type="date"
+                                                  sm="9"
+                                                  required
+                                                  max={moment().format(
+                                                    "YYYY-MM-DD"
+                                                  )}
+                                                  // className={
+                                                  //   customvalidated === true
+                                                  //     ? "border-danger"
+                                                  //     : null
+                                                  // }
+                                                  onChange={(e) =>
+                                                    handleVarietyChange(e)
+                                                  }
+                                                  name={"manufacturing_date"}
+                                                  value={
+                                                    productvariantarray.manufacturing_date
+                                                  }
+                                                />
+                                              </InputGroup>
+                                            </div>
+                                          </td>
+                                          <td className="p-0 text-center">
+                                            <div className="manufacture_date">
+                                              <InputGroup
+                                                className=""
+                                                size="sm"
+                                              >
+                                                <Form.Control
+                                                  type="date"
+                                                  sm="9"
+                                                  required
+                                                  disabled={
+                                                    productvariantarray.manufacturing_date
+                                                      ? false
+                                                      : true
+                                                  }
+                                                  min={moment(
+                                                    productvariantarray.manufacturing_date
+                                                  ).format("YYYY-MM-DD")}
+                                                  onChange={(e) =>
+                                                    handleVarietyChange(e)
+                                                  }
+                                                  name={"expire_date"}
+                                                  value={
+                                                    productvariantarray.expire_date
+                                                  }
+                                                />
+                                              </InputGroup>
+                                            </div>
+                                          </td>
+                                          <td className="p-0">
+                                            <div className="">
+                                              <InputGroup
+                                                className=""
+                                                size="sm"
+                                              >
+                                                <Form.Control
+                                                  name={"quantity"}
+                                                  type="number"
+                                                  value={
+                                                    productvariantarray.quantity
+                                                  }
+                                                  sm="9"
+                                                  min={"1"}
+                                                  required
+                                                  // className={
+                                                  //   customvalidated === true
+                                                  //     ? "border-danger"
+                                                  //     : null
+                                                  // }
+                                                  onChange={(e) =>
+                                                    handleVarietyChange(e)
+                                                  }
+                                                  onKeyPress={(event) => {
+                                                    if (event.key === "Enter") {
+                                                      VariantAddProduct();
+                                                    }
+                                                  }}
+                                                />
+                                              </InputGroup>
+                                            </div>
+                                          </td>
+                                          <td className="p-0">
+                                            <div className=" d-flex align-items-center">
+                                              <Button
+                                                variant="outline-success"
+                                                className="addcategoryicon"
+                                                onClick={() =>
+                                                  VariantAddProduct()
+                                                }
+                                                size="sm"
+                                              >
+                                                +
+                                              </Button>
+                                            </div>
+                                          </td>
+                                        </tr>
+                                        {checkProductType === true ? (
+                                          <tr>
+                                            <p
+                                              className="mt-1 ms-2 text-danger"
+                                              type="invalid"
                                             >
-                                              +
-                                            </Button>
-                                          </div>
-                                        </td>
-                                      </tr>
-                                      {checkProductType === true ? (
-                                        <tr>
-                                          <p
-                                            className="mt-1 ms-2 text-danger"
-                                            type="invalid"
-                                          >
-                                            Please the select the product type
-                                            first....!!!!
-                                          </p>
-                                        </tr>
-                                      ) : checkProductType ===
-                                        false ? null : null}
-
-                                      {varietyUnitvalidation ===
-                                      "ExpireDateValidation" ? (
-                                        <tr>
-                                          <p
-                                            className="mt-1 ms-2 text-danger"
-                                            type="invalid"
-                                          >
-                                            Please Expire date should be greater
-                                            than Manufacturing date
-                                          </p>
-                                        </tr>
-                                      ) : null}
-
-                                      <tr>
-                                        {customvalidated === true ? (
-                                          <p
-                                            className="mt-1 ms-2 text-danger"
-                                            type="invalid"
-                                          >
-                                            Please fill Required fields
-                                          </p>
-                                        ) : varietyValidation ===
-                                          "varietyadd" ? (
-                                          <p
-                                            className="mt-1 ms-2 text-danger"
-                                            type="invalid"
-                                          >
-                                            Please Click On Plus Button To Add
-                                            Variety
-                                          </p>
-                                        ) : null}
+                                              Please the select the product type
+                                              first....!!!!
+                                            </p>
+                                          </tr>
+                                        ) : checkProductType ===
+                                          false ? null : null}
 
                                         {varietyUnitvalidation ===
-                                        "fillUnit&size&color" ? (
-                                          <p
-                                            className="mt-1 ms-2 text-danger"
-                                            type="invalid"
-                                          >
-                                            Please Fill size and colors
-                                          </p>
-                                        ) : varietyUnitvalidation ===
-                                          "fillUnit&color" ? (
-                                          <p
-                                            className="mt-1 ms-2 text-danger my-3"
-                                            type="invalid"
-                                          >
-                                            Please fill color
-                                          </p>
-                                        ) : varietyUnitvalidation ===
-                                          "unitQwanity&size&color" ? (
-                                          <p
-                                            className="mt-1 ms-2 text-danger my-3"
-                                            type="invalid"
-                                          >
-                                            Please fill weight/volume/piece
-                                          </p>
-                                        ) : varietyUnitvalidation ===
-                                          "discountmore" ? (
-                                          <p
-                                            className="mt-1 ms-2 text-danger my-3"
-                                            type="invalid"
-                                          >
-                                            Discount should be less then 100
-                                          </p>
-                                        ) : varietyUnitvalidation ===
-                                          "QwanityValidation" ? (
-                                          <p
-                                            className="mt-1 ms-2 text-danger my-3"
-                                            type="invalid"
-                                          >
-                                            Quantity must be greater than 0
-                                          </p>
-                                        ) : varietyUnitvalidation ===
-                                          "mrpmore" ? (
-                                          <p
-                                            className="mt-1 ms-2 text-danger my-3"
-                                            type="invalid"
-                                          >
-                                            Mrp must be lesser than 50000 and
-                                            greater than 0
-                                          </p>
-                                        ) : varietyUnitvalidation ===
-                                          "" ? null : null}
-                                      </tr>
+                                        "ExpireDateValidation" ? (
+                                          <tr>
+                                            <p
+                                              className="mt-1 ms-2 text-danger"
+                                              type="invalid"
+                                            >
+                                              Please Expire date should be
+                                              greater than Manufacturing date
+                                            </p>
+                                          </tr>
+                                        ) : null}
 
-                                      {(variantmainarray || []).map(
-                                        (variantdata, i) => {
-                                          return (
-                                            <tr>
-                                              <td className="p-0 text-center ">
-                                                {variantdata.unit === "pcs"
-                                                  ? "color"
-                                                  : variantdata.unit === "gms"
-                                                  ? "weight"
-                                                  : variantdata.unit === "ml"
-                                                  ? "volume"
-                                                  : variantdata.unit === "piece"
-                                                  ? "piece"
-                                                  : ""}
-                                              </td>
-                                              <td className="p-0 text-center ">
-                                                {variantdata.colors}
-                                              </td>
-                                              <td className="p-0 text-center ">
-                                                {variantdata.unit === "gms"
-                                                  ? variantdata.unit_quantity
-                                                  : variantdata.unit === "ml"
-                                                  ? variantdata.unit_quantity
-                                                  : variantdata.unit === "piece"
-                                                  ? variantdata.unit_quantity
-                                                  : null}
-                                              </td>
-                                              <td className="p-0 text-center ">
-                                                {variantdata.size}
-                                              </td>
-                                              <td className="p-0 text-center ">
-                                                {variantdata.mrp}
-                                              </td>
-                                              <td className="p-0 text-center ">
-                                                {variantdata.discount}
-                                              </td>
-                                              <td className="p-0 text-center ">
-                                                {variantdata.product_price}
-                                              </td>
-                                              <td className="p-0 text-center ">
-                                                {(
-                                                  (variantdata.sale_price *
-                                                    (Number(productdata.gst) +
-                                                      Number(
-                                                        productdata.wholesale_sales_tax
-                                                      ) +
-                                                      Number(
-                                                        productdata.retails_sales_tax
-                                                      ) +
-                                                      Number(
-                                                        productdata.manufacturers_sales_tax
-                                                      ) +
-                                                      Number(
-                                                        productdata.value_added_tax
-                                                      ))) /
-                                                  100
-                                                ).toFixed(2)}
-                                              </td>
-                                              <td className="p-0 text-center ">
-                                                {variantdata.sale_price}
-                                              </td>
-                                              <td className="p-0 text-center ">
-                                                {variantdata.manufacturing_date}
-                                              </td>
-                                              <td className="p-0 text-center ">
-                                                {variantdata.expire_date}
-                                              </td>
-                                              <td className="p-0 text-center">
-                                                {variantdata.quantity}
-                                              </td>
-                                              <td className="p-0 text-center">
-                                                <Button
-                                                  variant="text-danger"
-                                                  className="addcategoryicon text-danger"
-                                                  onClick={(id) =>
-                                                    MainVariantRemoveClick(
-                                                      variantdata
-                                                    )
+                                        <tr>
+                                          {customvalidated === true ? (
+                                            <p
+                                              className="mt-1 ms-2 text-danger"
+                                              type="invalid"
+                                            >
+                                              Please fill Required fields
+                                            </p>
+                                          ) : varietyValidation ===
+                                            "varietyadd" ? (
+                                            <p
+                                              className="mt-1 ms-2 text-danger"
+                                              type="invalid"
+                                            >
+                                              Please Click On Plus Button To Add
+                                              Variety
+                                            </p>
+                                          ) : null}
+
+                                          {varietyUnitvalidation ===
+                                          "fillUnit&size&color" ? (
+                                            <p
+                                              className="mt-1 ms-2 text-danger"
+                                              type="invalid"
+                                            >
+                                              Please Fill size and colors
+                                            </p>
+                                          ) : varietyUnitvalidation ===
+                                            "fillUnit&color" ? (
+                                            <p
+                                              className="mt-1 ms-2 text-danger my-3"
+                                              type="invalid"
+                                            >
+                                              Please fill color
+                                            </p>
+                                          ) : varietyUnitvalidation ===
+                                            "unitQwanity&size&color" ? (
+                                            <p
+                                              className="mt-1 ms-2 text-danger my-3"
+                                              type="invalid"
+                                            >
+                                              Please fill weight/volume/piece
+                                            </p>
+                                          ) : varietyUnitvalidation ===
+                                            "discountmore" ? (
+                                            <p
+                                              className="mt-1 ms-2 text-danger my-3"
+                                              type="invalid"
+                                            >
+                                              Discount should be less then 100
+                                            </p>
+                                          ) : varietyUnitvalidation ===
+                                            "QwanityValidation" ? (
+                                            <p
+                                              className="mt-1 ms-2 text-danger my-3"
+                                              type="invalid"
+                                            >
+                                              Quantity must be greater than 0
+                                            </p>
+                                          ) : varietyUnitvalidation ===
+                                            "mrpmore" ? (
+                                            <p
+                                              className="mt-1 ms-2 text-danger my-3"
+                                              type="invalid"
+                                            >
+                                              Mrp must be lesser than 50000 and
+                                              greater than 0
+                                            </p>
+                                          ) : varietyUnitvalidation ===
+                                            "" ? null : null}
+                                        </tr>
+
+                                        {(variantmainarray || []).map(
+                                          (variantdata, i) => {
+                                            return (
+                                              <tr key={i}>
+                                                <td className="p-0 text-center ">
+                                                  {variantdata.unit === "pcs"
+                                                    ? "color"
+                                                    : variantdata.unit === "gms"
+                                                    ? "weight"
+                                                    : variantdata.unit === "ml"
+                                                    ? "volume"
+                                                    : variantdata.unit ===
+                                                      "piece"
+                                                    ? "piece"
+                                                    : ""}
+                                                </td>
+                                                <td className="p-0 text-center ">
+                                                  {variantdata.colors}
+                                                </td>
+                                                <td className="p-0 text-center ">
+                                                  {variantdata.unit === "gms"
+                                                    ? variantdata.unit_quantity
+                                                    : variantdata.unit === "ml"
+                                                    ? variantdata.unit_quantity
+                                                    : variantdata.unit ===
+                                                      "piece"
+                                                    ? variantdata.unit_quantity
+                                                    : null}
+                                                </td>
+                                                <td className="p-0 text-center ">
+                                                  {variantdata.size}
+                                                </td>
+                                                <td className="p-0 text-center ">
+                                                  {variantdata.mrp}
+                                                </td>
+                                                <td className="p-0 text-center ">
+                                                  {variantdata.discount}
+                                                </td>
+                                                <td className="p-0 text-center ">
+                                                  {variantdata.product_price}
+                                                </td>
+                                                <td className="p-0 text-center ">
+                                                  {(
+                                                    (variantdata.sale_price *
+                                                      (Number(productdata.gst) +
+                                                        Number(
+                                                          productdata.wholesale_sales_tax
+                                                        ) +
+                                                        Number(
+                                                          productdata.retails_sales_tax
+                                                        ) +
+                                                        Number(
+                                                          productdata.manufacturers_sales_tax
+                                                        ) +
+                                                        Number(
+                                                          productdata.value_added_tax
+                                                        ))) /
+                                                    100
+                                                  ).toFixed(2)}
+                                                </td>
+                                                <td className="p-0 text-center ">
+                                                  {variantdata.sale_price}
+                                                </td>
+                                                <td className="p-0 text-center ">
+                                                  {
+                                                    variantdata.manufacturing_date
                                                   }
-                                                  size="sm"
-                                                >
-                                                  &times;
-                                                </Button>
-                                              </td>
-                                            </tr>
-                                          );
-                                        }
-                                      )}
-                                    </tbody>
-                                  </Table>
+                                                </td>
+                                                <td className="p-0 text-center ">
+                                                  {variantdata.expire_date}
+                                                </td>
+                                                <td className="p-0 text-center">
+                                                  {variantdata.quantity}
+                                                </td>
+                                                <td className="p-0 text-center">
+                                                  <Button
+                                                    variant="text-danger"
+                                                    className="addcategoryicon text-danger"
+                                                    onClick={(id) =>
+                                                      MainVariantRemoveClick(
+                                                        variantdata
+                                                      )
+                                                    }
+                                                    size="sm"
+                                                  >
+                                                    &times;
+                                                  </Button>
+                                                </td>
+                                              </tr>
+                                            );
+                                          }
+                                        )}
+                                      </tbody>
+                                    </Table>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </Form.Group>
+                            </Form.Group>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ) : null}
-                </Form>
-                {/* </Form> */}
-                {/* Offer */}
+                    ) : null}
+                  </Form>
+                  {/* </Form> */}
+                  {/* Offer */}
 
-                {/* seo tag */}
-                <div className="my-3 inputsection_box">
-                  <h5 className="m-0">Seo Tag</h5>
-                  <div className="productvariety">
-                    <Form.Group
-                      className="mx-3"
-                      controlId="validationCustomSeo"
-                    >
-                      <div className=" d-flex align-items-center my-2">
-                        <InputGroup className="" size="sm">
-                          <Form.Control
-                            sm="9"
-                            onChange={ontagchange}
-                            value={addtag}
-                            // onKeyPress={(event) => {
-                            //   if (event.key === "Enter") {
-                            //     ontagaddclick();
-                            //   }
-                            // }}
-                          />
-                          <Button
-                            variant="outline-success"
-                            className="addcategoryicon"
-                            onClick={() => ontagaddclick()}
-                            size="sm"
-                          >
-                            +
-                          </Button>
-                        </InputGroup>
-                      </div>
-
-                      <div className="d-flex align-items-center tagselectbox mt-2">
-                        {productdata.seo_tag == "" && addtag === "" ? (
-                          ""
-                        ) : productdata.seo_tag ? (
-                          <Badge className="tagselecttitle mb-0" bg="success">
-                            {productdata.seo_tag === null ||
-                            productdata.seo_tag === undefined
-                              ? ""
-                              : productdata.seo_tag}
-                            <span
-                              onClick={() => tagRemoveClick()}
-                              className={
-                                "addcategoryicon mx-2 text-light spanCurser "
-                              }
-                            >
-                              {"x"}
-                            </span>
-                          </Badge>
-                        ) : null}
-
-                        {/* )
-
-                        })} */}
-                      </div>
-                    </Form.Group>
-                  </div>
-                </div>
-
-                {/* other info */}
-                <div className="my-3 inputsection_box">
-                  <h5 className="m-0">Other Instruction</h5>
-                  <Col sm="12" className="mt-3">
-                    <CKEditor
-                      editor={ClassicEditor}
-                      data={productdata.other_introduction}
-                      onChange={OtherDescription}
-                      name={"other_introduction"}
-                    />
-                  </Col>
-                </div>
-                {/* input */}
-                <div className="my-3 inputsection_box">
-                  <h5 className="m-0">Add Custom Input</h5>
-                  <div className=" mt-0 mb-3">
-                    <Table className="align-middle">
-                      <thead>
-                        <tr>
-                          <th>Heading</th>
-                          <th>Description</th>
-                          <th></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td className="text-center col-4">
-                            <InputGroup className="">
-                              <Form.Control
-                                value={headerval}
-                                type="text"
-                                sm="9"
-                                min={"1"}
-                                onChange={oncustomheadChange}
-                                name={"header"}
-                              />
-                            </InputGroup>
-                          </td>
-                          <td className="col-4">
-                            <InputGroup className="">
-                              <Form.Control
-                                value={descval}
-                                name={"description"}
-                                type="text"
-                                sm="9"
-                                min={"1"}
-                                onChange={oncustomdescChange}
-                                onKeyPress={(event) => {
-                                  if (event.key === "Enter") {
-                                    handleAddClick();
-                                  }
-                                }}
-                              />
-                            </InputGroup>
-                          </td>
-                          <td className="">
+                  {/* seo tag */}
+                  <div className="my-3 inputsection_box">
+                    <h5 className="m-0">Seo Tag</h5>
+                    <div className="productvariety">
+                      <Form.Group
+                        className="mx-3"
+                        controlId="validationCustomSeo"
+                      >
+                        <div className=" d-flex align-items-center my-2">
+                          <InputGroup className="" size="sm">
+                            <Form.Control
+                              sm="9"
+                              onChange={ontagchange}
+                              value={addtag}
+                              // onKeyPress={(event) => {
+                              //   if (event.key === "Enter") {
+                              //     ontagaddclick();
+                              //   }
+                              // }}
+                            />
                             <Button
                               variant="outline-success"
                               className="addcategoryicon"
-                              onClick={() => handleAddClick()}
+                              onClick={() => ontagaddclick()}
                               size="sm"
                             >
                               +
                             </Button>
-                          </td>
-                        </tr>
-                        {(customarray || []).map((variantdata, i) => {
-                          // const arr = variantdata.split(',')
-                          return (
-                            <tr className="">
-                              <td className=" text-center">
-                                <InputGroup className="">
-                                  <Form.Control
-                                    value={variantdata.header}
-                                    type="text"
-                                    sm="9"
-                                    min={"1"}
-                                    onChange={oncustomheadChange}
-                                    name={"custom_input_header"}
-                                    required
-                                  />
-                                </InputGroup>
-                              </td>
-                              <td className="text-center">
-                                <InputGroup className="">
-                                  <Form.Control
-                                    required
-                                    value={variantdata.description}
-                                    name={"custom_input_desc"}
-                                    type="text"
-                                    sm="9"
-                                    min={"1"}
-                                    onChange={oncustomdescChange}
-                                    onKeyPress={(event) => {
-                                      if (event.key === "Enter") {
-                                        handleAddClick();
-                                      }
-                                    }}
-                                  />
-                                </InputGroup>
-                              </td>
-                              <td className="">
-                                <Button
-                                  variant="text-danger"
-                                  className="addcategoryicon text-danger"
-                                  onClick={() => handleRemoveClick(variantdata)}
-                                  size="sm"
-                                >
-                                  &times;
-                                </Button>
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </Table>
+                          </InputGroup>
+                        </div>
+
+                        <div className="d-flex align-items-center tagselectbox mt-2">
+                          {productdata.seo_tag == "" && addtag === "" ? (
+                            ""
+                          ) : productdata.seo_tag ? (
+                            <Badge className="tagselecttitle mb-0" bg="success">
+                              {productdata.seo_tag === null ||
+                              productdata.seo_tag === undefined
+                                ? ""
+                                : productdata.seo_tag}
+                              <span
+                                onClick={() => tagRemoveClick()}
+                                className={
+                                  "addcategoryicon mx-2 text-light spanCurser "
+                                }
+                              >
+                                {"x"}
+                              </span>
+                            </Badge>
+                          ) : null}
+
+                          {/* )
+
+                        })} */}
+                        </div>
+                      </Form.Group>
+                    </div>
                   </div>
-                  {/* );
+
+                  {/* other info */}
+                  <div className="my-3 inputsection_box">
+                    <h5 className="m-0">Other Instruction</h5>
+                    <Col sm="12" className="mt-3">
+                      <CKEditor
+                        editor={ClassicEditor}
+                        data={productdata.other_introduction}
+                        onChange={OtherDescription}
+                        name={"other_introduction"}
+                      />
+                    </Col>
+                  </div>
+                  {/* input */}
+                  <div className="my-3 inputsection_box">
+                    <h5 className="m-0">Add Custom Input</h5>
+                    <div className=" mt-0 mb-3">
+                      <Table className="align-middle">
+                        <thead>
+                          <tr>
+                            <th>Heading</th>
+                            <th>Description</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td className="text-center col-4">
+                              <InputGroup className="">
+                                <Form.Control
+                                  value={headerval}
+                                  type="text"
+                                  sm="9"
+                                  min={"1"}
+                                  onChange={oncustomheadChange}
+                                  name={"header"}
+                                />
+                              </InputGroup>
+                            </td>
+                            <td className="col-4">
+                              <InputGroup className="">
+                                <Form.Control
+                                  value={descval}
+                                  name={"description"}
+                                  type="text"
+                                  sm="9"
+                                  min={"1"}
+                                  onChange={oncustomdescChange}
+                                  onKeyPress={(event) => {
+                                    if (event.key === "Enter") {
+                                      handleAddClick();
+                                    }
+                                  }}
+                                />
+                              </InputGroup>
+                            </td>
+                            <td className="">
+                              <Button
+                                variant="outline-success"
+                                className="addcategoryicon"
+                                onClick={() => handleAddClick()}
+                                size="sm"
+                              >
+                                +
+                              </Button>
+                            </td>
+                          </tr>
+                          {(customarray || []).map((variantdata, i) => {
+                            // const arr = variantdata.split(',')
+                            return (
+                              <tr className="" key={i}>
+                                <td className=" text-center">
+                                  <InputGroup className="">
+                                    <Form.Control
+                                      value={variantdata.header}
+                                      type="text"
+                                      sm="9"
+                                      min={"1"}
+                                      onChange={oncustomheadChange}
+                                      name={"custom_input_header"}
+                                      required
+                                    />
+                                  </InputGroup>
+                                </td>
+                                <td className="text-center">
+                                  <InputGroup className="">
+                                    <Form.Control
+                                      required
+                                      value={variantdata.description}
+                                      name={"custom_input_desc"}
+                                      type="text"
+                                      sm="9"
+                                      min={"1"}
+                                      onChange={oncustomdescChange}
+                                      onKeyPress={(event) => {
+                                        if (event.key === "Enter") {
+                                          handleAddClick();
+                                        }
+                                      }}
+                                    />
+                                  </InputGroup>
+                                </td>
+                                <td className="">
+                                  <Button
+                                    variant="text-danger"
+                                    className="addcategoryicon text-danger"
+                                    onClick={() =>
+                                      handleRemoveClick(variantdata)
+                                    }
+                                    size="sm"
+                                  >
+                                    &times;
+                                  </Button>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </Table>
+                    </div>
+                    {/* );
                 })} */}
-                  {/* --------------------------------------------- */}
+                    {/* --------------------------------------------- */}
+                  </div>
+                  {customvalidated === "pleasefillall" ? (
+                    <span className="text-danger">
+                      Please Fill All Mandatary Fields
+                    </span>
+                  ) : null}
                 </div>
-              </div>
-            </Modal.Body>
-            <Modal.Footer className="addproductfooter">
-              <Iconbutton
-                btntext={" Cancel"}
-                onClick={() => handleClose()}
-                btnclass={"button main_outline_button px-2"}
-                // Iconname={<GiCancel /> }
-              />
-              {/* <MainButton
+              </Modal.Body>
+              <Modal.Footer className="addproductfooter">
+                <Iconbutton
+                  btntext={" Cancel"}
+                  onClick={() => handleClose()}
+                  btnclass={"button main_outline_button px-2"}
+                  // Iconname={<GiCancel /> }
+                />
+                {/* <MainButton
                 btntext={"Save as Draft"}
                 onClick={() => handleSaveDraft()}
               /> */}
-              <Iconbutton
-                type={"submit"}
-                btntext={modalshow === "add" ? "Add Product" : "Update Product"}
-                btnclass={"button main_button "}
-              />
-              {/* {modalshow === "add" ? (
+                <Iconbutton
+                  type={"submit"}
+                  btntext={
+                    modalshow === "add" ? "Add Product" : "Update Product"
+                  }
+                  btnclass={"button main_button "}
+                />
+                {/* {modalshow === "add" ? (
                 <Iconbutton
                   // type={"submit"}
                   onClick={() => AddMoreVariety()}
@@ -3318,89 +3469,107 @@ function Product() {
                   btnclass={"button main_button "}
                 />
               ) : null} */}
-            </Modal.Footer>
-          </Form>
-        </Modal>
+              </Modal.Footer>
+            </Form>
+          </Modal>
 
-        {/* Variety CRUD Modal */}
-        <Modal
-          size="lg"
-          show={varietyshow}
-          onHide={handlevarietyClose}
-          dialogClassName="addproductmainmodal"
-        >
-          <Form ref={formRef}>
-            <Modal.Header closeButton>
-              <Modal.Title>Add Variety</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <div className="row">
-                {/* <Form.Group
+          {/* Variety CRUD Modal */}
+          <Modal
+            size="lg"
+            show={varietyshow}
+            onHide={handlevarietyClose}
+            dialogClassName="addproductmainmodal"
+          >
+            <Form ref={formRef}>
+              <Modal.Header closeButton>
+                <Modal.Title>Add Variety</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <div className="row">
+                  {/* <Form.Group
                   className=""
                 > */}
-                <div className="variation_box my-2">
-                  <div className="row">
-                    <div className="col-md-3 col-sm-4 p-2 text-center">
-                      <div className="addvariety_inputbox">
-                        <Form.Group
-                          className="mx-3"
-                          controlId="validationCustom01"
-                        >
-                          <Form.Label
-                            className="text-start inputlabelheading"
-                            sm="12"
+                  <div className="variation_box my-2">
+                    <div className="row">
+                      <div className="col-md-3 col-sm-4 p-2 text-center">
+                        <div className="addvariety_inputbox">
+                          <Form.Group
+                            className="mx-3"
+                            controlId="validationCustom01"
                           >
-                            Variety
-                            <span className="text-danger">*</span>
-                          </Form.Label>
-                          <Col sm="12">
-                            <InputGroup className="">
-                              <Form.Select
-                                required
-                                aria-label="Default select example"
-                                name="unit"
-                                onChange={(e) => onVariantChange(e)}
-                                value={variantarray.unit}
-                                disabled={
-                                  variantarray.unit &&
-                                  changeUnitproperty == false
-                                    ? true
-                                    : variantarray.unit ||
-                                      changeUnitproperty == true
-                                    ? false
-                                    : true
-                                }
-                              >
-                                <option value={""}>{"Select"}</option>
+                            <Form.Label
+                              className="text-start inputlabelheading"
+                              sm="12"
+                            >
+                              Variety
+                              <span className="text-danger">*</span>
+                            </Form.Label>
+                            <Col sm="12">
+                              <InputGroup className="">
+                                <Form.Select
+                                  required
+                                  aria-label="Default select example"
+                                  name="unit"
+                                  onChange={(e) => onVariantChange(e)}
+                                  value={variantarray.unit}
+                                  disabled={
+                                    variantarray.unit &&
+                                    changeUnitproperty == false
+                                      ? true
+                                      : variantarray.unit ||
+                                        changeUnitproperty == true
+                                      ? false
+                                      : true
+                                  }
+                                >
+                                  <option value={""}>{"Select"}</option>
 
-                                {(varietyy.variety || []).map((vari, i) => {
-                                  return vdata.length === 0 ? null : vdata[0]
-                                      .product_type === "" ? (
-                                    <option
-                                      value={
-                                        vari === "color"
-                                          ? "pcs"
-                                          : vari === "weight"
-                                          ? "gms"
-                                          : vari === "volume"
-                                          ? "ml"
-                                          : vari === "piece"
-                                          ? "piece"
-                                          : ""
-                                      }
-                                      key={i}
-                                    >
-                                      {vari}
-                                    </option>
-                                  ) : vdata.length === 0 ? null : vdata[0]
-                                      .product_type === "Cloths" ||
-                                    vdata.length === 0 ? null : vdata[0]
-                                      .product_type === "Fashion" ? (
-                                    vari === "weight" ||
-                                    vari === "volume" ? null : (
+                                  {(varietyy.variety || []).map((vari, i) => {
+                                    return vdata.length === 0 ? null : vdata[0]
+                                        .product_type === "" ? (
                                       <option
                                         value={
-                                          vari === "piece"
+                                          vari === "color"
+                                            ? "pcs"
+                                            : vari === "weight"
+                                            ? "gms"
+                                            : vari === "volume"
+                                            ? "ml"
+                                            : vari === "piece"
+                                            ? "piece"
+                                            : ""
+                                        }
+                                        key={i}
+                                      >
+                                        {vari}
+                                      </option>
+                                    ) : vdata.length === 0 ? null : vdata[0]
+                                        .product_type === "Cloths" ||
+                                      vdata.length === 0 ? null : vdata[0]
+                                        .product_type === "Fashion" ? (
+                                      vari === "weight" ||
+                                      vari === "volume" ? null : (
+                                        <option
+                                          value={
+                                            vari === "piece"
+                                              ? "piece"
+                                              : vari === "color"
+                                              ? "pcs"
+                                              : ""
+                                          }
+                                          key={i}
+                                        >
+                                          {vari}
+                                        </option>
+                                      )
+                                    ) : vari === "color" ? null : (
+                                      <option
+                                        value={
+                                          vari === "weight"
+                                            ? "gms"
+                                            : vari === "volume"
+                                            ? "ml"
+                                            : vari === "piece"
                                             ? "piece"
                                             : vari === "color"
                                             ? "pcs"
@@ -3410,962 +3579,977 @@ function Product() {
                                       >
                                         {vari}
                                       </option>
-                                    )
-                                  ) : vari === "color" ? null : (
-                                    <option
-                                      value={
-                                        vari === "weight"
-                                          ? "gms"
-                                          : vari === "volume"
-                                          ? "ml"
-                                          : vari === "piece"
-                                          ? "piece"
-                                          : vari === "color"
-                                          ? "pcs"
-                                          : ""
-                                      }
-                                      key={i}
-                                    >
-                                      {vari}
-                                    </option>
-                                  );
-                                })}
-                              </Form.Select>
-                            </InputGroup>
-                          </Col>
-                        </Form.Group>
+                                    );
+                                  })}
+                                </Form.Select>
+                              </InputGroup>
+                            </Col>
+                          </Form.Group>
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="col-md-3 col-sm-4 p-2 text-center">
-                      <div className="addvariety_inputbox">
-                        <Form.Group
-                          className="mx-3"
-                          controlId="validationCustom01"
-                        >
-                          <Form.Label
-                            className="text-start inputlabelheading"
-                            sm="12"
+                      <div className="col-md-3 col-sm-4 p-2 text-center">
+                        <div className="addvariety_inputbox">
+                          <Form.Group
+                            className="mx-3"
+                            controlId="validationCustom01"
                           >
-                            Color
-                            <span className="text-danger">*</span>
-                          </Form.Label>
-                          <Col sm="12">
-                            <InputGroup className="">
-                              <Form.Select
-                                aria-label="Default select example"
-                                required
-                                sm="9"
-                                name="colors"
-                                value={variantarray.colors}
-                                onChange={(e) => onVariantChange(e)}
-                              >
-                                <option value={variantarray.colors == ""}>
-                                  Select
-                                </option>
-                                {(varietyy.color || []).map((vari, i) => {
-                                  return (
-                                    <option value={vari} key={i}>
-                                      {vari}
-                                    </option>
-                                  );
-                                })}
-                              </Form.Select>
-                            </InputGroup>
-                          </Col>
-                        </Form.Group>
+                            <Form.Label
+                              className="text-start inputlabelheading"
+                              sm="12"
+                            >
+                              Color
+                              <span className="text-danger">*</span>
+                            </Form.Label>
+                            <Col sm="12">
+                              <InputGroup className="">
+                                <Form.Select
+                                  aria-label="Default select example"
+                                  required
+                                  sm="9"
+                                  name="colors"
+                                  value={variantarray.colors}
+                                  onChange={(e) => onVariantChange(e)}
+                                >
+                                  <option value={variantarray.colors == ""}>
+                                    Select
+                                  </option>
+                                  {(varietyy.color || []).map((vari, i) => {
+                                    return (
+                                      <option value={vari} key={i}>
+                                        {vari}
+                                      </option>
+                                    );
+                                  })}
+                                </Form.Select>
+                              </InputGroup>
+                            </Col>
+                          </Form.Group>
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="col-md-3 col-sm-4 p-2 text-center">
-                      <div className="addvariety_inputbox">
-                        <Form.Group
-                          className="mx-3"
-                          controlId="validationCustom01"
-                        >
-                          <Form.Label
-                            className="text-start inputlabelheading"
-                            sm="12"
+                      <div className="col-md-3 col-sm-4 p-2 text-center">
+                        <div className="addvariety_inputbox">
+                          <Form.Group
+                            className="mx-3"
+                            controlId="validationCustom01"
                           >
-                            Weight/Piece/Volume
-                            <span className="text-danger">*</span>
-                          </Form.Label>
-                          <Col sm="12">
-                            <InputGroup className="">
-                              <Form.Control
-                                value={variantarray.unit_quantity}
-                                disabled={
-                                  variantarray.unit == "pcs" ? true : false
-                                }
-                                required={
-                                  variantarray.unit !== "pcs" &&
-                                  variantarray.unit_quantity === ""
-                                    ? true
-                                    : false
-                                }
-                                type="text"
-                                sm="9"
-                                onChange={(e) => onVariantChange(e)}
-                                name={"unit_quantity"}
-                              />
-                            </InputGroup>
-                          </Col>
-                        </Form.Group>
-                      </div>
-                    </div>
-                    <div className="col-md-3 col-sm-4 p-2 text-center">
-                      <div className="addvariety_inputbox">
-                        <Form.Group
-                          className="mx-3"
-                          controlId="validationCustom01"
-                        >
-                          <Form.Label
-                            className="text-start inputlabelheading"
-                            sm="12"
-                          >
-                            Size
-                            <span className="text-danger">*</span>
-                          </Form.Label>
-                          <Col sm="12">
-                            <InputGroup className="">
-                              <Form.Select
-                                aria-label="Default select example"
-                                required
-                                sm="9"
-                                name="size"
-                                value={variantarray.size}
-                                onChange={(e) => onVariantChange(e)}
-                                disabled={
-                                  variantarray.unit !== "pcs" &&
-                                  variantarray.unit !== ""
-                                    ? true
-                                    : variantarray.unit == ""
-                                    ? false
-                                    : false
-                                }
-                              >
-                                <option value={""}>Select</option>
-                                {(varietyy.size || []).map((vari, i) => {
-                                  return (
-                                    <option value={vari} key={i}>
-                                      {vari}
-                                    </option>
-                                  );
-                                })}
-                              </Form.Select>
-                            </InputGroup>
-                          </Col>
-                        </Form.Group>
-                      </div>
-                    </div>
-
-                    <div className="col-md-3 col-sm-4 p-2 text-center">
-                      <div className="addvariety_inputbox">
-                        <Form.Group
-                          className="mx-3"
-                          controlId="validationCustom01"
-                        >
-                          <Form.Label
-                            className="text-start inputlabelheading"
-                            sm="12"
-                          >
-                            Mrp
-                            <span className="text-danger">*</span>
-                          </Form.Label>
-                          <Col sm="12">
-                            <InputGroup className="">
-                              <Form.Control
-                                step="0.01"
-                                type="number"
-                                // step={"any"}
-                                min={1}
-                                sm="9"
-                                onChange={(e) => onVariantChange(e)} //setmrp
-                                name={"mrp"}
-                                value={variantarray.mrp}
-                              />
-                            </InputGroup>
-                          </Col>
-                        </Form.Group>
-                      </div>
-                    </div>
-                    <div className="col-md-3 col-sm-4 p-2 text-center">
-                      <div className="addvariety_inputbox">
-                        <Form.Group
-                          className="mx-3"
-                          controlId="validationCustom01"
-                        >
-                          <Form.Label
-                            className="text-start inputlabelheading"
-                            sm="12"
-                          >
-                            Discount
-                          </Form.Label>
-                          <Col sm="12">
-                            <InputGroup className="">
-                              <Form.Control
-                                type="number"
-                                sm="9"
-                                min={"1"}
-                                max={"100"}
-                                onChange={(e) => onVariantChange(e)}
-                                name={"discount"}
-                                value={variantarray.discount}
-                              />
-                            </InputGroup>
-                          </Col>
-                        </Form.Group>
-                      </div>
-                    </div>
-                    <div className="col-md-3 col-sm-4 p-2 text-center">
-                      <div className="addvariety_inputbox">
-                        <Form.Group
-                          className="mx-3"
-                          controlId="validationCustom01"
-                        >
-                          <Form.Label
-                            className="text-start inputlabelheading"
-                            sm="12"
-                          >
-                            Original Price
-                            <span className="text-danger">*</span>
-                          </Form.Label>
-                          <Col sm="12">
-                            <InputGroup className="">
-                              <Form.Control
-                                min={1}
-                                step={0.01}
-                                type="number"
-                                sm="9"
-                                name={"product_price"}
-                                value={Number(
-                                  variantarray.product_price
-                                ).toFixed(2)}
-                              />
-                            </InputGroup>
-                          </Col>
-                        </Form.Group>
-                      </div>
-                    </div>
-
-                    <div className="col-md-3 col-sm-4 p-2 text-center">
-                      <div className="addvariety_inputbox">
-                        <Form.Group
-                          className="mx-3"
-                          controlId="validationCustom01"
-                        >
-                          <Form.Label
-                            className="text-start inputlabelheading"
-                            sm="12"
-                          >
-                            Tax
-                            <span className="text-danger">*</span>
-                          </Form.Label>
-                          <Col sm="12">
-                            <InputGroup className="">
-                              <Form.Control
-                                step={0.01}
-                                type="number"
-                                sm="9"
-                                min={1}
-                                name={"totaltax"}
-                                value={Number(totaltax).toFixed(2)}
-                              />
-                            </InputGroup>
-                          </Col>
-                        </Form.Group>
-                      </div>
-                    </div>
-
-                    <div className="col-md-3 col-sm-4 p-2 text-center">
-                      <div className="addvariety_inputbox">
-                        <Form.Group
-                          className="mx-3"
-                          controlId="validationCustom01"
-                        >
-                          <Form.Label
-                            className="text-start inputlabelheading"
-                            sm="12"
-                          >
-                            Sale Price
-                            <span className="text-danger">*</span>
-                          </Form.Label>
-                          <Col sm="12">
-                            <InputGroup className="">
-                              <Form.Control
-                                min={1}
-                                step={0.01}
-                                type="number"
-                                sm="9"
-                                name={"sale_price"}
-                                value={Number(variantarray.sale_price)}
-                              />
-                            </InputGroup>
-                          </Col>
-                        </Form.Group>
-                      </div>
-                    </div>
-
-                    <div className="col-md-3 col-sm-4 p-2 text-center">
-                      <div className="manufacture_date addvariety_inputbox">
-                        <Form.Group
-                          className="mx-3"
-                          controlId="validationCustom01"
-                        >
-                          <Form.Label
-                            className="text-start inputlabelheading"
-                            sm="12"
-                          >
-                            Manufacturing Date
-                            <span className="text-danger">*</span>
-                          </Form.Label>
-                          <Col sm="12">
-                            <InputGroup className="">
-                              <Form.Control
-                                type="date"
-                                sm="9"
-                                max={moment().format("YYYY-MM-DD")}
-                                onChange={(e) => onVariantChange(e)}
-                                name={"manufacturing_date"}
-                                value={moment(
-                                  variantarray.manufacturing_date
-                                ).format("YYYY-MM-DD")}
-                              />
-                            </InputGroup>
-                          </Col>
-                        </Form.Group>
-                      </div>
-                    </div>
-                    <div className="col-md-3 col-sm-4 p-2 text-center">
-                      <div className="manufacture_date addvariety_inputbox">
-                        <Form.Group
-                          className="mx-3"
-                          controlId="validationCustom01"
-                        >
-                          <Form.Label
-                            className="text-start inputlabelheading"
-                            sm="12"
-                          >
-                            Expire Date
-                            <span className="text-danger">*</span>
-                          </Form.Label>
-                          <Col sm="12">
-                            <InputGroup className="">
-                              <Form.Control
-                                type="date"
-                                sm="9"
-                                min={moment(
-                                  variantarray.manufacturing_date
-                                ).format("YYYY-MM-DD")}
-                                disabled={
-                                  variantarray.manufacturing_date ? false : true
-                                }
-                                onChange={(e) => onVariantChange(e)}
-                                name={"expire_date"}
-                                value={moment(variantarray.expire_date).format(
-                                  "YYYY-MM-DD"
-                                )}
-                              />
-                            </InputGroup>
-                          </Col>
-                        </Form.Group>
-                      </div>
-                    </div>
-                    <div className="col-md-3 col-sm-4 p-2">
-                      <div className="manufacture_date addvariety_inputbox">
-                        <Form.Group
-                          className="mx-3"
-                          controlId="validationCustom01"
-                        >
-                          <Form.Label
-                            className="text-start inputlabelheading"
-                            sm="12"
-                          >
-                            Quantity
-                            <span className="text-danger">*</span>
-                          </Form.Label>
-                          <Col sm="12">
-                            <InputGroup className="">
-                              <Form.Control
-                                name={"quantity"}
-                                type="number"
-                                value={variantarray.quantity}
-                                sm="9"
-                                min={"1"}
-                                onChange={(e) => onVariantChange(e)}
-                                onKeyUp={(event) => {
-                                  if (event.key === "Enter") {
-                                    onVariantaddclick();
+                            <Form.Label
+                              className="text-start inputlabelheading"
+                              sm="12"
+                            >
+                              Weight/Piece/Volume
+                              <span className="text-danger">*</span>
+                            </Form.Label>
+                            <Col sm="12">
+                              <InputGroup className="">
+                                <Form.Control
+                                  value={variantarray.unit_quantity}
+                                  disabled={
+                                    variantarray.unit == "pcs" ? true : false
                                   }
-                                }}
-                              />
-                            </InputGroup>
-                          </Col>
-                        </Form.Group>
+                                  required={
+                                    variantarray.unit !== "pcs" &&
+                                    variantarray.unit_quantity === ""
+                                      ? true
+                                      : false
+                                  }
+                                  type="text"
+                                  sm="9"
+                                  onChange={(e) => onVariantChange(e)}
+                                  name={"unit_quantity"}
+                                />
+                              </InputGroup>
+                            </Col>
+                          </Form.Group>
+                        </div>
                       </div>
-                    </div>
-                    <div className="col-md-3 col-sm-4 p-2 text-center">
-                      <div className="manufacture_date addvariety_inputbox">
-                        <Button
-                          variant="outline-success"
-                          className="addcategoryicon w-100"
-                          // type="submit"
-                          onClick={(e) =>
-                            onVariantaddclick(
-                              e,
-                              variantarray.id,
-                              variantarray.product_id
-                            )
-                          }
-                        >
-                          Save Variety
-                        </Button>
+                      <div className="col-md-3 col-sm-4 p-2 text-center">
+                        <div className="addvariety_inputbox">
+                          <Form.Group
+                            className="mx-3"
+                            controlId="validationCustom01"
+                          >
+                            <Form.Label
+                              className="text-start inputlabelheading"
+                              sm="12"
+                            >
+                              Size
+                              <span className="text-danger">*</span>
+                            </Form.Label>
+                            <Col sm="12">
+                              <InputGroup className="">
+                                <Form.Select
+                                  aria-label="Default select example"
+                                  required
+                                  sm="9"
+                                  name="size"
+                                  value={variantarray.size}
+                                  onChange={(e) => onVariantChange(e)}
+                                  disabled={
+                                    variantarray.unit !== "pcs" &&
+                                    variantarray.unit !== ""
+                                      ? true
+                                      : variantarray.unit == ""
+                                      ? false
+                                      : false
+                                  }
+                                >
+                                  <option value={""}>Select</option>
+                                  {(varietyy.size || []).map((vari, i) => {
+                                    return (
+                                      <option value={vari} key={i}>
+                                        {vari}
+                                      </option>
+                                    );
+                                  })}
+                                </Form.Select>
+                              </InputGroup>
+                            </Col>
+                          </Form.Group>
+                        </div>
                       </div>
-                    </div>
-                    <div className="col-md-3 col-sm-4 p-2 text-center">
-                      {varietyUnitvalidation === "ExpireDateValidation" ? (
-                        <tr>
-                          <p className="mt-1 ms-2 text-danger" type="invalid">
-                            Please Expire date should be greater than
-                            Manufacturing date
-                          </p>
-                        </tr>
-                      ) : null}
-                      <tr>
-                        {customvalidated === true ? (
-                          <p className="mt-1 ms-2 text-danger" type="invalid">
-                            Please fill Required fields
-                          </p>
-                        ) : null}
 
-                        {varietyUnitvalidation === "fillUnit&size&color" ? (
-                          <p className="mt-1 ms-2 text-danger" type="invalid">
-                            Please Fill size and colors
-                          </p>
-                        ) : varietyUnitvalidation === "fillUnit&color" ? (
-                          <p
-                            className="mt-1 ms-2 text-danger my-3"
-                            type="invalid"
+                      <div className="col-md-3 col-sm-4 p-2 text-center">
+                        <div className="addvariety_inputbox">
+                          <Form.Group
+                            className="mx-3"
+                            controlId="validationCustom01"
                           >
-                            Please fill color
-                          </p>
-                        ) : varietyUnitvalidation ===
-                          "unitQwanity&size&color" ? (
-                          <p
-                            className="mt-1 ms-2 text-danger my-3"
-                            type="invalid"
+                            <Form.Label
+                              className="text-start inputlabelheading"
+                              sm="12"
+                            >
+                              Mrp
+                              <span className="text-danger">*</span>
+                            </Form.Label>
+                            <Col sm="12">
+                              <InputGroup className="">
+                                <Form.Control
+                                  step="0.01"
+                                  type="number"
+                                  // step={"any"}
+                                  min={1}
+                                  sm="9"
+                                  onChange={(e) => onVariantChange(e)} //setmrp
+                                  name={"mrp"}
+                                  value={variantarray.mrp}
+                                />
+                              </InputGroup>
+                            </Col>
+                          </Form.Group>
+                        </div>
+                      </div>
+                      <div className="col-md-3 col-sm-4 p-2 text-center">
+                        <div className="addvariety_inputbox">
+                          <Form.Group
+                            className="mx-3"
+                            controlId="validationCustom01"
                           >
-                            Please fill weight/volume/piece
-                          </p>
-                        ) : varietyUnitvalidation === "discountmore" ? (
-                          <p
-                            className="mt-1 ms-2 text-danger my-3"
-                            type="invalid"
+                            <Form.Label
+                              className="text-start inputlabelheading"
+                              sm="12"
+                            >
+                              Discount
+                            </Form.Label>
+                            <Col sm="12">
+                              <InputGroup className="">
+                                <Form.Control
+                                  type="number"
+                                  sm="9"
+                                  min={"1"}
+                                  max={"100"}
+                                  onChange={(e) => onVariantChange(e)}
+                                  name={"discount"}
+                                  value={variantarray.discount}
+                                />
+                              </InputGroup>
+                            </Col>
+                          </Form.Group>
+                        </div>
+                      </div>
+                      <div className="col-md-3 col-sm-4 p-2 text-center">
+                        <div className="addvariety_inputbox">
+                          <Form.Group
+                            className="mx-3"
+                            controlId="validationCustom01"
                           >
-                            Discount should be less then 100
-                          </p>
-                        ) : varietyUnitvalidation === "QwanityValidation" ? (
-                          <p
-                            className="mt-1 ms-2 text-danger my-3"
-                            type="invalid"
-                          >
-                            Quantity must be greater than 0
-                          </p>
-                        ) : varietyUnitvalidation === "mrpmore" ? (
-                          <p
-                            className="mt-1 ms-2 text-danger my-3"
-                            type="invalid"
-                          >
-                            Mrp must be lesser than 50000 and greater than 0
-                          </p>
-                        ) : varietyUnitvalidation === "" ? null : null}
-                      </tr>
-                    </div>
+                            <Form.Label
+                              className="text-start inputlabelheading"
+                              sm="12"
+                            >
+                              Original Price
+                              <span className="text-danger">*</span>
+                            </Form.Label>
+                            <Col sm="12">
+                              <InputGroup className="">
+                                <Form.Control
+                                  min={1}
+                                  step={0.01}
+                                  type="number"
+                                  sm="9"
+                                  name={"product_price"}
+                                  value={Number(
+                                    variantarray.product_price
+                                  ).toFixed(2)}
+                                />
+                              </InputGroup>
+                            </Col>
+                          </Form.Group>
+                        </div>
+                      </div>
 
-                    <div className="col-12">
-                      <Table bordered className="align-middle my-2">
-                        <thead className="align-middle">
+                      <div className="col-md-3 col-sm-4 p-2 text-center">
+                        <div className="addvariety_inputbox">
+                          <Form.Group
+                            className="mx-3"
+                            controlId="validationCustom01"
+                          >
+                            <Form.Label
+                              className="text-start inputlabelheading"
+                              sm="12"
+                            >
+                              Tax
+                              <span className="text-danger">*</span>
+                            </Form.Label>
+                            <Col sm="12">
+                              <InputGroup className="">
+                                <Form.Control
+                                  step={0.01}
+                                  type="number"
+                                  sm="9"
+                                  min={1}
+                                  name={"totaltax"}
+                                  value={Number(totaltax).toFixed(2)}
+                                />
+                              </InputGroup>
+                            </Col>
+                          </Form.Group>
+                        </div>
+                      </div>
+
+                      <div className="col-md-3 col-sm-4 p-2 text-center">
+                        <div className="addvariety_inputbox">
+                          <Form.Group
+                            className="mx-3"
+                            controlId="validationCustom01"
+                          >
+                            <Form.Label
+                              className="text-start inputlabelheading"
+                              sm="12"
+                            >
+                              Sale Price
+                              <span className="text-danger">*</span>
+                            </Form.Label>
+                            <Col sm="12">
+                              <InputGroup className="">
+                                <Form.Control
+                                  min={1}
+                                  step={0.01}
+                                  type="number"
+                                  sm="9"
+                                  name={"sale_price"}
+                                  value={Number(variantarray.sale_price)}
+                                />
+                              </InputGroup>
+                            </Col>
+                          </Form.Group>
+                        </div>
+                      </div>
+
+                      <div className="col-md-3 col-sm-4 p-2 text-center">
+                        <div className="manufacture_date addvariety_inputbox">
+                          <Form.Group
+                            className="mx-3"
+                            controlId="validationCustom01"
+                          >
+                            <Form.Label
+                              className="text-start inputlabelheading"
+                              sm="12"
+                            >
+                              Manufacturing Date
+                              <span className="text-danger">*</span>
+                            </Form.Label>
+                            <Col sm="12">
+                              <InputGroup className="">
+                                <Form.Control
+                                  type="date"
+                                  sm="9"
+                                  max={moment().format("YYYY-MM-DD")}
+                                  onChange={(e) => onVariantChange(e)}
+                                  name={"manufacturing_date"}
+                                  value={moment(
+                                    variantarray.manufacturing_date
+                                  ).format("YYYY-MM-DD")}
+                                />
+                              </InputGroup>
+                            </Col>
+                          </Form.Group>
+                        </div>
+                      </div>
+                      <div className="col-md-3 col-sm-4 p-2 text-center">
+                        <div className="manufacture_date addvariety_inputbox">
+                          <Form.Group
+                            className="mx-3"
+                            controlId="validationCustom01"
+                          >
+                            <Form.Label
+                              className="text-start inputlabelheading"
+                              sm="12"
+                            >
+                              Expire Date
+                              <span className="text-danger">*</span>
+                            </Form.Label>
+                            <Col sm="12">
+                              <InputGroup className="">
+                                <Form.Control
+                                  type="date"
+                                  sm="9"
+                                  min={moment(
+                                    variantarray.manufacturing_date
+                                  ).format("YYYY-MM-DD")}
+                                  disabled={
+                                    variantarray.manufacturing_date
+                                      ? false
+                                      : true
+                                  }
+                                  onChange={(e) => onVariantChange(e)}
+                                  name={"expire_date"}
+                                  value={moment(
+                                    variantarray.expire_date
+                                  ).format("YYYY-MM-DD")}
+                                />
+                              </InputGroup>
+                            </Col>
+                          </Form.Group>
+                        </div>
+                      </div>
+                      <div className="col-md-3 col-sm-4 p-2">
+                        <div className="manufacture_date addvariety_inputbox">
+                          <Form.Group
+                            className="mx-3"
+                            controlId="validationCustom01"
+                          >
+                            <Form.Label
+                              className="text-start inputlabelheading"
+                              sm="12"
+                            >
+                              Quantity
+                              <span className="text-danger">*</span>
+                            </Form.Label>
+                            <Col sm="12">
+                              <InputGroup className="">
+                                <Form.Control
+                                  name={"quantity"}
+                                  type="number"
+                                  value={variantarray.quantity}
+                                  sm="9"
+                                  min={"1"}
+                                  onChange={(e) => onVariantChange(e)}
+                                  onKeyUp={(event) => {
+                                    if (event.key === "Enter") {
+                                      onVariantaddclick();
+                                    }
+                                  }}
+                                />
+                              </InputGroup>
+                            </Col>
+                          </Form.Group>
+                        </div>
+                      </div>
+                      <div className="col-md-3 col-sm-4 p-2 text-center">
+                        <div className="manufacture_date addvariety_inputbox">
+                          <Button
+                            variant="outline-success"
+                            className="addcategoryicon w-100"
+                            // type="submit"
+                            onClick={(e) =>
+                              onVariantaddclick(
+                                e,
+                                variantarray.id,
+                                variantarray.product_id
+                              )
+                            }
+                          >
+                            Save Variety
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="col-md-3 col-sm-4 p-2 text-center">
+                        {varietyUnitvalidation === "ExpireDateValidation" ? (
                           <tr>
-                            <th>
-                              Variety <span className="text-danger">*</span>
-                            </th>
-
-                            <th>Color</th>
-                            <th>Weight/piece/Volume </th>
-                            <th>Size </th>
-                            <th>
-                              Mrp <span className="text-danger">*</span>
-                            </th>
-                            <th>Discount</th>
-                            <th>
-                              Price<span className="text-danger">*</span>
-                            </th>
-                            <th>
-                              Total Tax<span className="text-danger">*</span>
-                            </th>
-                            <th>
-                              Sale Price<span className="text-danger">*</span>
-                            </th>
-                            <th className="manufacture_date">
-                              Mdate <span className="text-danger">*</span>
-                            </th>
-                            <th className="manufacture_date">
-                              Edate <span className="text-danger">*</span>
-                            </th>
-                            <th className="manufacture_date">
-                              Quantity<span className="text-danger">*</span>
-                            </th>
-                            <th className="manufacture_date">Action</th>
+                            <p className="mt-1 ms-2 text-danger" type="invalid">
+                              Please Expire date should be greater than
+                              Manufacturing date
+                            </p>
                           </tr>
-                        </thead>
-                        <tbody>
-                          {vdata === "" || vdata === null || vdata === undefined
-                            ? null
-                            : (vdata || []).map((variantdata, i) => {
-                                return variantdata.is_delete === "0" ? null : (
-                                  <>
-                                    <tr className="add_variety_list_box">
-                                      <td className="p-0 py-3 text-center ">
-                                        {variantdata.unit === "pcs"
-                                          ? "color"
-                                          : variantdata.unit === "piece"
-                                          ? "piece"
-                                          : variantdata.unit === "gms"
-                                          ? "weight"
-                                          : variantdata.unit === "ml"
-                                          ? "volume"
-                                          : ""}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {variantdata.colors}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {variantdata.unit === "gms"
-                                          ? variantdata.unit_quantity
-                                          : variantdata.unit === "ml"
-                                          ? variantdata.unit_quantity
-                                          : variantdata.unit === "piece"
-                                          ? variantdata.unit_quantity
-                                          : ""}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {variantdata.size}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {Number(variantdata.mrp).toFixed(2)}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {Number(variantdata.discount).toFixed(
-                                          2
-                                        )}
-                                      </td>
-
-                                      <td className="p-0 py-3 text-center ">
-                                        {Number(
-                                          variantdata.product_price
-                                        ).toFixed(2)}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {Number(
-                                          (variantdata.sale_price *
-                                            (Number(taxdata.gst) +
-                                              Number(
-                                                taxdata.wholesale_sales_tax
-                                              ) +
-                                              Number(
-                                                taxdata.retails_sales_tax
-                                              ) +
-                                              Number(
-                                                taxdata.manufacturers_sales_tax
-                                              ) +
-                                              Number(
-                                                taxdata.value_added_tax
-                                              ))) /
-                                            100
-                                        ).toFixed(2)}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {variantdata.sale_price.toFixed(2)}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {moment(
-                                          variantdata.manufacturing_date
-                                        ).format("YYYY-MM-DD")}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {moment(variantdata.expire_date).format(
-                                          "YYYY-MM-DD"
-                                        )}
-                                      </td>
-                                      <td className="p-0 py-3 text-center manufacture_date">
-                                        {variantdata.quantity}
-                                      </td>
-                                      <td className="p-0 py-3 text-center action_btn_box">
-                                        <RiImageAddLine
-                                          className="variety_edit_action_btn  text-success"
-                                          onClick={(id) => (
-                                            onImgView(
-                                              variantdata.id,
-                                              variantdata.product_id
-                                            ),
-                                            setOpen(!open)
-                                          )}
-                                          aria-controls={
-                                            "variantimgbox" + variantdata.id
-                                          }
-                                          aria-expanded={open}
-                                        />
-                                        <BiEdit
-                                          className="variety_edit_action_btn text-primary mx-2"
-                                          onClick={(id) =>
-                                            VariantEditClick(
-                                              variantdata.id,
-                                              variantdata.product_id
-                                            )
-                                          }
-                                        />
-                                        <BsTrash
-                                          className="variety_edit_action_btn text-danger"
-                                          onClick={(id) =>
-                                            VariantRemoveClick(
-                                              variantdata.id,
-                                              variantdata.product_id
-                                            )
-                                          }
-                                        />
-                                      </td>
-                                    </tr>
-                                    <Collapse in={open}>
-                                      {newImageUrls ? (
-                                        <>
-                                          <tr
-                                            className="img_preview_boxx"
-                                            id={
-                                              "variantimgbox" + variantdata.id
-                                            }
-                                          >
-                                            <td className="" colSpan={"12"}>
-                                              <div className="image_box">
-                                                {newImageUrls.map((imgg, i) => {
-                                                  return `${variantdata.id}` ===
-                                                    imgg.product_verient_id ? (
-                                                    <div className="imgprivew_box">
-                                                      {imgg.image_position ===
-                                                      "cover" ? (
-                                                        <span className="cover_img">
-                                                          Cover
-                                                        </span>
-                                                      ) : null}
-                                                      <img
-                                                        src={
-                                                          imgg.product_image_path
-                                                        }
-                                                        key={i}
-                                                        alt="apna_organic"
-                                                        height={120}
-                                                      />
-                                                      <span
-                                                        className="cover_icon"
-                                                        onClick={(id) =>
-                                                          onImgCoverEditClick(
-                                                            imgg.product_image_id,
-                                                            imgg.product_id,
-                                                            imgg.product_verient_id
-                                                          )
-                                                        }
-                                                      >
-                                                        Set Cover
-                                                      </span>
-                                                      <span
-                                                        className="cross_icon"
-                                                        onClick={() =>
-                                                          onImgRemove(
-                                                            imgg.product_image_id,
-                                                            imgg.product_image_name,
-                                                            imgg.vendor_id,
-                                                            imgg.product_id,
-                                                            imgg.product_verient_id
-                                                          )
-                                                        }
-                                                      >
-                                                        &times;
-                                                      </span>
-                                                    </div>
-                                                  ) : null;
-                                                })}
-                                                <div className="imgprivew_box">
-                                                  <img
-                                                    src={
-                                                      "https://i2.wp.com/asvs.in/wp-content/uploads/2017/08/dummy.png?fit=399%2C275&ssl=1"
-                                                    }
-                                                    key={i}
-                                                    alt="apna_organic"
-                                                    height={120}
-                                                  />
-                                                  <Form.Control
-                                                    multiple
-                                                    type="file"
-                                                    sm="9"
-                                                    className={"img_add_button"}
-                                                    onChange={(e) =>
-                                                      imguploadchange(
-                                                        e,
-                                                        variantdata.product_id,
-                                                        variantdata.id,
-                                                        variantdata.vendor_id
-                                                      )
-                                                    }
-                                                    name={"img_64"}
-                                                  />
-                                                  <span className="plus_icon">
-                                                    +
-                                                  </span>
-                                                </div>
-                                              </div>
-                                            </td>
-                                          </tr>
-                                          <tr>
-                                            <td colSpan={"12"}>
-                                              {customvalidated ===
-                                              "imgformat" ? (
-                                                <span
-                                                  className="mt-2   text-center fs-6 text-danger"
-                                                  type="invalid"
-                                                >
-                                                  Image Format should be in jpg,
-                                                  jpeg or png
-                                                </span>
-                                              ) : null}
-                                            </td>
-                                          </tr>
-                                        </>
-                                      ) : null}
-                                    </Collapse>
-                                  </>
-                                );
-                              })}
-                          {changeUnitproperty === "editvariety" ? (
-                            <tr>
-                              <td
-                                className="text-primary text-center mx-5"
-                                colSpan={12}
-                              >
-                                Now You can edit vareity type
-                              </td>
-                            </tr>
+                        ) : null}
+                        <tr>
+                          {customvalidated === true ? (
+                            <p className="mt-1 ms-2 text-danger" type="invalid">
+                              Please fill Required fields
+                            </p>
                           ) : null}
-                        </tbody>
-                      </Table>
+
+                          {varietyUnitvalidation === "fillUnit&size&color" ? (
+                            <p className="mt-1 ms-2 text-danger" type="invalid">
+                              Please Fill size and colors
+                            </p>
+                          ) : varietyUnitvalidation === "fillUnit&color" ? (
+                            <p
+                              className="mt-1 ms-2 text-danger my-3"
+                              type="invalid"
+                            >
+                              Please fill color
+                            </p>
+                          ) : varietyUnitvalidation ===
+                            "unitQwanity&size&color" ? (
+                            <p
+                              className="mt-1 ms-2 text-danger my-3"
+                              type="invalid"
+                            >
+                              Please fill weight/volume/piece
+                            </p>
+                          ) : varietyUnitvalidation === "discountmore" ? (
+                            <p
+                              className="mt-1 ms-2 text-danger my-3"
+                              type="invalid"
+                            >
+                              Discount should be less then 100
+                            </p>
+                          ) : varietyUnitvalidation === "QwanityValidation" ? (
+                            <p
+                              className="mt-1 ms-2 text-danger my-3"
+                              type="invalid"
+                            >
+                              Quantity must be greater than 0
+                            </p>
+                          ) : varietyUnitvalidation === "mrpmore" ? (
+                            <p
+                              className="mt-1 ms-2 text-danger my-3"
+                              type="invalid"
+                            >
+                              Mrp must be lesser than 50000 and greater than 0
+                            </p>
+                          ) : varietyUnitvalidation === "" ? null : null}
+                        </tr>
+                      </div>
+
+                      <div className="col-12">
+                        <Accordion defaultActiveKey="">
+                          <Table bordered className="align-middle my-2">
+                            <thead className="align-middle">
+                              <tr>
+                                <th>
+                                  Variety <span className="text-danger">*</span>
+                                </th>
+
+                                <th>Color</th>
+                                <th>Weight/piece/Volume </th>
+                                <th>Size </th>
+                                <th>
+                                  Mrp <span className="text-danger">*</span>
+                                </th>
+                                <th>Discount</th>
+                                <th>
+                                  Price<span className="text-danger">*</span>
+                                </th>
+                                <th>
+                                  Total Tax
+                                  <span className="text-danger">*</span>
+                                </th>
+                                <th>
+                                  Sale Price
+                                  <span className="text-danger">*</span>
+                                </th>
+                                <th className="manufacture_date">
+                                  Mdate <span className="text-danger">*</span>
+                                </th>
+                                <th className="manufacture_date">
+                                  Edate <span className="text-danger">*</span>
+                                </th>
+                                <th className="manufacture_date">
+                                  Quantity<span className="text-danger">*</span>
+                                </th>
+                                <th className="manufacture_date">Action</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {vdata === "" ||
+                              vdata === null ||
+                              vdata === undefined
+                                ? null
+                                : (vdata || []).map((variantdata, i) => {
+                                    return variantdata.is_delete ===
+                                      "0" ? null : (
+                                      <>
+                                        {/* <Accordion.Item eventKey="0"> */}
+                                        <tr
+                                          className="add_variety_list_box"
+                                          key={i}
+                                        >
+                                          <td className="p-0 py-3 text-center ">
+                                            {variantdata.unit === "pcs"
+                                              ? "color"
+                                              : variantdata.unit === "piece"
+                                              ? "piece"
+                                              : variantdata.unit === "gms"
+                                              ? "weight"
+                                              : variantdata.unit === "ml"
+                                              ? "volume"
+                                              : ""}
+                                          </td>
+                                          <td className="p-0 py-3 text-center ">
+                                            {variantdata.colors}
+                                          </td>
+                                          <td className="p-0 py-3 text-center ">
+                                            {variantdata.unit === "gms"
+                                              ? variantdata.unit_quantity
+                                              : variantdata.unit === "ml"
+                                              ? variantdata.unit_quantity
+                                              : variantdata.unit === "piece"
+                                              ? variantdata.unit_quantity
+                                              : ""}
+                                          </td>
+                                          <td className="p-0 py-3 text-center ">
+                                            {variantdata.size}
+                                          </td>
+                                          <td className="p-0 py-3 text-center ">
+                                            {Number(variantdata.mrp).toFixed(2)}
+                                          </td>
+                                          <td className="p-0 py-3 text-center ">
+                                            {Number(
+                                              variantdata.discount
+                                            ).toFixed(2)}
+                                          </td>
+
+                                          <td className="p-0 py-3 text-center ">
+                                            {Number(
+                                              variantdata.product_price
+                                            ).toFixed(2)}
+                                          </td>
+                                          <td className="p-0 py-3 text-center ">
+                                            {Number(
+                                              (variantdata.sale_price *
+                                                (Number(taxdata.gst) +
+                                                  Number(
+                                                    taxdata.wholesale_sales_tax
+                                                  ) +
+                                                  Number(
+                                                    taxdata.retails_sales_tax
+                                                  ) +
+                                                  Number(
+                                                    taxdata.manufacturers_sales_tax
+                                                  ) +
+                                                  Number(
+                                                    taxdata.value_added_tax
+                                                  ))) /
+                                                100
+                                            ).toFixed(2)}
+                                          </td>
+                                          <td className="p-0 py-3 text-center ">
+                                            {variantdata.sale_price.toFixed(2)}
+                                          </td>
+                                          <td className="p-0 py-3 text-center ">
+                                            {moment(
+                                              variantdata.manufacturing_date
+                                            ).format("YYYY-MM-DD")}
+                                          </td>
+                                          <td className="p-0 py-3 text-center ">
+                                            {moment(
+                                              variantdata.expire_date
+                                            ).format("YYYY-MM-DD")}
+                                          </td>
+                                          <td className="p-0 py-3 text-center manufacture_date">
+                                            {variantdata.quantity}
+                                          </td>
+
+                                          <td className="p-0 py-3 text-center action_btn_box">
+                                            <Accordion.Header eventKey={i}>
+                                              {" "}
+                                              <RiImageAddLine
+                                                type="button"
+                                                className="variety_edit_action_btn  text-success"
+                                                eventKey={i}
+                                                onClick={(_id) => (
+                                                  onImgView(
+                                                    variantdata.id,
+                                                    variantdata.product_id
+                                                  ),
+                                                  setOpen(!open)
+                                                )}
+                                                aria-controls={
+                                                  "variantimgbox" +
+                                                  variantdata.id
+                                                }
+                                                aria-expanded={open}
+                                              />
+                                            </Accordion.Header>
+
+                                            <BiEdit
+                                              className="variety_edit_action_btn text-primary mx-2"
+                                              onClick={(id) =>
+                                                VariantEditClick(
+                                                  variantdata.id,
+                                                  variantdata.product_id
+                                                )
+                                              }
+                                            />
+                                            <BsTrash
+                                              className="variety_edit_action_btn text-danger"
+                                              onClick={(id) =>
+                                                VariantRemoveClick(
+                                                  variantdata.id,
+                                                  variantdata.product_id
+                                                )
+                                              }
+                                            />
+                                          </td>
+                                        </tr>
+                                        <Accordion.Body eventKey={i}>
+                                          {newImageUrls ? (
+                                            <tr
+                                              className="img_preview_boxx"
+                                              id={
+                                                "variantimgbox" + variantdata.id
+                                              }
+                                            >
+                                              <td className="" colSpan={"12"}>
+                                                <div className="image_box">
+                                                  {newImageUrls.map(
+                                                    (imgg, i) => {
+                                                      return `${variantdata.id}` ===
+                                                        imgg.product_verient_id ? (
+                                                        <div
+                                                          className="imgprivew_box"
+                                                          key={i}
+                                                        >
+                                                          {imgg.image_position ===
+                                                          "cover" ? (
+                                                            <span className="cover_img">
+                                                              Cover
+                                                            </span>
+                                                          ) : null}
+                                                          <img
+                                                            src={
+                                                              imgg.product_image_path
+                                                            }
+                                                            key={i}
+                                                            alt="apna_organic"
+                                                            height={120}
+                                                          />
+                                                          <span
+                                                            className="cover_icon"
+                                                            onClick={(id) =>
+                                                              onImgCoverEditClick(
+                                                                imgg.product_image_id,
+                                                                imgg.product_id,
+                                                                imgg.product_verient_id
+                                                              )
+                                                            }
+                                                          >
+                                                            Set Cover
+                                                          </span>
+                                                          <span
+                                                            className="cross_icon"
+                                                            onClick={() =>
+                                                              onImgRemove(
+                                                                imgg.product_image_id,
+                                                                imgg.product_image_name,
+                                                                imgg.vendor_id,
+                                                                imgg.product_id,
+                                                                imgg.product_verient_id
+                                                              )
+                                                            }
+                                                          >
+                                                            &times;
+                                                          </span>
+                                                        </div>
+                                                      ) : null;
+                                                    }
+                                                  )}
+                                                  <div className="imgprivew_box">
+                                                    <img
+                                                      src={
+                                                        "https://i2.wp.com/asvs.in/wp-content/uploads/2017/08/dummy.png?fit=399%2C275&ssl=1"
+                                                      }
+                                                      key={i}
+                                                      alt="apna_organic"
+                                                      height={120}
+                                                    />
+                                                    <Form.Control
+                                                      multiple
+                                                      type="file"
+                                                      sm="9"
+                                                      className={
+                                                        "img_add_button"
+                                                      }
+                                                      onChange={(e) =>
+                                                        imguploadchange(
+                                                          e,
+                                                          variantdata.product_id,
+                                                          variantdata.id,
+                                                          variantdata.vendor_id
+                                                        )
+                                                      }
+                                                      name={"img_64"}
+                                                    />
+                                                    <span className="plus_icon">
+                                                      +
+                                                    </span>
+                                                  </div>
+                                                </div>
+                                              </td>
+                                            </tr>
+                                          ) : null}
+                                        </Accordion.Body>
+                                        {/* </Accordion.Item> */}
+                                        <tr>
+                                          <td colSpan={"12"}>
+                                            {customvalidated === "imgformat" ? (
+                                              <span
+                                                className="mt-2   text-center fs-6 text-danger"
+                                                type="invalid"
+                                              >
+                                                Image Format should be in jpg,
+                                                jpeg or png
+                                              </span>
+                                            ) : null}
+                                          </td>
+                                        </tr>
+                                      </>
+                                    );
+                                  })}
+                              {changeUnitproperty === "editvariety" ? (
+                                <tr>
+                                  <td
+                                    className="text-primary text-center mx-5"
+                                    colSpan={12}
+                                  >
+                                    Now You can edit vareity type
+                                  </td>
+                                </tr>
+                              ) : null}
+                            </tbody>
+                          </Table>
+                        </Accordion>
+                      </div>
                     </div>
                   </div>
+                  {/* </Form.Group> */}
                 </div>
-                {/* </Form.Group> */}
-              </div>
-            </Modal.Body>
-            <Modal.Footer>
-              <button
-                className="button main_outline_button"
-                onClick={handlevarietyClose}
-              >
-                Close
-              </button>
-            </Modal.Footer>
-          </Form>
-        </Modal>
+              </Modal.Body>
+              <Modal.Footer>
+                <button
+                  className="button main_outline_button"
+                  onClick={handlevarietyClose}
+                >
+                  Close
+                </button>
+              </Modal.Footer>
+            </Form>
+          </Modal>
 
-        <DataTable
-          columns={columns}
-          data={pdata.results}
-          pagination
-          highlightOnHover
-          pointerOnHover
-          className={"table_body product_table"}
-        />
+          <DataTable
+            columns={columns}
+            data={pdata.results}
+            pagination
+            highlightOnHover
+            pointerOnHover
+            className={"table_body product_table"}
+          />
 
-        <SAlert
-          show={VerityAlert}
-          title="Product Name"
-          text="Are you Sure you want to delete"
-          onConfirm={hideAlert}
-          showCancelButton={true}
-          onCancel={closeAlert}
-        />
+          <SAlert
+            show={VerityAlert}
+            title="Product Name"
+            text="Are you Sure you want to delete"
+            onConfirm={hideAlert}
+            showCancelButton={true}
+            onCancel={closeAlert}
+          />
 
-        <SAlert
-          show={Alert}
-          title="Product Name"
-          text="Are you Sure you want to delete"
-          onConfirm={deleteProductAlert}
-          showCancelButton={true}
-          onCancel={closeAlert}
-        />
+          <SAlert
+            show={Alert}
+            title="Product Name"
+            text="Are you Sure you want to delete"
+            onConfirm={deleteProductAlert}
+            showCancelButton={true}
+            onCancel={closeAlert}
+          />
 
-        <SAlert
-          show={ProductAlert}
-          title="Added Successfully"
-          text=" Product Added"
-          onConfirm={closeProductAlert}
-        />
+          <SAlert
+            show={ProductAlert}
+            title="Added Successfully"
+            text=" Product Added"
+            onConfirm={closeProductAlert}
+          />
 
-        <SAlert
-          show={ProductDraftAlert}
-          title="Added Successfully "
-          text=" Product Added To Draft"
-          onConfirm={closeProductAlert}
-        />
+          <SAlert
+            show={ProductDraftAlert}
+            title="Added Successfully "
+            text=" Product Added To Draft"
+            onConfirm={closeProductAlert}
+          />
 
-        <SAlert
-          show={UpdatetAlert}
-          title="Updated Successfully "
-          text=" Product Updated"
-          onConfirm={closeProductAlert}
-        />
+          <SAlert
+            show={UpdatetAlert}
+            title="Updated Successfully "
+            text=" Product Updated"
+            onConfirm={closeProductAlert}
+          />
 
-        {/* feature product modal */}
+          {/* feature product modal */}
 
-        <Modal show={featureshow} onHide={featureModalClose}>
-          <Form className="" novalidate validated={validated} ref={formRef}>
-            <Modal.Header closeButton>
-              <Modal.Title>Add Offer Product</Modal.Title>
-            </Modal.Header>
-            {error === false ? (
-              <p
-                className="mt-2 ms-2 text-danger text-center fs-6"
-                type="invalid"
-              >
-                Already Added In Offred Product List!!!
-              </p>
-            ) : null}
+          <Modal show={featureshow} onHide={featureModalClose}>
+            <Form className="" novalidate validated={validated} ref={formRef}>
+              <Modal.Header closeButton>
+                <Modal.Title>Add Offer Product</Modal.Title>
+              </Modal.Header>
+              {error === false ? (
+                <p
+                  className="mt-2 ms-2 text-danger text-center fs-6"
+                  type="invalid"
+                >
+                  Already Added In Offred Product List!!!
+                </p>
+              ) : null}
 
-            <Modal.Body className="p-3">
-              <div className="d-flex justify-content-center align-items-center p-0 m-0">
-                <div className="">
+              <Modal.Body className="p-3">
+                <div className="d-flex justify-content-center align-items-center p-0 m-0">
                   <div className="">
-                    <div className="row px-3">
-                      <div className="col-12">
-                        <Form.Group
-                          className="mb-3"
-                          controlId="formPlaintextName"
-                        >
-                          <Form.Label className=" " column sm="12">
-                            Product Name
-                          </Form.Label>
-                          <Form.Control
-                            type="text"
-                            placeholder="Name"
-                            value={productname}
-                            name={"productname"}
-                            required
-                          />
-                        </Form.Group>
-                      </div>
-                      <div className="col-12">
-                        <Form.Group
-                          className="mb-3"
-                          controlId="formPlaintextName"
-                        >
-                          <Form.Label className=" " column sm="12">
-                            Product Id
-                          </Form.Label>
-                          <Form.Control
-                            type="text"
-                            placeholder="Name"
-                            value={featuredata.product_id}
-                            name={"product_id"}
-                            required
-                          />
-                        </Form.Group>
-                      </div>
-                      <div className="col-12">
-                        <Form.Group
-                          className="mb-3"
-                          controlId="formPlaintextName"
-                        >
-                          <Form.Label className=" " column sm="12">
-                            Offer Type
-                          </Form.Label>
-                          <Form.Control
-                            type="text"
-                            placeholder="Name"
-                            value={featuredata.fetured_type}
-                            name={"fetured_type"}
-                            required
-                          />
-                        </Form.Group>
-                      </div>
-                      <div className="col-12">
-                        <Form.Group
-                          className="mb-3"
-                          controlId="formPlaintextName"
-                        >
-                          <Form.Label className=" " column sm="12">
-                            Start Date
-                          </Form.Label>
-                          <Form.Control
-                            type="date"
-                            placeholder="Name"
-                            onChange={(e) => OnFeatureDateChaneg(e)}
-                            value={featuredata.start_date}
-                            name={"start_date"}
-                            required
-                            min={moment().format("YYYY-MM-DD")}
-                          />
-                          <Form.Control.Feedback type="invalid" className="h6">
-                            Please fill start date
-                          </Form.Control.Feedback>
-                        </Form.Group>
-                      </div>
-                      <div className="col-12">
-                        <Form.Group
-                          className="mb-3"
-                          controlId="formPlaintextName"
-                        >
-                          <Form.Label className=" " column sm="12">
-                            End Date
-                          </Form.Label>
-                          <Form.Control
-                            type="date"
-                            placeholder="Name"
-                            onChange={(e) => OnFeatureDateChaneg(e)}
-                            value={featuredata.end_date}
-                            name={"end_date"}
-                            required
-                            min={moment(featuredata.start_date).format(
-                              "YYYY-MM-DD"
-                            )}
-                          />
-                          <Form.Control.Feedback type="invalid" className="h6">
-                            Please fill end date
-                          </Form.Control.Feedback>
-                        </Form.Group>
+                    <div className="">
+                      <div className="row px-3">
+                        <div className="col-12">
+                          <Form.Group
+                            className="mb-3"
+                            controlId="formPlaintextName"
+                          >
+                            <Form.Label className=" " column sm="12">
+                              Product Name
+                            </Form.Label>
+                            <Form.Control
+                              type="text"
+                              placeholder="Name"
+                              value={productname}
+                              name={"productname"}
+                              required
+                            />
+                          </Form.Group>
+                        </div>
+                        <div className="col-12">
+                          <Form.Group
+                            className="mb-3"
+                            controlId="formPlaintextName"
+                          >
+                            <Form.Label className=" " column sm="12">
+                              Product Id
+                            </Form.Label>
+                            <Form.Control
+                              type="text"
+                              placeholder="Name"
+                              value={featuredata.product_id}
+                              name={"product_id"}
+                              required
+                            />
+                          </Form.Group>
+                        </div>
+                        <div className="col-12">
+                          <Form.Group
+                            className="mb-3"
+                            controlId="formPlaintextName"
+                          >
+                            <Form.Label className=" " column sm="12">
+                              Offer Type
+                            </Form.Label>
+                            <Form.Control
+                              type="text"
+                              placeholder="Name"
+                              value={featuredata.fetured_type}
+                              name={"fetured_type"}
+                              required
+                            />
+                          </Form.Group>
+                        </div>
+                        <div className="col-12">
+                          <Form.Group
+                            className="mb-3"
+                            controlId="formPlaintextName"
+                          >
+                            <Form.Label className=" " column sm="12">
+                              Start Date
+                            </Form.Label>
+                            <Form.Control
+                              type="date"
+                              placeholder="Name"
+                              onChange={(e) => OnFeatureDateChaneg(e)}
+                              value={featuredata.start_date}
+                              name={"start_date"}
+                              required
+                              min={moment().format("YYYY-MM-DD")}
+                            />
+                            <Form.Control.Feedback
+                              type="invalid"
+                              className="h6"
+                            >
+                              Please fill start date
+                            </Form.Control.Feedback>
+                          </Form.Group>
+                        </div>
+                        <div className="col-12">
+                          <Form.Group
+                            className="mb-3"
+                            controlId="formPlaintextName"
+                          >
+                            <Form.Label className=" " column sm="12">
+                              End Date
+                            </Form.Label>
+                            <Form.Control
+                              type="date"
+                              placeholder="Name"
+                              onChange={(e) => OnFeatureDateChaneg(e)}
+                              value={featuredata.end_date}
+                              disabled={featuredata.start_date ? false : true}
+                              name={"end_date"}
+                              required
+                              min={moment(featuredata.start_date).format(
+                                "YYYY-MM-DD"
+                              )}
+                            />
+                            <Form.Control.Feedback
+                              type="invalid"
+                              className="h6"
+                            >
+                              Please fill end date
+                            </Form.Control.Feedback>
+                          </Form.Group>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </Modal.Body>
-            <Modal.Footer className="">
-              <Iconbutton
-                type={"button"}
-                btntext={"Cancel"}
-                onClick={featureModalClose}
-                btnclass={"button main_outline_button "}
-              />
-              <Iconbutton
-                onClick={OnOfferProductAdd}
-                btntext={"Added"}
-                btnclass={"button main_button "}
-              />
-            </Modal.Footer>
-          </Form>
-        </Modal>
-        <SAlert
-          show={RestoreAlert}
-          title={productname}
-          onConfirm={() => setRestoreAlert(false)}
-        />
+              </Modal.Body>
+              <Modal.Footer className="">
+                <Iconbutton
+                  type={"button"}
+                  btntext={"Cancel"}
+                  onClick={featureModalClose}
+                  btnclass={"button main_outline_button "}
+                />
+                <Iconbutton
+                  onClick={OnOfferProductAdd}
+                  btntext={"Added"}
+                  btnclass={"button main_button "}
+                />
+              </Modal.Footer>
+            </Form>
+          </Modal>
+          <SAlert
+            show={RestoreAlert}
+            title={productname}
+            onConfirm={() => setRestoreAlert(false)}
+          />
+        </div>
       </div>
-    </div>
     </>
   );
 }
