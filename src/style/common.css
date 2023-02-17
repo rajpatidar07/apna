@@ -44,7 +44,6 @@
 
 /* iconbutton */
 
-
 .adminmainbutton {
   /* display: flex; */
   align-items: center;
@@ -58,12 +57,11 @@
 .WQNxq {
   border: 0 solid #d5d6d7 !important;
   box-shadow: 0 0 0 1px rgb(0 0 0 / 5%) !important;
-  background-color: black !important;
+  /* background-color: black !important; */
 }
 
 .WQNxq .sc-bcXHqe .kVrXuC .rdt_Table {
   background-color: rgba(26, 28, 35/1) !important;
-
 }
 
 .bQdYbR {
@@ -123,9 +121,11 @@
   --bs-btn-border-color: transparent;
   --bs-btn-border-radius: 0.375rem;
   --bs-btn-hover-border-color: transparent;
-  --bs-btn-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
+  --bs-btn-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 1px 1px rgba(0, 0, 0, 0.075);
   --bs-btn-disabled-opacity: 0.65;
-  --bs-btn-focus-box-shadow: 0 0 0 0.25rem rgba(var(--bs-btn-focus-shadow-rgb), .5);
+  --bs-btn-focus-box-shadow: 0 0 0 0.25rem
+    rgba(var(--bs-btn-focus-shadow-rgb), 0.5);
   display: inline-block;
   padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x);
   font-family: var(--bs-btn-font-family);
@@ -143,19 +143,20 @@
   border: var(--bs-btn-border-width) solid var(--bs-btn-border-color);
   border-radius: var(--bs-btn-border-radius);
   background-color: var(--bs-btn-bg);
-  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 .button:hover {
   color: var(--bs-btn-hover-color);
   background-color: var(--bs-btn-hover-bg);
-  border-color: var(--bs-btn-hover-border-color)
+  border-color: var(--bs-btn-hover-border-color);
 }
 
-.button-check+.button:hover {
+.button-check + .button:hover {
   color: var(--bs-btn-color);
   background-color: var(--bs-btn-bg);
-  border-color: var(--bs-btn-border-color)
+  border-color: var(--bs-btn-border-color);
 }
 
 .button:focus-visible {
@@ -163,31 +164,31 @@
   background-color: var(--bs-btn-hover-bg);
   border-color: var(--bs-btn-hover-border-color);
   outline: 0;
-  box-shadow: var(--bs-btn-focus-box-shadow)
+  box-shadow: var(--bs-btn-focus-box-shadow);
 }
 
-.button-check:focus-visible+.button {
+.button-check:focus-visible + .button {
   border-color: var(--bs-btn-hover-border-color);
   outline: 0;
-  box-shadow: var(--bs-btn-focus-box-shadow)
+  box-shadow: var(--bs-btn-focus-box-shadow);
 }
 
-.button-check:checked+.button,
+.button-check:checked + .button,
 .button.active,
 .button.show,
 .button:first-child:active,
-:not(.button-check)+.button:active {
+:not(.button-check) + .button:active {
   color: var(--bs-btn-active-color);
   background-color: var(--bs-btn-active-bg);
-  border-color: var(--bs-btn-active-border-color)
+  border-color: var(--bs-btn-active-border-color);
 }
 
-.button-check:checked+.button:focus-visible,
+.button-check:checked + .button:focus-visible,
 .button.active:focus-visible,
 .button.show:focus-visible,
 .button:first-child:active:focus-visible,
-:not(.button-check)+.button:active:focus-visible {
-  box-shadow: var(--bs-btn-focus-box-shadow)
+:not(.button-check) + .button:active:focus-visible {
+  box-shadow: var(--bs-btn-focus-box-shadow);
 }
 
 .button.disabled,
@@ -197,7 +198,7 @@ fieldset:disabled .button {
   pointer-events: none;
   background-color: var(--bs-btn-disabled-bg);
   border-color: var(--bs-btn-disabled-border-color);
-  opacity: var(--bs-btn-disabled-opacity)
+  opacity: var(--bs-btn-disabled-opacity);
 }
 
 .main_button {
@@ -214,7 +215,7 @@ fieldset:disabled .button {
   --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --bs-btn-disabled-color: #fff;
   --bs-btn-disabled-bg: #198754;
-  --bs-btn-disabled-border-color: #198754
+  --bs-btn-disabled-border-color: #198754;
 }
 
 .main_outline_button {
@@ -231,7 +232,7 @@ fieldset:disabled .button {
   --bs-btn-disabled-color: #198754;
   --bs-btn-disabled-bg: transparent;
   --bs-btn-disabled-border-color: #198754;
-  --bs-gradient: none
+  --bs-gradient: none;
 }
 
 .aos_input label,
