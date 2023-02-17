@@ -14,6 +14,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 import VariationJson from "./json/variation";
 import CategoryJson from "./json/categorytype";
 import Table from "react-bootstrap/Table";
+import Accordion from "react-bootstrap/Accordion";
 import {
   AiOutlinePlus,
   AiOutlineCloudUpload,
@@ -223,7 +224,6 @@ function Product() {
   };
   const featureModalShow = () => setfeatureShow(true);
   const OnProductOfferClick = (e, productid, productname) => {
-    console.log("----------------------OFFER");
     setfeaturedata({
       ...featuredata,
       product_id: `${productid}`,
@@ -609,9 +609,9 @@ function Product() {
       console.log("------img" + "ppppp" + imgvalidation);
 
       if (
-        imgvalidation === "jpeg:base64" ||
-        imgvalidation === "jpg:base64" ||
-        imgvalidation === "png:base64"
+        imgvalidation === "jpeg;base64" ||
+        imgvalidation === "jpg;base64" ||
+        imgvalidation === "png;base64"
       ) {
         const productimg = rest.join("-");
         let imar = {
@@ -1046,7 +1046,7 @@ function Product() {
         setcustomValidated(false);
 
         setproductvariantarray({
-          product_status: "",
+          product_status: "pending",
           unit: productvariantarray.unit,
           colors: "",
           unit_quantity: "",
@@ -3881,161 +3881,172 @@ function Product() {
                     </div>
 
                     <div className="col-12">
-                      <Table bordered className="align-middle my-2">
-                        <thead className="align-middle">
-                          <tr>
-                            <th>
-                              Variety <span className="text-danger">*</span>
-                            </th>
+                      <Accordion defaultActiveKey="0">
+                        <Table bordered className="align-middle my-2">
+                          <thead className="align-middle">
+                            <tr>
+                              <th>
+                                Variety <span className="text-danger">*</span>
+                              </th>
 
-                            <th>Color</th>
-                            <th>Weight/piece/Volume </th>
-                            <th>Size </th>
-                            <th>
-                              Mrp <span className="text-danger">*</span>
-                            </th>
-                            <th>Discount</th>
-                            <th>
-                              Price<span className="text-danger">*</span>
-                            </th>
-                            <th>
-                              Total Tax<span className="text-danger">*</span>
-                            </th>
-                            <th>
-                              Sale Price<span className="text-danger">*</span>
-                            </th>
-                            <th className="manufacture_date">
-                              Mdate <span className="text-danger">*</span>
-                            </th>
-                            <th className="manufacture_date">
-                              Edate <span className="text-danger">*</span>
-                            </th>
-                            <th className="manufacture_date">
-                              Quantity<span className="text-danger">*</span>
-                            </th>
-                            <th className="manufacture_date">Action</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {vdata === "" || vdata === null || vdata === undefined
-                            ? null
-                            : (vdata || []).map((variantdata, i) => {
-                                return variantdata.is_delete === "0" ? null : (
-                                  <>
-                                    <tr className="add_variety_list_box">
-                                      <td className="p-0 py-3 text-center ">
-                                        {variantdata.unit === "pcs"
-                                          ? "color"
-                                          : variantdata.unit === "piece"
-                                          ? "piece"
-                                          : variantdata.unit === "gms"
-                                          ? "weight"
-                                          : variantdata.unit === "ml"
-                                          ? "volume"
-                                          : ""}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {variantdata.colors}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {variantdata.unit === "gms"
-                                          ? variantdata.unit_quantity
-                                          : variantdata.unit === "ml"
-                                          ? variantdata.unit_quantity
-                                          : variantdata.unit === "piece"
-                                          ? variantdata.unit_quantity
-                                          : ""}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {variantdata.size}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {Number(variantdata.mrp).toFixed(2)}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {Number(variantdata.discount).toFixed(
-                                          2
-                                        )}
-                                      </td>
-
-                                      <td className="p-0 py-3 text-center ">
-                                        {Number(
-                                          variantdata.product_price
-                                        ).toFixed(2)}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {Number(
-                                          (variantdata.sale_price *
-                                            (Number(taxdata.gst) +
-                                              Number(
-                                                taxdata.wholesale_sales_tax
-                                              ) +
-                                              Number(
-                                                taxdata.retails_sales_tax
-                                              ) +
-                                              Number(
-                                                taxdata.manufacturers_sales_tax
-                                              ) +
-                                              Number(
-                                                taxdata.value_added_tax
-                                              ))) /
-                                            100
-                                        ).toFixed(2)}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {variantdata.sale_price.toFixed(2)}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {moment(
-                                          variantdata.manufacturing_date
-                                        ).format("YYYY-MM-DD")}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {moment(variantdata.expire_date).format(
-                                          "YYYY-MM-DD"
-                                        )}
-                                      </td>
-                                      <td className="p-0 py-3 text-center manufacture_date">
-                                        {variantdata.quantity}
-                                      </td>
-                                      <td className="p-0 py-3 text-center action_btn_box">
-                                        <RiImageAddLine
-                                          className="variety_edit_action_btn  text-success"
-                                          onClick={(id) => (
-                                            onImgView(
-                                              variantdata.id,
-                                              variantdata.product_id
-                                            ),
-                                            setOpen(!open)
+                              <th>Color</th>
+                              <th>Weight/piece/Volume </th>
+                              <th>Size </th>
+                              <th>
+                                Mrp <span className="text-danger">*</span>
+                              </th>
+                              <th>Discount</th>
+                              <th>
+                                Price<span className="text-danger">*</span>
+                              </th>
+                              <th>
+                                Total Tax<span className="text-danger">*</span>
+                              </th>
+                              <th>
+                                Sale Price<span className="text-danger">*</span>
+                              </th>
+                              <th className="manufacture_date">
+                                Mdate <span className="text-danger">*</span>
+                              </th>
+                              <th className="manufacture_date">
+                                Edate <span className="text-danger">*</span>
+                              </th>
+                              <th className="manufacture_date">
+                                Quantity<span className="text-danger">*</span>
+                              </th>
+                              <th className="manufacture_date">Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {vdata === "" ||
+                            vdata === null ||
+                            vdata === undefined
+                              ? null
+                              : (vdata || []).map((variantdata, i) => {
+                                  return variantdata.is_delete ===
+                                    "0" ? null : (
+                                    <>
+                                      {/* <Accordion.Item eventKey="0"> */}
+                                      <tr className="add_variety_list_box">
+                                        <td className="p-0 py-3 text-center ">
+                                          {variantdata.unit === "pcs"
+                                            ? "color"
+                                            : variantdata.unit === "piece"
+                                            ? "piece"
+                                            : variantdata.unit === "gms"
+                                            ? "weight"
+                                            : variantdata.unit === "ml"
+                                            ? "volume"
+                                            : ""}
+                                        </td>
+                                        <td className="p-0 py-3 text-center ">
+                                          {variantdata.colors}
+                                        </td>
+                                        <td className="p-0 py-3 text-center ">
+                                          {variantdata.unit === "gms"
+                                            ? variantdata.unit_quantity
+                                            : variantdata.unit === "ml"
+                                            ? variantdata.unit_quantity
+                                            : variantdata.unit === "piece"
+                                            ? variantdata.unit_quantity
+                                            : ""}
+                                        </td>
+                                        <td className="p-0 py-3 text-center ">
+                                          {variantdata.size}
+                                        </td>
+                                        <td className="p-0 py-3 text-center ">
+                                          {Number(variantdata.mrp).toFixed(2)}
+                                        </td>
+                                        <td className="p-0 py-3 text-center ">
+                                          {Number(variantdata.discount).toFixed(
+                                            2
                                           )}
-                                          aria-controls={
-                                            "variantimgbox" + variantdata.id
-                                          }
-                                          aria-expanded={open}
-                                        />
-                                        <BiEdit
-                                          className="variety_edit_action_btn text-primary mx-2"
-                                          onClick={(id) =>
-                                            VariantEditClick(
-                                              variantdata.id,
-                                              variantdata.product_id
-                                            )
-                                          }
-                                        />
-                                        <BsTrash
-                                          className="variety_edit_action_btn text-danger"
-                                          onClick={(id) =>
-                                            VariantRemoveClick(
-                                              variantdata.id,
-                                              variantdata.product_id
-                                            )
-                                          }
-                                        />
-                                      </td>
-                                    </tr>
-                                    <Collapse in={open}>
-                                      {newImageUrls ? (
-                                        <>
+                                        </td>
+
+                                        <td className="p-0 py-3 text-center ">
+                                          {Number(
+                                            variantdata.product_price
+                                          ).toFixed(2)}
+                                        </td>
+                                        <td className="p-0 py-3 text-center ">
+                                          {Number(
+                                            (variantdata.sale_price *
+                                              (Number(taxdata.gst) +
+                                                Number(
+                                                  taxdata.wholesale_sales_tax
+                                                ) +
+                                                Number(
+                                                  taxdata.retails_sales_tax
+                                                ) +
+                                                Number(
+                                                  taxdata.manufacturers_sales_tax
+                                                ) +
+                                                Number(
+                                                  taxdata.value_added_tax
+                                                ))) /
+                                              100
+                                          ).toFixed(2)}
+                                        </td>
+                                        <td className="p-0 py-3 text-center ">
+                                          {variantdata.sale_price.toFixed(2)}
+                                        </td>
+                                        <td className="p-0 py-3 text-center ">
+                                          {moment(
+                                            variantdata.manufacturing_date
+                                          ).format("YYYY-MM-DD")}
+                                        </td>
+                                        <td className="p-0 py-3 text-center ">
+                                          {moment(
+                                            variantdata.expire_date
+                                          ).format("YYYY-MM-DD")}
+                                        </td>
+                                        <td className="p-0 py-3 text-center manufacture_date">
+                                          {variantdata.quantity}
+                                        </td>
+
+                                        <td className="p-0 py-3 text-center action_btn_box">
+                                          <Accordion.Header eventKey={i}>
+                                            {" "}
+                                            <RiImageAddLine
+                                              type="button"
+                                              className="variety_edit_action_btn  text-success"
+                                              eventKey={i}
+                                              // onClick={(_id) => (
+                                              //   onImgView(
+                                              //     variantdata.id,
+                                              //     variantdata.product_id
+                                              //   ),
+                                              //   setOpen(!open)
+                                              // )}
+                                              aria-controls={
+                                                "variantimgbox" + variantdata.id
+                                              }
+                                              aria-expanded={open}
+                                            />
+                                          </Accordion.Header>
+
+                                          <BiEdit
+                                            className="variety_edit_action_btn text-primary mx-2"
+                                            onClick={(id) =>
+                                              VariantEditClick(
+                                                variantdata.id,
+                                                variantdata.product_id
+                                              )
+                                            }
+                                          />
+                                          <BsTrash
+                                            className="variety_edit_action_btn text-danger"
+                                            onClick={(id) =>
+                                              VariantRemoveClick(
+                                                variantdata.id,
+                                                variantdata.product_id
+                                              )
+                                            }
+                                          />
+                                        </td>
+                                      </tr>
+                                      <Accordion.Body eventKey={i}>
+                                        {newImageUrls ? (
                                           <tr
                                             className="img_preview_boxx"
                                             id={
@@ -4122,38 +4133,38 @@ function Product() {
                                               </div>
                                             </td>
                                           </tr>
-                                          <tr>
-                                            <td colSpan={"12"}>
-                                              {customvalidated ===
-                                              "imgformat" ? (
-                                                <span
-                                                  className="mt-2   text-center fs-6 text-danger"
-                                                  type="invalid"
-                                                >
-                                                  Image Format should be in jpg,
-                                                  jpeg or png
-                                                </span>
-                                              ) : null}
-                                            </td>
-                                          </tr>
-                                        </>
-                                      ) : null}
-                                    </Collapse>
-                                  </>
-                                );
-                              })}
-                          {changeUnitproperty === "editvariety" ? (
-                            <tr>
-                              <td
-                                className="text-primary text-center mx-5"
-                                colSpan={12}
-                              >
-                                Now You can edit vareity type
-                              </td>
-                            </tr>
-                          ) : null}
-                        </tbody>
-                      </Table>
+                                        ) : null}
+                                      </Accordion.Body>
+                                      {/* </Accordion.Item> */}
+                                      <tr>
+                                        <td colSpan={"12"}>
+                                          {customvalidated === "imgformat" ? (
+                                            <span
+                                              className="mt-2   text-center fs-6 text-danger"
+                                              type="invalid"
+                                            >
+                                              Image Format should be in jpg,
+                                              jpeg or png
+                                            </span>
+                                          ) : null}
+                                        </td>
+                                      </tr>
+                                    </>
+                                  );
+                                })}
+                            {changeUnitproperty === "editvariety" ? (
+                              <tr>
+                                <td
+                                  className="text-primary text-center mx-5"
+                                  colSpan={12}
+                                >
+                                  Now You can edit vareity type
+                                </td>
+                              </tr>
+                            ) : null}
+                          </tbody>
+                        </Table>
+                      </Accordion>
                     </div>
                   </div>
                 </div>
