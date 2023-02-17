@@ -262,6 +262,7 @@ function Product() {
 
   // MAIN PRODUCT LIST API
   const fetchdata = () => {
+    setLoading(true)
     axios
       .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=400`, {
         product_search: {

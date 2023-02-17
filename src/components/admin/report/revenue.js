@@ -528,10 +528,8 @@ const optionss = {
       
 
    
-
       const TimeChange = (e)=>{
         setFilterchange(e.target.value)
-
         let value = e.target.value;
         //today---------------------------------------------------------------------------
         if(value==1){
@@ -548,33 +546,26 @@ const optionss = {
         }
             //yesterday------------------------------------------------------------------------
         if(value==2){
-          let yesterday=moment().subtract(1, 'days').startOf('days').format("YYYY-MM-DD")
-          
+          let yesterday=moment().subtract(1, 'days').startOf('days').format("YYYY-MM-DD")         
           setFromDate(yesterday);
-          setToDate( moment().format("YYYY-MM-DD"));
-         
+          setToDate( moment().format("YYYY-MM-DD"));       
           let previousTodatee=moment(yesterday).subtract(1, 'days').startOf('days').format("YYYY-MM-DD")
           setprevTodate(previousTodatee)
           setprevFromdate(moment(previousTodatee).subtract(1, 'days').startOf('days').format("YYYY-MM-DD"))
           setpreviousStateChange(2)
-
         }
         //last week---------------------------------------------------------------
        if(value==3){
            let lastweek= moment().subtract(1, 'weeks').startOf('weeks').format('YYYY-MM-DD')
-          setFromDate(lastweek);
-        
+          setFromDate(lastweek);       
           setToDate(moment().subtract(1,'weeks').endOf('weeks').format('YYYY-MM-DD'));
           let previouslastweek=moment(lastweek).subtract(1,'days').endOf('days').format('YYYY-MM-DD')
            setprevTodate(previouslastweek)
            setprevFromdate(moment(previouslastweek).subtract(1,'weeks').endOf('weeks').format('YYYY-MM-DD'))
            setpreviousStateChange(3)
-
-       
        }
              //last month---------------------------------------------------------------
        if(value==4){
-       
        let month=moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD')
         setFromDate(month);
         let lastMonth=moment().subtract(1, 'month').endOf('month').format('YYYY-MM-DD')
@@ -588,7 +579,6 @@ const optionss = {
      }
     //  last six month---------------------------------------------------------
      if(value==5){
-      
       let sixMonth=moment().subtract(6, 'month').startOf('month').format('YYYY-MM-DD')
       setFromDate(sixMonth );
       setToDate(moment().format("YYYY-MM-DD") );
@@ -599,10 +589,8 @@ const optionss = {
       // console.log("previou 6 month-"+prevDate)
       setpreviousStateChange(5)
    }
-
    //this week-----------------------------------------------------------------------
    if(value==8){
-      
     let ThisWeek=moment().startOf('weeks').format('YYYY-MM-DD')
     setFromDate(ThisWeek);
     // console.log("From last 6 month"+ThisWeek)
@@ -612,10 +600,8 @@ const optionss = {
     setprevFromdate(moment(previousthisweek).subtract(1,'weeks').endOf('weeks').format('YYYY-MM-DD'))
     // setPrevDate(moment(ThisWeek).subtract(1, 'weeks').endOf('weeks').format('YYYY-MM-DD'))
     setpreviousStateChange(8)
-      
  }
- if(value==9){
-      
+ if(value==9){ 
   let ThisMonth=moment().startOf('month').format('YYYY-MM-DD')
   setFromDate(ThisMonth);
   // console.log("From last 6 month"+ThisMonth)
@@ -625,9 +611,9 @@ const optionss = {
   setprevFromdate(moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
   setpreviousStateChange(9)
 }
-
    fetchData()
       }
+
       const fetchData=()=>{
         console.log( "from_date------------------------------------"+fromDate)
         console.log( "to_date---------------------------------------"+toDate)
@@ -638,7 +624,7 @@ const optionss = {
         // console.log( "locations by name----"+location)
           axios.post(`${process.env.REACT_APP_BASEURL}/revenue`,
          {
-           "from_date":fromDate,
+              "from_date":fromDate,
               "to_date":toDate,
               "prev_from_date":prevFromdate,
               "prev_to_date":prevTodate,
@@ -649,31 +635,21 @@ const optionss = {
         }
         ).then((response) => {
             // console.log('revenue data'+JSON.stringify(response.data))
-            // console.log(" revenue error"+JSON.stringify(response))
-
-
-                
+            // console.log(" revenue error"+JSON.stringify(response))               
             if(response.data.message=="no_data"){
-              setRevenueError(response.data.message)
-              
+              setRevenueError(response.data.message)              
                 setGetRevenue([0])
               setTabledata([])
-       
             }
             else{
-
-
               setRevenueError('')
               // console.log("data=="+JSON.stringify(response.data[0]))
                setGetRevenue(response.data[0])
-              setTabledata(response.data[0].ravenue_date_data)
-             
+              setTabledata(response.data[0].ravenue_date_data)          
               setapicall(false)
             }
-         
         }).catch(function (error) {
-          console.log(error);
-          
+          console.log(error); 
         });
        } 
 
@@ -712,67 +688,42 @@ const optionss = {
         if(result.data){
           setCategory(result.data)
         }
-        
      }
-
 
      const BrandData= async()=>{
       let result=  await axios.get(`${process.env.REACT_APP_BASEURL}/brand_list`)
-
       //  console.log("Brand data-----"+ JSON.stringify(result.data))
       if(result.data){
         setBrand(result.data)
       }
-      
    }
 
-      
-
-       
-
-
-       
-
-
       useEffect(() => {
-    
-    
         fetchData();
         VenderData();
         CategoryData();
         BrandData();
-    
-       
       }, [ apicall]);
-        
-      
-
-
- 
 
       const submitHandler=()=>{
-       
        setapicall(true)
-        fetchData()
+       fetchData()
       }
 
-
-
       const OnReset =()=>{
-
-        setpreviousStateChange('')
-  setFromDate(moment().format("YYYY-MM-DD"));
-setToDate(moment().format("YYYY-MM-DD"))
-setprevFromdate(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'))
-  setprevTodate(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'))
-        setBrandName([])
-        setLocation([])
-        setCategoryId("")
-        setVendorId("")
-        fetchData()
-         setapicall(true)
-       
-    }
+          setFilterchange("")
+          setpreviousStateChange('')
+          setFromDate(moment().format("YYYY-MM-DD"));
+          setToDate(moment().format("YYYY-MM-DD"))
+          setprevFromdate(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'))
+          setprevTodate(moment().subtract(1, 'days').startOf('days').format('YYYY-MM-DD'))
+          setBrandName([])
+          setLocation([])
+          setCategoryId("")
+          setVendorId("")
+          fetchData()
+          setapicall(true)
+  }
 
 
       // console.log("get revenue------"+JSON.stringify(getRevenue))
@@ -950,7 +901,7 @@ const SearchHandler=(e)=>{
               placeholder="Search by category"
               onChange={TimeChange}
             >
-              <option >Search by category</option>
+              <option name="Search_by_category" defaultValue={0}>Search by category</option>
               <option name="today" value={1}>Today</option>
               <option name="yesterday" value={2}>yesterday</option>
               <option name="this_week" value={8}>this  week</option>
@@ -961,15 +912,9 @@ const SearchHandler=(e)=>{
               {/* <option name="custom_month" value="6">custom month</option> */}
               <option name="custom_date" value="7">custom date</option>
 
-            </Form.Select>
-
-
-            
+            </Form.Select> 
             </div>
-
-        
-
-<div className="col-md-3 col-sm-6 aos_input">
+            <div className="col-md-3 col-sm-6 aos_input">
             <Select
       
               className=" basic-multi-select"
@@ -982,66 +927,42 @@ const SearchHandler=(e)=>{
             />
             
             </div>
-
-          
-
             <div className="col-md-3 col-sm-6 aos_input">
             <Select
-      
               className=" basic-multi-select"
               placeholder="Search by Brand"
               onChange={brandHandler}
-             
               classNamePrefix="select"
               isMulti  
               options={options1[0]} 
             />
-         
             </div>
-
-
-            
             <div className="col-md-3 col-sm-6 aos_input">
             <Select
-      
               className=" basic-multi-select"
               placeholder="Search by Category"
               onChange={categoryHandler}
-             
               classNamePrefix="select"
               isMulti  
               options={options3[0]} 
             />
-         
             </div>
-
-
             <div className="col-md-3 col-sm-6 aos_input mt-3">
             <Select
-      
               className=" basic-multi-select"
               placeholder="Search by Location"
               onChange={SearchHandler}
-             
               classNamePrefix="select"
               isMulti  
               options={options4} 
             />
-         
             </div>
-     
-
-
-
-
-           
           {filterchange==='7'?
-         
           <div className="col-md-3 col-sm-6 d-flex mt-3  aos_input">
              
-      <div className="col-6 pe-2 aos_input">
-        <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setFromDate(e.target.value)}} className={'adminsideinput'} max={moment().format("YYYY-MM-DD")}/>
-        </div>
+           <div className="col-6 pe-2 aos_input">
+              <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setFromDate(e.target.value)}} className={'adminsideinput'} max={moment().format("YYYY-MM-DD")}/>
+            </div>
         
         <div className="col-6 aos_input">
         <input type={"date"} placeholder={"Search by date"} onChange={(e)=>{setToDate(e.target.value)}} className={'adminsideinput'} max={moment().format("YYYY-MM-DD")}/>

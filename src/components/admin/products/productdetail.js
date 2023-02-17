@@ -13,8 +13,10 @@ import { useNavigate } from "react-router-dom";
 import SAlert from "../../admin/common/salert";
 import moment from "moment/moment";
 import InputGroup from "react-bootstrap/InputGroup";
+import  Loader from '../common/loader'
 let encoded;
 let ImgObj = [];
+
 const Productdetail = () => {
   const navigate = useNavigate();
   let vid = localStorage.getItem("variantid");
@@ -26,6 +28,7 @@ const Productdetail = () => {
   const [productdata, setProductData] = useState([]);
   const [validated, setValidated] = useState(false);
   const [vdata, setvdata] = useState([]);
+  const [loading, setloading] = useState(false);
   const [colorchange, setcolorchange] = useState("");
   const [sizechange, setsizechange] = useState("");
   const [variantapicall, setvariantapicall] = useState(false);
@@ -78,8 +81,10 @@ const Productdetail = () => {
   const [variantdetail, setVariantdetail] = useState([]);
   const [editbutton, setEditButton] = useState(false);
   const [changeUnitproperty, setChangeUnitProperty] = useState(false);
+  
   useEffect(() => {
     function getProductDetails() {
+      setloading(true)
       try {
         axios
           .get(`${process.env.REACT_APP_BASEURL}/product_details?id=${pid}`)
@@ -98,12 +103,14 @@ const Productdetail = () => {
                 unit: response.data.product_verient[0].unit,
                 product_id: pid,
               });
+              setloading(false)
             }
 
             setvariantapicall(false);
           });
       } catch (err) {
         console.log(err);
+        setloading(false)
       }
     }
 
@@ -111,6 +118,7 @@ const Productdetail = () => {
   }, [variantapicall]);
 
   useEffect(() => {
+    setloading(true)
     getCategorydata();
   }, [productdata.category]);
 
@@ -124,9 +132,11 @@ const Productdetail = () => {
       .then((response) => {
         let data = response.data;
         setCategoryName(data[0].category_name);
+        setloading(false)
       })
       .catch(function (error) {
         console.log(error);
+        setloading(false)
       });
   };
 
@@ -180,18 +190,21 @@ const Productdetail = () => {
       ImgObj.push(imar);
     }
     // image
-
+    setloading(true)
     axios
       .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
       .then((response) => {
         onImgView(id, product_id);
+        setloading(false)
       })
       .catch(function (error) {
         console.log(error);
+        setloading(false)
       });
   };
 
   const onImgRemove = (id, name, vendor_id, product_id, product_verient_id) => {
+    setloading(true)
     axios
       .put(`${process.env.REACT_APP_BASEURL}/product_image_delete`, {
         product_image_id: `${id}`,
@@ -200,9 +213,11 @@ const Productdetail = () => {
       })
       .then((response) => {
         onImgView(product_verient_id, product_id);
+        setloading(false)
       })
       .catch(function (error) {
         console.log(error);
+        setloading(false)
       });
   };
 
@@ -211,18 +226,22 @@ const Productdetail = () => {
     localStorage.setItem("variantid", id);
     localStorage.setItem("productid", productid);
     setEditButton(false);
+    setloading(true)
     axios
       .get(
         `${process.env.REACT_APP_BASEURL}/product_images_get_singal_veriant?product_id=${productid}&product_verient_id=${id}`
       )
       .then((response) => {
         setnewImageUrls(response.data);
+        setloading(false)
       })
       .catch(function (error) {
         console.log(error);
+        setloading(false)
       });
   };
   const onImgCoverEditClick = (imgid, productid, productvariantid) => {
+    setloading(true)
     axios
       .put(`${process.env.REACT_APP_BASEURL}/change_porduct_cover_image`, {
         product_image_id: `${imgid}`,
@@ -231,9 +250,11 @@ const Productdetail = () => {
       })
       .then((response) => {
         onImgView(productvariantid, productid);
+        setloading(false)
       })
       .catch(function (error) {
         console.log(error);
+        setloading(false)
       });
   };
 
@@ -331,6 +352,7 @@ const Productdetail = () => {
       ) {
         setVarietyUnitvalidation("mrpmore");
       } else {
+        setloading(true)
         axios
           .post(
             `${process.env.REACT_APP_BASEURL}/products_varient_add`,
@@ -360,15 +382,19 @@ const Productdetail = () => {
               setvariantapicall(true);
               setcustomValidated(false);
               setVarietyUnitvalidation("");
+              setloading(false)
             } else if (response.errno == 1064) {
               alert("Error in add product");
               setProductAlert(false);
+              setloading(false)
             } else {
               setProductAlert(false);
+              setloading(false)
             }
           })
           .catch(function (error) {
             console.log(error);
+            setloading(false)
           });
       }
     } else {
@@ -420,6 +446,7 @@ const Productdetail = () => {
         ) {
           setVarietyUnitvalidation("mrpmore");
         } else {
+          setloading(true)
           axios
             .put(
               `${process.env.REACT_APP_BASEURL}/products_varient_update`,
@@ -451,15 +478,19 @@ const Productdetail = () => {
                 setvariantapicall(true);
                 setcustomValidated(false);
                 setVarietyUnitvalidation("");
+                setloading(false)
               } else if (response.errno == 1064) {
                 alert("Error in Update product");
                 setUpdatetAlert(false);
+                setloading(false)
               } else {
                 setUpdatetAlert(false);
+                setloading(false)
               }
             })
             .catch(function (error) {
               console.log(error);
+              setloading(false)
             });
         }
       } else {
@@ -493,6 +524,7 @@ const Productdetail = () => {
     if (variantdetail.length === 2) {
       setChangeUnitProperty("editvariety");
     }
+    setloading(true)
     // console.log("veriant lenght--" + variantdetail.length);
     axios
       .put(`${process.env.REACT_APP_BASEURL}/products_delete_remove`, {
@@ -502,9 +534,11 @@ const Productdetail = () => {
       })
       .then((response) => {
         setvariantapicall(true);
+        setloading(false)
       })
       .catch(function (error) {
         console.log(error);
+        setloading(false)
       });
     setvdata(vdata.filter((item) => item !== variantremove.id));
     setVerityAlert(false);
@@ -514,21 +548,24 @@ const Productdetail = () => {
     if (variantdetail.length === 1) {
       setChangeUnitProperty(true);
     }
+    setloading(true)
     axios
       .get(
         `${process.env.REACT_APP_BASEURL}/products_pricing?id=${id}&product_id=${productid}&user_id`
       )
       .then((response) => {
         setvariantarray(response.data[0]);
+        setloading(false)
       })
       .catch(function (error) {
         console.log(error);
+        setloading(false)
       });
   };
   // useEffect((id, productid)=>{
   //   VariantEditClick(id, productid)
   // },[])
-  return (
+  return (<>{loading === true ? <Loader/>:
     <div>
       {" "}
       {hideallData == false ? (
@@ -1601,7 +1638,8 @@ const Productdetail = () => {
       ) : hideallData == true ? (
         <h1>No Record Found</h1>
       ) : null}
-    </div>
+    </div>}
+    </>
   );
 };
 
