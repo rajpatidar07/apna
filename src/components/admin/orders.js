@@ -44,7 +44,7 @@ function Orders() {
   useEffect(() => {
     axios
       .post(
-        `${process.env.REACT_APP_BASEURL}/orders_list`,
+        `${process.env.REACT_APP_BASEURL_0}/orders_list`,
         {
           status: searchdata.status,
           created_on: searchdata.created_on,
@@ -73,7 +73,7 @@ function Orders() {
     setLoading(true)
     axios
       .put(
-        `${process.env.REACT_APP_BASEURL}/order_status_change`,
+        `${process.env.REACT_APP_BASEURL_0}/order_status_change`,
         {
           status_change: e.target.value,
           id: id,

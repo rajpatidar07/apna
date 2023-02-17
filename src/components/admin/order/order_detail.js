@@ -32,7 +32,7 @@ const OrderDetail = () => {
     setchangstatuss(e.target.value);
     axios
       .put(
-        "http://192.168.29.108:5000/order_status_change",
+        `${process.env.REACT_APP_BASEURL_0}/order_status_change`,
         {
           status_change: e.target.value,
           id: orderid,
@@ -55,7 +55,7 @@ const OrderDetail = () => {
   useEffect(() => {
     axios
       .post(
-        `http://192.168.29.108:5000/order_deteils`,
+        `${process.env.REACT_APP_BASEURL_0}/order_deteils`,
         {
           id: orderid,
         },
