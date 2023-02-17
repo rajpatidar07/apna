@@ -27,25 +27,25 @@ const Promotionproduct = () => {
   const [searchdata, setsearchData] = useState({
     start_date: "",
     end_date: "",
-    status :"",
-    category:"", 
-    brand:"",
-    product_title_name:"",
-    vendor:""
+    status: "",
+    category: "",
+    brand: "",
+    product_title_name: "",
+    vendor: "",
   });
   const [filtervategory, setfiltercategory] = useState([]);
   const [vendorid, setVendorId] = useState([]);
-  const [searcherror,setsearcherror] = useState("")
-  
+  const [searcherror, setsearcherror] = useState("");
+
   let token = localStorage.getItem("token");
-  
+
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   /*<---Category list api---> */
   const getCategorydatafilter = () => {
     try {
       axios
-        .get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
+        .get(`${process.env.REACT_APP_BASEURL_0}/category?category=all`)
         .then((response) => {
           let cgory = response.data;
           setfiltercategory(cgory);
@@ -57,7 +57,7 @@ const Promotionproduct = () => {
     try {
       axios
         .post(
-          `${process.env.REACT_APP_BASEURL}/vendors`,
+          `${process.env.REACT_APP_BASEURL_0}/vendors`,
           { vendor_id: "all" },
           {
             headers: { admin_token: `${token}` },
@@ -79,7 +79,7 @@ const Promotionproduct = () => {
       console.log(err);
     }
   };
- /*<---Function to close sweet alter of update--->*/
+  /*<---Function to close sweet alter of update--->*/
   const hideUpdateAlert = () => setUpdateAlert(false);
 
   const OnDateChange = (e) => {
@@ -96,16 +96,6 @@ const Promotionproduct = () => {
 
   /*<----Table data---->*/
   const columns = [
-    {
-      name: "ID",
-      selector: (row) => row.id,
-      sortable: true,
-      width: "150px",
-      center: true,
-      style: {
-        paddingLeft: 0,
-      },
-    },
     {
       name: "#",
       width: "100px",
@@ -126,7 +116,8 @@ const Promotionproduct = () => {
           }}
         />
       ),
-    },{
+    },
+    {
       name: "Product Name",
       selector: (row) => (
         <div>
@@ -273,15 +264,18 @@ const Promotionproduct = () => {
   const handleShow = (product_id) => {
     try {
       axios
-        .post(`${process.env.REACT_APP_BASEURL_0}/fetured_product_search`, {
-          product_id: product_id,
-          fetured_type: "promotional",
-          start_date: "",
-          end_date: "",
-        },
-        {
-          headers: { admin_token: `${token}` },
-        })
+        .post(
+          `${process.env.REACT_APP_BASEURL_0}/fetured_product_search`,
+          {
+            product_id: product_id,
+            fetured_type: "promotional",
+            start_date: "",
+            end_date: "",
+          },
+          {
+            headers: { admin_token: `${token}` },
+          }
+        )
         .then((response) => {
           setId(response.data[0].id);
           console.log(response);
@@ -291,40 +285,45 @@ const Promotionproduct = () => {
 
             end_date: response.data[0].end_date,
           });
-          
+
           setapicall(false);
         });
     } catch (err) {}
     setShow(true);
   };
 
-   /*<---Function to Search--->*/
+  /*<---Function to Search--->*/
   useEffect(() => {
     try {
       axios
-        .post(`${process.env.REACT_APP_BASEURL_0}/fetured_product_search`, {
-          product_id: "",
-          fetured_type: "promotional",
-          start_date: /*`${searchdata.start_date}`*/"",
-          end_date: /*`${searchdata.end_date}`*/"",
-          category: [`${searchdata.category}`],
-          brand: [`${searchdata.brand}`],
-          shop: [`${searchdata.vendor}`],
-          product_title_name:[`${searchdata.product_title_name}`]
-        },
-        {
-          headers: { admin_token: `${token}` },
-        })
+        .post(
+          `${process.env.REACT_APP_BASEURL_0}/fetured_product_search`,
+          {
+            product_id: "",
+            fetured_type: "promotional",
+            start_date: /*`${searchdata.start_date}`*/ "",
+            end_date: /*`${searchdata.end_date}`*/ "",
+            category: [`${searchdata.category}`],
+            brand: [`${searchdata.brand}`],
+            shop: [`${searchdata.vendor}`],
+            product_title_name: [`${searchdata.product_title_name}`],
+          },
+          {
+            headers: { admin_token: `${token}` },
+          }
+        )
         .then((response) => {
           setpromotionProductData(response.data);
           setapicall(false);
         });
-    } catch (err) {console.log(err);}
+    } catch (err) {
+      console.log(err);
+    }
     getCategorydatafilter();
     getVendorData();
   }, [apicall]);
- 
-   /*<---Function to Update promotion product--->*/
+
+  /*<---Function to Update promotion product--->*/
   const UpdatePromotionProduct = (e) => {
     e.preventDefault();
     axios
@@ -357,15 +356,21 @@ const Promotionproduct = () => {
   };
   /*<---Function to reset Search--->*/
   const OnReset = () => {
-    setsearchData({product_title_name :"" ,status : "", category: "", brand: "", vendor: ""});
+    setsearchData({
+      product_title_name: "",
+      status: "",
+      category: "",
+      brand: "",
+      vendor: "",
+    });
     setapicall(true);
-    setsearcherror(false)
+    setsearcherror(false);
   };
 
   /*<---Onlick Function to Search--->*/
   const Search = () => {
     if (
-      searchdata.product_title_name ==="" &&
+      searchdata.product_title_name === "" &&
       searchdata.vendor === "" &&
       searchdata.brand === "" &&
       searchdata.category === ""
@@ -384,12 +389,12 @@ const Promotionproduct = () => {
       {/* search bar */}
       <div className="card mt-3 p-3 ">
         {/* <div className="row pb-3"> */}
-          {/* <div className="col-md-3 col-sm-6 aos_input">
+        {/* <div className="col-md-3 col-sm-6 aos_input">
             <input onChange={OnSearchChange} name='product_title_name'
               value={searchdata.product_title_name}
               className={'adminsideinput'} type={"text"} placeholder={"Search by product name"} />
           </div> */}
-          {/*           
+        {/*           
           <div className="col-md-3 col-sm-6 aos_input value={}">
             <input type={"date"} onChange={OnDateChange} name='start_date'
               value={searchdata.start_date}
@@ -400,13 +405,13 @@ const Promotionproduct = () => {
               value={searchdata.end_date}
               className={'adminsideinput'} placeholder={"Search by product name"} />
           </div> */}
-          {/* <div className="col-md-3 col-sm-6 aos_input">
+        {/* <div className="col-md-3 col-sm-6 aos_input">
             <MainButton
               btntext={"Search"}
               btnclass={"button main_button w-100"}
             />
           </div> */}
-          {/* <div className="col-md-3 col-sm-6 aos_input">
+        {/* <div className="col-md-3 col-sm-6 aos_input">
             <MainButton
               onClick={submitHandler}
               btntext={"Search"}
@@ -422,110 +427,113 @@ const Promotionproduct = () => {
             />
           </div> */}
         {/* </div> */}
-    <div className="card mt-3 p-3">
-      <div className="row pb-3">
-        <div className="col-md-3 col-sm-6 aos_input mb-2">
-            <input
-              type={"text"}
-              placeholder={"Search by product name"}
-              onChange={OnSearchChange}
-              name="product_title_name"
-              value={searchdata.product_title_name}
-              className={"adminsideinput"}
-            />{" "}
-            {searcherror === true ? (
-              <small className="text-danger">please fill the feild</small>
-            ) : null}
-        </div>
-        
-         <div className="col-md-3 col-sm-6 aos_input mb-2">
-            <Form.Select
-              aria-label="Search by category"
-              className="adminselectbox"
-              placeholder="Search by category"
-              onChange={OnSearchChange}
-              name="category"
-              value={String(searchdata.category)}
-            >
-              <option value={""}>Select Category</option>
-              {(filtervategory || []).map((data, i) => {
-                return (
-                  <option value={data.id} key={i}>
-                    {" "}
-                    {data.id}
-                  </option>
-                );
-              })}
-            </Form.Select>
-          </div>
-          <div className="col-md-3 col-sm-6 aos_input mb-2">
-            <Form.Select
-              aria-label="Search by status"
-              className="adminselectbox"
-              placeholder="Search by vendor"
-              onChange={OnSearchChange}
-              name="vendor"
-              value={String(searchdata.vendor)}
-            >
-              <option value={""}>Select Vendor</option>
-              {(vendorid || []).map((data, i) => {
-                return (
-                  <option value={data.shop_name} key={i}>
-                    {" "}
-                    {data.shop_name}
-                  </option>
-                );
-              })}
-            </Form.Select>
-          </div>
-          <div className="col-md-3 col-sm-6 aos_input mb-2">
-            <Form.Select
-              aria-label="Search by brand"
-              className="adminselectbox"
-              placeholder="Search by brand"
-              onChange={OnSearchChange}
-              name="brand"
-              value={String(searchdata.brand)}
-            >
-              <option value={""}>Select Brand</option>
-              {(BrandJson.BrandJson || []).map((data, i) => {
-                return (
-                  <option value={data} key={i}>
-                    {" "}
-                    {data}
-                  </option>
-                );
-              })}
-            </Form.Select>
-          </div>
-          <div className="col-md-3 col-sm-6 aos_input mb-2">
-            <Form.Select
-              aria-label="Search by delivery"
-              className="adminselectbox"
-              onChange={OnSearchChange}
-              name="status"
-              value={String(searchdata.status)}
-            >
-              <option value="">status</option>
-              <option value="Active">Active</option>
-              <option value="expired">Expired</option>
-              <option value="inactive">In active</option>
-            </Form.Select>
-        </div>
-         <div className="col-md-3 col-sm-6 aos_input mb-2 ">
-            <MainButton btntext={"Search"} btnclass={'button main_button w-100'} onClick={Search} />
-          </div>
-          <div className="col-md-3 col-sm-6 aos_input mb-2 ">
-            <MainButton
-              btntext={"Reset"}
-              btnclass={"button main_button w-100"}
-              type="reset"
-              onClick={OnReset}
-            />
-          </div>
-      </div>
-    </div>
+        <div className="card mt-3 p-3">
+          <div className="row pb-3">
+            <div className="col-md-3 col-sm-6 aos_input mb-2">
+              <input
+                type={"text"}
+                placeholder={"Search by product name"}
+                onChange={OnSearchChange}
+                name="product_title_name"
+                value={searchdata.product_title_name}
+                className={"adminsideinput"}
+              />{" "}
+              {searcherror === true ? (
+                <small className="text-danger">please fill the feild</small>
+              ) : null}
+            </div>
 
+            <div className="col-md-3 col-sm-6 aos_input mb-2">
+              <Form.Select
+                aria-label="Search by category"
+                className="adminselectbox"
+                placeholder="Search by category"
+                onChange={OnSearchChange}
+                name="category"
+                value={String(searchdata.category)}
+              >
+                <option value={""}>Select Category</option>
+                {(filtervategory || []).map((data, i) => {
+                  return (
+                    <option value={data.id} key={i}>
+                      {" "}
+                      {data.category_name}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </div>
+            <div className="col-md-3 col-sm-6 aos_input mb-2">
+              <Form.Select
+                aria-label="Search by status"
+                className="adminselectbox"
+                placeholder="Search by vendor"
+                onChange={OnSearchChange}
+                name="vendor"
+                value={String(searchdata.vendor)}
+              >
+                <option value={""}>Select Vendor</option>
+                {(vendorid || []).map((data, i) => {
+                  return (
+                    <option value={data.shop_name} key={i}>
+                      {" "}
+                      {data.shop_name}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </div>
+            <div className="col-md-3 col-sm-6 aos_input mb-2">
+              <Form.Select
+                aria-label="Search by brand"
+                className="adminselectbox"
+                placeholder="Search by brand"
+                onChange={OnSearchChange}
+                name="brand"
+                value={String(searchdata.brand)}
+              >
+                <option value={""}>Select Brand</option>
+                {(BrandJson.BrandJson || []).map((data, i) => {
+                  return (
+                    <option value={data} key={i}>
+                      {" "}
+                      {data}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </div>
+            <div className="col-md-3 col-sm-6 aos_input mb-2">
+              <Form.Select
+                aria-label="Search by delivery"
+                className="adminselectbox"
+                onChange={OnSearchChange}
+                name="status"
+                value={String(searchdata.status)}
+              >
+                <option value="">status</option>
+                <option value="Active">Active</option>
+                <option value="expired">Expired</option>
+                <option value="inactive">In active</option>
+              </Form.Select>
+            </div>
+            <div className="col-md-3 col-sm-6 aos_input mb-2 ">
+              <MainButton
+                btntext={"Search"}
+                btnclass={"button main_button w-100"}
+                onClick={Search}
+              />
+            </div>
+            <div className="col-md-3 col-sm-6 aos_input mb-2 ">
+              <MainButton
+                btntext={"Reset"}
+                btnclass={"button main_button w-100"}
+                type="reset"
+                onClick={OnReset}
+              />
+            </div>
+          </div>
+        </div>
 
         {/* upload */}
 

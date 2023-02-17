@@ -22,25 +22,25 @@ const Offerproduct = () => {
   const [searchdata, setsearchData] = useState({
     end_date: "",
     start_date: "",
-    category:"", 
-    brand:"",
-    vendor:"",
-    product_title_name:""
-});
-const [filtervategory, setfiltercategory] = useState([]);
-const [vendorid, setVendorId] = useState([]);
-const [searcherror,setsearcherror] = useState("")
-const [Alert, setAlert] = useState(false);
-const [apicall, setapicall] = useState(false);
-const [show, setShow] = useState(false);
+    category: "",
+    brand: "",
+    vendor: "",
+    product_title_name: "",
+  });
+  const [filtervategory, setfiltercategory] = useState([]);
+  const [vendorid, setVendorId] = useState([]);
+  const [searcherror, setsearcherror] = useState("");
+  const [Alert, setAlert] = useState(false);
+  const [apicall, setapicall] = useState(false);
+  const [show, setShow] = useState(false);
 
-let token = localStorage.getItem("token");
+  let token = localStorage.getItem("token");
 
   /*<---Category list api---> */
   const getCategorydatafilter = () => {
     try {
       axios
-        .get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
+        .get(`${process.env.REACT_APP_BASEURL_0}/category?category=all`)
         .then((response) => {
           let cgory = response.data;
           setfiltercategory(cgory);
@@ -52,7 +52,7 @@ let token = localStorage.getItem("token");
     try {
       axios
         .post(
-          `${process.env.REACT_APP_BASEURL}/vendors`,
+          `${process.env.REACT_APP_BASEURL_0}/vendors`,
           { vendor_id: "all" },
           {
             headers: { admin_token: `${token}` },
@@ -79,32 +79,37 @@ let token = localStorage.getItem("token");
     setUpdateAlert(false);
   };
 
- /*<---Onchange function of search --->*/
- const OnSearchChange = (e) => {
-  setsearchData({ ...searchdata, [e.target.name]: e.target.value });
-  setsearcherror(false)
-};
-/*<---Function to reset Search--->*/
-const OnReset = () => {
-  setsearchData({product_title_name:"",status :"", category:"", brand:"", vendor:""});
-  setsearcherror(false)
-  setapicall(true);
-
-};
-/*<---Onlick Function to Search--->*/
-const Search = () => {
-  if (
-    searchdata.product_title_name === "" &&
-    searchdata.vendor === "" &&
-    searchdata.brand === "" &&
-    searchdata.category === ""
-  ) {
-    setsearcherror(true);
-  } else {
+  /*<---Onchange function of search --->*/
+  const OnSearchChange = (e) => {
+    setsearchData({ ...searchdata, [e.target.name]: e.target.value });
+    setsearcherror(false);
+  };
+  /*<---Function to reset Search--->*/
+  const OnReset = () => {
+    setsearchData({
+      product_title_name: "",
+      status: "",
+      category: "",
+      brand: "",
+      vendor: "",
+    });
     setsearcherror(false);
     setapicall(true);
-  }
-};
+  };
+  /*<---Onlick Function to Search--->*/
+  const Search = () => {
+    if (
+      searchdata.product_title_name === "" &&
+      searchdata.vendor === "" &&
+      searchdata.brand === "" &&
+      searchdata.category === ""
+    ) {
+      setsearcherror(true);
+    } else {
+      setsearcherror(false);
+      setapicall(true);
+    }
+  };
 
   const OnDateChange = (e) => {
     let mdate = moment(e.target.value).format("YYYY-MM-DD");
@@ -122,19 +127,22 @@ const Search = () => {
   useEffect(() => {
     try {
       axios
-        .post(`${process.env.REACT_APP_BASEURL_0}/fetured_product_search`, {
-          product_id: "",
-          fetured_type: "special_offer",
-          start_date: /*`${searchdata.start_date}`*/"",
-          end_date: /*`${searchdata.end_date}`*/"",
-          category: [`${searchdata.category}`],
-          brand: [`${searchdata.brand}`],
-          shop: [`${searchdata.vendor}`],
-          product_title_name :[`${searchdata.product_title_name}`]
-        },
-        {
-          headers: { admin_token: `${token}` },
-        })
+        .post(
+          `${process.env.REACT_APP_BASEURL_0}/fetured_product_search`,
+          {
+            product_id: "",
+            fetured_type: "special_offer",
+            start_date: /*`${searchdata.start_date}`*/ "",
+            end_date: /*`${searchdata.end_date}`*/ "",
+            category: [`${searchdata.category}`],
+            brand: [`${searchdata.brand}`],
+            shop: [`${searchdata.vendor}`],
+            product_title_name: [`${searchdata.product_title_name}`],
+          },
+          {
+            headers: { admin_token: `${token}` },
+          }
+        )
         .then((response) => {
           setOfferProductData(response.data);
           setapicall(false);
@@ -145,16 +153,6 @@ const Search = () => {
   }, [apicall]);
 
   const columns = [
-    {
-      name: "ID",
-      selector: (row) => row.id,
-      sortable: true,
-      width: "150px",
-      center: true,
-      style: {
-        paddingLeft: 0,
-      },
-    },
     {
       name: "#",
       width: "100px",
@@ -324,15 +322,18 @@ const Search = () => {
   const handleShow = (product_id) => {
     try {
       axios
-        .post(`${process.env.REACT_APP_BASEURL_0}/fetured_product_search`, {
-          product_id: product_id,
-          fetured_type: "special_offer",
-          start_date: "",
-          end_date: "",
-        },
-        {
-          headers: { admin_token: `${token}` },
-        })
+        .post(
+          `${process.env.REACT_APP_BASEURL_0}/fetured_product_search`,
+          {
+            product_id: product_id,
+            fetured_type: "special_offer",
+            start_date: "",
+            end_date: "",
+          },
+          {
+            headers: { admin_token: `${token}` },
+          }
+        )
         .then((response) => {
           setId(response.data[0].id);
           setFeaturetData({
@@ -350,14 +351,17 @@ const Search = () => {
   const UpdateOfferProduct = (e) => {
     e.preventDefault();
     axios
-      .put(`${process.env.REACT_APP_BASEURL_0}/update_fetured_product`, {
-        id: id,
-        start_date: featuredData.start_date,
-        end_date: featuredData.end_date,
-      },
-      {
-        headers: { admin_token: `${token}` },
-      })
+      .put(
+        `${process.env.REACT_APP_BASEURL_0}/update_fetured_product`,
+        {
+          id: id,
+          start_date: featuredData.start_date,
+          end_date: featuredData.end_date,
+        },
+        {
+          headers: { admin_token: `${token}` },
+        }
+      )
       .then((response) => {
         let data = response.data;
         setapicall(true);
@@ -377,13 +381,13 @@ const Search = () => {
       {/* search bar */}
       <div className="card mt-3 p-3 ">
         {/* <div className="row pb-3"> */}
-          {/* <div className="col-md-3 col-sm-6 aos_input">
+        {/* <div className="col-md-3 col-sm-6 aos_input">
             <input onChange={OnSearchChange} name='product_title_name'
               value={searchdata.product_title_name}
               className={'adminsideinput'} type={"text"} placeholder={"Search by product name"} />
           </div> */}
 
-          {/* <div className="col-md-3 col-sm-6 aos_input value={}">
+        {/* <div className="col-md-3 col-sm-6 aos_input value={}">
             <input type={"date"} onChange={OnDateChange} name='start_date'
               value={searchdata.start_date}
               className={'adminsideinput'} placeholder={"Search by date"} />
@@ -393,14 +397,14 @@ const Search = () => {
               value={searchdata.end_date}
               className={'adminsideinput'} placeholder={"Search by date"} />
           </div> */}
-          {/* <div className="col-md-3 col-sm-6 aos_input">
+        {/* <div className="col-md-3 col-sm-6 aos_input">
             <MainButton
               btntext={"Search"}
               btnclass={"button main_button w-100"}
             />
           </div> */}
 
-          {/* <div className="col-md-3 col-sm-6 aos_input">
+        {/* <div className="col-md-3 col-sm-6 aos_input">
             <MainButton
               onClick={submitHandler}
               btntext={"Search"}
@@ -417,99 +421,103 @@ const Search = () => {
           </div> */}
         {/* </div> */}
         <div className="card mt-3 p-3">
-        <div className="row pb-3">
-        <div className="col-md-3 col-sm-6 aos_input mb-2">
-            <input
-              type={"text"}
-              placeholder={"Search by product name"}
-              onChange={OnSearchChange}
-              name="product_title_name"
-              value={searchdata.product_title_name}
-              className={"adminsideinput"}
-            />{" "}
-            {searcherror === true ? (
-              <small className="text-danger">please fill the feild</small>
-            ) : null}
-          </div>
-       
-  <div className="col-md-3 col-sm-6 aos_input mb-2">
-            <Form.Select
-              aria-label="Search by status"
-              className="adminselectbox"
-              placeholder="Search by category"
-              onChange={OnSearchChange}
-              name="category"
-              value={String(searchdata.category)}
-            >
-              <option value={""}>Select Category</option>
-              {(filtervategory || []).map((data, i) => {
-                return (
-                  <option value={data.id} key={i}>
-                    {" "}
-                    {data.id}
-                  </option>
-                );
-              })}
-            </Form.Select>
-          </div>
-          <div className="col-md-3 col-sm-6 aos_input mb-2">
-            <Form.Select
-              aria-label="Search by status"
-              className="adminselectbox"
-              placeholder="Search by vendor"
-              onChange={OnSearchChange}
-              name="vendor"
-              value={String(searchdata.vendor)}
-            >
-              <option value={""}>Select Vendor</option>
-              {(vendorid || []).map((data, i) => {
-                return (
-                  <option value={data.shop_name} key={i}>
-                    {" "}
-                    {data.shop_name}
-                  </option>
-                );
-              })}
-            </Form.Select>
-          </div>
-          <div className="col-md-3 col-sm-6 aos_input mb-2">
-            <Form.Select
-              aria-label="Search by brand"
-              className="adminselectbox"
-              placeholder="Search by brand"
-              onChange={OnSearchChange}
-              name="brand"
-              value={String(searchdata.brand)}
-            >
-              <option value={""}>Select Brand</option>
-              {(BrandJson.BrandJson || []).map((data, i) => {
-                return (
-                  <option value={data} key={i}>
-                    {" "}
-                    {data}
-                  </option>
-                );
-              })}
-            </Form.Select>
-          </div>
-        <div className="col-md-3 col-sm-6 aos_input mb-2">
-           <Form.Select
-              aria-label="Search by delivery"
-              className="adminselectbox"
-              onChange={OnSearchChange}
-              name="status"
-              value={String(searchdata.status)}
-            >
-              <option value="">status</option>
-              <option value="Active">Active</option>
-              <option value="expired">Expired</option>
-              <option value="inactive">In active</option>
-            </Form.Select>
-          </div>
-          <div className="col-md-3 col-sm-6 aos_input mb-2">
-            <MainButton btntext={"Search"} btnclass={'button main_button w-100'} onClick={Search} />
-          </div>
-          <div className="col-md-3 col-sm-6 aos_input mb-2">
+          <div className="row pb-3">
+            <div className="col-md-3 col-sm-6 aos_input mb-2">
+              <input
+                type={"text"}
+                placeholder={"Search by product name"}
+                onChange={OnSearchChange}
+                name="product_title_name"
+                value={searchdata.product_title_name}
+                className={"adminsideinput"}
+              />{" "}
+              {searcherror === true ? (
+                <small className="text-danger">please fill the feild</small>
+              ) : null}
+            </div>
+
+            <div className="col-md-3 col-sm-6 aos_input mb-2">
+              <Form.Select
+                aria-label="Search by status"
+                className="adminselectbox"
+                placeholder="Search by category"
+                onChange={OnSearchChange}
+                name="category"
+                value={String(searchdata.category)}
+              >
+                <option value={""}>Select Category</option>
+                {(filtervategory || []).map((data, i) => {
+                  return (
+                    <option value={data.id} key={i}>
+                      {" "}
+                      {data.category_name}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </div>
+            <div className="col-md-3 col-sm-6 aos_input mb-2">
+              <Form.Select
+                aria-label="Search by status"
+                className="adminselectbox"
+                placeholder="Search by vendor"
+                onChange={OnSearchChange}
+                name="vendor"
+                value={String(searchdata.vendor)}
+              >
+                <option value={""}>Select Vendor</option>
+                {(vendorid || []).map((data, i) => {
+                  return (
+                    <option value={data.shop_name} key={i}>
+                      {" "}
+                      {data.shop_name}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </div>
+            <div className="col-md-3 col-sm-6 aos_input mb-2">
+              <Form.Select
+                aria-label="Search by brand"
+                className="adminselectbox"
+                placeholder="Search by brand"
+                onChange={OnSearchChange}
+                name="brand"
+                value={String(searchdata.brand)}
+              >
+                <option value={""}>Select Brand</option>
+                {(BrandJson.BrandJson || []).map((data, i) => {
+                  return (
+                    <option value={data} key={i}>
+                      {" "}
+                      {data}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </div>
+            <div className="col-md-3 col-sm-6 aos_input mb-2">
+              <Form.Select
+                aria-label="Search by delivery"
+                className="adminselectbox"
+                onChange={OnSearchChange}
+                name="status"
+                value={String(searchdata.status)}
+              >
+                <option value="">status</option>
+                <option value="Active">Active</option>
+                <option value="expired">Expired</option>
+                <option value="inactive">In active</option>
+              </Form.Select>
+            </div>
+            <div className="col-md-3 col-sm-6 aos_input mb-2">
+              <MainButton
+                btntext={"Search"}
+                btnclass={"button main_button w-100"}
+                onClick={Search}
+              />
+            </div>
+            <div className="col-md-3 col-sm-6 aos_input mb-2">
               <MainButton
                 btntext={"Reset"}
                 btnclass={"button main_button w-100"}
@@ -518,7 +526,7 @@ const Search = () => {
               />
             </div>
           </div>
-          </div>
+        </div>
 
         {/* upload */}
 
