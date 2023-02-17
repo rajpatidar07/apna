@@ -13,6 +13,7 @@ import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
 import axios from "axios";
 import categorytype from "../../admin/json/categorytype";
+import Loader from "../common/loader";
 var newImg = "";
 
 const CategoryList = () => {
@@ -76,7 +77,9 @@ const CategoryList = () => {
         id: parentid,
         is_active: 0,
         level: level,
-      })
+      },{
+        headers: { admin_token: `${token}` },}
+      )
       .catch(function (error) {
         console.log(error);
       });
@@ -620,7 +623,7 @@ const CategoryList = () => {
     apicall(true);
   };
 
-  return (
+  return (<>
     <div className="App productlist_maindiv">
       <h2>Category</h2>
 
@@ -750,7 +753,7 @@ const CategoryList = () => {
                       onChange={(e) => handlChangeName(e)}
                       value={newName}
                       name={"new_category"}
-                      maxLength={15}
+                      maxLength={25}
                     />
                     {CateName === true ? (
                       <p className="text-danger mt-2">
@@ -1000,6 +1003,7 @@ const CategoryList = () => {
         />
       </div>
     </div>
+    </>
   );
 };
 export default CategoryList;

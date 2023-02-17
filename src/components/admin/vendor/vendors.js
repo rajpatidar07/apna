@@ -14,6 +14,7 @@ import { Badge, Button, InputGroup, Table } from "react-bootstrap";
 import { GiCancel } from "react-icons/gi";
 import storetype from "../json/storetype";
 import status from "../json/Status";
+import Loader from "../common/loader";
 
 const VendorsList = () => {
   const token = localStorage.getItem("token");
@@ -37,7 +38,7 @@ const VendorsList = () => {
   const [ErrorAddAlert, setErrorAddAlert] = useState(false);
   const [UpdateAlert, setUpdateAlert] = useState(false);
   const [ErrorUpdateAlert, setErrorUpdateAlert] = useState(false);
-  let [condition, setCondition] = useState(false);
+  // let [condition, setCondition] = useState(false);
   const [fileName, setFileName] = useState("");
   const vendorObject = {
     owner_name: "",
@@ -104,7 +105,7 @@ const VendorsList = () => {
       })
       .then((response) => {
         setvendordata(response.data);
-        setCondition(false);
+        setLoading(false);
         setapicall(false);
       })
       .catch(function (error) {
@@ -247,22 +248,6 @@ const VendorsList = () => {
     {
       name: "Change Status",
       selector: (row) => (
-    //     loading_status === true ?    
-    //    <Form.Group className="" controlId="formBasicEmail">
-    //       <Form.Select
-    //    size="sm"
-    //    className="w-100"
-    //  > 
-    //     <option>
-    //     &nbsp;&nbsp;&nbsp; loading...
-    //      <span
-    //        className="spinner-border spinner-border-sm"
-    //        role="status"
-    //        aria-hidden="true"
-    //      ></span>
-    //      </option>  
-    //  </Form.Select>
-    //     </Form.Group>:
         <Form.Group className="" controlId="formBasicEmail">
           <Form.Select
             size="sm"
@@ -270,7 +255,6 @@ const VendorsList = () => {
             onChange={(e) => handleStatusChnage(e, row.id)}
             name="status"
             value={row.status}
-            disabled={condition === true ? true : false}
           >
             <option value={""}>Status</option>
             {(status.vendorestatus || []).map((data, i) => {
@@ -328,8 +312,7 @@ const VendorsList = () => {
       )
       .then((response) => {
         setvendordata(response.data);
-
-        setCondition(false);
+        setLoading(false);
         setapicall(false);
       })
       .catch(function (error) {
@@ -423,9 +406,9 @@ const VendorsList = () => {
       setAddTagError("");
     }
   };
-  const CreateTimeout = () => {
-    setCondition(false);
-  };
+  // const CreateTimeout = () => {
+  //   setCondition(false);
+  // };
 
   const DocuRemoveClick = (e) => {
     setDocnameArray(Docnamearray.filter((item) => item !== e));
@@ -435,9 +418,8 @@ const VendorsList = () => {
 
   const handleStatusChnage = (e, id) => {
     setchangstatus(e.target.value);
-    setCondition(true);
-    setTimeout(CreateTimeout, 50000);
-    setLoading_status(true)
+    // setTimeout(CreateTimeout, 50000);
+    setLoading(true)
     axios
       .put(`${process.env.REACT_APP_BASEURL}/vendor_status_change`, {
         status_change: e.target.value,
@@ -447,15 +429,13 @@ const VendorsList = () => {
         if (
           response.data.status_message === "vendor status change succesfully "
         ) {
-          setCondition(false);
-          setLoading_status(false)
+          setLoading(false)
           setapicall(true);
         }
       })
       .catch(function (error) {
         console.log(error);
-        setLoading_status(false)
-        setCondition(false);
+        setLoading(false)
       });
   };
 
@@ -697,9 +677,7 @@ const VendorsList = () => {
             setAddAlert(true);
             setLoading(false);
             setaddvendordata(vendorObject);
-
             setCustomValidation(false);
-
             setcustomarray([]);
             setAddTagError("");
             setaddtag("");
@@ -819,6 +797,8 @@ const VendorsList = () => {
   };
 
   return (
+    <>
+    {loading === true ?<Loader/> :null}
     <div>
       <h2>Vendors List</h2>
 
@@ -916,6 +896,7 @@ const VendorsList = () => {
         />
       </div>
       <Modal size="lg" show={show} onHide={() => handleClose()}>
+      {loading === true ?<Loader/> :
         <Form
           className=""
           // noValidate
@@ -1438,25 +1419,15 @@ const VendorsList = () => {
             >
               Cancel
             </button>
-            {loading == true ? (
-              <button type="submit" className="button main_button">
-                &nbsp;&nbsp;&nbsp; loading...
-                <span
-                  className="spinner-border spinner-border-sm"
-                  role="status"
-                  aria-hidden="true"
-                ></span>
-              </button>
-            ) : (
+            
               <Iconbutton
                 type={"submit"}
                 btntext={show === "add" ? "Add Vendor" : "Update Vendor"}
                 // onClick={(show === 'add' ? AddVendorClick : UpdateVendorClick(show))}
                 btnclass={"button main_button "}
               />
-            )}
           </Modal.Footer>
-        </Form>
+        </Form>}
       </Modal>
 
       {/*   Add Docs model */}
@@ -1554,7 +1525,7 @@ const VendorsList = () => {
 
       {/* /End add docs model/ */}
     </div>
-  );
+  </>);
 };
 
 export default VendorsList;

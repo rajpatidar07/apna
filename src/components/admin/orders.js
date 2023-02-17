@@ -10,6 +10,7 @@ import OrderJson from "./json/orders";
 import axios from "axios";
 import moment from "moment";
 import Status from "./json/Status";
+import Loader from "./common/loader";
 
 function Orders() {
   let token = localStorage.getItem("token");
@@ -17,7 +18,6 @@ function Orders() {
   const [orderdata, setorderdata] = useState([]);
   const [changstatus, setchangstatus] = useState("");
   const [apicall, setapicall] = useState(false);
-  let [condition, setCondition] = useState(false);
   const [loading, setLoading] = useState(false);
   const [searchdata, setsearchData] = useState({
     status: "",
@@ -59,7 +59,6 @@ function Orders() {
         // console.log(response);
         setorderdata(response.data);
         setapicall(false);
-        setCondition(false);
       })
       .catch(function (error) {
         console.log(error);
@@ -69,7 +68,6 @@ function Orders() {
   const onStatusChange = (e, id,user_id) => {
     // e.prevantDefault();
     setchangstatus(e.target.value);
-    setCondition(true);
     setLoading(true)
     axios
       .put(
@@ -87,13 +85,11 @@ function Orders() {
       )
       .then((response) => {
         console.log(response.data);
-        setCondition(false);
         setLoading(false)
         setapicall(true);
       })
       .catch(function (error) {
         console.log(error);
-        setCondition(false);
         setLoading(false)
       });
   };
@@ -227,21 +223,6 @@ function Orders() {
     {
       name: "Change Status",
       selector: (row) => (
-      //   loading === true ?    
-      //    <Form.Select
-      //   size="sm"
-      //   className="w-100"
-      //   onChange={(e) => onStatusChange(e, row.order_id,row.user_id)}
-      // > 
-      //    <option>
-      //    &nbsp;&nbsp;&nbsp; loading...
-      //     <span
-      //       className="spinner-border spinner-border-sm"
-      //       role="status"
-      //       aria-hidden="true"
-      //     ></span>
-      //     </option>  
-      // </Form.Select>:
        <Form.Select
           aria-label="Search by delivery"
           size="sm"
@@ -253,56 +234,48 @@ function Orders() {
           <option
             value="placed"
             selected={row.status === "placed" ? true : false}
-            disabled={condition ? true : false}
           >
             Placed
           </option>
           <option
             value="pending"
             selected={row.status === "pending" ? true : false}
-            disabled={condition ? true : false}
           >
             Pending
           </option>
           <option
             value="shipped"
             selected={row.status === "shipped" ? true : false}
-            disabled={condition ? true : false}
           >
             Shipped
           </option>
           <option
             value="delivered"
             selected={row.status === "delivered" ? true : false}
-            disabled={condition ? true : false}
           >
             Delivered
           </option>
           <option
             value="packed"
             selected={row.status === "packed" ? true : false}
-            disabled={condition ? true : false}
           >
             Packed
           </option>
           <option
             value="cancel"
             selected={row.status === "cancel" ? true : false}
-            disabled={condition ? true : false}
           >
             Cancel
           </option>
           <option
             value="approved"
            selected={row.status === "approved" ? true : false}
-            disabled={condition ? true : false}
           >
             Approved{" "}
           </option>
           <option
             value="return"
             selected={row.status === "return" ? true : false}
-            disabled={condition ? true : false}
           >
             Return{" "}
           </option>
@@ -313,6 +286,8 @@ function Orders() {
   ];
 // console.log("--------==========="+JSON.stringify(orderdata))
   return (
+    <>
+    {loading === true ?<Loader/>:null}
     <div className="App">
       <h2>Orders</h2>
       <div className="card mt-3 px-3 ">
@@ -373,8 +348,8 @@ function Orders() {
           className={"table_body order_table"}
         />
       </div>
-      
     </div>
+    </>
   );
 }
 
