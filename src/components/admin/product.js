@@ -33,6 +33,7 @@ import moment from "moment/moment";
 import BrandJson from "./json/BrandJson";
 import { downloadExcel } from "react-export-table-to-excel";
 import productstatus from "../admin/json/Status";
+import Loader from "./common/loader";
 let categoryArray = [];
 let encoded;
 let ImgObj = [];
@@ -63,6 +64,7 @@ function Product() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [changeUnitproperty, setChangeUnitProperty] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [checkProductType, setCheckProductType] = useState(false);
   const [error, setError] = useState(true);
   const [vendorid, setVendorId] = useState([]);
@@ -170,7 +172,6 @@ function Product() {
     category: "",
     product_status: "",
   });
-
   const [newImageUrls, setnewImageUrls] = useState([]);
   const [variantremove, setVariantRemove] = useState([]);
   const [editbutton, setEditButton] = useState(false);
@@ -248,7 +249,7 @@ function Product() {
 
   // PRODUCT STATUS CHANGE API
   const onProductStatusChange = (e, id, productid) => {
-    setCondition(true);
+    setLoading(true);
     axios
       .put(
         `${process.env.REACT_APP_BASEURL_0}/product_status_update`,
@@ -262,12 +263,12 @@ function Product() {
         }
       )
       .then((response) => {
-        setCondition(false);
+        setLoading(false);
         setapicall(true);
       })
       .catch(function (error) {
         console.log(error);
-        setCondition(false);
+        setLoading(false);
       });
   };
   // PRODUCT STATUS CHANGE API END
@@ -304,7 +305,7 @@ function Product() {
       )
       .then((response) => {
         setpdata(response.data);
-        setCondition(false);
+        setLoading(false);
         setapicall(false);
       })
       .catch(function (error) {
@@ -1728,7 +1729,6 @@ function Product() {
           className="w-100"
           onChange={(e) => onProductStatusChange(e, row.id, row.product_id)}
           value={row.product_status}
-          disabled={condition === true ? true : false}
         >
           {/* <option value={""}>Status</option> */}
           {(productstatus.productstatus || []).map((data, i) => {
@@ -1824,7 +1824,8 @@ function Product() {
     },
   ];
   // END DATATABLE DATA
-  return (
+  return (<>
+{loading === true ? <Loader/>:null}
     <div className="App productlist_maindiv">
       <h2>Products</h2>
       <div className="card mt-3 p-3 ">
@@ -4439,6 +4440,7 @@ function Product() {
         />
       </div>
     </div>
+    </>
   );
 }
 
