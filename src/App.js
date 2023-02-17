@@ -2,13 +2,18 @@ import React from "react";
 import AdminLayout from "./components/admin/layout";
 import ReactDOM from "react-dom";
 import Error from "./components/admin/error_404/error";
-
+import Loader from "./components/admin/error_404/loader";
 
 const Portal = () => {
-  const modalRoot = document.getElementById('error');
+  const modalRoot = document.getElementById("error");
 
-  return ReactDOM.createPortal(<Error/>, modalRoot,);
-}
+  return ReactDOM.createPortal(<Error />, modalRoot);
+};
+const Loader_page = () => {
+  const modalRoot = document.getElementById("loader");
+
+  return ReactDOM.createPortal(<Loader />, modalRoot);
+};
 
 function App() {
   return (
@@ -16,8 +21,7 @@ function App() {
       {" "}
       <AdminLayout />
       <Portal />
-     
-   
+      <Loader_page />
     </div>
   );
 }
