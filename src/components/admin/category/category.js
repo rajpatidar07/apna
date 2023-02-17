@@ -118,7 +118,7 @@ const CategoryList = () => {
             setCateName(false);
             setCateType(false);
             setImagePath(response.data[0].image);
-
+           console.log(response);
             const arr = data.all_parent_id.split(",");
             if (arr[0] === "0" && arr.length === 1) {
             } else {
@@ -139,7 +139,7 @@ const CategoryList = () => {
                           setCateName(false);
                           setCateType(false);
                           console.log(
-                            "subcat-------------" +
+                            "subcat--------0000-----" +
                               JSON.stringify(response.data)
                           );
                         })
@@ -208,6 +208,7 @@ const CategoryList = () => {
   /*<---- Onchange function of category sub category---->*/
   const categoryFormChange = (e, id) => {
     setIndVal(e.target.value);
+    console.log(indVal);
     setScategory({ ...scategory, [e.target.name]: e.target.value });
   };
 
@@ -830,7 +831,7 @@ const CategoryList = () => {
                         name={"sub_category"}
                         // value={CategoryEditdata.category_name}
                       >
-                        <option value="">Select Sub category</option>
+                        <option value="1">Select Sub category</option>
                         {subCategory.map((cdata, i) => {
                           // console.log(
                           //   CategoryEditSubparent + "CategoryEditSubparent"
@@ -859,7 +860,8 @@ const CategoryList = () => {
                   </div>
                 )}
 
-                {childCategory[0] === "" ||
+                {indVal === "1" ||
+                childCategory[0] === "" ||
                 childCategory[0] === null ||
                 childCategory[0] === undefined ? null : (
                   <div className="col-md-6">
