@@ -606,7 +606,7 @@ const CategoryList = () => {
       {/* search bar */}
       <div className="card mt-3 p-3 ">
         <div className=" row">
-          <div className="col-md-3 col-sm-6 aos_input">
+          <div className="col-md-3 col-sm-6 aos_input mb-2">
             <input
               required
               type="text"
@@ -622,7 +622,7 @@ const CategoryList = () => {
               </p>
             ) : null}
           </div>
-          <div className="col-md-3 col-sm-6 aos_input">
+          <div className="col-md-3 col-sm-6 aos_input mb-2">
             <Form.Select
               aria-label="Search by status"
               className="adminselectbox"
@@ -641,7 +641,7 @@ const CategoryList = () => {
             </Form.Select>
           </div>
 
-          <div className="col-md-3 col-sm-6 aos_input">
+          <div className="col-md-3 col-sm-6 aos_input mb-2">
             <Form.Select
               aria-label="Search by status"
               className="adminselectbox"
@@ -659,7 +659,7 @@ const CategoryList = () => {
               })}
             </Form.Select>
           </div>
-          <div className="col-md-3 col-sm-6 aos_input">
+          <div className="col-md-3 col-sm-6 aos_input mb-2">
             <button
               className="button main_button w-100"
               onClick={() => SearchCategory()}
@@ -668,7 +668,7 @@ const CategoryList = () => {
             </button>
           </div>
 
-          <div className="col-md-3 col-sm-6 aos_input mt-3">
+          <div className="col-md-3 col-sm-6 aos_input mb-2">
             {" "}
             <button
               className="button main_button w-100"
@@ -718,7 +718,7 @@ const CategoryList = () => {
               <div className="row p-3 m-0">
                 <div className="col-md-6">
                   <Form.Group
-                    className="mb-3 aos_input"
+                    className="mb-3 aos_input mb-2"
                     controlId="formBasicName"
                   >
                     <Form.Label>Category Name</Form.Label>
@@ -813,7 +813,8 @@ const CategoryList = () => {
                     </Form.Control.Feedback>
                   </Form.Group>
                 </div>
-                {subCategory[0] === "" ||
+                {indVal === "0" ||
+                subCategory[0] === "" ||
                 subCategory[0] === null ||
                 subCategory[0] === undefined ? null : (
                   <div className="col-md-6">
