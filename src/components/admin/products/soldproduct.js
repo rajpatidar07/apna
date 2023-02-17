@@ -26,10 +26,11 @@ const Soldproduct = () => {
   const [vendorid, setVendorId] = useState([]);
   const [searchdata, setsearchData] = useState({
     product_title_name: "",
-    category:"",
-    vendor:"",
-    brand:"",
+    category: "",
+    vendor: "",
+    brand: "",
   });
+  const [customvalidation, setCustomvalidation] = useState(false);
   // console.log("*****************----------" + JSON.stringify(solddata));
   const closeUpdateAlert = () => {
     setUpdateAlert(false);
@@ -182,7 +183,7 @@ const Soldproduct = () => {
       name: "Product Name",
       selector: (row) => (
         <div>
-          <p className="mb-1" >
+          <p className="mb-1">
             <b>
               {row.product_title_name}
               <br />
@@ -323,22 +324,31 @@ const Soldproduct = () => {
   ];
 
   const OnQuntityChange = (e) => {
-
+    setCustomvalidation("");
     setProductData({ ...productData, [e.target.name]: e.target.value });
   };
 
   const OnProductQutUpdate = (e) => {
-    axios
-      .put(
-        `${process.env.REACT_APP_BASEURL}/products_varient_update`,
-        productData
-      )
-      .then((response) => {
-        let data = response.data;
-        setapicall(true);
-        setShow(false);
-        setUpdateAlert(true);
-      });
+    console.log("---dd" + productData.quantity);
+    if (
+      Number(productData.quantity) > 10000 ||
+      Number(productData.quantity) <= 0
+    ) {
+      setCustomvalidation("qtyhigher");
+    } else {
+      axios
+        .put(
+          `${process.env.REACT_APP_BASEURL}/products_varient_update`,
+          productData
+        )
+        .then((response) => {
+          let data = response.data;
+          setCustomvalidation("");
+          setapicall(true);
+          setShow(false);
+          setUpdateAlert(true);
+        });
+    }
   };
 
   const handleClose = () => {
@@ -480,6 +490,11 @@ const Soldproduct = () => {
                   min={0}
                 />
               </div>
+              {customvalidation === "qtyhigher" ? (
+                <span className="text-danger">
+                  Quantity Cannot exceed more than 10,000
+                </span>
+              ) : null}
             </div>
           </Modal.Body>
           <Modal.Footer>
@@ -490,7 +505,7 @@ const Soldproduct = () => {
               Cancel
             </button>
             <button
-               type="submit"
+              type="submit"
               className="button main_outline_button"
               onClick={() => OnProductQutUpdate()}
             >

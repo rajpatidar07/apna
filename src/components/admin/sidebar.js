@@ -57,6 +57,24 @@ function AdminSidebar() {
                     Product List
                   </Link>
                 </li>
+
+                <li>
+                  <Link to="/featureproduct" className="nav-link ">
+                    Featured Product
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/offerproduct" className="nav-link ">
+                    {" "}
+                    Special Offer Product{" "}
+                  </Link>
+                </li>
+
+                <li>
+                  <Link to="/promotionproduct" className="nav-link ">
+                    Promotion Product
+                  </Link>
+                </li>
                 <li>
                   <Link to="/soldproduct" className="nav-link ">
                     Sold Product
@@ -68,24 +86,8 @@ function AdminSidebar() {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/featureproduct" className="nav-link ">
-                    Featured Product
-                  </Link>
-                </li>
-                <li>
                   <Link to="/pendingproduct" className="nav-link ">
                     Pending Product
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/promotionproduct" className="nav-link ">
-                    Promotion Product
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/offerproduct" className="nav-link ">
-                    {" "}
-                    Offer Product{" "}
                   </Link>
                 </li>
                 <li>
@@ -107,8 +109,9 @@ function AdminSidebar() {
           </Accordion.Item>
           <Accordion.Item eventKey="4">
             <Accordion>
-              <Link to="/transactions" className="nav-link nav_heading">
-                <BiTransfer /> Transactions
+              {" "}
+              <Link to="/category" className="nav-link nav_heading">
+                <BiCategory /> Category List
               </Link>
             </Accordion>
           </Accordion.Item>
@@ -119,29 +122,14 @@ function AdminSidebar() {
               </Link>
             </Accordion>
           </Accordion.Item>
-          <Accordion.Item eventKey="5">
-            <Accordion>
-              <Link to="/add_blog" className="nav-link nav_heading">
-                <BiNotepad /> Blogs
-              </Link>
-            </Accordion>
-          </Accordion.Item>
           <Accordion.Item eventKey="6">
-            <Accordion>
-              {" "}
-              <Link to="/category" className="nav-link nav_heading">
-                <BiCategory /> Category List
-              </Link>
-            </Accordion>
-          </Accordion.Item>
-          <Accordion.Item eventKey="7">
             <Accordion>
               <Link to="/invoice" className="nav-link nav_heading">
                 <TbFileInvoice /> Invoices
               </Link>
             </Accordion>
           </Accordion.Item>
-          <Accordion.Item eventKey="8">
+          <Accordion.Item eventKey="7">
             <Accordion.Header>
               <Link className="nav-link nav_heading">
                 <BiShoppingBag />
@@ -207,43 +195,43 @@ function AdminSidebar() {
               </ul>
             </Accordion.Body>
           </Accordion.Item>
+          <Accordion.Item eventKey="8">
+            <Accordion>
+              <Link to="/transactions" className="nav-link nav_heading">
+                <BiTransfer /> Transactions
+              </Link>
+            </Accordion>
+          </Accordion.Item>
+
           <Accordion.Item eventKey="9">
+            <Accordion>
+              <Link to="/add_blog" className="nav-link nav_heading">
+                <BiNotepad /> Blogs
+              </Link>
+            </Accordion>
+          </Accordion.Item>
+
+          <Accordion.Item eventKey="10">
             <Accordion>
               <Link to="/coupon" className="nav-link nav_heading">
                 <RiCoupon3Line /> Coupons
               </Link>
             </Accordion>
           </Accordion.Item>
-          <Accordion.Item eventKey="10">
+          <Accordion.Item eventKey="11">
             <Accordion>
               <Link to="/review" className="nav-link nav_heading">
                 <MdOutlineRateReview /> Review
               </Link>
             </Accordion>
           </Accordion.Item>
-          <Accordion.Item eventKey="11">
+          {/* <Accordion.Item eventKey="12">
             <Accordion>
               <Link to="/delivery" className="nav-link nav_heading">
                 <TbTruckDelivery /> Delivery
               </Link>
             </Accordion>
-          </Accordion.Item>
-          <Accordion.Item eventKey="12">
-            <Accordion>
-              {" "}
-              <Link to="/complaint" className="nav-link nav_heading">
-                <RiCustomerService2Line /> Complaints
-              </Link>
-            </Accordion>
-          </Accordion.Item>
-          <Accordion.Item eventKey="13">
-            <Accordion>
-              {" "}
-              <Link to="/components" className="nav-link nav_heading">
-                <FaBeer /> Components
-              </Link>
-            </Accordion>
-          </Accordion.Item>
+          </Accordion.Item> */}
           <Accordion.Item eventKey="14">
             <Accordion>
               {" "}
@@ -264,6 +252,22 @@ function AdminSidebar() {
             <Accordion>
               <Link to="/add_admin" className="nav-link nav_heading">
                 <RiAdminLine /> Add/Update Admin
+              </Link>
+            </Accordion>
+          </Accordion.Item>
+          <Accordion.Item eventKey="13">
+            <Accordion>
+              {" "}
+              <Link to="/complaint" className="nav-link nav_heading">
+                <RiCustomerService2Line /> Complaints
+              </Link>
+            </Accordion>
+          </Accordion.Item>
+          <Accordion.Item eventKey="15">
+            <Accordion>
+              {" "}
+              <Link to="/components" className="nav-link nav_heading">
+                <FaBeer /> Components
               </Link>
             </Accordion>
           </Accordion.Item>

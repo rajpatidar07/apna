@@ -199,7 +199,13 @@ function Product() {
   const OnOfferProductAdd = (e) => {
     e.preventDefault();
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/add_fetured_product`, featuredata)
+      .post(
+        `${process.env.REACT_APP_BASEURL_0}/add_fetured_product`,
+        featuredata,
+        {
+          headers: { admin_token: `${token}` },
+        }
+      )
       .then((response) => {
         if (response.data.message === "Already_Exist") {
           setError(false);
@@ -211,6 +217,7 @@ function Product() {
             start_date: "",
             end_date: "",
           });
+          setError("");
         }
       })
       .catch(function (error) {
@@ -220,6 +227,7 @@ function Product() {
 
   const featureModalClose = (e) => {
     setfeatureShow(false);
+    setError("");
     setfeaturedata({ start_date: "", end_date: "" });
   };
   const featureModalShow = () => setfeatureShow(true);
@@ -227,9 +235,8 @@ function Product() {
     setfeaturedata({
       ...featuredata,
       product_id: `${productid}`,
-      fetured_type: e.target.value,
+      fetured_type: e,
     });
-
     setproductname(productname);
     setfeatureShow(true);
   };
@@ -243,11 +250,17 @@ function Product() {
   const onProductStatusChange = (e, id, productid) => {
     setCondition(true);
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/product_status_update`, {
-        id: `${id}`,
-        product_id: `${productid}`,
-        product_status: e.target.value,
-      })
+      .put(
+        `${process.env.REACT_APP_BASEURL_0}/product_status_update`,
+        {
+          id: `${id}`,
+          product_id: `${productid}`,
+          product_status: e.target.value,
+        },
+        {
+          headers: { admin_token: `${token}` },
+        }
+      )
       .then((response) => {
         setCondition(false);
         setapicall(true);
@@ -262,27 +275,33 @@ function Product() {
   // MAIN PRODUCT LIST API
   const fetchdata = () => {
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=400`, {
-        product_search: {
-          search: [`${searchdata.product_title_name}`],
-          price_from: "",
-          price_to: "",
-          id: "",
-          sale_price: "",
-          short_by_updated_on: "",
-          product_title_name_asc_desc: "",
-          category: [`${searchdata.category}`],
-          product_status: [`${searchdata.product_status}`],
-          is_delete: ["1"],
-          colors: [],
-          size: [],
-          parent_category: [],
-          product_type: [],
-          // product_title_name: [],
-          brand: [`${searchdata.brand}`],
-          shop: [`${searchdata.vendor}`],
+      .post(
+        `${process.env.REACT_APP_BASEURL_0}/home?page=0&per_page=400`,
+        {
+          product_search: {
+            search: [`${searchdata.product_title_name}`],
+            price_from: "",
+            price_to: "",
+            id: "",
+            sale_price: "",
+            short_by_updated_on: "",
+            product_title_name_asc_desc: "",
+            category: [`${searchdata.category}`],
+            product_status: [`${searchdata.product_status}`],
+            is_delete: ["1"],
+            colors: [],
+            size: [],
+            parent_category: [],
+            product_type: [],
+            // product_title_name: [],
+            brand: [`${searchdata.brand}`],
+            shop: [`${searchdata.vendor}`],
+          },
         },
-      })
+        {
+          headers: { admin_token: `${token}` },
+        }
+      )
       .then((response) => {
         setpdata(response.data);
         setCondition(false);
@@ -333,7 +352,7 @@ function Product() {
       setgrandcCategory("");
     } else {
       axios
-        .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
+        .get(`${process.env.REACT_APP_BASEURL_0}/category?category=${indVal}`)
         .then((response) => {
           if (response.data !== []) {
             let cgory = response.data;
@@ -379,7 +398,7 @@ function Product() {
     try {
       axios
         .post(
-          `${process.env.REACT_APP_BASEURL}/vendors`,
+          `${process.env.REACT_APP_BASEURL_0}/vendors`,
           { vendor_id: "all" },
           {
             headers: { admin_token: `${token}` },
@@ -405,7 +424,7 @@ function Product() {
   const getCategorydatafilter = () => {
     try {
       axios
-        .get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
+        .get(`${process.env.REACT_APP_BASEURL_0}/category?category=all`)
         .then((response) => {
           let cgory = response.data;
           setfiltercategory(cgory);
@@ -429,9 +448,9 @@ function Product() {
     const getCategorydata = () => {
       try {
         axios
-          .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
+          .get(`${process.env.REACT_APP_BASEURL_0}/category?category=${indVal}`)
           .then((response) => {
-            let cgory = response.data.filter((item) => item.is_active === "1");
+            let cgory = response.data;
 
             if (indVal === 0) {
               setCategory(cgory);
@@ -461,14 +480,14 @@ function Product() {
             for (let i = 0; i < arr.length; i++) {
               axios
                 .get(
-                  `${process.env.REACT_APP_BASEURL}/category_details?id=${arr[i]}`
+                  `${process.env.REACT_APP_BASEURL_0}/category_details?id=${arr[i]}`
                 )
                 .then((response) => {
                   let data = response.data[0];
                   if (i === 0) {
                     axios
                       .get(
-                        `${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`
+                        `${process.env.REACT_APP_BASEURL_0}/category?category=${arr[i]}`
                       )
                       .then((response) => {
                         console.log(
@@ -481,9 +500,12 @@ function Product() {
                   } else if (i === 1) {
                     axios
                       .get(
-                        `${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`
+                        `${process.env.REACT_APP_BASEURL_0}/category?category=${arr[i]}`
                       )
                       .then((response) => {
+                        console.log(
+                          "childcetgorydata---" + JSON.stringify(response.data)
+                        );
                         setchildCategory(response.data);
                       });
                     setCategoryEditparent(data.category_name);
@@ -491,9 +513,12 @@ function Product() {
                   } else if (i === 2) {
                     axios
                       .get(
-                        `${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`
+                        `${process.env.REACT_APP_BASEURL_0}/category?category=${arr[i]}`
                       )
                       .then((response) => {
+                        console.log(
+                          "sgrandcetgorydata---" + JSON.stringify(response.data)
+                        );
                         setgrandcCategory(response.data);
                       });
                     setCategoryEditSubparent(data.category_name);
@@ -540,6 +565,7 @@ function Product() {
     });
   };
   const handleClose = () => {
+    setIndVal(0);
     setproductdata(data);
     setcustomarray([]);
     setvariantarray(veriantData);
@@ -606,7 +632,6 @@ function Product() {
       encoded = await convertToBase64(e.target.files[i]);
       const [first, ...rest] = encoded.base64.split(",");
       let imgvalidation = first.split("/").pop();
-      console.log("------img" + "ppppp" + imgvalidation);
 
       if (
         imgvalidation === "jpeg;base64" ||
@@ -740,21 +765,27 @@ function Product() {
 
   const getProductVariant = (id) => {
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=400`, {
-        product_search: {
-          search: "",
-          category: [],
-          price_from: "",
-          price_to: "",
-          id: "",
-          product_title_name_asc_desc: "",
-          sale_price: "",
-          short_by_updated_on: "",
-          is_delete: ["1"],
-          product_id: [`${id}`],
-          product_title_name: [],
+      .post(
+        `${process.env.REACT_APP_BASEURL_0}/home?page=0&per_page=400`,
+        {
+          product_search: {
+            search: "",
+            category: [],
+            price_from: "",
+            price_to: "",
+            id: "",
+            product_title_name_asc_desc: "",
+            sale_price: "",
+            short_by_updated_on: "",
+            is_delete: ["1"],
+            product_id: [`${id}`],
+            product_title_name: [],
+          },
         },
-      })
+        {
+          headers: { admin_token: `${token}` },
+        }
+      )
       .then((response) => {
         setvdata(response.data.results);
         settaxdata(response.data.results[0]);
@@ -1062,7 +1093,7 @@ function Product() {
           quantity: "",
           product_id: productID,
         });
-        // setcustomValidated(false);
+        // setcustomValidated(false);setvariantmainarray
       }
     }
   };
@@ -1319,9 +1350,20 @@ function Product() {
       setvarietyValidated("varietyadd");
     } else {
       axios
-        .post(`${process.env.REACT_APP_BASEURL}/products`, productdataa)
+        .post(
+          `${process.env.REACT_APP_BASEURL_0}/products`,
+
+          productdataa,
+          {
+            headers: { admin_token: `${token}` },
+          }
+        )
         .then((response) => {
-          setapicall(true);
+          if (response.data.response === "please fill all input") {
+            setcustomValidated("plesefillall");
+          } else {
+            setapicall(true);
+          }
         });
       e.preventDefault();
       setValidated(false);
@@ -1337,7 +1379,9 @@ function Product() {
   const handleUpdateProduct = (e) => {
     e.preventDefault();
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/products_update`, productdata)
+      .put(`${process.env.REACT_APP_BASEURL_0}/products_update`, productdata, {
+        headers: { admin_token: `${token}` },
+      })
       .then((response) => {
         setapicall(true);
         setmodalshow(false);
@@ -1488,6 +1532,9 @@ function Product() {
               ) : null}
               {row.is_special_offer === 1 ? (
                 <span className={"badge bg-info mt-1"}>{"special offer"}</span>
+              ) : null}
+              {row.is_promotional === 1 ? (
+                <span className={"badge bg-primary mt-1"}>{"promotional"}</span>
               ) : null}
             </div>
           </p>
@@ -1647,7 +1694,7 @@ function Product() {
       selector: (row) => (
         <span
           className={
-            row.product_status === "pending"
+            row.product_status === "pending" || row.product_status === "1"
               ? "badge bg-warning"
               : row.product_status === "approved"
               ? "badge bg-success"
@@ -1657,7 +1704,7 @@ function Product() {
               : "badge bg-secondary"
           }
         >
-          {row.product_status === "pending"
+          {row.product_status === "pending" || row.product_status === "1"
             ? "Pending"
             : row.product_status === "approved"
             ? "Approved"
@@ -1724,7 +1771,11 @@ function Product() {
               <Dropdown.Item
                 value="special_offer"
                 onClick={(e) =>
-                  OnProductOfferClick(e, row.product_id, row.product_title_name)
+                  OnProductOfferClick(
+                    "special_offer",
+                    row.product_id,
+                    row.product_title_name
+                  )
                 }
               >
                 Special Offer
@@ -1732,7 +1783,11 @@ function Product() {
               <Dropdown.Item
                 value="featured_offer"
                 onClick={(e) =>
-                  OnProductOfferClick(e, row.product_id, row.product_title_name)
+                  OnProductOfferClick(
+                    "featured_offer",
+                    row.product_id,
+                    row.product_title_name
+                  )
                 }
               >
                 Featured Offer
@@ -1740,27 +1795,16 @@ function Product() {
               <Dropdown.Item
                 value="promotional"
                 onClick={(e) =>
-                  OnProductOfferClick(e, row.product_id, row.product_title_name)
+                  OnProductOfferClick(
+                    "promotional",
+                    row.product_id,
+                    row.product_title_name
+                  )
                 }
               >
                 Promotional
               </Dropdown.Item>
             </DropdownButton>
-            {/* <Form.Select
-              aria-label="Search by delivery"
-              size="sm"
-              className="w-100 feature_product_select"
-              onChange={(e) =>
-                OnProductOfferClick(e, row.product_id, row.product_title_name)
-              }
-            >
-              <option value="">Select</option>
-              <option value="special_offer">Special Offer</option>
-              <option value="featured_offer">Featured Offer </option>
-              <option value="promotional">Promotional </option>
-            </Form.Select> */}
-
-            {/* <FaEllipsisV className="feature_product_ellipsis"/> */}
           </div>
 
           <BiEdit
@@ -2038,8 +2082,12 @@ function Product() {
                             }
                           >
                             <option value={""}>Select Brand</option>
-                            {BrandJson.BrandJson.map((item) => {
-                              return <option value={item}>{item}</option>;
+                            {BrandJson.BrandJson.map((item, i) => {
+                              return (
+                                <option value={item} key={i}>
+                                  {item}
+                                </option>
+                              );
                             })}
                           </Form.Select>
                         </Col>
@@ -2136,8 +2184,12 @@ function Product() {
                         >
                           <option value={""}>Select Product Type</option>
 
-                          {categorytype.categorytype.map((data) => {
-                            return <option value={data}>{data}</option>;
+                          {categorytype.categorytype.map((data, i) => {
+                            return (
+                              <option value={data} key={i}>
+                                {data}
+                              </option>
+                            );
                           })}
                         </Form.Select>
                         <Form.Control.Feedback type="invalid" className="h6">
@@ -3011,7 +3063,7 @@ function Product() {
                                       {(variantmainarray || []).map(
                                         (variantdata, i) => {
                                           return (
-                                            <tr>
+                                            <tr key={i}>
                                               <td className="p-0 text-center ">
                                                 {variantdata.unit === "pcs"
                                                   ? "color"
@@ -3238,7 +3290,7 @@ function Product() {
                         {(customarray || []).map((variantdata, i) => {
                           // const arr = variantdata.split(',')
                           return (
-                            <tr className="">
+                            <tr className="" key={i}>
                               <td className=" text-center">
                                 <InputGroup className="">
                                   <Form.Control
@@ -3290,6 +3342,11 @@ function Product() {
                 })} */}
                   {/* --------------------------------------------- */}
                 </div>
+                {customvalidated === "pleasefillall" ? (
+                  <span className="text-danger">
+                    Please Fill All Mandatary Fields
+                  </span>
+                ) : null}
               </div>
             </Modal.Body>
             <Modal.Footer className="addproductfooter">
@@ -3881,7 +3938,7 @@ function Product() {
                     </div>
 
                     <div className="col-12">
-                      <Accordion defaultActiveKey="0">
+                      <Accordion defaultActiveKey="">
                         <Table bordered className="align-middle my-2">
                           <thead className="align-middle">
                             <tr>
@@ -3927,7 +3984,10 @@ function Product() {
                                     "0" ? null : (
                                     <>
                                       {/* <Accordion.Item eventKey="0"> */}
-                                      <tr className="add_variety_list_box">
+                                      <tr
+                                        className="add_variety_list_box"
+                                        key={i}
+                                      >
                                         <td className="p-0 py-3 text-center ">
                                           {variantdata.unit === "pcs"
                                             ? "color"
@@ -4011,13 +4071,13 @@ function Product() {
                                               type="button"
                                               className="variety_edit_action_btn  text-success"
                                               eventKey={i}
-                                              // onClick={(_id) => (
-                                              //   onImgView(
-                                              //     variantdata.id,
-                                              //     variantdata.product_id
-                                              //   ),
-                                              //   setOpen(!open)
-                                              // )}
+                                              onClick={(_id) => (
+                                                onImgView(
+                                                  variantdata.id,
+                                                  variantdata.product_id
+                                                ),
+                                                setOpen(!open)
+                                              )}
                                               aria-controls={
                                                 "variantimgbox" + variantdata.id
                                               }
@@ -4058,7 +4118,10 @@ function Product() {
                                                 {newImageUrls.map((imgg, i) => {
                                                   return `${variantdata.id}` ===
                                                     imgg.product_verient_id ? (
-                                                    <div className="imgprivew_box">
+                                                    <div
+                                                      className="imgprivew_box"
+                                                      key={i}
+                                                    >
                                                       {imgg.image_position ===
                                                       "cover" ? (
                                                         <span className="cover_img">
@@ -4337,6 +4400,7 @@ function Product() {
                             placeholder="Name"
                             onChange={(e) => OnFeatureDateChaneg(e)}
                             value={featuredata.end_date}
+                            disabled={featuredata.start_date ? false : true}
                             name={"end_date"}
                             required
                             min={moment(featuredata.start_date).format(
