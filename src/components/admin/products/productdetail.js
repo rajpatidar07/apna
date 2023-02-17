@@ -551,12 +551,6 @@ const Productdetail = () => {
                       ) : null;
                     })
                   : null}
-
-                {/* {
-         
-         newImageUrls!==[]? <img
-              src="https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
-            />:""} */}
               </Carousel>
             </div>
 
@@ -569,11 +563,6 @@ const Productdetail = () => {
                       {productdata.product_title_name}
                     </h5>
                   </b>
-                  <div className="productstatus">
-                    <h5 className="statuslabeltext">
-                      Product ID: <b> {productdata.id}</b>
-                    </h5>
-                  </div>
 
                   {/* price */}
 
@@ -587,7 +576,7 @@ const Productdetail = () => {
                             >
                               <h3 className="mb-0">
                                 {" "}
-                                Price:{data.product_price.toFixed(2)}
+                                Price:{data.sale_price.toFixed(2)}
                               </h3>
                               <div className="priceboxx">
                                 <b>
@@ -603,7 +592,7 @@ const Productdetail = () => {
                                 <b>
                                   {" "}
                                   <p className="text-secondary">
-                                    Sale Price: {data.sale_price}{" "}
+                                    Product Price: {data.product_price}{" "}
                                   </p>
                                 </b>
                               </div>
@@ -1448,13 +1437,13 @@ const Productdetail = () => {
                                                     type="button"
                                                     className="variety_edit_action_btn  text-success"
                                                     eventKey={i}
-                                                    onClick={(_id) => (
-                                                      onImgView(
-                                                        variantdata.id,
-                                                        variantdata.product_id
-                                                      ),
-                                                      setOpen(!open)
-                                                    )}
+                                                    // onClick={(_id) => (
+                                                    //   onImgView(
+                                                    //     variantdata.id,
+                                                    //     variantdata.product_id
+                                                    //   ),
+                                                    //   setOpen(!open)
+                                                    // )}
                                                     aria-controls={
                                                       "variantimgbox" +
                                                       variantdata.id
@@ -1486,7 +1475,7 @@ const Productdetail = () => {
                                             <Accordion.Body eventKey={i}>
                                               {newImageUrls ? (
                                                 <tr
-                                                  colSpan={"12"}
+                                                  // colSpan={"12"}
                                                   className="img_preview_boxx"
                                                   id={
                                                     "variantimgbox" +
@@ -1495,7 +1484,7 @@ const Productdetail = () => {
                                                 >
                                                   <td
                                                     className=""
-                                                    // colSpan={"12"}
+                                                    colSpan={"12"}
                                                   >
                                                     <div className="image_box">
                                                       {newImageUrls.map(
