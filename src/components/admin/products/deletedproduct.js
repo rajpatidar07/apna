@@ -405,7 +405,7 @@ const Deletedproduct = () => {
               btnclass={"button main_button w-100"}
             />
           </div>
-          <div className="col-md-3 col-sm-6 aos_input mt-2">
+          <div className="col-md-2 col-sm-6 aos_input mt-2">
             <MainButton
               btntext={"Reset"}
               btnclass={"button main_button w-100"}

@@ -449,7 +449,7 @@ const Pendingproduct = () => {
               btnclass={"button main_button w-100"}
             />
           </div>
-          <div className="col-md-3 col-sm-6 mt-2 aos_input">
+          <div className="col-md-2 col-sm-6 mt-2 aos_input">
             <MainButton
               btntext={"Reset"}
               btnclass={"button main_button w-100"}

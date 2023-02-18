@@ -247,6 +247,25 @@ const VendorsList = () => {
     {
       name: "Change Status",
       selector: (row) => (
+<<<<<<< HEAD
+        //     loading_status === true ?
+        //    <Form.Group className="" controlId="formBasicEmail">
+        //       <Form.Select
+        //    size="sm"
+        //    className="w-100"
+        //  >
+        //     <option>
+        //     &nbsp;&nbsp;&nbsp; loading...
+        //      <span
+        //        className="spinner-border spinner-border-sm"
+        //        role="status"
+        //        aria-hidden="true"
+        //      ></span>
+        //      </option>
+        //  </Form.Select>
+        //     </Form.Group>:
+=======
+>>>>>>> 15e957c3d67da1dce9e9c65d5146bb6ede82f276
         <Form.Group className="" controlId="formBasicEmail">
           <Form.Select
             size="sm"
@@ -417,8 +436,14 @@ const VendorsList = () => {
 
   const handleStatusChnage = (e, id) => {
     setchangstatus(e.target.value);
+<<<<<<< HEAD
+    setCondition(true);
+    setTimeout(CreateTimeout, 50000);
+    setLoading_status(true);
+=======
     // setTimeout(CreateTimeout, 50000);
     setLoading(true)
+>>>>>>> 15e957c3d67da1dce9e9c65d5146bb6ede82f276
     axios
       .put(`${process.env.REACT_APP_BASEURL}/vendor_status_change`, {
         status_change: e.target.value,
@@ -428,13 +453,23 @@ const VendorsList = () => {
         if (
           response.data.status_message === "vendor status change succesfully "
         ) {
+<<<<<<< HEAD
+          setCondition(false);
+          setLoading_status(false);
+=======
           setLoading(false)
+>>>>>>> 15e957c3d67da1dce9e9c65d5146bb6ede82f276
           setapicall(true);
         }
       })
       .catch(function (error) {
         console.log(error);
+<<<<<<< HEAD
+        setLoading_status(false);
+        setCondition(false);
+=======
         setLoading(false)
+>>>>>>> 15e957c3d67da1dce9e9c65d5146bb6ede82f276
       });
   };
 
@@ -868,7 +903,7 @@ const VendorsList = () => {
               Search
             </button>
           </div>
-          <div className="col-md-3 col-sm-6 aos_input mt-3">
+          <div className="col-md-3 col-sm-6 aos_input mt-2">
             <button
               className="button main_button w-100"
               onClick={() => OnReset()}
