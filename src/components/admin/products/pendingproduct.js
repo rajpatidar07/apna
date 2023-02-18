@@ -171,6 +171,18 @@ const Pendingproduct = () => {
       width: "100px",
     },
     {
+      name: "Vendor",
+      selector: (row) => row.shop,
+      sortable: true,
+      width: "90px",
+    },
+    {
+      name: "Product Type",
+      selector: (row) => row.product_type,
+      sortable: true,
+      width: "90px",
+    },
+    {
       name: "Brand",
       selector: (row) => row.brand,
       sortable: true,
@@ -178,31 +190,19 @@ const Pendingproduct = () => {
     },
     {
       name: "Mrp",
-      selector: (row) => row.mrp.toFixed(2),
-      sortable: true,
-      width: "100px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
-    },
-    {
-      name: "Dis(%)",
-      selector: (row) => row.discount + "%",
+      selector: (row) => (
+        <p className="m-0">
+          <b>MRP :</b>₹ {Number(row.mrp).toFixed(2)} <br />
+          <b>Discount : </b>
+          {Number(row.discount).toFixed(2)}%
+          {/* {row.discount === "0" ? null : row.discount + "%"}{" "} */}
+          <br />
+          <b>Product Price:</b>₹ {Number(row.product_price).toFixed(2)} <br />
+          <b>Sale Price:</b>₹ {Number(row.sale_price).toFixed(2)} <br />
+        </p>
+      ),
       sortable: true,
       width: "130px",
-      center: true,
-      style: {
-        paddingRight: "32px",
-        paddingLeft: "0px",
-      },
-    },
-    {
-      name: "Price",
-      selector: (row) => row.product_price.toFixed(2),
-      sortable: true,
-      width: "100px",
       center: true,
       style: {
         paddingRight: "32px",
@@ -212,22 +212,58 @@ const Pendingproduct = () => {
 
     {
       name: "Tax",
-      selector: (row) =>
-        Number(row.gst) +
-        Number(row.cgst) +
-        Number(row.sgst) +
-        Number(row.wholesale_sales_tax) +
-        Number(row.retails_sales_tax) +
-        Number(row.manufacturers_sales_tax) +
-        Number(row.value_added_tax) +
-        "%",
+      selector: (row) => (
+        <div className="d-flex flex-column">
+          <b>
+            Total:
+            {Number(row.gst) +
+              Number(row.cgst) +
+              Number(row.sgst) +
+              Number(row.wholesale_sales_tax) +
+              Number(row.retails_sales_tax) +
+              Number(row.manufacturers_sales_tax) +
+              Number(row.value_added_tax) +
+              "%"}{" "}
+          </b>{" "}
+          <div className="d-flex">
+            <b>Gst :</b>₹ {Number(row.gst).toFixed(2)}%<b>Cgst : </b>
+            {Number(row.cgst).toFixed(2)}%
+            {/* {row.discount === "0" ? null : row.discount + "%"}{" "} */}
+            <b>Sgst:</b> {Number(row.sgst).toFixed(2)}%
+          </div>
+          <div className="d-flex flex-column">
+            <b>
+              wholesale_sales_tax:{Number(row.wholesale_sales_tax).toFixed(2)}%
+            </b>{" "}
+            <b>retails_sales_tax:{Number(row.retails_sales_tax).toFixed(2)}%</b>{" "}
+            <b>value_added_tax:{Number(row.value_added_tax).toFixed(2)}% </b>
+            <b>
+              manufacturers_sales_tax:{" "}
+              {Number(row.manufacturers_sales_tax).toFixed(2)}%
+            </b>{" "}
+          </div>
+        </div>
+      ),
+
       sortable: true,
-      width: "90px",
+      width: "200px",
       center: true,
       style: {
         paddingLeft: "0px",
       },
     },
+    {
+      name: "SP",
+      selector: (row) => row.sale_price.toFixed(2),
+      sortable: true,
+      width: "100px",
+      center: true,
+      style: {
+        paddingRight: "32px",
+        paddingLeft: "0px",
+      },
+    },
+
     {
       name: "SP",
       selector: (row) => row.sale_price.toFixed(2),
