@@ -203,8 +203,10 @@ const Productdetail = () => {
         // setloading(false)
       });
   };
-
+  const [imageboxid, setimageboxid] = useState(0);
   const onImgView = (id, productid) => {
+    setEditButton(false);
+    setimageboxid(id);
     setViewImage("notview");
     localStorage.setItem("variantid", id);
     localStorage.setItem("productid", productid);
@@ -1351,325 +1353,310 @@ const Productdetail = () => {
 
                           <div className="col-auto">
                             <div className="col-12">
-                              <Accordion defaultActiveKey="">
-                                <Table bordered className="align-middle my-2">
-                                  <thead className="align-middle">
-                                    <tr>
-                                      <th>
-                                        Variety{" "}
-                                        <span className="text-danger">*</span>
-                                      </th>
+                              <Table bordered className="align-middle my-2">
+                                <thead className="align-middle">
+                                  <tr>
+                                    <th>
+                                      Variety{" "}
+                                      <span className="text-danger">*</span>
+                                    </th>
 
-                                      <th>Color</th>
-                                      <th>Weight/piece/Volume </th>
-                                      <th>Size </th>
-                                      <th>
-                                        Mrp{" "}
-                                        <span className="text-danger">*</span>
-                                      </th>
-                                      <th>Discount</th>
-                                      <th>
-                                        Price
-                                        <span className="text-danger">*</span>
-                                      </th>
-                                      <th>
-                                        Total Tax
-                                        <span className="text-danger">*</span>
-                                      </th>
-                                      <th>
-                                        Sale Price
-                                        <span className="text-danger">*</span>
-                                      </th>
-                                      <th className="manufacture_date">
-                                        Mdate{" "}
-                                        <span className="text-danger">*</span>
-                                      </th>
-                                      <th className="manufacture_date">
-                                        Edate{" "}
-                                        <span className="text-danger">*</span>
-                                      </th>
-                                      <th className="manufacture_date">
-                                        Quantity
-                                        <span className="text-danger">*</span>
-                                      </th>
-                                      <th className="manufacture_date">
-                                        Action
-                                      </th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {productdata.product_verient === "" ||
-                                    productdata.product_verient === null ||
-                                    productdata.product_verient === undefined
-                                      ? null
-                                      : (productdata.product_verient || []).map(
-                                          (variantdata, i) => {
-                                            return variantdata.is_delete ===
-                                              "0" ? null : (
-                                              <>
+                                    <th>Color</th>
+                                    <th>Weight/piece/Volume </th>
+                                    <th>Size </th>
+                                    <th>
+                                      Mrp <span className="text-danger">*</span>
+                                    </th>
+                                    <th>Discount</th>
+                                    <th>
+                                      Price
+                                      <span className="text-danger">*</span>
+                                    </th>
+                                    <th>
+                                      Total Tax
+                                      <span className="text-danger">*</span>
+                                    </th>
+                                    <th>
+                                      Sale Price
+                                      <span className="text-danger">*</span>
+                                    </th>
+                                    <th className="manufacture_date">
+                                      Mdate{" "}
+                                      <span className="text-danger">*</span>
+                                    </th>
+                                    <th className="manufacture_date">
+                                      Edate{" "}
+                                      <span className="text-danger">*</span>
+                                    </th>
+                                    <th className="manufacture_date">
+                                      Quantity
+                                      <span className="text-danger">*</span>
+                                    </th>
+                                    <th className="manufacture_date">Action</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {productdata.product_verient === "" ||
+                                  productdata.product_verient === null ||
+                                  productdata.product_verient === undefined
+                                    ? null
+                                    : (productdata.product_verient || []).map(
+                                        (variantdata, i) => {
+                                          return variantdata.is_delete ===
+                                            "0" ? null : (
+                                            <>
+                                              <tr
+                                                className="add_variety_list_box"
+                                                key={i}
+                                              >
+                                                <td className="p-0 py-3 text-center ">
+                                                  {variantdata.unit === "pcs"
+                                                    ? "color"
+                                                    : variantdata.unit ===
+                                                      "piece"
+                                                    ? "piece"
+                                                    : variantdata.unit === "gms"
+                                                    ? "weight"
+                                                    : variantdata.unit === "ml"
+                                                    ? "volume"
+                                                    : ""}
+                                                </td>
+                                                <td className="p-0 py-3 text-center ">
+                                                  {variantdata.colors}
+                                                </td>
+                                                <td className="p-0 py-3 text-center ">
+                                                  {variantdata.unit === "gms"
+                                                    ? variantdata.unit_quantity
+                                                    : variantdata.unit === "ml"
+                                                    ? variantdata.unit_quantity
+                                                    : variantdata.unit ===
+                                                      "piece"
+                                                    ? variantdata.unit_quantity
+                                                    : ""}
+                                                </td>
+                                                <td className="p-0 py-3 text-center ">
+                                                  {variantdata.size}
+                                                </td>
+                                                <td className="p-0 py-3 text-center ">
+                                                  {Number(
+                                                    variantdata.mrp
+                                                  ).toFixed(2)}
+                                                </td>
+                                                <td className="p-0 py-3 text-center ">
+                                                  {Number(
+                                                    variantdata.discount
+                                                  ).toFixed(2)}
+                                                </td>
+
+                                                <td className="p-0 py-3 text-center ">
+                                                  {Number(
+                                                    variantdata.product_price
+                                                  ).toFixed(2)}
+                                                </td>
+                                                <td className="p-0 py-3 text-center ">
+                                                  {Number(
+                                                    (variantdata.sale_price *
+                                                      (Number(taxdata.gst) +
+                                                        Number(
+                                                          taxdata.wholesale_sales_tax
+                                                        ) +
+                                                        Number(
+                                                          taxdata.retails_sales_tax
+                                                        ) +
+                                                        Number(
+                                                          taxdata.manufacturers_sales_tax
+                                                        ) +
+                                                        Number(
+                                                          taxdata.value_added_tax
+                                                        ))) /
+                                                      100
+                                                  ).toFixed(2)}
+                                                </td>
+                                                <td className="p-0 py-3 text-center ">
+                                                  {variantdata.sale_price.toFixed(
+                                                    2
+                                                  )}
+                                                </td>
+                                                <td className="p-0 py-3 text-center ">
+                                                  {moment(
+                                                    variantdata.manufacturing_date
+                                                  ).format("YYYY-MM-DD")}
+                                                </td>
+                                                <td className="p-0 py-3 text-center ">
+                                                  {moment(
+                                                    variantdata.expire_date
+                                                  ).format("YYYY-MM-DD")}
+                                                </td>
+                                                <td className="p-0 py-3 text-center manufacture_date">
+                                                  {variantdata.quantity}
+                                                </td>
+
+                                                <td className="p-0 py-3 text-center action_btn_box">
+                                                  <RiImageAddLine
+                                                    type="button"
+                                                    className="variety_edit_action_btn  text-success"
+                                                    eventKey={i}
+                                                    onClick={(_id) =>
+                                                      onImgView(
+                                                        variantdata.id,
+                                                        variantdata.product_id
+                                                      )
+                                                    }
+                                                    aria-controls={
+                                                      "variantimgbox" +
+                                                      variantdata.id
+                                                    }
+                                                    aria-expanded={open}
+                                                  />
+                                                  <BiEdit
+                                                    className="variety_edit_action_btn text-primary mx-2"
+                                                    onClick={(id) =>
+                                                      VariantEditClick(
+                                                        variantdata.id,
+                                                        variantdata.product_id
+                                                      )
+                                                    }
+                                                  />
+                                                  <BsTrash
+                                                    className="variety_edit_action_btn text-danger"
+                                                    onClick={(id) =>
+                                                      VariantRemoveClick(
+                                                        variantdata.id,
+                                                        variantdata.product_id
+                                                      )
+                                                    }
+                                                  />
+                                                </td>
+                                              </tr>
+                                              {newImageUrls ? (
                                                 <tr
-                                                  className="add_variety_list_box"
-                                                  key={i}
+                                                  className={
+                                                    variantdata.id == imageboxid
+                                                      ? "img_preview_boxx show"
+                                                      : "img_preview_boxx hide"
+                                                  }
+                                                  id={
+                                                    "variantimgbox" +
+                                                    variantdata.id
+                                                  }
                                                 >
-                                                  <td className="p-0 py-3 text-center ">
-                                                    {variantdata.unit === "pcs"
-                                                      ? "color"
-                                                      : variantdata.unit ===
-                                                        "piece"
-                                                      ? "piece"
-                                                      : variantdata.unit ===
-                                                        "gms"
-                                                      ? "weight"
-                                                      : variantdata.unit ===
-                                                        "ml"
-                                                      ? "volume"
-                                                      : ""}
-                                                  </td>
-                                                  <td className="p-0 py-3 text-center ">
-                                                    {variantdata.colors}
-                                                  </td>
-                                                  <td className="p-0 py-3 text-center ">
-                                                    {variantdata.unit === "gms"
-                                                      ? variantdata.unit_quantity
-                                                      : variantdata.unit ===
-                                                        "ml"
-                                                      ? variantdata.unit_quantity
-                                                      : variantdata.unit ===
-                                                        "piece"
-                                                      ? variantdata.unit_quantity
-                                                      : ""}
-                                                  </td>
-                                                  <td className="p-0 py-3 text-center ">
-                                                    {variantdata.size}
-                                                  </td>
-                                                  <td className="p-0 py-3 text-center ">
-                                                    {Number(
-                                                      variantdata.mrp
-                                                    ).toFixed(2)}
-                                                  </td>
-                                                  <td className="p-0 py-3 text-center ">
-                                                    {Number(
-                                                      variantdata.discount
-                                                    ).toFixed(2)}
-                                                  </td>
-
-                                                  <td className="p-0 py-3 text-center ">
-                                                    {Number(
-                                                      variantdata.product_price
-                                                    ).toFixed(2)}
-                                                  </td>
-                                                  <td className="p-0 py-3 text-center ">
-                                                    {Number(
-                                                      (variantdata.sale_price *
-                                                        (Number(taxdata.gst) +
-                                                          Number(
-                                                            taxdata.wholesale_sales_tax
-                                                          ) +
-                                                          Number(
-                                                            taxdata.retails_sales_tax
-                                                          ) +
-                                                          Number(
-                                                            taxdata.manufacturers_sales_tax
-                                                          ) +
-                                                          Number(
-                                                            taxdata.value_added_tax
-                                                          ))) /
-                                                        100
-                                                    ).toFixed(2)}
-                                                  </td>
-                                                  <td className="p-0 py-3 text-center ">
-                                                    {variantdata.sale_price.toFixed(
-                                                      2
-                                                    )}
-                                                  </td>
-                                                  <td className="p-0 py-3 text-center ">
-                                                    {moment(
-                                                      variantdata.manufacturing_date
-                                                    ).format("YYYY-MM-DD")}
-                                                  </td>
-                                                  <td className="p-0 py-3 text-center ">
-                                                    {moment(
-                                                      variantdata.expire_date
-                                                    ).format("YYYY-MM-DD")}
-                                                  </td>
-                                                  <td className="p-0 py-3 text-center manufacture_date">
-                                                    {variantdata.quantity}
-                                                  </td>
-
-                                                  <td className="p-0 py-3 text-center action_btn_box">
-                                                    <Accordion.Header
-                                                      eventKey={i}
-                                                    >
-                                                      {" "}
-                                                      <RiImageAddLine
-                                                        type="button"
-                                                        className="variety_edit_action_btn  text-success"
-                                                        eventKey={i}
-                                                        // onClick={(_id) => (
-                                                        //   onImgView(
-                                                        //     variantdata.id,
-                                                        //     variantdata.product_id
-                                                        //   ),
-                                                        //   setOpen(!open)
-                                                        // )}
-                                                        aria-controls={
-                                                          "variantimgbox" +
-                                                          variantdata.id
+                                                  <td
+                                                    className=""
+                                                    colSpan={"12"}
+                                                  >
+                                                    <div className="image_box">
+                                                      {newImageUrls.map(
+                                                        (imgg, i) => {
+                                                          return `${variantdata.id}` ===
+                                                            imgg.product_verient_id ? (
+                                                            <div
+                                                              className="imgprivew_box"
+                                                              key={i}
+                                                            >
+                                                              {imgg.image_position ===
+                                                              "cover" ? (
+                                                                <span className="cover_img">
+                                                                  Cover
+                                                                </span>
+                                                              ) : null}
+                                                              <img
+                                                                src={
+                                                                  imgg.product_image_path
+                                                                }
+                                                                key={i}
+                                                                alt="apna_organic"
+                                                                height={120}
+                                                              />
+                                                              <span
+                                                                className="cover_icon"
+                                                                onClick={(id) =>
+                                                                  onImgCoverEditClick(
+                                                                    imgg.product_image_id,
+                                                                    imgg.product_id,
+                                                                    imgg.product_verient_id
+                                                                  )
+                                                                }
+                                                              >
+                                                                Set Cover
+                                                              </span>
+                                                              <span
+                                                                className="cross_icon"
+                                                                onClick={() =>
+                                                                  onImgRemove(
+                                                                    imgg.product_image_id,
+                                                                    imgg.product_image_name,
+                                                                    imgg.vendor_id,
+                                                                    imgg.product_id,
+                                                                    imgg.product_verient_id
+                                                                  )
+                                                                }
+                                                              >
+                                                                &times;
+                                                              </span>
+                                                            </div>
+                                                          ) : null;
                                                         }
-                                                        aria-expanded={open}
-                                                      />
-                                                    </Accordion.Header>
-
-                                                    <BiEdit
-                                                      className="variety_edit_action_btn text-primary mx-2"
-                                                      onClick={(id) =>
-                                                        VariantEditClick(
-                                                          variantdata.id,
-                                                          variantdata.product_id
-                                                        )
-                                                      }
-                                                    />
-                                                    <BsTrash
-                                                      className="variety_edit_action_btn text-danger"
-                                                      onClick={(id) =>
-                                                        VariantRemoveClick(
-                                                          variantdata.id,
-                                                          variantdata.product_id
-                                                        )
-                                                      }
-                                                    />
+                                                      )}
+                                                      <div className="imgprivew_box">
+                                                        <img
+                                                          src={
+                                                            "https://i2.wp.com/asvs.in/wp-content/uploads/2017/08/dummy.png?fit=399%2C275&ssl=1"
+                                                          }
+                                                          key={i}
+                                                          alt="apna_organic"
+                                                          height={120}
+                                                        />
+                                                        <Form.Control
+                                                          multiple
+                                                          type="file"
+                                                          sm="9"
+                                                          className={
+                                                            "img_add_button"
+                                                          }
+                                                          onChange={(e) =>
+                                                            imguploadchange(
+                                                              e,
+                                                              variantdata.product_id,
+                                                              variantdata.id,
+                                                              variantdata.vendor_id
+                                                            )
+                                                          }
+                                                          name={"img_64"}
+                                                        />
+                                                        <span className="plus_icon">
+                                                          +
+                                                        </span>
+                                                      </div>
+                                                    </div>
                                                   </td>
                                                 </tr>
-                                                <Accordion.Body eventKey={i}>
-                                                  {newImageUrls ? (
-                                                    <tr
-                                                      // colSpan={"12"}
-                                                      className="img_preview_boxx"
-                                                      id={
-                                                        "variantimgbox" +
-                                                        variantdata.id
-                                                      }
-                                                    >
-                                                      <td
-                                                        className=""
-                                                        colSpan={"12"}
-                                                      >
-                                                        <div className="image_box">
-                                                          {newImageUrls.map(
-                                                            (imgg, i) => {
-                                                              return `${variantdata.id}` ===
-                                                                imgg.product_verient_id ? (
-                                                                <div
-                                                                  className="imgprivew_box"
-                                                                  key={i}
-                                                                >
-                                                                  {imgg.image_position ===
-                                                                  "cover" ? (
-                                                                    <span className="cover_img">
-                                                                      Cover
-                                                                    </span>
-                                                                  ) : null}
-                                                                  <img
-                                                                    src={
-                                                                      imgg.product_image_path
-                                                                    }
-                                                                    key={i}
-                                                                    alt="apna_organic"
-                                                                    height={120}
-                                                                  />
-                                                                  <span
-                                                                    className="cover_icon"
-                                                                    onClick={(
-                                                                      id
-                                                                    ) =>
-                                                                      onImgCoverEditClick(
-                                                                        imgg.product_image_id,
-                                                                        imgg.product_id,
-                                                                        imgg.product_verient_id
-                                                                      )
-                                                                    }
-                                                                  >
-                                                                    Set Cover
-                                                                  </span>
-                                                                  <span
-                                                                    className="cross_icon"
-                                                                    onClick={() =>
-                                                                      onImgRemove(
-                                                                        imgg.product_image_id,
-                                                                        imgg.product_image_name,
-                                                                        imgg.vendor_id,
-                                                                        imgg.product_id,
-                                                                        imgg.product_verient_id
-                                                                      )
-                                                                    }
-                                                                  >
-                                                                    &times;
-                                                                  </span>
-                                                                </div>
-                                                              ) : null;
-                                                            }
-                                                          )}
-                                                          <div className="imgprivew_box">
-                                                            <img
-                                                              src={
-                                                                "https://i2.wp.com/asvs.in/wp-content/uploads/2017/08/dummy.png?fit=399%2C275&ssl=1"
-                                                              }
-                                                              key={i}
-                                                              alt="apna_organic"
-                                                              height={120}
-                                                            />
-                                                            <Form.Control
-                                                              multiple
-                                                              type="file"
-                                                              sm="9"
-                                                              className={
-                                                                "img_add_button"
-                                                              }
-                                                              onChange={(e) =>
-                                                                imguploadchange(
-                                                                  e,
-                                                                  variantdata.product_id,
-                                                                  variantdata.id,
-                                                                  variantdata.vendor_id
-                                                                )
-                                                              }
-                                                              name={"img_64"}
-                                                            />
-                                                            <span className="plus_icon">
-                                                              +
-                                                            </span>
-                                                          </div>
-                                                        </div>
-                                                      </td>
-                                                    </tr>
-                                                  ) : null}
-                                                </Accordion.Body>
-                                              </>
-                                            );
-                                          }
-                                        )}
-                                    {changeUnitproperty === "editvariety" ? (
-                                      <tr className="text-primary text-center mx-5">
-                                        Now You can edit vareity type
-                                      </tr>
-                                    ) : customvalidated === "imgformat" ? (
-                                      <tr>
-                                        <td colSpan={"12"}>
-                                          (
-                                          <span
-                                            className="mt-2   text-center fs-6 text-danger"
-                                            type="invalid"
-                                          >
-                                            Image Format should be in jpg, jpeg
-                                            or png
-                                          </span>
-                                          )
-                                        </td>
-                                      </tr>
-                                    ) : null}
-                                  </tbody>
-                                </Table>
-                              </Accordion>
+                                              ) : null}
+                                            </>
+                                          );
+                                        }
+                                      )}
+                                  {changeUnitproperty === "editvariety" ? (
+                                    <tr className="text-primary text-center mx-5">
+                                      Now You can edit vareity type
+                                    </tr>
+                                  ) : customvalidated === "imgformat" ? (
+                                    <tr>
+                                      <td colSpan={"12"}>
+                                        (
+                                        <span
+                                          className="mt-2   text-center fs-6 text-danger"
+                                          type="invalid"
+                                        >
+                                          Image Format should be in jpg, jpeg or
+                                          png
+                                        </span>
+                                        )
+                                      </td>
+                                    </tr>
+                                  ) : null}
+                                </tbody>
+                              </Table>
+                              {/* </Accordion> */}
                             </div>
                           </div>
                         </div>

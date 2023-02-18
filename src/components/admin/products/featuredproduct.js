@@ -120,21 +120,12 @@ const Featuredproduct = () => {
   };
   /*<---Render feature data function--->*/
   useEffect(() => {
-    console.log(searchdata.product_title_name);
     try {
       axios
         .post(
           `${process.env.REACT_APP_BASEURL_0}/fetured_product_search`,
           {
-            // search: searchdata.product_title_name,
-            // product_id: "",
-            // fetured_type: "featured_offer",
-            // start_date: "",
-            // end_date: "",
-            // category: [`${searchdata.category}`],
-            // brand: [`${searchdata.brand}`],
-            // shop: [`${searchdata.vendor}`],
-            // status: searchdata.status,
+            fetured_type: "featured_offer",
             product_title_name: [`${searchdata.product_title_name}`],
             vendor_id: [`${searchdata.vendor}`],
             status: searchdata.status,

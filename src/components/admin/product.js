@@ -421,7 +421,7 @@ function Product() {
           );
           setVendorId(result1);
         });
-    } catch (err) { }
+    } catch (err) {}
   };
   // end vendor api
 
@@ -434,7 +434,7 @@ function Product() {
           let cgory = response.data;
           setfiltercategory(cgory);
         });
-    } catch (err) { }
+    } catch (err) {}
   };
   // end category api
 
@@ -464,7 +464,7 @@ function Product() {
               setlevel(0);
             }
           });
-      } catch (err) { }
+      } catch (err) {}
     };
     getCategorydata();
     // end category data
@@ -685,10 +685,9 @@ function Product() {
       });
   };
   const [imageboxid, setimageboxid] = useState(0);
-  console.log("imageboxid" + imageboxid)
   const onImgView = (id, productid) => {
     setEditButton(false);
-    setimageboxid(id)
+    setimageboxid(id);
 
     axios
       .get(
@@ -698,12 +697,10 @@ function Product() {
         setnewImageUrls(response.data);
         setapicall(true);
         setmodalshow(false);
-
       })
       .catch(function (error) {
         console.log(error);
       });
-
   };
 
   const onImgCoverEditClick = (imgid, productid, productvariantid) => {
@@ -733,7 +730,7 @@ function Product() {
       [e.target.name]: e.target.value,
     });
   };
-  console.log("---product", productdata);
+
   useEffect(() => {
     let discountt = (variantarray.mrp * variantarray.discount) / 100;
     let saleprice = variantarray.mrp - discountt;
@@ -1303,7 +1300,7 @@ function Product() {
             Number(productdata.retails_sales_tax) +
             Number(productdata.manufacturers_sales_tax) +
             Number(productdata.value_added_tax))) /
-        100
+          100
       ).toFixed(2),
       sale_price: saleprice,
     });
@@ -1708,22 +1705,22 @@ function Product() {
             row.product_status === "pending" || row.product_status === "1"
               ? "badge bg-warning"
               : row.product_status === "approved"
-                ? "badge bg-success"
-                : // ? "badge bg-info"
-                row.product_status === "draft"
-                  ? "badge bg-secondary"
-                  : "badge bg-secondary"
+              ? "badge bg-success"
+              : // ? "badge bg-info"
+              row.product_status === "draft"
+              ? "badge bg-secondary"
+              : "badge bg-secondary"
           }
         >
           {row.product_status === "pending" || row.product_status === "1"
             ? "Pending"
             : row.product_status === "approved"
-              ? "Approved"
-              : // : row.product_status === ""
-              // ? "Status"
-              row.product_status === "draft"
-                ? "Draft"
-                : "Draft"}
+            ? "Approved"
+            : // : row.product_status === ""
+            // ? "Status"
+            row.product_status === "draft"
+            ? "Draft"
+            : "Draft"}
         </span>
       ),
       sortable: true,
@@ -1834,6 +1831,7 @@ function Product() {
     },
   ];
   // END DATATABLE DATA
+  console.log("---------data  ", productdata);
   return (
     <>
       {loading === true ? <Loader /> : null}
@@ -1998,6 +1996,7 @@ function Product() {
           >
             <Form
               className="p-2 addproduct_form"
+              noValidate
               validated={validated}
               ref={mainformRef}
               onSubmit={
@@ -2023,15 +2022,7 @@ function Product() {
                         >
                           <Form.Label className="inputlabelheading" sm="12">
                             Product Title/Name
-                            <span className="text-danger">
-                              *
-                              <Form.Control.Feedback
-                                type="invalid"
-                                className="h6"
-                              >
-                                Please fill productname
-                              </Form.Control.Feedback>
-                            </span>
+                            <span className="text-danger">*</span>
                           </Form.Label>
                           <Col sm="12">
                             <Form.Control
@@ -2042,6 +2033,7 @@ function Product() {
                               name={"product_title_name"}
                               value={productdata.product_title_name}
                               maxLength={20}
+                              pattern="^[a-zA-Z0-9]+$"
                             />
                             <Form.Control.Feedback
                               type="invalid"
@@ -2066,13 +2058,19 @@ function Product() {
                               name={"product_slug"}
                               value={
                                 productdata.product_title_name === "" ||
-                                  productdata.product_title_name === "null" ||
-                                  productdata.product_title_name === null
+                                productdata.product_title_name === "null" ||
+                                productdata.product_title_name === null
                                   ? null
                                   : productdata.product_title_name + "_123"
                               }
                               required
                             />
+                            <Form.Control.Feedback
+                              type="invalid"
+                              className="h6"
+                            >
+                              Please fill product slug
+                            </Form.Control.Feedback>
                           </Col>
                         </Form.Group>
                         <Form.Group
@@ -2092,7 +2090,7 @@ function Product() {
                               onChange={(e) => handleInputFieldChange(e)}
                               value={
                                 productdata.brand === null ||
-                                  productdata.brand === undefined
+                                productdata.brand === undefined
                                   ? ""
                                   : productdata.brand
                               }
@@ -2106,6 +2104,12 @@ function Product() {
                                 );
                               })}
                             </Form.Select>
+                            <Form.Control.Feedback
+                              type="invalid"
+                              className="h6"
+                            >
+                              Please fill product brand
+                            </Form.Control.Feedback>
                           </Col>
                         </Form.Group>
                         <Form.Group
@@ -2114,42 +2118,34 @@ function Product() {
                         >
                           <Form.Label className="inputlabelheading" sm="12">
                             Store Name
-                            <span className="text-danger">
-                              *
-                              <Form.Control.Feedback
-                                type="invalid"
-                                className="h6"
-                              >
-                                Please fill storename
-                              </Form.Control.Feedback>
-                            </span>
+                            <span className="text-danger">*</span>
                           </Form.Label>
-                          <Form.Select
-                            onChange={handleVendorNameChange}
-                            aria-label="store_name"
-                            className="adminselectbox"
-                            required
-                          >
-                            {" "}
-                            <option value={""}> Select Store Name</option>
-                            {vendorid.map((cdata, i) => {
-                              return (
-                                <option
-                                  value={[cdata.id, cdata.shop_name]}
-                                  key={i}
-                                  selected={
-                                    (productdata.vendor_id,
-                                      productdata.store_name) ===
-                                    (cdata.id, cdata.shop_name)
-                                  }
-                                >
-                                  {cdata.shop_name}
-                                  {""}
-                                </option>
-                              );
-                            })}
-                          </Form.Select>
                           <Col sm="12">
+                            <Form.Select
+                              onChange={handleVendorNameChange}
+                              aria-label="store_name"
+                              className="adminselectbox"
+                              required
+                            >
+                              {" "}
+                              <option value={""}> Select Store Name</option>
+                              {vendorid.map((cdata, i) => {
+                                return (
+                                  <option
+                                    value={[cdata.id, cdata.shop_name]}
+                                    key={i}
+                                    selected={
+                                      (productdata.vendor_id,
+                                      productdata.store_name) ===
+                                      (cdata.id, cdata.shop_name)
+                                    }
+                                  >
+                                    {cdata.shop_name}
+                                    {""}
+                                  </option>
+                                );
+                              })}
+                            </Form.Select>
                             <Form.Control.Feedback
                               type="invalid"
                               className="h6"
@@ -2199,7 +2195,7 @@ function Product() {
                             onChange={(e) => handleInputFieldChange(e)}
                             value={
                               productdata.product_type === null ||
-                                productdata.product_type === undefined
+                              productdata.product_type === undefined
                                 ? ""
                                 : productdata.product_type
                             }
@@ -2260,8 +2256,8 @@ function Product() {
                       </Form.Group>
 
                       {subCategory === "" ||
-                        subCategory === null ||
-                        subCategory === undefined ? null : (
+                      subCategory === null ||
+                      subCategory === undefined ? null : (
                         <Form.Group
                           className=" aos_input"
                           controlId="formBasicParentCategory"
@@ -2276,7 +2272,7 @@ function Product() {
                             name={"sub_category"}
                             required
                           >
-                            <option value={""}>Select Category </option>
+                            {/* <option value={""}>Select Category </option> */}
                             {subCategory.map((cdata, i) => {
                               return (
                                 <option
@@ -2299,9 +2295,9 @@ function Product() {
                         </Form.Group>
                       )}
 
-                      {childCategory[0] === "" ||
-                        childCategory[0] === null ||
-                        childCategory[0] === undefined ? null : (
+                      {subCategory === "" ||
+                      subCategory === null ||
+                      subCategory === undefined ? null : (
                         <Form.Group
                           className="mb-3 aos_input"
                           controlId="formBasicParentCategory"
@@ -2313,7 +2309,7 @@ function Product() {
                             onChange={(e, id) => categoryFormChange(e, id)}
                             name={"childcategory"}
                           >
-                            <option value={""}>Select Category </option>
+                            {/* <option value={""}>Select Category </option> */}
                             {childCategory.map((cdata, i) => {
                               return (
                                 <option
@@ -2321,7 +2317,7 @@ function Product() {
                                   key={i}
                                   selected={
                                     categoryeditsubparent ===
-                                      cdata.category_name
+                                    cdata.category_name
                                       ? true
                                       : false
                                   }
@@ -2338,8 +2334,8 @@ function Product() {
                       )}
 
                       {grandcCategory[0] === "" ||
-                        grandcCategory[0] === null ||
-                        grandcCategory[0] === undefined ? null : (
+                      grandcCategory[0] === null ||
+                      grandcCategory[0] === undefined ? null : (
                         <Form.Group
                           className="mb-3 aos_input"
                           controlId="formBasicParentCategory"
@@ -2351,7 +2347,7 @@ function Product() {
                             onChange={(e, id) => categoryFormChange(e, id)}
                             name={"gcategory"}
                           >
-                            <option value={""}>Select Category </option>
+                            {/* <option value={""}>Select Category </option> */}
                             {grandcCategory.map((cdata, i) => {
                               return (
                                 <option
@@ -2359,7 +2355,7 @@ function Product() {
                                   key={i}
                                   selected={
                                     categoryeditchildparent ===
-                                      cdata.category_name
+                                    cdata.category_name
                                       ? true
                                       : false
                                   }
@@ -2397,7 +2393,7 @@ function Product() {
                             name="wholesale_sales_tax"
                             value={
                               productdata.wholesale_sales_tax === null ||
-                                productdata.wholesale_sales_tax === undefined
+                              productdata.wholesale_sales_tax === undefined
                                 ? ""
                                 : productdata.wholesale_sales_tax
                             }
@@ -2420,7 +2416,7 @@ function Product() {
                             name="manufacturers_sales_tax"
                             value={
                               productdata.manufacturers_sales_tax === null ||
-                                productdata.manufacturers_sales_tax === undefined
+                              productdata.manufacturers_sales_tax === undefined
                                 ? ""
                                 : productdata.manufacturers_sales_tax
                             }
@@ -2443,7 +2439,7 @@ function Product() {
                             name="retails_sales_tax"
                             value={
                               productdata.retails_sales_tax === null ||
-                                productdata.retails_sales_tax === undefined
+                              productdata.retails_sales_tax === undefined
                                 ? ""
                                 : productdata.retails_sales_tax
                             }
@@ -2466,7 +2462,7 @@ function Product() {
                             name="value_added_tax"
                             value={
                               productdata.value_added_tax === null ||
-                                productdata.value_added_tax === undefined
+                              productdata.value_added_tax === undefined
                                 ? ""
                                 : productdata.value_added_tax
                             }
@@ -2498,6 +2494,9 @@ function Product() {
                             }
                             required
                           />
+                          <Form.Control.Feedback type="invalid" className="h6">
+                            Please fill gst
+                          </Form.Control.Feedback>
                         </Col>
                       </Form.Group>
                       <Form.Group
@@ -2624,7 +2623,7 @@ function Product() {
                                                   }
                                                   disabled={
                                                     variantmainarray.length ===
-                                                      0
+                                                    0
                                                       ? false
                                                       : true
                                                   }
@@ -2642,24 +2641,24 @@ function Product() {
                                                               ? "pcs"
                                                               : vari ===
                                                                 "weight"
-                                                                ? "gms"
-                                                                : vari ===
-                                                                  "volume"
-                                                                  ? "ml"
-                                                                  : vari === "piece"
-                                                                    ? "piece"
-                                                                    : ""
+                                                              ? "gms"
+                                                              : vari ===
+                                                                "volume"
+                                                              ? "ml"
+                                                              : vari === "piece"
+                                                              ? "piece"
+                                                              : ""
                                                           }
                                                           key={i}
                                                         >
                                                           {vari}
                                                         </option>
                                                       ) : productdata.product_type ===
-                                                        "Cloths" ||
+                                                          "Cloths" ||
                                                         productdata.product_type ===
-                                                        "Fashion" ? (
+                                                          "Fashion" ? (
                                                         vari === "weight" ||
-                                                          vari ===
+                                                        vari ===
                                                           "volume" ? null : (
                                                           <option
                                                             value={
@@ -2667,8 +2666,8 @@ function Product() {
                                                                 ? "piece"
                                                                 : vari ===
                                                                   "color"
-                                                                  ? "pcs"
-                                                                  : ""
+                                                                ? "pcs"
+                                                                : ""
                                                             }
                                                             key={i}
                                                           >
@@ -2683,10 +2682,10 @@ function Product() {
                                                               ? "gms"
                                                               : vari ===
                                                                 "volume"
-                                                                ? "ml"
-                                                                : vari === "piece"
-                                                                  ? "piece"
-                                                                  : ""
+                                                              ? "ml"
+                                                              : vari === "piece"
+                                                              ? "piece"
+                                                              : ""
                                                           }
                                                           key={i}
                                                         >
@@ -2757,7 +2756,7 @@ function Product() {
                                                   sm="9"
                                                   disabled={
                                                     productvariantarray.unit ==
-                                                      "pcs"
+                                                    "pcs"
                                                       ? true
                                                       : false
                                                   }
@@ -2795,13 +2794,13 @@ function Product() {
                                                   disabled={
                                                     productvariantarray.unit !==
                                                       "pcs" &&
-                                                      productvariantarray.unit !==
+                                                    productvariantarray.unit !==
                                                       ""
                                                       ? true
                                                       : productvariantarray.unit ==
                                                         ""
-                                                        ? false
-                                                        : false
+                                                      ? false
+                                                      : false
                                                   }
                                                 >
                                                   <option
@@ -2944,13 +2943,13 @@ function Product() {
                                                   value={
                                                     productvariantarray.sale_price
                                                   }
-                                                // onChange={() =>
-                                                //   setproductvariantarray({
-                                                //     ...productvariantarray,
-                                                //     sale_price:
-                                                //       saleprice.toFixed(2),
-                                                //   })
-                                                // }
+                                                  // onChange={() =>
+                                                  //   setproductvariantarray({
+                                                  //     ...productvariantarray,
+                                                  //     sale_price:
+                                                  //       saleprice.toFixed(2),
+                                                  //   })
+                                                  // }
                                                 />
                                               </InputGroup>
                                             </div>
@@ -3074,7 +3073,7 @@ function Product() {
                                           false ? null : null}
 
                                         {varietyUnitvalidation ===
-                                          "ExpireDateValidation" ? (
+                                        "ExpireDateValidation" ? (
                                           <tr>
                                             <p
                                               className="mt-1 ms-2 text-danger"
@@ -3106,7 +3105,7 @@ function Product() {
                                           ) : null}
 
                                           {varietyUnitvalidation ===
-                                            "fillUnit&size&color" ? (
+                                          "fillUnit&size&color" ? (
                                             <p
                                               className="mt-1 ms-2 text-danger"
                                               type="invalid"
@@ -3166,13 +3165,13 @@ function Product() {
                                                   {variantdata.unit === "pcs"
                                                     ? "color"
                                                     : variantdata.unit === "gms"
-                                                      ? "weight"
-                                                      : variantdata.unit === "ml"
-                                                        ? "volume"
-                                                        : variantdata.unit ===
-                                                          "piece"
-                                                          ? "piece"
-                                                          : ""}
+                                                    ? "weight"
+                                                    : variantdata.unit === "ml"
+                                                    ? "volume"
+                                                    : variantdata.unit ===
+                                                      "piece"
+                                                    ? "piece"
+                                                    : ""}
                                                 </td>
                                                 <td className="p-0 text-center ">
                                                   {variantdata.colors}
@@ -3181,11 +3180,11 @@ function Product() {
                                                   {variantdata.unit === "gms"
                                                     ? variantdata.unit_quantity
                                                     : variantdata.unit === "ml"
-                                                      ? variantdata.unit_quantity
-                                                      : variantdata.unit ===
-                                                        "piece"
-                                                        ? variantdata.unit_quantity
-                                                        : null}
+                                                    ? variantdata.unit_quantity
+                                                    : variantdata.unit ===
+                                                      "piece"
+                                                    ? variantdata.unit_quantity
+                                                    : null}
                                                 </td>
                                                 <td className="p-0 text-center ">
                                                   {variantdata.size}
@@ -3278,11 +3277,11 @@ function Product() {
                               sm="9"
                               onChange={ontagchange}
                               value={addtag}
-                            // onKeyPress={(event) => {
-                            //   if (event.key === "Enter") {
-                            //     ontagaddclick();
-                            //   }
-                            // }}
+                              // onKeyPress={(event) => {
+                              //   if (event.key === "Enter") {
+                              //     ontagaddclick();
+                              //   }
+                              // }}
                             />
                             <Button
                               variant="outline-success"
@@ -3301,7 +3300,7 @@ function Product() {
                           ) : productdata.seo_tag ? (
                             <Badge className="tagselecttitle mb-0" bg="success">
                               {productdata.seo_tag === null ||
-                                productdata.seo_tag === undefined
+                              productdata.seo_tag === undefined
                                 ? ""
                                 : productdata.seo_tag}
                               <span
@@ -3458,7 +3457,7 @@ function Product() {
                   btntext={" Cancel"}
                   onClick={() => handleClose()}
                   btnclass={"button main_outline_button px-2"}
-                // Iconname={<GiCancel /> }
+                  // Iconname={<GiCancel /> }
                 />
                 {/* <MainButton
                 btntext={"Save as Draft"}
@@ -3524,48 +3523,48 @@ function Product() {
                                   value={variantarray.unit}
                                   disabled={
                                     variantarray.unit &&
-                                      changeUnitproperty == false
+                                    changeUnitproperty == false
                                       ? true
                                       : variantarray.unit ||
                                         changeUnitproperty == true
-                                        ? false
-                                        : true
+                                      ? false
+                                      : true
                                   }
                                 >
                                   <option value={""}>{"Select"}</option>
 
                                   {(varietyy.variety || []).map((vari, i) => {
                                     return vdata.length === 0 ? null : vdata[0]
-                                      .product_type === "" ? (
+                                        .product_type === "" ? (
                                       <option
                                         value={
                                           vari === "color"
                                             ? "pcs"
                                             : vari === "weight"
-                                              ? "gms"
-                                              : vari === "volume"
-                                                ? "ml"
-                                                : vari === "piece"
-                                                  ? "piece"
-                                                  : ""
+                                            ? "gms"
+                                            : vari === "volume"
+                                            ? "ml"
+                                            : vari === "piece"
+                                            ? "piece"
+                                            : ""
                                         }
                                         key={i}
                                       >
                                         {vari}
                                       </option>
                                     ) : vdata.length === 0 ? null : vdata[0]
-                                      .product_type === "Cloths" ||
+                                        .product_type === "Cloths" ||
                                       vdata.length === 0 ? null : vdata[0]
                                         .product_type === "Fashion" ? (
                                       vari === "weight" ||
-                                        vari === "volume" ? null : (
+                                      vari === "volume" ? null : (
                                         <option
                                           value={
                                             vari === "piece"
                                               ? "piece"
                                               : vari === "color"
-                                                ? "pcs"
-                                                : ""
+                                              ? "pcs"
+                                              : ""
                                           }
                                           key={i}
                                         >
@@ -3578,12 +3577,12 @@ function Product() {
                                           vari === "weight"
                                             ? "gms"
                                             : vari === "volume"
-                                              ? "ml"
-                                              : vari === "piece"
-                                                ? "piece"
-                                                : vari === "color"
-                                                  ? "pcs"
-                                                  : ""
+                                            ? "ml"
+                                            : vari === "piece"
+                                            ? "piece"
+                                            : vari === "color"
+                                            ? "pcs"
+                                            : ""
                                         }
                                         key={i}
                                       >
@@ -3660,7 +3659,7 @@ function Product() {
                                   }
                                   required={
                                     variantarray.unit !== "pcs" &&
-                                      variantarray.unit_quantity === ""
+                                    variantarray.unit_quantity === ""
                                       ? true
                                       : false
                                   }
@@ -3698,11 +3697,11 @@ function Product() {
                                   onChange={(e) => onVariantChange(e)}
                                   disabled={
                                     variantarray.unit !== "pcs" &&
-                                      variantarray.unit !== ""
+                                    variantarray.unit !== ""
                                       ? true
                                       : variantarray.unit == ""
-                                        ? false
-                                        : false
+                                      ? false
+                                      : false
                                   }
                                 >
                                   <option value={""}>Select</option>
@@ -4086,147 +4085,144 @@ function Product() {
                           </thead>
                           <tbody>
                             {vdata === "" ||
-                              vdata === null ||
-                              vdata === undefined
+                            vdata === null ||
+                            vdata === undefined
                               ? null
                               : (vdata || []).map((variantdata, i) => {
-                                return variantdata.is_delete ===
-                                  "0" ? null : (
-                                  <>
-                                    {/* <Accordion.Item eventKey="0"> */}
-                                    <tr
-                                      className="add_variety_list_box"
-                                      key={i}
-                                    >
-                                      <td className="p-0 py-3 text-center ">
-                                        {variantdata.unit === "pcs"
-                                          ? "color"
-                                          : variantdata.unit === "piece"
+                                  return variantdata.is_delete ===
+                                    "0" ? null : (
+                                    <>
+                                      {/* <Accordion.Item eventKey="0"> */}
+                                      <tr
+                                        className="add_variety_list_box"
+                                        key={i}
+                                      >
+                                        <td className="p-0 py-3 text-center ">
+                                          {variantdata.unit === "pcs"
+                                            ? "color"
+                                            : variantdata.unit === "piece"
                                             ? "piece"
                                             : variantdata.unit === "gms"
-                                              ? "weight"
-                                              : variantdata.unit === "ml"
-                                                ? "volume"
-                                                : ""}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {variantdata.colors}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {variantdata.unit === "gms"
-                                          ? variantdata.unit_quantity
-                                          : variantdata.unit === "ml"
+                                            ? "weight"
+                                            : variantdata.unit === "ml"
+                                            ? "volume"
+                                            : ""}
+                                        </td>
+                                        <td className="p-0 py-3 text-center ">
+                                          {variantdata.colors}
+                                        </td>
+                                        <td className="p-0 py-3 text-center ">
+                                          {variantdata.unit === "gms"
+                                            ? variantdata.unit_quantity
+                                            : variantdata.unit === "ml"
                                             ? variantdata.unit_quantity
                                             : variantdata.unit === "piece"
-                                              ? variantdata.unit_quantity
-                                              : ""}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {variantdata.size}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {Number(variantdata.mrp).toFixed(2)}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {Number(
-                                          variantdata.discount
-                                        ).toFixed(2)}
-                                      </td>
-
-                                      <td className="p-0 py-3 text-center ">
-                                        {Number(
-                                          variantdata.product_price
-                                        ).toFixed(2)}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {Number(
-                                          (variantdata.sale_price *
-                                            (Number(taxdata.gst) +
-                                              Number(
-                                                taxdata.wholesale_sales_tax
-                                              ) +
-                                              Number(
-                                                taxdata.retails_sales_tax
-                                              ) +
-                                              Number(
-                                                taxdata.manufacturers_sales_tax
-                                              ) +
-                                              Number(
-                                                taxdata.value_added_tax
-                                              ))) /
-                                          100
-                                        ).toFixed(2)}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {variantdata.sale_price.toFixed(2)}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {moment(
-                                          variantdata.manufacturing_date
-                                        ).format("YYYY-MM-DD")}
-                                      </td>
-                                      <td className="p-0 py-3 text-center ">
-                                        {moment(
-                                          variantdata.expire_date
-                                        ).format("YYYY-MM-DD")}
-                                      </td>
-                                      <td className="p-0 py-3 text-center manufacture_date">
-                                        {variantdata.quantity}
-                                      </td>
-
-                                      <td className="p-0 py-3 text-center action_btn_box">
-                                        {/* <Accordion.Header eventKey={i}> */}
-                                        <RiImageAddLine
-                                          type="button"
-                                          className="variety_edit_action_btn  text-success"
-                                          eventKey={i}
-                                          onClick={(_id) => (
-                                            onImgView(
-                                              variantdata.id,
-                                              variantdata.product_id
-                                            ),
-                                            setOpen(!open)
+                                            ? variantdata.unit_quantity
+                                            : ""}
+                                        </td>
+                                        <td className="p-0 py-3 text-center ">
+                                          {variantdata.size}
+                                        </td>
+                                        <td className="p-0 py-3 text-center ">
+                                          {Number(variantdata.mrp).toFixed(2)}
+                                        </td>
+                                        <td className="p-0 py-3 text-center ">
+                                          {Number(variantdata.discount).toFixed(
+                                            2
                                           )}
-                                          aria-controls={
-                                            "variantimgbox" +
-                                            variantdata.id
-                                          }
-                                          aria-expanded={open}
-                                        />
-                                        {/* </Accordion.Header> */}
+                                        </td>
 
-                                        <BiEdit
-                                          className="variety_edit_action_btn text-primary mx-2"
-                                          onClick={(id) =>
-                                            VariantEditClick(
-                                              variantdata.id,
-                                              variantdata.product_id
-                                            )
+                                        <td className="p-0 py-3 text-center ">
+                                          {Number(
+                                            variantdata.product_price
+                                          ).toFixed(2)}
+                                        </td>
+                                        <td className="p-0 py-3 text-center ">
+                                          {Number(
+                                            (variantdata.sale_price *
+                                              (Number(taxdata.gst) +
+                                                Number(
+                                                  taxdata.wholesale_sales_tax
+                                                ) +
+                                                Number(
+                                                  taxdata.retails_sales_tax
+                                                ) +
+                                                Number(
+                                                  taxdata.manufacturers_sales_tax
+                                                ) +
+                                                Number(
+                                                  taxdata.value_added_tax
+                                                ))) /
+                                              100
+                                          ).toFixed(2)}
+                                        </td>
+                                        <td className="p-0 py-3 text-center ">
+                                          {variantdata.sale_price.toFixed(2)}
+                                        </td>
+                                        <td className="p-0 py-3 text-center ">
+                                          {moment(
+                                            variantdata.manufacturing_date
+                                          ).format("YYYY-MM-DD")}
+                                        </td>
+                                        <td className="p-0 py-3 text-center ">
+                                          {moment(
+                                            variantdata.expire_date
+                                          ).format("YYYY-MM-DD")}
+                                        </td>
+                                        <td className="p-0 py-3 text-center manufacture_date">
+                                          {variantdata.quantity}
+                                        </td>
+
+                                        <td className="p-0 py-3 text-center action_btn_box">
+                                          <RiImageAddLine
+                                            type="button"
+                                            className="variety_edit_action_btn  text-success"
+                                            eventKey={i}
+                                            onClick={(_id) =>
+                                              onImgView(
+                                                variantdata.id,
+                                                variantdata.product_id
+                                              )
+                                            }
+                                            aria-controls={
+                                              "variantimgbox" + variantdata.id
+                                            }
+                                            aria-expanded={open}
+                                          />
+
+                                          <BiEdit
+                                            className="variety_edit_action_btn text-primary mx-2"
+                                            onClick={(id) =>
+                                              VariantEditClick(
+                                                variantdata.id,
+                                                variantdata.product_id
+                                              )
+                                            }
+                                          />
+                                          <BsTrash
+                                            className="variety_edit_action_btn text-danger"
+                                            onClick={(id) =>
+                                              VariantRemoveClick(
+                                                variantdata.id,
+                                                variantdata.product_id
+                                              )
+                                            }
+                                          />
+                                        </td>
+                                      </tr>
+                                      {/* <Accordion.Body eventKey={i}> */}
+                                      {newImageUrls ? (
+                                        <tr
+                                          className={
+                                            variantdata.id == imageboxid
+                                              ? "img_preview_boxx show"
+                                              : "img_preview_boxx hide"
                                           }
-                                        />
-                                        <BsTrash
-                                          className="variety_edit_action_btn text-danger"
-                                          onClick={(id) =>
-                                            VariantRemoveClick(
-                                              variantdata.id,
-                                              variantdata.product_id
-                                            )
-                                          }
-                                        />
-                                      </td>
-                                    </tr>
-                                    {/* <Accordion.Body eventKey={i}> */}
-                                    {newImageUrls ? (
-                                      <tr
-                                        className={variantdata.id == imageboxid ? "img_preview_boxx show" : "img_preview_boxx hide"}
-                                        id={
-                                          "variantimgbox" + variantdata.id
-                                        }
-                                      >
-                                        <td className="" colSpan={"12"}>
-                                          <div className="image_box">
-                                            {newImageUrls.map(
-                                              (imgg, i) => {
+                                          id={"variantimgbox" + variantdata.id}
+                                        >
+                                          <td className="" colSpan={"12"}>
+                                            <div className="image_box">
+                                              {newImageUrls.map((imgg, i) => {
                                                 return `${variantdata.id}` ===
                                                   imgg.product_verient_id ? (
                                                   <div
@@ -4234,7 +4230,7 @@ function Product() {
                                                     key={i}
                                                   >
                                                     {imgg.image_position ===
-                                                      "cover" ? (
+                                                    "cover" ? (
                                                       <span className="cover_img">
                                                         Cover
                                                       </span>
@@ -4275,60 +4271,57 @@ function Product() {
                                                     </span>
                                                   </div>
                                                 ) : null;
-                                              }
-                                            )}
-                                            <div className="imgprivew_box">
-                                              <img
-                                                src={
-                                                  "https://i2.wp.com/asvs.in/wp-content/uploads/2017/08/dummy.png?fit=399%2C275&ssl=1"
-                                                }
-                                                key={i}
-                                                alt="apna_organic"
-                                                height={120}
-                                              />
-                                              <Form.Control
-                                                multiple
-                                                type="file"
-                                                sm="9"
-                                                className={
-                                                  "img_add_button"
-                                                }
-                                                onChange={(e) =>
-                                                  imguploadchange(
-                                                    e,
-                                                    variantdata.product_id,
-                                                    variantdata.id,
-                                                    variantdata.vendor_id
-                                                  )
-                                                }
-                                                name={"img_64"}
-                                              />
-                                              <span className="plus_icon">
-                                                +
-                                              </span>
+                                              })}
+                                              <div className="imgprivew_box">
+                                                <img
+                                                  src={
+                                                    "https://i2.wp.com/asvs.in/wp-content/uploads/2017/08/dummy.png?fit=399%2C275&ssl=1"
+                                                  }
+                                                  key={i}
+                                                  alt="apna_organic"
+                                                  height={120}
+                                                />
+                                                <Form.Control
+                                                  multiple
+                                                  type="file"
+                                                  sm="9"
+                                                  className={"img_add_button"}
+                                                  onChange={(e) =>
+                                                    imguploadchange(
+                                                      e,
+                                                      variantdata.product_id,
+                                                      variantdata.id,
+                                                      variantdata.vendor_id
+                                                    )
+                                                  }
+                                                  name={"img_64"}
+                                                />
+                                                <span className="plus_icon">
+                                                  +
+                                                </span>
+                                              </div>
                                             </div>
-                                          </div>
+                                          </td>
+                                        </tr>
+                                      ) : null}
+                                      {/* </Accordion.Body> */}
+                                      {/* </Accordion.Item> */}
+                                      <tr>
+                                        <td colSpan={"12"}>
+                                          {customvalidated === "imgformat" ? (
+                                            <span
+                                              className="mt-2   text-center fs-6 text-danger"
+                                              type="invalid"
+                                            >
+                                              Image Format should be in jpg,
+                                              jpeg or png
+                                            </span>
+                                          ) : null}
                                         </td>
                                       </tr>
-                                    ) : null}
-                                    {/* </Accordion.Body> */}
-                                    {/* </Accordion.Item> */}
-                                    <tr>
-                                      <td colSpan={"12"}>
-                                        {customvalidated === "imgformat" ? (
-                                          <span
-                                            className="mt-2   text-center fs-6 text-danger"
-                                            type="invalid"
-                                          >
-                                            Image Format should be in jpg,
-                                            jpeg or png
-                                          </span>
-                                        ) : null}
-                                      </td>
-                                    </tr>
-                                  </>
-                                );
-                              })}
+                                    </>
+                                  );
+                                })}
                             {changeUnitproperty === "editvariety" ? (
                               <tr>
                                 <td
