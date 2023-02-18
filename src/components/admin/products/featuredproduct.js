@@ -22,15 +22,16 @@ const Featuredproduct = () => {
   const [id, setId] = useState("");
   const [filtervategory, setfiltercategory] = useState([]);
   const [vendorid, setVendorId] = useState([]);
-  const [searchdata, setsearchData] = useState({ 
-  product_title_name :"",
-  status:"",
-  category: "",
-  vendor: "",
-  brand: "", });
-const [searcherror,setsearcherror] = useState("")
+  const [searchdata, setsearchData] = useState({
+    product_title_name: "",
+    status: "",
+    category: "",
+    vendor: "",
+    brand: "",
+  });
+  const [searcherror, setsearcherror] = useState("");
 
-let token = localStorage.getItem("token");
+  let token = localStorage.getItem("token");
 
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
@@ -39,19 +40,18 @@ let token = localStorage.getItem("token");
     // formRef.current.reset();
     setValidated(false);
     setShow(false);
-    setapicall(true)
+    setapicall(true);
   };
 
   let closeUpdateAlert = () => {
     setUpdateAlert(false);
   };
 
-
   /*<---Category list api---> */
   const getCategorydatafilter = () => {
     try {
       axios
-        .get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
+        .get(`${process.env.REACT_APP_BASEURL_0}/category?category=all`)
         .then((response) => {
           let cgory = response.data;
           setfiltercategory(cgory);
@@ -63,7 +63,7 @@ let token = localStorage.getItem("token");
     try {
       axios
         .post(
-          `${process.env.REACT_APP_BASEURL}/vendors`,
+          `${process.env.REACT_APP_BASEURL_0}/vendors`,
           { vendor_id: "all" },
           {
             headers: { admin_token: `${token}` },
@@ -85,20 +85,23 @@ let token = localStorage.getItem("token");
       console.log(err);
     }
   };
-//   console.log("oooooo--------"+JSON.stringify(featuredProductData))
-/*<----Function to get the data---->*/
+  //   console.log("oooooo--------"+JSON.stringify(featuredProductData))
+  /*<----Function to get the data---->*/
   const handleShow = (product_id) => {
     try {
       axios
-        .post(`${process.env.REACT_APP_BASEURL_0}/fetured_product_search`, {
-          product_id: product_id,
-          fetured_type: "featured_offer",
-          start_date: "",
-          end_date: "",
-        },
+        .post(
+          `${process.env.REACT_APP_BASEURL_0}/fetured_product_search`,
+          {
+            product_id: product_id,
+            fetured_type: "featured_offer",
+            start_date: "",
+            end_date: "",
+          },
           {
             headers: { admin_token: `${token}` },
-          })
+          }
+        )
         .then((response) => {
           setId(response.data[0].id);
           console.log(response);
@@ -117,49 +120,44 @@ let token = localStorage.getItem("token");
   };
   /*<---Render feature data function--->*/
   useEffect(() => {
-    console.log(searchdata.product_title_name,);
+    console.log(searchdata.product_title_name);
     try {
       axios
-        .post(`${process.env.REACT_APP_BASEURL_0}/fetured_product_search`, {
-          // search: searchdata.product_title_name,
-          // product_id: "",
-          // fetured_type: "featured_offer",
-          // start_date: "",
-          // end_date: "",
-          // category: [`${searchdata.category}`],
-          // brand: [`${searchdata.brand}`],
-          // shop: [`${searchdata.vendor}`],
-          // status: searchdata.status,
-          product_title_name:[`${searchdata.product_title_name}`],
-          vendor_id:[`${searchdata.vendor}`],
-          status:searchdata.status,
-          category:[`${searchdata.category}`]
-        },
+        .post(
+          `${process.env.REACT_APP_BASEURL_0}/fetured_product_search`,
+          {
+            // search: searchdata.product_title_name,
+            // product_id: "",
+            // fetured_type: "featured_offer",
+            // start_date: "",
+            // end_date: "",
+            // category: [`${searchdata.category}`],
+            // brand: [`${searchdata.brand}`],
+            // shop: [`${searchdata.vendor}`],
+            // status: searchdata.status,
+            product_title_name: [`${searchdata.product_title_name}`],
+            vendor_id: [`${searchdata.vendor}`],
+            status: searchdata.status,
+            category: [`${searchdata.category}`],
+          },
           {
             headers: { admin_token: `${token}` },
-          })
+          }
+        )
         .then((response) => {
           console.log(response);
-        setFeatureProductData(response.data);
+          setFeatureProductData(response.data);
           setapicall(false);
         });
-    } catch (err) {console.log(err);}
+    } catch (err) {
+      console.log(err);
+    }
     getCategorydatafilter();
     getVendorData();
   }, [apicall]);
 
   /*<---Table data ---->*/
   const columns = [
-    {
-      name: "ID",
-      selector: (row) => row.id,
-      sortable: true,
-      width: "150px",
-      center: true,
-      style: {
-        paddingLeft: 0,
-      },
-    },
     {
       name: "#",
       width: "100px",
@@ -320,7 +318,7 @@ let token = localStorage.getItem("token");
     },
   ];
 
-/*<----Onchange function of Feature---->*/
+  /*<----Onchange function of Feature---->*/
   const handleFormChange = (e) => {
     setFeaturetData({ ...featuredData, [e.target.name]: e.target.value });
   };
@@ -328,45 +326,55 @@ let token = localStorage.getItem("token");
   /*<----Function to update feature product---->*/
   const UpdateFeaturedProduct = (e) => {
     e.preventDefault();
-    axios.put(`${process.env.REACT_APP_BASEURL_0}/update_fetured_product`,{
-      id:id,
-      start_date:featuredData.start_date,
-      end_date:featuredData.end_date
-    },
-    {
-      headers: { admin_token: `${token}` },
-    }).then((response) => {
-      let data = response.data;
-      setapicall(true);
-      setShow(false);
-      setUpdateAlert(true);
-    });
-  formRef.current.reset();
-  // setValidated(false);
-}
+    axios
+      .put(
+        `${process.env.REACT_APP_BASEURL_0}/update_fetured_product`,
+        {
+          id: id,
+          start_date: featuredData.start_date,
+          end_date: featuredData.end_date,
+        },
+        {
+          headers: { admin_token: `${token}` },
+        }
+      )
+      .then((response) => {
+        let data = response.data;
+        setapicall(true);
+        setShow(false);
+        setUpdateAlert(true);
+      });
+    formRef.current.reset();
+    // setValidated(false);
+  };
 
-const OnDateChange = (e) => {}
-const submitHandler = () => {
-  setapicall(true);
-};
-/*<---Onchange function of search --->*/
+  const OnDateChange = (e) => {};
+  const submitHandler = () => {
+    setapicall(true);
+  };
+  /*<---Onchange function of search --->*/
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
     console.log(searchdata);
-    setsearcherror(false)
+    setsearcherror(false);
   };
-/*<---Function to reset Search--->*/
+  /*<---Function to reset Search--->*/
   const OnReset = () => {
-    setsearchData({product_title_name :"",status :"", category:"", brand:"", vendor:""});
+    setsearchData({
+      product_title_name: "",
+      status: "",
+      category: "",
+      brand: "",
+      vendor: "",
+    });
     setapicall(true);
-    setsearcherror(false)
-
+    setsearcherror(false);
   };
   /*<---Onlick Function to Search--->*/
   const Search = () => {
     if (
       searchdata.product_title_name === "" &&
-      searchdata.status === "" && 
+      searchdata.status === "" &&
       searchdata.vendor === "" &&
       searchdata.brand === "" &&
       searchdata.category === ""
@@ -380,10 +388,10 @@ const submitHandler = () => {
 
   return (
     <div>
-        <h2>Featured Products</h2>
-        <div className="card mt-3 p-3">
+      <h2>Featured Products</h2>
+      <div className="card mt-3 p-3">
         <div className="row pb-3">
-        <div className="col-md-3 col-sm-6 aos_input mb-2">
+          <div className="col-md-3 col-sm-6 aos_input mb-2">
             <input
               type={"text"}
               placeholder={"Search by product name"}
@@ -396,11 +404,11 @@ const submitHandler = () => {
               <small className="text-danger">please fill the feild</small>
             ) : null}
           </div>
-        {/* <div className="col-md-3 col-sm-6 aos_input mb-2">
+          {/* <div className="col-md-3 col-sm-6 aos_input mb-2">
   <input type={"text"}  onChange={OnSearchChange} name='product_title_name'
   value={searchdata.status} placeholder={"Search by status"} className={'adminsideinput'}/>
 </div> */}
-  <div className="col-md-3 col-sm-6 aos_input mb-2">
+          <div className="col-md-3 col-sm-6 aos_input mb-2">
             <Form.Select
               aria-label="Search by status"
               className="adminselectbox"
@@ -460,113 +468,117 @@ const submitHandler = () => {
               })}
             </Form.Select>
           </div>
-<div className="col-md-3 col-sm-6">
-    <Form.Select
-      aria-label="Search by delivery"
-      className="adminselectbox"
-      onChange={OnSearchChange}
-      name="status"
-      value={String(searchdata.status)}
-    >
-      <option value="">status</option>
-      <option value="Active">Active</option>
-      <option value="expired">Expired</option>
-      <option value="inactive">In active</option>
-    </Form.Select>
-  </div>
- 
-    <div className="col-md-3 col-sm-6 aos_input mb-2 ">
-<MainButton btntext={"Search"} btnclass={'button main_button w-100'} onClick={Search} />
-  </div>
-  <div className="col-md-3 col-sm-6 aos_input mb-2 ">
-     <MainButton
-        btntext={"Reset"}
-        btnclass={"button main_button w-100"}
-        type="reset"
-         onClick={OnReset}
-       />
-    </div>
-        </div>
-        </div>
+          <div className="col-md-3 col-sm-6">
+            <Form.Select
+              aria-label="Search by delivery"
+              className="adminselectbox"
+              onChange={OnSearchChange}
+              name="status"
+              value={String(searchdata.status)}
+            >
+              <option value="">status</option>
+              <option value="Active">Active</option>
+              <option value="expired">Expired</option>
+              <option value="inactive">In active</option>
+            </Form.Select>
+          </div>
 
-        <Modal size="lg" show={show} onHide={() => setShow(false)}>
-          <Form className="" ref={formRef}>
-            <Modal.Header closeButton>
-              <Modal.Title></Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <div className="row p-3 m-0">
-                <div className="col-md-6">
-                  <Form.Group
-                    className="mb-3 aos_input"
-                    controlId="formBasicStartDate"
-                  >
-                    <Form.Label>Start Date</Form.Label>
-                    <Form.Control
-                      name="start_date"
-                      value={featuredData.start_date}
-                      onChange={(e) => handleFormChange(e)}
-                      type="date"
-                      placeholder="Coupon Start Date"
-                    />
-                  </Form.Group>
-                </div>
-                <div className="col-md-6">
-                  <Form.Group
-                    className="mb-3 aos_input"
-                    controlId="formBasicStartDate"
-                  >
-                    <Form.Label>End Date</Form.Label>
-                    <Form.Control
-                      name="end_date"
-                      value={featuredData.end_date}
-                      onChange={(e) => handleFormChange(e)}
-                      type="date"
-                      placeholder="Coupon Start Date"
-                    />
-                  </Form.Group>
-                </div>
+          <div className="col-md-3 col-sm-6 aos_input mb-2 ">
+            <MainButton
+              btntext={"Search"}
+              btnclass={"button main_button w-100"}
+              onClick={Search}
+            />
+          </div>
+          <div className="col-md-3 col-sm-6 aos_input mb-2 ">
+            <MainButton
+              btntext={"Reset"}
+              btnclass={"button main_button w-100"}
+              type="reset"
+              onClick={OnReset}
+            />
+          </div>
+        </div>
+      </div>
+
+      <Modal size="lg" show={show} onHide={() => setShow(false)}>
+        <Form className="" ref={formRef}>
+          <Modal.Header closeButton>
+            <Modal.Title></Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="row p-3 m-0">
+              <div className="col-md-6">
+                <Form.Group
+                  className="mb-3 aos_input"
+                  controlId="formBasicStartDate"
+                >
+                  <Form.Label>Start Date</Form.Label>
+                  <Form.Control
+                    name="start_date"
+                    value={featuredData.start_date}
+                    onChange={(e) => handleFormChange(e)}
+                    type="date"
+                    placeholder="Coupon Start Date"
+                  />
+                </Form.Group>
               </div>
-            </Modal.Body>
-            <Modal.Footer>
-              <button
-                className="button main_outline_button"
-                onClick={handleClose}
-              >
-                Cancel
-              </button>
-              <button
-                className="button main_outline_button"
-                onClick={UpdateFeaturedProduct}
-              >
-                Update
-              </button>
-            </Modal.Footer>
-          </Form>
-        </Modal>
-        <DataTable
-          columns={columns}
-          data={featuredProductData}
-          pagination
-          highlightOnHover
-          pointerOnHover
-          className={"table_body featuredproduct_table"}
-          />
+              <div className="col-md-6">
+                <Form.Group
+                  className="mb-3 aos_input"
+                  controlId="formBasicStartDate"
+                >
+                  <Form.Label>End Date</Form.Label>
+                  <Form.Control
+                    name="end_date"
+                    value={featuredData.end_date}
+                    onChange={(e) => handleFormChange(e)}
+                    type="date"
+                    placeholder="Coupon Start Date"
+                  />
+                </Form.Group>
+              </div>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <button
+              className="button main_outline_button"
+              onClick={handleClose}
+            >
+              Cancel
+            </button>
+            <button
+              className="button main_outline_button"
+              onClick={UpdateFeaturedProduct}
+            >
+              Update
+            </button>
+          </Modal.Footer>
+        </Form>
+      </Modal>
+      <DataTable
+        columns={columns}
+        data={featuredProductData}
+        pagination
+        highlightOnHover
+        pointerOnHover
+        className={"table_body featuredproduct_table"}
+      />
 
-<SAlert
-    show={Alert}
-    title="Product Name"
-    text="Are you Sure you want to remove"
-    onConfirm={hideAlert}
-    showCancelButton={true}
-    onCancel={hideAlert}
-  />
-  <SAlert
-    show={UpdateAlert}
-    title=" Sold product Updated Successfully "
-    onConfirm={closeUpdateAlert}
-  />
-    </div>     
+      <SAlert
+        show={Alert}
+        title="Product Name"
+        text="Are you Sure you want to remove"
+        onConfirm={hideAlert}
+        showCancelButton={true}
+        onCancel={hideAlert}
+      />
+      <SAlert
+        show={UpdateAlert}
+        title=" Sold product Updated Successfully "
+        onConfirm={closeUpdateAlert}
+      />
+    </div>
   );
 };
 

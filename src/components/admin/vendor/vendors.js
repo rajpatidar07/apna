@@ -14,6 +14,7 @@ import { Badge, Button, InputGroup, Table } from "react-bootstrap";
 import { GiCancel } from "react-icons/gi";
 import storetype from "../json/storetype";
 import status from "../json/Status";
+import Loader from "../common/loader";
 
 const VendorsList = () => {
   const token = localStorage.getItem("token");
@@ -22,7 +23,6 @@ const VendorsList = () => {
   const formRef = useRef();
   const [newImageUrls, setnewImageUrls] = useState([]);
   const [customValidation, setCustomValidation] = useState(false);
-  const [loading_status, setLoading_status] = useState(false);
   const [show, setShow] = useState("");
   const [docsshow, setDocsShow] = useState(false);
   const [Alert, setAlert] = useState(false);
@@ -37,7 +37,7 @@ const VendorsList = () => {
   const [ErrorAddAlert, setErrorAddAlert] = useState(false);
   const [UpdateAlert, setUpdateAlert] = useState(false);
   const [ErrorUpdateAlert, setErrorUpdateAlert] = useState(false);
-  let [condition, setCondition] = useState(false);
+  const [docerror, setDocerror] = useState("");
   const [fileName, setFileName] = useState("");
   const vendorObject = {
     owner_name: "",
@@ -104,7 +104,7 @@ const VendorsList = () => {
       })
       .then((response) => {
         setvendordata(response.data);
-        setCondition(false);
+        setLoading(false);
         setapicall(false);
       })
       .catch(function (error) {
@@ -247,6 +247,7 @@ const VendorsList = () => {
     {
       name: "Change Status",
       selector: (row) => (
+<<<<<<< HEAD
         //     loading_status === true ?
         //    <Form.Group className="" controlId="formBasicEmail">
         //       <Form.Select
@@ -263,6 +264,8 @@ const VendorsList = () => {
         //      </option>
         //  </Form.Select>
         //     </Form.Group>:
+=======
+>>>>>>> 15e957c3d67da1dce9e9c65d5146bb6ede82f276
         <Form.Group className="" controlId="formBasicEmail">
           <Form.Select
             size="sm"
@@ -270,7 +273,6 @@ const VendorsList = () => {
             onChange={(e) => handleStatusChnage(e, row.id)}
             name="status"
             value={row.status}
-            disabled={condition === true ? true : false}
           >
             <option value={""}>Status</option>
             {(status.vendorestatus || []).map((data, i) => {
@@ -328,8 +330,7 @@ const VendorsList = () => {
       )
       .then((response) => {
         setvendordata(response.data);
-
-        setCondition(false);
+        setLoading(false);
         setapicall(false);
       })
       .catch(function (error) {
@@ -423,9 +424,9 @@ const VendorsList = () => {
       setAddTagError("");
     }
   };
-  const CreateTimeout = () => {
-    setCondition(false);
-  };
+  // const CreateTimeout = () => {
+  //   setCondition(false);
+  // };
 
   const DocuRemoveClick = (e) => {
     setDocnameArray(Docnamearray.filter((item) => item !== e));
@@ -435,9 +436,14 @@ const VendorsList = () => {
 
   const handleStatusChnage = (e, id) => {
     setchangstatus(e.target.value);
+<<<<<<< HEAD
     setCondition(true);
     setTimeout(CreateTimeout, 50000);
     setLoading_status(true);
+=======
+    // setTimeout(CreateTimeout, 50000);
+    setLoading(true)
+>>>>>>> 15e957c3d67da1dce9e9c65d5146bb6ede82f276
     axios
       .put(`${process.env.REACT_APP_BASEURL}/vendor_status_change`, {
         status_change: e.target.value,
@@ -447,15 +453,23 @@ const VendorsList = () => {
         if (
           response.data.status_message === "vendor status change succesfully "
         ) {
+<<<<<<< HEAD
           setCondition(false);
           setLoading_status(false);
+=======
+          setLoading(false)
+>>>>>>> 15e957c3d67da1dce9e9c65d5146bb6ede82f276
           setapicall(true);
         }
       })
       .catch(function (error) {
         console.log(error);
+<<<<<<< HEAD
         setLoading_status(false);
         setCondition(false);
+=======
+        setLoading(false)
+>>>>>>> 15e957c3d67da1dce9e9c65d5146bb6ede82f276
       });
   };
 
@@ -500,7 +514,7 @@ const VendorsList = () => {
 
         const [first, ...rest] = encoded.base64.split(",");
         const [nameimg, ext] = encoded.name.split(".");
-
+       console.log("------" + ext)
         const vendorimg = rest.join("-");
         let imar = {
           vendor_id: `${vendorID}`,
@@ -509,7 +523,15 @@ const VendorsList = () => {
           type_of_file: `${ext}`,
           img_64: vendorimg,
         };
-        ImgObj.push(imar);
+        if(
+          ext === "jpeg" ||
+          ext === "jpg" ||
+          ext === "png" ||
+          ext === "pdf" ||
+          ext === ""){
+          ImgObj.push(imar);
+        }else{   
+          setDocerror("This image / document is not accetable")}
       }
 
       if (newImageUrls.length <= 5) {
@@ -520,6 +542,7 @@ const VendorsList = () => {
           )
           .then((response) => {
             onImgView(vendorID);
+            setDocerror("")
           })
           .catch(function (error) {
             console.log(error);
@@ -697,9 +720,7 @@ const VendorsList = () => {
             setAddAlert(true);
             setLoading(false);
             setaddvendordata(vendorObject);
-
             setCustomValidation(false);
-
             setcustomarray([]);
             setAddTagError("");
             setaddtag("");
@@ -819,6 +840,8 @@ const VendorsList = () => {
   };
 
   return (
+    <>
+    {loading === true ?<Loader/> :null}
     <div>
       <h2>Vendors List</h2>
 
@@ -916,6 +939,7 @@ const VendorsList = () => {
         />
       </div>
       <Modal size="lg" show={show} onHide={() => handleClose()}>
+      {loading === true ?<Loader/> :
         <Form
           className=""
           // noValidate
@@ -1223,7 +1247,7 @@ const VendorsList = () => {
                     ) : null}
                   </InputGroup>
 
-                  {console.log("document array--" + Docnamearray)}
+                  {/* {console.log("document array--" + Docnamearray)} */}
                   {Docnamearray === undefined ||
                   Docnamearray === null ||
                   Docnamearray === "" ||
@@ -1438,25 +1462,15 @@ const VendorsList = () => {
             >
               Cancel
             </button>
-            {loading == true ? (
-              <button type="submit" className="button main_button">
-                &nbsp;&nbsp;&nbsp; loading...
-                <span
-                  className="spinner-border spinner-border-sm"
-                  role="status"
-                  aria-hidden="true"
-                ></span>
-              </button>
-            ) : (
+            
               <Iconbutton
                 type={"submit"}
                 btntext={show === "add" ? "Add Vendor" : "Update Vendor"}
                 // onClick={(show === 'add' ? AddVendorClick : UpdateVendorClick(show))}
                 btnclass={"button main_button "}
               />
-            )}
           </Modal.Footer>
-        </Form>
+        </Form>}
       </Modal>
 
       {/*   Add Docs model */}
@@ -1479,15 +1493,18 @@ const VendorsList = () => {
                   className="mb-3 aos_input"
                   controlId="validationCustom09"
                 >
-                  <Form.Label>Documents Upload </Form.Label>
+                  <Form.Label>Documents Upload
+                  (In .jpg, .jpeg, .png , .pdf format) </Form.Label>
                   <Form.Control
                     multiple
                     type="file"
                     placeholder="multiple document upload"
                     name={"img_64"}
+                    accept="image/png,image/jpeg,image/jpg,document/pdf"
                     onChange={(e) => imguploadchange(e)}
                   />
                 </Form.Group>
+                    <small className="text-danger">{docerror}</small>
               </div>
             </div>
             <Table>
@@ -1554,7 +1571,7 @@ const VendorsList = () => {
 
       {/* /End add docs model/ */}
     </div>
-  );
+  </>);
 };
 
 export default VendorsList;

@@ -640,7 +640,7 @@ const RevenueReport = () => {
           .format("YYYY-MM-DD")
       );
       // setPrevDate(moment(sixMonth).subtract(6, 'month').startOf('month').format('YYYY-MM-DD'))
-      // console.log("previou 6 month-"+prevDate)
+      // console.log("prevziou 6 month-"+prevDate)
       setpreviousStateChange(5);
     }
 
@@ -785,6 +785,7 @@ const RevenueReport = () => {
   };
 
   const OnReset = () => {
+    setFilterchange("");
     setpreviousStateChange("");
     setFromDate(moment().format("YYYY-MM-DD"));
     setToDate(moment().format("YYYY-MM-DD"));
@@ -802,9 +803,6 @@ const RevenueReport = () => {
     setapicall(true);
   };
 
-  // console.log("get revenue------"+JSON.stringify(getRevenue))
-  // console.log("data====="+ JSON.stringify(tabledate))
-
   tabledate.map((item) => {
     GrossAmmount.push(item.gross_amount);
     totalSales.push(item.total_sales);
@@ -813,23 +811,6 @@ const RevenueReport = () => {
     NetSales.push(item.net_sales);
     Discount.push(item.discount);
   });
-
-  //  console.log("gross ammount ------"+GrossAmmount)
-  //  console.log("total sales ------"+ totalSales)
-  //  console.log("total GST ------"+ totalGSt)
-  //  console.log("total Shipping ------"+ TotalShipping)
-  //  console.log("net Sales ------"+ NetSales)
-  //  console.log("Discount ------"+ Discount)
-
-  // console.log("categoryList--"+ category)
-
-  // brand.map((item)=>{
-
-  //   const optionsBrand = [
-  //     { value: `${item.brand}` },
-
-  //   ]
-  // })
 
   const options1 = [
     brand.map((item) => ({ value: `${item.brand}`, label: `${item.brand}` })),
@@ -844,8 +825,6 @@ const RevenueReport = () => {
     });
     setBrandName(arrr);
   };
-
-  //  console.log("$$$$$$------"+JSON.stringify(brandName[0]))
 
   const options2 = [
     venderList.map((item) => ({
@@ -1006,7 +985,7 @@ const RevenueReport = () => {
             />
           </div>
 
-          <div className="col-md-3 col-sm-6 aos_input mt-2">
+          <div className="col-md-3 col-sm-6 aos_input mt-3">
             <Select
               className=" basic-multi-select"
               placeholder="Search by Location"
@@ -1018,7 +997,7 @@ const RevenueReport = () => {
           </div>
 
           {filterchange === "7" ? (
-            <div className="col-md-3 col-sm-6 d-flex mt-2  aos_input">
+            <div className="col-md-3 col-sm-6 d-flex mt-3  aos_input">
               <div className="col-6 pe-2 aos_input">
                 <input
                   type={"date"}
@@ -1049,7 +1028,7 @@ const RevenueReport = () => {
             </div>
           ) : null}
 
-          <div className="col-md-auto col-sm-6 mt-2  aos_input">
+          <div className="col-md-auto col-sm-6 mt-3  aos_input">
             <MainButton
               btntext={"Search"}
               btnclass={"button main_button"}
@@ -1057,7 +1036,7 @@ const RevenueReport = () => {
             />
           </div>
 
-          <div className="col-md-auto col-sm-6 mt-2 aos_input">
+          <div className="col-md-auto col-sm-6 mt-3 aos_input">
             <MainButton
               btntext={"Reset"}
               btnclass={"button main_button"}
@@ -1066,7 +1045,7 @@ const RevenueReport = () => {
             />
           </div>
 
-          <div className="col-md-auto col-sm-6 mt-2 aos_input">
+          <div className="col-md-auto col-sm-6 mt-3 aos_input">
             <DropdownButton
               id="dropdown-variant-success"
               title="Download"

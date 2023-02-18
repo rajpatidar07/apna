@@ -13,6 +13,7 @@ import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
 import axios from "axios";
 import categorytype from "../../admin/json/categorytype";
+import Loader from "../common/loader";
 var newImg = "";
 
 const CategoryList = () => {
@@ -40,6 +41,7 @@ const CategoryList = () => {
   });
   const [level, setlevel] = useState("");
   const [imgerror, setimgerror] = useState("");
+  const [numrror, setnumrror] = useState("");
   const [cid, setCid] = useState();
   const [parentid, setParentid] = useState("");
   const [file, setFile] = useState();
@@ -58,6 +60,9 @@ const CategoryList = () => {
     category_type: "",
     level: "",
   });
+
+  let token = localStorage.getItem("token");
+
   /*<----Sweet alert function of delete category---->*/
   const handleAlert = (id) => {
     setParentid(id[0]);
@@ -68,11 +73,13 @@ const CategoryList = () => {
   /*<----Function to delete category---->*/
   const hideAlert = () => {
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/delete_category`, {
+      .put(`${process.env.REACT_APP_BASEURL_0}/delete_category`, {
         id: parentid,
         is_active: 0,
         level: level,
-      })
+      },{
+        headers: { admin_token: `${token}` },}
+      )
       .catch(function (error) {
         console.log(error);
       });
@@ -111,7 +118,7 @@ const CategoryList = () => {
     if (e !== "add") {
       try {
         axios
-          .get(`${process.env.REACT_APP_BASEURL}/category_details?id=${e}`)
+          .get(`${process.env.REACT_APP_BASEURL_0}/category_details?id=${e}`)
           .then((response) => {
             let data = response.data[0];
             setCategoryEditData(data);
@@ -125,14 +132,14 @@ const CategoryList = () => {
               for (let i = 0; i < arr.length; i++) {
                 axios
                   .get(
-                    `${process.env.REACT_APP_BASEURL}/category_details?id=${arr[i]}`
+                    `${process.env.REACT_APP_BASEURL_0}/category_details?id=${arr[i]}`
                   )
                   .then((response) => {
                     let data = response.data[0];
                     if (i === 0) {
                       axios
                         .get(
-                          `${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`
+                          `${process.env.REACT_APP_BASEURL_0}/category?category=${arr[i]}`
                         )
                         .then((response) => {
                           setSubCategory(response.data);
@@ -150,7 +157,7 @@ const CategoryList = () => {
                     } else if (i === 1) {
                       axios
                         .get(
-                          `${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`
+                          `${process.env.REACT_APP_BASEURL_0}/category?category=${arr[i]}`
                         )
                         .then((response) => {
                           setchildCategory(response.data);
@@ -199,6 +206,7 @@ const CategoryList = () => {
   const handlChangeName = (e, id) => {
     setnewName(e.target.value);
     setCateName(false);
+    setnumrror("")
   };
   /*<---- Onchange function of category type---->*/
   const handlChangeType = (e, id) => {
@@ -226,7 +234,7 @@ const CategoryList = () => {
   function getUser() {
     try {
       axios
-        .get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
+        .get(`${process.env.REACT_APP_BASEURL_0}/category?category=all`)
         .then((response) => {
           let data = response.data.filter((item) => item.is_active === "1");
           setData(data);
@@ -250,7 +258,7 @@ const CategoryList = () => {
     if (id === "" || id === null || id === undefined || indVal !== "") {
       try {
         axios
-          .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
+          .get(`${process.env.REACT_APP_BASEURL_0}/category?category=${indVal}`)
           .then((response) => {
             let cgory = response.data;
             let specificValues = cgory.filter(
@@ -418,14 +426,16 @@ const CategoryList = () => {
 
   /*<---Function to add category--->*/
   const AddCategoryClick = (e, id) => {
-    e.preventDefault();
     let regex_num = /^[^\d]+$/;
     let num = regex_num.test(newName);
+    e.preventDefault();
     // const regex_spc = /^[^']+$/;
     // let spc = regex_spc.test(newName);
     // console.log(num, spc);
-    if (newName === "" || num === false /* || spc === false*/) {
+    if (newName === "" /*|| num === false  || spc === false*/) {
       setCateName(true);
+    }else if(num === false ){
+      setnumrror("Number can't be a category")
     } else if (type === "") {
       setCateType(true);
     } else if (
@@ -443,7 +453,10 @@ const CategoryList = () => {
       formData.append("new_category", newName);
       formData.append("category_type", type);
       axios
-        .post(`${process.env.REACT_APP_BASEURL}/add_category`, formData)
+        .post(`${process.env.REACT_APP_BASEURL_0}/add_category`, formData,
+        {
+          headers: { admin_token: `${token}` },
+        })
         .then((response) => {
           setnewName("");
           setFileName("");
@@ -462,6 +475,7 @@ const CategoryList = () => {
           setAddAlert(true);
           formRef.current.reset();
           setimgerror("");
+          setnumrror("")
           setCateName(false);
           setCateType(false);
         })
@@ -477,8 +491,12 @@ const CategoryList = () => {
   /*<---Function to update the category--->*/
   const UpdateCategoryClick = (show) => {
     show.preventDefault();
+    let regex_num = /^[^\d]+$/;
+    let num = regex_num.test(newName);
     if (newName === "") {
       setCateName(true);
+    }else if(num === false ){
+      setnumrror("Number can't be a category")
     } else if (type === "") {
       setCateType(true);
     } else if (
@@ -497,7 +515,10 @@ const CategoryList = () => {
       formData.append("new_category", newName);
       formData.append("category_type", type);
       axios
-        .put(`${process.env.REACT_APP_BASEURL}/update_category`, formData)
+        .put(`${process.env.REACT_APP_BASEURL_0}/update_category`, formData,
+        {
+          headers: { admin_token: `${token}` },
+        })
         .then((response) => {
           setnewName("");
           setType("");
@@ -509,6 +530,8 @@ const CategoryList = () => {
           setchildCategory([]);
           setgrandcCategory([]);
           setImagePath("");
+          setimgerror("")
+          setnumrror("")
           newImg = "";
           setFile();
           setapicall(true);
@@ -542,7 +565,7 @@ const CategoryList = () => {
       setsearchValidated(true);
     } else {
       axios
-        .post(`${process.env.REACT_APP_BASEURL}/search_category`, {
+        .post(`${process.env.REACT_APP_BASEURL_0}/search_category`, {
           category_name: `${SearchCat.category_name}`,
           category_type: `${SearchCat.category_type}`,
           level: `${SearchCat.level}`,
@@ -601,7 +624,7 @@ const CategoryList = () => {
     apicall(true);
   };
 
-  return (
+  return (<>
     <div className="App productlist_maindiv">
       <h2>Category</h2>
 
@@ -731,13 +754,14 @@ const CategoryList = () => {
                       onChange={(e) => handlChangeName(e)}
                       value={newName}
                       name={"new_category"}
-                      maxLength={15}
+                      maxLength={25}
                     />
                     {CateName === true ? (
                       <p className="text-danger mt-2">
                         Category name is required
                       </p>
                     ) : null}
+                    <small className="text-danger">{numrror}</small>
                   </Form.Group>
                 </div>
                 <div className="col-md-6">
@@ -864,6 +888,8 @@ const CategoryList = () => {
                 )}
 
                 {indVal === "1" ||
+                indVal === "" ||
+                indVal === "0" ||
                 childCategory[0] === "" ||
                 childCategory[0] === null ||
                 childCategory[0] === undefined ? null : (
@@ -982,6 +1008,7 @@ const CategoryList = () => {
         />
       </div>
     </div>
+    </>
   );
 };
 export default CategoryList;

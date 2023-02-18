@@ -35,7 +35,7 @@ const Pendingproduct = () => {
   const getCategorydatafilter = () => {
     try {
       axios
-        .get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
+        .get(`${process.env.REACT_APP_BASEURL_0}/category?category=all`)
         .then((response) => {
           let cgory = response.data;
           setfiltercategory(cgory);
@@ -47,7 +47,7 @@ const Pendingproduct = () => {
     try {
       axios
         .post(
-          `${process.env.REACT_APP_BASEURL}/vendors`,
+          `${process.env.REACT_APP_BASEURL_0}/vendors`,
           { vendor_id: "all" },
           {
             headers: { admin_token: `${token}` },
@@ -77,7 +77,7 @@ const Pendingproduct = () => {
 
   useEffect(() => {
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=400`, {
+      .post(`${process.env.REACT_APP_BASEURL_0}/home?page=0&per_page=400`, {
         product_search: {
           search: [`${searchdata.product_title_name}`],
           price_from: "",
@@ -134,13 +134,6 @@ const Pendingproduct = () => {
   };
   // end search and reset
   const columns = [
-    {
-      name: "Sku",
-      selector: (row) => <p>{row.id}</p>,
-      sortable: true,
-      width: "100px",
-      center: true,
-    },
     {
       name: "#",
       width: "150px",
@@ -302,11 +295,17 @@ const Pendingproduct = () => {
   ];
   const onProductStatusChange = (e, id, productid) => {
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/product_status_update`, {
-        id: `${id}`,
-        product_id: `${productid}`,
-        product_status: e.target.value,
-      })
+      .put(
+        `${process.env.REACT_APP_BASEURL_0}/product_status_update`,
+        {
+          id: `${id}`,
+          product_id: `${productid}`,
+          product_status: e.target.value,
+        },
+        {
+          headers: { admin_token: `${token}` },
+        }
+      )
       .then((response) => {
         setapicall(true);
       })
@@ -350,7 +349,7 @@ const Pendingproduct = () => {
                 return (
                   <option value={data.id} key={i}>
                     {" "}
-                    {data.id}
+                    {data.category_name}
                   </option>
                 );
               })}
