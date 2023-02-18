@@ -26,6 +26,7 @@ const Offerproduct = () => {
     brand: "",
     vendor: "",
     product_title_name: "",
+    status :""
   });
   const [filtervategory, setfiltercategory] = useState([]);
   const [vendorid, setVendorId] = useState([]);
@@ -99,6 +100,7 @@ const Offerproduct = () => {
   /*<---Onlick Function to Search--->*/
   const Search = () => {
     if (
+      searchdata.status === "" &&
       searchdata.product_title_name === "" &&
       searchdata.vendor === "" &&
       searchdata.brand === "" &&
@@ -138,6 +140,7 @@ const Offerproduct = () => {
             brand: [`${searchdata.brand}`],
             shop: [`${searchdata.vendor}`],
             product_title_name: [`${searchdata.product_title_name}`],
+            status :[`${searchdata.status}`]
           },
           {
             headers: { admin_token: `${token}` },

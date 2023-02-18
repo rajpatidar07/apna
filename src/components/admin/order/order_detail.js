@@ -1,12 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect ,useState } from "react";
 import "./order_detail.css";
 import Profile from "../../../images/user.jpg";
 import { AiOutlineFileText } from "react-icons/ai";
 import { BsTelephoneFill, BsFillEnvelopeFill } from "react-icons/bs";
-import { useState } from "react";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
 import moment from "moment";
+import Loader from '../common/loader'
+
 const OrderDetail = () => {
   let totalorder = 0;
   let orderid = localStorage.getItem("orderid");
@@ -17,6 +18,8 @@ const OrderDetail = () => {
   const [productorder, setproductOrder] = useState([]);
   const [amt, setAmt] = useState("");
   const [user, setUser] = useState([]);
+  let [loading, setloading] = useState(false)
+  let [apicall, setApicall] = useState(false)
   const [changstatuss, setchangstatuss] = useState("");
   const [searchdataa, setsearchDataa] = useState({
     status: "",
@@ -29,6 +32,7 @@ const OrderDetail = () => {
 
   // Function to change the status:-
   const onStatusChangee = (e) => {
+    setloading(true)
     setchangstatuss(e.target.value);
     axios
       .put(
@@ -36,6 +40,7 @@ const OrderDetail = () => {
         {
           status_change: e.target.value,
           id: orderid,
+          user_id :userid
         },
         {
           headers: {
@@ -45,6 +50,8 @@ const OrderDetail = () => {
       )
       .then((response) => {
         // console.log(response);
+        setApicall(true)
+        setloading(false)
       })
       .catch(function (error) {
         console.log(error);
@@ -53,6 +60,7 @@ const OrderDetail = () => {
 
   // To get the data of the order details:-
   useEffect(() => {
+    setloading(true)
     axios
       .post(
         `${process.env.REACT_APP_BASEURL_0}/order_deteils`,
@@ -67,15 +75,16 @@ const OrderDetail = () => {
       )
       .then((response) => {
         // console.log(response);
+        setloading(false                                       )
         setOrder(response.data);
         setproductOrder(response.data.product_types);
-
+        setApicall(false)
         UserData();
       })
       .catch(function (error) {
         console.log(error);
       });
-  }, []);
+  }, [apicall]);
 
   // To get the data of the user details :-
   const UserData = () => {
@@ -106,6 +115,9 @@ const OrderDetail = () => {
   var total_tax = 0;
   let qty = 0;
   return (
+    <>
+    {
+    loading ==  true ? <Loader/>:null}
     <div className="order_detail_page">
       <div className="order_detail">
         <h2>Orders Detail</h2>
@@ -430,6 +442,7 @@ const OrderDetail = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 export default OrderDetail;
