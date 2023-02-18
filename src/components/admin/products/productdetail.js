@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import ShowMoreText from "react-show-more-text";
+import Col from "react-bootstrap/Col";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import axios from "axios";
@@ -9,6 +10,7 @@ import Table from "react-bootstrap/Table";
 import VariationJson from "../json/variation";
 import { MdOutlineEdit } from "react-icons/md";
 import { Button } from "react-bootstrap";
+import Accordion from "react-bootstrap/Accordion";
 import { useNavigate } from "react-router-dom";
 import SAlert from "../../admin/common/salert";
 import moment from "moment/moment";
@@ -24,18 +26,21 @@ const Productdetail = () => {
   const navigate = useNavigate();
   let vid = localStorage.getItem("variantid");
   let pid = localStorage.getItem("productid");
+  let token = localStorage.getItem("token");
+  const [open, setOpen] = useState(false);
   const [hideallData, setHideAlldata] = useState(false);
   const [variantremove, setVariantRemove] = useState([]);
+  const [totaltax, settotaltax] = useState("");
   const [VerityAlert, setVerityAlert] = useState(false);
   const [categoryName, setCategoryName] = useState("");
   const [productdata, setProductData] = useState([]);
+  const [taxdata, settaxdata] = useState([]);
   const [validated, setValidated] = useState(false);
   const [vdata, setvdata] = useState([]);
   const [loading, setloading] = useState(false);
   const [colorchange, setcolorchange] = useState("");
   const [sizechange, setsizechange] = useState("");
   const [variantapicall, setvariantapicall] = useState(false);
-  const [varietyshow, setvarietyShow] = useState(false);
   const [ProductAlert, setProductAlert] = useState(false);
   const [UpdatetAlert, setUpdatetAlert] = useState(false);
   const [viewImage, setViewImage] = useState("view");
@@ -57,25 +62,6 @@ const Productdetail = () => {
     quantity: "",
   };
   const [variantarray, setvariantarray] = useState(veriantData);
-
-  const [productalldata, setproductalldata] = useState({
-    add_custom_input: "",
-    product_title_name: "",
-    product_slug: "",
-    store_name: "",
-    product_type: "",
-    category: "",
-    parent_category: "",
-    wholesale_sales_tax: "",
-    manufacturing_date: "",
-    expire_date: "",
-    seo_tag: "",
-    variety: false,
-    product_description: "",
-    other_introduction: "",
-    is_active: "0",
-  });
-
   const [customvalidated, setcustomValidated] = useState(false);
   const [unitValidated, setunitValidated] = useState(false);
   const [varietyUnitvalidation, setVarietyUnitvalidation] = useState("");
@@ -84,6 +70,8 @@ const Productdetail = () => {
   const [variantdetail, setVariantdetail] = useState([]);
   const [editbutton, setEditButton] = useState(false);
   const [changeUnitproperty, setChangeUnitProperty] = useState(false);
+  var varietyy = VariationJson;
+  // PRODUCT DETAIL API
   useEffect(() => {
     function getProductDetails() {
       // setloading(true);
@@ -98,6 +86,7 @@ const Productdetail = () => {
             }
             if (data != undefined || data != "" || data != null) {
               setProductData(data);
+              settaxdata(data);
               setVariantdetail(data.product_verient);
               onImgView(vid, pid);
               setvariantarray({
@@ -123,13 +112,14 @@ const Productdetail = () => {
     // setloading(true)
     getCategorydata();
   }, [productdata.category]);
+  //  END PRODUCT DETAIL API
 
   // api call for category details
   const getCategorydata = () => {
     setloading(true);
     axios
       .get(
-        `${process.env.REACT_APP_BASEURL}/category_details?id=${productdata.id}`
+        `${process.env.REACT_APP_BASEURL_0}/category_details?id=${productdata.id}`
       )
 
       .then((response) => {
@@ -145,18 +135,7 @@ const Productdetail = () => {
 
   // End of api call for category details
 
-  const onColorChange = (e, id) => {
-    setcolorchange(e.target.value);
-    vid = localStorage.setItem("variantid", id);
-  };
-
-  const onSizeClick = (e, id) => {
-    setsizechange(e.target.value);
-    vid = localStorage.setItem("variantid", id);
-  };
-
-  var varietyy = VariationJson;
-
+  // IMAGE SECTION END
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
@@ -172,6 +151,7 @@ const Productdetail = () => {
   };
 
   const imguploadchange = async (e, product_id, id, vendor_id) => {
+    setcustomValidated("");
     for (let i = 0; i < e.target.files.length; i++) {
       let coverimg;
       if (newImageUrls.length === 0 && i === 0) {
@@ -260,7 +240,9 @@ const Productdetail = () => {
         // setloading(false)
       });
   };
+  // IMAGE SECTION END
 
+  // ONCHANGE OF VARIETY
   const onVariantChange = (e) => {
     setVarietyUnitvalidation("");
     setcustomValidated(false);
@@ -271,18 +253,21 @@ const Productdetail = () => {
       [e.target.name]: e.target.value,
     });
   };
+  // END ONCHANGE OF VARIETY
 
-  let discountt = (variantarray.mrp * variantarray.discount) / 100;
-  let product_price = variantarray.mrp - discountt;
-  let saleprice =
-    product_price +
-    (product_price * (productdata.gst / 100) +
-      product_price * (productdata.wholesale_sales_tax / 100) +
-      product_price * (productdata.retails_sales_tax / 100) +
-      product_price * (productdata.value_added_tax / 100) +
-      product_price * (productdata.manufacturers_sales_tax / 100));
-
+  // SALE RICE CALCULATION
   useEffect(() => {
+    let discountt = (variantarray.mrp * variantarray.discount) / 100;
+    let saleprice = variantarray.mrp - discountt;
+    let totaltaxpercent =
+      Number(taxdata.gst) +
+      Number(taxdata.wholesale_sales_tax) +
+      Number(taxdata.retails_sales_tax) +
+      Number(taxdata.manufacturers_sales_tax) +
+      Number(taxdata.value_added_tax);
+    let totaltaxx = (saleprice * totaltaxpercent) / 100;
+    settotaltax(totaltaxx);
+    let product_price = saleprice - totaltaxx;
     setvariantarray({
       ...variantarray,
       product_status: "pending",
@@ -298,14 +283,9 @@ const Productdetail = () => {
       [e.target.name]: value,
     });
   };
+  //  END SALEPRICE CALCULATION
 
-  const handleVarietyChange = (e) => {
-    setproductalldata({
-      ...productalldata,
-      [e.target.name]: e.target.value,
-    });
-  };
-
+  // ADD VARIETY
   const onVariantaddclick = (id) => {
     if (id === "" || id === null || id === undefined) {
       if (
@@ -364,7 +344,6 @@ const Productdetail = () => {
           .then((response) => {
             if ((response.affectedRows = "1")) {
               setProductAlert(true);
-
               setvariantarray({
                 product_status: "",
                 // unit: "",
@@ -458,9 +437,6 @@ const Productdetail = () => {
             .then((response) => {
               if ((response.affectedRows = "1")) {
                 setUpdatetAlert(true);
-
-                // setvariantarray(response.data);
-
                 setvariantarray({
                   product_status: "",
                   // unit: "",
@@ -501,7 +477,9 @@ const Productdetail = () => {
       }
     }
   };
+  // END VARIETY
 
+  // REMOVE VARIETY
   const VariantRemoveClick = (id, productid) => {
     setVerityAlert(true);
     setVariantRemove((variantremove) => {
@@ -514,10 +492,6 @@ const Productdetail = () => {
     setProductAlert(false);
     setUpdatetAlert(false);
   };
-
-  // console.log(
-  //   "veriant lenght--" + variantdetail.length + "ppp " + changeUnitproperty
-  // );
 
   const deleteProductVeriant = () => {
     if (variantdetail.length === 0) {
@@ -546,7 +520,9 @@ const Productdetail = () => {
     setvdata(vdata.filter((item) => item !== variantremove.id));
     setVerityAlert(false);
   };
+  // END REMOVE VARIETY
 
+  // EDIT VARIETY
   const VariantEditClick = (id, productid) => {
     if (variantdetail.length === 1) {
       setChangeUnitProperty(true);
