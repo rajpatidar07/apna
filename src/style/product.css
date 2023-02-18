@@ -4,10 +4,12 @@
   gap: 10px;
   align-items: center;
 }
+
 .product_page_uploadbox .product_page_uploadbox_one {
   position: relative;
   overflow: hidden;
 }
+
 .product_page_uploadbox .hiddeninput {
   position: absolute;
   width: 100%;
@@ -29,16 +31,19 @@
   padding: 0px 0.2em;
   cursor: pointer;
 }
+
 .actioncolimn {
   display: flex;
   gap: 15px;
   align-items: center;
   padding-left: 18px;
 }
+
 .actioncolimn .editiconn {
   font-size: 20px;
   z-index: 1 !important;
 }
+
 .productdescbox {
   padding: 10px 0;
 }
@@ -60,44 +65,44 @@
   left: -30px;
   opacity: 0;
 }
+
 .table_body .actioncolimn .productprofile_div .product_list_dropdownstatus {
   z-index: 999;
   background-color: black;
 }
-.table_body
-  .actioncolimn
-  .productprofile_div
-  .product_list_dropdownstatus
-  .product_list_dropdownstatus_link {
+
+.table_body .actioncolimn .productprofile_div .product_list_dropdownstatus .product_list_dropdownstatus_link {
   color: #fff;
   z-index: 999;
 }
-.table_body
-  .actioncolimn
-  .productprofile_div
-  .product_list_dropdownstatus
-  .product_list_dropdownstatus_link:hover {
+
+.table_body .actioncolimn .productprofile_div .product_list_dropdownstatus .product_list_dropdownstatus_link:hover {
   color: black;
   z-index: 999;
 }
+
 .table_body .beUiVL {
   font-size: 16px !important;
   font-weight: 600 !important;
 }
+
 .table_body .actioncolimn .doticon {
   position: relative;
 }
+
 .table_body .bQdYbR {
   font-size: unset;
 }
 
 .table_body .sc-jSUZER.eVPPvF .actioncolimn,
-.table_body .sc-jSUZER.eVPPvF > div {
+.table_body .sc-jSUZER.eVPPvF>div {
   overflow: unset !important;
 }
+
 .dtqzBx div.dropdown:first-child {
   overflow: unset !important;
 }
+
 .statuschhangeselling {
   background-color: rgba(63, 195, 128, 0.9);
   color: black;
@@ -105,6 +110,7 @@
   height: 23px;
   padding: 0 12px;
 }
+
 .statuschhangesold {
   background-color: rgba(242, 38, 19, 0.9);
   color: black;
@@ -120,6 +126,7 @@
 .actioncolimn .feature_product_dropdown_box {
   position: relative;
 }
+
 .yYwtp div:first-child {
   white-space: nowrap;
   overflow: unset !important;
@@ -132,19 +139,23 @@
   top: 2px;
   opacity: 0;
 }
+
 /* variant and image */
 .img_preview_boxx {
   /* display: flex;
   gap: 10px;
   align-items: center; */
 }
+
 .img_preview_boxx .imgprivew_box {
   position: relative;
 }
+
 .add_variety_list_box .action_btn_box .variety_edit_action_btn {
   font-size: 22px;
   cursor: pointer;
 }
+
 .img_preview_boxx .imgprivew_box .cover_icon {
   display: none;
   position: absolute;
@@ -157,10 +168,12 @@
   background: #0d6efd;
   transition: all 0.2s;
 }
+
 .img_preview_boxx .imgprivew_box:hover .cover_icon {
   display: block;
   transition: all 0.2s;
 }
+
 .img_preview_boxx .imgprivew_box .cross_icon {
   position: absolute;
   font-size: 20px;
@@ -174,6 +187,7 @@
   top: 0px;
   cursor: pointer;
 }
+
 .img_preview_boxx .imgprivew_box .plus_icon {
   position: absolute;
   font-size: 60px;
@@ -189,9 +203,11 @@
   justify-content: center;
   align-items: center;
 }
+
 .manufacture_date .view_product_box {
   cursor: pointer;
 }
+
 .image_box .imgprivew_box .img_add_button {
   cursor: pointer;
   position: absolute;
@@ -200,6 +216,7 @@
   z-index: 1;
   height: 100%;
 }
+
 .img_preview_boxx .imgprivew_box .cover_img {
   background: green;
   color: #fff;
@@ -211,6 +228,7 @@
   position: absolute;
   font-weight: 600;
 }
+
 /* end variant and image */
 /* Complaint */
 .complaintdescbox {
@@ -242,6 +260,7 @@
   display: flex;
   gap: 10px;
 }
+
 .category_icon_box .category_icon {
   max-width: 50px;
   width: 100%;
@@ -259,9 +278,21 @@
   flex-wrap: wrap;
   gap: 10px;
 }
+
 .feature_product_dropdown_box .dropdown button {
   color: #000 !important;
   font-size: 30px !important;
   background: #fff !important;
   border: none;
+}
+
+.img_preview_boxx.show {
+  display: block;
+  transition: all .3s;
+}
+
+.img_preview_boxx.hide {
+  display: none;
+  transition: all .3s;
+
 }
