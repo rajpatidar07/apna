@@ -33,14 +33,17 @@ const Deletedproduct = () => {
   let token = localStorage.getItem("token");
   const closeRestoreAlert = () => {
     axios
-      .put(`${process.env.REACT_APP_BASEURL_0}/products_delete_remove`, {
-        varient_id: id,
-        product_id: productid,
-        is_delete: "1",
-      },
-      {
-        headers: { admin_token: `${token}` },
-      })
+      .put(
+        `${process.env.REACT_APP_BASEURL_0}/products_delete_remove`,
+        {
+          varient_id: id,
+          product_id: productid,
+          is_delete: "1",
+        },
+        {
+          headers: { admin_token: `${token}` },
+        }
+      )
       .then((response) => {
         let data = response.data;
         setapicall(true);
@@ -201,7 +204,8 @@ const Deletedproduct = () => {
       selector: (row) => row.brand,
       sortable: true,
       width: "100px",
-    },{
+    },
+    {
       name: "Mrp",
       selector: (row) => row.mrp.toFixed(2),
       sortable: true,
@@ -408,7 +412,7 @@ const Deletedproduct = () => {
               btnclass={"button main_button w-100"}
             />
           </div>
-          <div className="col-md-3 col-sm-6 aos_input mt-2">
+          <div className="col-md-2 col-sm-6 aos_input mt-2">
             <MainButton
               btntext={"Reset"}
               btnclass={"button main_button w-100"}

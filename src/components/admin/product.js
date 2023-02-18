@@ -1878,7 +1878,7 @@ function Product() {
             </Form.Select>
           </div>
 
-          <div className="col-md-2 col-sm-6  mt-2 aos_input">
+          <div className="col-md-2 col-sm-6  aos_input">
             <MainButton
               onClick={onProductSearchClick}
               btntext={"Search"}

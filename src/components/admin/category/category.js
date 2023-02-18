@@ -118,7 +118,7 @@ const CategoryList = () => {
             setCateName(false);
             setCateType(false);
             setImagePath(response.data[0].image);
-           console.log(response);
+            console.log(response);
             const arr = data.all_parent_id.split(",");
             if (arr[0] === "0" && arr.length === 1) {
             } else {
@@ -244,7 +244,7 @@ const CategoryList = () => {
 
   useEffect(() => {
     addCategory();
-  }, [indVal,apicall]);
+  }, [indVal, apicall]);
 
   const addCategory = async (category, id) => {
     if (id === "" || id === null || id === undefined || indVal !== "") {
@@ -281,7 +281,8 @@ const CategoryList = () => {
       } catch (err) {
         console.log(err);
       }
-    }setapicall(false)
+    }
+    setapicall(false);
   };
 
   /*<----data in table ---->*/
@@ -480,12 +481,12 @@ const CategoryList = () => {
       setCateName(true);
     } else if (type === "") {
       setCateType(true);
-    }  else if (
+    } else if (
       vadi === "jpeg" ||
       vadi === "jpg" ||
       vadi === "png" ||
       vadi === ""
-    )  {
+    ) {
       const formData = new FormData();
       formData.append("id", CategoryEditdata.id);
       formData.append("image", file);
@@ -793,8 +794,9 @@ const CategoryList = () => {
                     >
                       <option value={"0"}>Select Parent Category</option>
                       {category.map((cdata, i) => {
-                         return (
-                           cdata.id === CategoryEditdata.id && cdata.category_name ===  CategoryEditdata.category_name ? null :
+                        return cdata.id === CategoryEditdata.id &&
+                          cdata.category_name ===
+                            CategoryEditdata.category_name ? null : (
                           <option
                             value={cdata.id}
                             key={i}
@@ -837,8 +839,9 @@ const CategoryList = () => {
                           //   CategoryEditSubparent + "CategoryEditSubparent"
                           // );
 
-                          return (
-                          cdata.id === CategoryEditdata.id && cdata.category_name ===  CategoryEditdata.category_name ? null :
+                          return cdata.id === CategoryEditdata.id &&
+                            cdata.category_name ===
+                              CategoryEditdata.category_name ? null : (
                             <option
                               value={cdata.id}
                               key={i}
@@ -879,8 +882,9 @@ const CategoryList = () => {
                         {" "}
                         <option value="">Select Child category</option>
                         {childCategory.map((cdata, i) => {
-                          return (
-                             cdata.id === CategoryEditdata.id && cdata.category_name ===  CategoryEditdata.category_name? null :
+                          return cdata.id === CategoryEditdata.id &&
+                            cdata.category_name ===
+                              CategoryEditdata.category_name ? null : (
                             <option
                               value={cdata.id}
                               key={i}
@@ -906,9 +910,10 @@ const CategoryList = () => {
                   <Form.Group
                     className="mb-3 aos_input"
                     controlId="formBasicImg"
-                    >
-                    <Form.Label>Category Icon 
-                      (In .jpg, .jpeg, .png format)</Form.Label>
+                  >
+                    <Form.Label>
+                      Category Icon (In .jpg, .jpeg, .png format)
+                    </Form.Label>
                     <div className="category_icon_box">
                       <Form.Control
                         type="file"
@@ -917,7 +922,7 @@ const CategoryList = () => {
                         name={"category_icon"}
                         accept="image/png,image/jpeg,image/jpg"
                         // value={newImg}
-                        />
+                      />
                     </div>
                     {newImg === "" || newImg === "no image" ? null : (
                       <img

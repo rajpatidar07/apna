@@ -186,10 +186,18 @@ function Transactions() {
               </Form.Select>
             </div>
             <div className="col-md-3 col-sm-6">
-              <MainButton btntext={"Search"} onClick={onSearchClick} />
+              <MainButton
+                btnclass={"button main_button w-100"}
+                btntext={"Search"}
+                onClick={onSearchClick}
+              />
             </div>
             <div className="col-md-3 col-sm-6 mt-2">
-              <MainButton btntext={"Reset"} onClick={OnReset} />
+              <MainButton
+                btnclass={"button main_button w-100"}
+                btntext={"Reset"}
+                onClick={OnReset}
+              />
             </div>
           </div>
         </div>

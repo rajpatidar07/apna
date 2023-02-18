@@ -247,22 +247,22 @@ const VendorsList = () => {
     {
       name: "Change Status",
       selector: (row) => (
-    //     loading_status === true ?    
-    //    <Form.Group className="" controlId="formBasicEmail">
-    //       <Form.Select
-    //    size="sm"
-    //    className="w-100"
-    //  > 
-    //     <option>
-    //     &nbsp;&nbsp;&nbsp; loading...
-    //      <span
-    //        className="spinner-border spinner-border-sm"
-    //        role="status"
-    //        aria-hidden="true"
-    //      ></span>
-    //      </option>  
-    //  </Form.Select>
-    //     </Form.Group>:
+        //     loading_status === true ?
+        //    <Form.Group className="" controlId="formBasicEmail">
+        //       <Form.Select
+        //    size="sm"
+        //    className="w-100"
+        //  >
+        //     <option>
+        //     &nbsp;&nbsp;&nbsp; loading...
+        //      <span
+        //        className="spinner-border spinner-border-sm"
+        //        role="status"
+        //        aria-hidden="true"
+        //      ></span>
+        //      </option>
+        //  </Form.Select>
+        //     </Form.Group>:
         <Form.Group className="" controlId="formBasicEmail">
           <Form.Select
             size="sm"
@@ -437,7 +437,7 @@ const VendorsList = () => {
     setchangstatus(e.target.value);
     setCondition(true);
     setTimeout(CreateTimeout, 50000);
-    setLoading_status(true)
+    setLoading_status(true);
     axios
       .put(`${process.env.REACT_APP_BASEURL}/vendor_status_change`, {
         status_change: e.target.value,
@@ -448,13 +448,13 @@ const VendorsList = () => {
           response.data.status_message === "vendor status change succesfully "
         ) {
           setCondition(false);
-          setLoading_status(false)
+          setLoading_status(false);
           setapicall(true);
         }
       })
       .catch(function (error) {
         console.log(error);
-        setLoading_status(false)
+        setLoading_status(false);
         setCondition(false);
       });
   };
@@ -880,7 +880,7 @@ const VendorsList = () => {
               Search
             </button>
           </div>
-          <div className="col-md-3 col-sm-6 aos_input mt-3">
+          <div className="col-md-3 col-sm-6 aos_input mt-2">
             <button
               className="button main_button w-100"
               onClick={() => OnReset()}
