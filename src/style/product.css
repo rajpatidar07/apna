@@ -282,7 +282,7 @@
 .feature_product_dropdown_box .dropdown button {
   color: #000 !important;
   font-size: 30px !important;
-  background: #fff !important;
+  background: transparent !important;
   border: none;
 }
 
