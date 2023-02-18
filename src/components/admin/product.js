@@ -275,7 +275,7 @@ function Product() {
 
   // MAIN PRODUCT LIST API
   const fetchdata = () => {
-    setLoading(true)
+    setLoading(true);
     axios
       .post(
         `${process.env.REACT_APP_BASEURL_0}/home?page=0&per_page=400`,
@@ -342,7 +342,7 @@ function Product() {
     localStorage.setItem("productid", id[1]);
     navigate("/productdetail");
   };
-
+  // CATEGORY SELECT SHOW ON PRODUCT ADD
   const categoryFormChange = (e, id) => {
     setIndVal(e.target.value);
     setScategory({ ...scategory, [e.target.name]: e.target.value });
@@ -352,6 +352,10 @@ function Product() {
       setSubCategory("");
       setchildCategory("");
       setgrandcCategory("");
+      setproductdata({
+        ...productdata,
+        category: indVal,
+      });
     } else {
       axios
         .get(`${process.env.REACT_APP_BASEURL_0}/category?category=${indVal}`)
@@ -724,7 +728,7 @@ function Product() {
       [e.target.name]: e.target.value,
     });
   };
-
+  console.log("---product", productdata);
   useEffect(() => {
     let discountt = (variantarray.mrp * variantarray.discount) / 100;
     let saleprice = variantarray.mrp - discountt;
@@ -1342,7 +1346,8 @@ function Product() {
     if (
       form.checkValidity() === false ||
       productdata.variety === "" ||
-      variantmainarray.length === 0
+      variantmainarray.length === 0 ||
+      productdata.category === ""
     ) {
       e.stopPropagation();
       e.preventDefault();
