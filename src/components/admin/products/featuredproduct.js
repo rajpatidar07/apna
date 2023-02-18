@@ -8,6 +8,7 @@ import axios from "axios";
 import SAlert from "../common/salert";
 import MainButton from "../common/button";
 import BrandJson from "./../json/BrandJson";
+import Loader from "../common/loader"
 
 const Featuredproduct = () => {
   const currentdate = moment().format("");
@@ -30,6 +31,7 @@ const Featuredproduct = () => {
     brand: "",
   });
   const [searcherror, setsearcherror] = useState("");
+  let[loading,setloading] = useState(false)
 
   let token = localStorage.getItem("token");
 
@@ -121,6 +123,7 @@ const Featuredproduct = () => {
   /*<---Render feature data function--->*/
   useEffect(() => {
     console.log(searchdata.product_title_name);
+    setloading(true)
     try {
       axios
         .post(
@@ -148,6 +151,7 @@ const Featuredproduct = () => {
           console.log(response);
           setFeatureProductData(response.data);
           setapicall(false);
+          setloading(false)
         });
     } catch (err) {
       console.log(err);
@@ -387,6 +391,8 @@ const Featuredproduct = () => {
   };
 
   return (
+    <>
+    {loading === true ?<Loader/>:null}
     <div>
       <h2>Featured Products</h2>
       <div className="card mt-3 p-3">
@@ -579,6 +585,7 @@ const Featuredproduct = () => {
         onConfirm={closeUpdateAlert}
       />
     </div>
+    </>
   );
 };
 
