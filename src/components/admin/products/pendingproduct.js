@@ -7,11 +7,13 @@ import "sweetalert/dist/sweetalert.css";
 import axios from "axios";
 import moment from "moment";
 import BrandJson from "./../json/BrandJson";
+import Loader from "../common/loader";
 
 const Pendingproduct = () => {
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
+  const [loading, setloading] = useState(false);
   const [apicall, setapicall] = useState(false);
   let [searcherror, setsearcherror] = useState(false);
   const [pendingdata, setpendingdata] = useState([]);
@@ -76,6 +78,7 @@ const Pendingproduct = () => {
   };
 
   useEffect(() => {
+    setloading(true)
     axios
       .post(`${process.env.REACT_APP_BASEURL_0}/home?page=0&per_page=400`, {
         product_search: {
@@ -98,6 +101,7 @@ const Pendingproduct = () => {
         setpendingdata(response.data);
         setapicall(false);
         setsearcherror(false);
+        setloading(false)
       })
       .catch(function (error) {
         console.log(error);
@@ -352,6 +356,8 @@ const Pendingproduct = () => {
 
   const handleClick = () => {};
   return (
+    <>
+    {loading === true ?<Loader/>:null}
     <div>
       <h2>Pending Products</h2>
 
@@ -481,6 +487,7 @@ const Pendingproduct = () => {
         />
       </div>
     </div>
+    </>
   );
 };
 

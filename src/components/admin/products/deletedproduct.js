@@ -10,6 +10,7 @@ import "sweetalert/dist/sweetalert.css";
 import axios from "axios";
 import moment from "moment";
 import BrandJson from "./../json/BrandJson";
+import Loader from "../common/loader";
 
 const Deletedproduct = () => {
   const [id, setId] = useState();
@@ -19,6 +20,7 @@ const Deletedproduct = () => {
   const [filtervategory, setfiltercategory] = useState([]);
   const [vendorid, setVendorId] = useState([]);
   const [Alert, setAlert] = useState(false);
+  const [loading, setloading] = useState(false);
   const [apicall, setapicall] = useState(false);
   const [deletedata, setdeletedata] = useState([]);
   const [searchdata, setsearchData] = useState({
@@ -119,6 +121,7 @@ const Deletedproduct = () => {
     setsearcherror(false);
   };
   useEffect(() => {
+    setloading(true)
     axios
       .post(`${process.env.REACT_APP_BASEURL_0}/home?page=0&per_page=400`, {
         product_search: {
@@ -141,6 +144,7 @@ const Deletedproduct = () => {
         setdeletedata(response.data);
         setapicall(false);
         setsearcherror(false);
+        setloading(false)
       })
       .catch(function (error) {
         console.log(error);
@@ -309,6 +313,8 @@ const Deletedproduct = () => {
 
   const handleClick = () => {};
   return (
+    <>
+    {loading === true ? <Loader/>:null}
     <div>
       <h2>Deleted Products</h2>
 
@@ -436,6 +442,7 @@ const Deletedproduct = () => {
         />
       </div>
     </div>
+    </>
   );
 };
 

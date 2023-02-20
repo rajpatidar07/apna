@@ -8,11 +8,13 @@ import "sweetalert/dist/sweetalert.css";
 import axios from "axios";
 import BrandJson from "./../json/BrandJson";
 import moment from "moment";
+import Loader from "../common/loader";
 
 const Expiredproduct = () => {
   const handleClick = () => {};
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
+  const [loading, setloading] = useState(false);
   const [apicall, setapicall] = useState(false);
   let [searcherror, setsearcherror] = useState(false);
   const [expiredata, setexpiredata] = useState([]);
@@ -80,6 +82,7 @@ const Expiredproduct = () => {
     setsearchData({ ...searchdata, manufacturing_date: mdate });
   };
   useEffect(() => {
+    setloading(true)
     axios
       .post(`${process.env.REACT_APP_BASEURL_0}/home?page=0&per_page=400`, {
         product_search: {
@@ -110,6 +113,7 @@ const Expiredproduct = () => {
           setexpiredata(data_Array);
           setapicall(false);
           setsearcherror(false);
+          setloading(false)
         }
       });
     getCategorydatafilter();
@@ -325,6 +329,8 @@ const Expiredproduct = () => {
     setsearcherror(false);
   };
   return (
+  <>
+     {loading === true?<Loader/> :null}
     <div>
       <h2>Expired Products</h2>
 
@@ -443,6 +449,7 @@ const Expiredproduct = () => {
         />
       </div>
     </div>
+    </>
   );
 };
 

@@ -42,6 +42,7 @@ function Orders() {
 
   //To get the order list :-
   useEffect(() => {
+    setLoading(true)
     axios
       .post(
         `${process.env.REACT_APP_BASEURL_0}/orders_list`,
@@ -59,6 +60,7 @@ function Orders() {
         // console.log(response);
         setorderdata(response.data);
         setapicall(false);
+        setLoading(false)
       })
       .catch(function (error) {
         console.log(error);

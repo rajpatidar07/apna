@@ -11,6 +11,7 @@ import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import moment from "moment";
 import SAlert from "../common/salert";
+import Loader from "../common/loader";
 import BrandJson from "./../json/BrandJson";
 
 const Promotionproduct = () => {
@@ -23,6 +24,7 @@ const Promotionproduct = () => {
   const [featuredData, setFeaturetData] = useState([]);
   const [id, setId] = useState("");
   const [UpdateAlert, setUpdateAlert] = useState(false);
+  const [loading ,setloading] = useState(false)
   const currentdate = moment().format("");
   const [searchdata, setsearchData] = useState({
     start_date: "",
@@ -294,6 +296,7 @@ const Promotionproduct = () => {
 
   /*<---Function to Search--->*/
   useEffect(() => {
+    setloading(true)
     try {
       axios
         .post(
@@ -315,6 +318,7 @@ const Promotionproduct = () => {
         .then((response) => {
           setpromotionProductData(response.data);
           setapicall(false);
+          setloading(false)
         });
     } catch (err) {
       console.log(err);
@@ -382,7 +386,9 @@ const Promotionproduct = () => {
     }
   };
 
-  return (
+  return ( 
+  <>
+    {loading === true ?<Loader/> :null}
     <div>
       <h2>Promotional Products</h2>
 
@@ -618,6 +624,7 @@ const Promotionproduct = () => {
         />
       </div>
     </div>
+  </>
   );
 };
 

@@ -10,6 +10,7 @@ import moment from "moment";
 import SAlert from "../common/salert";
 import BrandJson from "./../json/BrandJson";
 import MainButton from "../common/button";
+import Loader from "../common/loader";
 
 const Offerproduct = () => {
   const formRef = useRef();
@@ -34,6 +35,7 @@ const Offerproduct = () => {
   const [Alert, setAlert] = useState(false);
   const [apicall, setapicall] = useState(false);
   const [show, setShow] = useState(false);
+  const [loading, setloading] = useState(false);
 
   let token = localStorage.getItem("token");
 
@@ -127,6 +129,7 @@ const Offerproduct = () => {
   const handleClick = () => {};
 
   useEffect(() => {
+    setloading(true)
     try {
       axios
         .post(
@@ -149,6 +152,7 @@ const Offerproduct = () => {
         .then((response) => {
           setOfferProductData(response.data);
           setapicall(false);
+          setloading(false)
         });
     } catch (err) {}
     getCategorydatafilter();
@@ -378,6 +382,8 @@ const Offerproduct = () => {
     setapicall(true);
   };
   return (
+  <>
+  {loading === true ?<Loader/> :null}
     <div>
       <h2> Special Offer Products</h2>
 
@@ -614,6 +620,7 @@ const Offerproduct = () => {
         />
       </div>
     </div>
+    </>
   );
 };
 

@@ -7,6 +7,7 @@ import { Modal } from "react-bootstrap";
 import axios from "axios";
 import BrandJson from "./../json/BrandJson";
 import SAlert from "../common/salert";
+import Loader from "../common/loader";
 
 const Soldproduct = () => {
   const formRef = useRef();
@@ -22,6 +23,7 @@ const Soldproduct = () => {
   const [apicall, setapicall] = useState([]);
   const [UpdateAlert, setUpdateAlert] = useState(false);
   let [searcherror, setsearcherror] = useState(false);
+  let [loading, setloading] = useState(false);
   const [filtervategory, setfiltercategory] = useState([]);
   const [vendorid, setVendorId] = useState([]);
   const [searchdata, setsearchData] = useState({
@@ -121,6 +123,7 @@ const Soldproduct = () => {
   };
 
   useEffect(() => {
+    setloading(true)
     axios
       .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=400`, {
         product_search: {
@@ -148,6 +151,7 @@ const Soldproduct = () => {
           setsolddata(response.data);
         }
         setapicall(false);
+        setloading(false)
       })
       .catch(function (error) {
         console.log(error);
@@ -356,6 +360,8 @@ const Soldproduct = () => {
     setShow(false);
   };
   return (
+  <>
+    {loading === true ?<Loader/> :null}
     <div>
       <h2>Sold Products </h2>
 
@@ -531,6 +537,7 @@ const Soldproduct = () => {
         />
       </div>
     </div>
+    </>
   );
 };
 
