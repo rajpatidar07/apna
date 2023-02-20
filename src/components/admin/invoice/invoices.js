@@ -18,7 +18,7 @@ const InvoiceList = () => {
   const [Alert, setAlert] = useState(false);
   const [invoice, setInvoice] = useState([]);
   let [searcherror, setsearcherror] = useState(false);
-  let [apicall,setapicall] = useState(false)
+  let [apicall, setapicall] = useState(false);
   const [SearchInvo, setSearchInvo] = useState({
     search: "",
     from_date: "",
@@ -39,12 +39,11 @@ const InvoiceList = () => {
     function getInvoiceList() {
       try {
         axios
-          .get(`${process.env.REACT_APP_BASEURL}/invoice_list`
-          )
+          .get(`${process.env.REACT_APP_BASEURL}/invoice_list`)
           .then((response) => {
             let data = response.data;
             setInvoice(data);
-            setapicall(false)
+            setapicall(false);
             console.log(response);
           });
       } catch (err) {
@@ -57,7 +56,7 @@ const InvoiceList = () => {
 
   const onValueChange = (e) => {
     setSearchInvo({ ...SearchInvo, [e.target.name]: e.target.value });
-    setsearcherror(false)
+    setsearcherror(false);
   };
   const onDateChange = (e) => {
     let mdate = moment(e.target.value).format("YYYY-MM-DD");
@@ -65,28 +64,32 @@ const InvoiceList = () => {
       ...SearchInvo,
       [e.target.name]: mdate,
     });
-    setsearcherror(false)
+    setsearcherror(false);
   };
   const SearchInvoices = () => {
-    if(
+    if (
       SearchInvo.search === "" &&
       SearchInvo.from_date === "" &&
-      SearchInvo.to_date === "" )
-      {setsearcherror(true)}
-      else
-     {
+      SearchInvo.to_date === ""
+    ) {
+      setsearcherror(true);
+    } else {
       axios
-        .post(`${process.env.REACT_APP_BASEURL_0}/invoice_search`, {
-          search: `${SearchInvo.search}`,
-          from_date: `${SearchInvo.from_date}`,
-          to_date: `${SearchInvo.to_date}`,
-        }, {
-          headers: { admin_token: `${token}` },
-        })
+        .post(
+          `${process.env.REACT_APP_BASEURL_0}/invoice_search`,
+          {
+            search: `${SearchInvo.search}`,
+            from_date: `${SearchInvo.from_date}`,
+            to_date: `${SearchInvo.to_date}`,
+          },
+          {
+            headers: { admin_token: `${token}` },
+          }
+        )
         .then((response) => {
           setInvoice(response.data);
           setSearchInvo("");
-          setsearcherror(false)
+          setsearcherror(false);
         });
     }
   };
@@ -111,13 +114,10 @@ const InvoiceList = () => {
         paddingRight: "32px",
         paddingLeft: "0px",
       },
-    }, {
+    },
+    {
       name: "Vendor Id",
-      selector: (row) => (
-        <p >
-          {row.vendor_id}
-        </p>
-      ),
+      selector: (row) => <p>{row.vendor_id}</p>,
       sortable: true,
       width: "150px",
       center: true,
@@ -160,13 +160,23 @@ const InvoiceList = () => {
       },
     },
     {
-      name: "Amount",
+      name: "Quantity",
       selector: (row) => row.total_quantity,
       sortable: true,
       width: "100px",
       center: true,
       style: {
         paddingRight: "32px",
+        paddingLeft: "0px",
+      },
+    },
+    {
+      name: "GST",
+      selector: (row) => row.total_gst,
+      sortable: true,
+      width: "90px",
+      center: true,
+      style: {
         paddingLeft: "0px",
       },
     },
@@ -191,6 +201,16 @@ const InvoiceList = () => {
       },
     },
     {
+      name: "Original Price",
+      selector: (row) => row.taxable_value - row.total_gst,
+      sortable: true,
+      width: "90px",
+      center: true,
+      style: {
+        paddingLeft: "0px",
+      },
+    },
+    {
       name: "Taxable Value",
       selector: (row) => row.taxable_value,
       sortable: true,
@@ -202,7 +222,7 @@ const InvoiceList = () => {
     },
     {
       name: "Discount/Coupon",
-      selector: (row) => row.discount_coupon,
+      selector: (row) => row.discount_coupon_value,
       sortable: true,
       width: "120px",
       center: true,
@@ -245,12 +265,9 @@ const InvoiceList = () => {
 
   /*<---Function to reset Search--->*/
   const OnReset = () => {
-    setSearchInvo({ search: "",
-    from_date: "",
-    to_date: ""});
+    setSearchInvo({ search: "", from_date: "", to_date: "" });
     setapicall(true);
-    setsearcherror(false)
-
+    setsearcherror(false);
   };
   let date = moment();
   let currentDate = date.format("YYYY-MM-DD");
@@ -270,7 +287,7 @@ const InvoiceList = () => {
               name={"search"}
               onChange={(e) => onValueChange(e)}
             />
-             {searcherror === true ? (
+            {searcherror === true ? (
               <small className="text-danger">please fill the feild</small>
             ) : null}
           </div>
@@ -300,7 +317,7 @@ const InvoiceList = () => {
             <MainButton
               btntext={"Search"}
               btnclass={"button main_button w-100"}
-              type="search"          
+              type="search"
               onClick={() => SearchInvoices()}
             >
               Search
@@ -308,12 +325,12 @@ const InvoiceList = () => {
           </div>
           <div className="col-md-3 col-sm-6 aos_input mb-2 mb-2 ">
             <MainButton
-                btntext={"Reset"}
-                btnclass={"button main_button w-100"}
-                type="reset"
-                onClick={OnReset}
-              />
-    </div>
+              btntext={"Reset"}
+              btnclass={"button main_button w-100"}
+              type="reset"
+              onClick={OnReset}
+            />
+          </div>
         </div>
 
         {/* upload */}
