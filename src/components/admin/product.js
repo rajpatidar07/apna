@@ -348,15 +348,15 @@ function Product() {
     setScategory({ ...scategory, [e.target.name]: e.target.value });
   };
   useEffect(() => {
-    if (indVal === "") {
-      setSubCategory("");
-      setchildCategory("");
-      setgrandcCategory("");
-      setproductdata({
-        ...productdata,
-        category: indVal,
-      });
-    } else {
+    // if (indVal === "") {
+    //   setSubCategory("");
+    //   setchildCategory("");
+    //   setgrandcCategory("");
+    //   setproductdata({
+    //     ...productdata,
+    //     category: indVal,
+    //   });
+    // } else {
       axios
         .get(`${process.env.REACT_APP_BASEURL_0}/category?category=${indVal}`)
         .then((response) => {
@@ -396,7 +396,7 @@ function Product() {
             }
           }
         });
-    }
+    // }
   }, [scategory, indVal]);
 
   // vendor api for filter

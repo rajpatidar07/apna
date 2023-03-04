@@ -8,6 +8,7 @@ import Form from "react-bootstrap/Form";
 import MainButton from "../common/button";
 import { useEffect } from "react";
 import axios from "axios";
+import { BiEdit } from "react-icons/bi";
 
 function Admin() {
   const [apicall, setapicall] = useState(false);
@@ -101,8 +102,8 @@ function Admin() {
       center: true,
       selector: (row) => (
         <div className={"actioncolimn"}>
-          <AiFillEdit
-            className=" p-0 m-0 editiconn"
+          <BiEdit
+            className=" p-0 m-0  editiconn text-secondary"
             onClick={handleShow.bind(this, row.id)}
           />
         </div>

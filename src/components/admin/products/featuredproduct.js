@@ -8,7 +8,7 @@ import axios from "axios";
 import SAlert from "../common/salert";
 import MainButton from "../common/button";
 import BrandJson from "./../json/BrandJson";
-import Loader from "../common/loader"
+import Loader from "../common/loader";
 
 const Featuredproduct = () => {
   const currentdate = moment().format("");
@@ -31,7 +31,7 @@ const Featuredproduct = () => {
     brand: "",
   });
   const [searcherror, setsearcherror] = useState("");
-  let[loading,setloading] = useState(false)
+  let [loading, setloading] = useState(false);
 
   let token = localStorage.getItem("token");
 
@@ -89,13 +89,14 @@ const Featuredproduct = () => {
   };
   //   console.log("oooooo--------"+JSON.stringify(featuredProductData))
   /*<----Function to get the data---->*/
-  const handleShow = (product_id) => {
+  const handleShow = (id) => {
+    console.log(id);
     try {
       axios
         .post(
           `${process.env.REACT_APP_BASEURL_0}/fetured_product_search`,
           {
-            product_id: product_id,
+            id: id,
             fetured_type: "featured_offer",
             start_date: "",
             end_date: "",
@@ -106,7 +107,13 @@ const Featuredproduct = () => {
         )
         .then((response) => {
           setId(response.data[0].id);
-          console.log(response);
+          console.log(response.data[0].start_date);
+          for (let i = 0; i < response.data.length; i++) {
+            if (response.data[i].id === id) {
+              console.log(response.data[i]); // return the object if id matches
+              return response.data[i];
+            }
+          }
           setFeaturetData({
             ...featuredData,
             start_date: response.data[0].start_date,
@@ -123,7 +130,7 @@ const Featuredproduct = () => {
   /*<---Render feature data function--->*/
   useEffect(() => {
     console.log(searchdata.product_title_name);
-    setloading(true)
+    setloading(true);
     try {
       axios
         .post(
@@ -143,7 +150,7 @@ const Featuredproduct = () => {
           console.log(response);
           setFeatureProductData(response.data);
           setapicall(false);
-          setloading(false)
+          setloading(false);
         });
     } catch (err) {
       console.log(err);
@@ -307,7 +314,7 @@ const Featuredproduct = () => {
         <div className={"actioncolimn"}>
           <BiEdit
             className=" p-0 m-0  editiconn text-secondary"
-            onClick={handleShow.bind(this, row.product_id)}
+            onClick={handleShow.bind(this, row.id)}
           />
         </div>
       ),
@@ -384,199 +391,199 @@ const Featuredproduct = () => {
 
   return (
     <>
-    {loading === true ?<Loader/>:null}
-    <div>
-      <h2>Featured Products</h2>
-      <div className="card mt-3 p-3">
-        <div className="row pb-3">
-          <div className="col-md-3 col-sm-6 aos_input mb-2">
-            <input
-              type={"text"}
-              placeholder={"Search by product name"}
-              onChange={OnSearchChange}
-              name="product_title_name"
-              value={searchdata.product_title_name}
-              className={"adminsideinput"}
-            />{" "}
-            {searcherror === true ? (
-              <small className="text-danger">please fill the feild</small>
-            ) : null}
-          </div>
-          {/* <div className="col-md-3 col-sm-6 aos_input mb-2">
+      {loading === true ? <Loader /> : null}
+      <div>
+        <h2>Featured Products</h2>
+        <div className="card mt-3 p-3">
+          <div className="row pb-3">
+            <div className="col-md-3 col-sm-6 aos_input mb-2">
+              <input
+                type={"text"}
+                placeholder={"Search by product name"}
+                onChange={OnSearchChange}
+                name="product_title_name"
+                value={searchdata.product_title_name}
+                className={"adminsideinput"}
+              />{" "}
+              {searcherror === true ? (
+                <small className="text-danger">please fill the feild</small>
+              ) : null}
+            </div>
+            {/* <div className="col-md-3 col-sm-6 aos_input mb-2">
   <input type={"text"}  onChange={OnSearchChange} name='product_title_name'
   value={searchdata.status} placeholder={"Search by status"} className={'adminsideinput'}/>
 </div> */}
-          <div className="col-md-3 col-sm-6 aos_input mb-2">
-            <Form.Select
-              aria-label="Search by status"
-              className="adminselectbox"
-              placeholder="Search by category"
-              onChange={OnSearchChange}
-              name="category"
-              value={String(searchdata.category)}
-            >
-              <option value={""}>Select Category</option>
-              {(filtervategory || []).map((data, i) => {
-                return (
-                  <option value={data.id} key={i}>
-                    {" "}
-                    {data.category_name}
-                  </option>
-                );
-              })}
-            </Form.Select>
-          </div>
-          <div className="col-md-3 col-sm-6 aos_input mb-2">
-            <Form.Select
-              aria-label="Search by status"
-              className="adminselectbox"
-              placeholder="Search by vendor"
-              onChange={OnSearchChange}
-              name="vendor"
-              value={String(searchdata.vendor)}
-            >
-              <option value={""}>Select Vendor</option>
-              {(vendorid || []).map((data, i) => {
-                return (
-                  <option value={data.shop_name} key={i}>
-                    {" "}
-                    {data.shop_name}
-                  </option>
-                );
-              })}
-            </Form.Select>
-          </div>
-          <div className="col-md-3 col-sm-6 aos_input mb-2">
-            <Form.Select
-              aria-label="Search by brand"
-              className="adminselectbox"
-              placeholder="Search by brand"
-              onChange={OnSearchChange}
-              name="brand"
-              value={String(searchdata.brand)}
-            >
-              <option value={""}>Select Brand</option>
-              {(BrandJson.BrandJson || []).map((data, i) => {
-                return (
-                  <option value={data} key={i}>
-                    {" "}
-                    {data}
-                  </option>
-                );
-              })}
-            </Form.Select>
-          </div>
-          <div className="col-md-3 col-sm-6">
-            <Form.Select
-              aria-label="Search by delivery"
-              className="adminselectbox"
-              onChange={OnSearchChange}
-              name="status"
-              value={String(searchdata.status)}
-            >
-              <option value="">status</option>
-              <option value="Active">Active</option>
-              <option value="expired">Expired</option>
-              <option value="inactive">In active</option>
-            </Form.Select>
-          </div>
+            <div className="col-md-3 col-sm-6 aos_input mb-2">
+              <Form.Select
+                aria-label="Search by status"
+                className="adminselectbox"
+                placeholder="Search by category"
+                onChange={OnSearchChange}
+                name="category"
+                value={String(searchdata.category)}
+              >
+                <option value={""}>Select Category</option>
+                {(filtervategory || []).map((data, i) => {
+                  return (
+                    <option value={data.id} key={i}>
+                      {" "}
+                      {data.category_name}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </div>
+            <div className="col-md-3 col-sm-6 aos_input mb-2">
+              <Form.Select
+                aria-label="Search by status"
+                className="adminselectbox"
+                placeholder="Search by vendor"
+                onChange={OnSearchChange}
+                name="vendor"
+                value={String(searchdata.vendor)}
+              >
+                <option value={""}>Select Vendor</option>
+                {(vendorid || []).map((data, i) => {
+                  return (
+                    <option value={data.shop_name} key={i}>
+                      {" "}
+                      {data.shop_name}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </div>
+            <div className="col-md-3 col-sm-6 aos_input mb-2">
+              <Form.Select
+                aria-label="Search by brand"
+                className="adminselectbox"
+                placeholder="Search by brand"
+                onChange={OnSearchChange}
+                name="brand"
+                value={String(searchdata.brand)}
+              >
+                <option value={""}>Select Brand</option>
+                {(BrandJson.BrandJson || []).map((data, i) => {
+                  return (
+                    <option value={data} key={i}>
+                      {" "}
+                      {data}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </div>
+            <div className="col-md-3 col-sm-6">
+              <Form.Select
+                aria-label="Search by delivery"
+                className="adminselectbox"
+                onChange={OnSearchChange}
+                name="status"
+                value={String(searchdata.status)}
+              >
+                <option value="">status</option>
+                <option value="Active">Active</option>
+                <option value="expired">Expired</option>
+                <option value="inactive">In active</option>
+              </Form.Select>
+            </div>
 
-          <div className="col-md-3 col-sm-6 aos_input mb-2 ">
-            <MainButton
-              btntext={"Search"}
-              btnclass={"button main_button w-100"}
-              onClick={Search}
-            />
-          </div>
-          <div className="col-md-3 col-sm-6 aos_input mb-2 ">
-            <MainButton
-              btntext={"Reset"}
-              btnclass={"button main_button w-100"}
-              type="reset"
-              onClick={OnReset}
-            />
+            <div className="col-md-3 col-sm-6 aos_input mb-2 ">
+              <MainButton
+                btntext={"Search"}
+                btnclass={"button main_button w-100"}
+                onClick={Search}
+              />
+            </div>
+            <div className="col-md-3 col-sm-6 aos_input mb-2 ">
+              <MainButton
+                btntext={"Reset"}
+                btnclass={"button main_button w-100"}
+                type="reset"
+                onClick={OnReset}
+              />
+            </div>
           </div>
         </div>
+
+        <Modal size="lg" show={show} onHide={() => setShow(false)}>
+          <Form className="" ref={formRef}>
+            <Modal.Header closeButton>
+              <Modal.Title></Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <div className="row p-3 m-0">
+                <div className="col-md-6">
+                  <Form.Group
+                    className="mb-3 aos_input"
+                    controlId="formBasicStartDate"
+                  >
+                    <Form.Label>Start Date</Form.Label>
+                    <Form.Control
+                      name="start_date"
+                      value={featuredData.start_date}
+                      onChange={(e) => handleFormChange(e)}
+                      type="date"
+                      placeholder="Coupon Start Date"
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-6">
+                  <Form.Group
+                    className="mb-3 aos_input"
+                    controlId="formBasicStartDate"
+                  >
+                    <Form.Label>End Date</Form.Label>
+                    <Form.Control
+                      name="end_date"
+                      value={featuredData.end_date}
+                      onChange={(e) => handleFormChange(e)}
+                      type="date"
+                      placeholder="Coupon Start Date"
+                    />
+                  </Form.Group>
+                </div>
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <button
+                className="button main_outline_button"
+                onClick={handleClose}
+              >
+                Cancel
+              </button>
+              <button
+                className="button main_outline_button"
+                onClick={UpdateFeaturedProduct}
+              >
+                Update
+              </button>
+            </Modal.Footer>
+          </Form>
+        </Modal>
+        <DataTable
+          columns={columns}
+          data={featuredProductData}
+          pagination
+          highlightOnHover
+          pointerOnHover
+          className={"table_body featuredproduct_table"}
+        />
+
+        <SAlert
+          show={Alert}
+          title="Product Name"
+          text="Are you Sure you want to remove"
+          onConfirm={hideAlert}
+          showCancelButton={true}
+          onCancel={hideAlert}
+        />
+        <SAlert
+          show={UpdateAlert}
+          title=" Sold product Updated Successfully "
+          onConfirm={closeUpdateAlert}
+        />
       </div>
-
-      <Modal size="lg" show={show} onHide={() => setShow(false)}>
-        <Form className="" ref={formRef}>
-          <Modal.Header closeButton>
-            <Modal.Title></Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <div className="row p-3 m-0">
-              <div className="col-md-6">
-                <Form.Group
-                  className="mb-3 aos_input"
-                  controlId="formBasicStartDate"
-                >
-                  <Form.Label>Start Date</Form.Label>
-                  <Form.Control
-                    name="start_date"
-                    value={featuredData.start_date}
-                    onChange={(e) => handleFormChange(e)}
-                    type="date"
-                    placeholder="Coupon Start Date"
-                  />
-                </Form.Group>
-              </div>
-              <div className="col-md-6">
-                <Form.Group
-                  className="mb-3 aos_input"
-                  controlId="formBasicStartDate"
-                >
-                  <Form.Label>End Date</Form.Label>
-                  <Form.Control
-                    name="end_date"
-                    value={featuredData.end_date}
-                    onChange={(e) => handleFormChange(e)}
-                    type="date"
-                    placeholder="Coupon Start Date"
-                  />
-                </Form.Group>
-              </div>
-            </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <button
-              className="button main_outline_button"
-              onClick={handleClose}
-            >
-              Cancel
-            </button>
-            <button
-              className="button main_outline_button"
-              onClick={UpdateFeaturedProduct}
-            >
-              Update
-            </button>
-          </Modal.Footer>
-        </Form>
-      </Modal>
-      <DataTable
-        columns={columns}
-        data={featuredProductData}
-        pagination
-        highlightOnHover
-        pointerOnHover
-        className={"table_body featuredproduct_table"}
-      />
-
-      <SAlert
-        show={Alert}
-        title="Product Name"
-        text="Are you Sure you want to remove"
-        onConfirm={hideAlert}
-        showCancelButton={true}
-        onCancel={hideAlert}
-      />
-      <SAlert
-        show={UpdateAlert}
-        title=" Sold product Updated Successfully "
-        onConfirm={closeUpdateAlert}
-      />
-    </div>
     </>
   );
 };

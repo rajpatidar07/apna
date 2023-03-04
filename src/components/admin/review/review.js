@@ -203,10 +203,10 @@ const Review = () => {
             className=" p-0 m-0  editiconn text-secondary"
             onClick={handleShow.bind(this, row.id)}
           />
-          <BsTrash
+          {/* <BsTrash
             className=" p-0 m-0 editiconn text-danger"
             onClick={handleAlert}
-          />
+          /> */}
         </div>
       ),
     },
@@ -371,11 +371,11 @@ const Review = () => {
           showCancelButton={true}
           onCancel={hideAlert}
         />
-        <SAlert
+        {/* <SAlert
           show={UpdateAlert}
           title="Updated Review Successfully "
           onConfirm={closeUpdateAlert}
-        />
+        /> */}
       </div>
     </div>
   );

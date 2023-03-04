@@ -18,7 +18,6 @@ const BlogList = () => {
   const [changstatus, setchangstatus] = useState("");
   const [apicall, setapicall] = useState(false);
   const [validated, setValidated] = useState(false);
-
   const [show, setShow] = useState("");
   const [Alert, setAlert] = useState(false);
   const [file, setFile] = useState();
@@ -40,13 +39,13 @@ const BlogList = () => {
     product_tag: "",
     publish_date: "",
   });
-
-
   const [searchdata, setsearchData] = useState([]);
-
   const [recent, setRecent] = useState("");
   const [categorySearch, setCategorySearch] = useState("");
   const [productTagSearch, setProductTagSearch] = useState("");
+
+
+
 
   // Function of cancel add success alert:-
 
@@ -117,10 +116,10 @@ const BlogList = () => {
               product_tag: "",
             })
             .then((response) => {
-              let data = response.data;
-              setaddBlog(response.data);
-              setsearchData(data);
-              setId(id);
+              let data = response.data[0];
+              setaddBlog(data);
+              setsearchData(response.data);
+              setId(data.id);
               setapicall(false);
             });
         } catch (err) {}
