@@ -23,12 +23,14 @@ function AdminHeader() {
   const [password, setPassword] = useState("");
   const [UpdateAlert, setUpdateAlert] = useState(false);
   const [newpassword, setnewPassword] = useState("");
+  const [errornewpassword, seterrornewpassword] = useState("");
+  const [erroroldpassword, seterroroldpassword] = useState("");
   let loginid = localStorage.getItem("encryptloginid");
   let pass = localStorage.getItem("encryptpassword");
   // console.log(loginid, pass);
   let vendoremail = localStorage.getItem("vendor_email");
   let vendorToken = localStorage.getItem("vendor_token");
-  let Token = localStorage.getItem("token");
+  let token = localStorage.getItem("token");
 
   // console.log("vendor_Email---"+vendoremail)
   // console.log("vendor_token---"+vendorToken)
@@ -38,60 +40,105 @@ function AdminHeader() {
   };
   const newPass = (e, id) => {
     setnewPassword(e.target.value);
+    seterrornewpassword("");
   };
 
   const closeUpdateAlert = () => {
     setUpdateAlert(false);
+    seterroroldpassword("");
   };
+  console.log(password);
 
   const LoginForm = (e) => {
     e.preventDefault();
-    if(vendorToken!==null){
+    if (password.trim() === "") {
+      seterroroldpassword("Password is required");
+    } else if (
+      !/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/.test(
+        password
+      )
+    ) {
+      seterroroldpassword(
+        "Password must contain digit, one uppercase letter, one special character, no space, and it must be 8-16 characters long"
+      );
+    } else if (newpassword.trim() === "") {
+      seterrornewpassword("Password is required");
+    } else if (
+      !/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/.test(
+        newpassword
+      )
+    ) {
+      seterrornewpassword(
+        "Password must contain digit, one uppercase letter, one special character, no space, and it must be 8-16 characters long"
+      );
+    } else if (vendorToken !== null && errornewpassword === "") {
       axios
-      .post(`${process.env.REACT_APP_BASEURL}/change_vendor_password`, {
-        headers: {
-          vendor_token: vendorToken,
-        },
-      }, {
-        email: vendoremail,
-        password: pass,
-        new_password: newpassword,
-      })
-      .then((response) => {
-        // console.log("possttttttt------" + JSON.stringify(response));
-        setShow(false);
-        setUpdateAlert(true);
-        setPassword("");
-        setnewPassword("");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+        .post(
+          `${process.env.REACT_APP_BASEURL}/change_vendor_password`,
+          {
+            headers: {
+              vendor_token: vendorToken,
+            },
+          },
+          {
+            email: vendoremail,
+            password: pass,
+            new_password: newpassword,
+          }
+        )
+        .then((response) => {
+          // console.log("possttttttt------" + JSON.stringify(response));
+          setShow(false);
+          setUpdateAlert(true);
+          setPassword("");
+          setnewPassword("");
+          seterrornewpassword("");
+          seterroroldpassword("");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       e.preventDefault();
-    }else {
+    } else {
       axios
-      .put(`${process.env.REACT_APP_BASEURL}/update_password`, {
-        admin_email: loginid,
-        admin_password: pass,
-        new_admin_password: newpassword,
-      })
-      .then((response) => {
-        // console.log("possttttttt------" + JSON.stringify(response));
-        setShow(false);
-        setUpdateAlert(true);
-        setPassword("");
-        setnewPassword("");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+        .put(
+          `${process.env.REACT_APP_BASEURL_0}/update_password`,
+          {
+            admin_email: loginid,
+            admin_password: password,
+            new_admin_password: newpassword,
+          },
+          {
+            headers: { admin_token: `${token}` },
+          }
+        )
+        .then((response) => {
+          console.log(response.data.response);
+          if (response.data.response === "password not matched") {
+            seterroroldpassword("Old password is incorrect");
+            setShow(true);
+            setUpdateAlert(false);
+          } else {
+            setShow(false);
+            setUpdateAlert(true);
+            setPassword("");
+            setnewPassword("");
+            seterrornewpassword("");
+            seterroroldpassword("");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       e.preventDefault();
     }
-
-   
   };
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false);
+    seterrornewpassword("");
+    seterroroldpassword("");
+  };
   const handleShow = () => setShow(true);
   const OnLogoutClick = () => {
     localStorage.removeItem("token");
@@ -223,7 +270,7 @@ function AdminHeader() {
           </Dropdown>
           <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-              <Modal.Title>Login</Modal.Title>
+              <Modal.Title>Change password</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form onSubmit={LoginForm}>
@@ -232,7 +279,7 @@ function AdminHeader() {
                   <Form.Control
                     required
                     name={"admin_email"}
-                    value={loginid?loginid:vendoremail?vendoremail:null}
+                    value={loginid ? loginid : vendoremail ? vendoremail : null}
                     type="email"
                     disabled
                   />
@@ -248,6 +295,7 @@ function AdminHeader() {
                     type="password"
                     placeholder="Password"
                   />
+                  <small className="text-danger">{erroroldpassword}</small>
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicPassword">
                   <Form.Label>Update Password</Form.Label>
@@ -259,6 +307,7 @@ function AdminHeader() {
                     placeholder="Password"
                     required
                   />
+                  <small className="text-danger"> {errornewpassword}</small>
                 </Form.Group>
                 <button
                   type={"button"}

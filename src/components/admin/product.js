@@ -62,6 +62,7 @@ function Product() {
     language: "en",
   };
   const navigate = useNavigate();
+  let [searcherror, setsearcherror] = useState(false);
   const [open, setOpen] = useState(false);
   const [changeUnitproperty, setChangeUnitProperty] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -357,45 +358,45 @@ function Product() {
     //     category: indVal,
     //   });
     // } else {
-      axios
-        .get(`${process.env.REACT_APP_BASEURL_0}/category?category=${indVal}`)
-        .then((response) => {
-          if (response.data !== []) {
-            let cgory = response.data;
-            if (indVal === scategory.parent_category) {
-              setSubCategory(cgory);
-              setproductdata({
-                ...productdata,
-                parent_category: "0",
-                category: indVal,
-              });
-            } else if (indVal === scategory.sub_category) {
-              setchildCategory(cgory);
-              setproductdata({
-                ...productdata,
-                parent_category: cgory[0].all_parent_id,
-                category: indVal,
-              });
-              setlevel(2);
-            } else if (indVal === scategory.childcategory) {
-              setgrandcCategory(cgory);
-              setproductdata({
-                ...productdata,
-                parent_category: cgory[0].all_parent_id,
-                category: indVal,
-              });
-              setlevel(3);
-            } else if (indVal === scategory.gcategory) {
-              setgrandcCategory(cgory);
-              setproductdata({
-                ...productdata,
-                parent_category: cgory[0].all_parent_id,
-                category: indVal,
-              });
-              setlevel(4);
-            }
+    axios
+      .get(`${process.env.REACT_APP_BASEURL_0}/category?category=${indVal}`)
+      .then((response) => {
+        if (response.data !== []) {
+          let cgory = response.data;
+          if (indVal === scategory.parent_category) {
+            setSubCategory(cgory);
+            setproductdata({
+              ...productdata,
+              parent_category: "0",
+              category: indVal,
+            });
+          } else if (indVal === scategory.sub_category) {
+            setchildCategory(cgory);
+            setproductdata({
+              ...productdata,
+              parent_category: cgory[0].all_parent_id,
+              category: indVal,
+            });
+            setlevel(2);
+          } else if (indVal === scategory.childcategory) {
+            setgrandcCategory(cgory);
+            setproductdata({
+              ...productdata,
+              parent_category: cgory[0].all_parent_id,
+              category: indVal,
+            });
+            setlevel(3);
+          } else if (indVal === scategory.gcategory) {
+            setgrandcCategory(cgory);
+            setproductdata({
+              ...productdata,
+              parent_category: cgory[0].all_parent_id,
+              category: indVal,
+            });
+            setlevel(4);
           }
-        });
+        }
+      });
     // }
   }, [scategory, indVal]);
 
@@ -1404,9 +1405,22 @@ function Product() {
   // PRODUCT SEARCH , FILTER  AND RESET
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
+    setsearcherror(false);
   };
   const onProductSearchClick = () => {
-    setapicall(true);
+    if (
+      searchdata.product_title_name === "" &&
+      searchdata.product_status === "" &&
+      searchdata.brand === "" &&
+      searchdata.tag === "" &&
+      searchdata.category === "" &&
+      searchdata.vendor === ""
+    ) {
+      setsearcherror(true);
+    } else {
+      setapicall(true);
+      setsearcherror(false);
+    }
   };
 
   const OnReset = () => {
@@ -1419,6 +1433,7 @@ function Product() {
       category: "",
     });
     setapicall(true);
+    setsearcherror(false);
   };
   // END PRODUCT SEARCH , FILTER  AND RESET
 
@@ -1849,6 +1864,9 @@ function Product() {
                 value={searchdata.product_title_name}
                 className={"adminsideinput"}
               />
+              {searcherror === true ? (
+                <small className="text-danger">please fill the feild</small>
+              ) : null}
             </div>
             <div className="col-md-2 col-sm-6 aos_input">
               <Form.Select
@@ -1910,7 +1928,6 @@ function Product() {
                 })}
               </Form.Select>
             </div>
-
             <div className="col-md-2 col-sm-6 aos_input">
               <Form.Select
                 aria-label="Search by status"
@@ -1931,7 +1948,6 @@ function Product() {
                 })}
               </Form.Select>
             </div>
-
             <div className="col-md-2 col-sm-6  mt-2 aos_input">
               <MainButton
                 onClick={onProductSearchClick}
@@ -1939,7 +1955,6 @@ function Product() {
                 btnclass={"button main_button w-100"}
               />
             </div>
-
             <div className="col-md-2 col-sm-6  mt-2 aos_input">
               <MainButton
                 btntext={"Reset"}
@@ -4426,7 +4441,7 @@ function Product() {
                             className="mb-3"
                             controlId="formPlaintextName"
                           >
-                            <Form.Label className=" " column sm="12">
+                            <Form.Label className="" column sm="12">
                               Product Name
                             </Form.Label>
                             <Form.Control
@@ -4443,7 +4458,7 @@ function Product() {
                             className="mb-3"
                             controlId="formPlaintextName"
                           >
-                            <Form.Label className=" " column sm="12">
+                            <Form.Label className="" column sm="12">
                               Product Id
                             </Form.Label>
                             <Form.Control
@@ -4460,7 +4475,7 @@ function Product() {
                             className="mb-3"
                             controlId="formPlaintextName"
                           >
-                            <Form.Label className=" " column sm="12">
+                            <Form.Label className="" column sm="12">
                               Offer Type
                             </Form.Label>
                             <Form.Control
@@ -4477,7 +4492,7 @@ function Product() {
                             className="mb-3"
                             controlId="formPlaintextName"
                           >
-                            <Form.Label className=" " column sm="12">
+                            <Form.Label className="" column sm="12">
                               Start Date
                             </Form.Label>
                             <Form.Control
@@ -4502,7 +4517,7 @@ function Product() {
                             className="mb-3"
                             controlId="formPlaintextName"
                           >
-                            <Form.Label className=" " column sm="12">
+                            <Form.Label className="" column sm="12">
                               End Date
                             </Form.Label>
                             <Form.Control

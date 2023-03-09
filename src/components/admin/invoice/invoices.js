@@ -294,18 +294,18 @@ const InvoiceList = () => {
           <div className="col-md-3 col-sm-6 aos_input mb-2">
             <input
               type={"date"}
-              max={currentDate}
               placeholder={"Search by Order Date"}
               onChange={(e) => onDateChange(e)}
               value={SearchInvo.from_date}
               name={"from_date"}
               className={"adminsideinput"}
+              max={currentDate}
             />
           </div>
           <div className="col-md-3 col-sm-6 aos_input mb-2">
             <input
               type={"date"}
-              max={currentDate}
+              min={SearchInvo.from_date}
               placeholder={"Search by Order End_Date"}
               onChange={(e) => onDateChange(e)}
               value={SearchInvo.to_date}

@@ -23,7 +23,9 @@ function Admin() {
   const [Searchad, setSearchAd] = useState({
     admin_name: "",
     admin_type: "",
+    admin_password: "",
   });
+  const [passwordError, setPasswordError] = useState("");
   const closeAddAlert = () => {
     setAddAlert(false);
   };
@@ -125,6 +127,8 @@ function Admin() {
   }, [apicall]);
   const handleFormChange = (e) => {
     setaddadmindata({ ...addadmindata, [e.target.name]: e.target.value });
+    setPasswordError("");
+    console.log(addadmindata.admin_password);
   };
   const onValueChange = (e) => {
     setSearchAd({ ...Searchad, [e.target.name]: e.target.value });
@@ -144,11 +148,24 @@ function Admin() {
   };
   const AddAdminClick = (e) => {
     const form = e.currentTarget;
-    if (form.checkValidity() === false) {
-      e.preventDefault();
-      e.stopPropagation();
-      setValidated(true);
-      setapicall(true);
+    e.preventDefault();
+    e.stopPropagation();
+    // if (form.checkValidity() === false) {
+    // e.preventDefault();
+    // e.stopPropagation();
+    //   setValidated(true);
+    //   setapicall(true);
+    // }
+    if (addadmindata.admin_password.trim() === "") {
+      setPasswordError("Password is required");
+    } else if (
+      !/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/.test(
+        addadmindata.admin_password
+      )
+    ) {
+      setPasswordError(
+        "Password must contain digit, one uppercase letter, one special character, no space, and it must be 8-16 characters long"
+      );
     } else {
       e.preventDefault();
       axios
@@ -161,6 +178,7 @@ function Admin() {
         })
         .then((response) => {
           setAddAlert(true);
+          setPasswordError("");
         })
         .catch(function (error) {});
 
@@ -173,20 +191,32 @@ function Admin() {
 
   const UpdateAdminClick = (e, show) => {
     e.preventDefault();
-    axios
-      .put(`${process.env.REACT_APP_BASEURL}/update_admin`, addadmindata)
-      .then((response) => {
-        setUpdateAlert(true);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-    formRef.current.reset();
-    setValidated(false);
-    setaddadmindata("");
-    setShow("");
-    setapicall(true);
-    show.preventDefault();
+    if (addadmindata.admin_password.trim() === "") {
+      setPasswordError("Password is required");
+    } else if (
+      !/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/.test(
+        addadmindata.admin_password
+      )
+    ) {
+      setPasswordError(
+        "Password must contain digit, one uppercase letter, one special character, no space, and it must be 8-16 characters long"
+      );
+    } else {
+      axios
+        .put(`${process.env.REACT_APP_BASEURL}/update_admin`, addadmindata)
+        .then((response) => {
+          setUpdateAlert(true);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      formRef.current.reset();
+      setValidated(false);
+      setaddadmindata("");
+      setShow("");
+      setapicall(true);
+      show.preventDefault();
+    }
   };
 
   return (
@@ -344,7 +374,6 @@ function Admin() {
                         <Form.Label className="" column sm="12">
                           Password
                         </Form.Label>
-
                         <Form.Control
                           type="password"
                           placeholder="Password"
@@ -352,7 +381,8 @@ function Admin() {
                           value={addadmindata.admin_password}
                           name={"admin_password"}
                           required
-                        />
+                        />{" "}
+                        <small className="text-danger">{passwordError}</small>
                         <Form.Control.Feedback type="invalid" className="h6">
                           Please fill password
                         </Form.Control.Feedback>

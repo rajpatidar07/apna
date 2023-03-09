@@ -27,14 +27,14 @@ const Coupon = () => {
     status: "",
     image: "",
   });
-  let[coupanNameErr ,setCoupanNameErr] = useState(false)
-  let[coupancodeErr ,setCoupancodeErr] = useState(false)
-  let[coupanproduct_typeErr ,setCoupanproduct_typeErr] = useState(false)
-  let[coupanstart_dateErr ,setCoupanstart_dateErr] = useState(false)
-  let[coupanend_dateErr ,setCoupanend_dateErr] = useState(false)
-  let[coupanminimum_amountErr ,setCoupanminimum_amountErr] = useState(false)
-  let[coupanpercentageErr ,setCoupanpercentageErr] = useState(false)
-  let[coupanstatusErr ,setCoupanstatusErr] = useState(false)
+  let [coupanNameErr, setCoupanNameErr] = useState(false);
+  let [coupancodeErr, setCoupancodeErr] = useState(false);
+  let [coupanproduct_typeErr, setCoupanproduct_typeErr] = useState(false);
+  let [coupanstart_dateErr, setCoupanstart_dateErr] = useState(false);
+  let [coupanend_dateErr, setCoupanend_dateErr] = useState(false);
+  let [coupanminimum_amountErr, setCoupanminimum_amountErr] = useState(false);
+  let [coupanpercentageErr, setCoupanpercentageErr] = useState(false);
+  let [coupanstatusErr, setCoupanstatusErr] = useState(false);
   const [file, setFile] = useState();
   const [fileName, setFileName] = useState("");
   const [Alert, setAlert] = useState(false);
@@ -44,7 +44,7 @@ const Coupon = () => {
   const [cid, setCId] = useState(false);
   const [AddAlert, setAddAlert] = useState(false);
   const [UpdateAlert, setUpdateAlert] = useState(false);
-  let [searcherror,setsearcherror] = useState(false)
+  let [searcherror, setsearcherror] = useState(false);
   const [SearchCoup, setSearchCoup] = useState({
     campaign_name: "",
     code: "",
@@ -80,13 +80,13 @@ const Coupon = () => {
   const handleClose = () => {
     formRef.current.reset();
     setValidated(false);
-    setCoupanNameErr(false)
-    setCoupancodeErr(false)
-    setCoupanend_dateErr(false)
-    setCoupanminimum_amountErr(false)
-    setCoupanpercentageErr(false)
-    setCoupanproduct_typeErr(false)
-    setCoupanstart_dateErr(false)
+    setCoupanNameErr(false);
+    setCoupancodeErr(false);
+    setCoupanend_dateErr(false);
+    setCoupanminimum_amountErr(false);
+    setCoupanpercentageErr(false);
+    setCoupanproduct_typeErr(false);
+    setCoupanstart_dateErr(false);
     setCoupanstatusErr(false);
     setShow(false);
   };
@@ -267,34 +267,37 @@ const Coupon = () => {
   ];
   const CouponSearch = (e) => {
     setSearchCoup({ ...SearchCoup, [e.target.name]: e.target.value });
-    setsearcherror(false)
+    setsearcherror(false);
   };
 
   const CoupondataSearch = () => {
-    if (SearchCoup.campaign_name === "" &&
-    SearchCoup.code === "" &&
-    SearchCoup.status === "")  {
-      setsearcherror(true)
-    }else{
-    axios
-      .post(`${process.env.REACT_APP_BASEURL}/coupons_list`, {
-        campaign_name: `${SearchCoup.campaign_name}`,
-        code: `${SearchCoup.code}`,
-        status: `${SearchCoup.status}`,
-      })
-      .then((response) => {
-        let data = response.data.filter((item) => (item.is_active = 1));
-        setcoupondata(data);
-        setSearchCoup({campaign_name:"",code:"",status:""})     
-       });
-       setsearcherror(false)
-  }}
+    if (
+      SearchCoup.campaign_name === "" &&
+      SearchCoup.code === "" &&
+      SearchCoup.status === ""
+    ) {
+      setsearcherror(true);
+    } else {
+      axios
+        .post(`${process.env.REACT_APP_BASEURL}/coupons_list`, {
+          campaign_name: `${SearchCoup.campaign_name}`,
+          code: `${SearchCoup.code}`,
+          status: `${SearchCoup.status}`,
+        })
+        .then((response) => {
+          let data = response.data.filter((item) => (item.is_active = 1));
+          setcoupondata(data);
+          setSearchCoup({ campaign_name: "", code: "", status: "" });
+        });
+      setsearcherror(false);
+    }
+  };
 
   const Reset = () => {
-    setSearchCoup({campaign_name:"",code:"",status:""})
-    setapicall(true)
-    setsearcherror(false)
-  }
+    setSearchCoup({ campaign_name: "", code: "", status: "" });
+    setapicall(true);
+    setsearcherror(false);
+  };
 
   useEffect(() => {
     setcoupondata(coupondata);
@@ -305,13 +308,13 @@ const Coupon = () => {
       ...addcoupondata,
       [e.target.name]: e.target.value,
     });
-    setCoupanNameErr(false)
-    setCoupancodeErr(false)
-    setCoupanend_dateErr(false)
-    setCoupanminimum_amountErr(false)
-    setCoupanpercentageErr(false)
-    setCoupanproduct_typeErr(false)
-    setCoupanstart_dateErr(false)
+    setCoupanNameErr(false);
+    setCoupancodeErr(false);
+    setCoupanend_dateErr(false);
+    setCoupanminimum_amountErr(false);
+    setCoupanpercentageErr(false);
+    setCoupanproduct_typeErr(false);
+    setCoupanstart_dateErr(false);
     setCoupanstatusErr(false);
   };
 
@@ -327,36 +330,47 @@ const Coupon = () => {
     //   e.preventDefault();
     //   setValidated(true);
     // }
-    if(addcoupondata.campaign_name === ""||addcoupondata.campaign_name === undefined || addcoupondata.campaign_name === null){
-      setCoupanNameErr(true)
+    if (
+      addcoupondata.campaign_name === "" ||
+      addcoupondata.campaign_name === undefined ||
+      addcoupondata.campaign_name === null
+    ) {
+      setCoupanNameErr(true);
+      e.stopPropagation();
+      e.preventDefault();
+    } else if (
+      addcoupondata.product_type === "" ||
+      addcoupondata.product_type === undefined
+    ) {
+      setCoupanproduct_typeErr(true);
+      e.stopPropagation();
+      e.preventDefault();
+    } else if (addcoupondata.code === "" || addcoupondata.code === undefined) {
+      setCoupancodeErr(true);
+      e.stopPropagation();
+      e.preventDefault();
+    } else if (
+      addcoupondata.minimum_amount === "" ||
+      addcoupondata.minimum_amount === undefined
+    ) {
+      setCoupanminimum_amountErr(true);
+      e.stopPropagation();
+      e.preventDefault();
+    } else if (
+      addcoupondata.percentage === "" ||
+      addcoupondata.percentage === undefined
+    ) {
+      setCoupanpercentageErr(true);
+      e.stopPropagation();
+      e.preventDefault();
+    } else if (
+      addcoupondata.status === "" ||
+      addcoupondata.status === undefined
+    ) {
+      setCoupanstatusErr(true);
       e.stopPropagation();
       e.preventDefault();
     }
-    else if(addcoupondata.product_type === ""||addcoupondata.product_type === undefined){
-      setCoupanproduct_typeErr(true)
-      e.stopPropagation();
-      e.preventDefault();
-    }
-    else if(addcoupondata.code === ""||addcoupondata.code === undefined){
-      setCoupancodeErr(true)
-      e.stopPropagation();
-      e.preventDefault();
-    }
-    else if(addcoupondata.minimum_amount === ""||addcoupondata.minimum_amount === undefined){
-      setCoupanminimum_amountErr(true)
-      e.stopPropagation();
-      e.preventDefault();
-    }
-    else if(addcoupondata.percentage === ""||addcoupondata.percentage === undefined){
-     setCoupanpercentageErr(true)
-     e.stopPropagation();
-     e.preventDefault();
-   }
-   else if(addcoupondata.status === ""||addcoupondata.status === undefined){
-     setCoupanstatusErr(true)
-     e.stopPropagation();
-     e.preventDefault();
-   }
     // else if(addcoupondata.start_date === ""||addcoupondata.start_date === undefined){
     //   setCoupanstart_dateErr(true)
     //   e.stopPropagation();
@@ -367,7 +381,7 @@ const Coupon = () => {
     //   e.stopPropagation();
     //   e.preventDefault();
     // }
-     else {
+    else {
       const formData = new FormData();
       formData.append("filename", fileName);
       formData.append("campaign_name", addcoupondata.campaign_name);
@@ -412,67 +426,79 @@ const Coupon = () => {
 
   const UpdateCouponClick = (e) => {
     const formData = new FormData();
-    if(addcoupondata.campaign_name === ""||addcoupondata.campaign_name === undefined || addcoupondata.campaign_name === null){
-      setCoupanNameErr(true)
+    if (
+      addcoupondata.campaign_name === "" ||
+      addcoupondata.campaign_name === undefined ||
+      addcoupondata.campaign_name === null
+    ) {
+      setCoupanNameErr(true);
       e.stopPropagation();
       e.preventDefault();
-    }
-    else if(addcoupondata.product_type === ""||addcoupondata.product_type === undefined){
-      setCoupanproduct_typeErr(true)
+    } else if (
+      addcoupondata.product_type === "" ||
+      addcoupondata.product_type === undefined
+    ) {
+      setCoupanproduct_typeErr(true);
       e.stopPropagation();
       e.preventDefault();
-    }
-    else if(addcoupondata.code === ""||addcoupondata.code === undefined){
-      setCoupancodeErr(true)
+    } else if (addcoupondata.code === "" || addcoupondata.code === undefined) {
+      setCoupancodeErr(true);
       e.stopPropagation();
       e.preventDefault();
-    }
-    else if(addcoupondata.minimum_amount === ""||addcoupondata.minimum_amount === undefined){
-      setCoupanminimum_amountErr(true)
+    } else if (
+      addcoupondata.minimum_amount === "" ||
+      addcoupondata.minimum_amount === undefined
+    ) {
+      setCoupanminimum_amountErr(true);
       e.stopPropagation();
       e.preventDefault();
-    }
-    else if(addcoupondata.percentage === ""||addcoupondata.percentage === undefined){
-     setCoupanpercentageErr(true)
-     e.stopPropagation();
-     e.preventDefault();
-   }
-   else if(addcoupondata.status === ""||addcoupondata.status === undefined){
-     setCoupanstatusErr(true)
-     e.stopPropagation();
-     e.preventDefault();
-   }else{
-    formData.append("filename", fileName);
-    formData.append("id", e);
-    formData.append("campaign_name", addcoupondata.campaign_name);
-    formData.append("code", addcoupondata.code);
-    formData.append("product_type", addcoupondata.product_type);
-    formData.append(
-      "start_date",
-      moment(addcoupondata.start_date).format("YYYY-MM-DDThh:mm:00.000")
-    );
-    formData.append(
-      "end_date",
-      moment(addcoupondata.end_date).format("YYYY-MM-DDThh:mm:00.000")
-    );
-    formData.append("minimum_amount", addcoupondata.minimum_amount);
-    formData.append("percentage", addcoupondata.percentage);
-    formData.append("status", addcoupondata.status);
-    formData.append("image", file);
+    } else if (
+      addcoupondata.percentage === "" ||
+      addcoupondata.percentage === undefined
+    ) {
+      setCoupanpercentageErr(true);
+      e.stopPropagation();
+      e.preventDefault();
+    } else if (
+      addcoupondata.status === "" ||
+      addcoupondata.status === undefined
+    ) {
+      setCoupanstatusErr(true);
+      e.stopPropagation();
+      e.preventDefault();
+    } else {
+      formData.append("filename", fileName);
+      formData.append("id", e);
+      formData.append("campaign_name", addcoupondata.campaign_name);
+      formData.append("code", addcoupondata.code);
+      formData.append("product_type", addcoupondata.product_type);
+      formData.append(
+        "start_date",
+        moment(addcoupondata.start_date).format("YYYY-MM-DDThh:mm:00.000")
+      );
+      formData.append(
+        "end_date",
+        moment(addcoupondata.end_date).format("YYYY-MM-DDThh:mm:00.000")
+      );
+      formData.append("minimum_amount", addcoupondata.minimum_amount);
+      formData.append("percentage", addcoupondata.percentage);
+      formData.append("status", addcoupondata.status);
+      formData.append("image", file);
 
-    axios
-      .put(`${process.env.REACT_APP_BASEURL}/coupon_update`, formData)
-      .then((response) => {
-        setapicall(true);
-        setUpdateAlert(true);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-    formRef.current.reset();
-    setValidated(false);
-    setaddcoupondata("");
-    setShow("");}
+      axios
+        .put(`${process.env.REACT_APP_BASEURL}/coupon_update`, formData)
+        .then((response) => {
+          setapicall(true);
+          setUpdateAlert(true);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      formRef.current.reset();
+      setValidated(false);
+      setaddcoupondata("");
+      setShow("");
+    }
   };
 
   let date = moment();
@@ -492,7 +518,9 @@ const Coupon = () => {
               placeholder={"Search by campaign name"}
               value={SearchCoup.campaign_name}
             />
-            {searcherror === true ?<small className="text-danger">This feild is required</small> :null}
+            {searcherror === true ? (
+              <small className="text-danger">This feild is required</small>
+            ) : null}
           </div>
           <div className="col-md-3 col-sm-6 aos_input mb-2">
             <input
@@ -576,7 +604,9 @@ const Coupon = () => {
                     className="mb-3 aos_input"
                     controlId="formBasicNamel"
                   >
-                    <Form.Label>Campaign Name <span className="text-danger">*</span></Form.Label>
+                    <Form.Label>
+                      Campaign Name <span className="text-danger">*</span>
+                    </Form.Label>
                     <Form.Control
                       onChange={(e) => handleFormChange(e)}
                       name="campaign_name"
@@ -585,10 +615,9 @@ const Coupon = () => {
                       type="text"
                       placeholder="campaign_name"
                     />
-                   { coupanNameErr === true?
-                    <small className="text-danger">
-                      Please fill name
-                    </small>:null}
+                    {coupanNameErr === true ? (
+                      <small className="text-danger">Please fill name</small>
+                    ) : null}
                   </Form.Group>
                 </div>
                 <div className="col-md-6">
@@ -596,7 +625,9 @@ const Coupon = () => {
                     className="mb-3 aos_input"
                     controlId="formBasicCategoryType"
                   >
-                    <Form.Label>Category Type<span className="text-danger">*</span></Form.Label>
+                    <Form.Label>
+                      Category Type<span className="text-danger">*</span>
+                    </Form.Label>
                     <Form.Select
                       aria-label="Search by category type"
                       required
@@ -612,10 +643,11 @@ const Coupon = () => {
                         Sports & Accessor
                       </option>
                     </Form.Select>
-                    { coupanproduct_typeErr === true?
-                    <small className="text-danger">
-                      Please fill category type
-                    </small>:null}
+                    {coupanproduct_typeErr === true ? (
+                      <small className="text-danger">
+                        Please fill category type
+                      </small>
+                    ) : null}
                   </Form.Group>
                 </div>
                 <div className="col-md-6">
@@ -623,7 +655,9 @@ const Coupon = () => {
                     className="mb-3 aos_input"
                     controlId="formBasicCode"
                   >
-                    <Form.Label>Coupon Code<span className="text-danger">*</span></Form.Label>
+                    <Form.Label>
+                      Coupon Code<span className="text-danger">*</span>
+                    </Form.Label>
                     <Form.Control
                       onChange={(e) => handleFormChange(e)}
                       name="code"
@@ -632,10 +666,11 @@ const Coupon = () => {
                       type="text"
                       placeholder="Coupon Code"
                     />
-                     { coupancodeErr === true?
-                    <small className="text-danger">
-                      Please fill coupon code
-                    </small>:null}
+                    {coupancodeErr === true ? (
+                      <small className="text-danger">
+                        Please fill coupon code
+                      </small>
+                    ) : null}
                   </Form.Group>
                 </div>
                 <div className="col-md-6">
@@ -643,7 +678,9 @@ const Coupon = () => {
                     className="mb-3 aos_input"
                     controlId="formBasicAmount"
                   >
-                    <Form.Label>Minimum Amount<span className="text-danger">*</span></Form.Label>
+                    <Form.Label>
+                      Minimum Amount<span className="text-danger">*</span>
+                    </Form.Label>
                     <Form.Control
                       onChange={(e) => handleFormChange(e)}
                       name="minimum_amount"
@@ -652,10 +689,11 @@ const Coupon = () => {
                       type="number"
                       placeholder="Minimum Amount Required"
                     />
-                     { coupanminimum_amountErr === true?
-                    <small className="text-danger">
-                      Please fill minimum amount
-                    </small>:null}
+                    {coupanminimum_amountErr === true ? (
+                      <small className="text-danger">
+                        Please fill minimum amount
+                      </small>
+                    ) : null}
                   </Form.Group>
                 </div>
                 <div className="col-md-6">
@@ -663,7 +701,9 @@ const Coupon = () => {
                     className="mb-3 aos_input"
                     controlId="formBasicPercent"
                   >
-                    <Form.Label>Discount Percentage<span className="text-danger">*</span></Form.Label>
+                    <Form.Label>
+                      Discount Percentage<span className="text-danger">*</span>
+                    </Form.Label>
                     <Form.Control
                       onChange={(e) => handleFormChange(e)}
                       name="percentage"
@@ -672,10 +712,11 @@ const Coupon = () => {
                       type="number"
                       placeholder="Discount Percentage"
                     />
-                     { coupanpercentageErr === true?
-                    <small className="text-danger">
-                      Please fill percentage
-                    </small>:null}
+                    {coupanpercentageErr === true ? (
+                      <small className="text-danger">
+                        Please fill percentage
+                      </small>
+                    ) : null}
                   </Form.Group>
                 </div>
                 <div className="col-md-6">
@@ -683,7 +724,9 @@ const Coupon = () => {
                     className="mb-3 aos_input"
                     controlId="formBasicPercent"
                   >
-                    <Form.Label>Status<span className="text-danger">*</span></Form.Label>
+                    <Form.Label>
+                      Status<span className="text-danger">*</span>
+                    </Form.Label>
                     <Form.Select
                       onChange={(e) => handleFormChange(e)}
                       name="status"
@@ -694,10 +737,9 @@ const Coupon = () => {
                       <option value="expired">Expired</option>
                       <option value="pending">Pending</option>
                     </Form.Select>
-                    { coupanstatusErr === true?
-                    <small className="text-danger">
-                      Select the status 
-                    </small>:null}
+                    {coupanstatusErr === true ? (
+                      <small className="text-danger">Select the status</small>
+                    ) : null}
                   </Form.Group>
                 </div>
                 <div className="col-md-6">
@@ -705,7 +747,9 @@ const Coupon = () => {
                     className="mb-3 aos_input"
                     controlId="formBasicStartDate"
                   >
-                    <Form.Label>Coupon Start Date<span className="text-danger">*</span></Form.Label>
+                    <Form.Label>
+                      Coupon Start Date<span className="text-danger">*</span>
+                    </Form.Label>
                     <Form.Control
                       onChange={(e) => handleFormChange(e)}
                       name="start_date"
@@ -717,11 +761,11 @@ const Coupon = () => {
                       type="date"
                       placeholder="Coupon Start Date"
                     />
-                    {coupanstart_dateErr ===  true ?          
-                    <small className="text-danger">
-                      Please fill start date
-                    </small>:null}
-
+                    {coupanstart_dateErr === true ? (
+                      <small className="text-danger">
+                        Please fill start date
+                      </small>
+                    ) : null}
                   </Form.Group>
                 </div>{" "}
                 <div className="col-md-6">
@@ -729,7 +773,9 @@ const Coupon = () => {
                     className="mb-3 aos_input"
                     controlId="formBasicEndDate"
                   >
-                    <Form.Label>Coupon End Date<span className="text-danger">*</span></Form.Label>
+                    <Form.Label>
+                      Coupon End Date<span className="text-danger">*</span>
+                    </Form.Label>
                     <Form.Control
                       onChange={(e) => handleFormChange(e)}
                       name="end_date"
@@ -743,11 +789,11 @@ const Coupon = () => {
                       type="date"
                       placeholder="Coupon End Date"
                     />
-                    {coupanend_dateErr ===  true ?
-                    <small className="text-danger">
-                      Please fill end date
-                    </small>:null}
-                    
+                    {coupanend_dateErr === true ? (
+                      <small className="text-danger">
+                        Please fill end date
+                      </small>
+                    ) : null}
                   </Form.Group>
                 </div>
                 <div className="col-md-6">

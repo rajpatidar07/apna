@@ -289,6 +289,7 @@ const Productdetail = () => {
 
   // ADD VARIETY
   const onVariantaddclick = (id) => {
+    console.log(id);
     if (id === "" || id === null || id === undefined) {
       if (
         variantarray.unit == "" ||
@@ -344,6 +345,7 @@ const Productdetail = () => {
             variantarray
           )
           .then((response) => {
+            console.log(response);
             if ((response.affectedRows = "1")) {
               setProductAlert(true);
               setvariantarray({
@@ -437,6 +439,7 @@ const Productdetail = () => {
               variantarray
             )
             .then((response) => {
+              console.log(response);
               if ((response.affectedRows = "1")) {
                 setUpdatetAlert(true);
                 setvariantarray({
@@ -560,44 +563,52 @@ const Productdetail = () => {
               </h2>
               <div className="row mt-3">
                 <div className="productimg_box col-8">
-                  <Carousel
-                    autoPlay
-                    interval="3000"
-                    transitionTime="3000"
-                    infiniteLoop
-                    showIndicators={false}
-                    className={"productimg_carousel"}
-                    showStatus={false}
-                  >
-                    {newImageUrls
-                      ? (newImageUrls || []).map((data, i) => {
-                          return data.product_verient_id == vid &&
-                            data.product_id == pid ? (
-                            <div className="w-100 h-50" key={i}>
+                  {newImageUrls.length === 0 ? (
+                    <img
+                      src="https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
+                      className="w-100 h-50"
+                    />
+                  ) : (
+                    <Carousel
+                      autoPlay
+                      interval="3000"
+                      transitionTime="3000"
+                      infiniteLoop
+                      showIndicators={false}
+                      className={"productimg_carousel"}
+                      showStatus={false}
+                    >
+                      {newImageUrls
+                        ? (newImageUrls || []).map((data, i) => {
+                            return data.product_verient_id == vid &&
+                              data.product_id == pid ? (
+                              <div className="w-100 h-50" key={i}>
+                                <img
+                                  src={
+                                    newImageUrls.length === 0
+                                      ? "https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
+                                      : data.product_image_path
+                                      ? data.product_image_path
+                                      : null
+                                  }
+                                  alt={data.product_image_name}
+                                />
+                              </div>
+                            ) : (
                               <img
                                 src={
-                                  newImageUrls.length === 0
-                                    ? "https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
-                                    : data.product_image_path
-                                    ? data.product_image_path
-                                    : null
+                                  "https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
                                 }
-                                alt={data.product_image_name}
+                                alt={""}
                               />
-                            </div>
-                          ) : <img
-                          src={
-                            "https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
-                          }
-                          alt={""}
-                        />;
-                        })
-                      : null}
-                  </Carousel>
+                            );
+                          })
+                        : null}
+                    </Carousel>
+                  )}
                 </div>
 
                 <div className="product_detail_box col-4 mt-4 ">
-                  {/*  */}
                   <div className="product_upper_section row">
                     <div className="col-6">
                       <b>

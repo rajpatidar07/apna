@@ -92,11 +92,13 @@ const Soldproduct = () => {
 
     setShow(true);
   };
+  /* Onchange function to search the product */
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
     setsearcherror(false);
   };
 
+  /* OnClick function to search the product */
   const onSearchClick = () => {
     if (
       searchdata.product_title_name === "" &&
@@ -110,7 +112,7 @@ const Soldproduct = () => {
       setapicall(true);
     }
   };
-
+  /* OnClick function to reset the search feilds for the product */
   const OnReset = () => {
     setsearchData({
       product_title_name: "",
@@ -121,9 +123,9 @@ const Soldproduct = () => {
     setapicall(true);
     setsearcherror(false);
   };
-
+  /* Render function to get data of the product */
   useEffect(() => {
-    setloading(true)
+    setloading(true);
     axios
       .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=400`, {
         product_search: {
@@ -134,7 +136,6 @@ const Soldproduct = () => {
           sale_price: "",
           product_title_name_asc_desc: "",
           short_by_updated_on: "",
-          // product_title_name: [`${searchdata.product_title_name}`],
           category: [`${searchdata.category}`],
           brand: [`${searchdata.brand}`],
           shop: [`${searchdata.vendor}`],
@@ -151,7 +152,7 @@ const Soldproduct = () => {
           setsolddata(response.data);
         }
         setapicall(false);
-        setloading(false)
+        setloading(false);
       })
       .catch(function (error) {
         console.log(error);
@@ -160,6 +161,7 @@ const Soldproduct = () => {
     getVendorData();
   }, [apicall]);
 
+  /* Table data */
   const columns = [
     {
       name: "#",
@@ -360,183 +362,183 @@ const Soldproduct = () => {
     setShow(false);
   };
   return (
-  <>
-    {loading === true ?<Loader/> :null}
-    <div>
-      <h2>Sold Products </h2>
+    <>
+      {loading === true ? <Loader /> : null}
+      <div>
+        <h2>Sold Products </h2>
 
-      {/* search bar */}
-      <div className="card mt-3 p-3">
-        <div className="row pb-3">
-          <div className="col-md-3 col-sm-6 aos_input mb-2">
-            <input
-              type={"text"}
-              placeholder={"Search by product name"}
-              onChange={OnSearchChange}
-              name="product_title_name"
-              value={searchdata.product_title_name}
-              className={"adminsideinput"}
-            />
-            {searcherror === true ? (
-              <small className="text-danger">please fill the feild</small>
-            ) : null}
-          </div>
-          <div className="col-md-3 col-sm-6 aos_input mb-2">
-            <Form.Select
-              aria-label="Search by status"
-              className="adminselectbox"
-              placeholder="Search by category"
-              onChange={OnSearchChange}
-              name="category"
-              value={String(searchdata.category)}
-            >
-              <option value={""}>Select Category</option>
-              {(filtervategory || []).map((data, i) => {
-                return (
-                  <option value={data.id} key={i}>
-                    {" "}
-                    {data.id}
-                  </option>
-                );
-              })}
-            </Form.Select>
-          </div>
-          <div className="col-md-3 col-sm-6 aos_input mb-2">
-            <Form.Select
-              aria-label="Search by status"
-              className="adminselectbox"
-              placeholder="Search by vendor"
-              onChange={OnSearchChange}
-              name="vendor"
-              value={String(searchdata.vendor)}
-            >
-              <option value={""}>Select Vendor</option>
-              {(vendorid || []).map((data, i) => {
-                return (
-                  <option value={data.shop_name} key={i}>
-                    {" "}
-                    {data.shop_name}
-                  </option>
-                );
-              })}
-            </Form.Select>
-          </div>
-          <div className="col-md-3 col-sm-6 aos_input mb-2">
-            <Form.Select
-              aria-label="Search by brand"
-              className="adminselectbox"
-              placeholder="Search by brand"
-              onChange={OnSearchChange}
-              name="brand"
-              value={String(searchdata.brand)}
-            >
-              <option value={""}>Select Brand</option>
-              {(BrandJson.BrandJson || []).map((data, i) => {
-                return (
-                  <option value={data} key={i}>
-                    {" "}
-                    {data}
-                  </option>
-                );
-              })}
-            </Form.Select>
-          </div>
-          <div className="col-md-3 col-sm-6 aos_input mb-2 ">
-            <MainButton
-              btntext={"Search"}
-              btnclass={"button main_button w-100"}
-              onClick={onSearchClick}
-            />
-          </div>
-          <div className="col-md-3 col-sm-6 aos_input mb-2 ">
-            <MainButton
-              btntext={"Reset"}
-              btnclass={"button main_button w-100"}
-              type="reset"
-              onClick={OnReset}
-            />
-          </div>
-        </div>
-
-        {/* upload */}
-
-        <Modal size="lg" show={show} onHide={() => handleClose()}>
-          <Modal.Header closeButton>
-            <Modal.Title>Sold Product</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <div className="row p-3 m-0">
-              <div className="col-md-6">
-                <Form.Group
-                  className="mb-3 aos_input mb-2"
-                  controlId="validationCustom01"
-                >
-                  <Form.Label>Product Id</Form.Label>
-                  <Form.Control
-                    defaultValue={productData.id}
-                    type="text"
-                    placeholder="Add Title"
-                    name={"id"}
-                    disabled
-                  />
-                </Form.Group>
-              </div>
-
-              <div className="col-md-3 col-sm-6 aos_input mb-2">
-                <label for="quantity">Quantity</label>
-                <input
-                  id="quantity"
-                  type={"number"}
-                  placeholder={"Select quantity"}
-                  onChange={OnQuntityChange}
-                  name="quantity"
-                  defaultValue={productData.quantity}
-                  className={"adminsideinput"}
-                  max={10000}
-                  min={0}
-                />
-              </div>
-              {customvalidation === "qtyhigher" ? (
-                <span className="text-danger">
-                  Quantity Cannot exceed more than 10,000
-                </span>
+        {/* search bar */}
+        <div className="card mt-3 p-3">
+          <div className="row pb-3">
+            <div className="col-md-3 col-sm-6 aos_input mb-2">
+              <input
+                type={"text"}
+                placeholder={"Search by product name"}
+                onChange={OnSearchChange}
+                name="product_title_name"
+                value={searchdata.product_title_name}
+                className={"adminsideinput"}
+              />
+              {searcherror === true ? (
+                <small className="text-danger">please fill the feild</small>
               ) : null}
             </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <button
-              className="button main_outline_button"
-              onClick={() => handleClose()}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="button main_outline_button"
-              onClick={() => OnProductQutUpdate()}
-            >
-              Update
-            </button>
-          </Modal.Footer>
-        </Modal>
+            <div className="col-md-3 col-sm-6 aos_input mb-2">
+              <Form.Select
+                aria-label="Search by status"
+                className="adminselectbox"
+                placeholder="Search by category"
+                onChange={OnSearchChange}
+                name="category"
+                value={String(searchdata.category)}
+              >
+                <option value={""}>Select Category</option>
+                {(filtervategory || []).map((data, i) => {
+                  return (
+                    <option value={data.id} key={i}>
+                      {" "}
+                      {data.id}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </div>
+            <div className="col-md-3 col-sm-6 aos_input mb-2">
+              <Form.Select
+                aria-label="Search by status"
+                className="adminselectbox"
+                placeholder="Search by vendor"
+                onChange={OnSearchChange}
+                name="vendor"
+                value={String(searchdata.vendor)}
+              >
+                <option value={""}>Select Vendor</option>
+                {(vendorid || []).map((data, i) => {
+                  return (
+                    <option value={data.shop_name} key={i}>
+                      {" "}
+                      {data.shop_name}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </div>
+            <div className="col-md-3 col-sm-6 aos_input mb-2">
+              <Form.Select
+                aria-label="Search by brand"
+                className="adminselectbox"
+                placeholder="Search by brand"
+                onChange={OnSearchChange}
+                name="brand"
+                value={String(searchdata.brand)}
+              >
+                <option value={""}>Select Brand</option>
+                {(BrandJson.BrandJson || []).map((data, i) => {
+                  return (
+                    <option value={data} key={i}>
+                      {" "}
+                      {data}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </div>
+            <div className="col-md-3 col-sm-6 aos_input mb-2 ">
+              <MainButton
+                btntext={"Search"}
+                btnclass={"button main_button w-100"}
+                onClick={onSearchClick}
+              />
+            </div>
+            <div className="col-md-3 col-sm-6 aos_input mb-2 ">
+              <MainButton
+                btntext={"Reset"}
+                btnclass={"button main_button w-100"}
+                type="reset"
+                onClick={OnReset}
+              />
+            </div>
+          </div>
 
-        {/* datatable */}
+          {/* upload */}
 
-        <DataTable
-          columns={columns}
-          data={solddata.results}
-          pagination
-          highlightOnHover
-          pointerOnHover
-          className={"table_body soldproduct_table"}
-        />
-        <SAlert
-          show={UpdateAlert}
-          title={"Update sucsessfully"}
-          onConfirm={closeUpdateAlert}
-        />
+          <Modal size="lg" show={show} onHide={() => handleClose()}>
+            <Modal.Header closeButton>
+              <Modal.Title>Sold Product</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <div className="row p-3 m-0">
+                <div className="col-md-6">
+                  <Form.Group
+                    className="mb-3 aos_input mb-2"
+                    controlId="validationCustom01"
+                  >
+                    <Form.Label>Product Id</Form.Label>
+                    <Form.Control
+                      defaultValue={productData.id}
+                      type="text"
+                      placeholder="Add Title"
+                      name={"id"}
+                      disabled
+                    />
+                  </Form.Group>
+                </div>
+
+                <div className="col-md-3 col-sm-6 aos_input mb-2">
+                  <label for="quantity">Quantity</label>
+                  <input
+                    id="quantity"
+                    type={"number"}
+                    placeholder={"Select quantity"}
+                    onChange={OnQuntityChange}
+                    name="quantity"
+                    defaultValue={productData.quantity}
+                    className={"adminsideinput"}
+                    max={10000}
+                    min={0}
+                  />
+                </div>
+                {customvalidation === "qtyhigher" ? (
+                  <span className="text-danger">
+                    Quantity Cannot exceed more than 10,000
+                  </span>
+                ) : null}
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <button
+                className="button main_outline_button"
+                onClick={() => handleClose()}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="button main_outline_button"
+                onClick={() => OnProductQutUpdate()}
+              >
+                Update
+              </button>
+            </Modal.Footer>
+          </Modal>
+
+          {/* datatable */}
+
+          <DataTable
+            columns={columns}
+            data={solddata.results}
+            pagination
+            highlightOnHover
+            pointerOnHover
+            className={"table_body soldproduct_table"}
+          />
+          <SAlert
+            show={UpdateAlert}
+            title={"Update sucsessfully"}
+            onConfirm={closeUpdateAlert}
+          />
+        </div>
       </div>
-    </div>
     </>
   );
 };
