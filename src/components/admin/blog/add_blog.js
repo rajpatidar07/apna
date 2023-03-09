@@ -44,14 +44,13 @@ const BlogList = () => {
   const [categorySearch, setCategorySearch] = useState("");
   const [productTagSearch, setProductTagSearch] = useState("");
   let [blogName, setBlogName] = useState("");
-  // Function of cancel add success alert:-
 
+  // Function of cancel add success alert:-
   const closeAddAlert = () => {
     setAddAlert(false);
   };
 
   // Function of cancel update success alert:-
-
   const closeUpdateAlert = () => {
     setUpdateAlert(false);
   };
