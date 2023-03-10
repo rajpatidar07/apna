@@ -82,7 +82,7 @@ const Expiredproduct = () => {
     setsearchData({ ...searchdata, manufacturing_date: mdate });
   };
   useEffect(() => {
-    setloading(true)
+    setloading(true);
     axios
       .post(`${process.env.REACT_APP_BASEURL_0}/home?page=0&per_page=400`, {
         product_search: {
@@ -113,7 +113,7 @@ const Expiredproduct = () => {
           setexpiredata(data_Array);
           setapicall(false);
           setsearcherror(false);
-          setloading(false)
+          setloading(false);
         }
       });
     getCategorydatafilter();
@@ -329,126 +329,126 @@ const Expiredproduct = () => {
     setsearcherror(false);
   };
   return (
-  <>
-     {loading === true?<Loader/> :null}
-    <div>
-      <h2>Expired Products</h2>
+    <>
+      {loading === true ? <Loader /> : null}
+      <div>
+        <h2>Expired Products</h2>
 
-      {/* search bar */}
-      <div className="card mt-3 p-3 ">
-        <div className="row pb-3">
-          <div className="col-md-3 col-sm-6 aos_input">
-            <input
-              type={"text"}
-              placeholder={"Search by product name"}
-              onChange={OnSearchChange}
-              name="product_title_name"
-              value={searchdata.product_title_name}
-              className={"adminsideinput"}
-            />{" "}
-            {searcherror === true ? (
-              <small className="text-danger">please fill the feild</small>
-            ) : null}
+        {/* search bar */}
+        <div className="card mt-3 p-3 ">
+          <div className="row pb-3">
+            <div className="col-md-3 col-sm-6 aos_input">
+              <input
+                type={"text"}
+                placeholder={"Search by product name"}
+                onChange={OnSearchChange}
+                name="product_title_name"
+                value={searchdata.product_title_name}
+                className={"form-control"}
+              />{" "}
+              {searcherror === true ? (
+                <small className="text-danger">please fill the feild</small>
+              ) : null}
+            </div>
+            <div className="col-md-2 col-sm-6 aos_input">
+              <Form.Select
+                aria-label="Search by status"
+                className="adminselectbox"
+                placeholder="Search by category"
+                onChange={OnSearchChange}
+                name="category"
+                value={String(searchdata.category)}
+              >
+                <option value={""}>Select Category</option>
+                {(filtervategory || []).map((data, i) => {
+                  return (
+                    <option value={data.id} key={i}>
+                      {" "}
+                      {data.category_name}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </div>
+            <div className="col-md-2 col-sm-6 aos_input">
+              <Form.Select
+                aria-label="Search by status"
+                className="adminselectbox"
+                placeholder="Search by vendor"
+                onChange={OnSearchChange}
+                name="vendor"
+                value={String(searchdata.vendor)}
+              >
+                <option value={""}>Select Vendor</option>
+                {(vendorid || []).map((data, i) => {
+                  return (
+                    <option value={data.shop_name} key={i}>
+                      {" "}
+                      {data.shop_name}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </div>
+            <div className="col-md-2 col-sm-6 aos_input">
+              <Form.Select
+                aria-label="Search by brand"
+                className="adminselectbox"
+                placeholder="Search by brand"
+                onChange={OnSearchChange}
+                name="brand"
+                value={String(searchdata.brand)}
+              >
+                <option value={""}>Select Brand</option>
+                {(BrandJson.BrandJson || []).map((data, i) => {
+                  return (
+                    <option value={data} key={i}>
+                      {" "}
+                      {data}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </div>
+            <div className="col-md-3 col-sm-6 aos_input ">
+              <MainButton
+                onClick={onSearchClick}
+                btntext={"Search"}
+                btnclass={"button main_button w-100"}
+              />
+            </div>
+            <div className="col-md-3 col-sm-6 aos_input mt-2">
+              <MainButton
+                btntext={"Reset"}
+                btnclass={"button main_button w-100"}
+                type="reset"
+                onClick={OnReset}
+              />
+            </div>
           </div>
-          <div className="col-md-2 col-sm-6 aos_input">
-            <Form.Select
-              aria-label="Search by status"
-              className="adminselectbox"
-              placeholder="Search by category"
-              onChange={OnSearchChange}
-              name="category"
-              value={String(searchdata.category)}
-            >
-              <option value={""}>Select Category</option>
-              {(filtervategory || []).map((data, i) => {
-                return (
-                  <option value={data.id} key={i}>
-                    {" "}
-                    {data.category_name}
-                  </option>
-                );
-              })}
-            </Form.Select>
-          </div>
-          <div className="col-md-2 col-sm-6 aos_input">
-            <Form.Select
-              aria-label="Search by status"
-              className="adminselectbox"
-              placeholder="Search by vendor"
-              onChange={OnSearchChange}
-              name="vendor"
-              value={String(searchdata.vendor)}
-            >
-              <option value={""}>Select Vendor</option>
-              {(vendorid || []).map((data, i) => {
-                return (
-                  <option value={data.shop_name} key={i}>
-                    {" "}
-                    {data.shop_name}
-                  </option>
-                );
-              })}
-            </Form.Select>
-          </div>
-          <div className="col-md-2 col-sm-6 aos_input">
-            <Form.Select
-              aria-label="Search by brand"
-              className="adminselectbox"
-              placeholder="Search by brand"
-              onChange={OnSearchChange}
-              name="brand"
-              value={String(searchdata.brand)}
-            >
-              <option value={""}>Select Brand</option>
-              {(BrandJson.BrandJson || []).map((data, i) => {
-                return (
-                  <option value={data} key={i}>
-                    {" "}
-                    {data}
-                  </option>
-                );
-              })}
-            </Form.Select>
-          </div>
-          <div className="col-md-3 col-sm-6 aos_input ">
-            <MainButton
-              onClick={onSearchClick}
-              btntext={"Search"}
-              btnclass={"button main_button w-100"}
-            />
-          </div>
-          <div className="col-md-3 col-sm-6 aos_input mt-2">
-            <MainButton
-              btntext={"Reset"}
-              btnclass={"button main_button w-100"}
-              type="reset"
-              onClick={OnReset}
-            />
-          </div>
+
+          {/* upload */}
+
+          {/* datatable */}
+
+          <DataTable
+            columns={columns}
+            data={expiredata}
+            pagination
+            highlightOnHover
+            pointerOnHover
+            className={"table_body expired_product_table"}
+          />
+          <SweetAlert
+            show={Alert}
+            title="Product Name"
+            text="Are you Sure you want to delete"
+            onConfirm={hideAlert}
+            showCancelButton={true}
+            onCancel={hideAlert}
+          />
         </div>
-
-        {/* upload */}
-
-        {/* datatable */}
-
-        <DataTable
-          columns={columns}
-          data={expiredata}
-          pagination
-          highlightOnHover
-          pointerOnHover
-          className={"table_body expired_product_table"}
-        />
-        <SweetAlert
-          show={Alert}
-          title="Product Name"
-          text="Are you Sure you want to delete"
-          onConfirm={hideAlert}
-          showCancelButton={true}
-          onCancel={hideAlert}
-        />
       </div>
-    </div>
     </>
   );
 };

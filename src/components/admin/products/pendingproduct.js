@@ -78,7 +78,7 @@ const Pendingproduct = () => {
   };
 
   useEffect(() => {
-    setloading(true)
+    setloading(true);
     axios
       .post(`${process.env.REACT_APP_BASEURL_0}/home?page=0&per_page=400`, {
         product_search: {
@@ -101,7 +101,7 @@ const Pendingproduct = () => {
         setpendingdata(response.data);
         setapicall(false);
         setsearcherror(false);
-        setloading(false)
+        setloading(false);
       })
       .catch(function (error) {
         console.log(error);
@@ -357,136 +357,136 @@ const Pendingproduct = () => {
   const handleClick = () => {};
   return (
     <>
-    {loading === true ?<Loader/>:null}
-    <div>
-      <h2>Pending Products</h2>
+      {loading === true ? <Loader /> : null}
+      <div>
+        <h2>Pending Products</h2>
 
-      {/* search bar */}
-      <div className="card mt-3 p-3 ">
-        <div className="row pb-3">
-          <div className="col-md-3 col-sm-6 aos_input">
-            <input
-              onChange={OnSearchChange}
-              name="product_title_name"
-              value={searchdata.product_title_name}
-              className={"adminsideinput"}
-              type={"text"}
-              placeholder={"Search by product name"}
-            />
-            {searcherror === true ? (
-              <small className="text-danger">please fill the feild</small>
-            ) : null}
+        {/* search bar */}
+        <div className="card mt-3 p-3 ">
+          <div className="row pb-3">
+            <div className="col-md-3 col-sm-6 aos_input">
+              <input
+                onChange={OnSearchChange}
+                name="product_title_name"
+                value={searchdata.product_title_name}
+                className={"form-control"}
+                type={"text"}
+                placeholder={"Search by product name"}
+              />
+              {searcherror === true ? (
+                <small className="text-danger">please fill the feild</small>
+              ) : null}
+            </div>
+            <div className="col-md-2 col-sm-6 aos_input">
+              <Form.Select
+                aria-label="Search by status"
+                className="adminselectbox"
+                placeholder="Search by category"
+                onChange={OnSearchChange}
+                name="category"
+                value={String(searchdata.category)}
+              >
+                <option value={""}>Select Category</option>
+                {(filtervategory || []).map((data, i) => {
+                  return (
+                    <option value={data.id} key={i}>
+                      {" "}
+                      {data.category_name}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </div>
+            <div className="col-md-2 col-sm-6 aos_input">
+              <Form.Select
+                aria-label="Search by status"
+                className="adminselectbox"
+                placeholder="Search by vendor"
+                onChange={OnSearchChange}
+                name="vendor"
+                value={String(searchdata.vendor)}
+              >
+                <option value={""}>Select Vendor</option>
+                {(vendorid || []).map((data, i) => {
+                  return (
+                    <option value={data.shop_name} key={i}>
+                      {" "}
+                      {data.shop_name}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </div>
+            <div className="col-md-2 col-sm-6 aos_input">
+              <Form.Select
+                aria-label="Search by brand"
+                className="adminselectbox"
+                placeholder="Search by brand"
+                onChange={OnSearchChange}
+                name="brand"
+                value={String(searchdata.brand)}
+              >
+                <option value={""}>Select Brand</option>
+                {(BrandJson.BrandJson || []).map((data, i) => {
+                  return (
+                    <option value={data} key={i}>
+                      {" "}
+                      {data}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </div>
+            <div className="col-md-3 col-sm-6 aos_input value={}">
+              <input
+                type={"date"}
+                onChange={OnDateChange}
+                name="manufacturing_date"
+                value={searchdata.manufacturing_date}
+                className={"adminsideinput"}
+                placeholder={"Search by Date"}
+                max={currentdate}
+              />
+            </div>
+            <div className="col-md-3 col-sm-6 mt-2 aos_input">
+              <MainButton
+                onClick={onSearchClick}
+                btntext={"Search"}
+                btnclass={"button main_button w-100"}
+              />
+            </div>
+            <div className="col-md-2 col-sm-6 mt-2 aos_input">
+              <MainButton
+                btntext={"Reset"}
+                btnclass={"button main_button w-100"}
+                type="reset"
+                onClick={OnReset}
+              />
+            </div>
           </div>
-          <div className="col-md-2 col-sm-6 aos_input">
-            <Form.Select
-              aria-label="Search by status"
-              className="adminselectbox"
-              placeholder="Search by category"
-              onChange={OnSearchChange}
-              name="category"
-              value={String(searchdata.category)}
-            >
-              <option value={""}>Select Category</option>
-              {(filtervategory || []).map((data, i) => {
-                return (
-                  <option value={data.id} key={i}>
-                    {" "}
-                    {data.category_name}
-                  </option>
-                );
-              })}
-            </Form.Select>
-          </div>
-          <div className="col-md-2 col-sm-6 aos_input">
-            <Form.Select
-              aria-label="Search by status"
-              className="adminselectbox"
-              placeholder="Search by vendor"
-              onChange={OnSearchChange}
-              name="vendor"
-              value={String(searchdata.vendor)}
-            >
-              <option value={""}>Select Vendor</option>
-              {(vendorid || []).map((data, i) => {
-                return (
-                  <option value={data.shop_name} key={i}>
-                    {" "}
-                    {data.shop_name}
-                  </option>
-                );
-              })}
-            </Form.Select>
-          </div>
-          <div className="col-md-2 col-sm-6 aos_input">
-            <Form.Select
-              aria-label="Search by brand"
-              className="adminselectbox"
-              placeholder="Search by brand"
-              onChange={OnSearchChange}
-              name="brand"
-              value={String(searchdata.brand)}
-            >
-              <option value={""}>Select Brand</option>
-              {(BrandJson.BrandJson || []).map((data, i) => {
-                return (
-                  <option value={data} key={i}>
-                    {" "}
-                    {data}
-                  </option>
-                );
-              })}
-            </Form.Select>
-          </div>
-          <div className="col-md-3 col-sm-6 aos_input value={}">
-            <input
-              type={"date"}
-              onChange={OnDateChange}
-              name="manufacturing_date"
-              value={searchdata.manufacturing_date}
-              className={"adminsideinput"}
-              placeholder={"Search by Date"}
-              max={currentdate}
-            />
-          </div>
-          <div className="col-md-3 col-sm-6 mt-2 aos_input">
-            <MainButton
-              onClick={onSearchClick}
-              btntext={"Search"}
-              btnclass={"button main_button w-100"}
-            />
-          </div>
-          <div className="col-md-2 col-sm-6 mt-2 aos_input">
-            <MainButton
-              btntext={"Reset"}
-              btnclass={"button main_button w-100"}
-              type="reset"
-              onClick={OnReset}
-            />
-          </div>
+
+          {/* upload */}
+
+          {/* datatable */}
+
+          <DataTable
+            columns={columns}
+            data={pendingdata.results}
+            pagination
+            highlightOnHover
+            pointerOnHover
+            className={"table_body pendingproduct_table"}
+          />
+          <SweetAlert
+            show={Alert}
+            title="Product Name"
+            text="Are you Sure you want to restore"
+            onConfirm={hideAlert}
+            showCancelButton={true}
+            onCancel={hideAlert}
+          />
         </div>
-
-        {/* upload */}
-
-        {/* datatable */}
-
-        <DataTable
-          columns={columns}
-          data={pendingdata.results}
-          pagination
-          highlightOnHover
-          pointerOnHover
-          className={"table_body pendingproduct_table"}
-        />
-        <SweetAlert
-          show={Alert}
-          title="Product Name"
-          text="Are you Sure you want to restore"
-          onConfirm={hideAlert}
-          showCancelButton={true}
-          onCancel={hideAlert}
-        />
       </div>
-    </div>
     </>
   );
 };

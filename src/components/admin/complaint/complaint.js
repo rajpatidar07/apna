@@ -24,6 +24,8 @@ const Complaint = () => {
   });
   const [show, setShow] = useState("");
   const [apicall, setapicall] = useState(false);
+  let [searcherror, setsearcherror] = useState(false);
+  const token = localStorage.getItem("token");
 
   const handleClose = () => {
     formRef.current.reset();
@@ -55,32 +57,60 @@ const Complaint = () => {
       });
     setShow(e);
   };
-  const [searchdata, setsearchData] = useState({
+  const [searchdata, setSearchData] = useState({
     id: "",
     status_: "",
     ticket_date: "",
   });
 
   const OnSearchChange = (e) => {
-    setsearchData({ ...searchdata, [e.target.name]: e.target.value });
+    setSearchData({ ...searchdata, [e.target.name]: e.target.value });
+    setsearcherror(false);
   };
 
   const onSearchClick = () => {
-    axios
-      .post(`${process.env.REACT_APP_BASEURL}/complaint_search`, {
-        id: `${searchdata.id}`,
-        status_: `${searchdata.status_}`,
-        ticket_date: `${searchdata.ticket_date}`,
-      })
-      .then((response) => {
-        setcomplaintdata(response.data);
-        setapicall(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    if (
+      searchdata.id === "" &&
+      searchdata.ticket_date === "" &&
+      searchdata.status_ === ""
+    ) {
+      setsearcherror(true);
+    } else {
+      axios
+        .post(
+          `${process.env.REACT_APP_BASEURL}/complaint_search`,
+          {
+            id: `${searchdata.id}`,
+            status_: `${searchdata.status_}`,
+            ticket_date: `${searchdata.ticket_date}`,
+          },
+          {
+            headers: {
+              admin_token: token,
+            },
+          }
+        )
+        .then((response) => {
+          setcomplaintdata(response.data);
+          setapicall(false);
+          setsearcherror(false);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
   };
 
+  /*Function to reset thre search feilds */
+  const onReset = () => {
+    setSearchData({
+      id: "",
+      status_: "",
+      ticket_date: "",
+    });
+    setapicall(true);
+    setsearcherror(false);
+  };
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_BASEURL}/complaint_details?id=all`)
@@ -92,6 +122,7 @@ const Complaint = () => {
         console.log(error);
       });
   }, [apicall]);
+
   const columns = [
     {
       name: "Id",
@@ -167,7 +198,7 @@ const Complaint = () => {
       },
     },
     {
-      name: "Status",
+      name: "status_",
       selector: (row) => (
         <span
           className={
@@ -182,6 +213,7 @@ const Complaint = () => {
               : null
           }
         >
+          {/* {row.status_} */}
           {row.status_ === "solved"
             ? "Solved"
             : row.status_ === "pending"
@@ -215,12 +247,15 @@ const Complaint = () => {
     },
   ];
 
+  /*Onchange Functoion to update complaint */
   const handleFormChange = (e) => {
     seteditcomplaintdata({
       ...editcomplaintdata,
       [e.target.name]: e.target.value,
     });
   };
+
+  /*Onclik Functoion to update complaint */
   const UpdateCategoryClick = (e) => {
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
@@ -232,7 +267,12 @@ const Complaint = () => {
       axios
         .put(
           `${process.env.REACT_APP_BASEURL}/complaint_update`,
-          editcomplaintdata
+          editcomplaintdata,
+          {
+            headers: {
+              admin_token: token,
+            },
+          }
         )
         .then((response) => {
           setShow(false);
@@ -261,6 +301,9 @@ const Complaint = () => {
               onChange={(e) => OnSearchChange(e)}
               value={searchdata.id}
             />
+            {searcherror === true ? (
+              <small className="text-danger">please fill the feild</small>
+            ) : null}
           </div>
 
           <div className="col-md-3 col-sm-6 aos_input">
@@ -270,7 +313,7 @@ const Complaint = () => {
               onChange={(e) => OnSearchChange(e)}
               value={searchdata.ticket_date}
               name={"ticket_date"}
-              className={"adminsideinput"}
+              className={"form-control"}
             />
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
@@ -281,7 +324,7 @@ const Complaint = () => {
               name={"status_"}
               value={searchdata.status_}
             >
-              <option value={""}>Status</option>
+              <option value={""}>status</option>
               <option value="pending">Pending</option>
               <option value="solved">Solved</option>
               <option value="failed">Failed</option>
@@ -294,6 +337,13 @@ const Complaint = () => {
               btntext={"Search"}
               btnclass={"button main_button w-100"}
               onClick={() => onSearchClick()}
+            />
+          </div>
+          <div className="col-md-3 col-sm-6 aos_input mt-2">
+            <MainButton
+              btntext={"Reset"}
+              btnclass={"button main_button w-100"}
+              onClick={() => onReset()}
             />
           </div>
         </div>
@@ -411,16 +461,16 @@ const Complaint = () => {
                     className="mb-3 aos_input"
                     controlId="formBasicEmail"
                   >
-                    <Form.Label>Status</Form.Label>
+                    <Form.Label>status</Form.Label>
                     <Form.Select
-                      aria-label="Status"
+                      aria-label="status_"
                       className="adminselectbox"
-                      placeholder="Status"
+                      placeholder="status"
                       onChange={(e) => handleFormChange(e)}
                       name={"status_"}
                       value={editcomplaintdata.status_}
                     >
-                      <option value={""}>Status</option>
+                      <option value={""}>status_</option>
                       <option value="solved">Solved</option>
                       <option value="pending">Pending</option>
                       <option value="proccess">Processing</option>

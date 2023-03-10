@@ -377,7 +377,7 @@ const Soldproduct = () => {
                 onChange={OnSearchChange}
                 name="product_title_name"
                 value={searchdata.product_title_name}
-                className={"adminsideinput"}
+                className={"form-control"}
               />
               {searcherror === true ? (
                 <small className="text-danger">please fill the feild</small>

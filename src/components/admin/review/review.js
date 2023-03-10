@@ -25,6 +25,8 @@ const Review = () => {
     status: "",
     note: "",
   });
+  let [searcherror, setsearcherror] = useState(false);
+
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
@@ -66,22 +68,42 @@ const Review = () => {
 
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
+    setsearcherror(false);
   };
 
   const onSearchClick = () => {
-    axios
-      .post(`${process.env.REACT_APP_BASEURL}/review_list`, {
-        product_name: `${searchdata.product_name}`,
-        category_type: `${searchdata.category_type}`,
-        status: `${searchdata.status}`,
-      })
-      .then((response) => {
-        setreviewdata(response.data);
-        setapicall(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    if (
+      searchdata.product_name === "" &&
+      searchdata.category_type === "" &&
+      searchdata.status === ""
+    ) {
+      setsearcherror(true);
+    } else {
+      axios
+        .post(`${process.env.REACT_APP_BASEURL}/review_list`, {
+          product_name: `${searchdata.product_name}`,
+          category_type: `${searchdata.category_type}`,
+          status: `${searchdata.status}`,
+        })
+        .then((response) => {
+          setreviewdata(response.data);
+          setapicall(false);
+          setsearcherror(false);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+  };
+  /*onclick funtion to Reset the search feild */
+  const onReset = () => {
+    setsearchData({
+      product_name: "",
+      category_type: "",
+      status: "",
+    });
+    setapicall(true);
+    setsearcherror(false);
   };
 
   const handleFormChange = (e) => {
@@ -127,6 +149,7 @@ const Review = () => {
         console.log(error);
       });
   }, [apicall]);
+
   const columns = [
     {
       name: "ID",
@@ -203,10 +226,10 @@ const Review = () => {
             className=" p-0 m-0  editiconn text-secondary"
             onClick={handleShow.bind(this, row.id)}
           />
-          {/* <BsTrash
+          <BsTrash
             className=" p-0 m-0 editiconn text-danger"
             onClick={handleAlert}
-          /> */}
+          />
         </div>
       ),
     },
@@ -228,6 +251,9 @@ const Review = () => {
               value={searchdata.product_name}
               className={"adminsideinput"}
             />
+            {searcherror === true ? (
+              <small className="text-danger">please fill the feild</small>
+            ) : null}
           </div>
           <div className="col-md-3 col-sm-6 aos_input">
             <Form.Select
@@ -249,6 +275,13 @@ const Review = () => {
               btntext={"Search"}
               btnclass={"button main_button w-100"}
               onClick={() => onSearchClick()}
+            />
+          </div>
+          <div className="col-md-3 col-sm-6 aos_input">
+            <MainButton
+              btntext={"Reset"}
+              btnclass={"button main_button w-100"}
+              onClick={() => onReset()}
             />
           </div>
         </div>
@@ -344,6 +377,7 @@ const Review = () => {
             </Modal.Body>
             <Modal.Footer>
               <button
+                type="button"
                 className="button main_outline_button"
                 onClick={handleClose}
               >
@@ -371,11 +405,11 @@ const Review = () => {
           showCancelButton={true}
           onCancel={hideAlert}
         />
-        {/* <SAlert
+        <SAlert
           show={UpdateAlert}
           title="Updated Review Successfully "
           onConfirm={closeUpdateAlert}
-        /> */}
+        />
       </div>
     </div>
   );
