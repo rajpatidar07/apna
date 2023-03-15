@@ -769,6 +769,7 @@ function Product() {
   }, []);
 
   const handleClose = () => {
+
     setproductdata(data);
     setcustomarray([]);
     setvariantarray(veriantData);
@@ -778,6 +779,7 @@ function Product() {
     setmodalshow(false);
     setVarietyUnitvalidation("");
     setvarietyValidated(false);
+    
   };
 
   // seotag
@@ -1520,6 +1522,7 @@ function Product() {
     }
   };
   const handleUpdateProduct = (e) => {
+  
     e.preventDefault();
     axios
       .put(`${process.env.REACT_APP_BASEURL}/products_update`, productdata)
@@ -1541,8 +1544,16 @@ function Product() {
   };
 
   const OnReset = () => {
-    setsearchData({ product_title_name: "", product_status: "" });
-    setapicall(true);
+    setsearchData({ 
+      product_title_name: "",
+      product_status: "",
+      category: "",
+      vendor: "",
+      brand: "",
+      tag:""
+   });
+  setapicall(true);
+
   };
 
   //-----------------------Download excel sheet code start here---------------------------------------------------
@@ -1618,7 +1629,7 @@ function Product() {
         console.log(error);
       });
   };
-
+console.log("*8888888888888888"+JSON.stringify(category))
   //-----------------------Download excel sheet code End  here---------------------------------------------------
   return (
     <div className="App productlist_maindiv">
@@ -1644,6 +1655,26 @@ function Product() {
               placeholder="Search by category"
               onChange={OnSearchChange}
               name="category"
+              value={String(searchdata.category)}
+            >
+              <option value={""}>Select Category</option>
+              {(filtervategory || []).map((data, i) => {
+                return (
+                  <option value={data.id} key={i}>
+                    {" "}
+                    {data.id}
+                  </option>
+                );
+              })}
+            </Form.Select>
+          </div>
+          {/* <div className="col-md-2 col-sm-6 aos_input">
+            <Form.Select
+              aria-label="Search by status"
+              className="adminselectbox"
+              placeholder="Search by category"
+              onChange={OnSearchChange}
+              name="category"
               value={searchdata.category}
             >
               <option value={""}>Select Category</option>
@@ -1656,7 +1687,7 @@ function Product() {
                 );
               })}
             </Form.Select>
-          </div>
+          </div> */}
           <div className="col-md-2 col-sm-6 aos_input">
             <Form.Select
               aria-label="Search by status"
@@ -1802,6 +1833,7 @@ function Product() {
         >
           <Form
             className="p-2 addproduct_form"
+            noValidate 
             validated={validated}
             ref={mainformRef}
             onSubmit={
@@ -1827,15 +1859,16 @@ function Product() {
                       >
                         <Form.Label className="inputlabelheading" sm="12">
                           Product Title/Name
-                          <span className="text-danger">
+                          {/* <span className="text-danger">
                             *
+                            {validated===false?
                             <Form.Control.Feedback
-                              type="invalid"
+                              type="text"
                               className="h6"
                             >
                               Please fill productname
-                            </Form.Control.Feedback>
-                          </span>
+                            </Form.Control.Feedback>:null}
+                          </span> */}
                         </Form.Label>
                         <Col sm="12">
                           <Form.Control
@@ -1848,8 +1881,8 @@ function Product() {
                             maxLength={20}
                           />
                           <Form.Control.Feedback type="invalid" className="h6">
-                            Please fill productname
-                          </Form.Control.Feedback>
+                    Please Product Name
+                  </Form.Control.Feedback>
                         </Col>
                       </Form.Group>
                       <Form.Group
@@ -1874,6 +1907,7 @@ function Product() {
                             }
                             required
                           />
+                          
                         </Col>
                       </Form.Group>
                       <Form.Group
@@ -1902,7 +1936,11 @@ function Product() {
                               return <option value={item}>{item}</option>;
                             })}
                           </Form.Select>
+                          <Form.Control.Feedback type="invalid" className="h6">
+                    Please Select Product Brand
+                  </Form.Control.Feedback>
                         </Col>
+                        
                       </Form.Group>
                       <Form.Group
                         className="mx-3"
@@ -1910,7 +1948,7 @@ function Product() {
                       >
                         <Form.Label className="inputlabelheading" sm="12">
                           Store Name
-                          <span className="text-danger">
+                          {/* <span className="text-danger">
                             *
                             <Form.Control.Feedback
                               type="invalid"
@@ -1918,7 +1956,7 @@ function Product() {
                             >
                               Please fill storename
                             </Form.Control.Feedback>
-                          </span>
+                          </span> */}
                         </Form.Label>
                         <Form.Select
                           onChange={handleVendorNameChange}
@@ -1945,11 +1983,14 @@ function Product() {
                             );
                           })}
                         </Form.Select>
-                        <Col sm="12">
+                        <Form.Control.Feedback type="invalid" className="h6">
+                    Please Select Store Name
+                  </Form.Control.Feedback>
+                        {/* <Col sm="12">
                           <Form.Control.Feedback type="invalid" className="h6">
                             Please fill storename
                           </Form.Control.Feedback>
-                        </Col>
+                        </Col> */}
                       </Form.Group>
                     </div>
                     <div className="col-md-8">
@@ -2244,6 +2285,9 @@ function Product() {
                           onChange={(e) => handleInputFieldChange(e)}
                           required
                         />
+                         <Form.Control.Feedback type="invalid" className="h6">
+                    Please Fill Gst
+                  </Form.Control.Feedback>
                       </Col>
                     </Form.Group>
                     <Form.Group className="mx-3" controlId="validationCustom11">
@@ -2399,7 +2443,7 @@ function Product() {
                                         <th>
                                           Mrp{" "}
                                           <span className="text-danger">
-                                            *{" "}
+                                            *{""}
                                           </span>
                                         </th>
                                         <th>Discount</th>
@@ -2649,8 +2693,11 @@ function Product() {
                                                 }
                                                 required
                                               />
+                                             
                                             </InputGroup>
+                                           
                                           </div>
+                                         
                                         </td>
                                         <td className="p-0 text-center">
                                           <div className=" d-flex align-items-center">
@@ -2912,7 +2959,7 @@ function Product() {
                                             className="mt-1 ms-2 text-danger"
                                             type="invalid"
                                           >
-                                            Please Fill size and colors
+                                            Please fill size and colors
                                           </p>
                                         ) : varietyUnitvalidation ===
                                           "fillUnit&color" ? (
@@ -3232,12 +3279,12 @@ function Product() {
               </div>
             </Modal.Body>
             <Modal.Footer className="addproductfooter">
-              <Iconbutton
+              {/* <Iconbutton
                 btntext={" Cancel"}
                 onClick={() => handleClose()}
                 btnclass={"button main_outline_button px-2"}
                 // Iconname={<GiCancel /> }
-              />
+              /> */}
               <MainButton
                 btntext={"Save as Draft"}
                 onClick={() => handleSaveDraft()}
@@ -3431,6 +3478,7 @@ function Product() {
                                         );
                                       })}
                                     </Form.Select>
+                                    
                                   </InputGroup>
                                 </div>
                               </td>

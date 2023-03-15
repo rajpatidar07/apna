@@ -10,7 +10,7 @@ import MainButton from "../common/button";
 import BrandJson from "./../json/BrandJson";
 
 const Featuredproduct = () => {
-  const currentdate = moment().format("");
+  const currentdate = moment().format("YYYY-MM-DD");
   const formRef = useRef();
   const [featuredProductData, setFeatureProductData] = useState([]);
   const [UpdateAlert, setUpdateAlert] = useState(false);

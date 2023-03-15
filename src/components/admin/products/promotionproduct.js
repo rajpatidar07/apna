@@ -26,7 +26,7 @@ const Promotionproduct = () => {
   const [featuredData, setFeaturetData] = useState([]);
   const [id, setId] = useState("");
   const [UpdateAlert, setUpdateAlert] = useState(false);
-  const currentdate = moment().format("");
+  const currentdate = moment().format("YYYY-MM-DD");
   const [searchdata, setsearchData] = useState({
         start_date: "",
         end_date: "",

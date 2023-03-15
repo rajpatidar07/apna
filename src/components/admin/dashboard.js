@@ -87,7 +87,7 @@ function Dashboard() {
         },
         tooltip: {
           x: {
-            format: 'dd/MM/yy HH:mm'
+            format: 'DD/MM/YYYY HH:mm'
           },
         },
        
