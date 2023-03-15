@@ -69,6 +69,7 @@ function Product() {
     childcategory: "",
     gcategory: "",
   });
+  console.log("categoryyyyy------"+JSON.stringify(filtervategory))
   const [categoryeditparent, setCategoryEditparent] = useState("");
   const [categoryeditsubparent, setCategoryEditSubparent] = useState("");
   const [categoryeditchildparent, setCategoryEditChildparent] = useState("");
@@ -501,11 +502,11 @@ function Product() {
           size="sm"
           className="w-100"
           onChange={(e) => onProductStatusChange(e, row.id, row.product_id)}
-          value={row.product_status}
+          value={row.Status}
           disabled={condition === true ? true : false}
         >
           <option value={""}>Status</option>
-          {(productstatus.productstatus || []).map((data, i) => {
+          {(productstatus.Status || []).map((data, i) => {
             return (
               <option value={data} key={i}>
                 {" "}
@@ -573,6 +574,8 @@ function Product() {
       ),
     },
   ];
+  console.log("8888******&&&&&&&&&&&&&&&&&&&&&&&&&&&&7*----"+JSON.stringify(productstatus))
+
   const categoryFormChange = (e, id) => {
     setIndVal(e.target.value);
     setScategory({ ...scategory, [e.target.name]: e.target.value });
@@ -787,6 +790,7 @@ function Product() {
   const ontagchange = (e) => {
     tagname = e.target.value;
     setaddtag(tagname);
+    setValidated(false)
   };
 
   const tagRemoveClick = (e) => {
@@ -1430,6 +1434,7 @@ function Product() {
       [e.target.name]: e.target.value,
     });
   };
+ 
   const handleVendorNameChange = (e) => {
     let arr = e.target.value.split(",");
     setproductdata({
@@ -1521,6 +1526,7 @@ function Product() {
       handleClose();
     }
   };
+  console.log("add producttt--------"+JSON.stringify(productdata))
   const handleUpdateProduct = (e) => {
   
     e.preventDefault();
@@ -1629,7 +1635,7 @@ function Product() {
         console.log(error);
       });
   };
-console.log("*8888888888888888"+JSON.stringify(category))
+// console.log("*8888888888888888"+JSON.stringify(category))
   //-----------------------Download excel sheet code End  here---------------------------------------------------
   return (
     <div className="App productlist_maindiv">
@@ -1894,19 +1900,29 @@ console.log("*8888888888888888"+JSON.stringify(category))
                         </Form.Label>
                         <Col sm="12">
                           <Form.Control
-                            type="text"
-                            placeholder="Product Slug"
-                            // onChange={(e) => handleInputFieldChange(e)}
-                            name={"product_slug"}
-                            value={
-                              productdata.product_title_name === "" ||
-                              productdata.product_title_name === "null" ||
-                              productdata.product_title_name === null
-                                ? null
-                                : productdata.product_title_name + "_123"
-                            }
-                            required
+                           type="text"
+                           placeholder="product_slug"
+                           required
+                           onChange={(e) => handleInputFieldChange(e)}
+                           name={"product_slug"}
+                           value={productdata.product_slug}
+                           maxLength={20}
+
+                            // type="text"
+                            // placeholder="Product Slug"
+                            // onChange={(e) => handleInputFieldChange1(e)}
+                            // name={"product_slug"}
+                            // value={
+                            //   productdata.product_title_name === "" ||
+                            //   productdata.product_title_name === "null" ||
+                            //   productdata.product_title_name === null
+                            //     ? null
+                            //     : productdata.product_title_name + "_123"
+                           
                           />
+                          <Form.Control.Feedback type="invalid" className="h6">
+                    Please Product Name
+                  </Form.Control.Feedback>
                           
                         </Col>
                       </Form.Group>
@@ -2357,6 +2373,7 @@ console.log("*8888888888888888"+JSON.stringify(category))
                 >
                   {modalshow === "add" ? (
                     <div className="my-3 inputsection_box">
+                       <h5 className="m-0">Add Variety</h5>
                       <div className="productvariety_box">
                         {/* <div className="productvariety">
                           <Form.Group
@@ -2557,6 +2574,7 @@ console.log("*8888888888888888"+JSON.stringify(category))
                                                   }
                                                 )}
                                               </Form.Select>
+                                              
                                             </InputGroup>
                                           </div>
                                         </td>
@@ -2594,6 +2612,7 @@ console.log("*8888888888888888"+JSON.stringify(category))
                                                   }
                                                 )}
                                               </Form.Select>
+                                             
                                             </InputGroup>
                                           </div>
                                         </td>
@@ -2951,7 +2970,7 @@ console.log("*8888888888888888"+JSON.stringify(category))
                                             Please Click On Plus Button To Add
                                             Variety
                                           </p>
-                                        ) : null}
+                                        ) : null }
 
                                         {varietyUnitvalidation ===
                                         "fillUnit&size&color" ? (
@@ -3106,16 +3125,17 @@ console.log("*8888888888888888"+JSON.stringify(category))
                     >
                       <div className=" d-flex align-items-center my-2">
                         <InputGroup className="" size="sm">
-                          <Form.Control
-                            sm="9"
-                            onChange={ontagchange}
-                            value={addtag}
-                            // onKeyPress={(event) => {
-                            //   if (event.key === "Enter") {
-                            //     ontagaddclick();
-                            //   }
-                            // }}
-                          />
+                        <Form.Control
+                          name={"quantity"}
+                          placeholder="Tag"
+                          type="text"
+                          value={addtag}
+                          onChange={ontagchange}
+                         
+                          required
+                        />
+
+                          
                           <Button
                             variant="outline-success"
                             className="addcategoryicon"
@@ -3124,9 +3144,14 @@ console.log("*8888888888888888"+JSON.stringify(category))
                           >
                             +
                           </Button>
+                       
                         </InputGroup>
                       </div>
-
+                      {validated===true?( <p  className="mt-1 ms-2 text-danger my-3"
+                                    type="invalid">
+                    Add Seo Tag
+                  </p>):null}
+                     
                       <div className="d-flex align-items-center tagselectbox mt-2">
                         {productdata.seo_tag == "" && addtag === "" ? (
                           ""

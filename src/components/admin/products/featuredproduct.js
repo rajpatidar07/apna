@@ -373,11 +373,11 @@ const submitHandler = () => {
         <h2>Featured Products</h2>
         <div className="card mt-3 p-3">
         <div className="row pb-3">
-        <div className="col-md-3 col-sm-6 aos_input">
+        {/* <div className="col-md-3 col-sm-6 aos_input">
   <input type={"text"}  onChange={OnSearchChange} name='product_title_name'
         value={searchdata.status} placeholder={"Search by status"} className={'adminsideinput'}/>
         {searcherror === true ?<small className="text-danger">This feild is required</small>:null}
-  </div>
+  </div> */}
   <div className="col-md-2 col-sm-6 aos_input">
             <Form.Select
               aria-label="Search by status"
@@ -442,7 +442,7 @@ const submitHandler = () => {
     <div className="col-md-3 col-sm-6 aos_input">
 <MainButton btntext={"Search"} btnclass={'button main_button w-100'} onClick={Search} />
   </div>
-  <div className="col-md-3 col-sm-6 aos_input mt-2">
+  <div className="col-md-3 col-sm-6 aos_input">
      <MainButton
         btntext={"Reset"}
         btnclass={"button main_button w-100"}

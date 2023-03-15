@@ -238,6 +238,7 @@ const Productdetail = () => {
   };
 
   const onVariantChange = (e) => {
+    setValidated(false)
     setVarietyUnitvalidation("");
     setcustomValidated(false);
     setvariantapicall(true);
@@ -296,6 +297,8 @@ const Productdetail = () => {
         variantarray.quantity == ""
       ) {
         setcustomValidated(true);
+      setValidated(true);
+
       } else if (variantarray.quantity == 0 || variantarray.quantity < 1) {
         setVarietyUnitvalidation("QwanityValidation");
       } else if (variantarray.manufacturing_date > variantarray.expire_date) {
@@ -339,6 +342,7 @@ const Productdetail = () => {
           .then((response) => {
             if ((response.affectedRows = "1")) {
               setProductAlert(true);
+              setValidated(false);
 
               setvariantarray({
                 product_status: "",
@@ -924,7 +928,42 @@ const Productdetail = () => {
                                 </td>
 
                                 <td className="p-0 text-center">
-                                  <div className=" d-flex align-items-center">
+                                <div className=" d-flex align-items-center">
+                                            <InputGroup className="" size="sm">
+                                              <Form.Select
+                                                aria-label="Default select example"
+                                                required
+                                                sm="9"
+                                                name="colors"
+                                                value={variantarray.colors}
+                                                onChange={(e) =>
+                                                  onVariantChange(e)
+                                                }
+                                              >
+                                                <option
+                                                  value={
+                                                    variantarray.colors == ""
+                                                  }
+                                                >
+                                                  Select
+                                                </option>
+                                                {(varietyy.color || []).map(
+                                                  (vari, i) => {
+                                                    return (
+                                                      <option
+                                                        value={vari}
+                                                        key={i}
+                                                      >
+                                                        {vari}
+                                                      </option>
+                                                    );
+                                                  }
+                                                )}
+                                              </Form.Select>
+                                             
+                                            </InputGroup>
+                                          </div>
+                                  {/* <div className=" d-flex align-items-center">
                                     <InputGroup className="" size="sm">
                                       <Form.Select
                                         aria-label="Default select example"
@@ -949,8 +988,9 @@ const Productdetail = () => {
                                           }
                                         )}
                                       </Form.Select>
+                                      
                                     </InputGroup>
-                                  </div>
+                                  </div> */}
                                 </td>
 
                                 <td className="p-0 text-center">
@@ -1051,6 +1091,13 @@ const Productdetail = () => {
                                       />
                                     </InputGroup>
                                   </div>
+                                  {varietyUnitvalidation==="mrpmore"?<p
+                                    className="mt-1 ms-2 text-danger my-3"
+                                    type="invalid"
+                                  >
+                                    Mrp must be lesser than 50000 and greater
+                                    than 0
+                                  </p>:null}
                                 </td>
                                 <td className="p-0 text-center">
                                   <div className=" d-flex align-items-center">
@@ -1195,7 +1242,31 @@ const Productdetail = () => {
                                 </td>
                                 <td className="p-0 text-center"></td>
                                 <td className="p-0">
-                                  <div className="manufacture_date">
+                                <Form.Group className="mx-3" controlId="validationCustom11">
+                      <Form.Label className="inputlabelheading" sm="12">
+                        
+                      </Form.Label>
+                      <InputGroup className="" size="sm">
+                        <Form.Control
+                          name={"quantity"}
+                          min={1}
+                          placeholder="qty"
+                          type="number"
+                          value={variantarray.quantity}
+                          onChange={(e) => onVariantChange(e)}
+                          onKeyPress={(event) => {
+                            if (event.key === "Enter") {
+                              onVariantaddclick();
+                            }
+                          }}
+                          required
+                        />
+                         <Form.Control.Feedback type="invalid" className="h6">
+                    Please Fill Quantity
+                  </Form.Control.Feedback>
+                  </InputGroup>
+                    </Form.Group>
+                                  {/* <div className="manufacture_date">
                                     <InputGroup className="" size="sm">
                                       <Form.Control
                                         name={"quantity"}
@@ -1216,7 +1287,7 @@ const Productdetail = () => {
                                         }}
                                       />
                                     </InputGroup>
-                                  </div>
+                                  </div> */}
                                 </td>
                                 <td className="p-0">
                                   <div className=" d-flex align-items-center">

@@ -404,7 +404,7 @@ const Addproduct = (props) => {
                     <Form.Label className="inputlabelheading" sm="12">
                       Product Title/Name<span className="text-danger">*
                         <Form.Control.Feedback type="invalid" className="h6">
-                          Please fill productname
+                          Please fill product name
                         </Form.Control.Feedback></span>
                     </Form.Label>
                     <Col sm="12">
