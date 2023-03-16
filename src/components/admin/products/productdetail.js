@@ -930,7 +930,34 @@ const Productdetail = () => {
                                 <td className="p-0 text-center">
                                 <div className=" d-flex align-items-center">
                                             <InputGroup className="" size="sm">
-                                              <Form.Select
+                                            <Form.Select
+                                            aria-label="Default select example"
+                          name="colors"
+                          value={variantarray.colors}
+                          onChange={(e) =>
+                            onVariantChange(e)
+                          }
+                          required
+                        >
+                          {" "}
+                          <option value={""}> Select Color</option>
+                          {(varietyy.color||[]).map((vari, i) => {
+                            return (
+                              <option
+                              value={vari}
+                              key={i}
+                                selected={
+                                  (productdata.color)
+                                  
+                                }
+                              >
+                                {vari}
+                                
+                              </option>
+                            );
+                          })}
+                        </Form.Select>
+                                              {/* <Form.Select
                                                 aria-label="Default select example"
                                                 required
                                                 sm="9"
@@ -959,7 +986,7 @@ const Productdetail = () => {
                                                     );
                                                   }
                                                 )}
-                                              </Form.Select>
+                                              </Form.Select> */}
                                              
                                             </InputGroup>
                                           </div>
@@ -996,18 +1023,29 @@ const Productdetail = () => {
                                 <td className="p-0 text-center">
                                   <div className=" d-flex align-items-center">
                                     <InputGroup className="" size="sm">
-                                      <Form.Control
+                                    <Form.Control
+                                                type="number"
+                                                sm="9"
+                                                
+                                                value={
+                                                  variantarray.unit_quantity
+                                                }
+                                                disabled={
+                                                  variantarray.unit == "pcs"
+                                                    ? true
+                                                    : false
+                                                }
+                                                onChange={(e) =>
+                                                  onVariantChange(e)
+                                                }
+                                                name={"unit_quantity"}
+                                                required
+                                              />
+                                      {/* <Form.Control
                                         value={
-                                          // variantarray.unit === "gms"
-                                          //   ? variantarray.unit_quantity
-                                          //   : variantarray.unit === "ml"
-                                          //   ? variantarray.unit_quantity
-                                          //   : variantarray.unit === "piece"
-                                          //   ? variantarray.unit_quantity
-                                          //   : variantarray.unit === ""
-                                          //   ?
+                                        
                                           variantarray.unit_quantity
-                                          // : null
+                                         
                                         }
                                         required={
                                           variantarray.unit !== "pcs" &&
@@ -1016,7 +1054,7 @@ const Productdetail = () => {
                                             : false
                                         }
                                         disabled={
-                                          // productVeriantUnit == "pcs" ||
+                                         
                                           variantarray.unit == "pcs"
                                             ? true
                                             : false
@@ -1030,7 +1068,7 @@ const Productdetail = () => {
                                         }
                                         onChange={(e) => onVariantChange(e)}
                                         name={"unit_quantity"}
-                                      />
+                                      /> */}
                                     </InputGroup>
                                   </div>
                                 </td>
@@ -1038,36 +1076,42 @@ const Productdetail = () => {
                                 <td className="p-0 text-center">
                                   <div className=" d-flex align-items-center">
                                     <InputGroup className="" size="sm">
-                                      <Form.Select
-                                        aria-label="Default select example"
-                                        required
-                                        sm="9"
-                                        name="size"
-                                        value={variantarray.size}
-                                        onChange={(e) => onVariantChange(e)}
-                                        disabled={
-                                          // productVeriantUnit !== "pcs" ||
-                                          variantarray.unit !== "pcs" &&
-                                          variantarray.unit !== ""
-                                            ? true
-                                            : variantarray.unit == ""
-                                            ? false
-                                            : false
-                                        }
-                                      >
-                                        <option value={variantarray.size == ""}>
-                                          Select
-                                        </option>
-                                        {(varietyy.size || []).map(
-                                          (vari, i) => {
-                                            return (
-                                              <option value={vari} key={i}>
-                                                {vari}
-                                              </option>
-                                            );
+                                    <Form.Select
+                                           aria-label="Default select example"
+                                           required
+                                           sm="9"
+                                           name="size"
+                                           value={variantarray.size}
+                                           onChange={(e) =>
+                                             onVariantChange(e)
+                                           }
+                                           disabled={
+                                            variantarray.unit !== "pcs" &&
+                                            variantarray.unit !== ""
+                                              ? true
+                                              : variantarray.unit == ""
+                                              ? false
+                                              : false
                                           }
-                                        )}
-                                      </Form.Select>
+                        >
+                          {" "}
+                          <option value={""}> Select Size</option>
+                          {(varietyy.size||[]).map((vari, i) => {
+                            return (
+                              <option
+                              value={vari}
+                              key={i}
+                                selected={
+                                  (productdata.size)
+                                  
+                                }
+                              >
+                                {vari}
+                                
+                              </option>
+                            );
+                          })}
+                        </Form.Select>
                                     </InputGroup>
                                   </div>
                                 </td>
@@ -1077,9 +1121,13 @@ const Productdetail = () => {
                                     <InputGroup className="" size="sm">
                                       <Form.Control
                                         type="number"
-                                        step={"0.01"}
-                                        min={1}
+                                        maxLength={"5"}
+                                        minLength={"1"}
+                                        min="1"
+                                        max="50000"
+                                       
                                         sm="9"
+                                        
                                         // className={
                                         //   customvalidated === true
                                         //     ? "border-danger"
@@ -1105,6 +1153,7 @@ const Productdetail = () => {
                                       <Form.Control
                                         type="number"
                                         sm="9"
+                                        
                                         min={1}
                                         max={"100"}
                                         onChange={(e) => onVariantChange(e)}
@@ -1192,21 +1241,33 @@ const Productdetail = () => {
                                 <td className="p-0 text-center">
                                   <div className="manufacture_date">
                                     <InputGroup className="" size="sm">
-                                      <Form.Control
+                                    <Form.Control
+                                                type="date"
+                                                sm="9"
+                                                required
+                                                min={moment().format(
+                                                  "YYYY-MM-DD"
+                                                )}
+                                               
+                                                onChange={(e) =>
+                                                  onVariantChange(e)
+                                                }
+                                                name={"manufacturing_date"}
+                                                value={
+                                                  variantarray.manufacturing_date
+                                                }
+                                              />
+                                      {/* <Form.Control
                                         type="date"
                                         sm="9"
-                                        // className={
-                                        //   customvalidated === true
-                                        //     ? "border-danger"
-                                        //     : null
-                                        // }
+                                       
                                         min={moment().format("YYYY-MM-DD")}
                                         onChange={(e) => onVariantChange(e)}
                                         name={"manufacturing_date"}
                                         value={moment(
                                           variantarray.manufacturing_date
                                         ).format("YYYY-MM-DD")}
-                                      />
+                                      /> */}
                                     </InputGroup>
                                   </div>
                                 </td>
@@ -1246,24 +1307,20 @@ const Productdetail = () => {
                       <Form.Label className="inputlabelheading" sm="12">
                         
                       </Form.Label>
-                      <InputGroup className="" size="sm">
-                        <Form.Control
-                          name={"quantity"}
-                          min={1}
-                          placeholder="qty"
-                          type="number"
-                          value={variantarray.quantity}
-                          onChange={(e) => onVariantChange(e)}
-                          onKeyPress={(event) => {
-                            if (event.key === "Enter") {
-                              onVariantaddclick();
-                            }
-                          }}
-                          required
-                        />
-                         <Form.Control.Feedback type="invalid" className="h6">
-                    Please Fill Quantity
-                  </Form.Control.Feedback>
+                      <InputGroup className="mb-2" size="sm">
+                      <Form.Control
+                                                type="number"
+                                                sm="9"
+                                                value={variantarray.quantity}  
+                                                onChange={(e) => onVariantChange(e)}
+                                                name={"quantity"}
+                                                onKeyPress={(event) => {
+                                                  if (event.key === "Enter") {
+                                                    onVariantaddclick();
+                                                  }
+                                                }}
+                                                required
+                                              />
                   </InputGroup>
                     </Form.Group>
                                   {/* <div className="manufacture_date">
