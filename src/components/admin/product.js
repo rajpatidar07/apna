@@ -578,11 +578,13 @@ function Product() {
     setIndVal(e.target.value);
     setScategory({ ...scategory, [e.target.name]: e.target.value });
   };
+  console.log("hellooooo-------"+JSON.stringify(scategory))
   useEffect(() => {
+    
     if (indVal === "") {
       setSubCategory("");
       setchildCategory("");
-      setgrandcCategory("");
+      // setgrandcCategory("");
     } else {
       axios
         .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
@@ -597,6 +599,7 @@ function Product() {
                 category: indVal,
               });
             } else if (indVal === scategory.sub_category) {
+              console.log("*****_---------"+scategory.sub_category)
               setchildCategory(cgory);
               setproductdata({
                 ...productdata,
@@ -605,6 +608,8 @@ function Product() {
               });
               setlevel(2);
             } else if (indVal === scategory.childcategory) {
+              console.log("*****_+++++++++++++++++++---------"+scategory.childcategory)
+
               setgrandcCategory(cgory);
               setproductdata({
                 ...productdata,
@@ -666,7 +671,6 @@ function Product() {
   // end category aopi
   // modal
   const [editparentCategory, seteditparentCategory] = useState("");
-
   let token = localStorage.getItem("token");
 
   const handleShow = (e) => {
@@ -677,6 +681,7 @@ function Product() {
 
     // category data
     const getCategorydata = () => {
+      
       try {
         axios
           .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
@@ -685,7 +690,7 @@ function Product() {
 
             if (indVal === 0) {
               setCategory(cgory);
-              // seteditparentCategory(response.data.category_name)
+              seteditparentCategory(response.data.category_name)
               setSubCategory("");
               setlevel(0);
             }
@@ -727,7 +732,11 @@ function Product() {
                         setSubCategory(response.data);
                       });
                     seteditparentCategory(data.category_name);
-                    // setCategoryEditparent(data.category_name);
+                    console.log("seteditparentCategory---" + JSON.stringify(data.category_name)) 
+
+                    setCategoryEditparent(data.category_name);
+
+
                   } else if (i === 1) {
                     axios
                       .get(
@@ -1042,7 +1051,7 @@ function Product() {
       } else if (
         vdata[0].product_type === "Cloths" &&
         variantarray.unit === "pcs" &&
-        (variantarray.colors === "" ||
+        (variantarray.colors == "" ||
           variantarray.size === null ||
           variantarray.size === "")
       ) {
@@ -1050,13 +1059,13 @@ function Product() {
       } else if (
         vdata[0].product_type !== "Cloths" &&
         variantarray.unit === "pcs" &&
-        variantarray.colors === "" &&
+        variantarray.colors == "" &&
         (variantarray.size === null || variantarray.size === "")
       ) {
         setVarietyUnitvalidation("fillUnit&color");
       } else if (
         variantarray.unit !== "pcs" &&
-        (variantarray.unit_quantity === "" ||
+        (variantarray.unit_quantity =="" ||
           variantarray.unit_quantity === "null" ||
           variantarray.unit_quantity === null)
       ) {
@@ -1126,7 +1135,7 @@ function Product() {
       } else if (
         vdata[0].product_type === "Cloths" &&
         variantarray.unit === "pcs" &&
-        (variantarray.colors === "" ||
+        (variantarray.colors == "" ||
           variantarray.size === null ||
           variantarray.size === "")
       ) {
@@ -1134,13 +1143,13 @@ function Product() {
       } else if (
         vdata[0].product_type !== "Cloths" &&
         variantarray.unit === "pcs" &&
-        variantarray.colors === "" &&
+        variantarray.colors == "" &&
         (variantarray.size === null || variantarray.size === "")
       ) {
         setVarietyUnitvalidation("fillUnit&color");
       } else if (
         variantarray.unit !== "pcs" &&
-        (variantarray.unit_quantity === "" ||
+        (variantarray.unit_quantity == "" ||
           variantarray.unit_quantity === "null" ||
           variantarray.unit_quantity === null)
       ) {
@@ -1209,7 +1218,7 @@ function Product() {
       if (
         variantarray.unit == "" ||
         variantarray.unit == null ||
-        variantarray.unit == "Select" ||
+        variantarray.unit === "Select" ||
         variantarray.product_price == "" ||
         variantarray.mrp == "" ||
         variantarray.sale_price == "" ||
@@ -1225,23 +1234,23 @@ function Product() {
       } else if (
         productdata.product_type === "Cloths" &&
         variantarray.unit === "pcs" &&
-        (variantarray.colors === "" ||
+        (variantarray.colors == "" ||
           variantarray.size === null ||
-          variantarray.size === "")
+          variantarray.size =="")
       ) {
         console.log("fill the size and color");
         setVarietyUnitvalidation("fillUnit&size&color");
       } else if (
         productdata.product_type !== "Cloths" &&
         variantarray.unit === "pcs" &&
-        variantarray.colors === "" &&
-        (variantarray.size === "" || variantarray.size === null)
+        variantarray.colors == "" &&
+        (variantarray.size =="" || variantarray.size === null)
       ) {
         console.log("fill the  color");
         setVarietyUnitvalidation("fillUnit&color");
       } else if (
         variantarray.unit !== "pcs" &&
-        (variantarray.unit_quantity === "" ||
+        (variantarray.unit_quantity == "" ||
           variantarray.unit_quantity === "null" ||
           variantarray.unit_quantity === null)
       ) {
@@ -1500,11 +1509,12 @@ function Product() {
   };
 
   const handleAddProduct = (e) => {
+  
     productdataa.push(productdata);
     const form = e.currentTarget;
     if (
       form.checkValidity() === false ||
-      productdata.variety === "" ||
+      productdata.variety == "" ||
       variantmainarray.length === 0
     ) {
       e.stopPropagation();
@@ -1524,8 +1534,11 @@ function Product() {
       setProductAlert(true);
       handleClose();
     }
+
   };
   const handleUpdateProduct = (e) => {
+    productdataa.push(productdata.category_name);
+
     const form = e.currentTarget;
     if( form.checkValidity() === false || 
     variantmainarray.length !== 0)
@@ -1550,6 +1563,7 @@ function Product() {
       setcustomValidated(true);
       setProductAlert(true);
       handleClose();
+       
 
   };
     }
@@ -1649,7 +1663,6 @@ function Product() {
         console.log(error);
       });
   };
-// console.log("*8888888888888888"+JSON.stringify(category))
   //-----------------------Download excel sheet code End  here---------------------------------------------------
   return (
     <div className="App productlist_maindiv">
@@ -2119,7 +2132,7 @@ function Product() {
                       </Form.Control.Feedback>
                     </Form.Group>
 
-                    {subCategory === "" ||
+                    {subCategory == "" ||
                     subCategory === null ||
                     subCategory === undefined ? null : (
                       <Form.Group
@@ -2158,20 +2171,22 @@ function Product() {
                         </Form.Control.Feedback>
                       </Form.Group>
                     )}
-
-                    {childCategory[0] === "" ||
+                    {childCategory[0] == "" ||
                     childCategory[0] === null ||
                     childCategory[0] === undefined ? null : (
                       <Form.Group
-                        className="mb-3 aos_input"
+                        className=" aos_input"
                         controlId="formBasicParentCategory"
                       >
-                        <Form.Label> Child Category</Form.Label>
+                        <Form.Label>
+                          Child Category <span className="text-danger">* </span>
+                        </Form.Label>
                         <Form.Select
                           aria-label="Search by status"
                           className="adminselectbox"
                           onChange={(e, id) => categoryFormChange(e, id)}
                           name={"childcategory"}
+                          required
                         >
                           <option value={""}>Select Category </option>
                           {childCategory.map((cdata, i) => {
@@ -2196,7 +2211,10 @@ function Product() {
                       </Form.Group>
                     )}
 
-                    {grandcCategory[0] === "" ||
+
+                   
+
+                    {/* {grandcCategory[0] === "" ||
                     grandcCategory[0] === null ||
                     grandcCategory[0] === undefined ? null : (
                       <Form.Group
@@ -2232,7 +2250,7 @@ function Product() {
                           Please fill category
                         </Form.Control.Feedback>
                       </Form.Group>
-                    )}
+                    )} */}
 
                     {/* end category select */}
                   </div>

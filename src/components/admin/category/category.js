@@ -282,7 +282,7 @@ const CategoryList = () => {
       }
     }
   };
-
+console.log("==================="+JSON.stringify(scategory))
   /*<----data in table ---->*/
   const columns = [
     {
