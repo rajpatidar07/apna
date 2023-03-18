@@ -247,6 +247,8 @@ const Productdetail = () => {
   // ONCHANGE OF VARIETY
   const onVariantChange = (e) => {
     setVarietyUnitvalidation("");
+    // setValidated(true);
+
     setcustomValidated(false);
     setvariantapicall(true);
     setunitValidated(false);
@@ -288,8 +290,7 @@ const Productdetail = () => {
   //  END SALEPRICE CALCULATION
 
   // ADD VARIETY
-  const onVariantaddclick = (id) => {
-    console.log(id);
+  const onVariantaddclick = (id, pid) => {
     if (id === "" || id === null || id === undefined) {
       if (
         variantarray.unit == "" ||
@@ -303,6 +304,7 @@ const Productdetail = () => {
         variantarray.quantity == ""
       ) {
         setcustomValidated(true);
+        setValidated(true);
       } else if (variantarray.quantity == 0 || variantarray.quantity < 1) {
         setVarietyUnitvalidation("QwanityValidation");
       } else if (variantarray.manufacturing_date > variantarray.expire_date) {
@@ -338,16 +340,16 @@ const Productdetail = () => {
       ) {
         setVarietyUnitvalidation("mrpmore");
       } else {
-        // setloading(true)
         axios
           .post(
             `${process.env.REACT_APP_BASEURL}/products_varient_add`,
             variantarray
           )
           .then((response) => {
-            console.log(response);
             if ((response.affectedRows = "1")) {
               setProductAlert(true);
+              setValidated(false);
+
               setvariantarray({
                 product_status: "",
                 // unit: "",
@@ -368,19 +370,15 @@ const Productdetail = () => {
               setvariantapicall(true);
               setcustomValidated(false);
               setVarietyUnitvalidation("");
-              // setloading(false)
             } else if (response.errno == 1064) {
               alert("Error in add product");
               setProductAlert(false);
-              // setloading(false)
             } else {
               setProductAlert(false);
-              // setloading(false)
             }
           })
           .catch(function (error) {
             console.log(error);
-            // setloading(false)
           });
       }
     } else {
@@ -432,16 +430,17 @@ const Productdetail = () => {
         ) {
           setVarietyUnitvalidation("mrpmore");
         } else {
-          // setloading(true)
           axios
             .put(
               `${process.env.REACT_APP_BASEURL}/products_varient_update`,
               variantarray
             )
             .then((response) => {
-              console.log(response);
               if ((response.affectedRows = "1")) {
                 setUpdatetAlert(true);
+
+                // setvariantarray(response.data);
+
                 setvariantarray({
                   product_status: "",
                   // unit: "",
@@ -462,19 +461,15 @@ const Productdetail = () => {
                 setvariantapicall(true);
                 setcustomValidated(false);
                 setVarietyUnitvalidation("");
-                // setloading(false)
               } else if (response.errno == 1064) {
                 alert("Error in Update product");
                 setUpdatetAlert(false);
-                // setloading(false)
               } else {
                 setUpdatetAlert(false);
-                // setloading(false)
               }
             })
             .catch(function (error) {
               console.log(error);
-              // setloading(false)
             });
         }
       } else {
@@ -959,24 +954,19 @@ const Productdetail = () => {
                                   <span className="text-danger">*</span>
                                 </Form.Label>
                                 <Col sm="12">
-                                  <InputGroup className="">
+                                  <InputGroup className="" size="sm">
                                     <Form.Control
+                                      type="number"
+                                      sm="9"
                                       value={variantarray.unit_quantity}
                                       disabled={
                                         variantarray.unit == "pcs"
                                           ? true
                                           : false
                                       }
-                                      required={
-                                        variantarray.unit !== "pcs" &&
-                                        variantarray.unit_quantity === ""
-                                          ? true
-                                          : false
-                                      }
-                                      type="text"
-                                      sm="9"
                                       onChange={(e) => onVariantChange(e)}
                                       name={"unit_quantity"}
+                                      required
                                     />
                                   </InputGroup>
                                 </Col>
@@ -1043,16 +1033,23 @@ const Productdetail = () => {
                                   <span className="text-danger">*</span>
                                 </Form.Label>
                                 <Col sm="12">
-                                  <InputGroup className="">
+                                  <InputGroup className="" size="sm">
                                     <Form.Control
-                                      step="0.01"
                                       type="number"
-                                      // step={"any"}
-                                      min={1}
                                       sm="9"
-                                      onChange={(e) => onVariantChange(e)} //setmrp
-                                      name={"mrp"}
+                                      maxLength={"5"}
+                                      minLength={"1"}
+                                      min="1"
+                                      max="50000"
+                                      // className={
+                                      //   customvalidated === true
+                                      //     ? "border-danger"
+                                      //     : null
+                                      // }
+                                      name="mrp"
                                       value={variantarray.mrp}
+                                      onChange={(e) => onVariantChange(e)}
+                                      required
                                     />
                                   </InputGroup>
                                 </Col>
@@ -1190,16 +1187,20 @@ const Productdetail = () => {
                                   <span className="text-danger">*</span>
                                 </Form.Label>
                                 <Col sm="12">
-                                  <InputGroup className="">
+                                  <InputGroup className="" size="sm">
                                     <Form.Control
                                       type="date"
                                       sm="9"
-                                      max={moment().format("YYYY-MM-DD")}
+                                      required
+                                      min={moment().format("YYYY-MM-DD")}
+                                      // className={
+                                      //   customvalidated === true
+                                      //     ? "border-danger"
+                                      //     : null
+                                      // }
                                       onChange={(e) => onVariantChange(e)}
                                       name={"manufacturing_date"}
-                                      value={moment(
-                                        variantarray.manufacturing_date
-                                      ).format("YYYY-MM-DD")}
+                                      value={variantarray.manufacturing_date}
                                     />
                                   </InputGroup>
                                 </Col>
@@ -1257,7 +1258,22 @@ const Productdetail = () => {
                                   <span className="text-danger">*</span>
                                 </Form.Label>
                                 <Col sm="12">
-                                  <InputGroup className="">
+                                  <InputGroup className="" size="sm">
+                                    <Form.Control
+                                      type="number"
+                                      sm="9"
+                                      value={variantarray.quantity}
+                                      onChange={(e) => onVariantChange(e)}
+                                      name={"quantity"}
+                                      onKeyPress={(event) => {
+                                        if (event.key === "Enter") {
+                                          onVariantaddclick();
+                                        }
+                                      }}
+                                      required
+                                    />
+                                  </InputGroup>
+                                  {/* <InputGroup className="">
                                     <Form.Control
                                       name={"quantity"}
                                       type="number"
@@ -1271,7 +1287,7 @@ const Productdetail = () => {
                                         }
                                       }}
                                     />
-                                  </InputGroup>
+                                  </InputGroup> */}
                                 </Col>
                               </Form.Group>
                             </div>
@@ -1282,9 +1298,8 @@ const Productdetail = () => {
                                 variant="outline-success"
                                 className="addcategoryicon w-100"
                                 // type="submit"
-                                onClick={(e) =>
+                                onClick={() =>
                                   onVariantaddclick(
-                                    e,
                                     variantarray.id,
                                     variantarray.product_id
                                   )

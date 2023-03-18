@@ -349,55 +349,55 @@ function Product() {
     setScategory({ ...scategory, [e.target.name]: e.target.value });
   };
   useEffect(() => {
-    // if (indVal === "") {
-    //   setSubCategory("");
-    //   setchildCategory("");
-    //   setgrandcCategory("");
-    //   setproductdata({
-    //     ...productdata,
-    //     category: indVal,
-    //   });
-    // } else {
-    axios
-      .get(`${process.env.REACT_APP_BASEURL_0}/category?category=${indVal}`)
-      .then((response) => {
-        if (response.data !== []) {
-          let cgory = response.data;
-          if (indVal === scategory.parent_category) {
-            setSubCategory(cgory);
-            setproductdata({
-              ...productdata,
-              parent_category: "0",
-              category: indVal,
-            });
-          } else if (indVal === scategory.sub_category) {
-            setchildCategory(cgory);
-            setproductdata({
-              ...productdata,
-              parent_category: cgory[0].all_parent_id,
-              category: indVal,
-            });
-            setlevel(2);
-          } else if (indVal === scategory.childcategory) {
-            setgrandcCategory(cgory);
-            setproductdata({
-              ...productdata,
-              parent_category: cgory[0].all_parent_id,
-              category: indVal,
-            });
-            setlevel(3);
-          } else if (indVal === scategory.gcategory) {
-            setgrandcCategory(cgory);
-            setproductdata({
-              ...productdata,
-              parent_category: cgory[0].all_parent_id,
-              category: indVal,
-            });
-            setlevel(4);
+    if (indVal === "") {
+      setSubCategory("");
+      setchildCategory("");
+      //   setgrandcCategory("");
+      //   setproductdata({
+      //     ...productdata,
+      //     category: indVal,
+      //   });
+    } else {
+      axios
+        .get(`${process.env.REACT_APP_BASEURL_0}/category?category=${indVal}`)
+        .then((response) => {
+          if (response.data !== []) {
+            let cgory = response.data;
+            if (indVal === scategory.parent_category) {
+              setSubCategory(cgory);
+              setproductdata({
+                ...productdata,
+                parent_category: "0",
+                category: indVal,
+              });
+            } else if (indVal === scategory.sub_category) {
+              setchildCategory(cgory);
+              setproductdata({
+                ...productdata,
+                parent_category: cgory[0].all_parent_id,
+                category: indVal,
+              });
+              setlevel(2);
+            } else if (indVal === scategory.childcategory) {
+              setgrandcCategory(cgory);
+              setproductdata({
+                ...productdata,
+                parent_category: cgory[0].all_parent_id,
+                category: indVal,
+              });
+              setlevel(3);
+            } else if (indVal === scategory.gcategory) {
+              setgrandcCategory(cgory);
+              setproductdata({
+                ...productdata,
+                parent_category: cgory[0].all_parent_id,
+                category: indVal,
+              });
+              setlevel(4);
+            }
           }
-        }
-      });
-    // }
+        });
+    }
   }, [scategory, indVal]);
 
   // vendor api for filter
@@ -722,7 +722,7 @@ function Product() {
 
   // ADD AND EDIT  VARIETY SECTION
   const onVariantChange = (e) => {
-    setValidated(false);
+    setValidated(true);
     setcustomValidated(false);
     setVarietyUnitvalidation("");
     setvarietyValidated(false);
@@ -731,19 +731,29 @@ function Product() {
       [e.target.name]: e.target.value,
     });
   };
+  let discountt = (variantarray.mrp * variantarray.discount) / 100;
+  let saleprice = variantarray.mrp - discountt;
+  let totaltaxpercent =
+    Number(taxdata.gst) +
+    Number(taxdata.wholesale_sales_tax) +
+    Number(taxdata.retails_sales_tax) +
+    Number(taxdata.manufacturers_sales_tax) +
+    Number(taxdata.value_added_tax);
+  let totaltaxx = (saleprice * totaltaxpercent) / 100;
 
+  let product_price = variantarray.sale_price - totaltaxx;
   useEffect(() => {
-    let discountt = (variantarray.mrp * variantarray.discount) / 100;
-    let saleprice = variantarray.mrp - discountt;
-    let totaltaxpercent =
-      Number(taxdata.gst) +
-      Number(taxdata.wholesale_sales_tax) +
-      Number(taxdata.retails_sales_tax) +
-      Number(taxdata.manufacturers_sales_tax) +
-      Number(taxdata.value_added_tax);
-    let totaltaxx = (saleprice * totaltaxpercent) / 100;
+    // let discountt = (variantarray.mrp * variantarray.discount) / 100;
+    // let saleprice = variantarray.mrp - discountt;
+    // let totaltaxpercent =
+    //   Number(taxdata.gst) +
+    //   Number(taxdata.wholesale_sales_tax) +
+    //   Number(taxdata.retails_sales_tax) +
+    //   Number(taxdata.manufacturers_sales_tax) +
+    //   Number(taxdata.value_added_tax);
+    // let totaltaxx = (saleprice * totaltaxpercent) / 100;
     settotaltax(totaltaxx);
-    let product_price = saleprice - totaltaxx;
+    // let product_price = saleprice - totaltaxx;
     setvariantarray({
       ...variantarray,
       product_status: "pending",
@@ -765,8 +775,8 @@ function Product() {
     setcustomValidated(false);
     setVarietyUnitvalidation("");
     setvarietyValidated(false);
-    setproductvariantarray({
-      ...productvariantarray,
+    setvariantarray({
+      ...variantarray,
       [e.target.name]: e.target.value,
     });
   };
@@ -1023,70 +1033,65 @@ function Product() {
       setCheckProductType(true);
     } else {
       if (
-        productvariantarray.unit == "" ||
-        productvariantarray.unit == null ||
-        productvariantarray.unit == "Select" ||
-        productvariantarray.product_price == "" ||
-        productvariantarray.mrp == "" ||
-        productvariantarray.sale_price == "" ||
-        productvariantarray.manufacturing_date == "" ||
-        productvariantarray.expire_date == "" ||
-        productvariantarray.quantity == ""
+        variantarray.unit == "" ||
+        variantarray.unit == null ||
+        variantarray.unit == "Select" ||
+        variantarray.product_price == "" ||
+        variantarray.mrp == "" ||
+        variantarray.sale_price == "" ||
+        variantarray.manufacturing_date == "" ||
+        variantarray.expire_date == "" ||
+        variantarray.quantity == ""
       ) {
         setcustomValidated(true);
-      } else if (
-        productvariantarray.quantity === 0 ||
-        productvariantarray.quantity < 1
-      ) {
+      } else if (variantarray.quantity === 0 || variantarray.quantity < 1) {
         setVarietyUnitvalidation("QwanityValidation");
-      } else if (
-        productvariantarray.manufacturing_date > productvariantarray.expire_date
-      ) {
+      } else if (variantarray.manufacturing_date > variantarray.expire_date) {
         setVarietyUnitvalidation("ExpireDateValidation");
       } else if (
         productdata.product_type === "Cloths" &&
-        productvariantarray.unit === "pcs" &&
-        (productvariantarray.colors === "" ||
-          productvariantarray.size === null ||
-          productvariantarray.size === "")
+        variantarray.unit === "pcs" &&
+        (variantarray.colors === "" ||
+          variantarray.size === null ||
+          variantarray.size === "")
       ) {
         setVarietyUnitvalidation("fillUnit&size&color");
       } else if (
         productdata.product_type !== "Cloths" &&
-        productvariantarray.unit === "pcs" &&
-        productvariantarray.colors === "" &&
-        (productvariantarray.size === "" || productvariantarray.size === null)
+        variantarray.unit === "pcs" &&
+        variantarray.colors === "" &&
+        (variantarray.size === "" || variantarray.size === null)
       ) {
         setVarietyUnitvalidation("fillUnit&color");
       } else if (
-        productvariantarray.unit !== "pcs" &&
-        (productvariantarray.unit_quantity === "" ||
-          productvariantarray.unit_quantity === "null" ||
-          productvariantarray.unit_quantity === null)
+        variantarray.unit !== "pcs" &&
+        (variantarray.unit_quantity === "" ||
+          variantarray.unit_quantity === "null" ||
+          variantarray.unit_quantity === null)
       ) {
         setunitValidated(true);
         setVarietyUnitvalidation("unitQwanity&size&color");
-      } else if (Number(productvariantarray.discount) > 100) {
+      } else if (Number(variantarray.discount) > 100) {
         setunitValidated(true);
         setVarietyUnitvalidation("discountmore");
       } else if (
-        Number(productvariantarray.mrp) > 50000 ||
-        Number(productvariantarray.mrp) <= 0
+        Number(variantarray.mrp) > 50000 ||
+        Number(variantarray.mrp) <= 0
       ) {
         setunitValidated(true);
         setVarietyUnitvalidation("mrpmore");
       } else {
         setvariantmainarray((variantmainarray) => [
           ...variantmainarray,
-          productvariantarray,
+          variantarray,
         ]);
         setVarietyUnitvalidation("");
         setvarietyValidated(false);
         setcustomValidated(false);
 
-        setproductvariantarray({
+        setvariantarray({
           product_status: "pending",
-          unit: productvariantarray.unit,
+          unit: variantarray.unit,
           colors: "",
           unit_quantity: "",
           size: "",
@@ -1288,11 +1293,10 @@ function Product() {
 
   // ADD PRICES ON ADDPRODUCT BUTTON
   useEffect(() => {
-    let discountt =
-      (productvariantarray.mrp * productvariantarray.discount) / 100;
-    let saleprice = productvariantarray.mrp - discountt;
-    setproductvariantarray({
-      ...productvariantarray,
+    let discountt = (variantarray.mrp * variantarray.discount) / 100;
+    let saleprice = variantarray.mrp - discountt;
+    setvariantarray({
+      ...variantarray,
       product_price: (
         saleprice -
         (saleprice *
@@ -1306,8 +1310,8 @@ function Product() {
       sale_price: saleprice,
     });
   }, [
-    productvariantarray.mrp,
-    productvariantarray.discount,
+    variantarray.mrp,
+    variantarray.discount,
     productdata.value_added_tax,
     productdata.gst,
     productdata.wholesale_sales_tax,
@@ -1386,19 +1390,30 @@ function Product() {
 
   // UPDATE PRODUCT COMMON DATA
   const handleUpdateProduct = (e) => {
-    e.preventDefault();
-    axios
-      .put(`${process.env.REACT_APP_BASEURL_0}/products_update`, productdata, {
-        headers: { admin_token: `${token}` },
-      })
-      .then((response) => {
-        setapicall(true);
-        setmodalshow(false);
-        setUpdatetAlert(true);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    productdataa.push(productdata.category_name);
+    const form = e.currentTarget;
+    if (form.checkValidity() === false || variantmainarray.length !== 0) {
+      e.stopPropagation();
+      e.preventDefault();
+      setValidated(true);
+    } else {
+      axios
+        .put(`${process.env.REACT_APP_BASEURL}/products_update`, productdata)
+        .then((response) => {
+          setapicall(true);
+          setmodalshow(false);
+          setUpdatetAlert(true);
+        })
+
+        .catch(function (error) {
+          console.log(error);
+        });
+      e.preventDefault();
+      setValidated(false);
+      setcustomValidated(true);
+      setProductAlert(true);
+      handleClose();
+    }
   };
   // END UPDATE PRODUCT COMMON DATA
 
@@ -2037,7 +2052,16 @@ function Product() {
                         >
                           <Form.Label className="inputlabelheading" sm="12">
                             Product Title/Name
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">
+                            *
+                            {validated===false?
+                            <Form.Control.Feedback
+                              type="text"
+                              className="h6"
+                            >
+                              Please fill productname
+                            </Form.Control.Feedback>:null}
+                          </span> */}
                           </Form.Label>
                           <Col sm="12">
                             <Form.Control
@@ -2048,13 +2072,12 @@ function Product() {
                               name={"product_title_name"}
                               value={productdata.product_title_name}
                               maxLength={20}
-                              pattern="^[a-zA-Z0-9]+$"
                             />
                             <Form.Control.Feedback
                               type="invalid"
                               className="h6"
                             >
-                              Please fill productname
+                              Please Product Name
                             </Form.Control.Feedback>
                           </Col>
                         </Form.Group>
@@ -2068,23 +2091,29 @@ function Product() {
                           <Col sm="12">
                             <Form.Control
                               type="text"
-                              placeholder="Product Slug"
-                              // onChange={(e) => handleInputFieldChange(e)}
-                              name={"product_slug"}
-                              value={
-                                productdata.product_title_name === "" ||
-                                productdata.product_title_name === "null" ||
-                                productdata.product_title_name === null
-                                  ? null
-                                  : productdata.product_title_name + "_123"
-                              }
+                              placeholder="product_slug"
                               required
+                              onChange={(e) => handleInputFieldChange(e)}
+                              name={"product_slug"}
+                              value={productdata.product_slug}
+                              maxLength={20}
+
+                              // type="text"
+                              // placeholder="Product Slug"
+                              // onChange={(e) => handleInputFieldChange1(e)}
+                              // name={"product_slug"}
+                              // value={
+                              //   productdata.product_title_name === "" ||
+                              //   productdata.product_title_name === "null" ||
+                              //   productdata.product_title_name === null
+                              //     ? null
+                              //     : productdata.product_title_name + "_123"
                             />
                             <Form.Control.Feedback
                               type="invalid"
                               className="h6"
                             >
-                              Please fill product slug
+                              Please Product Name
                             </Form.Control.Feedback>
                           </Col>
                         </Form.Group>
@@ -2111,19 +2140,15 @@ function Product() {
                               }
                             >
                               <option value={""}>Select Brand</option>
-                              {BrandJson.BrandJson.map((item, i) => {
-                                return (
-                                  <option value={item} key={i}>
-                                    {item}
-                                  </option>
-                                );
+                              {BrandJson.BrandJson.map((item) => {
+                                return <option value={item}>{item}</option>;
                               })}
                             </Form.Select>
                             <Form.Control.Feedback
                               type="invalid"
                               className="h6"
                             >
-                              Please fill product brand
+                              Please Select Product Brand
                             </Form.Control.Feedback>
                           </Col>
                         </Form.Group>
@@ -2133,44 +2158,74 @@ function Product() {
                         >
                           <Form.Label className="inputlabelheading" sm="12">
                             Store Name
-                            <span className="text-danger">*</span>
-                          </Form.Label>
-                          <Col sm="12">
-                            <Form.Select
-                              onChange={handleVendorNameChange}
-                              aria-label="store_name"
-                              className="adminselectbox"
-                              required
-                            >
-                              {" "}
-                              <option value={""}> Select Store Name</option>
-                              {vendorid.map((cdata, i) => {
-                                return (
-                                  <option
-                                    value={[cdata.id, cdata.shop_name]}
-                                    key={i}
-                                    selected={
-                                      (productdata.vendor_id,
-                                      productdata.store_name) ===
-                                      (cdata.id, cdata.shop_name)
-                                    }
-                                  >
-                                    {cdata.shop_name}
-                                    {""}
-                                  </option>
-                                );
-                              })}
-                            </Form.Select>
+                            {/* <span className="text-danger">
+                            *
                             <Form.Control.Feedback
                               type="invalid"
                               className="h6"
                             >
                               Please fill storename
                             </Form.Control.Feedback>
-                          </Col>
+                          </span> */}
+                          </Form.Label>
+                          <Form.Select
+                            onChange={handleVendorNameChange}
+                            aria-label="store_name"
+                            className="adminselectbox"
+                            required
+                          >
+                            {" "}
+                            <option value={""}> Select Store Name</option>
+                            {vendorid.map((cdata, i) => {
+                              return (
+                                <option
+                                  value={[cdata.id, cdata.shop_name]}
+                                  key={i}
+                                  selected={
+                                    (productdata.vendor_id,
+                                    productdata.store_name) ===
+                                    (cdata.id, cdata.shop_name)
+                                  }
+                                >
+                                  {cdata.shop_name}
+                                  {""}
+                                </option>
+                              );
+                            })}
+                          </Form.Select>
+                          <Form.Control.Feedback type="invalid" className="h6">
+                            Please Select Store Name
+                          </Form.Control.Feedback>
+                          {/* <Col sm="12">
+                          <Form.Control.Feedback type="invalid" className="h6">
+                            Please fill storename
+                          </Form.Control.Feedback>
+                        </Col> */}
                         </Form.Group>
                       </div>
                       <div className="col-md-8">
+                        <Form.Group
+                          className="mx-3"
+                          controlId="validationCustom04"
+                        >
+                          {/* {console.log(
+                          "product description-------" +
+                            productdata.product_description
+                        )} */}
+                          <Form.Label className="inputlabelheading" sm="12">
+                            Product Description
+                          </Form.Label>
+                          <Col sm="12">
+                            <CKEditor
+                              editor={ClassicEditor}
+                              data={productdata.product_description}
+                              onChange={handledescription}
+                              name={"product_description"}
+                            />
+                          </Col>
+                        </Form.Group>
+                      </div>
+                      {/* <div className="col-md-8">
                         <Form.Group
                           className="mx-3"
                           controlId="validationCustom04"
@@ -2187,7 +2242,7 @@ function Product() {
                             />
                           </Col>
                         </Form.Group>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                   {/* category */}
@@ -2217,12 +2272,8 @@ function Product() {
                           >
                             <option value={""}>Select Product Type</option>
 
-                            {categorytype.categorytype.map((data, i) => {
-                              return (
-                                <option value={data} key={i}>
-                                  {data}
-                                </option>
-                              );
+                            {categorytype.categorytype.map((data) => {
+                              return <option value={data}>{data}</option>;
                             })}
                           </Form.Select>
                           <Form.Control.Feedback type="invalid" className="h6">
@@ -2270,7 +2321,7 @@ function Product() {
                         </Form.Control.Feedback>
                       </Form.Group>
 
-                      {subCategory === "" ||
+                      {subCategory == "" ||
                       subCategory === null ||
                       subCategory === undefined ? null : (
                         <Form.Group
@@ -2287,7 +2338,7 @@ function Product() {
                             name={"sub_category"}
                             required
                           >
-                            {/* <option value={""}>Select Category </option> */}
+                            <option value={""}>Select Category </option>
                             {subCategory.map((cdata, i) => {
                               return (
                                 <option
@@ -2309,22 +2360,25 @@ function Product() {
                           </Form.Control.Feedback>
                         </Form.Group>
                       )}
-
-                      {subCategory === "" ||
-                      subCategory === null ||
-                      subCategory === undefined ? null : (
+                      {childCategory[0] == "" ||
+                      childCategory[0] === null ||
+                      childCategory[0] === undefined ? null : (
                         <Form.Group
-                          className="mb-3 aos_input"
+                          className=" aos_input"
                           controlId="formBasicParentCategory"
                         >
-                          <Form.Label> Child Category</Form.Label>
+                          <Form.Label>
+                            Child Category{" "}
+                            <span className="text-danger">* </span>
+                          </Form.Label>
                           <Form.Select
                             aria-label="Search by status"
                             className="adminselectbox"
                             onChange={(e, id) => categoryFormChange(e, id)}
                             name={"childcategory"}
+                            required
                           >
-                            {/* <option value={""}>Select Category </option> */}
+                            <option value={""}>Select Category </option>
                             {childCategory.map((cdata, i) => {
                               return (
                                 <option
@@ -2348,43 +2402,43 @@ function Product() {
                         </Form.Group>
                       )}
 
-                      {grandcCategory[0] === "" ||
-                      grandcCategory[0] === null ||
-                      grandcCategory[0] === undefined ? null : (
-                        <Form.Group
-                          className="mb-3 aos_input"
-                          controlId="formBasicParentCategory"
+                      {/* {grandcCategory[0] === "" ||
+                    grandcCategory[0] === null ||
+                    grandcCategory[0] === undefined ? null : (
+                      <Form.Group
+                        className="mb-3 aos_input"
+                        controlId="formBasicParentCategory"
+                      >
+                        <Form.Label> Inner Category</Form.Label>
+                        <Form.Select
+                          aria-label="Search by status"
+                          className="adminselectbox"
+                          onChange={(e, id) => categoryFormChange(e, id)}
+                          name={"gcategory"}
                         >
-                          <Form.Label> Inner Category</Form.Label>
-                          <Form.Select
-                            aria-label="Search by status"
-                            className="adminselectbox"
-                            onChange={(e, id) => categoryFormChange(e, id)}
-                            name={"gcategory"}
-                          >
-                            {/* <option value={""}>Select Category </option> */}
-                            {grandcCategory.map((cdata, i) => {
-                              return (
-                                <option
-                                  value={cdata.id}
-                                  key={i}
-                                  selected={
-                                    categoryeditchildparent ===
-                                    cdata.category_name
-                                      ? true
-                                      : false
-                                  }
-                                >
-                                  {cdata.category_name}{" "}
-                                </option>
-                              );
-                            })}
-                          </Form.Select>
-                          <Form.Control.Feedback type="invalid" className="h6">
-                            Please fill category
-                          </Form.Control.Feedback>
-                        </Form.Group>
-                      )}
+                          <option value={""}>Select Category </option>
+                          {grandcCategory.map((cdata, i) => {
+                            return (
+                              <option
+                                value={cdata.id}
+                                key={i}
+                                selected={
+                                  categoryeditchildparent ===
+                                  cdata.category_name
+                                    ? true
+                                    : false
+                                }
+                              >
+                                {cdata.category_name}{" "}
+                              </option>
+                            );
+                          })}
+                        </Form.Select>
+                        <Form.Control.Feedback type="invalid" className="h6">
+                          Please fill category
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    )} */}
 
                       {/* end category select */}
                     </div>
@@ -2393,6 +2447,164 @@ function Product() {
                   <div className="my-3 inputsection_box">
                     <h5 className="m-0">Taxes</h5>
                     <div className="productvariety mt-0">
+                      <Form.Group
+                        className="mx-3"
+                        controlId="validationCustom11"
+                      >
+                        <Form.Label className="inputlabelheading" sm="12">
+                          Wholesale Sales Tax
+                        </Form.Label>
+                        <Col sm="12">
+                          <Form.Control
+                            min={0}
+                            type="number"
+                            placeholder="Wholesale Sales Tax"
+                            name="wholesale_sales_tax"
+                            value={
+                              productdata.wholesale_sales_tax === null ||
+                              productdata.wholesale_sales_tax === undefined
+                                ? ""
+                                : productdata.wholesale_sales_tax
+                            }
+                            onChange={(e) => handleInputFieldChange(e)}
+                          />
+                        </Col>
+                      </Form.Group>
+                      <Form.Group
+                        className="mx-3"
+                        controlId="validationCustom11"
+                      >
+                        <Form.Label className="inputlabelheading" sm="12">
+                          Manufacturers’ Sales Tax
+                        </Form.Label>
+                        <Col sm="12">
+                          <Form.Control
+                            type="number"
+                            min={0}
+                            placeholder="Manufacturers’ Sales Tax "
+                            name="manufacturers_sales_tax"
+                            value={
+                              productdata.manufacturers_sales_tax === null ||
+                              productdata.manufacturers_sales_tax === undefined
+                                ? ""
+                                : productdata.manufacturers_sales_tax
+                            }
+                            onChange={(e) => handleInputFieldChange(e)}
+                          />
+                        </Col>
+                      </Form.Group>
+                      <Form.Group
+                        className="m-3"
+                        controlId="validationCustom11"
+                      >
+                        <Form.Label className="inputlabelheading" sm="12">
+                          Retail Sales Tax
+                        </Form.Label>
+                        <Col sm="12">
+                          <Form.Control
+                            type="number"
+                            min={0}
+                            placeholder="Retail Sales Tax"
+                            name="retails_sales_tax"
+                            value={
+                              productdata.retails_sales_tax === null ||
+                              productdata.retails_sales_tax === undefined
+                                ? ""
+                                : productdata.retails_sales_tax
+                            }
+                            onChange={(e) => handleInputFieldChange(e)}
+                          />
+                        </Col>
+                      </Form.Group>
+                      <Form.Group
+                        className="mx-3"
+                        controlId="validationCustom11"
+                      >
+                        <Form.Label className="inputlabelheading" sm="12">
+                          Gst<span className="text-danger">* </span>
+                        </Form.Label>
+                        <Col sm="12">
+                          <Form.Control
+                            type="number"
+                            min={1}
+                            placeholder="Gst"
+                            name="gst"
+                            value={productdata.gst}
+                            onChange={(e) => handleInputFieldChange(e)}
+                            required
+                          />
+                          <Form.Control.Feedback type="invalid" className="h6">
+                            Please Fill Gst
+                          </Form.Control.Feedback>
+                        </Col>
+                      </Form.Group>
+                      <Form.Group
+                        className="mx-3"
+                        controlId="validationCustom11"
+                      >
+                        <Form.Label className="inputlabelheading" sm="12">
+                          Sgst<span className="text-danger"> </span>
+                        </Form.Label>
+                        <Col sm="12">
+                          <Form.Control
+                            type="number"
+                            min={0}
+                            placeholder="Sgst"
+                            // className={
+                            //   customvalidated === true ? "border-danger" : null
+                            // }
+                            name="sgst"
+                            value={productdata.sgst}
+                            onChange={(e) => handleInputFieldChange(e)}
+                          />
+                        </Col>
+                      </Form.Group>
+                      <Form.Group
+                        className="mx-3"
+                        controlId="validationCustom11"
+                      >
+                        <Form.Label className="inputlabelheading" sm="12">
+                          Cgst<span className="text-danger"></span>
+                        </Form.Label>
+                        <Col sm="12">
+                          <Form.Control
+                            type="number"
+                            min={0}
+                            placeholder="Cgst"
+                            // className={
+                            //   customvalidated === true ? "border-danger" : null
+                            // }
+                            name="cgst"
+                            value={productdata.cgst}
+                            onChange={(e) => handleInputFieldChange(e)}
+                          />
+                        </Col>
+                      </Form.Group>
+                      <Form.Group
+                        className="mx-3"
+                        controlId="validationCustom11"
+                      >
+                        <Form.Label className="inputlabelheading" sm="12">
+                          Value Added Tax
+                        </Form.Label>
+                        <Col sm="12">
+                          <Form.Control
+                            type="number"
+                            min={0}
+                            placeholder="Value Added Tax"
+                            name="value_added_tax"
+                            value={
+                              productdata.value_added_tax === null ||
+                              productdata.value_added_tax === undefined
+                                ? ""
+                                : productdata.value_added_tax
+                            }
+                            onChange={(e) => handleInputFieldChange(e)}
+                          />
+                        </Col>
+                      </Form.Group>
+                    </div>
+                    {/* <div className="productvariety mt-0">
                       <Form.Group
                         className="mx-3"
                         controlId="validationCustom11"
@@ -2550,7 +2762,7 @@ function Product() {
                           />
                         </Col>
                       </Form.Group>
-                    </div>
+                    </div> */}
                   </div>
                   {/*single variety  */}
                   <Form
@@ -2560,7 +2772,70 @@ function Product() {
                   >
                     {modalshow === "add" ? (
                       <div className="my-3 inputsection_box">
+                        <h5 className="m-0">Add Variety</h5>
                         <div className="productvariety_box">
+                          {/* <div className="productvariety">
+                          <Form.Group
+                            className="mx-3"
+                            controlId="validationCustom11"
+                          >
+                            <Form.Label
+                              className="inputlabelheading"
+                              sm="12 d-flex align-itmes-center"
+                            >
+                              {productdata.variety === false ? (
+                                <Form.Check
+                                  type="radio"
+                                  aria-label="radio 1"
+                                  className="mx-2"
+                                  onChange={handleVarietyChange}
+                                  name="variety"
+                                  value={false}
+                                />
+                              ) : (
+                                <Form.Check
+                                  type="radio"
+                                  aria-label="radio 1"
+                                  className="mx-2"
+                                  onChange={handleVarietyChange}
+                                  name="variety"
+                                  value={false}
+                                />
+                              )}
+                              Single Product
+                            </Form.Label>
+                          </Form.Group>
+                          <Form.Group
+                            className="mx-3"
+                            controlId="validationCustom11"
+                          >
+                            <Form.Label
+                              className="inputlabelheading"
+                              sm="12 d-flex align-itmes-center"
+                            >
+                              {productdata.variety === true ? (
+                                <Form.Check
+                                  type="radio"
+                                  aria-label="radio 2"
+                                  className="mx-2"
+                                  onChange={handleVarietyChange}
+                                  name="variety"
+                                  value={true}
+                                />
+                              ) : (
+                                <Form.Check
+                                  type="radio"
+                                  aria-label="radio 2"
+                                  className="mx-2"
+                                  onChange={handleVarietyChange}
+                                  name="variety"
+                                  value={true}
+                                />
+                              )}
+                              Multiple Variety
+                            </Form.Label>
+                          </Form.Group>
+                        </div> */}
                           <div className="row">
                             <Form.Group className="mx-3">
                               <div className="variation_box my-2">
@@ -2584,12 +2859,11 @@ function Product() {
                                           <th>
                                             Mrp{" "}
                                             <span className="text-danger">
-                                              *{" "}
+                                              *{""}
                                             </span>
                                           </th>
                                           <th>Discount</th>
-                                          <th>Original Price</th>
-                                          <th>Total Tax</th>
+                                          <th>Price</th>
                                           <th>
                                             Sale Price{" "}
                                             <span className="text-danger">
@@ -2621,7 +2895,7 @@ function Product() {
                                       <tbody>
                                         <tr>
                                           <td className="p-0 text-center">
-                                            <div className="">
+                                            <div className=" d-flex align-items-center">
                                               <InputGroup
                                                 className=""
                                                 size="sm"
@@ -2630,11 +2904,9 @@ function Product() {
                                                   aria-label="Default select example"
                                                   name="unit"
                                                   required
-                                                  value={
-                                                    productvariantarray.unit
-                                                  }
+                                                  value={variantarray.unit}
                                                   onChange={(e) =>
-                                                    handleVarietyChange(e)
+                                                    onVariantChange(e)
                                                   }
                                                   disabled={
                                                     variantmainarray.length ===
@@ -2642,6 +2914,11 @@ function Product() {
                                                       ? false
                                                       : true
                                                   }
+                                                  // className={
+                                                  //   customvalidated === true
+                                                  //     ? "border-danger"
+                                                  //     : null
+                                                  // }
                                                 >
                                                   <option value={""}>
                                                     Select
@@ -2722,23 +2999,17 @@ function Product() {
                                               >
                                                 <Form.Select
                                                   aria-label="Default select example"
-                                                  required
-                                                  sm="9"
                                                   name="colors"
-                                                  value={
-                                                    productvariantarray.colors
-                                                  }
+                                                  value={variantarray.colors}
                                                   onChange={(e) =>
-                                                    handleVarietyChange(e)
+                                                    onVariantChange(e)
                                                   }
+                                                  required
                                                 >
-                                                  <option
-                                                    value={
-                                                      productvariantarray.colors ==
-                                                      ""
-                                                    }
-                                                  >
-                                                    Select
+                                                  {" "}
+                                                  <option value={""}>
+                                                    {" "}
+                                                    Select Color
                                                   </option>
                                                   {(varietyy.color || []).map(
                                                     (vari, i) => {
@@ -2746,6 +3017,9 @@ function Product() {
                                                         <option
                                                           value={vari}
                                                           key={i}
+                                                          selected={
+                                                            productdata.color
+                                                          }
                                                         >
                                                           {vari}
                                                         </option>
@@ -2753,6 +3027,36 @@ function Product() {
                                                     }
                                                   )}
                                                 </Form.Select>
+                                                {/* <Form.Select
+                                                aria-label="Default select example"
+                                                required
+                                                sm="9"
+                                                name="colors"
+                                                value={variantarray.colors}
+                                                onChange={(e) =>
+                                                  onVariantChange(e)
+                                                }
+                                              >
+                                                <option
+                                                  value={
+                                                    variantarray.colors == ""
+                                                  }
+                                                >
+                                                  Select
+                                                </option>
+                                                {(varietyy.color || []).map(
+                                                  (vari, i) => {
+                                                    return (
+                                                      <option
+                                                        value={vari}
+                                                        key={i}
+                                                      >
+                                                        {vari}
+                                                      </option>
+                                                    );
+                                                  }
+                                                )}
+                                              </Form.Select> */}
                                               </InputGroup>
                                             </div>
                                           </td>
@@ -2764,26 +3068,21 @@ function Product() {
                                                 size="sm"
                                               >
                                                 <Form.Control
-                                                  value={
-                                                    productvariantarray.unit_quantity
-                                                  }
                                                   type="number"
                                                   sm="9"
+                                                  value={
+                                                    variantarray.unit_quantity
+                                                  }
                                                   disabled={
-                                                    productvariantarray.unit ==
-                                                    "pcs"
+                                                    variantarray.unit == "pcs"
                                                       ? true
                                                       : false
                                                   }
-                                                  // className={
-                                                  //   customvalidated === true
-                                                  //     ? "border-danger"
-                                                  //     : null
-                                                  // }
                                                   onChange={(e) =>
-                                                    handleVarietyChange(e)
+                                                    onVariantChange(e)
                                                   }
                                                   name={"unit_quantity"}
+                                                  required
                                                 />
                                               </InputGroup>
                                             </div>
@@ -2800,31 +3099,24 @@ function Product() {
                                                   required
                                                   sm="9"
                                                   name="size"
-                                                  value={
-                                                    productvariantarray.size
-                                                  }
+                                                  value={variantarray.size}
                                                   onChange={(e) =>
-                                                    handleVarietyChange(e)
+                                                    onVariantChange(e)
                                                   }
                                                   disabled={
-                                                    productvariantarray.unit !==
+                                                    variantarray.unit !==
                                                       "pcs" &&
-                                                    productvariantarray.unit !==
-                                                      ""
+                                                    variantarray.unit !== ""
                                                       ? true
-                                                      : productvariantarray.unit ==
-                                                        ""
+                                                      : variantarray.unit == ""
                                                       ? false
                                                       : false
                                                   }
                                                 >
-                                                  <option
-                                                    value={
-                                                      productvariantarray.size ==
-                                                      ""
-                                                    }
-                                                  >
-                                                    Select
+                                                  {" "}
+                                                  <option value={""}>
+                                                    {" "}
+                                                    Select Size
                                                   </option>
                                                   {(varietyy.size || []).map(
                                                     (vari, i) => {
@@ -2832,6 +3124,9 @@ function Product() {
                                                         <option
                                                           value={vari}
                                                           key={i}
+                                                          selected={
+                                                            productdata.size
+                                                          }
                                                         >
                                                           {vari}
                                                         </option>
@@ -2839,6 +3134,42 @@ function Product() {
                                                     }
                                                   )}
                                                 </Form.Select>
+                                                {/* <Form.Select
+                                           aria-label="Default select example"
+                                           required
+                                           sm="9"
+                                           name="size"
+                                           value={variantarray.size}
+                                           onChange={(e) =>
+                                             onVariantChange(e)
+                                           }
+                                           disabled={
+                                            variantarray.unit !== "pcs" &&
+                                            variantarray.unit !== ""
+                                              ? true
+                                              : variantarray.unit == ""
+                                              ? false
+                                              : false
+                                          }
+                        >
+                          {" "}
+                          <option value={""}> Select Size</option>
+                          {(varietyy.size||[]).map((vari, i) => {
+                            return (
+                              <option
+                              value={vari}
+                              key={i}
+                                selected={
+                                  (productdata.size)
+                                  
+                                }
+                              >
+                                {vari}
+                                
+                              </option>
+                            );
+                          })}
+                        </Form.Select> */}
                                               </InputGroup>
                                             </div>
                                           </td>
@@ -2851,17 +3182,19 @@ function Product() {
                                                 <Form.Control
                                                   type="number"
                                                   sm="9"
-                                                  step="0.01"
                                                   maxLength={"5"}
                                                   minLength={"1"}
                                                   min="1"
                                                   max="50000"
+                                                  // className={
+                                                  //   customvalidated === true
+                                                  //     ? "border-danger"
+                                                  //     : null
+                                                  // }
                                                   name="mrp"
-                                                  value={
-                                                    productvariantarray.mrp
-                                                  }
+                                                  value={variantarray.mrp}
                                                   onChange={(e) =>
-                                                    handleVarietyChange(e)
+                                                    onVariantChange(e)
                                                   }
                                                   required
                                                 />
@@ -2877,22 +3210,19 @@ function Product() {
                                                 <Form.Control
                                                   type="number"
                                                   sm="9"
-                                                  min={"0"}
+                                                  min={"1"}
                                                   max={"100"}
                                                   onChange={(e) =>
-                                                    handleVarietyChange(e)
+                                                    onVariantChange(e)
                                                   }
                                                   name={"discount"}
-                                                  value={
-                                                    productvariantarray.discount
-                                                  }
+                                                  value={variantarray.discount}
                                                 />
                                               </InputGroup>
                                             </div>
                                           </td>
                                           <td className="p-0 text-center">
                                             <div className=" d-flex align-items-center">
-                                              {/* PRODUCT ORIGINAL PRICE */}
                                               <InputGroup
                                                 className=""
                                                 size="sm"
@@ -2901,43 +3231,16 @@ function Product() {
                                                   step={"any"}
                                                   type="number"
                                                   sm="9"
+                                                  // className={
+                                                  //   customvalidated === true
+                                                  //     ? "border-danger"
+                                                  //     : null
+                                                  // }
+                                                  // onChange={(e) =>
+                                                  //   onVariantChange(e)
+                                                  // }
                                                   name={"product_price"}
-                                                  value={
-                                                    productvariantarray.product_price
-                                                  }
-                                                  required
-                                                />
-                                              </InputGroup>
-                                            </div>
-                                          </td>
-                                          <td className="p-0 text-center">
-                                            <div className=" d-flex align-items-center">
-                                              <InputGroup
-                                                className=""
-                                                size="sm"
-                                              >
-                                                <Form.Control
-                                                  step={"any"}
-                                                  type="number"
-                                                  sm="9"
-                                                  name={"totaltax"}
-                                                  value={(
-                                                    (productvariantarray.sale_price *
-                                                      (Number(productdata.gst) +
-                                                        Number(
-                                                          productdata.wholesale_sales_tax
-                                                        ) +
-                                                        Number(
-                                                          productdata.retails_sales_tax
-                                                        ) +
-                                                        Number(
-                                                          productdata.manufacturers_sales_tax
-                                                        ) +
-                                                        Number(
-                                                          productdata.value_added_tax
-                                                        ))) /
-                                                    100
-                                                  ).toFixed(2)}
+                                                  value={product_price}
                                                   required
                                                 />
                                               </InputGroup>
@@ -2954,21 +3257,74 @@ function Product() {
                                                   type="number"
                                                   step={"any"}
                                                   sm="9"
-                                                  name={"sale_price"}
-                                                  value={
-                                                    productvariantarray.sale_price
-                                                  }
-                                                  // onChange={() =>
-                                                  //   setproductvariantarray({
-                                                  //     ...productvariantarray,
-                                                  //     sale_price:
-                                                  //       saleprice.toFixed(2),
-                                                  //   })
+                                                  // className={
+                                                  //   customvalidated === true
+                                                  //     ? "border-danger"
+                                                  //     : null
                                                   // }
+                                                  // onChange={(e) =>
+                                                  //   onVariantChange(e)
+                                                  // }
+                                                  name={"sale_price"}
+                                                  value={(
+                                                    product_price +
+                                                    ((product_price *
+                                                      productdata.gst) /
+                                                      100 +
+                                                      (product_price *
+                                                        productdata.wholesale_sales_tax) /
+                                                        100 +
+                                                      (product_price *
+                                                        productdata.retails_sales_tax) /
+                                                        100 +
+                                                      (product_price *
+                                                        productdata.value_added_tax) /
+                                                        100 +
+                                                      (product_price *
+                                                        productdata.manufacturers_sales_tax) /
+                                                        100)
+                                                  ).toFixed(2)}
                                                 />
                                               </InputGroup>
                                             </div>
                                           </td>
+
+                                          {/* <td className="p-0 text-center">
+                                          <div className="">
+                                            <Form.Check
+                                              onChange={(e) =>
+                                                handleInputcheckboxChange(e)
+                                              }
+                                              name={"special_offer"}
+                                              checked={
+                                                variantarray.special_offer ===
+                                                  1 ||
+                                                variantarray.special_offer ===
+                                                  true
+                                                  ? true
+                                                  : false
+                                              }
+                                            />
+                                          </div>
+                                        </td>
+                                        <td className="p-0 text-center">
+                                          <div className="">
+                                            <Form.Check
+                                              onChange={(e) =>
+                                                handleInputcheckboxChange(e)
+                                              }
+                                              name={"featured_product"}
+                                              checked={
+                                                variantarray.featured_product ===
+                                                  1 ||
+                                                variantarray.featured_product ===
+                                                  true
+                                                  ? true
+                                                  : false
+                                              }
+                                            />
+                                          </div>
+                                        </td> */}
                                           <td className="p-0 text-center">
                                             <div className="manufacture_date">
                                               <InputGroup
@@ -2979,7 +3335,7 @@ function Product() {
                                                   type="date"
                                                   sm="9"
                                                   required
-                                                  max={moment().format(
+                                                  min={moment().format(
                                                     "YYYY-MM-DD"
                                                   )}
                                                   // className={
@@ -2988,11 +3344,11 @@ function Product() {
                                                   //     : null
                                                   // }
                                                   onChange={(e) =>
-                                                    handleVarietyChange(e)
+                                                    onVariantChange(e)
                                                   }
                                                   name={"manufacturing_date"}
                                                   value={
-                                                    productvariantarray.manufacturing_date
+                                                    variantarray.manufacturing_date
                                                   }
                                                 />
                                               </InputGroup>
@@ -3009,19 +3365,21 @@ function Product() {
                                                   sm="9"
                                                   required
                                                   disabled={
-                                                    productvariantarray.manufacturing_date
+                                                    variantarray.manufacturing_date
                                                       ? false
                                                       : true
                                                   }
                                                   min={moment(
-                                                    productvariantarray.manufacturing_date
-                                                  ).format("YYYY-MM-DD")}
+                                                    variantarray.manufacturing_date
+                                                  )
+                                                    .add(1, "day")
+                                                    .format("YYYY-MM-DD")}
                                                   onChange={(e) =>
-                                                    handleVarietyChange(e)
+                                                    onVariantChange(e)
                                                   }
                                                   name={"expire_date"}
                                                   value={
-                                                    productvariantarray.expire_date
+                                                    variantarray.expire_date
                                                   }
                                                 />
                                               </InputGroup>
@@ -3034,27 +3392,19 @@ function Product() {
                                                 size="sm"
                                               >
                                                 <Form.Control
-                                                  name={"quantity"}
                                                   type="number"
-                                                  value={
-                                                    productvariantarray.quantity
-                                                  }
                                                   sm="9"
-                                                  min={"1"}
-                                                  required
-                                                  // className={
-                                                  //   customvalidated === true
-                                                  //     ? "border-danger"
-                                                  //     : null
-                                                  // }
+                                                  value={variantarray.quantity}
                                                   onChange={(e) =>
-                                                    handleVarietyChange(e)
+                                                    onVariantChange(e)
                                                   }
+                                                  name={"quantity"}
                                                   onKeyPress={(event) => {
                                                     if (event.key === "Enter") {
-                                                      VariantAddProduct();
+                                                      onVariantaddclick();
                                                     }
                                                   }}
+                                                  required
                                                 />
                                               </InputGroup>
                                             </div>
@@ -3125,7 +3475,7 @@ function Product() {
                                               className="mt-1 ms-2 text-danger"
                                               type="invalid"
                                             >
-                                              Please Fill size and colors
+                                              Please fill size and colors
                                             </p>
                                           ) : varietyUnitvalidation ===
                                             "fillUnit&color" ? (
@@ -3175,7 +3525,7 @@ function Product() {
                                         {(variantmainarray || []).map(
                                           (variantdata, i) => {
                                             return (
-                                              <tr key={i}>
+                                              <tr>
                                                 <td className="p-0 text-center ">
                                                   {variantdata.unit === "pcs"
                                                     ? "color"
@@ -3213,28 +3563,16 @@ function Product() {
                                                 <td className="p-0 text-center ">
                                                   {variantdata.product_price}
                                                 </td>
+
                                                 <td className="p-0 text-center ">
-                                                  {(
-                                                    (variantdata.sale_price *
-                                                      (Number(productdata.gst) +
-                                                        Number(
-                                                          productdata.wholesale_sales_tax
-                                                        ) +
-                                                        Number(
-                                                          productdata.retails_sales_tax
-                                                        ) +
-                                                        Number(
-                                                          productdata.manufacturers_sales_tax
-                                                        ) +
-                                                        Number(
-                                                          productdata.value_added_tax
-                                                        ))) /
-                                                    100
-                                                  ).toFixed(2)}
+                                                  {saleprice}
                                                 </td>
-                                                <td className="p-0 text-center ">
-                                                  {variantdata.sale_price}
-                                                </td>
+                                                {/* <td className="p-0 text-center ">
+                                                {`${variantdata.special_offer}`}
+                                              </td>
+                                              <td className="p-0 text-center ">
+                                                {`${variantdata.featured_product}`}
+                                              </td> */}
                                                 <td className="p-0 text-center ">
                                                   {
                                                     variantdata.manufacturing_date

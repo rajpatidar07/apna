@@ -73,12 +73,16 @@ const CategoryList = () => {
   /*<----Function to delete category---->*/
   const hideAlert = () => {
     axios
-      .put(`${process.env.REACT_APP_BASEURL_0}/delete_category`, {
-        id: parentid,
-        is_active: 0,
-        level: level,
-      },{
-        headers: { admin_token: `${token}` },}
+      .put(
+        `${process.env.REACT_APP_BASEURL_0}/delete_category`,
+        {
+          id: parentid,
+          is_active: 0,
+          level: level,
+        },
+        {
+          headers: { admin_token: `${token}` },
+        }
       )
       .catch(function (error) {
         console.log(error);
@@ -206,7 +210,7 @@ const CategoryList = () => {
   const handlChangeName = (e, id) => {
     setnewName(e.target.value);
     setCateName(false);
-    setnumrror("")
+    setnumrror("");
   };
   /*<---- Onchange function of category type---->*/
   const handlChangeType = (e, id) => {
@@ -434,8 +438,8 @@ const CategoryList = () => {
     // console.log(num, spc);
     if (newName === "" /*|| num === false  || spc === false*/) {
       setCateName(true);
-    }else if(num === false ){
-      setnumrror("Number can't be a category")
+    } else if (num === false) {
+      setnumrror("Number can't be a category");
     } else if (type === "") {
       setCateType(true);
     } else if (
@@ -453,8 +457,7 @@ const CategoryList = () => {
       formData.append("new_category", newName);
       formData.append("category_type", type);
       axios
-        .post(`${process.env.REACT_APP_BASEURL_0}/add_category`, formData,
-        {
+        .post(`${process.env.REACT_APP_BASEURL_0}/add_category`, formData, {
           headers: { admin_token: `${token}` },
         })
         .then((response) => {
@@ -475,7 +478,7 @@ const CategoryList = () => {
           setAddAlert(true);
           formRef.current.reset();
           setimgerror("");
-          setnumrror("")
+          setnumrror("");
           setCateName(false);
           setCateType(false);
         })
@@ -495,8 +498,8 @@ const CategoryList = () => {
     let num = regex_num.test(newName);
     if (newName === "") {
       setCateName(true);
-    }else if(num === false ){
-      setnumrror("Number can't be a category")
+    } else if (num === false) {
+      setnumrror("Number can't be a category");
     } else if (type === "") {
       setCateType(true);
     } else if (
@@ -515,8 +518,7 @@ const CategoryList = () => {
       formData.append("new_category", newName);
       formData.append("category_type", type);
       axios
-        .put(`${process.env.REACT_APP_BASEURL_0}/update_category`, formData,
-        {
+        .put(`${process.env.REACT_APP_BASEURL_0}/update_category`, formData, {
           headers: { admin_token: `${token}` },
         })
         .then((response) => {
@@ -530,8 +532,8 @@ const CategoryList = () => {
           setchildCategory([]);
           setgrandcCategory([]);
           setImagePath("");
-          setimgerror("")
-          setnumrror("")
+          setimgerror("");
+          setnumrror("");
           newImg = "";
           setFile();
           setapicall(true);
@@ -624,390 +626,392 @@ const CategoryList = () => {
     apicall(true);
   };
 
-  return (<>
-    <div className="App productlist_maindiv">
-      <h2>Category</h2>
+  return (
+    <>
+      <div className="App productlist_maindiv">
+        <h2>Category</h2>
 
-      {/* search bar */}
-      <div className="card mt-3 p-3 ">
-        <div className=" row">
-          <div className="col-md-3 col-sm-6 aos_input mb-2">
-            <input
-              required
-              type="text"
-              className="adminsideinput"
-              placeholder={"Search by category name"}
-              value={SearchCat.category_name}
-              name={"category_name"}
-              onChange={(e) => onValueChange(e)}
+        {/* search bar */}
+        <div className="card mt-3 p-3 ">
+          <div className=" row">
+            <div className="col-md-3 col-sm-6 aos_input mb-2">
+              <input
+                required
+                type="text"
+                className="adminsideinput"
+                placeholder={"Search by category name"}
+                value={SearchCat.category_name}
+                name={"category_name"}
+                onChange={(e) => onValueChange(e)}
+              />
+              {searchvalidated === true ? (
+                <p className="mt-1 ms-2 text-danger" type="invalid">
+                  Please fill this field
+                </p>
+              ) : null}
+            </div>
+            <div className="col-md-3 col-sm-6 aos_input mb-2">
+              <Form.Select
+                aria-label="Search by status"
+                className="adminselectbox"
+                name="category_type"
+                onChange={(e) => onValueChange(e)}
+                value={SearchCat.category_type}
+              >
+                <option value={""}>Search by category</option>
+                {result1.map((lvl, i) => {
+                  return (
+                    <option value={lvl.category_type} key={i}>
+                      {lvl.category_type}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </div>
+
+            <div className="col-md-3 col-sm-6 aos_input mb-2">
+              <Form.Select
+                aria-label="Search by status"
+                className="adminselectbox"
+                name="level"
+                onChange={(e) => onValueChange(e)}
+                value={SearchCat.level}
+              >
+                <option value={""}>Search by level</option>
+                {result2.map((lvl, i) => {
+                  return (
+                    <option value={lvl.level} key={i}>
+                      {lvl.level}
+                    </option>
+                  );
+                })}
+              </Form.Select>
+            </div>
+            <div className="col-md-3 col-sm-6 aos_input mb-2">
+              <button
+                className="button main_button w-100"
+                onClick={() => SearchCategory()}
+              >
+                Search
+              </button>
+            </div>
+
+            <div className="col-md-3 col-sm-6 aos_input mb-2">
+              {" "}
+              <button
+                className="button main_button w-100"
+                onClick={() => OnReset()}
+              >
+                Reset
+              </button>
+            </div>
+          </div>
+
+          {/* upload */}
+
+          <div className="product_page_uploadbox my-4">
+            <Iconbutton
+              btntext={"Add Category"}
+              onClick={() => handleShow("add")}
+              Iconname={<AiOutlinePlus />}
+              btnclass={"button main_button adminmainbutton"}
             />
-            {searchvalidated === true ? (
-              <p className="mt-1 ms-2 text-danger" type="invalid">
-                Please fill this field
-              </p>
-            ) : null}
-          </div>
-          <div className="col-md-3 col-sm-6 aos_input mb-2">
-            <Form.Select
-              aria-label="Search by status"
-              className="adminselectbox"
-              name="category_type"
-              onChange={(e) => onValueChange(e)}
-              value={SearchCat.category_type}
-            >
-              <option value={""}>Search by category</option>
-              {result1.map((lvl, i) => {
-                return (
-                  <option value={lvl.category_type} key={i}>
-                    {lvl.category_type}
-                  </option>
-                );
-              })}
-            </Form.Select>
           </div>
 
-          <div className="col-md-3 col-sm-6 aos_input mb-2">
-            <Form.Select
-              aria-label="Search by status"
-              className="adminselectbox"
-              name="level"
-              onChange={(e) => onValueChange(e)}
-              value={SearchCat.level}
+          {/* datatable */}
+          <Modal
+            show={show}
+            onHide={() => handleClose()}
+            dialogClassName="addproductmainmodal"
+            aria-labelledby="example-custom-modal-styling-title"
+            centered
+            backdrop={() => handleClose()}
+          >
+            <Form
+              className=""
+              validated={validated}
+              ref={formRef}
+              onSubmit={
+                show === "add"
+                  ? (e) => AddCategoryClick(e, category.id)
+                  : (show) => UpdateCategoryClick(show)
+              }
             >
-              <option value={""}>Search by level</option>
-              {result2.map((lvl, i) => {
-                return (
-                  <option value={lvl.level} key={i}>
-                    {lvl.level}
-                  </option>
-                );
-              })}
-            </Form.Select>
-          </div>
-          <div className="col-md-3 col-sm-6 aos_input mb-2">
-            <button
-              className="button main_button w-100"
-              onClick={() => SearchCategory()}
-            >
-              Search
-            </button>
-          </div>
+              <Modal.Header closeButton className="addproductheader">
+                <Modal.Title id="example-custom-modal-styling-title">
+                  {show === "add" ? "Add Category" : " Update Category"}
+                </Modal.Title>
+              </Modal.Header>
+              <Modal.Body className="addproductbody p-2">
+                <div className="row p-3 m-0">
+                  <div className="col-md-6">
+                    <Form.Group
+                      className="mb-3 aos_input mb-2"
+                      controlId="formBasicName"
+                    >
+                      <Form.Label>Category Name</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Category Name"
+                        // required
+                        onChange={(e) => handlChangeName(e)}
+                        value={newName}
+                        name={"new_category"}
+                        maxLength={25}
+                      />
+                      {CateName === true ? (
+                        <p className="text-danger mt-2">
+                          Category name is required
+                        </p>
+                      ) : null}
+                      <small className="text-danger">{numrror}</small>
+                    </Form.Group>
+                  </div>
+                  <div className="col-md-6">
+                    <Form.Group
+                      className="mb-3 aos_input"
+                      controlId="formBasicCategory"
+                    >
+                      <Form.Label>Category Type</Form.Label>
+                      <Form.Select
+                        aria-label="Select by category type"
+                        className="adminselectbox"
+                        onChange={(e) => handlChangeType(e)}
+                        defaultValue={CategoryEditdata.category_type}
+                        // required
+                        name={"category_type"}
+                      >
+                        <option value="">Search by category type</option>
+                        {(categorytype.categorytype || []).map((data, i) => {
+                          return (
+                            <option
+                              key={i}
+                              // selected={
+                              //   (CategoryEditdata.category_type = "Cloths"
+                              //     ? true
+                              //     : false)
+                              // }
+                              value={data}
+                            >
+                              {data}
+                            </option>
+                          );
+                        })}
+                      </Form.Select>
+                      {CateType === true ? (
+                        <p className="text-danger mt-2">
+                          Category type is required
+                        </p>
+                      ) : null}
+                    </Form.Group>
+                  </div>
+                  <div className="col-md-6">
+                    <Form.Group
+                      className="mb-3 aos_input"
+                      controlId="formBasicParentCategory"
+                    >
+                      <Form.Label>Parent Category</Form.Label>
+                      <Form.Select
+                        aria-label="Select by status"
+                        className="adminselectbox"
+                        onChange={(e, id) => categoryFormChange(e, id)}
+                        name={"category_name"}
+                        placeholder={"Select by category"}
+                        // value={indVal}
+                      >
+                        <option value={"0"}>Select Parent Category</option>
+                        {category.map((cdata, i) => {
+                          return cdata.id === CategoryEditdata.id &&
+                            cdata.category_name ===
+                              CategoryEditdata.category_name ? null : (
+                            <option
+                              value={cdata.id}
+                              key={i}
+                              selected={
+                                CategoryEditparent === cdata.category_name
+                                  ? true
+                                  : false
+                              }
+                            >
+                              {cdata.category_name}{" "}
+                            </option>
+                          );
+                        })}
+                      </Form.Select>
+                      <Form.Control.Feedback type="invalid" className="h6">
+                        Please fill category
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                  </div>
+                  {indVal === "0" ||
+                  subCategory[0] === "" ||
+                  subCategory[0] === null ||
+                  subCategory[0] === undefined ? null : (
+                    <div className="col-md-6">
+                      <Form.Group
+                        className="mb-3 aos_input"
+                        controlId="formBasicParentCategory"
+                      >
+                        <Form.Label>Sub Category</Form.Label>
+                        <Form.Select
+                          aria-label="Search by status"
+                          className="adminselectbox"
+                          onChange={(e, id) => categoryFormChange(e, id)}
+                          name={"sub_category"}
+                          // value={CategoryEditdata.category_name}
+                        >
+                          <option value="1">Select Sub category</option>
+                          {subCategory.map((cdata, i) => {
+                            // console.log(
+                            //   CategoryEditSubparent + "CategoryEditSubparent"
+                            // );
 
-          <div className="col-md-3 col-sm-6 aos_input mb-2">
-            {" "}
-            <button
-              className="button main_button w-100"
-              onClick={() => OnReset()}
-            >
-              Reset
-            </button>
-          </div>
-        </div>
+                            return cdata.id === CategoryEditdata.id &&
+                              cdata.category_name ===
+                                CategoryEditdata.category_name ? null : (
+                              <option
+                                value={cdata.id}
+                                key={i}
+                                selected={
+                                  CategoryEditSubparent === cdata.category_name
+                                    ? true
+                                    : false
+                                }
+                              >
+                                {cdata.category_name}{" "}
+                              </option>
+                            );
+                          })}
+                        </Form.Select>
+                        <Form.Control.Feedback type="invalid" className="h6">
+                          Please fill category
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </div>
+                  )}
 
-        {/* upload */}
+                  {indVal === "1" ||
+                  indVal === "" ||
+                  indVal === "0" ||
+                  childCategory[0] === "" ||
+                  childCategory[0] === null ||
+                  childCategory[0] === undefined ? null : (
+                    <div className="col-md-6">
+                      <Form.Group
+                        className="mb-3 aos_input"
+                        controlId="formBasicParentCategory"
+                      >
+                        <Form.Label> Child Category</Form.Label>
+                        <Form.Select
+                          aria-label="Search by status"
+                          className="adminselectbox"
+                          onChange={(e, id) => categoryFormChange(e, id)}
+                          name={"child_category"}
+                        >
+                          {" "}
+                          <option value="">Select Child category</option>
+                          {childCategory.map((cdata, i) => {
+                            return cdata.id === CategoryEditdata.id &&
+                              cdata.category_name ===
+                                CategoryEditdata.category_name ? null : (
+                              <option
+                                value={cdata.id}
+                                key={i}
+                                selected={
+                                  CategoryEditChildparent ===
+                                  cdata.category_name
+                                    ? true
+                                    : false
+                                }
+                              >
+                                {cdata.category_name}{" "}
+                              </option>
+                            );
+                          })}
+                        </Form.Select>
+                        <Form.Control.Feedback type="invalid" className="h6">
+                          Please fill category
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    </div>
+                  )}
 
-        <div className="product_page_uploadbox my-4">
-          <Iconbutton
-            btntext={"Add Category"}
-            onClick={() => handleShow("add")}
-            Iconname={<AiOutlinePlus />}
-            btnclass={"button main_button adminmainbutton"}
+                  <div className="col-md-6">
+                    <Form.Group
+                      className="mb-3 aos_input"
+                      controlId="formBasicImg"
+                    >
+                      <Form.Label>
+                        Category Icon (In .jpg, .jpeg, .png format)
+                      </Form.Label>
+                      <div className="category_icon_box">
+                        <Form.Control
+                          type="file"
+                          placeholder="Category Icon"
+                          onChange={(e) => saveFile(e)}
+                          name={"category_icon"}
+                          accept="image/png,image/jpeg,image/jpg"
+                          // value={newImg}
+                        />
+                      </div>
+                      {newImg === "" || newImg === "no image" ? null : (
+                        <img
+                          src={newImg}
+                          alt={"apna_organic"}
+                          className={"category_icon"}
+                          width={"100px"}
+                          height={"100px"}
+                          style={{ marginTop: 10 }}
+                        />
+                      )}
+                    </Form.Group>
+                    <small className="text-danger">{imgerror}</small>
+                  </div>
+                </div>
+              </Modal.Body>
+              <Modal.Footer className="addproductfooter">
+                <Iconbutton
+                  type={"button"}
+                  btntext={"Cancel"}
+                  onClick={() => handleClose()}
+                  btnclass={"button main_outline_button adminmainbutton px-2"}
+                />
+                <Iconbutton
+                  type={"submit"}
+                  btntext={show === "add" ? "Add Category" : "Update Category"}
+                  btnclass={"button main_button "}
+                />
+              </Modal.Footer>
+            </Form>
+          </Modal>
+          <DataTable
+            columns={columns}
+            data={data}
+            pagination
+            highlightOnHover
+            pointerOnHover
+            className={"table_body category_table"}
+          />
+          <SweetAlert
+            show={Alert}
+            title={newName}
+            text="Are you Sure you want to delete"
+            onConfirm={hideAlert}
+            showCancelButton={true}
+            onCancel={closeAddAlert}
+          />
+          <SweetAlert
+            show={AddAlert}
+            title="Category Added successfully "
+            onConfirm={closeAddAlert}
+          />
+          <SweetAlert
+            show={UpdateAlert}
+            title="Category Updated Successfully "
+            onConfirm={closeUpdateAlert}
           />
         </div>
-
-        {/* datatable */}
-        <Modal
-          show={show}
-          onHide={() => handleClose()}
-          dialogClassName="addproductmainmodal"
-          aria-labelledby="example-custom-modal-styling-title"
-          centered
-          backdrop={() => handleClose()}
-        >
-          <Form
-            className=""
-            validated={validated}
-            ref={formRef}
-            onSubmit={
-              show === "add"
-                ? (e) => AddCategoryClick(e, category.id)
-                : (show) => UpdateCategoryClick(show)
-            }
-          >
-            <Modal.Header closeButton className="addproductheader">
-              <Modal.Title id="example-custom-modal-styling-title">
-                {show === "add" ? "Add Category" : " Update Category"}
-              </Modal.Title>
-            </Modal.Header>
-            <Modal.Body className="addproductbody p-2">
-              <div className="row p-3 m-0">
-                <div className="col-md-6">
-                  <Form.Group
-                    className="mb-3 aos_input mb-2"
-                    controlId="formBasicName"
-                  >
-                    <Form.Label>Category Name</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Category Name"
-                      // required
-                      onChange={(e) => handlChangeName(e)}
-                      value={newName}
-                      name={"new_category"}
-                      maxLength={25}
-                    />
-                    {CateName === true ? (
-                      <p className="text-danger mt-2">
-                        Category name is required
-                      </p>
-                    ) : null}
-                    <small className="text-danger">{numrror}</small>
-                  </Form.Group>
-                </div>
-                <div className="col-md-6">
-                  <Form.Group
-                    className="mb-3 aos_input"
-                    controlId="formBasicCategory"
-                  >
-                    <Form.Label>Category Type</Form.Label>
-                    <Form.Select
-                      aria-label="Select by category type"
-                      className="adminselectbox"
-                      onChange={(e) => handlChangeType(e)}
-                      defaultValue={CategoryEditdata.category_type}
-                      // required
-                      name={"category_type"}
-                    >
-                      <option value="">Search by category type</option>
-                      {(categorytype.categorytype || []).map((data, i) => {
-                        return (
-                          <option
-                            key={i}
-                            // selected={
-                            //   (CategoryEditdata.category_type = "Cloths"
-                            //     ? true
-                            //     : false)
-                            // }
-                            value={data}
-                          >
-                            {data}
-                          </option>
-                        );
-                      })}
-                    </Form.Select>
-                    {CateType === true ? (
-                      <p className="text-danger mt-2">
-                        Category type is required
-                      </p>
-                    ) : null}
-                  </Form.Group>
-                </div>
-                <div className="col-md-6">
-                  <Form.Group
-                    className="mb-3 aos_input"
-                    controlId="formBasicParentCategory"
-                  >
-                    <Form.Label>Parent Category</Form.Label>
-                    <Form.Select
-                      aria-label="Select by status"
-                      className="adminselectbox"
-                      onChange={(e, id) => categoryFormChange(e, id)}
-                      name={"category_name"}
-                      placeholder={"Select by category"}
-                      // value={indVal}
-                    >
-                      <option value={"0"}>Select Parent Category</option>
-                      {category.map((cdata, i) => {
-                        return cdata.id === CategoryEditdata.id &&
-                          cdata.category_name ===
-                            CategoryEditdata.category_name ? null : (
-                          <option
-                            value={cdata.id}
-                            key={i}
-                            selected={
-                              CategoryEditparent === cdata.category_name
-                                ? true
-                                : false
-                            }
-                          >
-                            {cdata.category_name}{" "}
-                          </option>
-                        );
-                      })}
-                    </Form.Select>
-                    <Form.Control.Feedback type="invalid" className="h6">
-                      Please fill category
-                    </Form.Control.Feedback>
-                  </Form.Group>
-                </div>
-                {indVal === "0" ||
-                subCategory[0] === "" ||
-                subCategory[0] === null ||
-                subCategory[0] === undefined ? null : (
-                  <div className="col-md-6">
-                    <Form.Group
-                      className="mb-3 aos_input"
-                      controlId="formBasicParentCategory"
-                    >
-                      <Form.Label>Sub Category</Form.Label>
-                      <Form.Select
-                        aria-label="Search by status"
-                        className="adminselectbox"
-                        onChange={(e, id) => categoryFormChange(e, id)}
-                        name={"sub_category"}
-                        // value={CategoryEditdata.category_name}
-                      >
-                        <option value="1">Select Sub category</option>
-                        {subCategory.map((cdata, i) => {
-                          // console.log(
-                          //   CategoryEditSubparent + "CategoryEditSubparent"
-                          // );
-
-                          return cdata.id === CategoryEditdata.id &&
-                            cdata.category_name ===
-                              CategoryEditdata.category_name ? null : (
-                            <option
-                              value={cdata.id}
-                              key={i}
-                              selected={
-                                CategoryEditSubparent === cdata.category_name
-                                  ? true
-                                  : false
-                              }
-                            >
-                              {cdata.category_name}{" "}
-                            </option>
-                          );
-                        })}
-                      </Form.Select>
-                      <Form.Control.Feedback type="invalid" className="h6">
-                        Please fill category
-                      </Form.Control.Feedback>
-                    </Form.Group>
-                  </div>
-                )}
-
-                {indVal === "1" ||
-                indVal === "" ||
-                indVal === "0" ||
-                childCategory[0] === "" ||
-                childCategory[0] === null ||
-                childCategory[0] === undefined ? null : (
-                  <div className="col-md-6">
-                    <Form.Group
-                      className="mb-3 aos_input"
-                      controlId="formBasicParentCategory"
-                    >
-                      <Form.Label> Child Category</Form.Label>
-                      <Form.Select
-                        aria-label="Search by status"
-                        className="adminselectbox"
-                        onChange={(e, id) => categoryFormChange(e, id)}
-                        name={"child_category"}
-                      >
-                        {" "}
-                        <option value="">Select Child category</option>
-                        {childCategory.map((cdata, i) => {
-                          return cdata.id === CategoryEditdata.id &&
-                            cdata.category_name ===
-                              CategoryEditdata.category_name ? null : (
-                            <option
-                              value={cdata.id}
-                              key={i}
-                              selected={
-                                CategoryEditChildparent === cdata.category_name
-                                  ? true
-                                  : false
-                              }
-                            >
-                              {cdata.category_name}{" "}
-                            </option>
-                          );
-                        })}
-                      </Form.Select>
-                      <Form.Control.Feedback type="invalid" className="h6">
-                        Please fill category
-                      </Form.Control.Feedback>
-                    </Form.Group>
-                  </div>
-                )}
-
-                <div className="col-md-6">
-                  <Form.Group
-                    className="mb-3 aos_input"
-                    controlId="formBasicImg"
-                  >
-                    <Form.Label>
-                      Category Icon (In .jpg, .jpeg, .png format)
-                    </Form.Label>
-                    <div className="category_icon_box">
-                      <Form.Control
-                        type="file"
-                        placeholder="Category Icon"
-                        onChange={(e) => saveFile(e)}
-                        name={"category_icon"}
-                        accept="image/png,image/jpeg,image/jpg"
-                        // value={newImg}
-                      />
-                    </div>
-                    {newImg === "" || newImg === "no image" ? null : (
-                      <img
-                        src={newImg}
-                        alt={"apna_organic"}
-                        className={"category_icon"}
-                        width={"100px"}
-                        height={"100px"}
-                        style={{ marginTop: 10 }}
-                      />
-                    )}
-                  </Form.Group>
-                  <small className="text-danger">{imgerror}</small>
-                </div>
-              </div>
-            </Modal.Body>
-            <Modal.Footer className="addproductfooter">
-              <Iconbutton
-                type={"button"}
-                btntext={"Cancel"}
-                onClick={() => handleClose()}
-                btnclass={"button main_outline_button adminmainbutton px-2"}
-              />
-              <Iconbutton
-                type={"submit"}
-                btntext={show === "add" ? "Add Category" : "Update Category"}
-                btnclass={"button main_button "}
-              />
-            </Modal.Footer>
-          </Form>
-        </Modal>
-        <DataTable
-          columns={columns}
-          data={data}
-          pagination
-          highlightOnHover
-          pointerOnHover
-          className={"table_body category_table"}
-        />
-        <SweetAlert
-          show={Alert}
-          title={newName}
-          text="Are you Sure you want to delete"
-          onConfirm={hideAlert}
-          showCancelButton={true}
-          onCancel={closeAddAlert}
-        />
-        <SweetAlert
-          show={AddAlert}
-          title="Category Added successfully "
-          onConfirm={closeAddAlert}
-        />
-        <SweetAlert
-          show={UpdateAlert}
-          title="Category Updated Successfully "
-          onConfirm={closeUpdateAlert}
-        />
       </div>
-    </div>
     </>
   );
 };
