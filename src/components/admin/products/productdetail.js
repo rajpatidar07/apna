@@ -915,25 +915,37 @@ const Productdetail = () => {
                                 </Form.Label>
                                 <Col sm="12">
                                   <InputGroup className="">
-                                    <Form.Select
-                                      aria-label="Default select example"
-                                      required
-                                      sm="9"
-                                      name="colors"
-                                      value={variantarray.colors}
-                                      onChange={(e) => onVariantChange(e)}
-                                    >
-                                      <option value={variantarray.colors == ""}>
-                                        Select
-                                      </option>
-                                      {(varietyy.color || []).map((vari, i) => {
-                                        return (
-                                          <option value={vari} key={i}>
-                                            {vari}
-                                          </option>
-                                        );
-                                      })}
-                                    </Form.Select>
+                                  <Form.Select
+                                                  aria-label="Default select example"
+                                                  name="colors"
+                                                  value={variantarray.colors}
+                                                  onChange={(e) =>
+                                                    onVariantChange(e)
+                                                  }
+                                                  required
+                                                >
+                                                  {" "}
+                                                  <option value={""}>
+                                                    {" "}
+                                                    Select Color
+                                                  </option>
+                                                  {(varietyy.color || []).map(
+                                                    (vari, i) => {
+                                                      return (
+                                                        <option
+                                                          value={vari}
+                                                          key={i}
+                                                          selected={
+                                                            productdata.color
+                                                          }
+                                                        >
+                                                          {vari}
+                                                        </option>
+                                                      );
+                                                    }
+                                                  )}
+                                                </Form.Select>
+                                   
                                   </InputGroup>
                                 </Col>
                               </Form.Group>

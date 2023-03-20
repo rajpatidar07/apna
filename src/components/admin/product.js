@@ -3027,36 +3027,7 @@ function Product() {
                                                     }
                                                   )}
                                                 </Form.Select>
-                                                {/* <Form.Select
-                                                aria-label="Default select example"
-                                                required
-                                                sm="9"
-                                                name="colors"
-                                                value={variantarray.colors}
-                                                onChange={(e) =>
-                                                  onVariantChange(e)
-                                                }
-                                              >
-                                                <option
-                                                  value={
-                                                    variantarray.colors == ""
-                                                  }
-                                                >
-                                                  Select
-                                                </option>
-                                                {(varietyy.color || []).map(
-                                                  (vari, i) => {
-                                                    return (
-                                                      <option
-                                                        value={vari}
-                                                        key={i}
-                                                      >
-                                                        {vari}
-                                                      </option>
-                                                    );
-                                                  }
-                                                )}
-                                              </Form.Select> */}
+
                                               </InputGroup>
                                             </div>
                                           </td>
