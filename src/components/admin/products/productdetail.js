@@ -178,6 +178,7 @@ const Productdetail = () => {
       .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
       .then((response) => {
         onImgView(id, product_id);
+
         // setloading(false)
       })
       .catch(function (error) {
@@ -205,6 +206,7 @@ const Productdetail = () => {
   };
   const [imageboxid, setimageboxid] = useState(0);
   const onImgView = (id, productid) => {
+    setOpen(true);
     setEditButton(false);
     setimageboxid(id);
     setViewImage("notview");
@@ -1536,9 +1538,11 @@ const Productdetail = () => {
 
                                                 <td className="p-0 py-3 text-center action_btn_box">
                                                   <RiImageAddLine
-                                                    type="button"
+                                                
+                                                    type="file"
                                                     className="variety_edit_action_btn  text-success"
                                                     eventKey={i}
+                                                    
                                                     onClick={(_id) =>
                                                       onImgView(
                                                         variantdata.id,
