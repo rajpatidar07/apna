@@ -82,12 +82,9 @@ function Product() {
     gcategory: "",
   });
   const [categoryeditparent, setCategoryEditparent] = useState("");
-  console.log("1"+categoryeditparent)
   const [categoryeditsubparent, setCategoryEditSubparent] = useState("");
-  console.log("2"+categoryeditsubparent)
 
   const [categoryeditchildparent, setCategoryEditChildparent] = useState("");
-  console.log("3"+categoryeditsubparent)
 
   const [level, setlevel] = useState("");
   const [pdata, setpdata] = useState([]);
@@ -353,7 +350,6 @@ function Product() {
     
     setIndVal(e.target.value);
     setScategory({ ...scategory, [e.target.name]: e.target.value });
-    setchildCategory({...childCategory,[e.target.name]:e.target.value})
   };
   useEffect(() => {
     if (indVal === "") {
@@ -497,6 +493,9 @@ function Product() {
                 )
                 .then((response) => {
                   let data = response.data[0];
+                  console.log(
+                    "iiiiii---" + JSON.stringify(data) + i    
+                  );
                   if (i === 0) {
                     axios
                       .get(
@@ -524,6 +523,7 @@ function Product() {
                     setCategoryEditparent(data.category_name);
                    
                     setCategoryEditSubparent(data.category_name);
+                    setCategoryEditChildparent(data.category_name);
 
 
                   } else if (i === 2) {
@@ -560,6 +560,7 @@ function Product() {
   useEffect(() => {
     handleShow();
   }, []);
+
   // ONADD PRODUCT INPUT  CHANGE
   const handleInputFieldChange = (e) => {
     setCheckProductType(false);
@@ -679,6 +680,8 @@ function Product() {
       } else {
         setcustomValidated("imgformat");
       }
+      setProductAlert(true);
+
     }
   };
 
@@ -1533,19 +1536,22 @@ function Product() {
 
   const FileUploadAPI = (e) => {
     const formData = new FormData();
+    console.log("FORMMM--------MMMM---"+formData)
 
     formData.append("bulk_xls", e.target.files[0]);
+    console.log("FORMMMMMMM---"+formData)
 
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/product_bulk_uploads`, formData)
+      .post(`${process.env.REACT_APP_BASEURL}/product_bulk_uploads`,formData)
       .then((response) => {
         if (response.status == 200) {
           setProductAlert(true);
           setapicall(true);
         } else {
-          setBulkProductError("Error  in adding BulkProducts");
+          setBulkProductError("Error in adding BulkProducts");
         }
       })
+    console.log("----"+formData)
       .catch(function (error) {
         console.log(error);
       });
@@ -2395,13 +2401,14 @@ function Product() {
                         >
                           <Form.Label>
                             Child Category <span className="text-danger">* </span>
-                          </Form.Label>
+                          </Form.Label> {categoryeditchildparent}
                           <Form.Select
                             aria-label="Search by status"
                             className="adminselectbox"
                             onChange={(e, id) => categoryFormChange(e, id)}
                             name={"childcategory"}
                             required
+                            value={categoryeditchildparent}
                           >
                             <option value={""}>Select Category </option>
                             {childCategory.map((cdata, i) => {
@@ -2410,7 +2417,7 @@ function Product() {
                                   value={cdata.id}
                                   key={i}
                                   selected={
-                                    categoryeditsubparent==  cdata.category_name
+                                    categoryeditchildparent==  cdata.category_name
                                       ? true
                                       : false
                                   }
@@ -4766,7 +4773,7 @@ function Product() {
           <SAlert
             show={ProductAlert}
             title="Added Successfully"
-            text=" Product Added"
+            text={"Product Added"}
             onConfirm={closeProductAlert}
           />
 
