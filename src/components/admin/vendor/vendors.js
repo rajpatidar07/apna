@@ -434,7 +434,6 @@ const VendorsList = () => {
       })
       .catch(function (error) {
         console.log(error);
-        setLoading(false);
       });
   };
 

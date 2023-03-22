@@ -49,6 +49,22 @@ const BlogList = () => {
   const closeAddAlert = () => {
     setAddAlert(false);
   };
+//Blog Categoty Json//
+const CategoryJson = {
+  categorytype: [
+    "Food blogs",
+    "Cloths blogs",
+    "Travel blogs",
+    "Health blogs",
+    "Grocery blogs",
+    "Fashion blogs",
+    "Beauty & Personal care blogs",
+    "Home Applience blogs",
+    "Personal blogs",
+  ],
+};
+
+
 
   // Function of cancel update success alert:-
   const closeUpdateAlert = () => {
@@ -124,24 +140,38 @@ const BlogList = () => {
       setShow(true);
     }
   };
+
   useEffect(() => {
-    axios
-      .post(`${process.env.REACT_APP_BASEURL}/blogs`, {
-        id: "",
-        for_: "admin",
-        recent: "",
-        category: [],
-        product_tag: "",
-      })
-      .then((response) => {
-        let data = response.data;
-        setBlog(response.data);
-        setaddBlog(response.data);
-        setsearchData(data);
-        setCondition(false);
-        setapicall(false);
-      });
+    function getBlogList() {
+      try {
+        axios
+        .post(`${process.env.REACT_APP_BASEURL}/blogs`,{
+          id: "",
+          for_: "admin",
+          recent: "",
+          category: [],
+           product_tag: "",
+        })
+          .then((response) => {
+          let data = response.data[0];
+            if(data.message!=="No blogs Data"){
+
+            setBlog(data);
+            setapicall(false);
+            }
+
+         setBlog(response.data);
+         setaddBlog(response.data);
+         setsearchData(data);
+         setCondition(false);
+          });
+      } catch (err) {}
+    }
+
+    getBlogList();
   }, [apicall]);
+
+  
 
   const AddBlog = (e, id) => {
     const adminid = localStorage.getItem("encryptadminid");
@@ -232,15 +262,18 @@ const BlogList = () => {
       name: "Admin_id",
       selector: (row) => row.admin_id,
       sortable: true,
+      width: "100px",
+
     },
     {
       name: "id",
       selector: (row) => row.id,
+      width: "100px",
       sortable: true,
     },
     {
       name: "Logo",
-      width: "250px",
+      width: "100px",
       center: true,
       cell: (row) => (
         <>
@@ -263,28 +296,35 @@ const BlogList = () => {
       name: "Title",
       selector: (row) => row.title,
       sortable: true,
+      width: "100px",
+
     },
     {
       name: "Category",
       selector: (row) => row.category,
       sortable: true,
+      width:"100px"
+
+      
     },
     {
       name: "Product_tag",
       selector: (row) => row.product_tag,
       sortable: true,
-      center: true,
+      width:"100px"
     },
     {
       name: "Description",
       selector: (row) => row.description,
       sortable: true,
+      width:"100px"
     },
     {
       name: "Publish_date",
       selector: (row) => moment(row.publish_date).format("YYYY-MM-DD"),
       sortable: true,
       center: true,
+      width:"100px"
     },
     {
       name: "Status",
@@ -304,7 +344,7 @@ const BlogList = () => {
         </Badge>
       ),
       sortable: true,
-      width: "120px",
+      width: "100px",
       // center: true,
     },
     {
@@ -341,6 +381,7 @@ const BlogList = () => {
         </Form.Select>
       ),
       sortable: true,
+      width:"100px"
     },
     {
       name: "ACTION",
@@ -368,14 +409,14 @@ const BlogList = () => {
       ),
     },
   ];
-  const result1 = searchdata.filter(
-    (thing, index, self) =>
-      index === self.findIndex((t) => t.category == thing.category)
-  );
-  const result2 = searchdata.filter(
-    (thing, index, self) =>
-      index === self.findIndex((t) => t.product_tag == thing.product_tag)
-  );
+  // const result1 = searchdata.filter(
+  //   (thing, index, self) =>
+  //     index === self.findIndex((t) => t.category == thing.category)
+  // );
+  // const result2 = searchdata.filter(
+  //   (thing, index, self) =>
+  //     index === self.findIndex((t) => t.product_tag == thing.product_tag)
+  // );
   const handleClick = () => {};
   const onStatusChange = (e, id) => {
     setchangstatus(e.target.value);
@@ -418,7 +459,7 @@ const BlogList = () => {
             />
           </div>
 
-          <div className="col-md-3 col-sm-6 aos_input">
+          {/* <div className="col-md-3 col-sm-6 aos_input">
             <Form.Select
               aria-label="Search by Category"
               className="adminselectbox"
@@ -436,8 +477,8 @@ const BlogList = () => {
                 );
               })}
             </Form.Select>
-          </div>
-          <div className="col-md-3 col-sm-6 aos_input">
+          </div> */}
+          {/* <div className="col-md-3 col-sm-6 aos_input">
             <Form.Select
               aria-label="Search by Store Type"
               className="adminselectbox"
@@ -457,7 +498,7 @@ const BlogList = () => {
                 );
               })}
             </Form.Select>
-          </div>
+          </div> */}
 
           <div className="col-md-3 col-sm-6 aos_input">
             <button
@@ -543,9 +584,11 @@ const BlogList = () => {
                     name={"category"}
                   >
                     <option>Select Category</option>
-                    <option>Feshion</option>
-                    <option>Grocry</option>
-                    <option>Electronic</option>
+                    {CategoryJson.categorytype.map((blogcat)=>{
+                      return <option value={blogcat}>{blogcat}</option>;
+                    })}
+                    
+                   
                   </Form.Select>
                   <Form.Control.Feedback type="invalid" className="h6">
                     Please fill category

@@ -2408,7 +2408,6 @@ function Product() {
                             onChange={(e, id) => categoryFormChange(e, id)}
                             name={"childcategory"}
                             required
-                            value={categoryeditchildparent}
                           >
                             <option value={""}>Select Category </option>
                             {childCategory.map((cdata, i) => {
