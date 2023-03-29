@@ -457,7 +457,7 @@ const OrderReport = () => {
 
     {
       name: "Order ID",
-      selector: (row) => row.order_id,
+      selector: (row) => row.id,
       sortable: true,
       width: "170px",
     },
@@ -493,7 +493,7 @@ const OrderReport = () => {
 
     {
       name: "Net Revenue",
-      selector: (row) => row.total_order_amount,
+      selector: (row) => Number(row.total_order_amount).toFixed(2),
       sortable: true,
       width: "150px",
       center: true,
