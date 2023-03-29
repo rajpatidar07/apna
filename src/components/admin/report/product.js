@@ -35,10 +35,16 @@ const ProductReport = () => {
 
   const [previousStateChange, setpreviousStateChange] = useState(" ");
   const [prevFromdate, setprevFromdate] = useState(
-    moment().subtract(1, "days").startOf("days").format("YYYY-MM-DD")
+    moment()
+      .subtract(1, "days")
+      .startOf("days")
+      .format("YYYY-MM-DD")
   );
   const [prevTodate, setprevTodate] = useState(
-    moment().subtract(1, "days").startOf("days").format("YYYY-MM-DD")
+    moment()
+      .subtract(1, "days")
+      .startOf("days")
+      .format("YYYY-MM-DD")
   );
 
   const [apicall, setapicall] = useState(false);
@@ -54,9 +60,9 @@ const ProductReport = () => {
   const TimeChange = (e) => {
     setFilterchange(e.target.value);
 
-    let value = e.target.value;
+    let value = Number(e.target.value);
     //today---------------------------------------------------------------------------
-    if (value == 1) {
+    if (value === 1) {
       let frommDate = moment().format("YYYY-MM-DD");
       setFromDate(frommDate);
       setToDate(moment().format("YYYY-MM-DD"));
@@ -69,7 +75,7 @@ const ProductReport = () => {
       setpreviousStateChange(1);
     }
     //yesterday------------------------------------------------------------------------
-    if (value == 2) {
+    if (value === 2) {
       let yesterday = moment()
         .subtract(1, "days")
         .startOf("days")
@@ -92,7 +98,7 @@ const ProductReport = () => {
       setpreviousStateChange(2);
     }
     //last week---------------------------------------------------------------
-    if (value == 3) {
+    if (value === 3) {
       let lastweek = moment()
         .subtract(1, "weeks")
         .startOf("weeks")
@@ -100,7 +106,10 @@ const ProductReport = () => {
       setFromDate(lastweek);
 
       setToDate(
-        moment().subtract(1, "weeks").endOf("weeks").format("YYYY-MM-DD")
+        moment()
+          .subtract(1, "weeks")
+          .endOf("weeks")
+          .format("YYYY-MM-DD")
       );
       let previouslastweek = moment(lastweek)
         .subtract(1, "days")
@@ -116,7 +125,7 @@ const ProductReport = () => {
       setpreviousStateChange(3);
     }
     //last month---------------------------------------------------------------
-    if (value == 4) {
+    if (value === 4) {
       let month = moment()
         .subtract(1, "month")
         .startOf("month")
@@ -141,7 +150,7 @@ const ProductReport = () => {
       setpreviousStateChange(4);
     }
     //  last six month---------------------------------------------------------
-    if (value == 5) {
+    if (value === 5) {
       let sixMonth = moment()
         .subtract(6, "month")
         .startOf("month")
@@ -163,8 +172,10 @@ const ProductReport = () => {
     }
 
     //this week-----------------------------------------------------------------------
-    if (value == 8) {
-      let ThisWeek = moment().startOf("weeks").format("YYYY-MM-DD");
+    if (value === 8) {
+      let ThisWeek = moment()
+        .startOf("weeks")
+        .format("YYYY-MM-DD");
       setFromDate(ThisWeek);
       setToDate(moment().format("YYYY-MM-DD"));
       let previousthisweek = moment(ThisWeek)
@@ -180,8 +191,10 @@ const ProductReport = () => {
       );
       setpreviousStateChange(8);
     }
-    if (value == 9) {
-      let ThisMonth = moment().startOf("month").format("YYYY-MM-DD");
+    if (value === 9) {
+      let ThisMonth = moment()
+        .startOf("month")
+        .format("YYYY-MM-DD");
       setFromDate(ThisMonth);
       setToDate(moment().format("YYYY-MM-DD"));
       let previousthismont = moment(ThisMonth)
@@ -190,7 +203,10 @@ const ProductReport = () => {
         .format("YYYY-MM-DD");
       setprevTodate(previousthismont);
       setprevFromdate(
-        moment().subtract(1, "month").startOf("month").format("YYYY-MM-DD")
+        moment()
+          .subtract(1, "month")
+          .startOf("month")
+          .format("YYYY-MM-DD")
       );
       setpreviousStateChange(9);
     }
@@ -199,16 +215,24 @@ const ProductReport = () => {
 
   const fetchData = () => {
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/products_report`, {
-        from_date: fromDate,
-        to_date: toDate,
-        prev_from_date: prevFromdate,
-        prev_to_date: prevTodate,
-        vendors_id: vendorId,
-        categorys: categoryId,
-        user_locations: location,
-        brand: brandName,
-      })
+      .post(
+        `${process.env.REACT_APP_BASEURL}/products_report`,
+        {
+          from_date: fromDate,
+          to_date: toDate,
+          prev_from_date: prevFromdate,
+          prev_to_date: prevTodate,
+          vendors_id: vendorId,
+          categorys: categoryId,
+          user_locations: location,
+          brand: brandName,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
         if (response.data.message == "No_Data") {
           setProductError(response.data.message);
@@ -223,7 +247,7 @@ const ProductReport = () => {
           setapicall(false);
         }
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -420,7 +444,8 @@ const ProductReport = () => {
     },
     {
       name: "Net Revenue",
-      selector: (row) => (row.net_sales == null ? "No Record" : row.net_sales),
+      selector: (row) =>
+        row.net_sales == null ? "No Record" : Number(row.net_sales).toFixed(2),
       sortable: true,
       width: "150px",
       center: true,
@@ -443,7 +468,7 @@ const ProductReport = () => {
       },
     },
     {
-      name: "Stock",
+      name: "product count",
       selector: (row) =>
         row.product_count == null ? "No Record" : row.product_count,
       sortable: true,
@@ -569,7 +594,7 @@ const ProductReport = () => {
               placeholder="Search by category"
               onChange={TimeChange}
             >
-              <option>Search by category</option>
+              <option>Search by Dates</option>
               <option name="today" value={1}>
                 Today
               </option>
@@ -710,9 +735,9 @@ const ProductReport = () => {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
                       <h3>
-                        {console.log(
+                        {/* {console.log(
                           " Product count---====" + getProduct.product_count
-                        )}
+                        )} */}
                         {ProductError == "No_Data" ||
                         getProduct.product_count == null ||
                         getProduct.product_count == undefined ||

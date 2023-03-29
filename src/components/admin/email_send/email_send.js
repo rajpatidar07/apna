@@ -10,7 +10,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import EmailType from "../json/EmailType";
 import EmailStatus from "../json/EmailStatus";
-import { Alert } from "bootstrap";
+// import { Alert } from "bootstrap";
 import SAlert from "../common/salert";
 
 const EmailSend = () => {
@@ -189,7 +189,7 @@ const EmailSend = () => {
 
   const EmailTextHandler = (e) => {
     let newTemp;
-    if (e.editor.getData() != undefined) {
+    if (e.editor.getData() !== undefined) {
       newTemp = e.editor.getData().replaceAll(/"/g, "'");
     }
     setEmailText(newTemp);
@@ -223,7 +223,7 @@ const EmailSend = () => {
           console.log(response);
           setAddAlert(true);
         })
-        .catch(function (error) {
+        .catch(function(error) {
           console.log(error);
         });
 
@@ -251,7 +251,7 @@ const EmailSend = () => {
       .then((response) => {
         setUpdateAlert(true);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
 
@@ -276,7 +276,7 @@ const EmailSend = () => {
         setCondition(false);
         setapicall(false);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -293,7 +293,7 @@ const EmailSend = () => {
         setCondition(false);
         setapicall(true);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
         setCondition(false);
       });
@@ -308,7 +308,7 @@ const EmailSend = () => {
       .then((response) => {
         setapicall(true);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };

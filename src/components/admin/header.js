@@ -7,7 +7,7 @@ import { Bell, Search } from "react-bootstrap-icons";
 import profile from "../../images/user.jpg";
 import { BsBox, BsShopWindow } from "react-icons/bs";
 import { FiLogOut } from "react-icons/fi";
-import { CgProfile } from "react-icons/cg";
+
 import { AiOutlineSetting } from "react-icons/ai";
 import { BiTransfer } from "react-icons/bi";
 import { useState } from "react";

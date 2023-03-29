@@ -29,10 +29,16 @@ const CouponReport = () => {
   const [previousStateChange, setpreviousStateChange] = useState(" ");
   const [PrevCouponreport, setPrevCouponreport] = useState([]);
   const [prevFromdate, setprevFromdate] = useState(
-    moment().subtract(1, "days").startOf("days").format("YYYY-MM-DD")
+    moment()
+      .subtract(1, "days")
+      .startOf("days")
+      .format("YYYY-MM-DD")
   );
   const [prevTodate, setprevTodate] = useState(
-    moment().subtract(1, "days").startOf("days").format("YYYY-MM-DD")
+    moment()
+      .subtract(1, "days")
+      .startOf("days")
+      .format("YYYY-MM-DD")
   );
 
   const [apicall, setapicall] = useState(false);
@@ -46,13 +52,13 @@ const CouponReport = () => {
   const [brandName, setBrandName] = useState([]);
   const [location, setLocation] = useState([]);
 
-  console.log("------------------" + JSON.stringify(tabledate));
+  // console.log("------------------" + JSON.stringify(tabledate));
 
   const TimeChange = (e) => {
     setFilterchange(e.target.value);
 
-    let value = e.target.value;
-    if (value == 1) {
+    let value = Number(e.target.value);
+    if (value === 1) {
       let frommDate = moment().format("YYYY-MM-DD");
       setFromDate(frommDate);
       setToDate(moment().format("YYYY-MM-DD"));
@@ -66,7 +72,7 @@ const CouponReport = () => {
       setpreviousStateChange(1);
     }
     //yesterday------------------------------------------------------------------------
-    if (value == 2) {
+    if (value === 2) {
       let yesterday = moment()
         .subtract(1, "days")
         .startOf("days")
@@ -89,7 +95,7 @@ const CouponReport = () => {
       setpreviousStateChange(2);
     }
     //last week---------------------------------------------------------------
-    if (value == 3) {
+    if (value === 3) {
       let lastweek = moment()
         .subtract(1, "weeks")
         .startOf("weeks")
@@ -97,7 +103,10 @@ const CouponReport = () => {
       setFromDate(lastweek);
 
       setToDate(
-        moment().subtract(1, "weeks").endOf("weeks").format("YYYY-MM-DD")
+        moment()
+          .subtract(1, "weeks")
+          .endOf("weeks")
+          .format("YYYY-MM-DD")
       );
       let previouslastweek = moment(lastweek)
         .subtract(1, "days")
@@ -113,7 +122,7 @@ const CouponReport = () => {
       setpreviousStateChange(3);
     }
     //last month---------------------------------------------------------------
-    if (value == 4) {
+    if (value === 4) {
       let month = moment()
         .subtract(1, "month")
         .startOf("month")
@@ -138,7 +147,7 @@ const CouponReport = () => {
       setpreviousStateChange(4);
     }
     //  last six month---------------------------------------------------------
-    if (value == 5) {
+    if (value === 5) {
       let sixMonth = moment()
         .subtract(6, "month")
         .startOf("month")
@@ -160,8 +169,10 @@ const CouponReport = () => {
     }
 
     //this week-----------------------------------------------------------------------
-    if (value == 8) {
-      let ThisWeek = moment().startOf("weeks").format("YYYY-MM-DD");
+    if (value === 8) {
+      let ThisWeek = moment()
+        .startOf("weeks")
+        .format("YYYY-MM-DD");
       setFromDate(ThisWeek);
       setToDate(moment().format("YYYY-MM-DD"));
       let previousthisweek = moment(ThisWeek)
@@ -177,8 +188,10 @@ const CouponReport = () => {
       );
       setpreviousStateChange(8);
     }
-    if (value == 9) {
-      let ThisMonth = moment().startOf("month").format("YYYY-MM-DD");
+    if (value === 9) {
+      let ThisMonth = moment()
+        .startOf("month")
+        .format("YYYY-MM-DD");
       setFromDate(ThisMonth);
       setToDate(moment().format("YYYY-MM-DD"));
       let previousthismont = moment(ThisMonth)
@@ -187,7 +200,10 @@ const CouponReport = () => {
         .format("YYYY-MM-DD");
       setprevTodate(previousthismont);
       setprevFromdate(
-        moment().subtract(1, "month").startOf("month").format("YYYY-MM-DD")
+        moment()
+          .subtract(1, "month")
+          .startOf("month")
+          .format("YYYY-MM-DD")
       );
       setpreviousStateChange(9);
     }
@@ -195,16 +211,24 @@ const CouponReport = () => {
   };
   const fetchData = () => {
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/coupons_report`, {
-        from_date: fromDate,
-        to_date: toDate,
-        prev_from_date: prevFromdate,
-        prev_to_date: prevTodate,
-        vendors_id: vendorId,
-        categorys: categoryId,
-        user_locations: location,
-        brand: brandName,
-      })
+      .post(
+        `${process.env.REACT_APP_BASEURL}/coupons_report`,
+        {
+          from_date: fromDate,
+          to_date: toDate,
+          prev_from_date: prevFromdate,
+          prev_to_date: prevTodate,
+          vendors_id: vendorId,
+          categorys: categoryId,
+          user_locations: location,
+          brand: brandName,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
         if (response.data.message == "no_data") {
           setCouponError(response.data.message);
@@ -220,7 +244,7 @@ const CouponReport = () => {
           setTabledata(response.data[2]);
         }
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -383,7 +407,7 @@ const CouponReport = () => {
     },
     {
       name: "Amount Discounted",
-      selector: (row) => row.amount_discounted,
+      selector: (row) => Number(row.amount_discounted).toFixed(2),
       sortable: true,
     },
     {
@@ -501,7 +525,7 @@ const CouponReport = () => {
               placeholder="Search by category"
               onChange={TimeChange}
             >
-              <option>Search by category</option>
+              <option>Search by Dates</option>
               <option name="today" value={1}>
                 Today
               </option>

@@ -32,10 +32,16 @@ const CategoryReport = () => {
 
   const [previousStateChange, setpreviousStateChange] = useState(" ");
   const [prevFromdate, setprevFromdate] = useState(
-    moment().subtract(1, "days").startOf("days").format("YYYY-MM-DD")
+    moment()
+      .subtract(1, "days")
+      .startOf("days")
+      .format("YYYY-MM-DD")
   );
   const [prevTodate, setprevTodate] = useState(
-    moment().subtract(1, "days").startOf("days").format("YYYY-MM-DD")
+    moment()
+      .subtract(1, "days")
+      .startOf("days")
+      .format("YYYY-MM-DD")
   );
   const [fromDate, setFromDate] = useState(moment().format("YYYY-MM-DD"));
   const [toDate, setToDate] = useState(moment().format("YYYY-MM-DD"));
@@ -75,7 +81,7 @@ const CategoryReport = () => {
           setapicall(false);
         }
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -122,8 +128,8 @@ const CategoryReport = () => {
 
   const TimeChange = (e) => {
     setFilterchange(e.target.value);
-    let value = e.target.value;
-    if (value == 1) {
+    let value = Number(e.target.value);
+    if (value === 1) {
       let frommDate = moment().format("YYYY-MM-DD");
       setFromDate(frommDate);
       setToDate(moment().format("YYYY-MM-DD"));
@@ -136,7 +142,7 @@ const CategoryReport = () => {
       setpreviousStateChange(1);
     }
     //yesterday------------------------------------------------------------------------
-    if (value == 2) {
+    if (value === 2) {
       let yesterday = moment()
         .subtract(1, "days")
         .startOf("days")
@@ -159,7 +165,7 @@ const CategoryReport = () => {
       setpreviousStateChange(2);
     }
     //last week---------------------------------------------------------------
-    if (value == 3) {
+    if (value === 3) {
       let lastweek = moment()
         .subtract(1, "weeks")
         .startOf("weeks")
@@ -167,7 +173,10 @@ const CategoryReport = () => {
       setFromDate(lastweek);
 
       setToDate(
-        moment().subtract(1, "weeks").endOf("weeks").format("YYYY-MM-DD")
+        moment()
+          .subtract(1, "weeks")
+          .endOf("weeks")
+          .format("YYYY-MM-DD")
       );
       let previouslastweek = moment(lastweek)
         .subtract(1, "days")
@@ -183,7 +192,7 @@ const CategoryReport = () => {
       setpreviousStateChange(3);
     }
     //last month---------------------------------------------------------------
-    if (value == 4) {
+    if (value === 4) {
       let month = moment()
         .subtract(1, "month")
         .startOf("month")
@@ -208,7 +217,7 @@ const CategoryReport = () => {
       setpreviousStateChange(4);
     }
     //  last six month---------------------------------------------------------
-    if (value == 5) {
+    if (value === 5) {
       let sixMonth = moment()
         .subtract(6, "month")
         .startOf("month")
@@ -230,8 +239,10 @@ const CategoryReport = () => {
     }
 
     //this week-----------------------------------------------------------------------
-    if (value == 8) {
-      let ThisWeek = moment().startOf("weeks").format("YYYY-MM-DD");
+    if (value === 8) {
+      let ThisWeek = moment()
+        .startOf("weeks")
+        .format("YYYY-MM-DD");
       setFromDate(ThisWeek);
       setToDate(moment().format("YYYY-MM-DD"));
       let previousthisweek = moment(ThisWeek)
@@ -247,8 +258,10 @@ const CategoryReport = () => {
       );
       setpreviousStateChange(8);
     }
-    if (value == 9) {
-      let ThisMonth = moment().startOf("month").format("YYYY-MM-DD");
+    if (value === 9) {
+      let ThisMonth = moment()
+        .startOf("month")
+        .format("YYYY-MM-DD");
       setFromDate(ThisMonth);
       setToDate(moment().format("YYYY-MM-DD"));
       let previousthismont = moment(ThisMonth)
@@ -257,7 +270,10 @@ const CategoryReport = () => {
         .format("YYYY-MM-DD");
       setprevTodate(previousthismont);
       setprevFromdate(
-        moment().subtract(1, "month").startOf("month").format("YYYY-MM-DD")
+        moment()
+          .subtract(1, "month")
+          .startOf("month")
+          .format("YYYY-MM-DD")
       );
       setpreviousStateChange(9);
     }
@@ -396,7 +412,9 @@ const CategoryReport = () => {
     {
       name: "Net Revenue",
       selector: (row) =>
-        row.total_sales == null ? "No Record" : row.total_sales,
+        row.total_sales == null
+          ? "No Record"
+          : Number(row.total_sales).toFixed(2),
       sortable: true,
     },
 
@@ -471,7 +489,7 @@ const CategoryReport = () => {
     100
   ).toFixed(2);
 
-  resultProductAmmount != "Infinity"
+  resultProductAmmount !== "Infinity"
     ? console.log()
     : (resultProductAmmount = 0);
 
@@ -488,7 +506,7 @@ const CategoryReport = () => {
     100
   ).toFixed(2);
 
-  resultProductCount != "Infinity" ? console.log() : (resultProductCount = 0);
+  resultProductCount !== "Infinity" ? console.log() : (resultProductCount = 0);
 
   // // // //-----------------------order count---------------------------------------
   var getSoldorder = Number(Categoryreport.order_count);
@@ -500,7 +518,7 @@ const CategoryReport = () => {
     100
   ).toFixed(2);
 
-  resultorder != "Infinity" ? console.log() : (resultorder = 0);
+  resultorder !== "Infinity" ? console.log() : (resultorder = 0);
   return (
     <div>
       <h2>Category Report</h2>
@@ -514,7 +532,7 @@ const CategoryReport = () => {
               placeholder="Search by category"
               onChange={TimeChange}
             >
-              <option>Search by category</option>
+              <option>Search by Dates</option>
               <option name="today" value={1}>
                 Today
               </option>
@@ -584,7 +602,7 @@ const CategoryReport = () => {
               options={options4}
             />
           </div>
-          {filterchange === "7" ? (
+          {filterchange == "7" ? (
             <div className="col-md-3 col-sm-6 aos_input d-flex">
               <div className="col-6 aos_input pe-2">
                 <input
@@ -610,7 +628,7 @@ const CategoryReport = () => {
                 />
               </div>
             </div>
-          ) : filterchange === "6" ? (
+          ) : filterchange == "6" ? (
             <div className="col-md-3 col-sm-6 aos_input">
               <Input type={"month"} plchldr={"Search by month"} />
             </div>
@@ -653,10 +671,6 @@ const CategoryReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                      {console.log("roroororo---" + CategoryError)}
-                      {console.log(
-                        "dataaaa-" + Categoryreport.total_sold_product_count
-                      )}
                       {CategoryError == "no_data" ||
                       Categoryreport.total_sold_product_count == null ||
                       Categoryreport.total_sold_product_count == undefined ||

@@ -8,9 +8,9 @@ import { useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Table from "react-bootstrap/Table";
 import VariationJson from "../json/variation";
-import { MdOutlineEdit } from "react-icons/md";
+// import { MdOutlineEdit } from "react-icons/md";
 import { Button } from "react-bootstrap";
-import Accordion from "react-bootstrap/Accordion";
+
 import { useNavigate } from "react-router-dom";
 import SAlert from "../../admin/common/salert";
 import moment from "moment/moment";
@@ -26,7 +26,7 @@ const Productdetail = () => {
   const navigate = useNavigate();
   let vid = localStorage.getItem("variantid");
   let pid = localStorage.getItem("productid");
-  let token = localStorage.getItem("token");
+
   const [open, setOpen] = useState(false);
   const [hideallData, setHideAlldata] = useState(false);
   const [variantremove, setVariantRemove] = useState([]);
@@ -38,8 +38,7 @@ const Productdetail = () => {
   const [validated, setValidated] = useState(false);
   const [vdata, setvdata] = useState([]);
   const [loading, setloading] = useState(false);
-  const [colorchange, setcolorchange] = useState("");
-  const [sizechange, setsizechange] = useState("");
+
   const [variantapicall, setvariantapicall] = useState(false);
   const [ProductAlert, setProductAlert] = useState(false);
   const [UpdatetAlert, setUpdatetAlert] = useState(false);
@@ -84,7 +83,7 @@ const Productdetail = () => {
             if (data === "error") {
               navigate("/product");
             }
-            if (data != undefined || data != "" || data != null) {
+            if (data !== undefined || data !== "" || data !== null) {
               setProductData(data);
               settaxdata(data);
               setVariantdetail(data.product_verient);
@@ -127,7 +126,7 @@ const Productdetail = () => {
         setCategoryName(data[0].category_name);
         setloading(false);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
         setloading(false);
       });
@@ -181,7 +180,7 @@ const Productdetail = () => {
 
         // setloading(false)
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
         // setloading(false)
       });
@@ -199,7 +198,7 @@ const Productdetail = () => {
         onImgView(product_verient_id, product_id);
         // setloading(false)
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
         // setloading(false)
       });
@@ -222,7 +221,7 @@ const Productdetail = () => {
         setnewImageUrls(response.data);
         // setloading(false)
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
         // setloading(false)
       });
@@ -239,7 +238,7 @@ const Productdetail = () => {
         onImgView(productvariantid, productid);
         // setloading(false)
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
         // setloading(false)
       });
@@ -295,19 +294,19 @@ const Productdetail = () => {
   const onVariantaddclick = (id, pid) => {
     if (id === "" || id === null || id === undefined) {
       if (
-        variantarray.unit == "" ||
-        variantarray.unit == null ||
-        variantarray.unit == "Select" ||
-        variantarray.product_price == "" ||
-        variantarray.mrp == "" ||
-        variantarray.sale_price == "" ||
-        variantarray.manufacturing_date == "" ||
-        variantarray.expire_date == "" ||
-        variantarray.quantity == ""
+        variantarray.unit === "" ||
+        variantarray.unit === null ||
+        variantarray.unit === "Select" ||
+        variantarray.product_price === "" ||
+        variantarray.mrp === "" ||
+        variantarray.sale_price === "" ||
+        variantarray.manufacturing_date === "" ||
+        variantarray.expire_date === "" ||
+        variantarray.quantity === ""
       ) {
         setcustomValidated(true);
         setValidated(true);
-      } else if (variantarray.quantity == 0 || variantarray.quantity < 1) {
+      } else if (variantarray.quantity === 0 || variantarray.quantity < 1) {
         setVarietyUnitvalidation("QwanityValidation");
       } else if (variantarray.manufacturing_date > variantarray.expire_date) {
         setVarietyUnitvalidation("ExpireDateValidation");
@@ -379,25 +378,25 @@ const Productdetail = () => {
               setProductAlert(false);
             }
           })
-          .catch(function (error) {
+          .catch(function(error) {
             console.log(error);
           });
       }
     } else {
       if (id) {
         if (
-          variantarray.unit == "" ||
-          variantarray.unit == null ||
-          variantarray.unit == "Select" ||
-          variantarray.product_price == "" ||
-          variantarray.mrp == "" ||
-          variantarray.sale_price == "" ||
-          variantarray.manufacturing_date == "" ||
-          variantarray.expire_date == "" ||
-          variantarray.quantity == ""
+          variantarray.unit === "" ||
+          variantarray.unit === null ||
+          variantarray.unit === "Select" ||
+          variantarray.product_price === "" ||
+          variantarray.mrp === "" ||
+          variantarray.sale_price === "" ||
+          variantarray.manufacturing_date === "" ||
+          variantarray.expire_date === "" ||
+          variantarray.quantity === ""
         ) {
           setcustomValidated(true);
-        } else if (variantarray.quantity == 0 || variantarray.quantity < 1) {
+        } else if (variantarray.quantity === 0 || variantarray.quantity < 1) {
           setVarietyUnitvalidation("QwanityValidation");
         } else if (variantarray.manufacturing_date > variantarray.expire_date) {
           setVarietyUnitvalidation("ExpireDateValidation");
@@ -463,14 +462,14 @@ const Productdetail = () => {
                 setvariantapicall(true);
                 setcustomValidated(false);
                 setVarietyUnitvalidation("");
-              } else if (response.errno == 1064) {
+              } else if (response.errno === 1064) {
                 alert("Error in Update product");
                 setUpdatetAlert(false);
               } else {
                 setUpdatetAlert(false);
               }
             })
-            .catch(function (error) {
+            .catch(function(error) {
               console.log(error);
             });
         }
@@ -515,7 +514,7 @@ const Productdetail = () => {
         setvariantapicall(true);
         // setloading(false)
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
         // setloading(false)
       });
@@ -538,7 +537,7 @@ const Productdetail = () => {
         setvariantarray(response.data[0]);
         // setloading(false)
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
         // setloading(false)
       });
@@ -577,8 +576,8 @@ const Productdetail = () => {
                     >
                       {newImageUrls
                         ? (newImageUrls || []).map((data, i) => {
-                            return data.product_verient_id == vid &&
-                              data.product_id == pid ? (
+                            return data.product_verient_id === vid &&
+                              data.product_id === pid ? (
                               <div className="w-100 h-50" key={i}>
                                 <img
                                   src={
@@ -619,8 +618,8 @@ const Productdetail = () => {
                       <div className="product_upper_section ">
                         {variantdetail
                           ? (variantdetail || []).map((data, i) => {
-                              return data.id == vid &&
-                                data.product_id == pid ? (
+                              return data.id === vid &&
+                                data.product_id === pid ? (
                                 <div
                                   className="product_mid_section product_variety_section"
                                   key={i}
@@ -729,7 +728,7 @@ const Productdetail = () => {
                             <h5 className="statuslabeltext">
                               Gst:{" "}
                               <b>
-                                {productdata.gst == "undefined"
+                                {productdata.gst === "undefined"
                                   ? 0
                                   : productdata.gst}{" "}
                               </b>{" "}
@@ -740,7 +739,7 @@ const Productdetail = () => {
                             <h5 className="statuslabeltext">
                               Cgst:{" "}
                               <b>
-                                {productdata.cgst == "undefined"
+                                {productdata.cgst === "undefined"
                                   ? 0
                                   : productdata.cgst}{" "}
                               </b>{" "}
@@ -750,7 +749,7 @@ const Productdetail = () => {
                             <h5 className="statuslabeltext">
                               Sgst:{" "}
                               <b>
-                                {productdata.sgst == "undefined"
+                                {productdata.sgst === "undefined"
                                   ? 0
                                   : productdata.sgst}{" "}
                               </b>
@@ -760,8 +759,8 @@ const Productdetail = () => {
                             <h5 className="statuslabeltext">
                               Wholesale sales tax:{" "}
                               <b>
-                                {productdata.wholesale_sales_tax == "" ||
-                                productdata.wholesale_sales_tax == "undefined"
+                                {productdata.wholesale_sales_tax === "" ||
+                                productdata.wholesale_sales_tax === "undefined"
                                   ? 0
                                   : productdata.wholesale_sales_tax}
                               </b>
@@ -772,8 +771,9 @@ const Productdetail = () => {
                           <h5 className="statuslabeltext">
                             Manufacturers sales tax:{" "}
                             <b>
-                              {productdata.manufacturers_sales_tax == "" ||
-                              productdata.manufacturers_sales_tax == "undefined"
+                              {productdata.manufacturers_sales_tax === "" ||
+                              productdata.manufacturers_sales_tax ===
+                                "undefined"
                                 ? 0
                                 : productdata.manufacturers_sales_tax}
                             </b>
@@ -783,8 +783,8 @@ const Productdetail = () => {
                           <h5 className="statuslabeltext">
                             Retails sales tax:{" "}
                             <b>
-                              {productdata.retails_sales_tax == "" ||
-                              productdata.retails_sales_tax == "undefined"
+                              {productdata.retails_sales_tax === "" ||
+                              productdata.retails_sales_tax === "undefined"
                                 ? 0
                                 : productdata.retails_sales_tax}
                             </b>
@@ -824,10 +824,10 @@ const Productdetail = () => {
                                       value={variantarray.unit}
                                       disabled={
                                         variantarray.unit &&
-                                        changeUnitproperty == false
+                                        changeUnitproperty === false
                                           ? true
                                           : variantarray.unit ||
-                                            changeUnitproperty == true
+                                            changeUnitproperty === true
                                           ? false
                                           : true
                                       }
@@ -917,37 +917,27 @@ const Productdetail = () => {
                                 </Form.Label>
                                 <Col sm="12">
                                   <InputGroup className="">
-                                  <Form.Select
-                                                  aria-label="Default select example"
-                                                  name="colors"
-                                                  value={variantarray.colors}
-                                                  onChange={(e) =>
-                                                    onVariantChange(e)
-                                                  }
-                                                  required
-                                                >
-                                                  {" "}
-                                                  <option value={""}>
-                                                    {" "}
-                                                    Select Color
-                                                  </option>
-                                                  {(varietyy.color || []).map(
-                                                    (vari, i) => {
-                                                      return (
-                                                        <option
-                                                          value={vari}
-                                                          key={i}
-                                                          selected={
-                                                            productdata.color
-                                                          }
-                                                        >
-                                                          {vari}
-                                                        </option>
-                                                      );
-                                                    }
-                                                  )}
-                                                </Form.Select>
-                                   
+                                    <Form.Select
+                                      aria-label="Default select example"
+                                      name="colors"
+                                      value={variantarray.colors}
+                                      onChange={(e) => onVariantChange(e)}
+                                      required
+                                    >
+                                      {" "}
+                                      <option value={""}> Select Color</option>
+                                      {(varietyy.color || []).map((vari, i) => {
+                                        return (
+                                          <option
+                                            value={vari}
+                                            key={i}
+                                            selected={productdata.color}
+                                          >
+                                            {vari}
+                                          </option>
+                                        );
+                                      })}
+                                    </Form.Select>
                                   </InputGroup>
                                 </Col>
                               </Form.Group>
@@ -974,7 +964,7 @@ const Productdetail = () => {
                                       sm="9"
                                       value={variantarray.unit_quantity}
                                       disabled={
-                                        variantarray.unit == "pcs"
+                                        variantarray.unit === "pcs"
                                           ? true
                                           : false
                                       }
@@ -1013,7 +1003,7 @@ const Productdetail = () => {
                                         variantarray.unit !== "pcs" &&
                                         variantarray.unit !== ""
                                           ? true
-                                          : variantarray.unit == ""
+                                          : variantarray.unit === ""
                                           ? false
                                           : false
                                       }
@@ -1538,11 +1528,9 @@ const Productdetail = () => {
 
                                                 <td className="p-0 py-3 text-center action_btn_box">
                                                   <RiImageAddLine
-                                                
                                                     type="file"
                                                     className="variety_edit_action_btn  text-success"
                                                     eventKey={i}
-                                                    
                                                     onClick={(_id) =>
                                                       onImgView(
                                                         variantdata.id,
@@ -1578,7 +1566,8 @@ const Productdetail = () => {
                                               {newImageUrls ? (
                                                 <tr
                                                   className={
-                                                    variantdata.id == imageboxid
+                                                    variantdata.id ===
+                                                    imageboxid
                                                       ? "img_preview_boxx show"
                                                       : "img_preview_boxx hide"
                                                   }

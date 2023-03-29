@@ -12,8 +12,7 @@ const Login = () => {
   const [adminid, setadminId] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [validated, setValidated] = useState(false);
-  const [token, settoken] = useState("");
+
   const [Emailerror, setEmailError] = useState(true);
   const [Passworderror, setPasswordError] = useState(true);
   const onValueChange = (e, id) => {
@@ -39,7 +38,6 @@ const Login = () => {
           admin_password: password,
         })
         .then((response) => {
-          console.log("responce------" + JSON.stringify(response));
           if (response.data === "email not found") {
             setEmailError(false);
           } else if (response.data === "password not matched") {
@@ -48,8 +46,9 @@ const Login = () => {
             localStorage.setItem("encryptloginid", email);
             localStorage.setItem("encryptpassword", password);
             localStorage.setItem("encryptadminid", adminid);
-            console.log("*++++++++============"+adminid)
+            console.log("*++++++++============" + adminid);
             localStorage.setItem("token", response.data[1].token);
+
             navigate("/");
           }
         });
@@ -60,12 +59,13 @@ const Login = () => {
     axios
       .get(`${process.env.REACT_APP_BASEURL}/admin?id=1`)
       .then((response) => {
-        let data = response.data[0];
+        let data = response.data;
+
         setadminId(data.id);
         setAdminData(data);
       });
   }, []);
-// console.log("ppppppppppp"+JSON.stringify(admindata))
+  // console.log("ppppppppppp"+JSON.stringify(admindata))
   return (
     <Fragment>
       <div className="for_scrol">

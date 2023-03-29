@@ -18,7 +18,7 @@ function Banner() {
   const [Alert, setAlert] = useState(false);
   const [validated, setValidated] = useState(false);
   const [banner, setBanner] = useState([]);
-  const[imageBanner,setImageBanner]=useState([]);
+  const [imageBanner, setImageBanner] = useState([]);
   const [apicall, setapicall] = useState([]);
   const [bannerId, setBannerId] = useState("");
   const [Imgarray, setImgArray] = useState([]);
@@ -147,8 +147,6 @@ function Banner() {
   };
 
   const handleShow = (e, banner_id) => {
-
-
     if (e === "add") {
       setShow(e);
     } else {
@@ -181,10 +179,9 @@ function Banner() {
         banner_location: "",
       })
       .then((response) => {
-        let data = response.data;
+        // let data = response.data;
         setBanner(response.data);
         setAddBanner(response.data);
-        
       });
   }, [apicall]);
 
@@ -195,9 +192,9 @@ function Banner() {
   const handleFormChange = (e) => {
     setAddBanner({ ...addBanner, [e.target.name]: e.target.value });
   };
-  const handleBannerChange=(e)=>{
-    setImageBanner({...imageBanner,[e.target.name]: e.target.value})
-  }
+  const handleBannerChange = (e) => {
+    setImageBanner({ ...imageBanner, [e.target.name]: e.target.value });
+  };
 
   const handleClose = () => {
     formRef.current.reset();
@@ -224,16 +221,14 @@ function Banner() {
       axios
         .post(`${process.env.REACT_APP_BASEURL}/add_banner`, formData)
         .then((response) => {
-          if(response.data.code=="ER_DUP_ENTRY"){
+          if (response.data.code === "ER_DUP_ENTRY") {
             setError(false);
-          }
-          else
-          {
+          } else {
             setShow(false);
-          setapicall(true);
-          setAddAlert(true);
+            setapicall(true);
+            setAddAlert(true);
           }
-          let data = response.data;
+          // let data = response.data;
         });
       formRef.current.reset();
       setValidated(false);
@@ -241,7 +236,6 @@ function Banner() {
     }
   };
   const UpdateBanner = (show) => {
-
     const formData = new FormData();
     formData.append("image", file);
     formData.append("filename", fileName);
@@ -254,7 +248,7 @@ function Banner() {
     axios
       .put(`${process.env.REACT_APP_BASEURL}/update_banner`, formData)
       .then((response) => {
-        let data = response.data;
+        // let data = response.data;
         setShow(false);
         setapicall(true);
         setUpdateAlert(true);
@@ -309,13 +303,13 @@ function Banner() {
             </Modal.Title>
           </Modal.Header>
           {error === false ? (
-              <p
-                className="mt-2 ms-2 text-danger text-center fs-6"
-                type="invalid"
-              >
-                Already Added!!!
-              </p>
-            ) : null}
+            <p
+              className="mt-2 ms-2 text-danger text-center fs-6"
+              type="invalid"
+            >
+              Already Added!!!
+            </p>
+          ) : null}
           <Modal.Body>
             <div className="row p-3 m-0">
               <div className="col-md-6">
@@ -377,68 +371,91 @@ function Banner() {
               </div>
               <div className="col-md-4">
                 <Form.Label>Banner_location</Form.Label>
-                {show === "add" ?
-                <>
-                 <Form.Select
-                  aria-label="Search by location"
-                  className="mb-3 aos_input"
-                  controlId="validationCustom01"
-                  onChange={(e) => handleBannerChange(e)}
-                  placeholder="Add banner_location"
+                {show === "add" ? (
+                  <>
+                    <Form.Select
+                      aria-label="Search by location"
+                      className="mb-3 aos_input"
+                      controlId="validationCustom01"
+                      onChange={(e) => handleBannerChange(e)}
+                      placeholder="Add banner_location"
+                      name={"banner_location"}
+                    >
+                      <option>Select location</option>
 
-                  name={"banner_location"}
-                >
-                  <option>Select location</option>
-                  
-                  <option value="home_page_left_side">
-                    home_page_left_side
-                  </option>
-                  <option value="home_page_left_side(1)">
-                    home_page_left_side(1)
-                  </option>
-                  <option value="home_page_right_side(1)">
-                    home_page_right_side(1)
-                  </option>
-                  <option value="home_page_right_side(2)">
-                    home_page_right_side(2)
-                  </option>
-                </Form.Select>
+                      <option value="home_page_left_side">
+                        home_page_left_side
+                      </option>
+                      <option value="home_page_left_side(1)">
+                        home_page_left_side(1)
+                      </option>
+                      <option value="home_page_right_side(1)">
+                        home_page_right_side(1)
+                      </option>
+                      <option value="home_page_right_side(2)">
+                        home_page_right_side(2)
+                      </option>
+                    </Form.Select>
 
-                {imageBanner.banner_location === "home_page_left_side"?
-                  <p className="mt-2 ms-2 text-danger text-center fs-6" type="invalid">
-                            Select Image This (height-738px * width-738px)
-                            </p>:imageBanner.banner_location==="home_page_left_side(1)"? <p className="mt-2 ms-2 text-danger text-center fs-6" type="invalid">
-                            Select Image This (height-356px * width-738px)
-                            </p>:imageBanner.banner_location==="home_page_right_side(1)"? <p className="mt-2 ms-2 text-danger text-center fs-6" type="invalid">
-                            Select Image This (height-356px * width-356px)</p>:imageBanner.banner_location==="home_page_right_side(2)"? <p className="mt-2 ms-2 text-danger text-center fs-6" type="invalid">
-                            Select Image This(height-356px * width-356px)</p> :null}
-                </>
-               : <Form.Select
-               aria-label="Search by location"
-               className="mb-3 aos_input"
-               
-               controlId="validationCustom01"
-               placeholder="Add banner_location"
+                    {imageBanner.banner_location === "home_page_left_side" ? (
+                      <p
+                        className="mt-2 ms-2 text-danger text-center fs-6"
+                        type="invalid"
+                      >
+                        Select Image This (height-738px * width-738px)
+                      </p>
+                    ) : imageBanner.banner_location ===
+                      "home_page_left_side(1)" ? (
+                      <p
+                        className="mt-2 ms-2 text-danger text-center fs-6"
+                        type="invalid"
+                      >
+                        Select Image This (height-356px * width-738px)
+                      </p>
+                    ) : imageBanner.banner_location ===
+                      "home_page_right_side(1)" ? (
+                      <p
+                        className="mt-2 ms-2 text-danger text-center fs-6"
+                        type="invalid"
+                      >
+                        Select Image This (height-356px * width-356px)
+                      </p>
+                    ) : imageBanner.banner_location ===
+                      "home_page_right_side(2)" ? (
+                      <p
+                        className="mt-2 ms-2 text-danger text-center fs-6"
+                        type="invalid"
+                      >
+                        Select Image This(height-356px * width-356px)
+                      </p>
+                    ) : null}
+                  </>
+                ) : (
+                  <Form.Select
+                    aria-label="Search by location"
+                    className="mb-3 aos_input"
+                    controlId="validationCustom01"
+                    placeholder="Add banner_location"
+                    name={"banner_location"}
+                  >
+                    <option>Select location</option>
 
-               name={"banner_location"}
-             >
-               <option>Select location</option>
-               
-               <option disabled value="home_page_left_side">
-                 home_page_left_side
-               </option>
-               <option disabled value="home_page_left_side(1)">
-                 home_page_left_side(1)
-               </option>
-               <option disabled value="home_page_right_side(1)">
-                 home_page_right_side(1)
-               </option>
-               <option disabled value="home_page_right_side(2)">
-                 home_page_right_side(2)
-               </option>
-             </Form.Select>}
+                    <option disabled value="home_page_left_side">
+                      home_page_left_side
+                    </option>
+                    <option disabled value="home_page_left_side(1)">
+                      home_page_left_side(1)
+                    </option>
+                    <option disabled value="home_page_right_side(1)">
+                      home_page_right_side(1)
+                    </option>
+                    <option disabled value="home_page_right_side(2)">
+                      home_page_right_side(2)
+                    </option>
+                  </Form.Select>
+                )}
               </div>
-              
+
               <div className="col-md-4">
                 <Form.Group
                   className="mb-3 aos_input"
@@ -452,7 +469,7 @@ function Banner() {
                     name={"image"}
                   />
                   {addBanner.image ? (
-                    <img src={Newlogo} width={"50px"} />
+                    <img src={Newlogo} alt="newimg" width={"50px"} />
                   ) : null}
                   <Form.Control.Feedback type="invalid" className="h6">
                     Please upload image

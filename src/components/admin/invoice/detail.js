@@ -7,28 +7,74 @@ import moment from "moment";
 
 const Invoice = () => {
   let invoice_no = localStorage.getItem("invoice_no");
+  let order_number = localStorage.getItem("invoiceid");
+  const token = localStorage.getItem("token");
+
+  const [userdetails, setUserdetails] = useState([]);
+
   const [invoicedetails, setInvoiceDetails] = useState([]);
-  const [pdetails, setpDetails] = useState([]);
+
+  const [productorder, setproductOrder] = useState([]);
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_BASEURL}/invoice_details?invoice_no=${invoice_no}`
+        `${process.env.REACT_APP_BASEURL}/invoice_details?invoice_no=${invoice_no}`,
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
       )
       .then((response) => {
+        // console.log("invoice details-----" + JSON.stringify(response.data));
         setInvoiceDetails(response.data);
-        setpDetails(response.data.product_types);
       });
+
+    oreder_details();
   }, []);
-  var qty = 0;
-  var mrpTotal = 0;
-  var disCountTotal = 0;
-  var taxable_value_total = 0;
-  var taxTotal = 0;
-  var salePrice_total = 0;
-  var totalGSt = 0;
-  var totalCGST = 0;
-  var totalSGST = 0;
-  var GrandTotal = 0;
+
+  const oreder_details = () => {
+    axios
+      .post(
+        `${process.env.REACT_APP_BASEURL_0}/order_deteils`,
+        {
+          id: order_number,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
+      .then((response) => {
+        const UserId = Number(response.data.user_id);
+        setproductOrder(response.data.product_types);
+
+        axios
+          .post(
+            `http://192.168.29.108:5000/user_details`,
+            {
+              user_id: UserId,
+            },
+            {
+              headers: {
+                admin_token: token,
+              },
+            }
+          )
+          .then((response) => {
+            // console.log(response);
+            let data = response.data;
+            setUserdetails(data[0]);
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
 
   function printDocument() {
     const input = document.getElementById("container1");
@@ -43,7 +89,17 @@ const Invoice = () => {
       pdf.save("Invoice.pdf");
     });
   }
+  var totalMrp = 0;
+  var total_shipping = 0;
+  var total_Product_price = 0;
+  var total_sale_price = 0;
+  var total = 0;
+  var grand_total = 0;
+  var total_tax = 0;
+  let qty = 0;
 
+  //  let total_tax_with_qty = 0;
+  let total_priceWithout_tax = 0;
   return (
     <>
       {/* <Document >
@@ -55,24 +111,24 @@ const Invoice = () => {
               <div className="table-responsive-sm p-3">
                 <table className="invoice_header w-100">
                   <thead>
-                  <tr className="border-bottom">
-                    <td className="align-bottom" width={"50%"}>
-                      <h2 className="m-0 mt-2">
-                        <b>INVOICE</b>
-                      </h2>
-                    </td>
-                    <td className="text-end">
-                      <h5 className="text-uppercase m-0">
-                        <b>Apna Organic Store</b>
-                      </h5>
-                      <p className="m-0">
-                        Plot No. 45 Universal Tower ,2nd Floor,
-                      </p>
-                      <p className="m-0">Scheme 54 PU4, Indore, MP 452001</p>
-                      <p className="m-0">contact@apnaorganicstore.com</p>
-                      <p className="m-0">1234567890</p>
-                    </td>
-                  </tr>
+                    <tr className="border-bottom">
+                      <td className="align-bottom" width={"50%"}>
+                        <h2 className="m-0 mt-2">
+                          <b>INVOICE</b>
+                        </h2>
+                      </td>
+                      <td className="text-end">
+                        <h5 className="text-uppercase m-0">
+                          <b>Apna Organic Store</b>
+                        </h5>
+                        <p className="m-0">
+                          Plot No. 45 Universal Tower ,2nd Floor,
+                        </p>
+                        <p className="m-0">Scheme 54 PU4, Indore, MP 452001</p>
+                        <p className="m-0">contact@apnaorganicstore.com</p>
+                        <p className="m-0">1234567890</p>
+                      </td>
+                    </tr>
                   </thead>
                 </table>
                 <div className="pb-4 pt-4">
@@ -91,12 +147,18 @@ const Invoice = () => {
                           <p className="m-0">
                             <b>Order Id : </b> {invoicedetails.id}
                           </p>
+
                           <p className="m-0">
                             <b>Order Date : </b>
-                            {moment(invoicedetails.order_date).format("YYYY-MM-DD")}
+                            {moment(invoicedetails.order_date).format(
+                              "YYYY-MM-DD"
+                            )}
                           </p>
                           <p className="m-0">
-                            <b>Invoice Date : </b> {moment(invoicedetails.invoice_date).format("YYYY-MM-DD")}
+                            <b>Invoice Date : </b>{" "}
+                            {moment(invoicedetails.invoice_date).format(
+                              "YYYY-MM-DD"
+                            )}
                           </p>
                         </td>
                         <td className="">
@@ -104,26 +166,54 @@ const Invoice = () => {
                             <b>Bill to: </b>
                           </h5>
                           <p className="m-0">
-                            Plot No. 45 Universal Tower ,2nd Floor,
+                            <b>Name : </b>
+                            {userdetails.first_name} &nbsp;
+                            {userdetails.last_name} ,
                           </p>
                           <p className="m-0">
-                            Scheme 54 PU4, Indore, MP 452001
+                            <b> Home Address : </b>
+                            {userdetails.address}
                           </p>
-                          <p className="m-0">contact@apnaorganicstore.com</p>
-                          <p className="m-0">1234567890</p>
+                          <p className="m-0">
+                            <b> Office Address : </b>
+                            {userdetails.address2}
+                          </p>
+                          <p className="m-0">
+                            <b> Email : </b>
+                            {userdetails.email}
+                          </p>
+
+                          <p className="m-0">
+                            <b> Mobile : </b>
+                            {userdetails.phone_no}
+                          </p>
                         </td>
                         <td className="">
                           <h5 className="text-uppercase m-0">
-                            <b>Ship to:</b>
+                            <b>Ship to: </b>
                           </h5>
                           <p className="m-0">
-                            Plot No. 45 Universal Tower ,2nd Floor,
+                            <b>Name : </b>
+                            {userdetails.first_name} &nbsp;
+                            {userdetails.last_name}
                           </p>
                           <p className="m-0">
-                            Scheme 54 PU4, Indore, MP 452001
+                            <b> Home Address : </b>
+                            {userdetails.address}
                           </p>
-                          <p className="m-0">contact@apnaorganicstore.com</p>
-                          <p className="m-0">1234567890</p>
+                          <p className="m-0">
+                            <b> Office Address : </b>
+                            {userdetails.address2}
+                          </p>
+                          <p className="m-0">
+                            <b> Email : </b>
+                            {userdetails.email}
+                          </p>
+
+                          <p className="m-0">
+                            <b> Mobile : </b>
+                            {userdetails.phone_no}
+                          </p>
                         </td>
                       </tr>
                     </tbody>
@@ -132,64 +222,134 @@ const Invoice = () => {
                 <table className="table table-striped border">
                   <thead>
                     <tr>
-                      <th className="center">Product</th>
+                      <th className="center">
+                        Total Product({invoicedetails.total_quantity})
+                      </th>
                       <th> ₹ MRP </th>
-                      <th> ₹ Discount (10%)</th>
+                      <th> ₹ Shipping charges </th>
+                      <th> ₹ Product Price</th>
                       <th className="center">₹ Taxable Price </th>
                       <th className="center"> ₹ Tax </th>
-                      <th>Qty</th>
                       <th className="right">₹ Sale Price </th>
+                      <th>Qty</th>
+
                       <th className="right">₹ Total amount </th>
                     </tr>
                   </thead>
 
                   <tbody>
-                    {pdetails.map((invodetails) => {
-                      invodetails.discount = "0";
-                      qty += Number(invodetails.order_quantity);
-                      let discont = (invodetails.mrp * 10) / 100;
-                      let taxeble_price = invodetails.mrp - discont;
+                    {productorder.map((orderdata) => {
+                      orderdata.gst === "null" ||
+                      orderdata.gst === "undefined" ||
+                      orderdata.gst === ""
+                        ? (orderdata.gst = "0")
+                        : Number(orderdata.gst);
+                      orderdata.sgst === "null" ||
+                      orderdata.sgst === "undefined" ||
+                      orderdata.sgst === ""
+                        ? (orderdata.sgst = "0")
+                        : Number(orderdata.sgst);
+                      orderdata.cgst === "null" ||
+                      orderdata.cgst === "undefined" ||
+                      orderdata.cgst === ""
+                        ? (orderdata.cgst = "0")
+                        : Number(orderdata.cgst);
+                      orderdata.mrp === "undefined" ||
+                      orderdata.mrp === "null" ||
+                      orderdata.mrp === ""
+                        ? (orderdata.mrp = "0")
+                        : Number(orderdata.mrp);
+                      let countAllText =
+                        Number(orderdata.gst) +
+                        Number(orderdata.wholesale_sales_tax) +
+                        Number(orderdata.manufacturers_sales_tax) +
+                        Number(orderdata.retails_sales_tax) +
+                        Number(orderdata.value_added_tax);
+                      let discont = (orderdata.mrp * orderdata.discount) / 100;
                       let tax =
-                        (taxeble_price * (Number(invodetails.gst) + 
-                        Number(invodetails.retails_sales_tax) +
-                        Number(invodetails.manufacturers_sales_tax) +
-                        Number(invodetails.value_added_tax) +
-                        Number(invodetails.wholesale_sales_tax)) / 100 )
-                      let salePrice = Number(invodetails.sale_price)
-                      let totalAmmount = (
-                        qty * salePrice ).toFixed(2);
-                      mrpTotal += Number(invodetails.mrp);
-                      disCountTotal += Number(discont);
-                      taxable_value_total += taxeble_price;
-                      taxTotal += tax;
-                      salePrice_total += salePrice;
-                      totalGSt += Number(invodetails.gst);
-                      totalCGST += Number(invodetails.cgst);
-                      totalSGST += Number(invodetails.sgst);
-                      GrandTotal += Number(totalAmmount);
+                        (Number(orderdata.sale_price) * countAllText) / 100;
+
+                      totalMrp += Number(orderdata.mrp);
+                      total_shipping += Number(invoicedetails.shipping_charges);
+                      qty = orderdata.order_quantity;
+
+                      let total_price = orderdata.sale_price * qty;
+
+                      let Total_taxMultiply_qty = tax * qty;
+                      // console.log("textt--" + Total_taxMultiply_qty);
+                      // total_tax_with_qty += Number(Total_taxMultiply_qty);
+                      total_Product_price += Number(orderdata.product_price);
+                      total_sale_price += Number(orderdata.sale_price);
+                      let price_without_tax =
+                        Number(orderdata.product_price).toFixed(2) - tax;
+
+                      // let pricewithout_tax_with_qty = price_without_tax * qty;
+
+                      total_priceWithout_tax += Number(price_without_tax);
+
+                      total += Number(total_price);
+                      grand_total += Number(total_price + total_shipping);
+                      total_tax += Number(tax);
+
                       return (
-                        <tr key={invodetails.id}>
+                        <tr key={orderdata.id}>
                           <td className="center">
-                            <b> {invodetails.product_title_name}</b>
+                            <b> {orderdata.product_title_name}</b>
                             <br />
-                            <small>GST: {invodetails.gst} %</small>
-                            <br />
-                            <small>CGST: {invodetails.cgst} %</small>
-                            <br />
-                            <small>SGST: {invodetails.sgst} %</small>
+                            {orderdata.unit === "gms" ? (
+                              <small>
+                                <b>weight:</b> {orderdata.unit_quantity} grm
+                              </small>
+                            ) : orderdata.unit === "ml" ? (
+                              <small>
+                                {" "}
+                                <b>volume:</b>
+                                {orderdata.unit_quantity} ml
+                              </small>
+                            ) : orderdata.unit === "pcs" ? (
+                              <>
+                                <small>
+                                  <b>color:</b>:{orderdata.colors}
+                                </small>
+                                <br />
+                                <small>
+                                  <b>size:</b>
+                                  {orderdata.size}
+                                </small>
+                              </>
+                            ) : null}
                           </td>
 
-                          <td className="left">{parseInt(invodetails.mrp)}</td>
                           <td className="left">
-                            ₹ {discont.toFixed(2)} <br />
+                            ₹{Number(orderdata.mrp)}
+                            <br />
+                            <small>
+                              {" "}
+                              <b>Discount:</b>₹{discont} (
+                              {Number(orderdata.discount)}% )
+                            </small>
                           </td>
                           <td className="left">
-                            ₹ {taxeble_price.toFixed(2)} <br />
+                            ₹ {Number(invoicedetails.shipping_charges)}
                           </td>
-                          <td className="left">₹ {tax.toFixed(2)}</td>
-                          <td className="">{invodetails.order_quantity}</td>
-                          <td className="left">{salePrice.toFixed(2)}</td>
-                          <td className="left">{totalAmmount}</td>
+                          <td className="left">
+                            ₹ {Number(orderdata.product_price).toFixed(2)}{" "}
+                          </td>
+                          <td className="left">
+                            ₹ {price_without_tax.toFixed(2)} <br />
+                          </td>
+                          <td className="left">
+                            ₹ {tax.toFixed(2)} ({countAllText}%)
+                            <br />
+                          </td>
+                          <td className="left">
+                            ₹{Number(orderdata.sale_price).toFixed(2)}
+                          </td>
+                          <td className="">{orderdata.order_quantity}</td>
+
+                          <td className="left">
+                            {Number(total_price).toFixed(2)}
+                          </td>
                         </tr>
                       );
                     })}
@@ -198,30 +358,33 @@ const Invoice = () => {
                         <b>Total</b>
                       </th>
                       <th className="">
-                        <b> ₹ {mrpTotal} </b>
+                        <b> ₹ {totalMrp.toFixed(2)} </b>
                       </th>
                       <th className="">
-                        <b>₹ {disCountTotal} </b>
+                        <b>₹ {total_shipping.toFixed(2)}</b>
                       </th>
                       <th className="">
-                        <b> ₹ {taxable_value_total.toFixed(2)} </b>
+                        <b> ₹ {total_Product_price.toFixed(2)} </b>
                       </th>
                       <th className="">
-                        <b> ₹ {taxTotal.toFixed(2)} </b>
+                        <b> ₹ {total_priceWithout_tax.toFixed(2)} </b>
                       </th>
                       <th className="">
-                        <b> ₹ {qty}</b>
+                        <b> ₹ {total_tax.toFixed(2)}</b>
                       </th>
                       <th className="">
-                        <b> ₹ {salePrice_total.toFixed(2)}</b>
+                        <b> ₹{total_sale_price.toFixed(2)}</b>
                       </th>
                       <th className="">
-                        <b> ₹ {GrandTotal}</b>
+                        <b> </b>
+                      </th>
+                      <th className="">
+                        <b> ₹{total.toFixed(2)} </b>
                       </th>
                     </tr>
                     <tr>
                       <th
-                        colSpan={"7"}
+                        colSpan={"8"}
                         className="font-weight-bold text-end p-4"
                       >
                         <h5>
@@ -230,7 +393,7 @@ const Invoice = () => {
                       </th>
                       <th className="pt-4 pb-4">
                         <h5>
-                          <b> ₹ {GrandTotal}</b>
+                          <b>{grand_total.toFixed(2)} </b>
                         </h5>
                       </th>
                     </tr>
@@ -270,7 +433,6 @@ const Invoice = () => {
           </div>
         </div>
       </div>
-      s
     </>
   );
 };

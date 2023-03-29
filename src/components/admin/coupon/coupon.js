@@ -12,6 +12,7 @@ import SAlert from "../common/salert";
 import axios from "axios";
 import moment from "moment";
 const Coupon = () => {
+  const token = localStorage.getItem("token");
   const formRef = useRef();
   const [validated, setValidated] = useState(false);
   const [searcherror, setsearcherror] = useState(false);
@@ -58,10 +59,18 @@ const Coupon = () => {
 
   const hideAlert = () => {
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/coupons_delete`, {
-        id: `${cid}`,
-        is_active: "0",
-      })
+      .put(
+        `${process.env.REACT_APP_BASEURL}/coupons_delete`,
+        {
+          id: `${cid}`,
+          is_active: "0",
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
         setapicall(true);
         setAlert(false);
@@ -337,7 +346,7 @@ const Coupon = () => {
           setShow(false);
           setAddAlert(true);
         })
-        .catch(function (error) {
+        .catch(function(error) {
           console.log(error);
         });
       formRef.current.reset();
@@ -373,7 +382,7 @@ const Coupon = () => {
         setapicall(true);
         setUpdateAlert(true);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
     formRef.current.reset();

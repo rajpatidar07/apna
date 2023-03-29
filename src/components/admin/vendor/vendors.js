@@ -97,17 +97,25 @@ const VendorsList = () => {
 
   const onSearchClick = () => {
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/vendor_list`, {
-        owner_name: `${searchdata.owner_name}`,
-        store_type: `${searchdata.store_type}`,
-        status: `${searchdata.status}`,
-      })
+      .post(
+        `${process.env.REACT_APP_BASEURL}/vendor_list`,
+        {
+          owner_name: `${searchdata.owner_name}`,
+          store_type: `${searchdata.store_type}`,
+          status: `${searchdata.status}`,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
         setvendordata(response.data);
         setLoading(false);
         setapicall(false);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -279,7 +287,12 @@ const VendorsList = () => {
         </Button>
         // : null
         /*: null*/
-      ),
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+        /*: null*/
+       /*: null*/),
       sortable: true,
     },
     {
@@ -314,7 +327,7 @@ const VendorsList = () => {
         setLoading(false);
         setapicall(false);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   }, [apicall]);
@@ -386,7 +399,7 @@ const VendorsList = () => {
           setDocnameArray(strCopy);
           setapicall(false);
         })
-        .catch(function (error) {
+        .catch(function(error) {
           console.log(error);
         });
       setShow(e);
@@ -397,7 +410,7 @@ const VendorsList = () => {
     setaddtag(e.target.value);
   };
   const onDocuAddclick = (e) => {
-    if (addtag == "") {
+    if (addtag === "") {
       setAddTagError("addTagErorrr");
     } else {
       setDocnameArray((Docnamearray) => [...Docnamearray, addtag]);
@@ -420,11 +433,21 @@ const VendorsList = () => {
     // setTimeout(CreateTimeout, 50000);
     setLoading(true);
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/vendor_status_change`, {
-        status_change: e.target.value,
-        id: `${id}`,
-      })
+      .put(
+        `${process.env.REACT_APP_BASEURL}/vendor_status_change`,
+        {
+          status_change: e.target.value,
+          id: `${id}`,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
+        // setLoading(false);
+        // setapicall(true);
         if (
           response.data.status_message === "vendor status change succesfully "
         ) {
@@ -432,7 +455,7 @@ const VendorsList = () => {
           setapicall(true);
         }
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -510,7 +533,7 @@ const VendorsList = () => {
             onImgView(vendorID);
             setDocerror("");
           })
-          .catch(function (error) {
+          .catch(function(error) {
             console.log(error);
           });
       } else {
@@ -530,7 +553,7 @@ const VendorsList = () => {
       .then((response) => {
         onImgView(vendor_id);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -545,7 +568,7 @@ const VendorsList = () => {
         setnewImageUrls(response.data);
         //  console.log("new img length------"+((response.data.length)))
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -640,9 +663,9 @@ const VendorsList = () => {
     } else if (addvendordata.geolocation === "") {
       setCustomValidation("GeolocationEmpty");
     } else if (
-      imgvalidate == "jpg" ||
-      imgvalidate == "jpeg" ||
-      imgvalidate == "png" ||
+      imgvalidate === "jpg" ||
+      imgvalidate === "jpeg" ||
+      imgvalidate === "png" ||
       imgvalidate === ""
     ) {
       e.preventDefault();
@@ -694,7 +717,7 @@ const VendorsList = () => {
             setDocnameArray("");
           }
         })
-        .catch(function (error) {
+        .catch(function(error) {
           setLoading(false);
           setErrorAddAlert(true);
           console.log(error);
@@ -750,10 +773,10 @@ const VendorsList = () => {
     ) {
       setCustomValidation("GeolocationEmpty");
     } else if (
-      imgvalidate == "jpg" ||
-      imgvalidate == "jpeg" ||
-      imgvalidate == "png" ||
-      imgvalidate == ""
+      imgvalidate === "jpg" ||
+      imgvalidate === "jpeg" ||
+      imgvalidate === "png" ||
+      imgvalidate === ""
     ) {
       setLoading(true);
       let x = [addvendordata.document_name];
@@ -796,7 +819,7 @@ const VendorsList = () => {
             setaddvendordata(vendorObject);
           }
         })
-        .catch(function (error) {
+        .catch(function(error) {
           setErrorUpdateAlert(true);
           console.log(error);
         });
@@ -1009,7 +1032,7 @@ const VendorsList = () => {
                         // required
                         type="email"
                         placeholder="Email"
-                        disabled={show == "add" ? false : true}
+                        disabled={show === "add" ? false : true}
                         name={"email"}
                       />
                       {/* {customValidation === "alreadyexist" ? (
@@ -1240,14 +1263,14 @@ const VendorsList = () => {
                           {Docnamearray.map((seotags, i) => {
                             return (
                               <>
-                                {seotags == '""' ? null : (
+                                {seotags === '""' ? null : (
                                   <Badge
                                     className="tagselecttitle mb-0"
                                     bg="success"
                                   >
                                     {seotags === null ||
                                     seotags === undefined ||
-                                    seotags == '""'
+                                    seotags === '""'
                                       ? null
                                       : seotags}
 
@@ -1322,23 +1345,23 @@ const VendorsList = () => {
                           </tr>
                           <tr>
                             <td>
-                              {SocialLink == "HeaderBlank" ? (
+                              {SocialLink === "HeaderBlank" ? (
                                 <span className="text-danger">
                                   {" "}
                                   Please Fill ..!!{" "}
                                 </span>
-                              ) : SocialLink == false ? (
+                              ) : SocialLink === false ? (
                                 ""
                               ) : null}
                             </td>
                             <td>
                               {" "}
-                              {SocialLink == "DesBlank" ? (
+                              {SocialLink === "DesBlank" ? (
                                 <span className="text-danger">
                                   {" "}
                                   Please Fill..!!{" "}
                                 </span>
-                              ) : SocialLink == false ? (
+                              ) : SocialLink === false ? (
                                 ""
                               ) : null}
                             </td>
@@ -1430,7 +1453,11 @@ const VendorsList = () => {
                       ) : null}
 
                       {addvendordata.shop_logo ? (
-                        <img src={addvendordata.shop_logo} width={"50px"} />
+                        <img
+                          src={addvendordata.shop_logo}
+                          alt="newimg"
+                          width={"50px"}
+                        />
                       ) : null}
                       <Form.Control.Feedback type="invalid" className="h6">
                         Please upload document

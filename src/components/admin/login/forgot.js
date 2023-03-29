@@ -108,7 +108,7 @@ const Forgot = () => {
                       </div>
 
                       <div className="col-12">
-                        {loading == true ? (
+                        {loading === true ? (
                           <button
                             type="submit"
                             className="w-100 btn-success btn"

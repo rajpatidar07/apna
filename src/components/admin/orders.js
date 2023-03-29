@@ -42,7 +42,7 @@ function Orders() {
 
   //To get the order list :-
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     axios
       .post(
         `${process.env.REACT_APP_BASEURL_0}/orders_list`,
@@ -57,27 +57,32 @@ function Orders() {
         }
       )
       .then((response) => {
-        // console.log(response);
+        // console.log("data----" + JSON.stringify(response.data));
+
+        // const result = response.data.filter(
+        //   (thing, index, self) =>
+        //     index === self.findIndex((t) => t.order_id === thing.order_id)
+        // );
         setorderdata(response.data);
         setapicall(false);
-        setLoading(false)
+        setLoading(false);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   }, [apicall, changstatus]);
 
-  const onStatusChange = (e, id,user_id) => {
+  const onStatusChange = (e, id, user_id) => {
     // e.prevantDefault();
     setchangstatus(e.target.value);
-    setLoading(true)
+    setLoading(true);
     axios
       .put(
         `${process.env.REACT_APP_BASEURL_0}/order_status_change`,
         {
           status_change: e.target.value,
           id: id,
-          user_id:user_id,
+          user_id: user_id,
         },
         {
           headers: {
@@ -86,18 +91,18 @@ function Orders() {
         }
       )
       .then((response) => {
-        console.log(response.data);
-        setLoading(false)
+        setLoading(false);
         setapicall(true);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
-        setLoading(false)
+        setLoading(false);
       });
   };
 
   // To go on the order details page :-
   const onOrderClick = (id) => {
+    console.log("id--" + JSON.stringify(id));
     localStorage.setItem("orderid", id[0]);
     localStorage.setItem("userid", id[1]);
 
@@ -109,47 +114,23 @@ function Orders() {
     {
       name: "Order Id",
       selector: (row) => (
-        <p onClick={onOrderClick.bind(this, [row.order_id, row.user_id])}>
+        <p onClick={onOrderClick.bind(this, [row.id, row.user_id])}>
           {" "}
-          {row.order_id}
+          {row.id}
         </p>
       ),
       sortable: true,
     },
 
     {
-      name: "Items",
-      selector: (row) => (
-        <p className="m-0">
-          <b>Product ID:</b> {row.product_id}
-          <br />
-          <b>Quantity:</b> {row.quantity}
-        </p>
-      ),
-      sortable: true,
-    },
-    {
-      name: "price",
-      selector: (row) => (
-        <p className="m-0">
-          <b>MRP :</b>₹ {row.mrp} ({row.discount}%) <br />
-          <b>Product Price:</b>₹ {Number(row.taxable_value).toFixed(2)} <br />
-          <b>Sale Price:</b> ₹ {Number(row.sale_price).toFixed(2)}
-        </p>
-      ),
+      name: "Quantity",
+      selector: (row) => <p className="m-0">{row.total_quantity}</p>,
       sortable: true,
     },
     {
       name: "Tax",
       selector: (row) => (
-        <p className="m-0">
-          <b>GST %:</b> {row.gst}
-          <br />
-          <b>CGST %:</b> {row.cgst}
-          <br />
-          <b>SGST %:</b> {row.sgst}
-          <br />
-        </p>
+        <p className="m-0">{Number(row.total_gst).toFixed(2)}</p>
       ),
       sortable: true,
     },
@@ -157,11 +138,7 @@ function Orders() {
     {
       name: "Total Ammount",
       selector: (row) => (
-        <p className="m-0">
-          <b>Sale Price X Quantity</b>
-          <br />₹{(Number(row.total_amount))}
-          <br />
-        </p>
+        <p className="m-0">₹{Number(row.total_amount).toFixed(2)}</p>
       ),
       sortable: true,
     },
@@ -225,14 +202,14 @@ function Orders() {
     {
       name: "Change Status",
       selector: (row) => (
-       <Form.Select
+        <Form.Select
           aria-label="Search by delivery"
           size="sm"
           className="w-100"
-          onChange={(e) => onStatusChange(e, row.order_id,row.user_id)}
+          onChange={(e) => onStatusChange(e, row.id, row.user_id)}
           name="status"
           // value={row.product_status}
-        > 
+        >
           <option
             value="placed"
             selected={row.status === "placed" ? true : false}
@@ -271,7 +248,7 @@ function Orders() {
           </option>
           <option
             value="approved"
-           selected={row.status === "approved" ? true : false}
+            selected={row.status === "approved" ? true : false}
           >
             Approved{" "}
           </option>
@@ -286,71 +263,77 @@ function Orders() {
       sortable: true,
     },
   ];
-// console.log("--------==========="+JSON.stringify(orderdata))
+  // console.log("--------==========="+JSON.stringify(orderdata))
   return (
     <>
-    {loading === true ?<Loader/>:null}
-    <div className="App">
-      <h2>Orders</h2>
-      <div className="card mt-3 px-3 ">
-        <div className="product_page_searchbox bg-gray my-4">
-          <div className="row">
-            <div className="col-md-3 col-sm-6">
-              <Form.Select
-                aria-label="Search by delivery"
-                className="adminselectbox"
-                onChange={OnSearchChange}
-                name="status"
-                value={String(searchdata.status)}
-              >
-                <option value="">Delivery status</option>
-                <option value="delivered">Delivered</option>
-                <option value="pending">Pending</option>
-                <option value="approved">Approved</option>
-                <option value="packed">Packed</option>
-                <option value="placed">Placed</option>
-                <option value="return">Return</option>
-                <option value="cancel">Cancel</option>
-              </Form.Select>
-            </div>
-            <div className="col-md-3 col-sm-6">
-              <Form.Select
-                aria-label="Search by delivery_status"
-                className="adminselectbox"
-                onChange={OnSearchChange}
-                name="created_on"
-                value={String(searchdata.created_on)}
-              >
-                <option value="">Order limits</option>
-                <option value="one">Today</option>
-                <option value="1">Yesterday</option>
-                <option value="15">Last 15 days orders</option>
-                <option value="30">Last 30 days orders</option>
-                <option value="90">Last 3 month orders</option>
-                <option value="180">Last 6 month orders</option>
-              </Form.Select>
-            </div>
-            <div className="col-md-3 col-sm-6 aos_input ">
-              <MainButton btntext={"Search"} onClick={onSearchClick}
-               btnclass={"button main_button w-100"} />
-            </div>
-            <div className="col-md-3 col-sm-6 aos_input ">
-              <MainButton btntext={"Reset"} onClick={OnReset} 
-               btnclass={"button main_button w-100"} />
+      {loading === true ? <Loader /> : null}
+      <div className="App">
+        <h2>Orders</h2>
+        <div className="card mt-3 px-3 ">
+          <div className="product_page_searchbox bg-gray my-4">
+            <div className="row">
+              <div className="col-md-3 col-sm-6">
+                <Form.Select
+                  aria-label="Search by delivery"
+                  className="adminselectbox"
+                  onChange={OnSearchChange}
+                  name="status"
+                  value={String(searchdata.status)}
+                >
+                  <option value="">Delivery status</option>
+                  <option value="delivered">Delivered</option>
+                  <option value="pending">Pending</option>
+                  <option value="approved">Approved</option>
+                  <option value="packed">Packed</option>
+                  <option value="placed">Placed</option>
+                  <option value="return">Return</option>
+                  <option value="cancel">Cancel</option>
+                </Form.Select>
+              </div>
+              <div className="col-md-3 col-sm-6">
+                <Form.Select
+                  aria-label="Search by delivery_status"
+                  className="adminselectbox"
+                  onChange={OnSearchChange}
+                  name="created_on"
+                  value={String(searchdata.created_on)}
+                >
+                  <option value="">Order limits</option>
+                  <option value="one">Today</option>
+                  <option value="1">Yesterday</option>
+                  <option value="15">Last 15 days orders</option>
+                  <option value="30">Last 30 days orders</option>
+                  <option value="90">Last 3 month orders</option>
+                  <option value="180">Last 6 month orders</option>
+                </Form.Select>
+              </div>
+              <div className="col-md-3 col-sm-6 aos_input ">
+                <MainButton
+                  btntext={"Search"}
+                  onClick={onSearchClick}
+                  btnclass={"button main_button w-100"}
+                />
+              </div>
+              <div className="col-md-3 col-sm-6 aos_input ">
+                <MainButton
+                  btntext={"Reset"}
+                  onClick={OnReset}
+                  btnclass={"button main_button w-100"}
+                />
+              </div>
             </div>
           </div>
-        </div>
 
-        <DataTable
-          columns={columns}
-          data={orderdata}
-          pagination
-          highlightOnHover
-          pointerOnHover
-          className={"table_body order_table"}
-        />
+          <DataTable
+            columns={columns}
+            data={orderdata}
+            pagination
+            highlightOnHover
+            pointerOnHover
+            className={"table_body order_table"}
+          />
+        </div>
       </div>
-    </div>
     </>
   );
 }

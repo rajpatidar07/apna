@@ -31,10 +31,16 @@ const RevenueReport = () => {
   const [fromDate, setFromDate] = useState(moment().format("YYYY-MM-DD"));
   const [toDate, setToDate] = useState(moment().format("YYYY-MM-DD"));
   const [prevFromdate, setprevFromdate] = useState(
-    moment().subtract(1, "days").startOf("days").format("YYYY-MM-DD")
+    moment()
+      .subtract(1, "days")
+      .startOf("days")
+      .format("YYYY-MM-DD")
   );
   const [prevTodate, setprevTodate] = useState(
-    moment().subtract(1, "days").startOf("days").format("YYYY-MM-DD")
+    moment()
+      .subtract(1, "days")
+      .startOf("days")
+      .format("YYYY-MM-DD")
   );
 
   const [apicall, setapicall] = useState(false);
@@ -468,19 +474,19 @@ const RevenueReport = () => {
     },
     {
       name: "Gross Revenue",
-      selector: (row) => row.gross_amount.toFixed(2),
+      selector: (row) => Number(row.gross_amount).toFixed(2),
       sortable: true,
       width: "150px",
     },
     {
       name: "Total GST",
-      selector: (row) => row.total_gst.toFixed(2),
+      selector: (row) => Number(row.total_gst).toFixed(2),
       sortable: true,
       width: "150px",
     },
     {
       name: "Discount",
-      selector: (row) => row.discount.toFixed(2),
+      selector: (row) => Number(row.discount).toFixed(2),
       sortable: true,
       width: "150px",
       center: true,
@@ -492,7 +498,7 @@ const RevenueReport = () => {
 
     {
       name: "Shipping",
-      selector: (row) => row.total_shipping_charges.toFixed(2),
+      selector: (row) => Number(row.total_shipping_charges).toFixed(2),
       sortable: true,
       width: "160px",
       center: true,
@@ -503,7 +509,7 @@ const RevenueReport = () => {
     },
     {
       name: "Net Revenue",
-      selector: (row) => row.net_sales.toFixed(2),
+      selector: (row) => Number(row.net_sales).toFixed(2),
       sortable: true,
       width: "150px",
       center: true,
@@ -515,7 +521,7 @@ const RevenueReport = () => {
 
     {
       name: "Total Revenue",
-      selector: (row) => row.total_sales.toFixed(2),
+      selector: (row) => Number(row.total_sales).toFixed(2),
       sortable: true,
       width: "150px",
       center: true,
@@ -529,9 +535,9 @@ const RevenueReport = () => {
   const TimeChange = (e) => {
     setFilterchange(e.target.value);
 
-    let value = e.target.value;
+    let value = Number(e.target.value);
     //today---------------------------------------------------------------------------
-    if (value == 1) {
+    if (value === 1) {
       let frommDate = moment().format("YYYY-MM-DD");
       setFromDate(frommDate);
       // console.log("From date"+e.target.value)
@@ -547,7 +553,7 @@ const RevenueReport = () => {
       setpreviousStateChange(1);
     }
     //yesterday------------------------------------------------------------------------
-    if (value == 2) {
+    if (value === 2) {
       let yesterday = moment()
         .subtract(1, "days")
         .startOf("days")
@@ -570,7 +576,7 @@ const RevenueReport = () => {
       setpreviousStateChange(2);
     }
     //last week---------------------------------------------------------------
-    if (value == 3) {
+    if (value === 3) {
       let lastweek = moment()
         .subtract(1, "weeks")
         .startOf("weeks")
@@ -578,7 +584,10 @@ const RevenueReport = () => {
       setFromDate(lastweek);
 
       setToDate(
-        moment().subtract(1, "weeks").endOf("weeks").format("YYYY-MM-DD")
+        moment()
+          .subtract(1, "weeks")
+          .endOf("weeks")
+          .format("YYYY-MM-DD")
       );
       let previouslastweek = moment(lastweek)
         .subtract(1, "days")
@@ -594,7 +603,7 @@ const RevenueReport = () => {
       setpreviousStateChange(3);
     }
     //last month---------------------------------------------------------------
-    if (value == 4) {
+    if (value === 4) {
       let month = moment()
         .subtract(1, "month")
         .startOf("month")
@@ -621,7 +630,7 @@ const RevenueReport = () => {
       setpreviousStateChange(4);
     }
     //  last six month---------------------------------------------------------
-    if (value == 5) {
+    if (value === 5) {
       let sixMonth = moment()
         .subtract(6, "month")
         .startOf("month")
@@ -645,8 +654,10 @@ const RevenueReport = () => {
     }
 
     //this week-----------------------------------------------------------------------
-    if (value == 8) {
-      let ThisWeek = moment().startOf("weeks").format("YYYY-MM-DD");
+    if (value === 8) {
+      let ThisWeek = moment()
+        .startOf("weeks")
+        .format("YYYY-MM-DD");
       setFromDate(ThisWeek);
       // console.log("From last 6 month"+ThisWeek)
       setToDate(moment().format("YYYY-MM-DD"));
@@ -664,8 +675,10 @@ const RevenueReport = () => {
       // setPrevDate(moment(ThisWeek).subtract(1, 'weeks').endOf('weeks').format('YYYY-MM-DD'))
       setpreviousStateChange(8);
     }
-    if (value == 9) {
-      let ThisMonth = moment().startOf("month").format("YYYY-MM-DD");
+    if (value === 9) {
+      let ThisMonth = moment()
+        .startOf("month")
+        .format("YYYY-MM-DD");
       setFromDate(ThisMonth);
       // console.log("From last 6 month"+ThisMonth)
       setToDate(moment().format("YYYY-MM-DD"));
@@ -675,7 +688,10 @@ const RevenueReport = () => {
         .format("YYYY-MM-DD");
       setprevTodate(previousthismont);
       setprevFromdate(
-        moment().subtract(1, "month").startOf("month").format("YYYY-MM-DD")
+        moment()
+          .subtract(1, "month")
+          .startOf("month")
+          .format("YYYY-MM-DD")
       );
       setpreviousStateChange(9);
     }
@@ -695,16 +711,24 @@ const RevenueReport = () => {
     // console.log( "brand----"+brandName)
     // console.log( "locations by name----"+location)
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/revenue`, {
-        from_date: fromDate,
-        to_date: toDate,
-        prev_from_date: prevFromdate,
-        prev_to_date: prevTodate,
-        vendors_id: vendorId,
-        categorys: categoryId,
-        user_locations: location,
-        brand: brandName,
-      })
+      .post(
+        `${process.env.REACT_APP_BASEURL}/revenue`,
+        {
+          from_date: fromDate,
+          to_date: toDate,
+          prev_from_date: prevFromdate,
+          prev_to_date: prevTodate,
+          vendors_id: vendorId,
+          categorys: categoryId,
+          user_locations: location,
+          brand: brandName,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
         // console.log('revenue data'+JSON.stringify(response.data))
         // console.log(" revenue error"+JSON.stringify(response))
@@ -716,14 +740,14 @@ const RevenueReport = () => {
           setTabledata([]);
         } else {
           setRevenueError("");
-          // console.log("data=="+JSON.stringify(response.data[0]))
+          console.log("data==" + JSON.stringify(response.data));
           setGetRevenue(response.data[0]);
           setTabledata(response.data[0].ravenue_date_data);
 
           setapicall(false);
         }
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -790,10 +814,16 @@ const RevenueReport = () => {
     setFromDate(moment().format("YYYY-MM-DD"));
     setToDate(moment().format("YYYY-MM-DD"));
     setprevFromdate(
-      moment().subtract(1, "days").startOf("days").format("YYYY-MM-DD")
+      moment()
+        .subtract(1, "days")
+        .startOf("days")
+        .format("YYYY-MM-DD")
     );
     setprevTodate(
-      moment().subtract(1, "days").startOf("days").format("YYYY-MM-DD")
+      moment()
+        .subtract(1, "days")
+        .startOf("days")
+        .format("YYYY-MM-DD")
     );
     setBrandName([]);
     setLocation([]);
@@ -923,7 +953,7 @@ const RevenueReport = () => {
               placeholder="Search by category"
               onChange={TimeChange}
             >
-              <option>Search by category</option>
+              <option>Search by Dates</option>
               <option name="today" value={1}>
                 Today
               </option>
@@ -1080,7 +1110,9 @@ const RevenueReport = () => {
                       getRevenue.gross_total_amount == "" ? (
                         <h3>₹0</h3>
                       ) : (
-                        <h3>₹{getRevenue.gross_total_amount.toFixed(2)}</h3>
+                        <h3>
+                          ₹{Number(getRevenue.gross_total_amount).toFixed(2)}
+                        </h3>
                       )}
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
@@ -1139,7 +1171,10 @@ const RevenueReport = () => {
                         <p className="h5"> ₹0</p>
                       ) : (
                         <p className="h5">
-                          ₹{getRevenue.prev_gross_total_amount.toFixed(2)}{" "}
+                          ₹
+                          {Number(getRevenue.prev_gross_total_amount).toFixed(
+                            2
+                          )}{" "}
                         </p>
                       )}
                     </div>
@@ -1191,7 +1226,7 @@ const RevenueReport = () => {
                       getRevenue.return_total == "" ? (
                         <h3>₹0</h3>
                       ) : (
-                        <h3>₹{getRevenue.return_total.toFixed(2)}</h3>
+                        <h3>₹{Number(getRevenue.return_total).toFixed(2)}</h3>
                       )}
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
@@ -1249,7 +1284,7 @@ const RevenueReport = () => {
                         <p className="h5"> ₹0</p>
                       ) : (
                         <p className="h5">
-                          ₹{getRevenue.prev_return_total.toFixed(2)}{" "}
+                          ₹{Number(getRevenue.prev_return_total).toFixed(2)}{" "}
                         </p>
                       )}
                     </div>
@@ -1274,7 +1309,7 @@ const RevenueReport = () => {
                       getRevenue.total_gst == "" ? (
                         <h3>₹0</h3>
                       ) : (
-                        <h3>₹{getRevenue.total_gst.toFixed(2)}</h3>
+                        <h3>₹{Number(getRevenue.total_gst).toFixed(2)}</h3>
                       )}
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
@@ -1332,7 +1367,7 @@ const RevenueReport = () => {
                         <p className="h5"> ₹0</p>
                       ) : (
                         <p className="h5">
-                          ₹{getRevenue.prev_total_gst.toFixed(2)}{" "}
+                          ₹{Number(getRevenue.prev_total_gst).toFixed(2)}{" "}
                         </p>
                       )}
                     </div>
@@ -1357,7 +1392,9 @@ const RevenueReport = () => {
                       getRevenue.total_shipping_charges == "" ? (
                         <h3>₹0</h3>
                       ) : (
-                        <h3>{getRevenue.total_shipping_charges.toFixed(2)}</h3>
+                        <h3>
+                          {Number(getRevenue.total_shipping_charges).toFixed(2)}
+                        </h3>
                       )}
                       <div className="d-flex align-items-center justify-content-center">
                         <AiOutlineArrowRight className="h5 mb-0 mx-2" />
@@ -1415,7 +1452,10 @@ const RevenueReport = () => {
                         <p className="h5"> ₹0</p>
                       ) : (
                         <p className="h5">
-                          ₹{getRevenue.prev_total_shipping_charges.toFixed(2)}{" "}
+                          ₹
+                          {Number(
+                            getRevenue.prev_total_shipping_charges
+                          ).toFixed(2)}{" "}
                         </p>
                       )}
                     </div>

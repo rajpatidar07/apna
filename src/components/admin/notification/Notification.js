@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import NotificationType from "../json/NotificationType";
 import NotificationStatus from "../json/NotificationStatus";
-import { Alert } from "bootstrap";
+// import { Alert } from "bootstrap";
 import SAlert from "../common/salert";
 
 const Notification = () => {
@@ -215,7 +215,7 @@ const Notification = () => {
         .then((response) => {
           setAddAlert(true);
         })
-        .catch(function (error) {
+        .catch(function(error) {
           console.log(error);
         });
 
@@ -230,7 +230,6 @@ const Notification = () => {
   // To update the notification:-
 
   const UpdateNotificationHandler = (e) => {
-
     e.preventDefault();
     axios
       .put(`${process.env.REACT_APP_BASEURL}/update_notification_template`, {
@@ -244,7 +243,7 @@ const Notification = () => {
       .then((response) => {
         setUpdateAlert(true);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
 
@@ -271,7 +270,7 @@ const Notification = () => {
         setGetNotificationdata(data);
         setapicall(false);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -288,7 +287,7 @@ const Notification = () => {
       .then((response) => {
         setapicall(true);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };
@@ -307,7 +306,7 @@ const Notification = () => {
         setDeleteAlert(false);
         setapicall(true);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   };

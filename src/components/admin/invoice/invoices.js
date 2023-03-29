@@ -27,6 +27,7 @@ const InvoiceList = () => {
   let token = localStorage.getItem("token");
 
   const InvoiceCheck = (id) => {
+    // console.log("idd-----" + JSON.stringify(id));
     localStorage.setItem("invoiceid", id[1]);
     localStorage.setItem("invoice_no", id[0]);
     if (id[0] == undefined || id[0] == "" || id[0] == null) {
@@ -39,12 +40,17 @@ const InvoiceList = () => {
     function getInvoiceList() {
       try {
         axios
-          .get(`${process.env.REACT_APP_BASEURL}/invoice_list`)
+          .get(`${process.env.REACT_APP_BASEURL}/invoice_list`, {
+            headers: {
+              admin_token: token,
+            },
+          })
           .then((response) => {
             let data = response.data;
+
             setInvoice(data);
             setapicall(false);
-            console.log(response);
+            // console.log(response);
           });
       } catch (err) {
         console.log(err);
@@ -74,6 +80,7 @@ const InvoiceList = () => {
     ) {
       setsearcherror(true);
     } else {
+      console.log("serch number---" + SearchInvo.search);
       axios
         .post(
           `${process.env.REACT_APP_BASEURL_0}/invoice_search`,
@@ -88,14 +95,18 @@ const InvoiceList = () => {
         )
         .then((response) => {
           setInvoice(response.data);
-          setSearchInvo("");
+          setSearchInvo({
+            search: "",
+            from_date: "",
+            to_date: "",
+          });
           setsearcherror(false);
         });
     }
   };
   const columns = [
     {
-      name: "Id",
+      name: "Order No.",
       selector: (row) => row.id,
       sortable: true,
       width: "75px",
@@ -103,7 +114,7 @@ const InvoiceList = () => {
     {
       name: "Invoice Number",
       selector: (row) => (
-        <p onClick={() => InvoiceCheck.bind(this, [row.invoice_no, row.id])}>
+        <p onClick={InvoiceCheck.bind(this, [row.invoice_no, row.id])}>
           {row.invoice_no}
         </p>
       ),
@@ -171,8 +182,8 @@ const InvoiceList = () => {
       },
     },
     {
-      name: "GST",
-      selector: (row) => row.total_gst,
+      name: "Tax",
+      selector: (row) => Number(row.total_gst).toFixed(2),
       sortable: true,
       width: "90px",
       center: true,
@@ -180,39 +191,10 @@ const InvoiceList = () => {
         paddingLeft: "0px",
       },
     },
-    {
-      name: "CGST",
-      selector: (row) => row.total_cgst,
-      sortable: true,
-      width: "90px",
-      center: true,
-      style: {
-        paddingLeft: "0px",
-      },
-    },
-    {
-      name: "SGST",
-      selector: (row) => row.total_sgst,
-      sortable: true,
-      width: "90px",
-      center: true,
-      style: {
-        paddingLeft: "0px",
-      },
-    },
-    {
-      name: "Original Price",
-      selector: (row) => row.taxable_value - row.total_gst,
-      sortable: true,
-      width: "90px",
-      center: true,
-      style: {
-        paddingLeft: "0px",
-      },
-    },
+
     {
       name: "Taxable Value",
-      selector: (row) => row.taxable_value,
+      selector: (row) => Number(row.taxable_value).toFixed(2),
       sortable: true,
       width: "90px",
       center: true,
@@ -222,7 +204,7 @@ const InvoiceList = () => {
     },
     {
       name: "Discount/Coupon",
-      selector: (row) => row.discount_coupon_value,
+      selector: (row) => Number(row.discount_coupon_value).toFixed(2),
       sortable: true,
       width: "120px",
       center: true,
@@ -233,7 +215,7 @@ const InvoiceList = () => {
     },
     {
       name: "Total",
-      selector: (row) => row.total_amount,
+      selector: (row) => Number(row.total_amount).toFixed(2),
       sortable: true,
       width: "100px",
       center: true,
@@ -244,8 +226,9 @@ const InvoiceList = () => {
     },
   ];
   const [filterText, setFilterText] = React.useState("");
-  const [resetPaginationToggle, setResetPaginationToggle] =
-    React.useState(false);
+  const [resetPaginationToggle, setResetPaginationToggle] = React.useState(
+    false
+  );
   const subHeaderComponent = useMemo(() => {
     const handleClear = () => {
       if (filterText) {
@@ -266,6 +249,7 @@ const InvoiceList = () => {
   /*<---Function to reset Search--->*/
   const OnReset = () => {
     setSearchInvo({ search: "", from_date: "", to_date: "" });
+
     setapicall(true);
     setsearcherror(false);
   };
@@ -282,8 +266,8 @@ const InvoiceList = () => {
             <input
               className="adminsideinput"
               type={"text"}
-              placeholder="Search by Vendor_Id"
-              value={Number(SearchInvo.search)}
+              placeholder="Search by order no.and vendor id"
+              value={SearchInvo.search}
               name={"search"}
               onChange={(e) => onValueChange(e)}
             />
