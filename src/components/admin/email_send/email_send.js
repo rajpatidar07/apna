@@ -14,6 +14,7 @@ import EmailStatus from "../json/EmailStatus";
 import SAlert from "../common/salert";
 
 const EmailSend = () => {
+  const token = localStorage.getItem("token");
   const [emaildata, setEmaildata] = useState({
     email_type: "",
     email_text: "",
@@ -55,7 +56,11 @@ const EmailSend = () => {
     if (e !== "add") {
       try {
         axios
-          .get(`${process.env.REACT_APP_BASEURL}/email_template_get?id=${e}`)
+          .get(`${process.env.REACT_APP_BASEURL}/email_template_get?id=${e}`, {
+            headers: {
+              admin_token: token,
+            },
+          })
           .then((response) => {
             setEmaildata(response.data[0]);
 
@@ -210,15 +215,23 @@ const EmailSend = () => {
     } else {
       e.preventDefault();
       axios
-        .post(`${process.env.REACT_APP_BASEURL}/add_email_template`, {
-          type: emaildata.type,
-          email_type: emaildata.email_type,
-          email_name: emaildata.email_name,
-          email_text: emailText,
-          text_msg: emaildata.text_msg,
-          test_email: emaildata.test_email,
-          status: emaildata.status,
-        })
+        .post(
+          `${process.env.REACT_APP_BASEURL}/add_email_template`,
+          {
+            type: emaildata.type,
+            email_type: emaildata.email_type,
+            email_name: emaildata.email_name,
+            email_text: emailText,
+            text_msg: emaildata.text_msg,
+            test_email: emaildata.test_email,
+            status: emaildata.status,
+          },
+          {
+            headers: {
+              admin_token: token,
+            },
+          }
+        )
         .then((response) => {
           console.log(response);
           setAddAlert(true);
@@ -238,16 +251,24 @@ const EmailSend = () => {
   const UpdateEmailHandler = (e) => {
     e.preventDefault();
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/update_email_template`, {
-        id: emaildata.id,
-        type: emaildata.type,
-        email_type: emaildata.email_type,
-        email_name: emaildata.email_name,
-        email_text: emailText,
-        text_msg: emaildata.text_msg,
-        test_email: emaildata.test_email,
-        status: emaildata.status,
-      })
+      .put(
+        `${process.env.REACT_APP_BASEURL}/update_email_template`,
+        {
+          id: emaildata.id,
+          type: emaildata.type,
+          email_type: emaildata.email_type,
+          email_name: emaildata.email_name,
+          email_text: emailText,
+          text_msg: emaildata.text_msg,
+          test_email: emaildata.test_email,
+          status: emaildata.status,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
         setUpdateAlert(true);
       })
@@ -264,11 +285,19 @@ const EmailSend = () => {
 
   const fetchEmailData = () => {
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/email_template_list`, {
-        type: getusertype,
-        email_type: getemailtype,
-        status: getemailStatus,
-      })
+      .post(
+        `${process.env.REACT_APP_BASEURL}/email_template_list`,
+        {
+          type: getusertype,
+          email_type: getemailtype,
+          status: getemailStatus,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
         let data = response.data.filter((item) => item.is_deleted === 1);
 
@@ -285,10 +314,18 @@ const EmailSend = () => {
     setchangstatus(e.target.value);
     setCondition(true);
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/email_template_status`, {
-        status: e.target.value,
-        id: `${id}`,
-      })
+      .put(
+        `${process.env.REACT_APP_BASEURL}/email_template_status`,
+        {
+          status: e.target.value,
+          id: `${id}`,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
         setCondition(false);
         setapicall(true);
@@ -301,10 +338,18 @@ const EmailSend = () => {
 
   const deleteEmail = (id) => {
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/email_template_remove`, {
-        is_deleted: 0,
-        id: `${id}`,
-      })
+      .put(
+        `${process.env.REACT_APP_BASEURL}/email_template_remove`,
+        {
+          is_deleted: 0,
+          id: `${id}`,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
         setapicall(true);
       })

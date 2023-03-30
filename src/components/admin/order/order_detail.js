@@ -263,7 +263,7 @@ const OrderDetail = () => {
                   total_priceWithout_tax += Number(pricewithout_tax_with_qty);
 
                   total += Number(total_price);
-                  sub_total += Number(total_price);
+                  sub_total += Number(orderdata.sale_price);
                   total_tax += Number(tax);
 
                   // console.log("ffff--" + taxqty );

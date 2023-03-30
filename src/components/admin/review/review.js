@@ -26,7 +26,7 @@ const Review = () => {
     note: "",
   });
   let [searcherror, setsearcherror] = useState(false);
-
+  const token = localStorage.getItem("token");
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
@@ -39,9 +39,17 @@ const Review = () => {
 
   const handleShow = (e) => {
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/review_list`, {
-        id: `${e}`,
-      })
+      .post(
+        `${process.env.REACT_APP_BASEURL}/review_list`,
+        {
+          id: `${e}`,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
 
       .then((response) => {
         setaddreviewdata(response.data[0]);
@@ -55,7 +63,7 @@ const Review = () => {
 
         setapicall(false);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
     setShow(true);
@@ -80,17 +88,25 @@ const Review = () => {
       setsearcherror(true);
     } else {
       axios
-        .post(`${process.env.REACT_APP_BASEURL}/review_list`, {
-          product_name: `${searchdata.product_name}`,
-          category_type: `${searchdata.category_type}`,
-          status: `${searchdata.status}`,
-        })
+        .post(
+          `${process.env.REACT_APP_BASEURL}/review_list`,
+          {
+            product_name: `${searchdata.product_name}`,
+            category_type: `${searchdata.category_type}`,
+            status: `${searchdata.status}`,
+          },
+          {
+            headers: {
+              admin_token: token,
+            },
+          }
+        )
         .then((response) => {
           setreviewdata(response.data);
           setapicall(false);
           setsearcherror(false);
         })
-        .catch(function (error) {
+        .catch(function(error) {
           console.log(error);
         });
     }
@@ -123,12 +139,19 @@ const Review = () => {
       e.preventDefault();
       axios
         .put(`${process.env.REACT_APP_BASEURL}/review_approved`, editreviewdata)
-        .then((response) => {
-          setShow(false);
-          setapicall(true);
-          setUpdateAlert(true);
-        })
-        .catch(function (error) {
+        .then(
+          (response) => {
+            setShow(false);
+            setapicall(true);
+            setUpdateAlert(true);
+          },
+          {
+            headers: {
+              admin_token: token,
+            },
+          }
+        )
+        .catch(function(error) {
           console.log(error);
         });
       setValidated(false);
@@ -136,16 +159,24 @@ const Review = () => {
   };
   useEffect(() => {
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/review_list`, {
-        product_name: "",
-        category_type: "",
-        status: "",
-      })
+      .post(
+        `${process.env.REACT_APP_BASEURL}/review_list`,
+        {
+          product_name: "",
+          category_type: "",
+          status: "",
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
         setreviewdata(response.data);
         setapicall(false);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   }, [apicall]);

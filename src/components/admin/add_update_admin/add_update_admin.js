@@ -11,6 +11,7 @@ import axios from "axios";
 import { BiEdit } from "react-icons/bi";
 
 function Admin() {
+  const token = localStorage.getItem("token");
   const [apicall, setapicall] = useState(false);
   const [show, setShow] = useState("");
   const [validated, setValidated] = useState(false);
@@ -49,7 +50,11 @@ function Admin() {
     if (e !== "add") {
       try {
         axios
-          .get(`${process.env.REACT_APP_BASEURL}/admin?id=${e}`)
+          .get(`${process.env.REACT_APP_BASEURL}/admin?id=${e}`, {
+            headers: {
+              admin_token: token,
+            },
+          })
           .then((response) => {
             let data = response.data[0];
             setaddadmindata(data);
@@ -114,10 +119,18 @@ function Admin() {
   ];
   useEffect(() => {
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/admin_search`, {
-        admin_name: `${Searchad.admin_name}`,
-        admin_type: `${Searchad.admin_type}`,
-      })
+      .post(
+        `${process.env.REACT_APP_BASEURL}/admin_search`,
+        {
+          admin_name: `${Searchad.admin_name}`,
+          admin_type: `${Searchad.admin_type}`,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
         setadmindata(response.data);
         setSearchAdmin(response.data);
@@ -136,10 +149,18 @@ function Admin() {
 
   const SearchAdmin = () => {
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/admin_search`, {
-        admin_name: `${Searchad.admin_name}`,
-        admin_type: `${Searchad.admin_type}`,
-      })
+      .post(
+        `${process.env.REACT_APP_BASEURL}/admin_search`,
+        {
+          admin_name: `${Searchad.admin_name}`,
+          admin_type: `${Searchad.admin_type}`,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
         setadmindata(response.data);
         setSearchAd("");
@@ -169,18 +190,26 @@ function Admin() {
     } else {
       e.preventDefault();
       axios
-        .post(`${process.env.REACT_APP_BASEURL}/add_admin`, {
-          admin_email: `${addadmindata.admin_email}`,
-          admin_name: `${addadmindata.admin_name}`,
-          admin_phone: `${addadmindata.admin_phone}`,
-          admin_type: `${addadmindata.admin_type}`,
-          admin_password: `${addadmindata.admin_password}`,
-        })
+        .post(
+          `${process.env.REACT_APP_BASEURL}/add_admin`,
+          {
+            admin_email: `${addadmindata.admin_email}`,
+            admin_name: `${addadmindata.admin_name}`,
+            admin_phone: `${addadmindata.admin_phone}`,
+            admin_type: `${addadmindata.admin_type}`,
+            admin_password: `${addadmindata.admin_password}`,
+          },
+          {
+            headers: {
+              admin_token: token,
+            },
+          }
+        )
         .then((response) => {
           setAddAlert(true);
           setPasswordError("");
         })
-        .catch(function (error) {});
+        .catch(function(error) {});
 
       formRef.current.reset();
       setValidated(false);
@@ -204,10 +233,17 @@ function Admin() {
     } else {
       axios
         .put(`${process.env.REACT_APP_BASEURL}/update_admin`, addadmindata)
-        .then((response) => {
-          setUpdateAlert(true);
-        })
-        .catch(function (error) {
+        .then(
+          (response) => {
+            setUpdateAlert(true);
+          },
+          {
+            headers: {
+              admin_token: token,
+            },
+          }
+        )
+        .catch(function(error) {
           console.log(error);
         });
       formRef.current.reset();

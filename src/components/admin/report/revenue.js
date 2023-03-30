@@ -467,7 +467,7 @@ const RevenueReport = () => {
   const columns = [
     {
       name: "Date",
-      selector: (row) => row.uniquedates,
+      selector: (row) => moment(row.uniquedates).format("YYYY-MM-DD"),
       sortable: true,
       width: "170px",
       center: true,
@@ -740,7 +740,7 @@ const RevenueReport = () => {
           setTabledata([]);
         } else {
           setRevenueError("");
-          console.log("data==" + JSON.stringify(response.data));
+
           setGetRevenue(response.data[0]);
           setTabledata(response.data[0].ravenue_date_data);
 

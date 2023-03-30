@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import "../../../style/order.css";
 import axios from "axios";
 function Transactions() {
+  const token = localStorage.getItem("token");
   const [apicall, setapicall] = useState(false);
   const [transectiondata, setTransectionData] = useState([]);
   const [SearchTransection, setSearchTransection] = useState({
@@ -20,11 +21,19 @@ function Transactions() {
   // To render the data of the transaction list :-
   useEffect(() => {
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/transaction_list`, {
-        order_id: SearchTransection.order_id,
-        method: SearchTransection.method,
-        status: SearchTransection.status,
-      })
+      .post(
+        `${process.env.REACT_APP_BASEURL}/transaction_list`,
+        {
+          order_id: SearchTransection.order_id,
+          method: SearchTransection.method,
+          status: SearchTransection.status,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
         let data = response.data;
         setTransectionData(data);

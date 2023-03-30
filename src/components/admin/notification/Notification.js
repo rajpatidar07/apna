@@ -14,6 +14,7 @@ import SAlert from "../common/salert";
 
 const Notification = () => {
   // Declaration of States or valiables :-
+  const token = localStorage.getItem("token");
 
   const [Notificationdata, setNotificationdata] = useState({
     notification_type: "",
@@ -58,7 +59,12 @@ const Notification = () => {
       try {
         axios
           .get(
-            `${process.env.REACT_APP_BASEURL}/notification_template_get?id=${e}`
+            `${process.env.REACT_APP_BASEURL}/notification_template_get?id=${e}`,
+            {
+              headers: {
+                admin_token: token,
+              },
+            }
           )
           .then((response) => {
             setNotificationdata(response.data[0]);
@@ -205,13 +211,21 @@ const Notification = () => {
     } else {
       e.preventDefault();
       axios
-        .post(`${process.env.REACT_APP_BASEURL}/add_notification_template`, {
-          type: Notificationdata.type,
-          notification_type: Notificationdata.notification_type,
-          notification_name: Notificationdata.notification_name,
-          notification_text: Notificationdata.notification_text,
-          status: Notificationdata.status,
-        })
+        .post(
+          `${process.env.REACT_APP_BASEURL}/add_notification_template`,
+          {
+            type: Notificationdata.type,
+            notification_type: Notificationdata.notification_type,
+            notification_name: Notificationdata.notification_name,
+            notification_text: Notificationdata.notification_text,
+            status: Notificationdata.status,
+          },
+          {
+            headers: {
+              admin_token: token,
+            },
+          }
+        )
         .then((response) => {
           setAddAlert(true);
         })
@@ -232,14 +246,22 @@ const Notification = () => {
   const UpdateNotificationHandler = (e) => {
     e.preventDefault();
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/update_notification_template`, {
-        id: Notificationdata.id,
-        type: Notificationdata.type,
-        notification_type: Notificationdata.notification_type,
-        notification_name: Notificationdata.notification_name,
-        notification_text: Notificationdata.notification_text,
-        status: Notificationdata.status,
-      })
+      .put(
+        `${process.env.REACT_APP_BASEURL}/update_notification_template`,
+        {
+          id: Notificationdata.id,
+          type: Notificationdata.type,
+          notification_type: Notificationdata.notification_type,
+          notification_name: Notificationdata.notification_name,
+          notification_text: Notificationdata.notification_text,
+          status: Notificationdata.status,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
         setUpdateAlert(true);
       })
@@ -258,11 +280,19 @@ const Notification = () => {
 
   const fetchNotificationData = () => {
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/notification_template_list`, {
-        type: getusertype,
-        notification_type: getNotificationType,
-        status: getNotificationStatus,
-      })
+      .post(
+        `${process.env.REACT_APP_BASEURL}/notification_template_list`,
+        {
+          type: getusertype,
+          notification_type: getNotificationType,
+          status: getNotificationStatus,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
         // console.log(response);
 
@@ -280,10 +310,18 @@ const Notification = () => {
   const onStatusChange = (e, id) => {
     setchangstatus(e.target.value);
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/notification_template_status`, {
-        status: e.target.value,
-        id: `${id}`,
-      })
+      .put(
+        `${process.env.REACT_APP_BASEURL}/notification_template_status`,
+        {
+          status: e.target.value,
+          id: `${id}`,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
         setapicall(true);
       })
@@ -297,10 +335,18 @@ const Notification = () => {
   const deleteNotification = (id) => {
     console.log("1", id);
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/notification_template_remove`, {
-        is_deleted: 0,
-        id: `${id}`,
-      })
+      .put(
+        `${process.env.REACT_APP_BASEURL}/notification_template_remove`,
+        {
+          is_deleted: 0,
+          id: `${id}`,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
         console.log(response);
         setDeleteAlert(false);

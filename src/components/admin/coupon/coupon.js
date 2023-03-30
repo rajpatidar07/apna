@@ -106,7 +106,11 @@ const Coupon = () => {
     function getCouponList() {
       try {
         axios
-          .get(`${process.env.REACT_APP_BASEURL}/coupon?coupon_id=all`)
+          .get(`${process.env.REACT_APP_BASEURL}/coupon?coupon_id=all`, {
+            headers: {
+              admin_token: token,
+            },
+          })
           .then((response) => {
             let data = response.data.filter((item) => item.is_active === 1);
             setcoupondata(data);

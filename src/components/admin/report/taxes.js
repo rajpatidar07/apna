@@ -52,17 +52,33 @@ const TaxesReport = () => {
   const [location, setLocation] = useState([]);
 
   const fetchData = () => {
+    console.log("from_date------------------------------------" + fromDate);
+    console.log("to_date---------------------------------------" + toDate);
+    console.log(
+      "Previous  Todate---------------------------------------" + prevTodate
+    );
+    console.log(
+      "Previous fromdate---------------------------------------" + prevFromdate
+    );
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/taxes_report`, {
-        from_date: fromDate,
-        to_date: toDate,
-        prev_from_date: prevFromdate,
-        prev_to_date: prevTodate,
-        vendors_id: vendorId,
-        categorys: categoryId,
-        user_locations: location,
-        brand: brandName,
-      })
+      .post(
+        `${process.env.REACT_APP_BASEURL}/taxes_report`,
+        {
+          from_date: fromDate,
+          to_date: toDate,
+          prev_from_date: prevFromdate,
+          prev_to_date: prevTodate,
+          vendors_id: vendorId,
+          categorys: categoryId,
+          user_locations: location,
+          brand: brandName,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
         if (response.data.message == "No_Data") {
           setTaxesError(response.data.message);
@@ -446,19 +462,30 @@ const TaxesReport = () => {
   //----------------------------------------------------+++=++++++ excel--------------------------------------------------->
 
   const columns = [
+    ,
     {
-      name: "GST ",
-      selector: (row) => Number(row.gst).toFixed(2),
+      name: "Order Date ",
+      selector: (row) => moment(row.order_date).format("YYYY-MM-DD"),
       sortable: true,
     },
     {
-      name: "Order Taxes",
-      selector: (row) => Number(row.order_taxes).toFixed(2),
+      name: "Total SGST ",
+      selector: (row) => Number(row.total_sgst).toFixed(2),
+      sortable: true,
+    },
+    {
+      name: "Total CGST ",
+      selector: (row) => Number(row.total_cgst).toFixed(2),
+      sortable: true,
+    },
+    {
+      name: "Total  Taxes",
+      selector: (row) => Number(row.total_gst).toFixed(2),
       sortable: true,
     },
     {
       name: "Order",
-      selector: (row) => row.order_count,
+      selector: (row) => row.id,
       sortable: true,
     },
   ];

@@ -53,7 +53,11 @@ const Featuredproduct = () => {
   const getCategorydatafilter = () => {
     try {
       axios
-        .get(`${process.env.REACT_APP_BASEURL_0}/category?category=all`)
+        .get(`${process.env.REACT_APP_BASEURL_0}/category?category=all`, {
+          headers: {
+            admin_token: token,
+          },
+        })
         .then((response) => {
           let cgory = response.data;
           setfiltercategory(cgory);
@@ -65,7 +69,7 @@ const Featuredproduct = () => {
     try {
       axios
         .post(
-          `${process.env.REACT_APP_BASEURL_0}/vendors`,
+          `${process.env.REACT_APP_BASEURL}/vendors`,
           { vendor_id: "all" },
           {
             headers: { admin_token: `${token}` },
@@ -106,6 +110,7 @@ const Featuredproduct = () => {
           }
         )
         .then((response) => {
+          console.log("data----" + JSON.stringify(response.data));
           setId(response.data[0].id);
           console.log(response.data[0].start_date);
           for (let i = 0; i < response.data.length; i++) {

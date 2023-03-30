@@ -81,7 +81,7 @@ const StockReport = () => {
       sortable: true,
     },
   ];
-
+  const token = localStorage.getItem("token");
   const [filterchange, setFilterchange] = useState("");
   const [getTableStock, setGetTableStock] = useState([]);
   const [apicall, setapicall] = useState(false);
@@ -106,9 +106,17 @@ const StockReport = () => {
 
   const fetchData = () => {
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/stock_report`, {
-        values: StockStatus,
-      })
+      .post(
+        `${process.env.REACT_APP_BASEURL}/stock_report`,
+        {
+          values: StockStatus,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
         if (response.data.message === "No_Data") {
           setGetTableStock([]);

@@ -55,17 +55,25 @@ const CategoryReport = () => {
 
   const fetchData = () => {
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/categories_report`, {
-        from_date: fromDate,
-        to_date: toDate,
-        prev_from_date: prevFromdate,
-        prev_to_date: prevTodate,
-        parent_category: categoryId,
-        vendors_id: vendorId,
+      .post(
+        `${process.env.REACT_APP_BASEURL}/categories_report`,
+        {
+          from_date: fromDate,
+          to_date: toDate,
+          prev_from_date: prevFromdate,
+          prev_to_date: prevTodate,
+          parent_category: categoryId,
+          vendors_id: vendorId,
 
-        user_locations: location,
-        brand: brandName,
-      })
+          user_locations: location,
+          brand: brandName,
+        },
+        {
+          headers: {
+            admin_token: token,
+          },
+        }
+      )
       .then((response) => {
         if (response.data.message == "no_data") {
           setCategoryError(response.data.message);
