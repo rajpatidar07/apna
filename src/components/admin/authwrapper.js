@@ -5,7 +5,7 @@ const AuthWrapper = () => {
   const location = useLocation(); // current location
 
   const adminLogged = localStorage.getItem("token");
-  const VendorLogged = localStorage.getItem("vendor_token");
+  // const VendorLogged = localStorage.getItem("vendor_token");
 
   return adminLogged === null ||
     adminLogged === "" ||

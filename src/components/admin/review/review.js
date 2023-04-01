@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import Input from "../common/input";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import DataTable from "react-data-table-component";
@@ -11,7 +10,6 @@ import axios from "axios";
 import moment from "moment";
 import SAlert from "../common/salert";
 import { AiOutlineStar } from "react-icons/ai";
-import { AiFillStar } from "react-icons/ai";
 
 const Review = () => {
   const formRef = useRef();
@@ -63,7 +61,7 @@ const Review = () => {
 
         setapicall(false);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
     setShow(true);
@@ -106,7 +104,7 @@ const Review = () => {
           setapicall(false);
           setsearcherror(false);
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
     }
@@ -151,7 +149,7 @@ const Review = () => {
             },
           }
         )
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
       setValidated(false);
@@ -176,7 +174,7 @@ const Review = () => {
         setreviewdata(response.data);
         setapicall(false);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }, [apicall]);
@@ -230,10 +228,10 @@ const Review = () => {
             row.status === "approve"
               ? "success"
               : row.status === "reject"
-              ? "danger"
-              : row.status === "pending"
-              ? "warning"
-              : null
+                ? "danger"
+                : row.status === "pending"
+                  ? "warning"
+                  : null
           }
         >
           {row.status}

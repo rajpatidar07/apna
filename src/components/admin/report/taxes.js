@@ -52,14 +52,7 @@ const TaxesReport = () => {
   const [location, setLocation] = useState([]);
 
   const fetchData = () => {
-    console.log("from_date------------------------------------" + fromDate);
-    console.log("to_date---------------------------------------" + toDate);
-    console.log(
-      "Previous  Todate---------------------------------------" + prevTodate
-    );
-    console.log(
-      "Previous fromdate---------------------------------------" + prevFromdate
-    );
+   
     axios
       .post(
         `${process.env.REACT_APP_BASEURL}/taxes_report`,
@@ -93,7 +86,7 @@ const TaxesReport = () => {
           setapicall(false);
         }
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -669,9 +662,9 @@ const TaxesReport = () => {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
                       {TaxesError == "No_Data" ||
-                      Taxesreport.order_tax == null ||
-                      Taxesreport.order_tax == undefined ||
-                      Taxesreport.order_tax == "" ? (
+                        Taxesreport.order_tax == null ||
+                        Taxesreport.order_tax == undefined ||
+                        Taxesreport.order_tax == "" ? (
                         <h3>₹0</h3>
                       ) : (
                         <h3>₹{Taxesreport.order_tax.toFixed(2)}</h3>
@@ -727,9 +720,9 @@ const TaxesReport = () => {
                       )}
 
                       {TaxesError == "no_data" ||
-                      PrevTaxesreport.prev_order_tax == null ||
-                      PrevTaxesreport.prev_order_tax == undefined ||
-                      PrevTaxesreport.prev_order_tax == "" ? (
+                        PrevTaxesreport.prev_order_tax == null ||
+                        PrevTaxesreport.prev_order_tax == undefined ||
+                        PrevTaxesreport.prev_order_tax == "" ? (
                         <p className="h5">₹0</p>
                       ) : (
                         <p className="h5">
@@ -759,9 +752,9 @@ const TaxesReport = () => {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
                       {TaxesError == "No_Data" ||
-                      Taxesreport.order_count == null ||
-                      Taxesreport.order_count == undefined ||
-                      Taxesreport.order_count == "" ? (
+                        Taxesreport.order_count == null ||
+                        Taxesreport.order_count == undefined ||
+                        Taxesreport.order_count == "" ? (
                         <h3>0</h3>
                       ) : (
                         <h3>{Taxesreport.order_count}</h3>
@@ -818,9 +811,9 @@ const TaxesReport = () => {
                       )}
 
                       {TaxesError == "no_data" ||
-                      PrevTaxesreport.prev_order_count == null ||
-                      PrevTaxesreport.prev_order_count == undefined ||
-                      PrevTaxesreport.prev_order_count == "" ? (
+                        PrevTaxesreport.prev_order_count == null ||
+                        PrevTaxesreport.prev_order_count == undefined ||
+                        PrevTaxesreport.prev_order_count == "" ? (
                         <p className="h5"> 0</p>
                       ) : (
                         <p className="h5">

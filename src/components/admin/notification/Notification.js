@@ -70,7 +70,7 @@ const Notification = () => {
             setNotificationdata(response.data[0]);
             setId(id);
           });
-      } catch (err) {}
+      } catch (err) { }
     }
 
     setShow(e);
@@ -124,19 +124,19 @@ const Notification = () => {
             row.status === "active"
               ? "badge bg-success"
               : row.status === "pending"
-              ? "badge bg-primary"
-              : row.status === "hold"
-              ? "badge bg-danger"
-              : "badge bg-dark"
+                ? "badge bg-primary"
+                : row.status === "hold"
+                  ? "badge bg-danger"
+                  : "badge bg-dark"
           }
         >
           {row.status === "pending"
             ? "Pending"
             : row.status === "active"
-            ? "Active"
-            : row.status === "hold"
-            ? "Hold"
-            : "No status"}
+              ? "Active"
+              : row.status === "hold"
+                ? "Hold"
+                : "No status"}
         </span>
       ),
       sortable: true,
@@ -229,7 +229,7 @@ const Notification = () => {
         .then((response) => {
           setAddAlert(true);
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
 
@@ -265,7 +265,7 @@ const Notification = () => {
       .then((response) => {
         setUpdateAlert(true);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
 
@@ -294,13 +294,12 @@ const Notification = () => {
         }
       )
       .then((response) => {
-        // console.log(response);
 
         let data = response.data.filter((item) => item.is_deleted === 1);
         setGetNotificationdata(data);
         setapicall(false);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -325,7 +324,7 @@ const Notification = () => {
       .then((response) => {
         setapicall(true);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -333,7 +332,6 @@ const Notification = () => {
   //To delete the Notification :-
 
   const deleteNotification = (id) => {
-    console.log("1", id);
     axios
       .put(
         `${process.env.REACT_APP_BASEURL}/notification_template_remove`,
@@ -352,7 +350,7 @@ const Notification = () => {
         setDeleteAlert(false);
         setapicall(true);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -360,7 +358,6 @@ const Notification = () => {
   //To mshow alert delete box :-
 
   const ShowDeleteAlert = (id) => {
-    console.log(id);
     setId(id);
     setDeleteAlert(true);
   };

@@ -27,7 +27,6 @@ const InvoiceList = () => {
   let token = localStorage.getItem("token");
 
   const InvoiceCheck = (id) => {
-    // console.log("idd-----" + JSON.stringify(id));
     localStorage.setItem("invoiceid", id[1]);
     localStorage.setItem("invoice_no", id[0]);
     if (id[0] == undefined || id[0] == "" || id[0] == null) {
@@ -50,7 +49,6 @@ const InvoiceList = () => {
 
             setInvoice(data);
             setapicall(false);
-            // console.log(response);
           });
       } catch (err) {
         console.log(err);
@@ -80,7 +78,6 @@ const InvoiceList = () => {
     ) {
       setsearcherror(true);
     } else {
-      console.log("serch number---" + SearchInvo.search);
       axios
         .post(
           `${process.env.REACT_APP_BASEURL_0}/invoice_search`,

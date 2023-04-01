@@ -132,7 +132,7 @@ function Banner() {
     setAlert(true);
   };
 
-  const handleClick = () => {};
+  const handleClick = () => { };
 
   const hideAlert = () => {
     axios.put(`${process.env.REACT_APP_BASEURL}/banner_delete`, {
@@ -165,7 +165,7 @@ function Banner() {
               setBannerId(banner_id);
               setImgArray(response.data[0].image);
             });
-        } catch (err) {}
+        } catch (err) { }
       }
       getBanner();
       setShow(true);
@@ -192,9 +192,9 @@ function Banner() {
   const handleFormChange = (e) => {
     setAddBanner({ ...addBanner, [e.target.name]: e.target.value });
   };
-  const handleBannerChange = (e) => {
-    setImageBanner({ ...imageBanner, [e.target.name]: e.target.value });
-  };
+  // const handleBannerChange = (e) => {
+  //   setImageBanner({ ...imageBanner, [e.target.name]: e.target.value });
+  // };
 
   const handleClose = () => {
     formRef.current.reset();
@@ -377,7 +377,7 @@ function Banner() {
                       aria-label="Search by location"
                       className="mb-3 aos_input"
                       controlId="validationCustom01"
-                      onChange={(e) => handleBannerChange(e)}
+                      onChange={(e) => handleFormChange(e)}
                       placeholder="Add banner_location"
                       name={"banner_location"}
                     >
@@ -397,14 +397,14 @@ function Banner() {
                       </option>
                     </Form.Select>
 
-                    {imageBanner.banner_location === "home_page_left_side" ? (
+                    {addBanner.banner_location === "home_page_left_side" ? (
                       <p
                         className="mt-2 ms-2 text-danger text-center fs-6"
                         type="invalid"
                       >
                         Select Image This (height-738px * width-738px)
                       </p>
-                    ) : imageBanner.banner_location ===
+                    ) : addBanner.banner_location ===
                       "home_page_left_side(1)" ? (
                       <p
                         className="mt-2 ms-2 text-danger text-center fs-6"
@@ -412,7 +412,7 @@ function Banner() {
                       >
                         Select Image This (height-356px * width-738px)
                       </p>
-                    ) : imageBanner.banner_location ===
+                    ) : addBanner.banner_location ===
                       "home_page_right_side(1)" ? (
                       <p
                         className="mt-2 ms-2 text-danger text-center fs-6"
@@ -420,7 +420,7 @@ function Banner() {
                       >
                         Select Image This (height-356px * width-356px)
                       </p>
-                    ) : imageBanner.banner_location ===
+                    ) : addBanner.banner_location ===
                       "home_page_right_side(2)" ? (
                       <p
                         className="mt-2 ms-2 text-danger text-center fs-6"

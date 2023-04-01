@@ -115,7 +115,7 @@ const VendorsList = () => {
         setLoading(false);
         setapicall(false);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -169,17 +169,17 @@ const VendorsList = () => {
           <br />
           <b>Profile:</b>{" "}
           {row.id == null ||
-          row.owner_name == null ||
-          row.shop_name == null ||
-          row.mobile == null ||
-          row.email == null ||
-          row.shop_address == null ||
-          row.gstn == null ||
-          row.geolocation == null ||
-          row.store_type == null ||
-          row.document_name == null ||
-          row.social_media_links == null ||
-          row.shop_logo == null ? (
+            row.owner_name == null ||
+            row.shop_name == null ||
+            row.mobile == null ||
+            row.email == null ||
+            row.shop_address == null ||
+            row.gstn == null ||
+            row.geolocation == null ||
+            row.store_type == null ||
+            row.document_name == null ||
+            row.social_media_links == null ||
+            row.shop_logo == null ? (
             <span className="text-danger">
               <b>Not Complete</b>
             </span>
@@ -223,31 +223,31 @@ const VendorsList = () => {
             row.status === "pending"
               ? "badge bg-warning"
               : row.status === "approved"
-              ? "badge bg-success"
-              : row.status === "blocked"
-              ? "badge bg-danger"
-              : row.status === "in progress"
-              ? "badge bg-primary"
-              : row.status === "incomplete"
-              ? "badge bg-info"
-              : row.status === "return"
-              ? "badge bg-secondary"
-              : "badge bg-dark"
+                ? "badge bg-success"
+                : row.status === "blocked"
+                  ? "badge bg-danger"
+                  : row.status === "in progress"
+                    ? "badge bg-primary"
+                    : row.status === "incomplete"
+                      ? "badge bg-info"
+                      : row.status === "return"
+                        ? "badge bg-secondary"
+                        : "badge bg-dark"
           }
         >
           {row.status === "pending"
             ? "Pending"
             : row.status === "approved"
-            ? "Approved"
-            : row.status === "blocked"
-            ? "Blocked"
-            : row.status === "in progress"
-            ? "In Progress"
-            : row.status === "incomplete"
-            ? "In Complete"
-            : row.status === "return"
-            ? "Return"
-            : "return"}
+              ? "Approved"
+              : row.status === "blocked"
+                ? "Blocked"
+                : row.status === "in progress"
+                  ? "In Progress"
+                  : row.status === "incomplete"
+                    ? "In Complete"
+                    : row.status === "return"
+                      ? "Return"
+                      : "return"}
         </span>
       ),
       sortable: true,
@@ -327,7 +327,7 @@ const VendorsList = () => {
         setLoading(false);
         setapicall(false);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }, [apicall]);
@@ -366,7 +366,6 @@ const VendorsList = () => {
     setaddtag("");
     setDocnameArray("");
 
-    // console.log(e);
     if (e === "add") {
       setShow(e);
     }
@@ -374,7 +373,6 @@ const VendorsList = () => {
       setCall(true);
 
       axios
-        // .get(`${process.env.REACT_APP_BASEURL}/vendors?id=${e}`, addvendordata)
         .post(
           `${process.env.REACT_APP_BASEURL}/vendors`,
           {
@@ -399,7 +397,7 @@ const VendorsList = () => {
           setDocnameArray(strCopy);
           setapicall(false);
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
       setShow(e);
@@ -455,7 +453,7 @@ const VendorsList = () => {
           setapicall(true);
         }
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -501,7 +499,6 @@ const VendorsList = () => {
 
         const [first, ...rest] = encoded.base64.split(",");
         const [nameimg, ext] = encoded.name.split(".");
-        console.log("------" + ext);
         const vendorimg = rest.join("-");
         let imar = {
           vendor_id: `${vendorID}`,
@@ -533,7 +530,7 @@ const VendorsList = () => {
             onImgView(vendorID);
             setDocerror("");
           })
-          .catch(function(error) {
+          .catch(function (error) {
             console.log(error);
           });
       } else {
@@ -553,7 +550,7 @@ const VendorsList = () => {
       .then((response) => {
         onImgView(vendor_id);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -564,11 +561,9 @@ const VendorsList = () => {
         `${process.env.REACT_APP_BASEURL}/vendor_documents_get?vendor_id=${vendorID}`
       )
       .then((response) => {
-        //  console.log("response--------------------"+JSON.stringify(response.data))
         setnewImageUrls(response.data);
-        //  console.log("new img length------"+((response.data.length)))
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -580,17 +575,13 @@ const VendorsList = () => {
   const oncustomheadChange = (e) => {
     setSocialLink(false);
     setheaderval(e.target.value);
-    // setAddCustom((AddCustom) =>{ return {...AddCustom,  e.target.value : e.target.value}});
   };
-  // console.log("checkkkk"+JSON.stringify(AddCustom))
 
   const oncustomdescChange = (e) => {
     setSocialLink(false);
     setdescval(e.target.value);
   };
-  // console.log("--------uuuuuuu-------"+JSON.stringify(AddCustom))
 
-  // const handleAClick = () => {
   useEffect(() => {
     if (headerval !== "" && descval !== "") {
       setcustomarray((customarray) => [...customarray, AddCustom]);
@@ -599,7 +590,6 @@ const VendorsList = () => {
       setAddCustom("");
       // setcustomValidated(false);
       setsCall(false);
-      // console.log("--------hello-------"+JSON.stringify(customarray))
     }
   }, [scall]);
 
@@ -616,7 +606,6 @@ const VendorsList = () => {
       setsCall(true);
     }
   };
-  // console.log("--------customarray-------"+JSON.stringify(customarray))
 
   const handleRemoveClick = (e) => {
     setcustomarray(customarray.filter((item) => item !== e));
@@ -631,7 +620,7 @@ const VendorsList = () => {
   // end social media link
 
   let shoplogo = `${process.env.REACT_APP_BASEURL}/${addvendordata.shop_logo}`;
-  const handleClick = () => {};
+  const handleClick = () => { };
 
   const AddVendorClick = (e) => {
     e.preventDefault();
@@ -697,7 +686,6 @@ const VendorsList = () => {
           },
         })
         .then((response) => {
-          console.log("vendor data----" + JSON.stringify(response));
           if (response.data.message === "vendor already exist") {
             setCustomValidation("alreadyexist");
             setLoading(false);
@@ -717,7 +705,7 @@ const VendorsList = () => {
             setDocnameArray("");
           }
         })
-        .catch(function(error) {
+        .catch(function (error) {
           setLoading(false);
           setErrorAddAlert(true);
           console.log(error);
@@ -819,7 +807,7 @@ const VendorsList = () => {
             setaddvendordata(vendorObject);
           }
         })
-        .catch(function(error) {
+        .catch(function (error) {
           setErrorUpdateAlert(true);
           console.log(error);
         });
@@ -1006,8 +994,8 @@ const VendorsList = () => {
                         // min={1}
                         placeholder="Mobile"
                         name={"mobile"}
-                        // maxLength={10}
-                        // minLength={10}
+                      // maxLength={10}
+                      // minLength={10}
                       />
                       {customValidation === "MobileEmpty" ? (
                         <span className="text-danger">
@@ -1254,11 +1242,10 @@ const VendorsList = () => {
                         ) : null}
                       </InputGroup>
 
-                      {/* {console.log("document array--" + Docnamearray)} */}
                       {Docnamearray === undefined ||
-                      Docnamearray === null ||
-                      Docnamearray === "" ||
-                      Docnamearray.length === 0 ? null : (
+                        Docnamearray === null ||
+                        Docnamearray === "" ||
+                        Docnamearray.length === 0 ? null : (
                         <div className="d-flex align-items-center tagselectbox mt-2">
                           {Docnamearray.map((seotags, i) => {
                             return (
@@ -1269,8 +1256,8 @@ const VendorsList = () => {
                                     bg="success"
                                   >
                                     {seotags === null ||
-                                    seotags === undefined ||
-                                    seotags === '""'
+                                      seotags === undefined ||
+                                      seotags === '""'
                                       ? null
                                       : seotags}
 
@@ -1368,60 +1355,60 @@ const VendorsList = () => {
                           </tr>
                           {customarray
                             ? (customarray || []).map((variantdata, i) => {
-                                let v = JSON.stringify(variantdata);
+                              let v = JSON.stringify(variantdata);
 
-                                let st = v.split(":");
-                                let pro = st[0].replace(/[{}]/g, "");
-                                let link = st[1].replace(/[{}]/g, "");
+                              let st = v.split(":");
+                              let pro = st[0].replace(/[{}]/g, "");
+                              let link = st[1].replace(/[{}]/g, "");
 
-                                return (
-                                  <tr className="">
-                                    <td className=" text-center">
-                                      <InputGroup className="">
-                                        <Form.Control
-                                          value={JSON.parse(pro)}
-                                          type="text"
-                                          sm="9"
-                                          min={"1"}
-                                          onChange={oncustomheadChange}
-                                          name={"custom_input_header"}
-                                          required
-                                        />
-                                      </InputGroup>
-                                    </td>
-                                    <td className="text-center">
-                                      <InputGroup className="">
-                                        <Form.Control
-                                          required
-                                          value={JSON.parse(link)}
-                                          name={"custom_input_desc"}
-                                          type="text"
-                                          sm="9"
-                                          min={"1"}
-                                          onChange={oncustomdescChange}
-                                          onKeyPress={(event) => {
-                                            if (event.key === "Enter") {
-                                              handleAddClick();
-                                            }
-                                          }}
-                                        />
-                                      </InputGroup>
-                                    </td>
-                                    <td className="">
-                                      <Button
-                                        variant="text-danger"
-                                        className="addcategoryicon text-danger"
-                                        onClick={() =>
-                                          handleRemoveClick(variantdata)
-                                        }
-                                        size="sm"
-                                      >
-                                        &times;
-                                      </Button>
-                                    </td>
-                                  </tr>
-                                );
-                              })
+                              return (
+                                <tr className="">
+                                  <td className=" text-center">
+                                    <InputGroup className="">
+                                      <Form.Control
+                                        value={JSON.parse(pro)}
+                                        type="text"
+                                        sm="9"
+                                        min={"1"}
+                                        onChange={oncustomheadChange}
+                                        name={"custom_input_header"}
+                                        required
+                                      />
+                                    </InputGroup>
+                                  </td>
+                                  <td className="text-center">
+                                    <InputGroup className="">
+                                      <Form.Control
+                                        required
+                                        value={JSON.parse(link)}
+                                        name={"custom_input_desc"}
+                                        type="text"
+                                        sm="9"
+                                        min={"1"}
+                                        onChange={oncustomdescChange}
+                                        onKeyPress={(event) => {
+                                          if (event.key === "Enter") {
+                                            handleAddClick();
+                                          }
+                                        }}
+                                      />
+                                    </InputGroup>
+                                  </td>
+                                  <td className="">
+                                    <Button
+                                      variant="text-danger"
+                                      className="addcategoryicon text-danger"
+                                      onClick={() =>
+                                        handleRemoveClick(variantdata)
+                                      }
+                                      size="sm"
+                                    >
+                                      &times;
+                                    </Button>
+                                  </td>
+                                </tr>
+                              );
+                            })
                             : null}
                         </tbody>
                       </Table>

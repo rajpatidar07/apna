@@ -129,7 +129,6 @@ const CategoryList = () => {
             setCateName(false);
             setCateType(false);
             setImagePath(response.data[0].image);
-            console.log(response);
             const arr = data.all_parent_id.split(",");
             if (arr[0] === "0" && arr.length === 1) {
             } else {
@@ -149,10 +148,7 @@ const CategoryList = () => {
                           setSubCategory(response.data);
                           setCateName(false);
                           setCateType(false);
-                          console.log(
-                            "subcat--------0000-----" +
-                              JSON.stringify(response.data)
-                          );
+                         
                         })
                         .catch(function (error) {
                           console.log(error);
@@ -167,10 +163,7 @@ const CategoryList = () => {
                           setchildCategory(response.data);
                           setCateName(false);
                           setCateType(false);
-                          console.log(
-                            "childcat-------------" +
-                              JSON.stringify(response.data)
-                          );
+                         
                         })
                         .catch(function (error) {
                           console.log(error);
@@ -180,10 +173,7 @@ const CategoryList = () => {
                       setCategoryEditChildparent(data.category_name);
                       setCateName(false);
                       setCateType(false);
-                      console.log(
-                        "grandfchildcat-------------" +
-                          JSON.stringify(response.data)
-                      );
+                     
                     }
                   })
                   .catch(function (error) {
@@ -201,7 +191,7 @@ const CategoryList = () => {
             setShow(e);
             setCategoryEditData(data);
           });
-      } catch (err) {}
+      } catch (err) { }
     }
   };
 
@@ -220,7 +210,6 @@ const CategoryList = () => {
   /*<---- Onchange function of category sub category---->*/
   const categoryFormChange = (e, id) => {
     setIndVal(e.target.value);
-    console.log(indVal);
     setScategory({ ...scategory, [e.target.name]: e.target.value });
   };
 
@@ -435,7 +424,6 @@ const CategoryList = () => {
     e.preventDefault();
     // const regex_spc = /^[^']+$/;
     // let spc = regex_spc.test(newName);
-    // console.log(num, spc);
     if (newName === "" /*|| num === false  || spc === false*/) {
       setCateName(true);
     } else if (num === false) {
@@ -594,7 +582,7 @@ const CategoryList = () => {
 
     setapicall(true);
   };
-  const handleClick = () => {};
+  const handleClick = () => { };
   const navigate = useNavigate();
 
   const result1 = searchdata.filter(
@@ -817,13 +805,13 @@ const CategoryList = () => {
                         onChange={(e, id) => categoryFormChange(e, id)}
                         name={"category_name"}
                         placeholder={"Select by category"}
-                        // value={indVal}
+                      // value={indVal}
                       >
                         <option value={"0"}>Select Parent Category</option>
                         {category.map((cdata, i) => {
                           return cdata.id === CategoryEditdata.id &&
                             cdata.category_name ===
-                              CategoryEditdata.category_name ? null : (
+                            CategoryEditdata.category_name ? null : (
                             <option
                               value={cdata.id}
                               key={i}
@@ -844,9 +832,9 @@ const CategoryList = () => {
                     </Form.Group>
                   </div>
                   {indVal === "0" ||
-                  subCategory[0] === "" ||
-                  subCategory[0] === null ||
-                  subCategory[0] === undefined ? null : (
+                    subCategory[0] === "" ||
+                    subCategory[0] === null ||
+                    subCategory[0] === undefined ? null : (
                     <div className="col-md-6">
                       <Form.Group
                         className="mb-3 aos_input"
@@ -858,17 +846,15 @@ const CategoryList = () => {
                           className="adminselectbox"
                           onChange={(e, id) => categoryFormChange(e, id)}
                           name={"sub_category"}
-                          // value={CategoryEditdata.category_name}
+                        // value={CategoryEditdata.category_name}
                         >
                           <option value="1">Select Sub category</option>
                           {subCategory.map((cdata, i) => {
-                            // console.log(
-                            //   CategoryEditSubparent + "CategoryEditSubparent"
-                            // );
+                           
 
                             return cdata.id === CategoryEditdata.id &&
                               cdata.category_name ===
-                                CategoryEditdata.category_name ? null : (
+                              CategoryEditdata.category_name ? null : (
                               <option
                                 value={cdata.id}
                                 key={i}
@@ -891,11 +877,11 @@ const CategoryList = () => {
                   )}
 
                   {indVal === "1" ||
-                  indVal === "" ||
-                  indVal === "0" ||
-                  childCategory[0] === "" ||
-                  childCategory[0] === null ||
-                  childCategory[0] === undefined ? null : (
+                    indVal === "" ||
+                    indVal === "0" ||
+                    childCategory[0] === "" ||
+                    childCategory[0] === null ||
+                    childCategory[0] === undefined ? null : (
                     <div className="col-md-6">
                       <Form.Group
                         className="mb-3 aos_input"
@@ -913,13 +899,13 @@ const CategoryList = () => {
                           {childCategory.map((cdata, i) => {
                             return cdata.id === CategoryEditdata.id &&
                               cdata.category_name ===
-                                CategoryEditdata.category_name ? null : (
+                              CategoryEditdata.category_name ? null : (
                               <option
                                 value={cdata.id}
                                 key={i}
                                 selected={
                                   CategoryEditChildparent ===
-                                  cdata.category_name
+                                    cdata.category_name
                                     ? true
                                     : false
                                 }
@@ -951,7 +937,7 @@ const CategoryList = () => {
                           onChange={(e) => saveFile(e)}
                           name={"category_icon"}
                           accept="image/png,image/jpeg,image/jpg"
-                          // value={newImg}
+                        // value={newImg}
                         />
                       </div>
                       {newImg === "" || newImg === "no image" ? null : (

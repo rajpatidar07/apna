@@ -124,7 +124,7 @@ const StockReport = () => {
           setGetTableStock(response.data);
         }
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };

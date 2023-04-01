@@ -52,7 +52,6 @@ const CouponReport = () => {
   const [brandName, setBrandName] = useState([]);
   const [location, setLocation] = useState([]);
 
-  // console.log("------------------" + JSON.stringify(tabledate));
 
   const TimeChange = (e) => {
     setFilterchange(e.target.value);
@@ -244,7 +243,7 @@ const CouponReport = () => {
           setTabledata(response.data[2]);
         }
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -665,8 +664,8 @@ const CouponReport = () => {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
                       {couponError == "no_data" ||
-                      getCoupon.orders_count == null ||
-                      getCoupon.orders_count == undefined ? (
+                        getCoupon.orders_count == null ||
+                        getCoupon.orders_count == undefined ? (
                         <h3>0</h3>
                       ) : (
                         <h3>{getCoupon.orders_count}</h3>
@@ -723,9 +722,9 @@ const CouponReport = () => {
                       )}
 
                       {couponError == "no_data" ||
-                      PrevCouponreport.prev_orders_count == null ||
-                      PrevCouponreport.prev_orders_count == undefined ||
-                      PrevCouponreport.prev_orders_count == "" ? (
+                        PrevCouponreport.prev_orders_count == null ||
+                        PrevCouponreport.prev_orders_count == undefined ||
+                        PrevCouponreport.prev_orders_count == "" ? (
                         <p className="h5"> 0</p>
                       ) : (
                         <p className="h5">
@@ -749,9 +748,9 @@ const CouponReport = () => {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
                       {couponError == "no_data" ||
-                      getCoupon.discount_amount == null ||
-                      getCoupon.discount_amount == undefined ||
-                      getCoupon.discount_amount == "" ? (
+                        getCoupon.discount_amount == null ||
+                        getCoupon.discount_amount == undefined ||
+                        getCoupon.discount_amount == "" ? (
                         <h3>₹0</h3>
                       ) : (
                         <h3>{getCoupon.discount_amount.toFixed(2)}</h3>
@@ -807,9 +806,9 @@ const CouponReport = () => {
                       )}
 
                       {couponError == "no_data" ||
-                      PrevCouponreport.prev_discount_amount == null ||
-                      PrevCouponreport.prev_discount_amount == undefined ||
-                      PrevCouponreport.prev_discount_amount == "" ? (
+                        PrevCouponreport.prev_discount_amount == null ||
+                        PrevCouponreport.prev_discount_amount == undefined ||
+                        PrevCouponreport.prev_discount_amount == "" ? (
                         <p className="h5"> ₹0</p>
                       ) : (
                         <p className="h5">
@@ -829,7 +828,7 @@ const CouponReport = () => {
         {/* graph */}
 
         {getCoupon.discount_amount != undefined ||
-        getCoupon.orders_count != undefined ? (
+          getCoupon.orders_count != undefined ? (
           <HighchartsReact highcharts={Highcharts} options={options} />
         ) : null}
 

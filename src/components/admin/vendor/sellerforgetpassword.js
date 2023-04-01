@@ -12,10 +12,7 @@ const SellerForgertPassword = (props) => {
 
   const [emailerror, setemailerror] = useState("");
 
-  const navigate = useNavigate();
-  const [error, setError] = useState(true);
-  const [loginemailerror, setLoginemailerror] = useState(true);
-  const [vendorstatus, setvendorstatus] = useState(false);
+ 
   // const { state } = useLocation();
 
   const handlefORGOTFormChange = (e) => {

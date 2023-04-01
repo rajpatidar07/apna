@@ -1,6 +1,6 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
-import {Fragment} from 'react';
+import { Fragment } from 'react';
 const AddAdmin = (props) => {
   return (
     <div>

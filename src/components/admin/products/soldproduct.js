@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
@@ -10,11 +10,8 @@ import SAlert from "../common/salert";
 import Loader from "../common/loader";
 
 const Soldproduct = () => {
-  const formRef = useRef();
-  const handleAlert = () => setAlert(true);
-  const hideAlert = () => setAlert(false);
-  const [Alert, setAlert] = useState(false);
-  const handleClick = () => {};
+ 
+  const handleClick = () => { };
   let token = localStorage.getItem("token");
   const [show, setShow] = useState(false);
   const [id, setId] = useState("");
@@ -33,7 +30,7 @@ const Soldproduct = () => {
     brand: "",
   });
   const [customvalidation, setCustomvalidation] = useState(false);
-  // console.log("*****************----------" + JSON.stringify(solddata));
+  
   const closeUpdateAlert = () => {
     setUpdateAlert(false);
   };
@@ -46,7 +43,7 @@ const Soldproduct = () => {
           let cgory = response.data;
           setfiltercategory(cgory);
         });
-    } catch (err) {}
+    } catch (err) { }
   };
   /*<---vendor list api---> */
   const getVendorData = () => {
@@ -64,7 +61,7 @@ const Soldproduct = () => {
 
           const result = cgory.filter(
             (thing, index, self) =>
-              index === self.findIndex((t) => t.shop_name == thing.shop_name)
+              index === self.findIndex((t) => t.shop_name === thing.shop_name)
           );
           const result1 = result.filter(
             (item) => item.status === "approved" || item.status === "active"
@@ -335,7 +332,7 @@ const Soldproduct = () => {
   };
 
   const OnProductQutUpdate = (e) => {
-    console.log("---dd" + productData.quantity);
+    
     if (
       Number(productData.quantity) > 10000 ||
       Number(productData.quantity) <= 0
@@ -348,7 +345,7 @@ const Soldproduct = () => {
           productData
         )
         .then((response) => {
-          let data = response.data;
+          // let data = response.data;
           setCustomvalidation("");
           setapicall(true);
           setShow(false);

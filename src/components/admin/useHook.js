@@ -60,14 +60,12 @@ const useHook = (callback) => {
   // validation function
 
   const customValidates = (field, value) => {
-    console.log("---field" + field + "value" + value);
     switch (field) {
       case "admin_email":
         let passregex =
           /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z]{2,4})+$/;
         let checkpass = passregex.test(value);
         if (value === "") {
-          console.log("-------------------------------------------");
           setLoginerror({
             ...loginerror,
             field: "Please Enter Correct Email",
@@ -78,7 +76,6 @@ const useHook = (callback) => {
         break;
       case "admin_password":
         if (value === "") {
-          console.log("---------------yyy----------------------------");
 
           setLoginerror({
             ...loginerror,

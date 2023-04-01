@@ -205,24 +205,24 @@ const Complaint = () => {
             row.status_ === "solved"
               ? "badge bg-success"
               : row.status_ === "failed"
-              ? "badge bg-danger"
-              : row.status_ === "pending"
-              ? "badge bg-warning"
-              : row.status_ === "proccess"
-              ? "badge bg-info"
-              : null
+                ? "badge bg-danger"
+                : row.status_ === "pending"
+                  ? "badge bg-warning"
+                  : row.status_ === "proccess"
+                    ? "badge bg-info"
+                    : null
           }
         >
           {/* {row.status_} */}
           {row.status_ === "solved"
             ? "Solved"
             : row.status_ === "pending"
-            ? "pending"
-            : row.status_ === "proccess"
-            ? "Processing"
-            : row.status_ === "failed"
-            ? "Failed"
-            : null}
+              ? "pending"
+              : row.status_ === "proccess"
+                ? "Processing"
+                : row.status_ === "failed"
+                  ? "Failed"
+                  : null}
         </span>
       ),
       sortable: true,

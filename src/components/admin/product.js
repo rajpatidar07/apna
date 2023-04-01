@@ -3,13 +3,12 @@ import React, { useEffect, useState, useRef } from "react";
 import Col from "react-bootstrap/Col";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { Badge, Collapse } from "react-bootstrap";
+import { Badge } from "react-bootstrap";
 import MainButton from "./common/button";
 import Modal from "react-bootstrap/Modal";
 import Iconbutton from "./common/iconbutton";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
-import { MdOutlineEdit, MdArrowDropDownCircle } from "react-icons/md";
 import { RiImageAddLine } from "react-icons/ri";
 import InputGroup from "react-bootstrap/InputGroup";
 import VariationJson from "./json/variation";
@@ -17,13 +16,10 @@ import CategoryJson from "./json/categorytype";
 import Table from "react-bootstrap/Table";
 import FileInput from "./setting/FileInput";
 import ImageCropper from "./setting/ImageCropper";
-import Accordion from "react-bootstrap/Accordion";
 import {
   AiOutlinePlus,
   AiOutlineCloudUpload,
-  AiOutlineEdit,
 } from "react-icons/ai";
-import { IoFilter } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
@@ -37,7 +33,6 @@ import BrandJson from "./json/BrandJson";
 import { downloadExcel } from "react-export-table-to-excel";
 import productstatus from "../admin/json/Status";
 import Loader from "./common/loader";
-let categoryArray = [];
 let encoded;
 let ImgObj = [];
 
@@ -71,7 +66,7 @@ function Product() {
     },
     language: "en",
   };
-  
+
   const navigate = useNavigate();
   let [searcherror, setsearcherror] = useState(false);
   const [open, setOpen] = useState(false);
@@ -116,7 +111,6 @@ function Product() {
   const [validated, setValidated] = useState(false);
   const [customvalidated, setcustomValidated] = useState(false);
   const [modalshow, setmodalshow] = useState(false);
-  const [seoarray, setseoArray] = useState([]);
   const [unitValidated, setunitValidated] = useState(false);
   const [varietyUnitvalidation, setVarietyUnitvalidation] = useState("");
   var veriantData = {
@@ -139,7 +133,7 @@ function Product() {
   const [totaltax, settotaltax] = useState("");
   const [variantarray, setvariantarray] = useState(veriantData);
   const [variantmainarray, setvariantmainarray] = useState([]);
-  const [productvariantarray, setproductvariantarray] = useState(veriantData);
+  // const [productvariantarray, setproductvariantarray] = useState(veriantData);
   const [data1, setdata1] = useState("");
   const [otherintro, setotherintro] = useState("");
   const [headerval, setheaderval] = useState("");
@@ -150,7 +144,7 @@ function Product() {
     description: [],
   });
   const [vdata, setvdata] = useState([]);
-  let [condition, setCondition] = useState(false);
+  // let [condition, setCondition] = useState(false);
   var data = {
     add_custom_input: [],
     product_title_name: "",
@@ -188,7 +182,7 @@ function Product() {
     category: "",
     product_status: "",
   });
- 
+
 
   const [variantremove, setVariantRemove] = useState([]);
   const [editbutton, setEditButton] = useState(false);
@@ -238,7 +232,7 @@ function Product() {
           setError("");
         }
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -248,7 +242,7 @@ function Product() {
     setError("");
     setfeaturedata({ start_date: "", end_date: "" });
   };
-  const featureModalShow = () => setfeatureShow(true);
+  // const featureModalShow = () => setfeatureShow(true);
   const OnProductOfferClick = (e, productid, productname) => {
     setfeaturedata({
       ...featuredata,
@@ -283,7 +277,7 @@ function Product() {
         setLoading(false);
         setapicall(true);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
         setLoading(false);
       });
@@ -327,13 +321,13 @@ function Product() {
         setLoading(false);
         setapicall(false);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
 
   useEffect(() => {
-    const first = "";
+    // const first = "";
     fetchdata();
     getVendorData();
     getCategorydatafilter();
@@ -342,7 +336,7 @@ function Product() {
   //MAIN PRODUCT LIST API END
 
   // PRODUCT DELETE ALERT
-  let filtered;
+  // let filtered;
   const handleAlert = (id) => {
     setAlert(true);
     setVariantRemove({ ...variantremove, id: id[0], productid: id[1] });
@@ -389,7 +383,6 @@ function Product() {
               });
             } else if (indVal === scategory.sub_category) {
               setchildCategory(cgory);
-              // console.log("@@@@@----"+JSON.stringify(cgory))
               setproductdata({
                 ...productdata,
                 parent_category: cgory[0].all_parent_id,
@@ -432,7 +425,7 @@ function Product() {
           let cgory = response.data;
           const result = cgory.filter(
             (thing, index, self) =>
-              index === self.findIndex((t) => t.shop_name == thing.shop_name)
+              index === self.findIndex((t) => t.shop_name === thing.shop_name)
           );
           const result1 = result.filter(
             (item) => item.status === "approved" || item.status === "active"
@@ -440,7 +433,7 @@ function Product() {
           setVendorId(result1);
           // setVid("")
         });
-    } catch (err) {}
+    } catch (err) { }
   };
   // end vendor api
 
@@ -453,7 +446,7 @@ function Product() {
           let cgory = response.data;
           setfiltercategory(cgory);
         });
-    } catch (err) {}
+    } catch (err) { }
   };
   // end category api
 
@@ -482,7 +475,7 @@ function Product() {
               setlevel(0);
             }
           });
-      } catch (err) {}
+      } catch (err) { }
     };
     getCategorydata();
     // end category data
@@ -494,7 +487,7 @@ function Product() {
         .get(`${process.env.REACT_APP_BASEURL}/product_details?id=${e}`)
         .then((response) => {
           let data = response.data;
-          if (data != undefined || data != "" || data != null) {
+          if (data !== undefined || data !== "" || data !== null) {
             setproductdata(data);
 
             // categoryedit
@@ -507,7 +500,7 @@ function Product() {
                 )
                 .then((response) => {
                   let data = response.data[0];
-                
+
                   if (i === 0) {
                     axios
                       .get(
@@ -526,7 +519,7 @@ function Product() {
                         `${process.env.REACT_APP_BASEURL_0}/category?category=${arr[i]}`
                       )
                       .then((response) => {
-                      
+
                         setchildCategory(response.data);
                       });
                     setCategoryEditparent(data.category_name);
@@ -539,8 +532,7 @@ function Product() {
                         `${process.env.REACT_APP_BASEURL_0}/category?category=${arr[i]}`
                       )
                       .then((response) => {
-                        console.log(
-                        );
+                       
                         setgrandcCategory(response.data);
                       });
                     setCategoryEditSubparent(data.category_name);
@@ -556,7 +548,7 @@ function Product() {
           let customdatra = JSON.parse(response.data.add_custom_input);
           setcustomarray(customdatra);
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
       setmodalshow(e);
@@ -646,7 +638,7 @@ function Product() {
     setCurrentPage("crop-img");
 
   };
-  
+
 
 
   const onCropDone = (imgCroppedArea, product_id, id, vendor_id) => {
@@ -677,7 +669,7 @@ function Product() {
       setCurrentPage("img-cropped");
     };
   };
-  
+
   const onCropCancel = () => {
     setCurrentPage("choose-img");
     setImage("");
@@ -687,7 +679,7 @@ function Product() {
 
     setcustomValidated("");
     onImgView(product_id, id);
-    let i 
+    let i
     let coverimg;
 
     for (i = 0; i < imageName.length; i++) {
@@ -700,43 +692,41 @@ function Product() {
       }
     }
     //   encoded = await convertToBase64(e.target.files[i]);
-        encoded = dataURL;
-      const [first, ...rest] = encoded.split(",");
-      let imgvalidation = first.split("/").pop();
-      console.log("imgvalidation--------"+first)
-      if (
-        imgvalidation === "jpeg;base64" ||
-        imgvalidation === "jpg;base64" ||
-        imgvalidation === "png;base64"
-      ) {
-        const productimg = rest.join("-");
-        let imar = {
-          product_id: `${product_id}`,
-          product_verient_id: `${id}`,
-          vendor_id: `${vendor_id}`,
-          product_image_name:`${imageName}${i}${id}`,
-          image_position: `${coverimg}`,
-          img_64: productimg,
-        };
-        ImgObj.push(imar);
-        axios
-          .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
-          .then((response) => {
+    encoded = dataURL;
+    const [first, ...rest] = encoded.split(",");
+    let imgvalidation = first.split("/").pop();
+    if (
+      imgvalidation === "jpeg;base64" ||
+      imgvalidation === "jpg;base64" ||
+      imgvalidation === "png;base64"
+    ) {
+      const productimg = rest.join("-");
+      let imar = {
+        product_id: `${product_id}`,
+        product_verient_id: `${id}`,
+        vendor_id: `${vendor_id}`,
+        product_image_name: `${imageName}${i}${id}`,
+        image_position: `${coverimg}`,
+        img_64: productimg,
+      };
+      ImgObj.push(imar);
+      axios
+        .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
+        .then((response) => {
 
-            ImgObj = [];
-            onImgView(id, product_id);
-            setcustomValidated("");
+          ImgObj = [];
+          onImgView(id, product_id);
+          setcustomValidated("");
 
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
-      } else {
-        setcustomValidated("imgformat");
-  console.log("SHOWW---"+customvalidated)
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
+      setcustomValidated("imgformat");
 
-      }
-      setProductAlert(true);
+    }
+    setProductAlert(true);
 
   };
 
@@ -750,14 +740,14 @@ function Product() {
       .then((response) => {
         onImgView(product_verient_id, product_id);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
   const [imageboxid, setimageboxid] = useState(0);
   const onImgView = (id, productid) => {
     setEditButton(false);
-     setimageboxid(id);
+    setimageboxid(id);
 
     axios
       .get(
@@ -765,7 +755,7 @@ function Product() {
       )
       .then((response) => {
         setnewImageUrls(response.data)
-       setImgAfterCrop("")
+        setImgAfterCrop("")
 
         setapicall(true);
         setmodalshow(false);
@@ -774,33 +764,9 @@ function Product() {
         console.log(error);
       });
   };
-  // const onImgView = (id, productid) => {
-  //   // console.log("ksabdhjabdwhhjwb---===="+productid)
-  //   setEditButton(false);
-  //   setimageboxid(id);
-
-  //   axios
-  //     .get(
-  //       `${process.env.REACT_APP_BASEURL}/product_images_get_singal_veriant?product_id=${productid}&product_verient_id=${id}`
-  //     )
-  //     .then((response) => {
-
-  //       // setnewImageUrls(response.data);
-  //       setImgAfterCrop(response.data)
-  //       console.log("product_id"+productid +"---"+"product_verient_id"+id)
-  //       // console.log("BHAVNA--------"+JSON.stringify(imgAfterCrop))
-
-  //       setapicall(true);
-  //       setmodalshow(false);
-  //     })
-  //     .catch(function(error) {
-  //       console.log(error);
-  //     });
-
-  // };
+  
 
   const onImgCoverEditClick = (imgid, productid, productvariantid) => {
-    // console.log("Iiiiiiiiiiiiiiiiiiii---"+imgid, productid, productvariantid)
     axios
       .put(`${process.env.REACT_APP_BASEURL}/change_porduct_cover_image`, {
         product_image_id: `${imgid}`,
@@ -810,7 +776,7 @@ function Product() {
       .then((response) => {
         onImgView(productvariantid, productid);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -857,25 +823,25 @@ function Product() {
       sale_price: `${saleprice}`,
     });
   }, [variantarray.mrp, variantarray.discount, taxdata]);
-  const handleInputcheckboxChange = (e) => {
-    setcustomValidated(false);
-    const target = e.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
-    setvariantarray({
-      ...variantarray,
-      [e.target.name]: value,
-    });
-  };
-  const handleVarietyChange = (e) => {
-    setValidated(false);
-    setcustomValidated(false);
-    setVarietyUnitvalidation("");
-    setvarietyValidated(false);
-    setvariantarray({
-      ...variantarray,
-      [e.target.name]: e.target.value,
-    });
-  };
+  // const handleInputcheckboxChange = (e) => {
+  //   setcustomValidated(false);
+  //   const target = e.target;
+  //   const value = target.type === "checkbox" ? target.checked : target.value;
+  //   setvariantarray({
+  //     ...variantarray,
+  //     [e.target.name]: value,
+  //   });
+  // };
+  // const handleVarietyChange = (e) => {
+  //   setValidated(false);
+  //   setcustomValidated(false);
+  //   setVarietyUnitvalidation("");
+  //   setvarietyValidated(false);
+  //   setvariantarray({
+  //     ...variantarray,
+  //     [e.target.name]: e.target.value,
+  //   });
+  // };
 
   const getProductVariant = (id) => {
     axios
@@ -901,12 +867,11 @@ function Product() {
         }
       )
       .then((response) => {
-        // console.log("------------------"+JSON.stringify(response.data))
         setvdata(response.data.results);
         settaxdata(response.data.results[0]);
         setvariantapicall(false);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -924,7 +889,7 @@ function Product() {
           product_id: id,
         });
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
     // END GET THE SELECTED VARIENT DATA------------------------------------------------------
@@ -947,17 +912,17 @@ function Product() {
     setvarietyShow(false);
   };
   const onVariantaddclick = (id) => {
-    if (id == undefined || id == null || unitValidated == "false") {
+    if (id === undefined || id === null || unitValidated === "false") {
       if (
-        variantarray.unit == "" ||
-        variantarray.unit == null ||
-        variantarray.unit == "Select" ||
-        variantarray.product_price == "" ||
-        variantarray.mrp == "" ||
-        variantarray.sale_price == "" ||
-        variantarray.manufacturing_date == "" ||
-        variantarray.expire_date == "" ||
-        variantarray.quantity == ""
+        variantarray.unit === "" ||
+        variantarray.unit === null ||
+        variantarray.unit === "Select" ||
+        variantarray.product_price === "" ||
+        variantarray.mrp === "" ||
+        variantarray.sale_price === "" ||
+        variantarray.manufacturing_date === "" ||
+        variantarray.expire_date === "" ||
+        variantarray.quantity === ""
         // variantarray.product_price == "" ||
         // variantarray.mrp == "" ||
         // variantarray.sale_price == "" ||
@@ -1027,7 +992,7 @@ function Product() {
                 quantity: "",
                 product_id: productID,
               });
-            } else if (response.errno == 1064) {
+            } else if (response.errno === 1064) {
               alert("Error in add product");
               setProductAlert(false);
             } else {
@@ -1036,7 +1001,7 @@ function Product() {
 
             // formRef.reset();
           })
-          .catch(function(error) {
+          .catch(function (error) {
             console.log(error);
           });
       }
@@ -1045,12 +1010,12 @@ function Product() {
         // variantarray.unit == "" ||
         // variantarray.unit == null ||
         // variantarray.unit == "Select" ||
-        variantarray.product_price == "" ||
-        variantarray.mrp == "" ||
-        variantarray.sale_price == "" ||
-        variantarray.manufacturing_date == "" ||
-        variantarray.expire_date == "" ||
-        variantarray.quantity == ""
+        variantarray.product_price === "" ||
+        variantarray.mrp === "" ||
+        variantarray.sale_price === "" ||
+        variantarray.manufacturing_date === "" ||
+        variantarray.expire_date === "" ||
+        variantarray.quantity === ""
       ) {
         setcustomValidated(true);
       } else if (variantarray.quantity === 0 || variantarray.quantity < 1) {
@@ -1125,7 +1090,7 @@ function Product() {
 
             getProductVariant(productID);
           })
-          .catch(function(error) {
+          .catch(function (error) {
             console.log(error);
           });
       }
@@ -1137,19 +1102,19 @@ function Product() {
       ...productdata,
       variety: true,
     });
-    if (productdata.product_type == "") {
+    if (productdata.product_type === "") {
       setCheckProductType(true);
     } else {
       if (
-        variantarray.unit == "" ||
-        variantarray.unit == null ||
-        variantarray.unit == "Select" ||
-        variantarray.product_price == "" ||
-        variantarray.mrp == "" ||
-        variantarray.sale_price == "" ||
-        variantarray.manufacturing_date == "" ||
-        variantarray.expire_date == "" ||
-        variantarray.quantity == ""
+        variantarray.unit === "" ||
+        variantarray.unit === null ||
+        variantarray.unit === "Select" ||
+        variantarray.product_price === "" ||
+        variantarray.mrp === "" ||
+        variantarray.sale_price === "" ||
+        variantarray.manufacturing_date === "" ||
+        variantarray.expire_date === "" ||
+        variantarray.quantity === ""
       ) {
         setcustomValidated(true);
       } else if (variantarray.quantity === 0 || variantarray.quantity < 1) {
@@ -1265,7 +1230,7 @@ function Product() {
       .then((response) => {
         getProductVariant(variantremove.productid);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
 
@@ -1285,7 +1250,7 @@ function Product() {
       .then((response) => {
         setapicall(true);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
 
@@ -1319,7 +1284,7 @@ function Product() {
       .then((response) => {
         setvariantarray(response.data[0]);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -1371,10 +1336,9 @@ function Product() {
   // CKEDITOR TEXT BOX
   const handledescription = (event, editor) => {
     setdata1(editor.getData());
-    // console.log({ event, editor, data1 });
 
     let productdesc;
-    if (editor.getData() != undefined) {
+    if (editor.getData() !== undefined) {
       productdesc = editor.getData().replaceAll(/"/g, "'");
     }
     setproductdata({
@@ -1385,9 +1349,8 @@ function Product() {
 
   const OtherDescription = (event, editor) => {
     setotherintro(editor.getData());
-    // console.log({ event, editor, otherintro });
     let otherinstrction;
-    if (editor.getData() != undefined) {
+    if (editor.getData() !== undefined) {
       otherinstrction = editor.getData().replaceAll(/"/g, "'");
     }
     setproductdata({
@@ -1398,7 +1361,7 @@ function Product() {
   // END CKEDITOR BOX
 
   let productdataa = [];
-  let scategoryy = [];
+  // let scategoryy = [];
 
   // ADD PRICES ON ADDPRODUCT BUTTON
   useEffect(() => {
@@ -1414,7 +1377,7 @@ function Product() {
             Number(productdata.retails_sales_tax) +
             Number(productdata.manufacturers_sales_tax) +
             Number(productdata.value_added_tax))) /
-          100
+        100
       ).toFixed(2),
       sale_price: saleprice,
     });
@@ -1430,32 +1393,32 @@ function Product() {
   // END  ADD PRICES ON ADDPRODUCT BUTTON
 
   // ADD PRODUCT AND SAVE TO DRAFT
-  const handleSaveDraft = (e) => {
-    // setproductvariantarray({
-    //   ...productvariantarray,
-    //   product_status: "draft",
-    // });
-    productdataa.push(productdata);
-    const form = e.currentTarget;
-    if (
-      form.checkValidity() === false ||
-      productdata.variety === "" ||
-      variantmainarray.length === 0
-    ) {
-      e.stopPropagation();
-      e.preventDefault();
-      setValidated(true);
-      setcustomValidated(false);
-      setvarietyValidated("varietyadd");
-    } else {
-      axios
-        .post(`${process.env.REACT_APP_BASEURL}/products`, productdataa)
-        .then((response) => {
-          setProductDraftAlert(true);
-          setapicall(true);
-        });
-    }
-  };
+  // const handleSaveDraft = (e) => {
+  //   setproductvariantarray({
+  //     ...productvariantarray,
+  //     product_status: "draft",
+  //   });
+  //   productdataa.push(productdata);
+  //   const form = e.currentTarget;
+  //   if (
+  //     form.checkValidity() === false ||
+  //     productdata.variety === "" ||
+  //     variantmainarray.length === 0
+  //   ) {
+  //     e.stopPropagation();
+  //     e.preventDefault();
+  //     setValidated(true);
+  //     setcustomValidated(false);
+  //     setvarietyValidated("varietyadd");
+  //   } else {
+  //     axios
+  //       .post(`${process.env.REACT_APP_BASEURL}/products`, productdataa)
+  //       .then((response) => {
+  //         setProductDraftAlert(true);
+  //         setapicall(true);
+  //       });
+  //   }
+  // };
   const handleAddProduct = (e) => {
     productdataa.push(productdata);
     const form = e.currentTarget;
@@ -1516,7 +1479,7 @@ function Product() {
           setUpdatetAlert(true);
         })
 
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
       e.preventDefault();
@@ -1618,22 +1581,20 @@ function Product() {
 
   const FileUploadAPI = (e) => {
     const formData = new FormData();
-    console.log("FORMMM--------MMMM---" + formData);
 
     formData.append("bulk_xls", e.target.files[0]);
-    console.log("FORMMMMMMM---" + formData);
 
     axios
       .post(`${process.env.REACT_APP_BASEURL}/product_bulk_uploads`, formData)
       .then((response) => {
-        if (response.status == 200) {
+        if (response.status === 200) {
           setProductAlert(true);
           setapicall(true);
         } else {
           setBulkProductError("Error in adding BulkProducts");
         }
       });
-    console.log("----" + formData).catch(function(error) {
+    console.log("----" + formData).catch(function (error) {
       console.log(error);
     });
   };
@@ -1848,22 +1809,22 @@ function Product() {
             row.product_status === "pending" || row.product_status === "1"
               ? "badge bg-warning"
               : row.product_status === "approved"
-              ? "badge bg-success"
-              : // ? "badge bg-info"
-              row.product_status === "draft"
-              ? "badge bg-secondary"
-              : "badge bg-secondary"
+                ? "badge bg-success"
+                : // ? "badge bg-info"
+                row.product_status === "draft"
+                  ? "badge bg-secondary"
+                  : "badge bg-secondary"
           }
         >
           {row.product_status === "pending" || row.product_status === "1"
             ? "Pending"
             : row.product_status === "approved"
-            ? "Approved"
-            : // : row.product_status === ""
-            // ? "Status"
-            row.product_status === "draft"
-            ? "Draft"
-            : "Draft"}
+              ? "Approved"
+              : // : row.product_status === ""
+              // ? "Status"
+              row.product_status === "draft"
+                ? "Draft"
+                : "Draft"}
         </span>
       ),
       sortable: true,
@@ -1882,6 +1843,7 @@ function Product() {
         >
           {/* <option value={""}>Status</option> */}
           {(productstatus.productstatus || []).map((data, i) => {
+            
             return (
               <option value={data} key={i}>
                 {" "}
@@ -1976,7 +1938,7 @@ function Product() {
   // END DATATABLE DATA
   return (
     <>
-    
+
       {loading === true ? <Loader /> : null}
       <div className="App productlist_maindiv">
         <h2>Products</h2>
@@ -2110,7 +2072,7 @@ function Product() {
                 Iconname={<AiOutlineCloudUpload />}
               />
             </div>
-            {bulkProductError == "" ? (
+            {bulkProductError === "" ? (
               ""
             ) : (
               <p className="mt-1 ms-2 text-danger" type="invalid">
@@ -2211,16 +2173,16 @@ function Product() {
                               value={productdata.product_slug}
                               maxLength={20}
 
-                              // type="text"
-                              // placeholder="Product Slug"
-                              // onChange={(e) => handleInputFieldChange1(e)}
-                              // name={"product_slug"}
-                              // value={
-                              //   productdata.product_title_name === "" ||
-                              //   productdata.product_title_name === "null" ||
-                              //   productdata.product_title_name === null
-                              //     ? null
-                              //     : productdata.product_title_name + "_123"
+                            // type="text"
+                            // placeholder="Product Slug"
+                            // onChange={(e) => handleInputFieldChange1(e)}
+                            // name={"product_slug"}
+                            // value={
+                            //   productdata.product_title_name === "" ||
+                            //   productdata.product_title_name === "null" ||
+                            //   productdata.product_title_name === null
+                            //     ? null
+                            //     : productdata.product_title_name + "_123"
                             />
                             <Form.Control.Feedback
                               type="invalid"
@@ -2247,14 +2209,14 @@ function Product() {
                               onChange={(e) => handleInputFieldChange(e)}
                               value={
                                 productdata.brand === null ||
-                                productdata.brand === undefined
+                                  productdata.brand === undefined
                                   ? ""
                                   : productdata.brand
                               }
                             >
                               <option value={""}>Select Brand</option>
-                              {BrandJson.BrandJson.map((item) => {
-                                return <option value={item}>{item}</option>;
+                              {BrandJson.BrandJson.map((item,i) => {
+                                return <option value={item} key={i}>{item}</option>;
                               })}
                             </Form.Select>
                             <Form.Control.Feedback
@@ -2296,7 +2258,7 @@ function Product() {
                                   key={i}
                                   selected={
                                     (productdata.vendor_id,
-                                    productdata.store_name) ===
+                                      productdata.store_name) ===
                                     (cdata.id, cdata.shop_name)
                                   }
                                 >
@@ -2321,10 +2283,7 @@ function Product() {
                           className="mx-3"
                           controlId="validationCustom04"
                         >
-                          {/* {console.log(
-                          "product description-------" +
-                            productdata.product_description
-                        )} */}
+                        
                           <Form.Label className="inputlabelheading" sm="12">
                             Product Description
                           </Form.Label>
@@ -2378,15 +2337,15 @@ function Product() {
                             onChange={(e) => handleInputFieldChange(e)}
                             value={
                               productdata.product_type === null ||
-                              productdata.product_type === undefined
+                                productdata.product_type === undefined
                                 ? ""
                                 : productdata.product_type
                             }
                           >
                             <option value={""}>Select Product Type</option>
 
-                            {categorytype.categorytype.map((data) => {
-                              return <option value={data}>{data}</option>;
+                            {categorytype.categorytype.map((data,i) => {
+                              return <option value={data}key={i}>{data}</option>;
                             })}
                           </Form.Select>
                           <Form.Control.Feedback type="invalid" className="h6">
@@ -2419,7 +2378,7 @@ function Product() {
                                 name="parent_category"
                                 key={i}
                                 selected={
-                                  editparentCategory == cdata.category_name
+                                  editparentCategory === cdata.category_name
                                     ? true
                                     : false
                                 }
@@ -2434,9 +2393,9 @@ function Product() {
                         </Form.Control.Feedback>
                       </Form.Group>
 
-                      {subCategory == "" ||
-                      subCategory === null ||
-                      subCategory === undefined ? null : (
+                      {subCategory === "" ||
+                        subCategory === null ||
+                        subCategory === undefined ? null : (
                         <Form.Group
                           className=" aos_input"
                           controlId="formBasicParentCategory"
@@ -2458,7 +2417,7 @@ function Product() {
                                   value={cdata.id}
                                   key={i}
                                   selected={
-                                    categoryeditparent == cdata.category_name
+                                    categoryeditparent === cdata.category_name
                                       ? true
                                       : false
                                   }
@@ -2473,9 +2432,9 @@ function Product() {
                           </Form.Control.Feedback>
                         </Form.Group>
                       )}
-                      {childCategory[0] == "" ||
-                      childCategory[0] === null ||
-                      childCategory[0] === undefined ? null : (
+                      {childCategory[0] === "" ||
+                        childCategory[0] === null ||
+                        childCategory[0] === undefined ? null : (
                         <Form.Group
                           className=" aos_input"
                           controlId="formBasicParentCategory"
@@ -2499,8 +2458,8 @@ function Product() {
                                   value={cdata.id}
                                   key={i}
                                   selected={
-                                    categoryeditchildparent ==
-                                    cdata.category_name
+                                    categoryeditchildparent ===
+                                      cdata.category_name
                                       ? true
                                       : false
                                   }
@@ -2576,7 +2535,7 @@ function Product() {
                             name="wholesale_sales_tax"
                             value={
                               productdata.wholesale_sales_tax === null ||
-                              productdata.wholesale_sales_tax === undefined
+                                productdata.wholesale_sales_tax === undefined
                                 ? ""
                                 : productdata.wholesale_sales_tax
                             }
@@ -2599,7 +2558,7 @@ function Product() {
                             name="manufacturers_sales_tax"
                             value={
                               productdata.manufacturers_sales_tax === null ||
-                              productdata.manufacturers_sales_tax === undefined
+                                productdata.manufacturers_sales_tax === undefined
                                 ? ""
                                 : productdata.manufacturers_sales_tax
                             }
@@ -2622,7 +2581,7 @@ function Product() {
                             name="retails_sales_tax"
                             value={
                               productdata.retails_sales_tax === null ||
-                              productdata.retails_sales_tax === undefined
+                                productdata.retails_sales_tax === undefined
                                 ? ""
                                 : productdata.retails_sales_tax
                             }
@@ -2709,7 +2668,7 @@ function Product() {
                             name="value_added_tax"
                             value={
                               productdata.value_added_tax === null ||
-                              productdata.value_added_tax === undefined
+                                productdata.value_added_tax === undefined
                                 ? ""
                                 : productdata.value_added_tax
                             }
@@ -3024,22 +2983,22 @@ function Product() {
                                                   }
                                                   disabled={
                                                     variantmainarray.length ===
-                                                    0
+                                                      0
                                                       ? false
                                                       : true
                                                   }
-                                                  // className={
-                                                  //   customvalidated === true
-                                                  //     ? "border-danger"
-                                                  //     : null
-                                                  // }
+                                                // className={
+                                                //   customvalidated === true
+                                                //     ? "border-danger"
+                                                //     : null
+                                                // }
                                                 >
                                                   <option value={""}>
                                                     Select
                                                   </option>
                                                   {(varietyy.variety || []).map(
                                                     (vari, i) => {
-                                                      return changeUnitproperty ==
+                                                      return changeUnitproperty ===
                                                         true ? (
                                                         <option
                                                           value={
@@ -3047,24 +3006,24 @@ function Product() {
                                                               ? "pcs"
                                                               : vari ===
                                                                 "weight"
-                                                              ? "gms"
-                                                              : vari ===
-                                                                "volume"
-                                                              ? "ml"
-                                                              : vari === "piece"
-                                                              ? "piece"
-                                                              : ""
+                                                                ? "gms"
+                                                                : vari ===
+                                                                  "volume"
+                                                                  ? "ml"
+                                                                  : vari === "piece"
+                                                                    ? "piece"
+                                                                    : ""
                                                           }
                                                           key={i}
                                                         >
                                                           {vari}
                                                         </option>
                                                       ) : productdata.product_type ===
-                                                          "Cloths" ||
+                                                        "Cloths" ||
                                                         productdata.product_type ===
-                                                          "Fashion" ? (
+                                                        "Fashion" ? (
                                                         vari === "weight" ||
-                                                        vari ===
+                                                          vari ===
                                                           "volume" ? null : (
                                                           <option
                                                             value={
@@ -3072,8 +3031,8 @@ function Product() {
                                                                 ? "piece"
                                                                 : vari ===
                                                                   "color"
-                                                                ? "pcs"
-                                                                : ""
+                                                                  ? "pcs"
+                                                                  : ""
                                                             }
                                                             key={i}
                                                           >
@@ -3088,10 +3047,10 @@ function Product() {
                                                               ? "gms"
                                                               : vari ===
                                                                 "volume"
-                                                              ? "ml"
-                                                              : vari === "piece"
-                                                              ? "piece"
-                                                              : ""
+                                                                ? "ml"
+                                                                : vari === "piece"
+                                                                  ? "piece"
+                                                                  : ""
                                                           }
                                                           key={i}
                                                         >
@@ -3120,11 +3079,11 @@ function Product() {
                                                   }
                                                   disabled={
                                                     variantarray.unit !== "pcs" &&
-                                                    variantarray.unit !== ""
+                                                      variantarray.unit !== ""
                                                       ? true
-                                                      : variantarray.unit == ""
-                                                      ? false
-                                                      : false
+                                                      : variantarray.unit === ""
+                                                        ? false
+                                                        : false
                                                   }
                                                   required
                                                 >
@@ -3166,7 +3125,7 @@ function Product() {
                                                     variantarray.unit_quantity
                                                   }
                                                   disabled={
-                                                    variantarray.unit == "pcs"
+                                                    variantarray.unit === "pcs"
                                                       ? true
                                                       : false
                                                   }
@@ -3198,11 +3157,11 @@ function Product() {
                                                   disabled={
                                                     variantarray.unit !==
                                                       "pcs" &&
-                                                    variantarray.unit !== ""
+                                                      variantarray.unit !== ""
                                                       ? true
-                                                      : variantarray.unit == ""
-                                                      ? false
-                                                      : false
+                                                      : variantarray.unit === ""
+                                                        ? false
+                                                        : false
                                                   }
                                                 >
                                                   {" "}
@@ -3365,16 +3324,16 @@ function Product() {
                                                       100 +
                                                       (product_price *
                                                         productdata.wholesale_sales_tax) /
-                                                        100 +
+                                                      100 +
                                                       (product_price *
                                                         productdata.retails_sales_tax) /
-                                                        100 +
+                                                      100 +
                                                       (product_price *
                                                         productdata.value_added_tax) /
-                                                        100 +
+                                                      100 +
                                                       (product_price *
                                                         productdata.manufacturers_sales_tax) /
-                                                        100)
+                                                      100)
                                                   ).toFixed(2)}
                                                 />
                                               </InputGroup>
@@ -3530,7 +3489,7 @@ function Product() {
                                           false ? null : null}
 
                                         {varietyUnitvalidation ===
-                                        "ExpireDateValidation" ? (
+                                          "ExpireDateValidation" ? (
                                           <tr>
                                             <p
                                               className="mt-1 ms-2 text-danger"
@@ -3562,7 +3521,7 @@ function Product() {
                                           ) : null}
 
                                           {varietyUnitvalidation ===
-                                          "fillUnit&size&color" ? (
+                                            "fillUnit&size&color" ? (
                                             <p
                                               className="mt-1 ms-2 text-danger"
                                               type="invalid"
@@ -3617,18 +3576,18 @@ function Product() {
                                         {(variantmainarray || []).map(
                                           (variantdata, i) => {
                                             return (
-                                              <tr>
+                                              <tr key={i}>
                                                 <td className="p-0 text-center ">
                                                   {variantdata.unit === "pcs"
                                                     ? "color"
                                                     : variantdata.unit === "gms"
-                                                    ? "weight"
-                                                    : variantdata.unit === "ml"
-                                                    ? "volume"
-                                                    : variantdata.unit ===
-                                                      "piece"
-                                                    ? "piece"
-                                                    : ""}
+                                                      ? "weight"
+                                                      : variantdata.unit === "ml"
+                                                        ? "volume"
+                                                        : variantdata.unit ===
+                                                          "piece"
+                                                          ? "piece"
+                                                          : ""}
                                                 </td>
                                                 <td className="p-0 text-center ">
                                                   {variantdata.colors}
@@ -3637,11 +3596,11 @@ function Product() {
                                                   {variantdata.unit === "gms"
                                                     ? variantdata.unit_quantity
                                                     : variantdata.unit === "ml"
-                                                    ? variantdata.unit_quantity
-                                                    : variantdata.unit ===
-                                                      "piece"
-                                                    ? variantdata.unit_quantity
-                                                    : null}
+                                                      ? variantdata.unit_quantity
+                                                      : variantdata.unit ===
+                                                        "piece"
+                                                        ? variantdata.unit_quantity
+                                                        : null}
                                                 </td>
                                                 <td className="p-0 text-center ">
                                                   {variantdata.size}
@@ -3722,11 +3681,11 @@ function Product() {
                               sm="9"
                               onChange={ontagchange}
                               value={addtag}
-                              // onKeyPress={(event) => {
-                              //   if (event.key === "Enter") {
-                              //     ontagaddclick();
-                              //   }
-                              // }}
+                            // onKeyPress={(event) => {
+                            //   if (event.key === "Enter") {
+                            //     ontagaddclick();
+                            //   }
+                            // }}
                             />
                             <Button
                               variant="outline-success"
@@ -3740,12 +3699,12 @@ function Product() {
                         </div>
 
                         <div className="d-flex align-items-center tagselectbox mt-2">
-                          {productdata.seo_tag == "" && addtag === "" ? (
+                          {productdata.seo_tag === "" && addtag === "" ? (
                             ""
                           ) : productdata.seo_tag ? (
                             <Badge className="tagselecttitle mb-0" bg="success">
                               {productdata.seo_tag === null ||
-                              productdata.seo_tag === undefined
+                                productdata.seo_tag === undefined
                                 ? ""
                                 : productdata.seo_tag}
                               <span
@@ -3902,7 +3861,7 @@ function Product() {
                   btntext={" Cancel"}
                   onClick={() => handleClose()}
                   btnclass={"button main_outline_button px-2"}
-                  // Iconname={<GiCancel /> }
+                // Iconname={<GiCancel /> }
                 />
                 {/* <MainButton
                 btntext={"Save as Draft"}
@@ -3968,48 +3927,48 @@ function Product() {
                                   value={variantarray.unit}
                                   disabled={
                                     variantarray.unit &&
-                                    changeUnitproperty == false
+                                      changeUnitproperty === false
                                       ? true
                                       : variantarray.unit ||
-                                        changeUnitproperty == true
-                                      ? false
-                                      : true
+                                        changeUnitproperty === true
+                                        ? false
+                                        : true
                                   }
                                 >
                                   <option value={""}>{"Select"}</option>
 
                                   {(varietyy.variety || []).map((vari, i) => {
                                     return vdata.length === 0 ? null : vdata[0]
-                                        .product_type === "" ? (
+                                      .product_type === "" ? (
                                       <option
                                         value={
                                           vari === "color"
                                             ? "pcs"
                                             : vari === "weight"
-                                            ? "gms"
-                                            : vari === "volume"
-                                            ? "ml"
-                                            : vari === "piece"
-                                            ? "piece"
-                                            : ""
+                                              ? "gms"
+                                              : vari === "volume"
+                                                ? "ml"
+                                                : vari === "piece"
+                                                  ? "piece"
+                                                  : ""
                                         }
                                         key={i}
                                       >
                                         {vari}
                                       </option>
                                     ) : vdata.length === 0 ? null : vdata[0]
-                                        .product_type === "Cloths" ||
+                                      .product_type === "Cloths" ||
                                       vdata.length === 0 ? null : vdata[0]
                                         .product_type === "Fashion" ? (
                                       vari === "weight" ||
-                                      vari === "volume" ? null : (
+                                        vari === "volume" ? null : (
                                         <option
                                           value={
                                             vari === "piece"
                                               ? "piece"
                                               : vari === "color"
-                                              ? "pcs"
-                                              : ""
+                                                ? "pcs"
+                                                : ""
                                           }
                                           key={i}
                                         >
@@ -4022,12 +3981,12 @@ function Product() {
                                           vari === "weight"
                                             ? "gms"
                                             : vari === "volume"
-                                            ? "ml"
-                                            : vari === "piece"
-                                            ? "piece"
-                                            : vari === "color"
-                                            ? "pcs"
-                                            : ""
+                                              ? "ml"
+                                              : vari === "piece"
+                                                ? "piece"
+                                                : vari === "color"
+                                                  ? "pcs"
+                                                  : ""
                                         }
                                         key={i}
                                       >
@@ -4043,7 +4002,7 @@ function Product() {
                       </div>
                       <div className="col-md-3 col-sm-4 p-2 text-center">
                         <div className="addvariety_inputbox">
-                          
+
                           <Form.Group
                             className="mx-3"
                             controlId="validationCustom01"
@@ -4069,55 +4028,55 @@ function Product() {
                                   <span className="text-danger">*</span>
                                 </Form.Select>
                                 </InputGroup> */}
-                                </Col>
-                                {/* </Form.Label> */}
-                                <Col sm="12">
-                                  <InputGroup className="">
-                                  <Form.Select
-                                                  aria-label="Default select example"
-                                                  name="colors"
-                                                  value={variantarray.colors}
-                                                  onChange={(e) =>
-                                                    onVariantChange(e)
-                                                  }
-                                                  disabled={
-                                                    variantarray.unit !== "pcs" &&
-                                                    variantarray.unit !== ""
-                                                      ? true
-                                                      : variantarray.unit == ""
-                                                      ? false
-                                                      : false
-                                                  }
-                                                  required
-                                                >
-                                                  {" "}
-                                                  <option value={""}>
-                                                    {" "}
-                                                    Select Color
-                                                  </option>
-                                                  {(varietyy.color || []).map(
-                                                    (vari, i) => {
-                                                      return (
-                                                        <option
-                                                          value={vari}
-                                                          key={i}
-                                                          selected={
-                                                            productdata.color
-                                                          }
-                                                        >
-                                                          {vari}
-                                                        </option>
-                                                      );
-                                                    }
-                                                  )}
-                                                </Form.Select>
-                                   
-                                  </InputGroup>
-                                </Col>
-                              </Form.Group>
-                            </div>
-                            
-                          </div>
+                            </Col>
+                            {/* </Form.Label> */}
+                            <Col sm="12">
+                              <InputGroup className="">
+                                <Form.Select
+                                  aria-label="Default select example"
+                                  name="colors"
+                                  value={variantarray.colors}
+                                  onChange={(e) =>
+                                    onVariantChange(e)
+                                  }
+                                  disabled={
+                                    variantarray.unit !== "pcs" &&
+                                      variantarray.unit !== ""
+                                      ? true
+                                      : variantarray.unit === ""
+                                        ? false
+                                        : false
+                                  }
+                                  required
+                                >
+                                  {" "}
+                                  <option value={""}>
+                                    {" "}
+                                    Select Color
+                                  </option>
+                                  {(varietyy.color || []).map(
+                                    (vari, i) => {
+                                      return (
+                                        <option
+                                          value={vari}
+                                          key={i}
+                                          selected={
+                                            productdata.color
+                                          }
+                                        >
+                                          {vari}
+                                        </option>
+                                      );
+                                    }
+                                  )}
+                                </Form.Select>
+
+                              </InputGroup>
+                            </Col>
+                          </Form.Group>
+                        </div>
+
+                      </div>
 
                       <div className="col-md-3 col-sm-4 p-2 text-center">
                         <div className="addvariety_inputbox">
@@ -4139,7 +4098,7 @@ function Product() {
                                   sm="9"
                                   value={variantarray.unit_quantity}
                                   disabled={
-                                    variantarray.unit == "pcs" ? true : false
+                                    variantarray.unit === "pcs" ? true : false
                                   }
                                   onChange={(e) => onVariantChange(e)}
                                   name={"unit_quantity"}
@@ -4174,11 +4133,11 @@ function Product() {
                                   onChange={(e) => onVariantChange(e)}
                                   disabled={
                                     variantarray.unit !== "pcs" &&
-                                    variantarray.unit !== ""
+                                      variantarray.unit !== ""
                                       ? true
-                                      : variantarray.unit == ""
-                                      ? false
-                                      : false
+                                      : variantarray.unit === ""
+                                        ? false
+                                        : false
                                   }
                                 >
                                   <option value={""}>Select</option>
@@ -4549,8 +4508,8 @@ function Product() {
 
                       <div className="col-12">
                         {/* <Accordion defaultActiveKey="variantimgbox149"> */}
-                  
-                        
+
+
                         <Table bordered className="align-middle my-2">
                           <thead className="align-middle">
                             <tr>
@@ -4590,247 +4549,246 @@ function Product() {
                           </thead>
                           <tbody>
                             {vdata === "" ||
-                            vdata === null ||
-                            vdata === undefined
+                              vdata === null ||
+                              vdata === undefined
                               ? null
                               : (vdata || []).map((variantdata, i) => {
-                                  return variantdata.is_delete ===
-                                    "0" ? null : (
-                                    <>
-                                      {/* <Accordion.Item eventKey="0"> */}
-                                      <tr
-                                        className="add_variety_list_box"
-                                        key={i}
-                                      >
-                                        <td className="p-0 py-3 text-center ">
-                                          {variantdata.unit === "pcs"
-                                            ? "color"
-                                            : variantdata.unit === "piece"
+                                return variantdata.is_delete ===
+                                  "0" ? null : (
+                                  <>
+                                    {/* <Accordion.Item eventKey="0"> */}
+                                    <tr
+                                      className="add_variety_list_box"
+                                      key={i}
+                                    >
+                                      <td className="p-0 py-3 text-center ">
+                                        {variantdata.unit === "pcs"
+                                          ? "color"
+                                          : variantdata.unit === "piece"
                                             ? "piece"
                                             : variantdata.unit === "gms"
-                                            ? "weight"
-                                            : variantdata.unit === "ml"
-                                            ? "volume"
-                                            : ""}
-                                        </td>
-                                        <td className="p-0 py-3 text-center ">
-                                          {variantdata.colors}
-                                        </td>
-                                        <td className="p-0 py-3 text-center ">
-                                          {variantdata.unit === "gms"
-                                            ? variantdata.unit_quantity
-                                            : variantdata.unit === "ml"
+                                              ? "weight"
+                                              : variantdata.unit === "ml"
+                                                ? "volume"
+                                                : ""}
+                                      </td>
+                                      <td className="p-0 py-3 text-center ">
+                                        {variantdata.colors}
+                                      </td>
+                                      <td className="p-0 py-3 text-center ">
+                                        {variantdata.unit === "gms"
+                                          ? variantdata.unit_quantity
+                                          : variantdata.unit === "ml"
                                             ? variantdata.unit_quantity
                                             : variantdata.unit === "piece"
-                                            ? variantdata.unit_quantity
-                                            : ""}
-                                        </td>
-                                        <td className="p-0 py-3 text-center ">
-                                          {variantdata.size}
-                                        </td>
-                                        <td className="p-0 py-3 text-center ">
-                                          {Number(variantdata.mrp).toFixed(2)}
-                                        </td>
-                                        <td className="p-0 py-3 text-center ">
-                                          {Number(variantdata.discount).toFixed(
-                                            2
-                                          )}
-                                        </td>
+                                              ? variantdata.unit_quantity
+                                              : ""}
+                                      </td>
+                                      <td className="p-0 py-3 text-center ">
+                                        {variantdata.size}
+                                      </td>
+                                      <td className="p-0 py-3 text-center ">
+                                        {Number(variantdata.mrp).toFixed(2)}
+                                      </td>
+                                      <td className="p-0 py-3 text-center ">
+                                        {Number(variantdata.discount).toFixed(
+                                          2
+                                        )}
+                                      </td>
 
-                                        <td className="p-0 py-3 text-center ">
-                                          {Number(
-                                            variantdata.product_price
-                                          ).toFixed(2)}
-                                        </td>
-                                        <td className="p-0 py-3 text-center ">
-                                          {Number(
-                                            (variantdata.sale_price *
-                                              (Number(taxdata.gst) +
-                                                Number(
-                                                  taxdata.wholesale_sales_tax
-                                                ) +
-                                                Number(
-                                                  taxdata.retails_sales_tax
-                                                ) +
-                                                Number(
-                                                  taxdata.manufacturers_sales_tax
-                                                ) +
-                                                Number(
-                                                  taxdata.value_added_tax
-                                                ))) /
-                                              100
-                                          ).toFixed(2)}
-                                        </td>
-                                        <td className="p-0 py-3 text-center ">
-                                          {variantdata.sale_price.toFixed(2)}
-                                        </td>
-                                        <td className="p-0 py-3 text-center ">
-                                          {moment(
-                                            variantdata.manufacturing_date
-                                          ).format("YYYY-MM-DD")}
-                                        </td>
-                                        <td className="p-0 py-3 text-center ">
-                                          {moment(
-                                            variantdata.expire_date
-                                          ).format("YYYY-MM-DD")}
-                                        </td>
-                                        <td className="p-0 py-3 text-center manufacture_date">
-                                          {variantdata.quantity}
-                                        </td>
+                                      <td className="p-0 py-3 text-center ">
+                                        {Number(
+                                          variantdata.product_price
+                                        ).toFixed(2)}
+                                      </td>
+                                      <td className="p-0 py-3 text-center ">
+                                        {Number(
+                                          (variantdata.sale_price *
+                                            (Number(taxdata.gst) +
+                                              Number(
+                                                taxdata.wholesale_sales_tax
+                                              ) +
+                                              Number(
+                                                taxdata.retails_sales_tax
+                                              ) +
+                                              Number(
+                                                taxdata.manufacturers_sales_tax
+                                              ) +
+                                              Number(
+                                                taxdata.value_added_tax
+                                              ))) /
+                                          100
+                                        ).toFixed(2)}
+                                      </td>
+                                      <td className="p-0 py-3 text-center ">
+                                        {variantdata.sale_price.toFixed(2)}
+                                      </td>
+                                      <td className="p-0 py-3 text-center ">
+                                        {moment(
+                                          variantdata.manufacturing_date
+                                        ).format("YYYY-MM-DD")}
+                                      </td>
+                                      <td className="p-0 py-3 text-center ">
+                                        {moment(
+                                          variantdata.expire_date
+                                        ).format("YYYY-MM-DD")}
+                                      </td>
+                                      <td className="p-0 py-3 text-center manufacture_date">
+                                        {variantdata.quantity}
+                                      </td>
 
-                                        <td className="p-0 py-3 text-center action_btn_box">
-                                          <RiImageAddLine
-                                            type="button"
-                                            className="variety_edit_action_btn  text-success"
-                                            eventKey={i}
-                                            onClick={(_id) =>
-                                              onImgView(
-                                                variantdata.id,
-                                                variantdata.product_id
-                                              )
-                                            }
-                                            aria-controls={
-                                              "variantimgbox" + variantdata.id
-                                            }
-                                            aria-expanded={open}
-                                          />
-
-                                          <BiEdit
-                                            className="variety_edit_action_btn text-primary mx-2"
-                                            onClick={(id) =>
-                                              VariantEditClick(
-                                                variantdata.id,
-                                                variantdata.product_id
-                                              )
-                                            }
-                                          />
-                                          <BsTrash
-                                            className="variety_edit_action_btn text-danger"
-                                            onClick={(id) =>
-                                              VariantRemoveClick(
-                                                variantdata.id,
-                                                variantdata.product_id
-                                              )
-                                            }
-                                          />
-                                        </td>
-                                      </tr>
-                                      {/* <Accordion.Body eventKey={i}> */}
-                                      {newImageUrls ? (
-                                        <tr
-                                          className={
-                                            variantdata.id == imageboxid
-                                              ? "img_preview_boxx show"
-                                              : "img_preview_boxx hide"
+                                      <td className="p-0 py-3 text-center action_btn_box">
+                                        <RiImageAddLine
+                                          type="button"
+                                          className="variety_edit_action_btn  text-success"
+                                          eventKey={i}
+                                          onClick={(_id) =>
+                                            onImgView(
+                                              variantdata.id,
+                                              variantdata.product_id
+                                            )
                                           }
-                                          id={"variantimgbox" + variantdata.id}
-                                        >
-                                          <td className="" colSpan={"12"}>
-                                            <div className="image_box">
-                                            {newImageUrls.map((imgg,i)=>{
-                                                return `${variantdata.id}` ===
-                                                  imgg.product_verient_id ? (
-                                                  <div
-                                                    className="imgprivew_box"
-                                                    key={i}
-                                                  >
-                                                    {imgg.image_position ===
+                                          aria-controls={
+                                            "variantimgbox" + variantdata.id
+                                          }
+                                          aria-expanded={open}
+                                        />
+
+                                        <BiEdit
+                                          className="variety_edit_action_btn text-primary mx-2"
+                                          onClick={(id) =>
+                                            VariantEditClick(
+                                              variantdata.id,
+                                              variantdata.product_id
+                                            )
+                                          }
+                                        />
+                                        <BsTrash
+                                          className="variety_edit_action_btn text-danger"
+                                          onClick={(id) =>
+                                            VariantRemoveClick(
+                                              variantdata.id,
+                                              variantdata.product_id
+                                            )
+                                          }
+                                        />
+                                      </td>
+                                    </tr>
+                                    {/* <Accordion.Body eventKey={i}> */}
+                                    {newImageUrls ? (
+                                      <tr
+                                        className={
+                                          variantdata.id === imageboxid
+                                            ? "img_preview_boxx show"
+                                            : "img_preview_boxx hide"
+                                        }
+                                        id={"variantimgbox" + variantdata.id}
+                                      >
+                                        <td className="" colSpan={"12"}>
+                                          <div className="image_box">
+                                            {newImageUrls.map((imgg, i) => {
+                                              return `${variantdata.id}` ===
+                                                imgg.product_verient_id ? (
+                                                <div
+                                                  className="imgprivew_box"
+                                                  key={i}
+                                                >
+                                                  {imgg.image_position ===
                                                     "cover" ? (
-                                                      <span className="cover_img">
-                                                        Cover
-                                                      </span>
-                                                    ) : null}
-                                                    <img
-                                                      src={
-                                                        imgg.product_image_path
-                                                      }
-                                                      key={i}
-                                                      alt="apna_organic"
-                                                      height={120}
-                                                    />
-                                                    <span
-                                                      className="cover_icon"
-                                                      onClick={(id) =>
-                                                        onImgCoverEditClick(
-                                                          imgg.product_image_id,
-                                                          imgg.product_id,
-                                                          imgg.product_verient_id
-                                                        )
-                                                      }
-                                                    >
-                                                      Set Cover
+                                                    <span className="cover_img">
+                                                      Cover
                                                     </span>
-                                                    <span
-                                                      className="cross_icon"
-                                                      onClick={() =>
-                                                        onImgRemove(
-                                                          imgg.product_image_id,
-                                                          imgg.product_image_name,
-                                                          imgg.vendor_id,
-                                                          imgg.product_id,
-                                                          imgg.product_verient_id
-                                                        )
-                                                      }
-                                                    >
-                                                      &times;
-                                                    </span>
-                                                  </div>
-                                                ) : null;
-                                              })}
-                                              <div className="imgprivew_box">
+                                                  ) : null}
+                                                  <img
+                                                    src={
+                                                      imgg.product_image_path
+                                                    }
+                                                    key={i}
+                                                    alt="apna_organic"
+                                                    height={120}
+                                                  />
+                                                  <span
+                                                    className="cover_icon"
+                                                    onClick={(id) =>
+                                                      onImgCoverEditClick(
+                                                        imgg.product_image_id,
+                                                        imgg.product_id,
+                                                        imgg.product_verient_id
+                                                      )
+                                                    }
+                                                  >
+                                                    Set Cover
+                                                  </span>
+                                                  <span
+                                                    className="cross_icon"
+                                                    onClick={() =>
+                                                      onImgRemove(
+                                                        imgg.product_image_id,
+                                                        imgg.product_image_name,
+                                                        imgg.vendor_id,
+                                                        imgg.product_id,
+                                                        imgg.product_verient_id
+                                                      )
+                                                    }
+                                                  >
+                                                    &times;
+                                                  </span>
+                                                </div>
+                                              ) : null;
+                                            })}
+                                            <div className="imgprivew_box">
 
                                               <div className="container">
-      {currentPage === "choose-img" ? (
-        <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName}/>
-      ) : currentPage === "crop-img" ? (
-        <ImageCropper
-          image={image}
-          imageNamee={imageName}
-          onCropDone={(imgCroppedArea)=>onCropDone(
-            imgCroppedArea,
-            variantdata.product_id,
-            variantdata.id,
-            variantdata.vendor_id,
-            // console.log("product_id"+variantdata.product_id +"id-------"+variantdata.id+"vendor_id"+variantdata.vendor_id)
-            
-            )
-          }
-          onCropCancel={onCropCancel}
-        />
-      ) : (
-        <div>
-          <div> 
-               <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName}/>
-           </div>
-          {<FileInput/>===<ImageCropper/>?( 
-          <>
-           <button
-            onClick={() => {
-              setCurrentPage("crop-img");
-            }}
-            className="btn"
-          >
-            Crop
-          </button>
+                                                {currentPage === "choose-img" ? (
+                                                  <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />
+                                                ) : currentPage === "crop-img" ? (
+                                                  <ImageCropper
+                                                    image={image}
+                                                    imageNamee={imageName}
+                                                    onCropDone={(imgCroppedArea) => onCropDone(
+                                                      imgCroppedArea,
+                                                      variantdata.product_id,
+                                                      variantdata.id,
+                                                      variantdata.vendor_id,
 
-          <button
-            onClick={() => {
-              setCurrentPage("choose-img");
-              setImage("");
-            }}
-            className="btn"
-          >
-            New Image
-          </button>
-          </>
-         ):""}
-        </div>
-      )}
-    </div>
-                                              
-      
-   
-                                                {/* <Form.Control
+                                                    )
+                                                    }
+                                                    onCropCancel={onCropCancel}
+                                                  />
+                                                ) : (
+                                                  <div>
+                                                    <div>
+                                                      <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />
+                                                    </div>
+                                                    {<FileInput /> === <ImageCropper /> ? (
+                                                      <>
+                                                        <button
+                                                          onClick={() => {
+                                                            setCurrentPage("crop-img");
+                                                          }}
+                                                          className="btn"
+                                                        >
+                                                          Crop
+                                                        </button>
+
+                                                        <button
+                                                          onClick={() => {
+                                                            setCurrentPage("choose-img");
+                                                            setImage("");
+                                                          }}
+                                                          className="btn"
+                                                        >
+                                                          New Image
+                                                        </button>
+                                                      </>
+                                                    ) : ""}
+                                                  </div>
+                                                )}
+                                              </div>
+
+
+
+                                              {/* <Form.Control
                                                   multiple
                                                   type="file"
                                                   sm="9"
@@ -4845,32 +4803,32 @@ function Product() {
                                                   }
                                                   name={"img_64"}
                                                 /> */}
-                                                {/* <span className="plus_icon">
+                                              {/* <span className="plus_icon">
                                                   +
                                                 </span> */}
-                                              </div>
                                             </div>
-                                          </td>
-                                        </tr>
-                                      ) : null}
-                                      {/* </Accordion.Body> */}
-                                      {/* </Accordion.Item> */}
-                                      <tr>
-                                        <td colSpan={"12"}>
-                                          {customvalidated === "imgformat" ? (
-                                            <span
-                                              className="mt-2   text-center fs-6 text-danger"
-                                              type="invalid"
-                                            >
-                                              Image Format should be in jpg,
-                                              jpeg or png
-                                            </span>
-                                          ) : null}
+                                          </div>
                                         </td>
                                       </tr>
-                                    </>
-                                  );
-                                })}
+                                    ) : null}
+                                    {/* </Accordion.Body> */}
+                                    {/* </Accordion.Item> */}
+                                    <tr>
+                                      <td colSpan={"12"}>
+                                        {customvalidated === "imgformat" ? (
+                                          <span
+                                            className="mt-2   text-center fs-6 text-danger"
+                                            type="invalid"
+                                          >
+                                            Image Format should be in jpg,
+                                            jpeg or png
+                                          </span>
+                                        ) : null}
+                                      </td>
+                                    </tr>
+                                  </>
+                                );
+                              })}
                             {changeUnitproperty === "editvariety" ? (
                               <tr>
                                 <td
@@ -4893,10 +4851,10 @@ function Product() {
                   {/* </Form.Group> */}
                 </div>
 
-                
+
 
               </Modal.Body>
-              
+
               <Modal.Footer>
                 <button
                   className="button main_outline_button"

@@ -26,7 +26,6 @@ const Invoice = () => {
         }
       )
       .then((response) => {
-        // console.log("invoice details-----" + JSON.stringify(response.data));
         setInvoiceDetails(response.data);
       });
 
@@ -63,15 +62,14 @@ const Invoice = () => {
             }
           )
           .then((response) => {
-            // console.log(response);
             let data = response.data;
             setUserdetails(data[0]);
           })
-          .catch(function(error) {
+          .catch(function (error) {
             console.log(error);
           });
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -240,23 +238,23 @@ const Invoice = () => {
                   <tbody>
                     {productorder.map((orderdata) => {
                       orderdata.gst === "null" ||
-                      orderdata.gst === "undefined" ||
-                      orderdata.gst === ""
+                        orderdata.gst === "undefined" ||
+                        orderdata.gst === ""
                         ? (orderdata.gst = "0")
                         : Number(orderdata.gst);
                       orderdata.sgst === "null" ||
-                      orderdata.sgst === "undefined" ||
-                      orderdata.sgst === ""
+                        orderdata.sgst === "undefined" ||
+                        orderdata.sgst === ""
                         ? (orderdata.sgst = "0")
                         : Number(orderdata.sgst);
                       orderdata.cgst === "null" ||
-                      orderdata.cgst === "undefined" ||
-                      orderdata.cgst === ""
+                        orderdata.cgst === "undefined" ||
+                        orderdata.cgst === ""
                         ? (orderdata.cgst = "0")
                         : Number(orderdata.cgst);
                       orderdata.mrp === "undefined" ||
-                      orderdata.mrp === "null" ||
-                      orderdata.mrp === ""
+                        orderdata.mrp === "null" ||
+                        orderdata.mrp === ""
                         ? (orderdata.mrp = "0")
                         : Number(orderdata.mrp);
                       let countAllText =
@@ -276,14 +274,11 @@ const Invoice = () => {
                       let total_price = orderdata.sale_price * qty;
 
                       let Total_taxMultiply_qty = tax * qty;
-                      // console.log("textt--" + Total_taxMultiply_qty);
-                      // total_tax_with_qty += Number(Total_taxMultiply_qty);
                       total_Product_price += Number(orderdata.product_price);
                       total_sale_price += Number(orderdata.sale_price);
                       let price_without_tax =
                         Number(orderdata.product_price).toFixed(2) - tax;
 
-                      // let pricewithout_tax_with_qty = price_without_tax * qty;
 
                       total_priceWithout_tax += Number(price_without_tax);
 

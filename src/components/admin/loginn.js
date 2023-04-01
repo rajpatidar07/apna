@@ -1,8 +1,6 @@
-import { Button } from "bootstrap";
 import React, { Fragment } from "react";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import MainButton from "./common/button";
 import useHook from "./useHook";
 
 const Loginn = () => {
@@ -10,8 +8,6 @@ const Loginn = () => {
 
   //Final submit function
   const formLogin = () => {
-    // console.log("Callback function when form is submitted!");
-    // console.log("Form Values ", logindata);
   };
   // hook call
   const { loginerror, customValidates } = useHook(formLogin);

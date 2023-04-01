@@ -1,100 +1,97 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState} from "react";
 
-import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 
 
 import MainButton from "../common/button";
 
-import  Logo from '../../../images/logo.png'
-import axios from "axios";
+import Logo from '../../../images/logo.png'
 import Spinner from "react-bootstrap/Spinner";
 
 
 const VendorEmailLogin = () => {
 
 
-//   const [sellerLoginshow, setSellerLoginShow] = useState(false);
-//   const [sellerForgetpasswordshow, setSellerForgetpasswordshow] = useState(false);
-//   const [sellerChangepasswordshow, setSellerChangepasswordshow] = useState(false);
-//   const [otpverificationshow, setOtpverificationShow] = useState(false);
-//   const[sellersignupshow,setSellerSignUpShow]=useState(true)
+  //   const [sellerLoginshow, setSellerLoginShow] = useState(false);
+  //   const [sellerForgetpasswordshow, setSellerForgetpasswordshow] = useState(false);
+  //   const [sellerChangepasswordshow, setSellerChangepasswordshow] = useState(false);
+  //   const [otpverificationshow, setOtpverificationShow] = useState(false);
+  //   const[sellersignupshow,setSellerSignUpShow]=useState(true)
   const [spinner, setSpinner] = useState(false);
-//   const [otp, setotp] = useState(0);
-//   const [emailVal, setemailVal] = useState("");
+  //   const [otp, setotp] = useState(0);
+  //   const [emailVal, setemailVal] = useState("");
 
 
 
-//   const [emailerror, setemailerror] = useState("");
+  //   const [emailerror, setemailerror] = useState("");
 
-//   const [passval, setpassval] = useState("");
-
-
-//   const navigate = useNavigate();
-
-//   const { state } = useLocation();
-
-//   const [emailvaluebyforget,setEmailvaluebyforget]=useState()
-
-// const getdatafromForgetpassword=(data)=>{
-//   setEmailvaluebyforget(data)
- 
-
-// }
-// console.log("email---------"+emailvaluebyforget,otpmsg)
+  //   const [passval, setpassval] = useState("");
 
 
-// const sellerloginfunction=()=>{
-//   setSellerLoginShow(true)
-//   setSellerSignUpShow(false)
-// }
+  //   const navigate = useNavigate();
 
-// const sellerForgetPasswordFunction=()=>{
-//   setSellerForgetpasswordshow(true)
-//   setSellerLoginShow(false)
-//   setSellerSignUpShow(false)
-// }
+  //   const { state } = useLocation();
+
+  //   const [emailvaluebyforget,setEmailvaluebyforget]=useState()
+
+  // const getdatafromForgetpassword=(data)=>{
+  //   setEmailvaluebyforget(data)
 
 
-//   const onEmailChange=(e)=>{
-//     setemailVal(e.target.value);
-//     setemailerror("")
-//   }
+  // }
 
 
-//   const onPasswordChange = (e) => {
-//     setpassval(e.target.value);
-//   };
+  // const sellerloginfunction=()=>{
+  //   setSellerLoginShow(true)
+  //   setSellerSignUpShow(false)
+  // }
+
+  // const sellerForgetPasswordFunction=()=>{
+  //   setSellerForgetpasswordshow(true)
+  //   setSellerLoginShow(false)
+  //   setSellerSignUpShow(false)
+  // }
 
 
-//   const SignUpUser = (e) => {
-   
-//     e.preventDefault();
-    
-//     // alert("SINGNNN"+email)
-//      setSpinner("spinner");
-//     axios
-//       .post(`${process.env.REACT_APP_BASEURL}/vendor_signup`, {
-//         email: emailVal,
-//       })
-//       .then((response) => {
-     
-//         setSpinner(false);
-//         if (response.data.response === false) {
-//           setemailerror("Already Exist. Please Login");
-//           emailVal = "";
-//         } else if (response.data.message === "invalid address") {
-//           setemailerror("invalid address");
-//           setSpinner(false);
-//         } else {
-//           setSpinner(false);
-//           setemailerror("")
-//           setOtpverificationShow(true)
-//           setSellerSignUpShow(false)
-//         }
-//         return response;
-//       })
-//       .catch((error) => {});
-//   };
+  //   const onEmailChange=(e)=>{
+  //     setemailVal(e.target.value);
+  //     setemailerror("")
+  //   }
+
+
+  //   const onPasswordChange = (e) => {
+  //     setpassval(e.target.value);
+  //   };
+
+
+  //   const SignUpUser = (e) => {
+
+  //     e.preventDefault();
+
+  //     // alert("SINGNNN"+email)
+  //      setSpinner("spinner");
+  //     axios
+  //       .post(`${process.env.REACT_APP_BASEURL}/vendor_signup`, {
+  //         email: emailVal,
+  //       })
+  //       .then((response) => {
+
+  //         setSpinner(false);
+  //         if (response.data.response === false) {
+  //           setemailerror("Already Exist. Please Login");
+  //           emailVal = "";
+  //         } else if (response.data.message === "invalid address") {
+  //           setemailerror("invalid address");
+  //           setSpinner(false);
+  //         } else {
+  //           setSpinner(false);
+  //           setemailerror("")
+  //           setOtpverificationShow(true)
+  //           setSellerSignUpShow(false)
+  //         }
+  //         return response;
+  //       })
+  //       .catch((error) => {});
+  //   };
   return (
     <Fragment>
       <div className="for_scrol">
@@ -111,13 +108,13 @@ const VendorEmailLogin = () => {
               </div>
 
               {/* vendor sign up[  start] */}
-        <div className="admin_login_form">
+              <div className="admin_login_form">
                 <div className="log-in-box">
                   <div className="log-in-title">
                     <h4>Create your password</h4>
                   </div>
                   <div className="input-box">
-                    <form className="row g-4" 
+                    <form className="row g-4"
                     // onSubmit={SignUpUser}
                     >
                       <div className="col-12">
@@ -128,10 +125,10 @@ const VendorEmailLogin = () => {
                             type="email"
                             className="form-control"
                             name={"admin_email"}
-                         
+
                             placeholder="Email Address"
                           />
-                        {/* {emailerror === "Already Exist. Please Login" ? (
+                          {/* {emailerror === "Already Exist. Please Login" ? (
                             <p className="text-danger">
                               {"Vendor Already Exist. Please Login"}
                             </p>
@@ -152,10 +149,10 @@ const VendorEmailLogin = () => {
                             type="password"
                             className="form-control"
                             name={"admin_password"}
-                          
+
                             placeholder="Password"
                           />
-                       
+
                           <label htmlFor="password">Password</label>
                         </div>
                       </div>
@@ -187,38 +184,38 @@ const VendorEmailLogin = () => {
                      </div>  */}
                         </div>
                       </div>
-                  
+
                       <div className="col-12">
-                      {  spinner === "spinner"?  
-                       <MainButton
-                       btntext={ <Spinner animation="border" role="status">
-                       <span className="visually-hidden">
-                     
-                         Sign Up
-                       </span>
-                     </Spinner>}
-                        btnclass={"w-100 btn-success btn"}
-                        > 
-                       </MainButton> :  
-                      <MainButton
-                        btntext={"Sign Up"}
-                        btnclass={"w-100 btn-success btn"}
-                      ></MainButton>}
-                      
+                        {spinner === "spinner" ?
+                          <MainButton
+                            btntext={<Spinner animation="border" role="status">
+                              <span className="visually-hidden">
+
+                                Sign Up
+                              </span>
+                            </Spinner>}
+                            btnclass={"w-100 btn-success btn"}
+                          >
+                          </MainButton> :
+                          <MainButton
+                            btntext={"Sign Up"}
+                            btnclass={"w-100 btn-success btn"}
+                          ></MainButton>}
+
                       </div>
                     </form>
                   </div>
 
-               
 
-              
 
-      
 
-                 
+
+
+
+
                 </div>
               </div>
-             
+
 
 
             </div>
@@ -226,7 +223,7 @@ const VendorEmailLogin = () => {
         </div>
       </div>
 
-    
+
     </Fragment>
   );
 };

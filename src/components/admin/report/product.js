@@ -247,7 +247,7 @@ const ProductReport = () => {
           setapicall(false);
         }
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -735,13 +735,11 @@ const ProductReport = () => {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
                       <h3>
-                        {/* {console.log(
-                          " Product count---====" + getProduct.product_count
-                        )} */}
+                       
                         {ProductError == "No_Data" ||
-                        getProduct.product_count == null ||
-                        getProduct.product_count == undefined ||
-                        getProduct.product_count == "" ? (
+                          getProduct.product_count == null ||
+                          getProduct.product_count == undefined ||
+                          getProduct.product_count == "" ? (
                           <h3> 0</h3>
                         ) : (
                           <h3>{getProduct.product_count}</h3>
@@ -798,9 +796,9 @@ const ProductReport = () => {
                       )}
 
                       {ProductError == "no_data" ||
-                      PrevProductreport.prev_product_count == null ||
-                      PrevProductreport.prev_product_count == undefined ||
-                      PrevProductreport.prev_product_count == "" ? (
+                        PrevProductreport.prev_product_count == null ||
+                        PrevProductreport.prev_product_count == undefined ||
+                        PrevProductreport.prev_product_count == "" ? (
                         <p className="h5"> 0</p>
                       ) : (
                         <p className="h5">
@@ -824,9 +822,9 @@ const ProductReport = () => {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
                       {ProductError == "No_Data" ||
-                      getProduct.net_sales == null ||
-                      getProduct.net_sales == undefined ||
-                      getProduct.net_sales == "" ? (
+                        getProduct.net_sales == null ||
+                        getProduct.net_sales == undefined ||
+                        getProduct.net_sales == "" ? (
                         <h3>₹0</h3>
                       ) : (
                         <h3>₹{getProduct.net_sales.toFixed(2)}</h3>
@@ -883,9 +881,9 @@ const ProductReport = () => {
                       )}
 
                       {ProductError == "no_data" ||
-                      PrevProductreport.prev_net_sales == null ||
-                      PrevProductreport.prev_net_sales == undefined ||
-                      PrevProductreport.prev_net_sales == "" ? (
+                        PrevProductreport.prev_net_sales == null ||
+                        PrevProductreport.prev_net_sales == undefined ||
+                        PrevProductreport.prev_net_sales == "" ? (
                         <p className="h5"> ₹0</p>
                       ) : (
                         <p className="h5">
@@ -909,9 +907,9 @@ const ProductReport = () => {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
                       {ProductError == "No_Data" ||
-                      getProduct.order_count == null ||
-                      getProduct.order_count == undefined ||
-                      getProduct.order_count == "" ? (
+                        getProduct.order_count == null ||
+                        getProduct.order_count == undefined ||
+                        getProduct.order_count == "" ? (
                         <h3>0</h3>
                       ) : (
                         <h3>{getProduct.order_count}</h3>
@@ -967,9 +965,9 @@ const ProductReport = () => {
                       )}
 
                       {ProductError == "no_data" ||
-                      PrevProductreport.prev_order_count == null ||
-                      PrevProductreport.prev_order_count == undefined ||
-                      PrevProductreport.prev_order_count == "" ? (
+                        PrevProductreport.prev_order_count == null ||
+                        PrevProductreport.prev_order_count == undefined ||
+                        PrevProductreport.prev_order_count == "" ? (
                         <p className="h5"> 0</p>
                       ) : (
                         <p className="h5">
@@ -990,8 +988,8 @@ const ProductReport = () => {
 
         {/* graph */}
         {getProduct.product_count ||
-        getProduct.net_sales ||
-        getProduct.order_count ? (
+          getProduct.net_sales ||
+          getProduct.order_count ? (
           <HighchartsReact highcharts={Highcharts} options={options} />
         ) : null}
 

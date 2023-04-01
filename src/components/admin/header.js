@@ -27,14 +27,11 @@ function AdminHeader() {
   const [erroroldpassword, seterroroldpassword] = useState("");
   let loginid = localStorage.getItem("encryptloginid");
   let pass = localStorage.getItem("encryptpassword");
-  // console.log(loginid, pass);
   let vendoremail = localStorage.getItem("vendor_email");
   let vendorToken = localStorage.getItem("vendor_token");
   let token = localStorage.getItem("token");
 
-  // console.log("vendor_Email---"+vendoremail)
-  // console.log("vendor_token---"+vendorToken)
-  // console.log("token---"+Token)
+ 
   const onPasswordChange = (e) => {
     setPassword(e.target.value);
   };
@@ -47,7 +44,6 @@ function AdminHeader() {
     setUpdateAlert(false);
     seterroroldpassword("");
   };
-  console.log(password);
 
   const LoginForm = (e) => {
     e.preventDefault();
@@ -87,7 +83,6 @@ function AdminHeader() {
           }
         )
         .then((response) => {
-          // console.log("possttttttt------" + JSON.stringify(response));
           setShow(false);
           setUpdateAlert(true);
           setPassword("");
@@ -113,7 +108,6 @@ function AdminHeader() {
           }
         )
         .then((response) => {
-          console.log(response.data.response);
           if (response.data.response === "password not matched") {
             seterroroldpassword("Old password is incorrect");
             setShow(true);

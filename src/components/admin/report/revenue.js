@@ -296,7 +296,7 @@ const RevenueReport = () => {
   //   }
   // })
 
-  // console.log("&&&&&&&&&&&&----"+JSON.stringify(tabledate))
+  
 
   const options = {
     chart: {
@@ -540,8 +540,7 @@ const RevenueReport = () => {
     if (value === 1) {
       let frommDate = moment().format("YYYY-MM-DD");
       setFromDate(frommDate);
-      // console.log("From date"+e.target.value)
-      // console.log("today")
+     
       setToDate(moment().format("YYYY-MM-DD"));
       let previousTodate = moment(frommDate)
         .subtract(1, "days")
@@ -549,7 +548,7 @@ const RevenueReport = () => {
         .format("YYYY-MM-DD");
       setprevTodate(previousTodate);
       setprevFromdate(previousTodate);
-      // console.log("previous day"+ prevDate)
+    
       setpreviousStateChange(1);
     }
     //yesterday------------------------------------------------------------------------
@@ -626,7 +625,7 @@ const RevenueReport = () => {
           .format("YYYY-MM-DD")
       );
       // setPrevDate(moment(month).subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
-      // console.log("previou month-"+prevDate)
+     
       setpreviousStateChange(4);
     }
     //  last six month---------------------------------------------------------
@@ -649,7 +648,7 @@ const RevenueReport = () => {
           .format("YYYY-MM-DD")
       );
       // setPrevDate(moment(sixMonth).subtract(6, 'month').startOf('month').format('YYYY-MM-DD'))
-      // console.log("prevziou 6 month-"+prevDate)
+    
       setpreviousStateChange(5);
     }
 
@@ -659,7 +658,7 @@ const RevenueReport = () => {
         .startOf("weeks")
         .format("YYYY-MM-DD");
       setFromDate(ThisWeek);
-      // console.log("From last 6 month"+ThisWeek)
+     
       setToDate(moment().format("YYYY-MM-DD"));
       let previousthisweek = moment(ThisWeek)
         .subtract(1, "days")
@@ -680,7 +679,6 @@ const RevenueReport = () => {
         .startOf("month")
         .format("YYYY-MM-DD");
       setFromDate(ThisMonth);
-      // console.log("From last 6 month"+ThisMonth)
       setToDate(moment().format("YYYY-MM-DD"));
       let previousthismont = moment(ThisMonth)
         .subtract(1, "days")
@@ -699,17 +697,7 @@ const RevenueReport = () => {
     fetchData();
   };
   const fetchData = () => {
-    console.log("from_date------------------------------------" + fromDate);
-    console.log("to_date---------------------------------------" + toDate);
-    console.log(
-      "Previous  Todate---------------------------------------" + prevTodate
-    );
-    console.log(
-      "Previous fromdate---------------------------------------" + prevFromdate
-    );
-    // console.log("previous fromDate-"+moment(prevDate).startOf('weeks').format('YYYY-MM-DD'))
-    // console.log( "brand----"+brandName)
-    // console.log( "locations by name----"+location)
+   
     axios
       .post(
         `${process.env.REACT_APP_BASEURL}/revenue`,
@@ -730,8 +718,7 @@ const RevenueReport = () => {
         }
       )
       .then((response) => {
-        // console.log('revenue data'+JSON.stringify(response.data))
-        // console.log(" revenue error"+JSON.stringify(response))
+     
 
         if (response.data.message == "no_data") {
           setRevenueError(response.data.message);
@@ -747,7 +734,7 @@ const RevenueReport = () => {
           setapicall(false);
         }
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -781,7 +768,7 @@ const RevenueReport = () => {
     let result = await axios.get(
       `${process.env.REACT_APP_BASEURL}/category?category=all`
     );
-    // console.log(result.data)
+   
     if (result.data) {
       setCategory(result.data);
     }
@@ -790,7 +777,7 @@ const RevenueReport = () => {
   const BrandData = async () => {
     let result = await axios.get(`${process.env.REACT_APP_BASEURL}/brand_list`);
 
-    //  console.log("Brand data-----"+ JSON.stringify(result.data))
+    
     if (result.data) {
       setBrand(result.data);
     }
@@ -1105,9 +1092,9 @@ const RevenueReport = () => {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
                       {RevenueError == "no_data" ||
-                      getRevenue.gross_total_amount == null ||
-                      getRevenue.gross_total_amount == undefined ||
-                      getRevenue.gross_total_amount == "" ? (
+                        getRevenue.gross_total_amount == null ||
+                        getRevenue.gross_total_amount == undefined ||
+                        getRevenue.gross_total_amount == "" ? (
                         <h3>₹0</h3>
                       ) : (
                         <h3>
@@ -1165,9 +1152,9 @@ const RevenueReport = () => {
                       )}
 
                       {RevenueError == "no_data" ||
-                      getRevenue.prev_gross_total_amount == null ||
-                      getRevenue.prev_gross_total_amount == undefined ||
-                      getRevenue.prev_gross_total_amount == "" ? (
+                        getRevenue.prev_gross_total_amount == null ||
+                        getRevenue.prev_gross_total_amount == undefined ||
+                        getRevenue.prev_gross_total_amount == "" ? (
                         <p className="h5"> ₹0</p>
                       ) : (
                         <p className="h5">
@@ -1221,9 +1208,9 @@ const RevenueReport = () => {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
                       {RevenueError == "no_data" ||
-                      getRevenue.return_total == null ||
-                      getRevenue.return_total == undefined ||
-                      getRevenue.return_total == "" ? (
+                        getRevenue.return_total == null ||
+                        getRevenue.return_total == undefined ||
+                        getRevenue.return_total == "" ? (
                         <h3>₹0</h3>
                       ) : (
                         <h3>₹{Number(getRevenue.return_total).toFixed(2)}</h3>
@@ -1278,9 +1265,9 @@ const RevenueReport = () => {
                         <h5>Today :</h5>
                       )}
                       {RevenueError == "no_data" ||
-                      getRevenue.prev_return_total == null ||
-                      getRevenue.prev_return_total == undefined ||
-                      getRevenue.prev_return_total == "" ? (
+                        getRevenue.prev_return_total == null ||
+                        getRevenue.prev_return_total == undefined ||
+                        getRevenue.prev_return_total == "" ? (
                         <p className="h5"> ₹0</p>
                       ) : (
                         <p className="h5">
@@ -1304,9 +1291,9 @@ const RevenueReport = () => {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
                       {RevenueError == "no_data" ||
-                      getRevenue.total_gst == null ||
-                      getRevenue.total_gst == undefined ||
-                      getRevenue.total_gst == "" ? (
+                        getRevenue.total_gst == null ||
+                        getRevenue.total_gst == undefined ||
+                        getRevenue.total_gst == "" ? (
                         <h3>₹0</h3>
                       ) : (
                         <h3>₹{Number(getRevenue.total_gst).toFixed(2)}</h3>
@@ -1361,9 +1348,9 @@ const RevenueReport = () => {
                         <h5>Today :</h5>
                       )}
                       {RevenueError == "no_data" ||
-                      getRevenue.prev_total_gst == null ||
-                      getRevenue.prev_total_gst == undefined ||
-                      getRevenue.prev_total_gst == "" ? (
+                        getRevenue.prev_total_gst == null ||
+                        getRevenue.prev_total_gst == undefined ||
+                        getRevenue.prev_total_gst == "" ? (
                         <p className="h5"> ₹0</p>
                       ) : (
                         <p className="h5">
@@ -1387,9 +1374,9 @@ const RevenueReport = () => {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
                       {RevenueError == "no_data" ||
-                      getRevenue.total_shipping_charges == null ||
-                      getRevenue.total_shipping_charges == undefined ||
-                      getRevenue.total_shipping_charges == "" ? (
+                        getRevenue.total_shipping_charges == null ||
+                        getRevenue.total_shipping_charges == undefined ||
+                        getRevenue.total_shipping_charges == "" ? (
                         <h3>₹0</h3>
                       ) : (
                         <h3>
@@ -1446,9 +1433,9 @@ const RevenueReport = () => {
                         <h5>Today :</h5>
                       )}
                       {RevenueError == "no_data" ||
-                      getRevenue.prev_total_shipping_charges == null ||
-                      getRevenue.prev_total_shipping_charges == undefined ||
-                      getRevenue.prev_total_shipping_charges == "" ? (
+                        getRevenue.prev_total_shipping_charges == null ||
+                        getRevenue.prev_total_shipping_charges == undefined ||
+                        getRevenue.prev_total_shipping_charges == "" ? (
                         <p className="h5"> ₹0</p>
                       ) : (
                         <p className="h5">
@@ -1473,16 +1460,16 @@ const RevenueReport = () => {
 
         {/* graph */}
         {getRevenue.gross_total_amount ||
-        getRevenue.discount_amount ||
-        getRevenue.return_total ||
-        getRevenue.total_gst ? (
+          getRevenue.discount_amount ||
+          getRevenue.return_total ||
+          getRevenue.total_gst ? (
           <HighchartsReact highcharts={Highcharts} options={optionss} />
         ) : null}
 
         {getRevenue.gross_total_amount ||
-        getRevenue.discount_amount ||
-        getRevenue.return_total ||
-        getRevenue.total_gst ? (
+          getRevenue.discount_amount ||
+          getRevenue.return_total ||
+          getRevenue.total_gst ? (
           <HighchartsReact highcharts={Highcharts} options={options} />
         ) : null}
         {/* <div id="chart">

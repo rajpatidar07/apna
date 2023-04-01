@@ -62,7 +62,7 @@ const Featuredproduct = () => {
           let cgory = response.data;
           setfiltercategory(cgory);
         });
-    } catch (err) {}
+    } catch (err) { }
   };
   /*<---Category list api---> */
   const getVendorData = () => {
@@ -91,10 +91,8 @@ const Featuredproduct = () => {
       console.log(err);
     }
   };
-  //   console.log("oooooo--------"+JSON.stringify(featuredProductData))
   /*<----Function to get the data---->*/
   const handleShow = (id) => {
-    console.log(id);
     try {
       axios
         .post(
@@ -110,12 +108,9 @@ const Featuredproduct = () => {
           }
         )
         .then((response) => {
-          console.log("data----" + JSON.stringify(response.data));
           setId(response.data[0].id);
-          console.log(response.data[0].start_date);
           for (let i = 0; i < response.data.length; i++) {
             if (response.data[i].id === id) {
-              console.log(response.data[i]); // return the object if id matches
               return response.data[i];
             }
           }
@@ -134,7 +129,6 @@ const Featuredproduct = () => {
   };
   /*<---Render feature data function--->*/
   useEffect(() => {
-    console.log(searchdata.product_title_name);
     setloading(true);
     try {
       axios
@@ -152,7 +146,6 @@ const Featuredproduct = () => {
           }
         )
         .then((response) => {
-          console.log(response);
           setFeatureProductData(response.data);
           setapicall(false);
           setloading(false);
@@ -263,23 +256,23 @@ const Featuredproduct = () => {
         <span
           className={
             (currentdate > row.start_date || currentdate === row.start_date) &&
-            currentdate < row.end_date
+              currentdate < row.end_date
               ? "badge bg-success"
               : currentdate > row.end_date || currentdate === row.end_date
-              ? "badge bg-danger"
-              : currentdate < row.start_date
-              ? "badge bg-info"
-              : null
+                ? "badge bg-danger"
+                : currentdate < row.start_date
+                  ? "badge bg-info"
+                  : null
           }
         >
           {(currentdate > row.start_date || currentdate === row.start_date) &&
-          currentdate < row.end_date
+            currentdate < row.end_date
             ? "Active"
             : currentdate > row.end_date || currentdate === row.end_date
-            ? "Expired"
-            : currentdate < row.start_date
-            ? "In Active"
-            : null}
+              ? "Expired"
+              : currentdate < row.start_date
+                ? "In Active"
+                : null}
         </span>
       ),
       sortable: true,
@@ -356,14 +349,13 @@ const Featuredproduct = () => {
     // setValidated(false);
   };
 
-  const OnDateChange = (e) => {};
+  const OnDateChange = (e) => { };
   const submitHandler = () => {
     setapicall(true);
   };
   /*<---Onchange function of search --->*/
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
-    console.log(searchdata);
     setsearcherror(false);
   };
   /*<---Function to reset Search--->*/

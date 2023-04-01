@@ -51,14 +51,7 @@ const OrderReport = () => {
   const [brandName, setBrandName] = useState([]);
   const [location, setLocation] = useState([]);
   const fetchData = () => {
-    console.log("from_date------------------------------------" + fromDate);
-    console.log("to_date---------------------------------------" + toDate);
-    console.log(
-      "Previous  Todate---------------------------------------" + prevTodate
-    );
-    console.log(
-      "Previous fromdate---------------------------------------" + prevFromdate
-    );
+   
     axios
       .post(
         `${process.env.REACT_APP_BASEURL}/orders_report`,
@@ -79,13 +72,7 @@ const OrderReport = () => {
         }
       )
       .then((response) => {
-        // console.log("Order data----" + JSON.stringify(response.data[0]));
-        // console.log(
-        //   "Order previous data----" + JSON.stringify(response.data[1])
-        // );
-        // console.log("Order Table data---" + JSON.stringify(response.data[2]));
-        //  console.log('Error-----'+JSON.stringify(response.data))
-
+      
         if (response.data.message === "No_Data") {
           setOrderError(response.data.message);
           setordersreport([0]);
@@ -100,7 +87,7 @@ const OrderReport = () => {
           setapicall(false);
         }
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -117,7 +104,7 @@ const OrderReport = () => {
         },
       }
     );
-    //  console.log("vendor----"+JSON.stringify(result.data))
+    
     if (result.data) {
       setVenderList(result.data);
     }
@@ -127,7 +114,6 @@ const OrderReport = () => {
     let result = await axios.get(
       `${process.env.REACT_APP_BASEURL}/category?category=all`
     );
-    // console.log(result.data)
     if (result.data) {
       setCategory(result.data);
     }
@@ -136,7 +122,6 @@ const OrderReport = () => {
   const BrandData = async () => {
     let result = await axios.get(`${process.env.REACT_APP_BASEURL}/brand_list`);
 
-    //  console.log("Brand data-----"+ JSON.stringify(result.data))
     if (result.data) {
       setBrand(result.data);
     }
@@ -152,13 +137,12 @@ const OrderReport = () => {
   const TimeChange = (e) => {
     setFilterchange(e.target.value);
     let value = Number(e.target.value);
-    console.log("---------------------------------------------" + value);
+   
     //today---------------------------------------------------------------------------
     if (value === 1) {
       let frommDate = moment().format("YYYY-MM-DD");
       setFromDate(frommDate);
-      // console.log("From date"+e.target.value)
-      // console.log("today")
+      
       setToDate(moment().format("YYYY-MM-DD"));
       let previousTodate = moment(frommDate)
         .subtract(1, "days")
@@ -166,7 +150,7 @@ const OrderReport = () => {
         .format("YYYY-MM-DD");
       setprevTodate(previousTodate);
       setprevFromdate(previousTodate);
-      // console.log("previous day"+ prevDate)
+      
       setpreviousStateChange(1);
     }
     //yesterday------------------------------------------------------------------------
@@ -243,7 +227,7 @@ const OrderReport = () => {
           .format("YYYY-MM-DD")
       );
       // setPrevDate(moment(month).subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
-      // console.log("previou month-"+prevDate)
+     
       setpreviousStateChange(4);
     }
     //  last six month---------------------------------------------------------
@@ -266,7 +250,7 @@ const OrderReport = () => {
           .format("YYYY-MM-DD")
       );
       // setPrevDate(moment(sixMonth).subtract(6, 'month').startOf('month').format('YYYY-MM-DD'))
-      // console.log("previou 6 month-"+prevDate)
+      
       setpreviousStateChange(5);
     }
 
@@ -276,7 +260,7 @@ const OrderReport = () => {
         .startOf("weeks")
         .format("YYYY-MM-DD");
       setFromDate(ThisWeek);
-      // console.log("From last 6 month"+ThisWeek)
+     
       setToDate(moment().format("YYYY-MM-DD"));
       let previousthisweek = moment(ThisWeek)
         .subtract(1, "days")
@@ -297,7 +281,7 @@ const OrderReport = () => {
         .startOf("month")
         .format("YYYY-MM-DD");
       setFromDate(ThisMonth);
-      // console.log("From last 6 month"+ThisMonth)
+     
       setToDate(moment().format("YYYY-MM-DD"));
       let previousthismont = moment(ThisMonth)
         .subtract(1, "days")
@@ -418,7 +402,7 @@ const OrderReport = () => {
     // doc.text(headers, backgroundColor, "pink");
     doc.text(title, marginLeft, 40);
     doc.autoTable(content);
-    doc.save("Order Report.pdf");
+    doc.Gave("Order Report.pdf");
     // doc.setFillColor("Gray" ,100)
   };
 
@@ -504,7 +488,7 @@ const OrderReport = () => {
     },
   ];
 
-  // console.log("dd"+orderTable)
+
 
   const options1 = [
     brand.map((item) => ({ value: `${item.brand}`, label: `${item.brand}` })),
@@ -520,7 +504,7 @@ const OrderReport = () => {
     setBrandName(arrr);
   };
 
-  //  console.log("$$$$$$------"+JSON.stringify(brandName[0]))
+  
   const options2 = [
     venderList.map((item) => ({
       value: `${item.id}`,
@@ -538,7 +522,7 @@ const OrderReport = () => {
     setVendorId(vendorArray);
   };
 
-  // console.log("$$$$$$------" + JSON.stringify(vendorId[0]));
+ 
 
   const options3 = [
     category.map((item) => ({
@@ -580,7 +564,7 @@ const OrderReport = () => {
     ((getorderCount - getPreviousorderCount) / getPreviousorderCount) *
     100
   ).toFixed(2);
-  // console.log("result Ordr------" + resultCount);
+  
   resultCount !== "Infinity" ? console.log() : (resultCount = 0);
 
   // //-----------------------Avg order --------------------------------------------------------
@@ -590,7 +574,7 @@ const OrderReport = () => {
     ((getorderAvg - getPreviousorderAvg) / getPreviousorderAvg) *
     100
   ).toFixed(2);
-  // console.log("result Avg ordder------" + resultAVG);
+
   resultAVG !== "Infinity" ? console.log() : (resultAVG = 0);
 
   // //-----------------------Avg item order count---------------------------------------
@@ -603,7 +587,7 @@ const OrderReport = () => {
     ((getorderAvgItem - getPreviousorderAvgItem) / getPreviousorderAvgItem) *
     100
   ).toFixed(2);
-  // console.log("result avg order count------" + resultAVGITEM);
+  
   resultAVGITEM !== "Infinity" ? console.log() : (resultAVGITEM = 0);
 
   //  //--------------------Nets sales------------------------------------------
@@ -614,9 +598,8 @@ const OrderReport = () => {
     ((getNetSales - getPreviouNetSales) / getPreviouNetSales) *
     100
   ).toFixed(2);
-  // console.log("result Net sales------" + resultNetSales);
+ 
   resultNetSales !== "Infinity" ? console.log() : (resultNetSales = 0);
-  // console.log("oooooooo=-----------" + JSON.stringify(orderTable));
 
   return (
     <div>
@@ -773,13 +756,11 @@ const OrderReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                      {console.log(
-                        "ordererro---" + typeof ordersreport.order_count
-                      )}
+                     
                       {OrderError === "No_Data" ||
-                      ordersreport.order_count == null ||
-                      ordersreport.order_count == undefined ||
-                      ordersreport.order_count == "" ? (
+                        ordersreport.order_count == null ||
+                        ordersreport.order_count == undefined ||
+                        ordersreport.order_count == "" ? (
                         <h3>0</h3>
                       ) : (
                         <h3>{ordersreport.order_count}</h3>
@@ -836,9 +817,9 @@ const OrderReport = () => {
                       )}
 
                       {OrderError == "no_data" ||
-                      Prevordersreport.prev_order_count == null ||
-                      Prevordersreport.prev_order_count == undefined ||
-                      Prevordersreport.prev_order_count == "" ? (
+                        Prevordersreport.prev_order_count == null ||
+                        Prevordersreport.prev_order_count == undefined ||
+                        Prevordersreport.prev_order_count == "" ? (
                         <p className="h5"> 0</p>
                       ) : (
                         <p className="h5">
@@ -862,9 +843,9 @@ const OrderReport = () => {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
                       {OrderError == "No_Data" ||
-                      ordersreport.avg_order_value == null ||
-                      ordersreport.avg_order_value == undefined ||
-                      ordersreport.avg_order_value == "" ? (
+                        ordersreport.avg_order_value == null ||
+                        ordersreport.avg_order_value == undefined ||
+                        ordersreport.avg_order_value == "" ? (
                         <h3>0</h3>
                       ) : (
                         <h3>₹{ordersreport.avg_order_value.toFixed(2)}</h3>
@@ -921,9 +902,9 @@ const OrderReport = () => {
                       )}
 
                       {OrderError == "no_data" ||
-                      Prevordersreport.prev_avg_order_value == null ||
-                      Prevordersreport.prev_avg_order_value == undefined ||
-                      Prevordersreport.prev_avg_order_value == "" ? (
+                        Prevordersreport.prev_avg_order_value == null ||
+                        Prevordersreport.prev_avg_order_value == undefined ||
+                        Prevordersreport.prev_avg_order_value == "" ? (
                         <p className="h5"> ₹0</p>
                       ) : (
                         <p className="h5">
@@ -947,9 +928,9 @@ const OrderReport = () => {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
                       {OrderError == "No_Data" ||
-                      ordersreport.avg_item_per_order == null ||
-                      ordersreport.avg_item_per_order == undefined ||
-                      ordersreport.avg_item_per_order == "" ? (
+                        ordersreport.avg_item_per_order == null ||
+                        ordersreport.avg_item_per_order == undefined ||
+                        ordersreport.avg_item_per_order == "" ? (
                         <h3>0</h3>
                       ) : (
                         <h3>{ordersreport.avg_item_per_order.toFixed(2)}</h3>
@@ -1006,9 +987,9 @@ const OrderReport = () => {
                       )}
 
                       {OrderError == "no_data" ||
-                      Prevordersreport.prev_avg_item_per_order == null ||
-                      Prevordersreport.prev_avg_item_per_order == undefined ||
-                      Prevordersreport.prev_avg_item_per_order == "" ? (
+                        Prevordersreport.prev_avg_item_per_order == null ||
+                        Prevordersreport.prev_avg_item_per_order == undefined ||
+                        Prevordersreport.prev_avg_item_per_order == "" ? (
                         <p className="h5"> 0</p>
                       ) : (
                         <p className="h5">
@@ -1033,12 +1014,11 @@ const OrderReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                      {/* {console.log("********" + OrderError)}
-                      {console.log(" Net Revenue===" + ordersreport.net_sales)} */}
+                     
                       {OrderError == "No_Data" ||
-                      ordersreport.net_sales == null ||
-                      ordersreport.net_sales == undefined ||
-                      ordersreport.net_sales == "" ? (
+                        ordersreport.net_sales == null ||
+                        ordersreport.net_sales == undefined ||
+                        ordersreport.net_sales == "" ? (
                         <h3>₹0</h3>
                       ) : (
                         <h3>₹{ordersreport.net_sales.toFixed(2)}</h3>
@@ -1095,9 +1075,9 @@ const OrderReport = () => {
                       )}
 
                       {OrderError == "no_data" ||
-                      Prevordersreport.prev_net_sales == null ||
-                      Prevordersreport.prev_net_sales == undefined ||
-                      Prevordersreport.prev_net_sales == "" ? (
+                        Prevordersreport.prev_net_sales == null ||
+                        Prevordersreport.prev_net_sales == undefined ||
+                        Prevordersreport.prev_net_sales == "" ? (
                         <p className="h5"> ₹0</p>
                       ) : (
                         <p className="h5">
@@ -1116,9 +1096,9 @@ const OrderReport = () => {
 
         {/* graph */}
         {ordersreport.order_count ||
-        ordersreport.avg_order_value ||
-        ordersreport.avg_item_per_order ||
-        ordersreport.net_sales ? (
+          ordersreport.avg_order_value ||
+          ordersreport.avg_item_per_order ||
+          ordersreport.net_sales ? (
           <HighchartsReact highcharts={Highcharts} options={options} />
         ) : null}
 

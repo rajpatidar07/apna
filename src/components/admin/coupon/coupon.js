@@ -17,7 +17,6 @@ const Coupon = () => {
   const [validated, setValidated] = useState(false);
   const [searcherror, setsearcherror] = useState(false);
   const [coupondata, setcoupondata] = useState([]);
-  console.log(coupondata);
   const [addcoupondata, setaddcoupondata] = useState({
     campaign_name: "",
     code: "",
@@ -97,7 +96,7 @@ const Coupon = () => {
             let data = response.data[0];
             setaddcoupondata(data);
           });
-      } catch (err) {}
+      } catch (err) { }
       setShow(e);
     }
   };
@@ -118,7 +117,7 @@ const Coupon = () => {
             setsearchCoupon(data);
             setapicall(false);
           });
-      } catch (err) {}
+      } catch (err) { }
     }
 
     getCouponList();
@@ -206,10 +205,10 @@ const Coupon = () => {
             row.status === "active"
               ? "success"
               : row.status === "expired"
-              ? "danger"
-              : row.status === "pending"
-              ? "warning"
-              : null
+                ? "danger"
+                : row.status === "pending"
+                  ? "warning"
+                  : null
           }
         >
           {row.status}
@@ -350,7 +349,7 @@ const Coupon = () => {
           setShow(false);
           setAddAlert(true);
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
       formRef.current.reset();
@@ -386,7 +385,7 @@ const Coupon = () => {
         setapicall(true);
         setUpdateAlert(true);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
     formRef.current.reset();

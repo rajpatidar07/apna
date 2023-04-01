@@ -66,7 +66,7 @@ const EmailSend = () => {
 
             setEmailText(response.data[0].email_text);
           });
-      } catch (err) {}
+      } catch (err) { }
     }
 
     setShow(e);
@@ -121,19 +121,19 @@ const EmailSend = () => {
             row.status === "active"
               ? "badge bg-success"
               : row.status === "pending"
-              ? "badge bg-primary"
-              : row.status === "hold"
-              ? "badge bg-danger"
-              : "badge bg-dark"
+                ? "badge bg-primary"
+                : row.status === "hold"
+                  ? "badge bg-danger"
+                  : "badge bg-dark"
           }
         >
           {row.status === "pending"
             ? "Pending"
             : row.status === "active"
-            ? "Active"
-            : row.status === "hold"
-            ? "Hold"
-            : "No status"}
+              ? "Active"
+              : row.status === "hold"
+                ? "Hold"
+                : "No status"}
         </span>
       ),
       sortable: true,
@@ -233,10 +233,9 @@ const EmailSend = () => {
           }
         )
         .then((response) => {
-          console.log(response);
           setAddAlert(true);
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
 
@@ -272,7 +271,7 @@ const EmailSend = () => {
       .then((response) => {
         setUpdateAlert(true);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
 
@@ -305,7 +304,7 @@ const EmailSend = () => {
         setCondition(false);
         setapicall(false);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -330,7 +329,7 @@ const EmailSend = () => {
         setCondition(false);
         setapicall(true);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
         setCondition(false);
       });
@@ -353,7 +352,7 @@ const EmailSend = () => {
       .then((response) => {
         setapicall(true);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -590,7 +589,6 @@ const EmailSend = () => {
                   required
                 />
               </div>
-              {console.log("emailtext------" + emailText)}
               <div sm="12" className="mt-3">
                 <CKEditor
                   data={emailText}

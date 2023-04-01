@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Input from "../common/input";
 import { MdOutlineRestore } from "react-icons/md";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
@@ -19,7 +18,6 @@ const Deletedproduct = () => {
   const [RestoreAlert, setRestoreAlert] = useState(false);
   const [filtervategory, setfiltercategory] = useState([]);
   const [vendorid, setVendorId] = useState([]);
-  const [Alert, setAlert] = useState(false);
   const [loading, setloading] = useState(false);
   const [apicall, setapicall] = useState(false);
   const [deletedata, setdeletedata] = useState([]);
@@ -62,7 +60,7 @@ const Deletedproduct = () => {
           let cgory = response.data;
           setfiltercategory(cgory);
         });
-    } catch (err) {}
+    } catch (err) { }
   };
   /*<---vendor list api---> */
   const getVendorData = () => {
@@ -311,7 +309,7 @@ const Deletedproduct = () => {
     setProductId(productid);
   };
 
-  const handleClick = () => {};
+  const handleClick = () => { };
   return (
     <>
       {loading === true ? <Loader /> : null}

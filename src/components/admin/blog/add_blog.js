@@ -49,20 +49,20 @@ const BlogList = () => {
   const closeAddAlert = () => {
     setAddAlert(false);
   };
-//Blog Categoty Json//
-const CategoryJson = {
-  categorytype: [
-    "Food blogs",
-    "Cloths blogs",
-    "Travel blogs",
-    "Health blogs",
-    "Grocery blogs",
-    "Fashion blogs",
-    "Beauty & Personal care blogs",
-    "Home Applience blogs",
-    "Personal blogs",
-  ],
-};
+  //Blog Categoty Json//
+  const CategoryJson = {
+    categorytype: [
+      "Food blogs",
+      "Cloths blogs",
+      "Travel blogs",
+      "Health blogs",
+      "Grocery blogs",
+      "Fashion blogs",
+      "Beauty & Personal care blogs",
+      "Home Applience blogs",
+      "Personal blogs",
+    ],
+  };
 
 
 
@@ -134,7 +134,7 @@ const CategoryJson = {
               setId(data.id);
               setapicall(false);
             });
-        } catch (err) {}
+        } catch (err) { }
       }
       getBlog();
       setShow(true);
@@ -145,33 +145,33 @@ const CategoryJson = {
     function getBlogList() {
       try {
         axios
-        .post(`${process.env.REACT_APP_BASEURL}/blogs`,{
-          id: "",
-          for_: "admin",
-          recent: "",
-          category: [],
-           product_tag: "",
-        })
+          .post(`${process.env.REACT_APP_BASEURL}/blogs`, {
+            id: "",
+            for_: "admin",
+            recent: "",
+            category: [],
+            product_tag: "",
+          })
           .then((response) => {
-          let data = response.data[0];
-            if(data.message!=="No blogs Data"){
+            let data = response.data[0];
+            if (data.message !== "No blogs Data") {
 
-            setBlog(data);
-            setapicall(false);
+              setBlog(data);
+              setapicall(false);
             }
 
-         setBlog(response.data);
-         setaddBlog(response.data);
-         setsearchData(data);
-         setCondition(false);
+            setBlog(response.data);
+            setaddBlog(response.data);
+            setsearchData(data);
+            setCondition(false);
           });
-      } catch (err) {}
+      } catch (err) { }
     }
 
     getBlogList();
   }, [apicall]);
 
-  
+
 
   const AddBlog = (e, id) => {
     const adminid = localStorage.getItem("encryptadminid");
@@ -180,7 +180,6 @@ const CategoryJson = {
       e.stopPropagation();
       e.preventDefault();
       setValidated(true);
-      console.log("id");
     }
     if (form.checkValidity() === true) {
       e.preventDefault();
@@ -303,28 +302,28 @@ const CategoryJson = {
       name: "Category",
       selector: (row) => row.category,
       sortable: true,
-      width:"100px"
+      width: "100px"
 
-      
+
     },
     {
       name: "Product_tag",
       selector: (row) => row.product_tag,
       sortable: true,
-      width:"100px"
+      width: "100px"
     },
     {
       name: "Description",
       selector: (row) => row.description,
       sortable: true,
-      width:"100px"
+      width: "100px"
     },
     {
       name: "Publish_date",
       selector: (row) => moment(row.publish_date).format("YYYY-MM-DD"),
       sortable: true,
       center: true,
-      width:"100px"
+      width: "100px"
     },
     {
       name: "Status",
@@ -334,10 +333,10 @@ const CategoryJson = {
             row.status === "approved"
               ? "success"
               : row.status === "pending"
-              ? "warning"
-              : row.status === "published"
-              ? "info"
-              : null
+                ? "warning"
+                : row.status === "published"
+                  ? "info"
+                  : null
           }
         >
           {row.status}
@@ -381,7 +380,7 @@ const CategoryJson = {
         </Form.Select>
       ),
       sortable: true,
-      width:"100px"
+      width: "100px"
     },
     {
       name: "ACTION",
@@ -417,7 +416,7 @@ const CategoryJson = {
   //   (thing, index, self) =>
   //     index === self.findIndex((t) => t.product_tag == thing.product_tag)
   // );
-  const handleClick = () => {};
+  const handleClick = () => { };
   const onStatusChange = (e, id) => {
     setchangstatus(e.target.value);
     setCondition(true);
@@ -584,11 +583,11 @@ const CategoryJson = {
                     name={"category"}
                   >
                     <option>Select Category</option>
-                    {CategoryJson.categorytype.map((blogcat)=>{
+                    {CategoryJson.categorytype.map((blogcat) => {
                       return <option value={blogcat}>{blogcat}</option>;
                     })}
-                    
-                   
+
+
                   </Form.Select>
                   <Form.Control.Feedback type="invalid" className="h6">
                     Please fill category

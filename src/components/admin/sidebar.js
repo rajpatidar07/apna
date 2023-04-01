@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import logo from "../../images/logo.png";
 import Accordion from "react-bootstrap/Accordion";
-import { FaBeer, FaBloggerB } from "react-icons/fa";
+import { FaBeer } from "react-icons/fa";
 import {
   MdOutlineDashboard,
   MdOutlineMarkEmailUnread,
@@ -16,7 +16,7 @@ import {
   BiNotepad,
 } from "react-icons/bi";
 import { BsBox, BsShopWindow } from "react-icons/bs";
-import { TbFileInvoice, TbTruckDelivery } from "react-icons/tb";
+import { TbFileInvoice } from "react-icons/tb";
 import {
   RiCustomerService2Line,
   RiAdminLine,

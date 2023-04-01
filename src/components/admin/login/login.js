@@ -46,7 +46,6 @@ const Login = () => {
             localStorage.setItem("encryptloginid", email);
             localStorage.setItem("encryptpassword", password);
             localStorage.setItem("encryptadminid", adminid);
-            console.log("*++++++++============" + adminid);
             localStorage.setItem("token", response.data[1].token);
 
             navigate("/");
@@ -65,7 +64,6 @@ const Login = () => {
         setAdminData(data);
       });
   }, []);
-  // console.log("ppppppppppp"+JSON.stringify(admindata))
   return (
     <Fragment>
       <div className="for_scrol">

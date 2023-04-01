@@ -32,8 +32,7 @@ const OrderDetail = () => {
 
   // Function to change the status:-
   const onStatusChangee = (e) => {
-    console.log("UserID---" + orderid);
-    console.log("orderID---" + userid);
+   
     // setloading(true);
 
     axios
@@ -54,7 +53,7 @@ const OrderDetail = () => {
         setloading(false);
         setApicall(true);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -75,7 +74,6 @@ const OrderDetail = () => {
         }
       )
       .then((response) => {
-        // console.log(response);
         setloading(false);
         setOrder(response.data);
         setproductOrder(response.data.product_types);
@@ -83,7 +81,7 @@ const OrderDetail = () => {
         setApicall(false);
         UserData();
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }, [apicall]);
@@ -103,11 +101,10 @@ const OrderDetail = () => {
         }
       )
       .then((response) => {
-        // console.log(response);
         let data = response.data;
         setUser(data);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -153,49 +150,49 @@ const OrderDetail = () => {
                       <option>Select Order Status</option>
                       <option
                         value="placed"
-                        // selected={order.status === "placed" ? true : false}
+                      // selected={order.status === "placed" ? true : false}
                       >
                         Placed
                       </option>
                       <option
                         value="shipped"
-                        // selected={order.status === "shipped" ? true : false}
+                      // selected={order.status === "shipped" ? true : false}
                       >
                         Shipped
                       </option>
                       <option
                         value="delivered"
-                        // selected={order.status === "delivered" ? true : false}
+                      // selected={order.status === "delivered" ? true : false}
                       >
                         Delivered
                       </option>
                       <option
                         value="pending"
-                        // selected={order.status === "pending" ? true : false}
+                      // selected={order.status === "pending" ? true : false}
                       >
                         Pending
                       </option>
                       <option
                         value="approved"
-                        // selected={order.status === "approved" ? true : false}
+                      // selected={order.status === "approved" ? true : false}
                       >
                         Approved
                       </option>
                       <option
                         value="packed"
-                        // selected={order.status === "packed" ? true : false}
+                      // selected={order.status === "packed" ? true : false}
                       >
                         Packed
                       </option>
                       <option
                         value="return"
-                        // selected={order.status === "return" ? true : false}
+                      // selected={order.status === "return" ? true : false}
                       >
                         Return
                       </option>
                       <option
                         value="cancel"
-                        // selected={order.status === "cancel" ? true : false}
+                      // selected={order.status === "cancel" ? true : false}
                       >
                         Cancel
                       </option>
@@ -220,23 +217,23 @@ const OrderDetail = () => {
 
                 {(productorder || []).map((orderdata) => {
                   orderdata.gst == "null" ||
-                  orderdata.gst == "undefined" ||
-                  orderdata.gst == ""
+                    orderdata.gst == "undefined" ||
+                    orderdata.gst == ""
                     ? (orderdata.gst = "0")
                     : Number(orderdata.gst);
                   orderdata.sgst == "null" ||
-                  orderdata.sgst == "undefined" ||
-                  orderdata.sgst == ""
+                    orderdata.sgst == "undefined" ||
+                    orderdata.sgst == ""
                     ? (orderdata.sgst = "0")
                     : Number(orderdata.sgst);
                   orderdata.cgst == "null" ||
-                  orderdata.cgst == "undefined" ||
-                  orderdata.cgst == ""
+                    orderdata.cgst == "undefined" ||
+                    orderdata.cgst == ""
                     ? (orderdata.cgst = "0")
                     : Number(orderdata.cgst);
                   orderdata.mrp == "undefined" ||
-                  orderdata.mrp == "null" ||
-                  orderdata.mrp == ""
+                    orderdata.mrp == "null" ||
+                    orderdata.mrp == ""
                     ? (orderdata.mrp = "0")
                     : Number(orderdata.mrp);
                   let countAllText =
@@ -253,7 +250,6 @@ const OrderDetail = () => {
                   let total_price = orderdata.sale_price * qty;
 
                   let Total_taxMultiply_qty = tax * qty;
-                  // console.log("textt--" + Total_taxMultiply_qty);
                   total_tax_with_qty += Number(Total_taxMultiply_qty);
                   let price_without_tax =
                     Number(orderdata.product_price).toFixed(2) - tax;
@@ -266,7 +262,6 @@ const OrderDetail = () => {
                   sub_total += Number(orderdata.sale_price);
                   total_tax += Number(tax);
 
-                  // console.log("ffff--" + taxqty );
                   return (
                     <div
                       className="d-flex justify-content-between mb-3 align-items-center"
@@ -278,14 +273,13 @@ const OrderDetail = () => {
                             orderdata.all_images
                               ? orderdata.all_images
                               : orderdata.all_images === "null"
-                              ? "https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
-                              : null
+                                ? "https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
+                                : null
                           }
                           alt="apnaorganic"
                         />
                         <div className="product_name_detial ps-3">
                           <h6> Name: {orderdata.product_title_name}</h6>
-                          {/* {console.log("orderdata.color--" + orderdata.unit)}  */}
                           {orderdata.unit === "gms" ? (
                             <p>weight:{orderdata.unit_quantity} grm</p>
                           ) : orderdata.unit === "ml" ? (

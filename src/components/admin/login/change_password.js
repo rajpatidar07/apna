@@ -23,63 +23,61 @@ const ChangePassword = () => {
     setValidation(false);
   };
 
-  const PasswordChange=(e)=>{
+  const PasswordChange = (e) => {
     setpassval(e.target.value)
-      setPasswordError("")
+    setPasswordError("")
   }
   const LoginForm = (e) => {
     if (
       passval.new_password !== password.confirm_password &&
       passval.new_password !== "" &&
       password.confirm_password !== ""
-    ) 
-    if (!passval) {
-      setPasswordError("New password is required");
-    }
-    else if (
-      passval < 8 ||
-      passval !== /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/
     )
-    {
-      setPasswordError(
-        "New password must be at least 8 characters, 1 lowercase letter, 1 uppercase letter and 1 digit"
-      );
+      if (!passval) {
+        setPasswordError("New password is required");
+      }
+      else if (
+        passval < 8 ||
+        passval !== /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/
+      ) {
+        setPasswordError(
+          "New password must be at least 8 characters, 1 lowercase letter, 1 uppercase letter and 1 digit"
+        );
+      }
+      else if (
+        passval.new_password === "" ||
+        password.confirm_password === ""
+      ) {
+        setValidation("please fill all input");
+      }
+      else {
+        setValidation("not same");
+        setPasswordError("");
+      }
+    if (passval.length >= 8) {
+      {
+        axios
+          .put(`${process.env.REACT_APP_BASEURL}/update_password`, {
+            admin_email: password.email,
+            admin_password: password.current_password,
+            new_admin_password: password.confirm_password,
+          })
+          .then((response) => {
+            if (response.data.response === "please fill all input") {
+              setValidation("please fill all input");
+            } else if (response.data.response === "email not matched") {
+              setValidation("email not matched");
+            } else if (response.data.response === "password not matched") {
+              setValidation("password not matched");
+            } else if (
+              passval.new_password === password.confirm_password &&
+              response.data.response === "password_updated"
+            ) {
+              navigate("/login");
+            }
+          });
+      }
     }
-    else if (
-      passval.new_password === "" ||
-      password.confirm_password === ""
-    ) {
-      setValidation("please fill all input");
-    } 
-    else
-    {
-      setValidation("not same");
-      setPasswordError("");
-    } 
-  if (passval.length>=8){
-    {
-      axios
-        .put(`${process.env.REACT_APP_BASEURL}/update_password`, {
-          admin_email: password.email,
-          admin_password: password.current_password,
-          new_admin_password: password.confirm_password,
-        })
-        .then((response) => {
-          if (response.data.response === "please fill all input") {
-            setValidation("please fill all input");
-          } else if (response.data.response === "email not matched") {
-            setValidation("email not matched");
-          } else if (response.data.response === "password not matched") {
-            setValidation("password not matched");
-          } else if (
-            passval.new_password === password.confirm_password &&
-            response.data.response === "password_updated"
-          ) {
-            navigate("/login");
-          }
-        });
-    }
-  }
     e.preventDefault();
   };
 
@@ -148,8 +146,8 @@ const ChangePassword = () => {
                             placeholder="New Password"
                           />
                           {PasswordError && (
-                    <p className="error-message text-danger">{PasswordError}</p>
-                  )}
+                            <p className="error-message text-danger">{PasswordError}</p>
+                          )}
                           <label for="new password">New Password</label>
                         </div>
                       </div>

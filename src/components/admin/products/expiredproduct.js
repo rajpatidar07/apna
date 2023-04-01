@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
@@ -11,7 +10,7 @@ import moment from "moment";
 import Loader from "../common/loader";
 
 const Expiredproduct = () => {
-  const handleClick = () => {};
+  const handleClick = () => { };
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
   const [loading, setloading] = useState(false);
@@ -29,7 +28,6 @@ const Expiredproduct = () => {
     brand: "",
   });
   let token = localStorage.getItem("token");
-  // console.log('title:', searchdata.product_title_name,
   // 'category:',searchdata.category,
   // 'vendot:',searchdata.vendor,
   // 'brand:',searchdata.brand,
@@ -48,7 +46,7 @@ const Expiredproduct = () => {
           let cgory = response.data;
           setfiltercategory(cgory);
         });
-    } catch (err) {}
+    } catch (err) { }
   };
   /*<---Category list api---> */
   const getVendorData = () => {
@@ -66,7 +64,7 @@ const Expiredproduct = () => {
 
           const result = cgory.filter(
             (thing, index, self) =>
-              index === self.findIndex((t) => t.shop_name == thing.shop_name)
+              index === self.findIndex((t) => t.shop_name === thing.shop_name)
           );
           const result1 = result.filter(
             (item) => item.status === "approved" || item.status === "active"
@@ -77,10 +75,10 @@ const Expiredproduct = () => {
       console.log(err);
     }
   };
-  const OnDateChange = (e) => {
-    let mdate = moment(e.target.value).format("YYYY-MM-DD");
-    setsearchData({ ...searchdata, manufacturing_date: mdate });
-  };
+  // const OnDateChange = (e) => {
+  //   let mdate = moment(e.target.value).format("YYYY-MM-DD");
+  //   setsearchData({ ...searchdata, manufacturing_date: mdate });
+  // };
   useEffect(() => {
     setloading(true);
     axios

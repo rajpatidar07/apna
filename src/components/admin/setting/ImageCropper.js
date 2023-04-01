@@ -19,40 +19,39 @@ function ImageCropper({ image, onCropDone, onCropCancel }) {
   const onAspectRatioChange = (event) => {
     setAspectRatio(event.target.value);
   };
-  
-  return (
-  <>
-  
-   <div className="cropper ">
-      <div>
-        <Cropper
-          image={image}
-          aspect={aspectRatio}
-          crop={crop}
-          zoom={zoom}
-          onCropChange={setCrop}
-          onZoomChange={setZoom}
-          onCropComplete={onCropComplete}
-          style={{
-            containerStyle: {
-              width: "90%",
-              height: "50%",
-              // marginTop:"50%",
-              // marginLeft:"20px",
-              backgroundColor: "#fff",
-            },
-          }}
-        />
-      </div>
 
-      
-    </div>
-    <div className="action-btns " >
-        <div className="aspect-ratios"  onChange={onAspectRatioChange}>
-          <input type="radio" value={1/1} name="ratio" /> 1:1
-          <input type="radio" value={1/2} name="ratio" /> 1:2
-          <input type="radio" value={1/3} name="ratio" /> 1:3
-          <input type="radio" value={1/4} name="ratio" /> 1:4
+  return (
+    <>
+
+      <div className="cropper ">
+        <div>
+          <Cropper
+            image={image}
+            aspect={aspectRatio}
+            crop={crop}
+            zoom={zoom}
+            onCropChange={setCrop}
+            onZoomChange={setZoom}
+            onCropComplete={onCropComplete}
+            style={{
+              containerStyle: {
+                width: "90%",
+                height: "50%",
+               
+                backgroundColor: "#fff",
+              },
+            }}
+          />
+        </div>
+
+
+      </div>
+      <div className="action-btns " >
+        <div className="aspect-ratios" onChange={onAspectRatioChange}>
+          <input type="radio" value={1 / 1} name="ratio" /> 1:1
+          <input type="radio" value={1 / 2} name="ratio" /> 1:2
+          <input type="radio" value={1 / 3} name="ratio" /> 1:3
+          <input type="radio" value={1 / 4} name="ratio" /> 1:4
         </div>
 
         <button className="btn btn-outline" onClick={onCropCancel}>
@@ -68,7 +67,7 @@ function ImageCropper({ image, onCropDone, onCropCancel }) {
           Done
         </button>
       </div>
-  </>    
+    </>
   );
 }
 

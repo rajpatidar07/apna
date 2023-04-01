@@ -155,7 +155,7 @@ const CustomerReport = () => {
   const [user, setUser] = useState([]);
   const [apicall, setapicall] = useState(false);
   const [CustomerError, setCustomerError] = useState("");
-
+console.log("---"+CustomerError)
   const TimeChange = (e) => {
     setFilterchange(e.target.value);
     setUser(e.target.value);
@@ -175,7 +175,7 @@ const CustomerReport = () => {
         }
       )
       .then((response) => {
-        if (response.data.message == "No_Data") {
+        if (response.data.message === "No_Data") {
           setCustomerError(response.data.message);
           setGetTableCoustomer([]);
           setapicall(false);
@@ -185,7 +185,7 @@ const CustomerReport = () => {
           setapicall(false);
         }
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };

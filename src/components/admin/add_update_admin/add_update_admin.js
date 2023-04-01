@@ -60,7 +60,7 @@ function Admin() {
             setaddadmindata(data);
             localStorage.setItem("adminid", response.data.id);
           });
-      } catch (err) {}
+      } catch (err) { }
     }
     setShow(e);
   };
@@ -96,10 +96,10 @@ function Admin() {
         row.admin_type === "1"
           ? "Super Admin"
           : row.admin_type === "2"
-          ? "Admin"
-          : row.admin_type === "3"
-          ? "Editor"
-          : null,
+            ? "Admin"
+            : row.admin_type === "3"
+              ? "Editor"
+              : null,
       sortable: true,
       center: true,
     },
@@ -141,7 +141,6 @@ function Admin() {
   const handleFormChange = (e) => {
     setaddadmindata({ ...addadmindata, [e.target.name]: e.target.value });
     setPasswordError("");
-    console.log(addadmindata.admin_password);
   };
   const onValueChange = (e) => {
     setSearchAd({ ...Searchad, [e.target.name]: e.target.value });
@@ -209,7 +208,7 @@ function Admin() {
           setAddAlert(true);
           setPasswordError("");
         })
-        .catch(function(error) {});
+        .catch(function (error) { });
 
       formRef.current.reset();
       setValidated(false);
@@ -243,7 +242,7 @@ function Admin() {
             },
           }
         )
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
       formRef.current.reset();

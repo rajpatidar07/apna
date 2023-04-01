@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import Form from "react-bootstrap/Form";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { Badge, Button, InputGroup, Table } from "react-bootstrap";
 import { GiCancel } from "react-icons/gi";
 // import Spinner from "react-bootstrap/Spinner";
@@ -50,7 +50,6 @@ const VendorUpdate = () => {
   const [file, setFile] = useState();
   const [fileName, setFileName] = useState("");
   const [apicall, setapicall] = useState(false);
-  const navigate = useNavigate();
 
   const handleClose = () => {
     setShow(false);
@@ -65,7 +64,6 @@ const VendorUpdate = () => {
       store_type: "",
       image: "",
       status: "",
-      image: "",
       document_name: [],
       availability: "",
       social_media_links: [],
@@ -99,7 +97,6 @@ const VendorUpdate = () => {
           }
         )
         .then((response) => {
-          // console.log("res-----"+JSON.stringify(response.data))
           setaddvendordata(response.data[0]);
           setFile("");
           setFileName("");
@@ -334,10 +331,10 @@ const VendorUpdate = () => {
     ) {
       setCustomValidation("GeolocationEmpty");
     } else if (
-      imgvalidate == "jpg" ||
-      imgvalidate == "jpeg" ||
-      imgvalidate == "png" ||
-      imgvalidate == ""
+      imgvalidate === "jpg" ||
+      imgvalidate === "jpeg" ||
+      imgvalidate === "png" ||
+      imgvalidate === ""
     ) {
       // e.stopPropagation();
       let x = [addvendordata.document_name];
@@ -395,7 +392,7 @@ const VendorUpdate = () => {
             <div className="col-md-6">
               <Form.Group
                 className="mb-3 aos_input"
-                //  controlId="validationCustom01"
+              //  controlId="validationCustom01"
               >
                 <Form.Label>
                   Owner Name <span className="text-danger">* </span>
@@ -406,7 +403,7 @@ const VendorUpdate = () => {
                   name={"owner_name"}
                   onChange={(e) => handleFormChange(e)}
                   value={addvendordata.owner_name}
-                  // required
+                // required
                 />
                 {customValidation === "ownernameEmpty" ? (
                   <span className="text-danger">Please fill the Owner </span>
@@ -419,7 +416,7 @@ const VendorUpdate = () => {
             <div className="col-md-6">
               <Form.Group
                 className="mb-3 aos_input"
-                //  controlId="validationCustom02"
+              //  controlId="validationCustom02"
               >
                 <Form.Label>
                   Shop Name <span className="text-danger">* </span>
@@ -430,7 +427,7 @@ const VendorUpdate = () => {
                   name={"shop_name"}
                   onChange={(e) => handleFormChange(e)}
                   value={addvendordata.shop_name}
-                  //  required
+                //  required
                 />
                 {customValidation === "shopnameEmpty" ? (
                   <span className="text-danger">Please fill the Shop name</span>
@@ -442,7 +439,7 @@ const VendorUpdate = () => {
             <div className="col-md-6">
               <Form.Group
                 className="mb-3 aos_input"
-                //  controlId="validationCustom03"
+              //  controlId="validationCustom03"
               >
                 <Form.Label>
                   Mobile <span className="text-danger">* </span>
@@ -453,7 +450,7 @@ const VendorUpdate = () => {
                   name={"mobile"}
                   onChange={(e) => handleFormChange(e)}
                   value={addvendordata.mobile}
-                  // required
+                // required
                 />
                 {customValidation === "MobileEmpty" ? (
                   <span className="text-danger">Please fill the Mobile </span>
@@ -469,7 +466,7 @@ const VendorUpdate = () => {
             <div className="col-md-6">
               <Form.Group
                 className="mb-3 aos_input"
-                //  controlId="validationCustom04"
+              //  controlId="validationCustom04"
               >
                 <Form.Label>
                   Email <span className="text-danger">* </span>
@@ -480,7 +477,7 @@ const VendorUpdate = () => {
                   name={"email"}
                   onChange={(e) => handleFormChange(e)}
                   value={addvendordata.email}
-                  // required
+                // required
                 />
                 {customValidation === "EmailEmpty" ? (
                   <span className="text-danger">
@@ -494,7 +491,7 @@ const VendorUpdate = () => {
             <div className="col-md-6">
               <Form.Group
                 className="mb-3 aos_input"
-                //  controlId="validationCustom05"
+              //  controlId="validationCustom05"
               >
                 <Form.Label>
                   Shop Address <span className="text-danger">* </span>
@@ -507,7 +504,7 @@ const VendorUpdate = () => {
                   name={"shop_address"}
                   onChange={(e) => handleFormChange(e)}
                   value={addvendordata.shop_address}
-                  // required
+                // required
                 />
                 {customValidation === "ShopAddressEmpty" ? (
                   <span className="text-danger">
@@ -521,7 +518,7 @@ const VendorUpdate = () => {
             <div className="col-md-6">
               <Form.Group
                 className="mb-3 aos_input"
-                // controlId="validationCustom06"
+              // controlId="validationCustom06"
               >
                 <Form.Label>
                   GSTN <span className="text-danger">* </span>
@@ -532,7 +529,7 @@ const VendorUpdate = () => {
                   name={"gstn"}
                   onChange={(e) => handleFormChange(e)}
                   value={addvendordata.gstn}
-                  // required
+                // required
                 />
                 {customValidation === "GSTEmpty" ? (
                   <span className="text-danger">Please fill the GST NO. </span>
@@ -545,7 +542,7 @@ const VendorUpdate = () => {
             <div className="col-md-6">
               <Form.Group
                 className="mb-3 aos_input"
-                // controlId="validationCustom06"
+              // controlId="validationCustom06"
               >
                 <Form.Label>Avaliable</Form.Label>
                 <Form.Select
@@ -604,7 +601,7 @@ const VendorUpdate = () => {
             <div className="col-md-6">
               <Form.Group
                 className="mb-3 aos_input"
-                // controlId="validationCustom06"
+              // controlId="validationCustom06"
               >
                 <Form.Label>
                   Store Type <span className="text-danger">* </span>
@@ -642,7 +639,7 @@ const VendorUpdate = () => {
             <div className="col-md-6">
               <Form.Group
                 className="mb-3 aos_input"
-                // controlId="validationCustom07"
+              // controlId="validationCustom07"
               >
                 <Form.Label>
                   Geolocation <span className="text-danger">* </span>
@@ -653,7 +650,7 @@ const VendorUpdate = () => {
                   name={"geolocation"}
                   onChange={(e) => handleFormChange(e)}
                   value={addvendordata.geolocation}
-                  // required
+                // required
                 />
                 {customValidation === "GeolocationEmpty" ? (
                   <span className="text-danger">Please fill the Location </span>
@@ -665,7 +662,7 @@ const VendorUpdate = () => {
             <div className="col-md-6">
               <Form.Group
                 className="mb-3 aos_input"
-                // controlId="validationCustom10"
+              // controlId="validationCustom10"
               >
                 <Form.Label>
                   Document Name <span className="text-danger">* </span>
@@ -698,8 +695,8 @@ const VendorUpdate = () => {
                 ) : null}
 
                 {Docnamearray === undefined ||
-                Docnamearray === null ||
-                Docnamearray === "" ? null : (
+                  Docnamearray === null ||
+                  Docnamearray === "" ? null : (
                   <div className="d-flex align-items-center tagselectbox mt-2">
                     {Docnamearray.map((seotags, i) => {
                       return (
@@ -799,57 +796,57 @@ const VendorUpdate = () => {
                     </tr>
                     {customarray
                       ? (customarray || []).map((variantdata, i) => {
-                          let v = JSON.stringify(variantdata);
-                          let st = v.split(":");
-                          let pro = st[0].replace(/[{}]/g, "");
-                          let link = st[1].replace(/[{}]/g, "");
+                        let v = JSON.stringify(variantdata);
+                        let st = v.split(":");
+                        let pro = st[0].replace(/[{}]/g, "");
+                        let link = st[1].replace(/[{}]/g, "");
 
-                          return (
-                            <tr className="">
-                              <td className=" text-center">
-                                <InputGroup className="">
-                                  <Form.Control
-                                    value={JSON.parse(pro)}
-                                    type="text"
-                                    sm="9"
-                                    min={"1"}
-                                    onChange={oncustomheadChange}
-                                    name={"custom_input_header"}
-                                    required
-                                  />
-                                </InputGroup>
-                              </td>
-                              <td className="text-center">
-                                <InputGroup className="">
-                                  <Form.Control
-                                    required
-                                    value={JSON.parse(link)}
-                                    name={"custom_input_desc"}
-                                    type="text"
-                                    sm="9"
-                                    min={"1"}
-                                    onChange={oncustomdescChange}
-                                    onKeyPress={(event) => {
-                                      if (event.key === "Enter") {
-                                        handleAddClick();
-                                      }
-                                    }}
-                                  />
-                                </InputGroup>
-                              </td>
-                              <td className="">
-                                <Button
-                                  variant="text-danger"
-                                  className="addcategoryicon text-danger"
-                                  onClick={() => handleRemoveClick(variantdata)}
-                                  size="sm"
-                                >
-                                  &times;
-                                </Button>
-                              </td>
-                            </tr>
-                          );
-                        })
+                        return (
+                          <tr className="">
+                            <td className=" text-center">
+                              <InputGroup className="">
+                                <Form.Control
+                                  value={JSON.parse(pro)}
+                                  type="text"
+                                  sm="9"
+                                  min={"1"}
+                                  onChange={oncustomheadChange}
+                                  name={"custom_input_header"}
+                                  required
+                                />
+                              </InputGroup>
+                            </td>
+                            <td className="text-center">
+                              <InputGroup className="">
+                                <Form.Control
+                                  required
+                                  value={JSON.parse(link)}
+                                  name={"custom_input_desc"}
+                                  type="text"
+                                  sm="9"
+                                  min={"1"}
+                                  onChange={oncustomdescChange}
+                                  onKeyPress={(event) => {
+                                    if (event.key === "Enter") {
+                                      handleAddClick();
+                                    }
+                                  }}
+                                />
+                              </InputGroup>
+                            </td>
+                            <td className="">
+                              <Button
+                                variant="text-danger"
+                                className="addcategoryicon text-danger"
+                                onClick={() => handleRemoveClick(variantdata)}
+                                size="sm"
+                              >
+                                &times;
+                              </Button>
+                            </td>
+                          </tr>
+                        );
+                      })
                       : null}
                   </tbody>
                 </Table>
@@ -862,7 +859,7 @@ const VendorUpdate = () => {
             <div classImg="col-md-6">
               <Form.Group
                 className="mb-3 aos_input"
-                // controlId="validationCustom08"
+              // controlId="validationCustom08"
               >
                 <Form.Label>
                   Shop Logo <b>(In .jpg, .jpeg, .png format)</b>
@@ -880,7 +877,7 @@ const VendorUpdate = () => {
                   </p>
                 ) : null}
                 {addvendordata.shop_logo ? (
-                  <img src={addvendordata.shop_logo} width={"50px"} />
+                  <img src={addvendordata.shop_logo} alt="" width={"50px"} />
                 ) : null}
               </Form.Group>
             </div>
@@ -888,7 +885,7 @@ const VendorUpdate = () => {
             <div className="col-md-6">
               <Form.Group
                 className="mb-3 aos_input"
-                //  controlId="validationCustom09"
+              //  controlId="validationCustom09"
               >
                 <Form.Label>Documents Upload </Form.Label>
                 <Form.Control

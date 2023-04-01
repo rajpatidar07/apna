@@ -57,17 +57,12 @@ function Orders() {
         }
       )
       .then((response) => {
-        // console.log("data----" + JSON.stringify(response.data));
-
-        // const result = response.data.filter(
-        //   (thing, index, self) =>
-        //     index === self.findIndex((t) => t.order_id === thing.order_id)
-        // );
+       
         setorderdata(response.data);
         setapicall(false);
         setLoading(false);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }, [apicall, changstatus]);
@@ -94,7 +89,7 @@ function Orders() {
         setLoading(false);
         setapicall(true);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
         setLoading(false);
       });
@@ -102,7 +97,6 @@ function Orders() {
 
   // To go on the order details page :-
   const onOrderClick = (id) => {
-    console.log("id--" + JSON.stringify(id));
     localStorage.setItem("orderid", id[0]);
     localStorage.setItem("userid", id[1]);
 
@@ -166,35 +160,35 @@ function Orders() {
             row.status === "placed"
               ? "badge bg-warning"
               : row.status === "pending"
-              ? "badge bg-secondary"
-              : row.status === "shipped"
-              ? "badge bg-primary"
-              : row.status === "delivered"
-              ? "badge bg-success"
-              : row.status === "packed"
-              ? "badge bg-primary"
-              : row.status === "cancel"
-              ? "badge bg-danger"
-              : row.status === "approved"
-              ? "badge bg-info"
-              : "badge bg-dark"
+                ? "badge bg-secondary"
+                : row.status === "shipped"
+                  ? "badge bg-primary"
+                  : row.status === "delivered"
+                    ? "badge bg-success"
+                    : row.status === "packed"
+                      ? "badge bg-primary"
+                      : row.status === "cancel"
+                        ? "badge bg-danger"
+                        : row.status === "approved"
+                          ? "badge bg-info"
+                          : "badge bg-dark"
           }
         >
           {row.status === "placed"
             ? "placed"
             : row.status === "delivered"
-            ? "delivered"
-            : row.status === "shipped"
-            ? "shipped"
-            : row.status === "packed"
-            ? "packed"
-            : row.status === "cancel"
-            ? "cancel"
-            : row.status === "approved"
-            ? "approved"
-            : row.status === "pending"
-            ? "pending"
-            : "return"}
+              ? "delivered"
+              : row.status === "shipped"
+                ? "shipped"
+                : row.status === "packed"
+                  ? "packed"
+                  : row.status === "cancel"
+                    ? "cancel"
+                    : row.status === "approved"
+                      ? "approved"
+                      : row.status === "pending"
+                        ? "pending"
+                        : "return"}
         </span>
       ),
       sortable: true,
@@ -208,7 +202,7 @@ function Orders() {
           className="w-100"
           onChange={(e) => onStatusChange(e, row.id, row.user_id)}
           name="status"
-          // value={row.product_status}
+        // value={row.product_status}
         >
           <option
             value="placed"
@@ -263,7 +257,6 @@ function Orders() {
       sortable: true,
     },
   ];
-  // console.log("--------==========="+JSON.stringify(orderdata))
   return (
     <>
       {loading === true ? <Loader /> : null}

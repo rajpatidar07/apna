@@ -39,7 +39,7 @@ function Transactions() {
         setTransectionData(data);
         setapicall(false);
       })
-      .catch((err) => {});
+      .catch((err) => { });
   }, [apicall]);
 
   // const TransectionSearch = () => {
@@ -108,14 +108,14 @@ function Transactions() {
         row.method === 1
           ? "UPI"
           : row.method === 2
-          ? "Card"
-          : row.method === 3
-          ? "COD"
-          : row.method === 4
-          ? "Netbanking"
-          : row.method === 5
-          ? "Wallet"
-          : "Other",
+            ? "Card"
+            : row.method === 3
+              ? "COD"
+              : row.method === 4
+                ? "Netbanking"
+                : row.method === 5
+                  ? "Wallet"
+                  : "Other",
       sortable: true,
     },
     {
@@ -126,19 +126,19 @@ function Transactions() {
             row.status === 1
               ? "badge bg-primary"
               : row.status === 2
-              ? "badge bg-success"
-              : row.status === 3
-              ? "badge bg-danger"
-              : "badge bg-dark"
+                ? "badge bg-success"
+                : row.status === 3
+                  ? "badge bg-danger"
+                  : "badge bg-dark"
           }
         >
           {row.status === 1
             ? "Processing"
             : row.status === 2
-            ? "Success"
-            : row.status === 3
-            ? "Failed"
-            : "Refund"}
+              ? "Success"
+              : row.status === 3
+                ? "Failed"
+                : "Refund"}
         </span>
       ),
       sortable: true,

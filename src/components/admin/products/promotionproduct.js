@@ -52,7 +52,7 @@ const Promotionproduct = () => {
           let cgory = response.data;
           setfiltercategory(cgory);
         });
-    } catch (err) {}
+    } catch (err) { }
   };
   /*<---Category list api---> */
   const getVendorData = () => {
@@ -94,7 +94,7 @@ const Promotionproduct = () => {
     setShow(false);
   };
 
-  const handleClick = () => {};
+  const handleClick = () => { };
 
   /*<----Table data---->*/
   const columns = [
@@ -197,23 +197,23 @@ const Promotionproduct = () => {
         <span
           className={
             (currentdate > row.start_date || currentdate === row.start_date) &&
-            currentdate < row.end_date
+              currentdate < row.end_date
               ? "badge bg-success"
               : currentdate > row.end_date || currentdate === row.end_date
-              ? "badge bg-danger"
-              : currentdate < row.start_date
-              ? "badge bg-info"
-              : null
+                ? "badge bg-danger"
+                : currentdate < row.start_date
+                  ? "badge bg-info"
+                  : null
           }
         >
           {(currentdate > row.start_date || currentdate === row.start_date) &&
-          currentdate < row.end_date
+            currentdate < row.end_date
             ? "Active"
             : currentdate > row.end_date || currentdate === row.end_date
-            ? "Expired"
-            : currentdate < row.start_date
-            ? "In Active"
-            : null}
+              ? "Expired"
+              : currentdate < row.start_date
+                ? "In Active"
+                : null}
         </span>
       ),
       sortable: true,
@@ -280,7 +280,6 @@ const Promotionproduct = () => {
         )
         .then((response) => {
           setId(response.data[0].id);
-          console.log(response);
           setFeaturetData({
             ...featuredData,
             start_date: response.data[0].start_date,
@@ -290,7 +289,7 @@ const Promotionproduct = () => {
 
           setapicall(false);
         });
-    } catch (err) {}
+    } catch (err) { }
     setShow(true);
   };
 

@@ -36,14 +36,7 @@ const Addproduct = (props) => {
   var varietyy = VariationJson;
 
   // api
-  // useEffect(() => {
-  //   axios.get("https://apnaorganicstore.in/backend/products").then((response) => {
-  //     let udata = response.data[1];
-  //     setpdata(udata);
-  //   }).catch(function (error) {
-  //     console.log(error);
-  //   });
-  // }, []);
+  
   // api end
   //  json
   const productjson = {
@@ -227,7 +220,7 @@ const Addproduct = (props) => {
       setseoArray(productjson.seo_tag)
     }
   }, [props.show]);
- 
+
   useEffect(() => {
     setvdata(varietyjson)
   }, []);
@@ -291,7 +284,6 @@ const Addproduct = (props) => {
     setvariantmainarray(variantmainarray.filter(item => item !== e));
   }
   const VariantEditClick = (e) => {
-    console.log(JSON.stringify(e) + "   eeeee")
     setdata1(e)
     setvariantmainarray(variantmainarray.filter(item => item !== e));
   }
@@ -351,7 +343,6 @@ const Addproduct = (props) => {
 
   const handleAddProduct = (e) => {
     const form = e.currentTarget;
-    console.log("form----------   " + JSON.stringify(pdata));
 
     if (form.checkValidity() === false) {
       e.stopPropagation();
@@ -448,17 +439,13 @@ const Addproduct = (props) => {
                       data="<p>Hello from CKEditor 5!</p>"
                       onReady={editor => {
                         // You can store the "editor" and use when it is needed.
-                        // console.log('Editor is ready to use!', editor);
                       }}
                       onChange={(event, editor) => {
                         const data = editor.getData();
-                        // console.log({ event, editor, data });
                       }}
                       onBlur={(event, editor) => {
-                        // console.log('Blur.', editor);
                       }}
                       onFocus={(event, editor) => {
-                        // console.log('Focus.', editor);
                       }}
                       name={'product_description'}
                       value={pdata.product_description}
@@ -1061,11 +1048,11 @@ const Addproduct = (props) => {
                         >
                           {pdata.featured_product === true ?
                             <Form.Check className="mx-0" value={pdata.featured_product ? true : false}
-                             name='featured_product' onChange={handleInputcheckboxChange} checked /> :
-                           <Form.Check className="mx-2" value={pdata.featured_product ? true : false} 
-                           name='featured_product' onChange={handleInputcheckboxChange} />
+                              name='featured_product' onChange={handleInputcheckboxChange} checked /> :
+                            <Form.Check className="mx-2" value={pdata.featured_product ? true : false}
+                              name='featured_product' onChange={handleInputcheckboxChange} />
                           }
-                          
+
                           Featured Product
                         </Form.Label>
                       </Form.Group>
@@ -1096,7 +1083,7 @@ const Addproduct = (props) => {
                           onClick={() => ontagaddclick()} size="sm">
                           +
                         </Button>
-                        
+
                       </InputGroup>
 
                     </div>
@@ -1131,17 +1118,13 @@ const Addproduct = (props) => {
                     data="<p>Hello from CKEditor 5!</p>"
                     onReady={editor => {
                       // You can store the "editor" and use when it is needed.
-                      // console.log('Editor is ready to use!', editor);
                     }}
                     onChange={(event, editor) => {
                       const data = editor.getData();
-                      // console.log({ event, editor, data });
                     }}
                     onBlur={(event, editor) => {
-                      // console.log('Blur.', editor);
                     }}
                     onFocus={(event, editor) => {
-                      // console.log('Focus.', editor);
                     }}
                   />
 
@@ -1199,7 +1182,7 @@ const Addproduct = (props) => {
                             onClick={() => handleAddClick()} size="sm">
                             +
                           </Button>
-                        
+
                         </td>
                       </tr>
                       {(pdata.add_custom_input || []).map((variantdata, i) => {
@@ -1276,13 +1259,13 @@ const Addproduct = (props) => {
       </Modal>
       {/* variety */}
       <Modal size="lg" show={props.show1} onHide={props.hide} dialogClassName="addproductmainmodal">
-      <Form ref={formRef} validated={validated} onSubmit={onVariantaddclick}>
-        <Modal.Header closeButton>
-          <Modal.Title>Add Variety</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="row">
-          
+        <Form ref={formRef} validated={validated} onSubmit={onVariantaddclick}>
+          <Modal.Header closeButton>
+            <Modal.Title>Add Variety</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="row">
+
               <Form.Group
                 className="mx-3"
               // controlId="validationCustom13"
@@ -1598,13 +1581,13 @@ const Addproduct = (props) => {
                   </div>
                 </div>
               </Form.Group>
-          
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <button className='button main_outline_button' onClick={props.hide}>Cancel</button>
-          <button className='button main_button' onClick={() => handleClose()}>Save</button>
-        </Modal.Footer>
+
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <button className='button main_outline_button' onClick={props.hide}>Cancel</button>
+            <button className='button main_button' onClick={() => handleClose()}>Save</button>
+          </Modal.Footer>
         </Form>
       </Modal>
 

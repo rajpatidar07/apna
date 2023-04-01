@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from "react";
 import DataTable from "react-data-table-component";
 import Form from "react-bootstrap/Form";
 import { BiEdit } from "react-icons/bi";
-import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
@@ -14,7 +13,7 @@ import Loader from "../common/loader";
 
 const Offerproduct = () => {
   const formRef = useRef();
-  let userid = localStorage.getItem("userid");
+  // let userid = localStorage.getItem("userid");
   const [offerProductData, setOfferProductData] = useState([]);
   const [featuredData, setFeaturetData] = useState([]);
   const [id, setId] = useState("");
@@ -48,7 +47,7 @@ const Offerproduct = () => {
           let cgory = response.data;
           setfiltercategory(cgory);
         });
-    } catch (err) {}
+    } catch (err) { }
   };
   /*<---Category list api---> */
   const getVendorData = () => {
@@ -66,7 +65,7 @@ const Offerproduct = () => {
 
           const result = cgory.filter(
             (thing, index, self) =>
-              index === self.findIndex((t) => t.shop_name == thing.shop_name)
+              index === self.findIndex((t) => t.shop_name === thing.shop_name)
           );
           const result1 = result.filter(
             (item) => item.status === "approved" || item.status === "active"
@@ -115,18 +114,16 @@ const Offerproduct = () => {
     }
   };
 
-  const OnDateChange = (e) => {
-    let mdate = moment(e.target.value).format("YYYY-MM-DD");
-    setsearchData({ ...searchdata, [e.target.name]: mdate });
-  };
-  const handleAlert = () => setAlert(true);
+  // const OnDateChange = (e) => {
+  //   let mdate = moment(e.target.value).format("YYYY-MM-DD");
+  //   setsearchData({ ...searchdata, [e.target.name]: mdate });
+  // };
   const hideAlert = () => setAlert(false);
 
   const handleClose = (e) => {
     e.preventDefault();
     setShow(false);
   };
-  const handleClick = () => {};
 
   useEffect(() => {
     setloading(true);
@@ -154,7 +151,7 @@ const Offerproduct = () => {
           setapicall(false);
           setloading(false);
         });
-    } catch (err) {}
+    } catch (err) { }
     getCategorydatafilter();
     getVendorData();
   }, [apicall]);
@@ -259,23 +256,23 @@ const Offerproduct = () => {
         <span
           className={
             (currentdate > row.start_date || currentdate === row.start_date) &&
-            currentdate < row.end_date
+              currentdate < row.end_date
               ? "badge bg-success"
               : currentdate > row.end_date || currentdate === row.end_date
-              ? "badge bg-danger"
-              : currentdate < row.start_date
-              ? "badge bg-info"
-              : null
+                ? "badge bg-danger"
+                : currentdate < row.start_date
+                  ? "badge bg-info"
+                  : null
           }
         >
           {(currentdate > row.start_date || currentdate === row.start_date) &&
-          currentdate < row.end_date
+            currentdate < row.end_date
             ? "Active"
             : currentdate > row.end_date || currentdate === row.end_date
-            ? "Expired"
-            : currentdate < row.start_date
-            ? "In Active"
-            : null}
+              ? "Expired"
+              : currentdate < row.start_date
+                ? "In Active"
+                : null}
         </span>
       ),
       sortable: true,
@@ -351,7 +348,7 @@ const Offerproduct = () => {
           });
           setapicall(false);
         });
-    } catch (err) {}
+    } catch (err) { }
     setShow(true);
   };
 
@@ -378,9 +375,9 @@ const Offerproduct = () => {
     formRef.current.reset();
   };
 
-  const submitHandler = () => {
-    setapicall(true);
-  };
+  // const submitHandler = () => {
+  //   setapicall(true);
+  // };
   /*Calculation for today's date */
   let date = moment();
   let currentDate = date.format("YYYY-MM-DD");

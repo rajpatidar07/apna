@@ -75,7 +75,7 @@ const CategoryReport = () => {
         }
       )
       .then((response) => {
-        if (response.data.message == "no_data") {
+        if (response.data.message === "no_data") {
           setCategoryError(response.data.message);
           setCategoryreport([0]);
           setGetTableCategory([0]);
@@ -89,7 +89,7 @@ const CategoryReport = () => {
           setapicall(false);
         }
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -680,9 +680,9 @@ const CategoryReport = () => {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
                       {CategoryError == "no_data" ||
-                      Categoryreport.total_sold_product_count == null ||
-                      Categoryreport.total_sold_product_count == undefined ||
-                      Categoryreport.total_sold_product_count == "" ? (
+                        Categoryreport.total_sold_product_count == null ||
+                        Categoryreport.total_sold_product_count == undefined ||
+                        Categoryreport.total_sold_product_count == "" ? (
                         <h3>0</h3>
                       ) : (
                         <h3>{Categoryreport.total_sold_product_count}</h3>
@@ -739,11 +739,11 @@ const CategoryReport = () => {
                       )}
 
                       {CategoryError == "no_data" ||
-                      PrevCategoryreport.prev_total_sold_product_count ==
+                        PrevCategoryreport.prev_total_sold_product_count ==
                         null ||
-                      PrevCategoryreport.prev_total_sold_product_count ==
+                        PrevCategoryreport.prev_total_sold_product_count ==
                         undefined ||
-                      PrevCategoryreport.prev_total_sold_product_count == "" ? (
+                        PrevCategoryreport.prev_total_sold_product_count == "" ? (
                         <p className="h5"> 0</p>
                       ) : (
                         <p className="h5">
@@ -767,9 +767,9 @@ const CategoryReport = () => {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
                       {CategoryError == "no_data" ||
-                      Categoryreport.total_sold_product_amount == null ||
-                      Categoryreport.total_sold_product_amount == undefined ||
-                      Categoryreport.total_sold_product_amount == "" ? (
+                        Categoryreport.total_sold_product_amount == null ||
+                        Categoryreport.total_sold_product_amount == undefined ||
+                        Categoryreport.total_sold_product_amount == "" ? (
                         <h3>₹0</h3>
                       ) : (
                         <h3>
@@ -826,11 +826,11 @@ const CategoryReport = () => {
                       )}
 
                       {CategoryError == "no_data" ||
-                      PrevCategoryreport.prev_total_sold_product_amount ==
+                        PrevCategoryreport.prev_total_sold_product_amount ==
                         null ||
-                      PrevCategoryreport.prev_total_sold_product_amount ==
+                        PrevCategoryreport.prev_total_sold_product_amount ==
                         undefined ||
-                      PrevCategoryreport.prev_total_sold_product_amount ==
+                        PrevCategoryreport.prev_total_sold_product_amount ==
                         "" ? (
                         <p className="h5"> ₹0</p>
                       ) : (
@@ -858,9 +858,9 @@ const CategoryReport = () => {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
                       {CategoryError == "no_data" ||
-                      Categoryreport.order_count == null ||
-                      Categoryreport.order_count == undefined ||
-                      Categoryreport.order_count == "" ? (
+                        Categoryreport.order_count == null ||
+                        Categoryreport.order_count == undefined ||
+                        Categoryreport.order_count == "" ? (
                         <h3>0</h3>
                       ) : (
                         <h3>{Categoryreport.order_count}</h3>
@@ -917,9 +917,9 @@ const CategoryReport = () => {
                       )}
 
                       {CategoryError == "no_data" ||
-                      PrevCategoryreport.prev_order_count == null ||
-                      PrevCategoryreport.prev_order_count == undefined ||
-                      PrevCategoryreport.prev_order_count == "" ? (
+                        PrevCategoryreport.prev_order_count == null ||
+                        PrevCategoryreport.prev_order_count == undefined ||
+                        PrevCategoryreport.prev_order_count == "" ? (
                         <p className="h5"> 0</p>
                       ) : (
                         <p className="h5">
@@ -939,8 +939,8 @@ const CategoryReport = () => {
 
         {/* graph */}
         {Categoryreport.total_sold_product_count ||
-        Categoryreport.total_sold_product_amount ||
-        Categoryreport.order_count ? (
+          Categoryreport.total_sold_product_amount ||
+          Categoryreport.order_count ? (
           <HighchartsReact highcharts={Highcharts} options={options} />
         ) : null}
 

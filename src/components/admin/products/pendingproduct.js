@@ -10,7 +10,6 @@ import BrandJson from "./../json/BrandJson";
 import Loader from "../common/loader";
 
 const Pendingproduct = () => {
-  const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   const [Alert, setAlert] = useState(false);
   const [loading, setloading] = useState(false);
@@ -42,7 +41,7 @@ const Pendingproduct = () => {
           let cgory = response.data;
           setfiltercategory(cgory);
         });
-    } catch (err) {}
+    } catch (err) { }
   };
   /*<---vendor list api---> */
   const getVendorData = () => {
@@ -60,7 +59,7 @@ const Pendingproduct = () => {
 
           const result = cgory.filter(
             (thing, index, self) =>
-              index === self.findIndex((t) => t.shop_name == thing.shop_name)
+              index === self.findIndex((t) => t.shop_name === thing.shop_name)
           );
           const result1 = result.filter(
             (item) => item.status === "approved" || item.status === "active"
@@ -354,7 +353,7 @@ const Pendingproduct = () => {
       });
   };
 
-  const handleClick = () => {};
+  const handleClick = () => { };
   return (
     <>
       {loading === true ? <Loader /> : null}

@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import Input from "../common/input";
 import ListGroup from "react-bootstrap/ListGroup";
 import Iconbutton from "../common/iconbutton";
@@ -484,7 +484,7 @@ const Delivery = () => {
                         </strong>
 
                         <div bg="primary" pill className={"col-md-6"}>
-                        <Badge bg="danger">Late</Badge>
+                          <Badge bg="danger">Late</Badge>
                         </div>
                       </ListGroup.Item>
                       <ListGroup.Item className="d-flex justify-content-between align-items-start border-0 flex-wrap-wrap row shipping_infoo py-2">
