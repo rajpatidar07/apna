@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+
 import Col from "react-bootstrap/Col";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
@@ -14,6 +15,8 @@ import InputGroup from "react-bootstrap/InputGroup";
 import VariationJson from "./json/variation";
 import CategoryJson from "./json/categorytype";
 import Table from "react-bootstrap/Table";
+import FileInput from "./setting/FileInput";
+import ImageCropper from "./setting/ImageCropper";
 import Accordion from "react-bootstrap/Accordion";
 import {
   AiOutlinePlus,
@@ -39,6 +42,13 @@ let encoded;
 let ImgObj = [];
 
 function Product() {
+  const [currentPage, setCurrentPage] = useState("choose-img");
+  const [imgAfterCrop, setImgAfterCrop] = useState("");
+  const [newImageUrls, setnewImageUrls] = useState([]);
+
+  const [image, setImage] = useState("");
+  const [imageName, setimageName] = useState("");
+
   ClassicEditor.defaultConfig = {
     toolbar: {
       items: [
@@ -61,6 +71,7 @@ function Product() {
     },
     language: "en",
   };
+  
   const navigate = useNavigate();
   let [searcherror, setsearcherror] = useState(false);
   const [open, setOpen] = useState(false);
@@ -69,6 +80,8 @@ function Product() {
   const [checkProductType, setCheckProductType] = useState(false);
   const [error, setError] = useState(true);
   const [vendorid, setVendorId] = useState([]);
+  // const [vid,setVid]=useState("")
+
   const [filtervategory, setfiltercategory] = useState([]);
   const [category, setCategory] = useState([]);
   const [indVal, setIndVal] = useState(0);
@@ -175,7 +188,8 @@ function Product() {
     category: "",
     product_status: "",
   });
-  const [newImageUrls, setnewImageUrls] = useState([]);
+ 
+
   const [variantremove, setVariantRemove] = useState([]);
   const [editbutton, setEditButton] = useState(false);
   const [taxdata, settaxdata] = useState({
@@ -273,6 +287,7 @@ function Product() {
         console.log(error);
         setLoading(false);
       });
+
   };
   // PRODUCT STATUS CHANGE API END
 
@@ -423,6 +438,7 @@ function Product() {
             (item) => item.status === "approved" || item.status === "active"
           );
           setVendorId(result1);
+          // setVid("")
         });
     } catch (err) {}
   };
@@ -462,7 +478,6 @@ function Product() {
 
             if (indVal === 0) {
               setCategory(cgory);
-              // seteditparentCategory(response.data.category_name)
               setSubCategory("");
               setlevel(0);
             }
@@ -492,7 +507,7 @@ function Product() {
                 )
                 .then((response) => {
                   let data = response.data[0];
-                  console.log("iiiiii---" + JSON.stringify(data) + i);
+                
                   if (i === 0) {
                     axios
                       .get(
@@ -500,7 +515,6 @@ function Product() {
                       )
                       .then((response) => {
                         console.log(
-                          "subcetgorydata---" + JSON.stringify(response.data)
                         );
                         setSubCategory(response.data);
                       });
@@ -512,9 +526,7 @@ function Product() {
                         `${process.env.REACT_APP_BASEURL_0}/category?category=${arr[i]}`
                       )
                       .then((response) => {
-                        console.log(
-                          "childcetgorydata---" + JSON.stringify(response.data)
-                        );
+                      
                         setchildCategory(response.data);
                       });
                     setCategoryEditparent(data.category_name);
@@ -528,7 +540,6 @@ function Product() {
                       )
                       .then((response) => {
                         console.log(
-                          "sgrandcetgorydata---" + JSON.stringify(response.data)
                         );
                         setgrandcCategory(response.data);
                       });
@@ -614,37 +625,85 @@ function Product() {
     setaddtag("");
   };
   // END SEO TAG ADD
-
   // IMAGE UPLOAD SECTION
-  const convertToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      const { name } = file;
-      fileReader.addEventListener("load", () => {
-        resolve({ name: name, base64: fileReader.result });
-      });
-      fileReader.readAsDataURL(file);
-      fileReader.onerror = (error) => {
-        reject(error);
-      };
-    });
+  // const convertToBase64 = (file) => {
+  //   console.log("baseeeeeeeeeeeeee");
+  //   return new Promise((resolve, reject) => {
+  //     const fileReader = new FileReader();
+  //     const { name } = file;
+  //     fileReader.addEventListener("load", () => {
+  //       resolve({ name: name, base64: fileReader.result });
+  //     });
+  //     fileReader.readAsDataURL(file);
+  //     fileReader.onerror = (error) => {
+  //       reject(error);
+  //     };
+  //   });
+  // };
+  const onImageSelected = (selectedImg) => {
+    setImage(selectedImg.dataurl);
+    setimageName(selectedImg.imageName)
+    setCurrentPage("crop-img");
+
+  };
+  
+
+
+  const onCropDone = (imgCroppedArea, product_id, id, vendor_id) => {
+
+    const canvasEle = document.createElement("canvas");
+    canvasEle.width = imgCroppedArea.width;
+
+    canvasEle.height = imgCroppedArea.height;
+    const context = canvasEle.getContext("2d");
+    let imageObj1 = new Image();
+    imageObj1.src = image;
+    imageObj1.onload = function () {
+      context.drawImage(
+        imageObj1,
+        imgCroppedArea.x,
+        imgCroppedArea.y,
+        imgCroppedArea.width,
+        imgCroppedArea.height,
+        0,
+        0,
+        imgCroppedArea.width,
+        imgCroppedArea.height
+      );
+
+      const dataURL = canvasEle.toDataURL("image/jpeg");
+      imguploadchange(dataURL, product_id, id, vendor_id)
+      onImgView(product_id, id)
+      setCurrentPage("img-cropped");
+    };
+  };
+  
+  const onCropCancel = () => {
+    setCurrentPage("choose-img");
+    setImage("");
   };
 
-  const imguploadchange = async (e, product_id, id, vendor_id) => {
+  const imguploadchange = async (dataURL, product_id, id, vendor_id) => {
+
     setcustomValidated("");
     onImgView(product_id, id);
-    for (let i = 0; i < e.target.files.length; i++) {
-      let coverimg;
+    let i 
+    let coverimg;
 
-      if (newImageUrls.length === 0 && i === 0) {
+    for (i = 0; i < imageName.length; i++) {
+
+      if ((newImageUrls.length === 0 || newImageUrls.length === 1) && i === 0) {
         coverimg = "cover";
       } else {
         coverimg = `cover${i}`;
-      }
-      encoded = await convertToBase64(e.target.files[i]);
-      const [first, ...rest] = encoded.base64.split(",");
-      let imgvalidation = first.split("/").pop();
 
+      }
+    }
+    //   encoded = await convertToBase64(e.target.files[i]);
+        encoded = dataURL;
+      const [first, ...rest] = encoded.split(",");
+      let imgvalidation = first.split("/").pop();
+      console.log("imgvalidation--------"+first)
       if (
         imgvalidation === "jpeg;base64" ||
         imgvalidation === "jpg;base64" ||
@@ -655,27 +714,30 @@ function Product() {
           product_id: `${product_id}`,
           product_verient_id: `${id}`,
           vendor_id: `${vendor_id}`,
-          product_image_name: `${encoded.name}${i}${id}`,
-          image_position: coverimg,
+          product_image_name:`${imageName}${i}${id}`,
+          image_position: `${coverimg}`,
           img_64: productimg,
         };
         ImgObj.push(imar);
-
         axios
           .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
           .then((response) => {
+
             ImgObj = [];
             onImgView(id, product_id);
             setcustomValidated("");
+
           })
           .catch(function(error) {
             console.log(error);
           });
       } else {
         setcustomValidated("imgformat");
+  console.log("SHOWW---"+customvalidated)
+
       }
       setProductAlert(true);
-    }
+
   };
 
   const onImgRemove = (id, name, vendor_id, product_id, product_verient_id) => {
@@ -695,23 +757,50 @@ function Product() {
   const [imageboxid, setimageboxid] = useState(0);
   const onImgView = (id, productid) => {
     setEditButton(false);
-    setimageboxid(id);
+     setimageboxid(id);
 
     axios
       .get(
         `${process.env.REACT_APP_BASEURL}/product_images_get_singal_veriant?product_id=${productid}&product_verient_id=${id}`
       )
       .then((response) => {
-        setnewImageUrls(response.data);
+        setnewImageUrls(response.data)
+       setImgAfterCrop("")
+
         setapicall(true);
         setmodalshow(false);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
+  // const onImgView = (id, productid) => {
+  //   // console.log("ksabdhjabdwhhjwb---===="+productid)
+  //   setEditButton(false);
+  //   setimageboxid(id);
+
+  //   axios
+  //     .get(
+  //       `${process.env.REACT_APP_BASEURL}/product_images_get_singal_veriant?product_id=${productid}&product_verient_id=${id}`
+  //     )
+  //     .then((response) => {
+
+  //       // setnewImageUrls(response.data);
+  //       setImgAfterCrop(response.data)
+  //       console.log("product_id"+productid +"---"+"product_verient_id"+id)
+  //       // console.log("BHAVNA--------"+JSON.stringify(imgAfterCrop))
+
+  //       setapicall(true);
+  //       setmodalshow(false);
+  //     })
+  //     .catch(function(error) {
+  //       console.log(error);
+  //     });
+
+  // };
 
   const onImgCoverEditClick = (imgid, productid, productvariantid) => {
+    // console.log("Iiiiiiiiiiiiiiiiiiii---"+imgid, productid, productvariantid)
     axios
       .put(`${process.env.REACT_APP_BASEURL}/change_porduct_cover_image`, {
         product_image_id: `${imgid}`,
@@ -812,6 +901,7 @@ function Product() {
         }
       )
       .then((response) => {
+        // console.log("------------------"+JSON.stringify(response.data))
         setvdata(response.data.results);
         settaxdata(response.data.results[0]);
         setvariantapicall(false);
@@ -1886,6 +1976,7 @@ function Product() {
   // END DATATABLE DATA
   return (
     <>
+    
       {loading === true ? <Loader /> : null}
       <div className="App productlist_maindiv">
         <h2>Products</h2>
@@ -3027,6 +3118,14 @@ function Product() {
                                                   onChange={(e) =>
                                                     onVariantChange(e)
                                                   }
+                                                  disabled={
+                                                    variantarray.unit !== "pcs" &&
+                                                    variantarray.unit !== ""
+                                                      ? true
+                                                      : variantarray.unit == ""
+                                                      ? false
+                                                      : false
+                                                  }
                                                   required
                                                 >
                                                   {" "}
@@ -3944,6 +4043,7 @@ function Product() {
                       </div>
                       <div className="col-md-3 col-sm-4 p-2 text-center">
                         <div className="addvariety_inputbox">
+                          
                           <Form.Group
                             className="mx-3"
                             controlId="validationCustom01"
@@ -3956,7 +4056,7 @@ function Product() {
                               <span className="text-danger">*</span>
                             </Form.Label>
                             <Col sm="12">
-                              <InputGroup className="">
+                              {/* <InputGroup className="">
                                 <Form.Select
                                   aria-label="Default select example"
                                   name="colors"
@@ -3964,25 +4064,60 @@ function Product() {
                                   onChange={(e) => onVariantChange(e)}
                                   required
                                 >
-                                  {" "}
-                                  <option value={""}> Select Color</option>
-                                  {(varietyy.color || []).map((vari, i) => {
-                                    return (
-                                      <option
-                                        value={vari}
-                                        key={i}
-                                        selected={productdata.color}
-                                      >
-                                        {vari}
-                                      </option>
-                                    );
-                                  })}
+                                  
+                                  Color
+                                  <span className="text-danger">*</span>
                                 </Form.Select>
-                              </InputGroup>
-                            </Col>
-                          </Form.Group>
-                        </div>
-                      </div>
+                                </InputGroup> */}
+                                </Col>
+                                {/* </Form.Label> */}
+                                <Col sm="12">
+                                  <InputGroup className="">
+                                  <Form.Select
+                                                  aria-label="Default select example"
+                                                  name="colors"
+                                                  value={variantarray.colors}
+                                                  onChange={(e) =>
+                                                    onVariantChange(e)
+                                                  }
+                                                  disabled={
+                                                    variantarray.unit !== "pcs" &&
+                                                    variantarray.unit !== ""
+                                                      ? true
+                                                      : variantarray.unit == ""
+                                                      ? false
+                                                      : false
+                                                  }
+                                                  required
+                                                >
+                                                  {" "}
+                                                  <option value={""}>
+                                                    {" "}
+                                                    Select Color
+                                                  </option>
+                                                  {(varietyy.color || []).map(
+                                                    (vari, i) => {
+                                                      return (
+                                                        <option
+                                                          value={vari}
+                                                          key={i}
+                                                          selected={
+                                                            productdata.color
+                                                          }
+                                                        >
+                                                          {vari}
+                                                        </option>
+                                                      );
+                                                    }
+                                                  )}
+                                                </Form.Select>
+                                   
+                                  </InputGroup>
+                                </Col>
+                              </Form.Group>
+                            </div>
+                            
+                          </div>
 
                       <div className="col-md-3 col-sm-4 p-2 text-center">
                         <div className="addvariety_inputbox">
@@ -4329,7 +4464,7 @@ function Product() {
                                         }
                                       }}
                                     />
-                                  </InputGroup> */}
+                                  </InputGroup>  */}
                             </Col>
                           </Form.Group>
                         </div>
@@ -4414,6 +4549,8 @@ function Product() {
 
                       <div className="col-12">
                         {/* <Accordion defaultActiveKey="variantimgbox149"> */}
+                  
+                        
                         <Table bordered className="align-middle my-2">
                           <thead className="align-middle">
                             <tr>
@@ -4590,7 +4727,7 @@ function Product() {
                                         >
                                           <td className="" colSpan={"12"}>
                                             <div className="image_box">
-                                              {newImageUrls.map((imgg, i) => {
+                                            {newImageUrls.map((imgg,i)=>{
                                                 return `${variantdata.id}` ===
                                                   imgg.product_verient_id ? (
                                                   <div
@@ -4641,15 +4778,59 @@ function Product() {
                                                 ) : null;
                                               })}
                                               <div className="imgprivew_box">
-                                                <img
-                                                  src={
-                                                    "https://i2.wp.com/asvs.in/wp-content/uploads/2017/08/dummy.png?fit=399%2C275&ssl=1"
-                                                  }
-                                                  key={i}
-                                                  alt="apna_organic"
-                                                  height={120}
-                                                />
-                                                <Form.Control
+
+                                              <div className="container">
+      {currentPage === "choose-img" ? (
+        <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName}/>
+      ) : currentPage === "crop-img" ? (
+        <ImageCropper
+          image={image}
+          imageNamee={imageName}
+          onCropDone={(imgCroppedArea)=>onCropDone(
+            imgCroppedArea,
+            variantdata.product_id,
+            variantdata.id,
+            variantdata.vendor_id,
+            // console.log("product_id"+variantdata.product_id +"id-------"+variantdata.id+"vendor_id"+variantdata.vendor_id)
+            
+            )
+          }
+          onCropCancel={onCropCancel}
+        />
+      ) : (
+        <div>
+          <div> 
+               <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName}/>
+           </div>
+          {<FileInput/>===<ImageCropper/>?( 
+          <>
+           <button
+            onClick={() => {
+              setCurrentPage("crop-img");
+            }}
+            className="btn"
+          >
+            Crop
+          </button>
+
+          <button
+            onClick={() => {
+              setCurrentPage("choose-img");
+              setImage("");
+            }}
+            className="btn"
+          >
+            New Image
+          </button>
+          </>
+         ):""}
+        </div>
+      )}
+    </div>
+                                              
+      
+   
+                                                {/* <Form.Control
                                                   multiple
                                                   type="file"
                                                   sm="9"
@@ -4663,10 +4844,10 @@ function Product() {
                                                     )
                                                   }
                                                   name={"img_64"}
-                                                />
-                                                <span className="plus_icon">
+                                                /> */}
+                                                {/* <span className="plus_icon">
                                                   +
-                                                </span>
+                                                </span> */}
                                               </div>
                                             </div>
                                           </td>
@@ -4703,12 +4884,19 @@ function Product() {
                           </tbody>
                         </Table>
                         {/* </Accordion> */}
+                        {/* </Col>
+                      </Form.Group> */}
+
                       </div>
                     </div>
                   </div>
                   {/* </Form.Group> */}
                 </div>
+
+                
+
               </Modal.Body>
+              
               <Modal.Footer>
                 <button
                   className="button main_outline_button"
