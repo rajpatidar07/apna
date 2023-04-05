@@ -432,7 +432,7 @@ const VendorsList = () => {
     setLoading(true);
     axios
       .put(
-        `${process.env.REACT_APP_BASEURL}/vendor_status_change`,
+        `${process.env.REACT_APP_BASEURL_0}/vendor_status_change`,
         {
           status_change: e.target.value,
           id: `${id}`,
@@ -523,8 +523,10 @@ const VendorsList = () => {
       if (newImageUrls.length <= 5) {
         axios
           .post(
-            `${process.env.REACT_APP_BASEURL}/vendor_documents_upload`,
-            ImgObj
+            `${process.env.REACT_APP_BASEURL_0}/vendor_documents_upload`,
+            ImgObj, {
+              headers: { admin_token: `${token}` },
+            } 
           )
           .then((response) => {
             onImgView(vendorID);
@@ -558,7 +560,9 @@ const VendorsList = () => {
   const onImgView = (vendorID) => {
     axios
       .get(
-        `${process.env.REACT_APP_BASEURL}/vendor_documents_get?vendor_id=${vendorID}`
+        `${process.env.REACT_APP_BASEURL_0}/vendor_documents_get?vendor_id=${vendorID}`, {
+          headers: { admin_token: `${token}` },
+        } 
       )
       .then((response) => {
         setnewImageUrls(response.data);

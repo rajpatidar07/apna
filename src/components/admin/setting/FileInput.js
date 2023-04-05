@@ -15,40 +15,41 @@ function FileInput({ onImageSelected }) {
 
 
   return (
-    <div>
-                <Form.Group
-                  className="mb-3 aos_input"
-                  controlId="validationCustom08"
-                >
-                  <Form.Control
+    <div className="mt-100">
+        <div>
+          {window.location.pathname==="/product"?"":
+          <Form.Label>Image</Form.Label>}
+        
+      <Form.Control
         multiple
-        className="img_add_button mt=100"
+        className="img_add_button"
         onChange={handleOnChange}
         type="file"
         placeholder="Shop_logo"
         name={"img_64"}
         ref={inputRef}
       />
-       {window.location.pathname==="/product"?
-       <span className="plus_icon"> + </span>:""}
-                 
-                </Form.Group>
-              </div> 
-    
-    // <div  >
-    //   <Form.Control
-    //     multiple
-    //     className="img_add_button mt=100"
-    //     onChange={handleOnChange}
-    //     type="file"
-    //     placeholder="Shop_logo"
-    //     name={"img_64"}
-    //     ref={inputRef}
-    //   />
-    //   {window.location.pathname==="/product"?
-    //   <span className="plus_icon"> + </span>:""}
+      <div className="imgprivew_box">
+        {window.location.pathname==="/product"?
+        <>
+         <img
+      src={
+             "https://i2.wp.com/asvs.in/wp-content/uploads/2017/08/dummy.png?fit=399%2C275&ssl=1"
+          }
+      alt="apna_organic"
+       width={100}
+       height={100}
+       /> 
+   
+      <span className="plus_icon"> + </span>
+        </>
+     :null}
+      </div>
+     
 
-    // </div>
+    </div>
+    </div>
+   
   );
 }
 

@@ -4763,8 +4763,9 @@ console.log("8888---"+dataURL)
                                               ) : null;
                                             })}
                                             <div className="imgprivew_box">
-
-                                              <div className="container">
+                                           
+                                            
+                                            
                                                 {currentPage === "choose-img" ? (
                                                   <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />
                                                 ) : currentPage === "crop-img" ? (
@@ -4810,7 +4811,8 @@ console.log("8888---"+dataURL)
                                                     ) : ""}
                                                   </div>
                                                 )}
-                                              </div>
+                                                
+                                           
 
 
 

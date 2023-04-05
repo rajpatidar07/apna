@@ -171,11 +171,13 @@ function Banner() {
       function getBanner() {
         try {
           axios
-            .post(`${process.env.REACT_APP_BASEURL}/banner_list`, {
+            .post(`${process.env.REACT_APP_BASEURL_0}/banner_list`, {
               banner_id: e,
               title: "",
               banner_location: "",
-            })
+            }, {
+              headers: { admin_token: `${token}` },
+            } )
             .then((response) => {
               let data = response.data;
               setBanner(data);
@@ -191,11 +193,13 @@ function Banner() {
   };
   useEffect(() => {
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/banner_list`, {
+      .post(`${process.env.REACT_APP_BASEURL_0}/banner_list`, {
         banner_id: "",
         title: "",
         banner_location: "",
-      })
+      }, {
+        headers: { admin_token: `${token}` },
+      } )
       .then((response) => {
         // let data = response.data;
         setBanner(response.data);
@@ -569,9 +573,7 @@ if (response.data.code === "ER_DUP_ENTRY") {
                 )}
               </div>
 
-
-              <div className="col-md-4">
-                {/* <Form.Group
+{/* <Form.Group
                   className="mb-3 aos_input"
                   controlId="validationCustom08"
                 >
@@ -589,49 +591,61 @@ if (response.data.code === "ER_DUP_ENTRY") {
                     Please upload image
                   </Form.Control.Feedback>
                 </Form.Group> */}
-                     <div className="container">
+              <div className="col-md-4">
+                
       {currentPage === "choose-img" ? (
         
         <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName}/>
       ) : currentPage === "crop-img" ? (
-        <ImageCropper
+        <div className="container-fluid">
+           <ImageCropper
            image={image}
            imageNamee={imageName}
           onCropDone={(imgCroppedArea) => onCropDone(imgCroppedArea )}onCropCancel={onCropCancel}
             />
+            
+        </div>
+       
       ) : (
         <div>
-           <div>
-                 <img className="cropped-img"
-                src={imgAfterCrop}
+        <div>
+        <div>
+              <img className="cropped-img w-50 h-50"
+                  src={imgAfterCrop}
+
                 // key={i}
                 // alt="apna_organic"
                 // height={120}
                />
           </div>  
-
-          <button
-            onClick={() => {
-              setCurrentPage("crop-img");
-            }}
-
-            className="btn"
-          >
-            Crop
-          </button>
-
-          <button
-            onClick={() => {
-              setCurrentPage("choose-img");
-              setImage("");
-            }}
-            className="btn"
-          >
-            New Image
-          </button>
         </div>
+        { <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />  === <ImageCropper/>  ? (
+            <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />):
+          <>
+            <button
+              onClick={() => {
+                setCurrentPage("crop-img");
+              }}
+              className="btn"
+            >
+              Crop
+            </button>
+
+            <button
+              onClick={() => {
+                setCurrentPage("choose-img");
+                setImage("");
+              }}
+              className="btn"
+            >
+              New Image
+            </button>
+          </>
+       
+      }
+      </div>
+
       )}
-    </div>
               </div>
               {/* <div className="col-md-4">
                 <Form.Group
