@@ -7,7 +7,7 @@ function FileInput({ onImageSelected }) {
       const reader = new FileReader();
       const image_name = event.target.files[0].name;
       reader.readAsDataURL(event.target.files[0]);
-      reader.onload = function (e) {
+      reader.onload = function () {
         onImageSelected({ "dataurl": reader.result, "imageName": image_name });
       };
     }
@@ -16,18 +16,39 @@ function FileInput({ onImageSelected }) {
 
   return (
     <div>
-      <Form.Control
+                <Form.Group
+                  className="mb-3 aos_input"
+                  controlId="validationCustom08"
+                >
+                  <Form.Control
         multiple
-        className={"img_add_button"}
+        className="img_add_button mt=100"
         onChange={handleOnChange}
         type="file"
         placeholder="Shop_logo"
         name={"img_64"}
         ref={inputRef}
       />
-      <span className="plus_icon"> + </span>
+       {window.location.pathname==="/product"?
+       <span className="plus_icon"> + </span>:""}
+                 
+                </Form.Group>
+              </div> 
+    
+    // <div  >
+    //   <Form.Control
+    //     multiple
+    //     className="img_add_button mt=100"
+    //     onChange={handleOnChange}
+    //     type="file"
+    //     placeholder="Shop_logo"
+    //     name={"img_64"}
+    //     ref={inputRef}
+    //   />
+    //   {window.location.pathname==="/product"?
+    //   <span className="plus_icon"> + </span>:""}
 
-    </div>
+    // </div>
   );
 }
 

@@ -156,6 +156,7 @@ const Featuredproduct = () => {
     getCategorydatafilter();
     getVendorData();
   }, [apicall]);
+  console.log("setFeatureProductData"+JSON.stringify(featuredProductData))
 
   /*<---Table data ---->*/
   const columns = [

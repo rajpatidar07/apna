@@ -35,9 +35,10 @@ function ImageCropper({ image, onCropDone, onCropCancel }) {
             onCropComplete={onCropComplete}
             style={{
               containerStyle: {
-                width: "90%",
-                height: "50%",
-               
+                width: "30%",
+                height: "30%",
+                // marginTop:"30%",
+                // marginLeft:"50px",
                 backgroundColor: "#fff",
               },
             }}

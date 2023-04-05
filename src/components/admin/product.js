@@ -75,8 +75,6 @@ function Product() {
   const [checkProductType, setCheckProductType] = useState(false);
   const [error, setError] = useState(true);
   const [vendorid, setVendorId] = useState([]);
-  // const [vid,setVid]=useState("")
-
   const [filtervategory, setfiltercategory] = useState([]);
   const [category, setCategory] = useState([]);
   const [indVal, setIndVal] = useState(0);
@@ -96,6 +94,8 @@ function Product() {
 
   const [level, setlevel] = useState("");
   const [pdata, setpdata] = useState([]);
+  console.log("PDAYTAA>NAME"+JSON.stringify(pdata.category_name))
+
   const [variantid, setvariantid] = useState("");
   const [productid, setproductid] = useState("");
   const [Alert, setAlert] = useState(false);
@@ -130,6 +130,7 @@ function Product() {
     expire_date: "",
     quantity: "",
   };
+  
   const [totaltax, settotaltax] = useState("");
   const [variantarray, setvariantarray] = useState(veriantData);
   const [variantmainarray, setvariantmainarray] = useState([]);
@@ -145,6 +146,9 @@ function Product() {
   });
   const [vdata, setvdata] = useState([]);
   // let [condition, setCondition] = useState(false);
+  var category_name={
+    
+  }
   var data = {
     add_custom_input: [],
     product_title_name: "",
@@ -182,7 +186,6 @@ function Product() {
     category: "",
     product_status: "",
   });
-
 
   const [variantremove, setVariantRemove] = useState([]);
   const [editbutton, setEditButton] = useState(false);
@@ -305,6 +308,7 @@ function Product() {
             is_delete: ["1"],
             colors: [],
             size: [],
+            seo_tag:[`${searchdata.tag}`],
             parent_category: [],
             product_type: [],
             // product_title_name: [],
@@ -325,7 +329,7 @@ function Product() {
         console.log(error);
       });
   };
-
+  console.log("PDATA----"+JSON.stringify(pdata))
   useEffect(() => {
     // const first = "";
     fetchdata();
@@ -383,6 +387,7 @@ function Product() {
               });
             } else if (indVal === scategory.sub_category) {
               setchildCategory(cgory);
+              // console.log("@@@@@----"+JSON.stringify(cgory))
               setproductdata({
                 ...productdata,
                 parent_category: cgory[0].all_parent_id,
@@ -393,7 +398,7 @@ function Product() {
               setgrandcCategory(cgory);
               setproductdata({
                 ...productdata,
-                parent_category: cgory[0].all_parent_id,
+                parent_category: cgory.all_parent_id,
                 category: indVal,
               });
               setlevel(3);
@@ -676,7 +681,7 @@ function Product() {
   };
 
   const imguploadchange = async (dataURL, product_id, id, vendor_id) => {
-
+console.log("8888---"+dataURL)
     setcustomValidated("");
     onImgView(product_id, id);
     let i
@@ -875,6 +880,8 @@ function Product() {
         console.log(error);
       });
   };
+  console.log("VDAAAA__"+vdata)
+
   // ADD VARIETY MODAL
   const handlevarietyShow = (id, variantid) => {
     // START GET THE SELECTED VARIENT DATA------------------------------------------------------
@@ -1496,6 +1503,7 @@ function Product() {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
     setsearcherror(false);
   };
+
   const onProductSearchClick = () => {
     if (
       searchdata.product_title_name === "" &&
@@ -1664,6 +1672,12 @@ function Product() {
     {
       name: "Vendor",
       selector: (row) => row.shop,
+      sortable: true,
+      width: "90px",
+    },
+    {
+      name: "Seo_Tag",
+      selector: (row) => row.seo_tag,
       sortable: true,
       width: "90px",
     },
@@ -1959,6 +1973,17 @@ function Product() {
               ) : null}
             </div>
             <div className="col-md-2 col-sm-6 aos_input">
+              <input
+                type={"text"}
+                placeholder={"Search by seo_tag"}
+                onChange={OnSearchChange}
+                name="tag"
+                value={searchdata.tag}
+                className={"form-control"}
+              />
+             
+            </div>
+            <div className="col-md-2 col-sm-6 aos_input">
               <Form.Select
                 aria-label="Search by status"
                 className="adminselectbox"
@@ -2018,6 +2043,7 @@ function Product() {
                 })}
               </Form.Select>
             </div>
+           
             <div className="col-md-2 col-sm-6 aos_input">
               <Form.Select
                 aria-label="Search by status"

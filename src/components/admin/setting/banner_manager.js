@@ -9,8 +9,12 @@ import { BiEdit } from "react-icons/bi";
 import { useEffect } from "react";
 import Iconbutton from "../common/iconbutton";
 import axios from "axios";
-
+import FileInput from "./FileInput";
+import ImageCropper from "./ImageCropper";
 function Banner() {
+  let encoded;
+  let ImgObj = [];
+  let token = localStorage.getItem("token");
   const formRef = useRef();
   const [error, setError] = useState(true);
 
@@ -27,7 +31,7 @@ function Banner() {
   const [UpdateAlert, setUpdateAlert] = useState(false);
   const [fileName, setFileName] = useState("");
   const [addBanner, setAddBanner] = useState({
-    image: "",
+    imgBase64: "",
     title: "",
     description: "",
     size: "",
@@ -47,7 +51,21 @@ function Banner() {
       center: true,
       cell: (row) => (
         <>
-          <img
+         <img
+          alt={"apna_organic"}
+          src={
+            row.image
+              ? row.image
+              : "https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
+          }
+          style={{
+            padding: 10,
+            textAlign: "right",
+            maxHeight: "100px",
+            maxWidth: "100px",
+          }}
+        />
+          {/* <img
             height="90px"
             width="75px"
             alt={row.title}
@@ -59,7 +77,7 @@ function Banner() {
               textAlign: "right",
             }}
             onClick={() => handleClick()}
-          />
+          /> */}
         </>
       ),
     },
@@ -102,7 +120,7 @@ function Banner() {
               row.banner_id,
               row.title,
               row.description,
-              row.image,
+              row.imgBase64,
               row.banner_url,
               row.banner_location,
               row.size
@@ -132,7 +150,7 @@ function Banner() {
     setAlert(true);
   };
 
-  const handleClick = () => { };
+  const handleClick = () => {};
 
   const hideAlert = () => {
     axios.put(`${process.env.REACT_APP_BASEURL}/banner_delete`, {
@@ -165,7 +183,7 @@ function Banner() {
               setBannerId(banner_id);
               setImgArray(response.data[0].image);
             });
-        } catch (err) { }
+        } catch (err) {}
       }
       getBanner();
       setShow(true);
@@ -184,11 +202,63 @@ function Banner() {
         setAddBanner(response.data);
       });
   }, [apicall]);
+  const [currentPage, setCurrentPage] = useState("choose-img");
+  const [imgAfterCrop, setImgAfterCrop] = useState("");
+  const [image, setImage] = useState("");
+  const [imageName, setimageName] = useState("");
+  const onImageSelected = (selectedImg) => {
+    setImage(selectedImg.dataurl);
+    setimageName(selectedImg.imageName)
+    setCurrentPage("crop-img");
 
-  const ImgFormChange = (e) => {
-    setFile(e.target.files[0]);
-    setFileName(e.target.files[0].name);
   };
+  // console.log("IMAGW"+image)
+  // console.log("setFileName---"+imageName)
+
+  const onCropDone = (imgCroppedArea) => {
+    const canvasEle = document.createElement("canvas");
+    canvasEle.width = imgCroppedArea.width;
+
+    canvasEle.height = imgCroppedArea.height;
+    const context = canvasEle.getContext("2d");
+    console.log("context"+context)
+
+    let imageObj1 = new Image();
+    imageObj1.src = image;
+    // console.log("===++++"+image)
+    imageObj1.onload = function () {
+      context.drawImage(
+        imageObj1,
+        imgCroppedArea.x,
+        imgCroppedArea.y,
+        imgCroppedArea.width,
+        imgCroppedArea.height,
+        0,
+        0,
+        imgCroppedArea.width,
+        imgCroppedArea.height
+      );
+
+      const dataURL = canvasEle.toDataURL("image/jpeg");
+      // console.log("DATAURL"+dataURL)
+    //  setAddBanner(dataURL)
+    //  console.log("CHECK---"+dataURL+"----ee---------"+addBanner)
+
+      // console.log("dataURL----------------------"+dataURL)
+      setImgAfterCrop(dataURL)
+      setCurrentPage("img-cropped");
+    };
+  };
+  const onCropCancel = () => {
+    setCurrentPage("choose-img");
+    setImage("");
+  };
+  // const ImgFormChange = (e) => {
+  //   setFile(e.target.files[0]);
+  //   setFileName(e.target.files[0].name);
+  // };
+
+
   const handleFormChange = (e) => {
     setAddBanner({ ...addBanner, [e.target.name]: e.target.value });
   };
@@ -201,7 +271,9 @@ function Banner() {
     setValidated(false);
     setShow(false);
   };
-  const AddBanner = (e, banner_id) => {
+  
+  const AddBanner = (e) => {
+
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
       e.stopPropagation();
@@ -210,52 +282,93 @@ function Banner() {
     }
     if (form.checkValidity() === true) {
       e.preventDefault();
-      const formData = new FormData();
-      formData.append("image", file);
-      formData.append("filename", fileName);
-      formData.append("banner_url", addBanner.banner_url);
-      formData.append("title", addBanner.title);
-      formData.append("description", addBanner.description);
-      formData.append("size", addBanner.size);
-      formData.append("banner_location", addBanner.banner_location);
-      axios
-        .post(`${process.env.REACT_APP_BASEURL}/add_banner`, formData)
-        .then((response) => {
-          if (response.data.code === "ER_DUP_ENTRY") {
-            setError(false);
-          } else {
-            setShow(false);
-            setapicall(true);
-            setAddAlert(true);
-          }
-          // let data = response.data;
-        });
-      formRef.current.reset();
-      setValidated(false);
-      // setData("");
+      encoded=imgAfterCrop
+      const [first, ...rest] = encoded.split(","); 
+
+      let imgvalidation = first.split("/").pop();
+      if (
+        imgvalidation === "jpeg;base64" ||
+        imgvalidation === "jpg;base64" ||
+        imgvalidation === "png;base64"
+      )
+      {
+        const productimg = rest.join("-");
+        let imar = {
+              title:addBanner.title,
+              banner_url:addBanner.banner_url,
+              description:addBanner.description,
+              size:addBanner.size,
+              banner_location:addBanner.banner_location,
+              imgBase64: productimg,
+            };
+        axios
+        .post(`${process.env.REACT_APP_BASEURL_0}/add_banner`, imar, {
+          headers: { admin_token: `${token}` },
+        } )
+.then((response) => {
+if (response.data.code === "ER_DUP_ENTRY") {
+  setError(false);
+} else {
+  setShow(false);
+  setapicall(true);
+  setAddAlert(true);
+}
+// let data = response.data;
+})
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+      else{
+        setValidated(false);
+      }
     }
-  };
-  const UpdateBanner = (show) => {
-    const formData = new FormData();
-    formData.append("image", file);
-    formData.append("filename", fileName);
-    formData.append("banner_url", addBanner.banner_url);
-    formData.append("title", addBanner.title);
-    formData.append("description", addBanner.description);
-    formData.append("size", addBanner.size);
-    formData.append("banner_location", addBanner.banner_location);
-    formData.append("banner_id", addBanner.banner_id);
-    axios
-      .put(`${process.env.REACT_APP_BASEURL}/update_banner`, formData)
-      .then((response) => {
-        // let data = response.data;
-        setShow(false);
-        setapicall(true);
-        setUpdateAlert(true);
-      });
-    formRef.current.reset();
-    setValidated(false);
-  };
+  }
+  const UpdateBanner = (e) => {
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.stopPropagation();
+      e.preventDefault();
+      setValidated(true);
+    }
+    if (form.checkValidity() === true) {
+      e.preventDefault();
+      encoded=imgAfterCrop
+      const [first, ...rest] = encoded.split(","); 
+
+      let imgvalidation = first.split("/").pop();
+      if (
+        imgvalidation === "jpeg;base64" ||
+        imgvalidation === "jpg;base64" ||
+        imgvalidation === "png;base64"
+      )
+      {
+        const productimg = rest.join("-");
+        let imar = {
+          title:addBanner.title,
+            banner_url:addBanner.banner_url,
+            description:addBanner.description,
+            size:addBanner.size,
+            banner_location:addBanner.banner_location,
+            imgBase64: productimg,
+            banner_id:addBanner.banner_id
+            };
+            axios
+            .put(`${process.env.REACT_APP_BASEURL_0}/update_banner`, imar, {
+              headers: { admin_token: `${token}` },
+            })
+            .then((response) => {
+              // let data = response.data;
+              setShow(false);
+              setapicall(true);
+              setUpdateAlert(true);
+            });
+          formRef.current.reset();
+          setValidated(false);
+        };
+      }
+    }
+
   return (
     <div>
       <h2>Banner Manager</h2>
@@ -456,8 +569,9 @@ function Banner() {
                 )}
               </div>
 
+
               <div className="col-md-4">
-                <Form.Group
+                {/* <Form.Group
                   className="mb-3 aos_input"
                   controlId="validationCustom08"
                 >
@@ -474,8 +588,72 @@ function Banner() {
                   <Form.Control.Feedback type="invalid" className="h6">
                     Please upload image
                   </Form.Control.Feedback>
-                </Form.Group>
+                </Form.Group> */}
+                     <div className="container">
+      {currentPage === "choose-img" ? (
+        
+        <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName}/>
+      ) : currentPage === "crop-img" ? (
+        <ImageCropper
+           image={image}
+           imageNamee={imageName}
+          onCropDone={(imgCroppedArea) => onCropDone(imgCroppedArea )}onCropCancel={onCropCancel}
+            />
+      ) : (
+        <div>
+           <div>
+                 <img className="cropped-img"
+                src={imgAfterCrop}
+                // key={i}
+                // alt="apna_organic"
+                // height={120}
+               />
+          </div>  
+
+          <button
+            onClick={() => {
+              setCurrentPage("crop-img");
+            }}
+
+            className="btn"
+          >
+            Crop
+          </button>
+
+          <button
+            onClick={() => {
+              setCurrentPage("choose-img");
+              setImage("");
+            }}
+            className="btn"
+          >
+            New Image
+          </button>
+        </div>
+      )}
+    </div>
               </div>
+              {/* <div className="col-md-4">
+                <Form.Group
+                  className="mb-3 aos_input"
+                  controlId="validationCustom08"
+                >
+                  <Form.Label>Blog Image</Form.Label>
+                 
+                  {/* <Form.Control
+                    onChange={(e) => ImgFormChange(e)}
+                    type="file"
+                    placeholder="Shop_logo"
+                    name={"image"}
+                  /> 
+                  {addBanner.image ? (
+                    <img src={Newlogo} alt="newimg" width={"50px"} />
+                  ) : null}
+                  <Form.Control.Feedback type="invalid" className="h6">
+                    Please upload image
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </div> */}
 
               <div className="col-md-12">
                 <Form.Group
