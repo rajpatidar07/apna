@@ -611,7 +611,7 @@ const CategoryList = () => {
     setCateType(false);
     setValidated(false);
     setShow(false);
-    apicall(true);
+    // apicall(true);
   };
 
   return (

@@ -38,7 +38,7 @@ function FileInput({ onImageSelected }) {
           }
       alt="apna_organic"
        width={100}
-       height={100}
+       height={"100%"}
        /> 
    
       <span className="plus_icon"> + </span>

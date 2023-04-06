@@ -80,6 +80,7 @@ function Product() {
   const [indVal, setIndVal] = useState(0);
   const [subCategory, setSubCategory] = useState([]);
   const [childCategory, setchildCategory] = useState([]);
+  console.log("childCategory--"+JSON.stringify(childCategory))
   const [grandcCategory, setgrandcCategory] = useState([]);
   const [scategory, setScategory] = useState({
     parent_category: "",
@@ -91,10 +92,10 @@ function Product() {
   const [categoryeditsubparent, setCategoryEditSubparent] = useState("");
 
   const [categoryeditchildparent, setCategoryEditChildparent] = useState("");
-
+ console.log("CHILDCATEGORYYYY   EDIT--"+categoryeditchildparent)
   const [level, setlevel] = useState("");
   const [pdata, setpdata] = useState([]);
-  console.log("PDAYTAA>NAME"+JSON.stringify(pdata.category_name))
+  // console.log("PDAYTAA>NAME"+JSON.stringify(pdata.category_name))
 
   const [variantid, setvariantid] = useState("");
   const [productid, setproductid] = useState("");
@@ -329,7 +330,6 @@ function Product() {
         console.log(error);
       });
   };
-  console.log("PDATA----"+JSON.stringify(pdata))
   useEffect(() => {
     // const first = "";
     fetchdata();
@@ -390,7 +390,7 @@ function Product() {
               // console.log("@@@@@----"+JSON.stringify(cgory))
               setproductdata({
                 ...productdata,
-                parent_category: cgory[0].all_parent_id,
+                parent_category: cgory.all_parent_id,
                 category: indVal,
               });
               setlevel(2);
@@ -525,12 +525,15 @@ function Product() {
                       )
                       .then((response) => {
 
-                        setchildCategory(response.data);
+                        setchildCategory(response.data[0]);
+                    console.log("@@@-----------------"+data.category_name)
+
                       });
                     setCategoryEditparent(data.category_name);
 
                     setCategoryEditSubparent(data.category_name);
                     setCategoryEditChildparent(data.category_name);
+                    console.log("@@@"+data.category_name)
                   } else if (i === 2) {
                     axios
                       .get(
@@ -880,7 +883,6 @@ console.log("8888---"+dataURL)
         console.log(error);
       });
   };
-  console.log("VDAAAA__"+vdata)
 
   // ADD VARIETY MODAL
   const handlevarietyShow = (id, variantid) => {
@@ -2469,7 +2471,8 @@ console.log("8888---"+dataURL)
                             Child Category{" "}
                             <span className="text-danger">* </span>
                           </Form.Label>{" "}
-                          {categoryeditchildparent}
+                          {/* {categoryeditchildparent} */}
+                          {/* {childCategory} */}
                           <Form.Select
                             aria-label="Search by status"
                             className="adminselectbox"
