@@ -364,17 +364,14 @@ function Product() {
     setScategory({ ...scategory, [e.target.name]: e.target.value });
   };
   useEffect(() => {
+    
     if (indVal === "") {
       setSubCategory("");
       setchildCategory("");
-      //   setgrandcCategory("");
-      //   setproductdata({
-      //     ...productdata,
-      //     category: indVal,
-      //   });
+      // setgrandcCategory("");
     } else {
       axios
-        .get(`${process.env.REACT_APP_BASEURL_0}/category?category=${indVal}`)
+        .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
         .then((response) => {
           if (response.data !== []) {
             let cgory = response.data;
@@ -386,15 +383,17 @@ function Product() {
                 category: indVal,
               });
             } else if (indVal === scategory.sub_category) {
+              console.log("*****_---------"+scategory.sub_category)
               setchildCategory(cgory);
-              // console.log("@@@@@----"+JSON.stringify(cgory))
               setproductdata({
                 ...productdata,
-                parent_category: cgory.all_parent_id,
+                parent_category: cgory[0].all_parent_id,
                 category: indVal,
               });
               setlevel(2);
             } else if (indVal === scategory.childcategory) {
+              console.log("*****_+++++++++++++++++++---------"+scategory.childcategory)
+
               setgrandcCategory(cgory);
               setproductdata({
                 ...productdata,
@@ -415,6 +414,61 @@ function Product() {
         });
     }
   }, [scategory, indVal]);
+
+
+
+  // useEffect(() => {
+  //   if (indVal === "") {
+  //     setSubCategory("");
+  //     setchildCategory("");
+  //     //   setgrandcCategory("");
+  //     //   setproductdata({
+  //     //     ...productdata,
+  //     //     category: indVal,
+  //     //   });
+  //   } else {
+  //     axios
+  //       .get(`${process.env.REACT_APP_BASEURL_0}/category?category=${indVal}`)
+  //       .then((response) => {
+  //         if (response.data !== []) {
+  //           let cgory = response.data;
+  //           if (indVal === scategory.parent_category) {
+  //             setSubCategory(cgory);
+  //             setproductdata({
+  //               ...productdata,
+  //               parent_category: "0",
+  //               category: indVal,
+  //             });
+  //           } else if (indVal === scategory.sub_category) {
+  //             setchildCategory(cgory);
+  //             // console.log("@@@@@----"+JSON.stringify(cgory))
+  //             setproductdata({
+  //               ...productdata,
+  //               parent_category: cgory.all_parent_id,
+  //               category: indVal,
+  //             });
+  //             setlevel(2);
+  //           } else if (indVal === scategory.childcategory) {
+  //             setgrandcCategory(cgory);
+  //             setproductdata({
+  //               ...productdata,
+  //               parent_category: cgory.all_parent_id,
+  //               category: indVal,
+  //             });
+  //             setlevel(3);
+  //           } else if (indVal === scategory.gcategory) {
+  //             setgrandcCategory(cgory);
+  //             setproductdata({
+  //               ...productdata,
+  //               parent_category: cgory[0].all_parent_id,
+  //               category: indVal,
+  //             });
+  //             setlevel(4);
+  //           }
+  //         }
+  //       });
+  //   }
+  // }, [scategory, indVal]);
   // vendor api for filter
   const getVendorData = () => {
     try {
@@ -446,13 +500,23 @@ function Product() {
   const getCategorydatafilter = () => {
     try {
       axios
-        .get(`${process.env.REACT_APP_BASEURL_0}/category?category=all`)
+        .get(`${process.env.REACT_APP_BASEURL}/category?category=all`)
         .then((response) => {
           let cgory = response.data;
           setfiltercategory(cgory);
         });
-    } catch (err) { }
+    } catch (err) {}
   };
+  // const getCategorydatafilter = () => {
+  //   try {
+  //     axios
+  //       .get(`${process.env.REACT_APP_BASEURL_0}/category?category=all`)
+  //       .then((response) => {
+  //         let cgory = response.data;
+  //         setfiltercategory(cgory);
+  //       });
+  //   } catch (err) { }
+  // };
   // end category api
 
   // modal
@@ -468,19 +532,21 @@ function Product() {
 
     // category data
     const getCategorydata = () => {
+      
       try {
         axios
-          .get(`${process.env.REACT_APP_BASEURL_0}/category?category=${indVal}`)
+          .get(`${process.env.REACT_APP_BASEURL}/category?category=${indVal}`)
           .then((response) => {
-            let cgory = response.data;
+            let cgory = response.data.filter((item) => item.is_active === "1");
 
             if (indVal === 0) {
               setCategory(cgory);
+              seteditparentCategory(response.data.category_name)
               setSubCategory("");
               setlevel(0);
             }
           });
-      } catch (err) { }
+      } catch (err) {}
     };
     getCategorydata();
     // end category data
@@ -492,7 +558,7 @@ function Product() {
         .get(`${process.env.REACT_APP_BASEURL}/product_details?id=${e}`)
         .then((response) => {
           let data = response.data;
-          if (data !== undefined || data !== "" || data !== null) {
+          if (data != undefined || data != "" || data != null) {
             setproductdata(data);
 
             // categoryedit
@@ -501,50 +567,47 @@ function Product() {
             for (let i = 0; i < arr.length; i++) {
               axios
                 .get(
-                  `${process.env.REACT_APP_BASEURL_0}/category_details?id=${arr[i]}`
+                  `${process.env.REACT_APP_BASEURL}/category_details?id=${arr[i]}`
                 )
                 .then((response) => {
                   let data = response.data[0];
-
                   if (i === 0) {
                     axios
                       .get(
-                        `${process.env.REACT_APP_BASEURL_0}/category?category=${arr[i]}`
+                        `${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`
                       )
                       .then((response) => {
                         console.log(
+                          "subcetgorydata---" + JSON.stringify(response.data)
                         );
                         setSubCategory(response.data);
                       });
                     seteditparentCategory(data.category_name);
+                    console.log("seteditparentCategory---" + JSON.stringify(data.category_name)) 
+
                     setCategoryEditparent(data.category_name);
+
+
                   } else if (i === 1) {
                     axios
                       .get(
-                        `${process.env.REACT_APP_BASEURL_0}/category?category=${arr[i]}`
+                        `${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`
                       )
                       .then((response) => {
-
-                        setchildCategory(response.data[0]);
-                    console.log("@@@-----------------"+data.category_name)
-
+                        setchildCategory(response.data);
                       });
                     setCategoryEditparent(data.category_name);
-
-                    setCategoryEditSubparent(data.category_name);
-                    setCategoryEditChildparent(data.category_name);
-                    console.log("@@@"+data.category_name)
+                    // setCategoryEditSubparent(data.category_name);
                   } else if (i === 2) {
                     axios
                       .get(
-                        `${process.env.REACT_APP_BASEURL_0}/category?category=${arr[i]}`
+                        `${process.env.REACT_APP_BASEURL}/category?category=${arr[i]}`
                       )
                       .then((response) => {
-                       
                         setgrandcCategory(response.data);
                       });
                     setCategoryEditSubparent(data.category_name);
-                    setCategoryEditChildparent(data.category_name);
+                    // setCategoryEditChildparent(data.category_name);
                   } else if (i === 3) {
                     setCategoryEditChildparent(data.category_name);
                   }
@@ -562,6 +625,110 @@ function Product() {
       setmodalshow(e);
     }
   };
+
+
+  // const handleShow = (e) => {
+  //   setproductdata(data);
+  //   // vendor
+  //   getVendorData();
+  //   // end vendor api
+
+  //   // category data
+  //   const getCategorydata = () => {
+  //     try {
+  //       axios
+  //         .get(`${process.env.REACT_APP_BASEURL_0}/category?category=${indVal}`)
+  //         .then((response) => {
+  //           let cgory = response.data;
+
+  //           if (indVal === 0) {
+  //             setCategory(cgory);
+  //             setSubCategory("");
+  //             setlevel(0);
+  //           }
+  //         });
+  //     } catch (err) { }
+  //   };
+  //   getCategorydata();
+  //   // end category data
+
+  //   if (e === "add") {
+  //     setmodalshow(e);
+  //   } else {
+  //     axios
+  //       .get(`${process.env.REACT_APP_BASEURL}/product_details?id=${e}`)
+  //       .then((response) => {
+  //         let data = response.data;
+  //         if (data !== undefined || data !== "" || data !== null) {
+  //           setproductdata(data);
+
+  //           // categoryedit
+
+  //           const arr = data.parent_category.split(",");
+  //           for (let i = 0; i < arr.length; i++) {
+  //             axios
+  //               .get(
+  //                 `${process.env.REACT_APP_BASEURL_0}/category_details?id=${arr[i]}`
+  //               )
+  //               .then((response) => {
+  //                 let data = response.data[0];
+
+  //                 if (i === 0) {
+  //                   axios
+  //                     .get(
+  //                       `${process.env.REACT_APP_BASEURL_0}/category?category=${arr[i]}`
+  //                     )
+  //                     .then((response) => {
+  //                       console.log(
+  //                       );
+  //                       setSubCategory(response.data);
+  //                     });
+  //                   seteditparentCategory(data.category_name);
+  //                   setCategoryEditparent(data.category_name);
+  //                 } else if (i === 1) {
+  //                   axios
+  //                     .get(
+  //                       `${process.env.REACT_APP_BASEURL_0}/category?category=${arr[i]}`
+  //                     )
+  //                     .then((response) => {
+
+  //                       setchildCategory(response.data[0]);
+  //                   console.log("@@@-----------------"+data.category_name)
+
+  //                     });
+  //                   setCategoryEditparent(data.category_name);
+
+  //                   setCategoryEditSubparent(data.category_name);
+  //                   setCategoryEditChildparent(data.category_name);
+  //                   console.log("@@@"+data.category_name)
+  //                 } else if (i === 2) {
+  //                   axios
+  //                     .get(
+  //                       `${process.env.REACT_APP_BASEURL_0}/category?category=${arr[i]}`
+  //                     )
+  //                     .then((response) => {
+                       
+  //                       setgrandcCategory(response.data);
+  //                     });
+  //                   setCategoryEditSubparent(data.category_name);
+  //                   setCategoryEditChildparent(data.category_name);
+  //                 } else if (i === 3) {
+  //                   setCategoryEditChildparent(data.category_name);
+  //                 }
+  //               });
+  //           }
+  //           // end category edit api
+  //         }
+
+  //         let customdatra = JSON.parse(response.data.add_custom_input);
+  //         setcustomarray(customdatra);
+  //       })
+  //       .catch(function (error) {
+  //         console.log(error);
+  //       });
+  //     setmodalshow(e);
+  //   }
+  // };
   useEffect(() => {
     handleShow();
   }, []);
@@ -587,8 +754,9 @@ function Product() {
       shop: arr[1],
     });
   };
+
   const handleClose = () => {
-    setIndVal(0);
+
     setproductdata(data);
     setcustomarray([]);
     setvariantarray(veriantData);
@@ -598,7 +766,21 @@ function Product() {
     setmodalshow(false);
     setVarietyUnitvalidation("");
     setvarietyValidated(false);
+    
   };
+
+  // const handleClose = () => {
+  //   setIndVal(0);
+  //   setproductdata(data);
+  //   setcustomarray([]);
+  //   setvariantarray(veriantData);
+  //   setvariantmainarray([]);
+  //   setcustomValidated(false);
+  //   setValidated(false);
+  //   setmodalshow(false);
+  //   setVarietyUnitvalidation("");
+  //   setvarietyValidated(false);
+  // };
   // END ADD AND EDIT PRODUCT MODAL
 
   // seotag
@@ -1429,13 +1611,13 @@ console.log("8888---"+dataURL)
   //   }
   // };
   const handleAddProduct = (e) => {
+  
     productdataa.push(productdata);
     const form = e.currentTarget;
     if (
       form.checkValidity() === false ||
-      productdata.variety === "" ||
-      variantmainarray.length === 0 ||
-      productdata.category === ""
+      productdata.variety == "" ||
+      variantmainarray.length === 0
     ) {
       e.stopPropagation();
       e.preventDefault();
@@ -1444,60 +1626,52 @@ console.log("8888---"+dataURL)
       setvarietyValidated("varietyadd");
     } else {
       axios
-        .post(
-          `${process.env.REACT_APP_BASEURL_0}/products`,
-
-          productdataa,
-          {
-            headers: { admin_token: `${token}` },
-          }
-        )
+        .post(`${process.env.REACT_APP_BASEURL}/products`, productdataa)
         .then((response) => {
-          if (response.data.response === "please fill all input") {
-            setcustomValidated("plesefillall");
-          } else {
-            setapicall(true);
-          }
+          setapicall(true);
         });
       e.preventDefault();
       setValidated(false);
       setcustomValidated(true);
       setProductAlert(true);
-      setapicall(true);
       handleClose();
     }
+
   };
   // END ADD PRODUCT AND SAVE TO DRAFT
 
   // UPDATE PRODUCT COMMON DATA
   const handleUpdateProduct = (e) => {
     productdataa.push(productdata.category_name);
-    console.log("CHECKK--" + productdataa);
-    // scategory.push()
+
     const form = e.currentTarget;
-    if (form.checkValidity() === false || variantmainarray.length !== 0) {
+    if( form.checkValidity() === false || 
+    variantmainarray.length !== 0)
+    {
       e.stopPropagation();
       e.preventDefault();
       setValidated(true);
-    } else {
+    }else{
       axios
-        .put(`${process.env.REACT_APP_BASEURL}/products_update`, productdata)
-        .then((response) => {
-          setapicall(true);
-          setmodalshow(false);
-          setUpdatetAlert(true);
-        })
-
-        .catch(function (error) {
-          console.log(error);
-        });
+      .put(`${process.env.REACT_APP_BASEURL}/products_update`, productdata)
+      .then((response) => {
+        setapicall(true);
+        setmodalshow(false);
+        setUpdatetAlert(true);
+      })
+     
+      .catch(function (error) {
+        console.log(error);
+      });
       e.preventDefault();
       setValidated(false);
       setcustomValidated(true);
       setProductAlert(true);
       handleClose();
-    }
+       
+
   };
+    }
   // END UPDATE PRODUCT COMMON DATA
 
   // PRODUCT SEARCH , FILTER  AND RESET
@@ -2347,164 +2521,159 @@ console.log("8888---"+dataURL)
                   </div>
                   {/* category */}
                   <div className="my-3 inputsection_box">
-                    <h5 className="m-0">Category Info</h5>
-                    <div className="productvariety">
-                      <Form.Group
-                        className="mx-3"
-                        controlId="validationCustom05"
-                      >
-                        <Form.Label className="inputlabelheading" sm="12">
-                          Product Type<span className="text-danger">* </span>
-                        </Form.Label>
-                        <Col sm="12">
-                          <Form.Select
-                            aria-label="Product Type"
-                            className="adminselectbox"
-                            required
-                            name="product_type"
-                            onChange={(e) => handleInputFieldChange(e)}
-                            value={
-                              productdata.product_type === null ||
-                                productdata.product_type === undefined
-                                ? ""
-                                : productdata.product_type
-                            }
-                          >
-                            <option value={""}>Select Product Type</option>
-
-                            {categorytype.categorytype.map((data,i) => {
-                              return <option value={data}key={i}>{data}</option>;
-                            })}
-                          </Form.Select>
-                          <Form.Control.Feedback type="invalid" className="h6">
-                            Please select product type
-                          </Form.Control.Feedback>
-                        </Col>
-                      </Form.Group>
-
-                      {/* category select */}
-                      <Form.Group
-                        className=" aos_input"
-                        controlId="validationCustom06"
-                      >
-                        <Form.Label className="inputlabelheading" sm="12">
-                          Parent Category{" "}
-                          <span className="text-danger">* </span>
-                        </Form.Label>
+                  <h5 className="m-0">Category Info</h5>
+                  <div className="productvariety">
+                    <Form.Group className="mx-3" controlId="validationCustom05">
+                      <Form.Label className="inputlabelheading" sm="12">
+                        Product Type<span className="text-danger">* </span>
+                      </Form.Label>
+                      <Col sm="12">
                         <Form.Select
-                          onChange={(e, id) => categoryFormChange(e, id)}
-                          name={"parent_category"}
-                          aria-label="Parent Category"
+                          aria-label="Product Type"
                           className="adminselectbox"
                           required
+                          name="product_type"
+                          onChange={(e) => handleInputFieldChange(e)}
+                          value={
+                            productdata.product_type === null ||
+                            productdata.product_type === undefined
+                              ? ""
+                              : productdata.product_type
+                          }
                         >
-                          <option value={""}>Select Parent Category </option>
-                          {category.map((cdata, i) => {
+                          <option value={""}>Select Product Type</option>
+
+                          {categorytype.categorytype.map((data) => {
+                            return <option value={data}>{data}</option>;
+                          })}
+                        </Form.Select>
+                        <Form.Control.Feedback type="invalid" className="h6">
+                          Please select product type
+                        </Form.Control.Feedback>
+                      </Col>
+                    </Form.Group>
+
+                    {/* category select */}
+                    <Form.Group
+                      className=" aos_input"
+                      controlId="validationCustom06"
+                    >
+                      <Form.Label className="inputlabelheading" sm="12">
+                        Parent Category <span className="text-danger">* </span>
+                      </Form.Label>
+                      <Form.Select
+                        onChange={(e, id) => categoryFormChange(e, id)}
+                        name={"parent_category"}
+                        aria-label="Parent Category"
+                        className="adminselectbox"
+                        required
+                      >
+                        <option value={""}>Select Parent Category </option>
+                        {category.map((cdata, i) => {
+                          return (
+                            <option
+                              value={cdata.id}
+                              name="parent_category"
+                              key={i}
+                              selected={
+                                editparentCategory == cdata.category_name
+                                  ? true
+                                  : false
+                              }
+                            >
+                              {cdata.category_name} {""}
+                            </option>
+                          );
+                        })}
+                      </Form.Select>
+                      <Form.Control.Feedback type="invalid" className="h6">
+                        Please select Category
+                      </Form.Control.Feedback>
+                    </Form.Group>
+
+                    {subCategory == "" ||
+                    subCategory === null ||
+                    subCategory === undefined ? null : (
+                      <Form.Group
+                        className=" aos_input"
+                        controlId="formBasicParentCategory"
+                      >
+                        <Form.Label>
+                          Sub Category <span className="text-danger">* </span>
+                        </Form.Label>
+                        <Form.Select
+                          aria-label="Search by status"
+                          className="adminselectbox"
+                          onChange={(e, id) => categoryFormChange(e, id)}
+                          name={"sub_category"}
+                          required
+                        >
+                          <option value={""}>Select Category </option>
+                          {subCategory.map((cdata, i) => {
                             return (
                               <option
                                 value={cdata.id}
-                                name="parent_category"
                                 key={i}
                                 selected={
-                                  editparentCategory === cdata.category_name
+                                  categoryeditparent === cdata.category_name
                                     ? true
                                     : false
                                 }
                               >
-                                {cdata.category_name} {""}
+                                {cdata.category_name}{" "}
                               </option>
                             );
                           })}
                         </Form.Select>
                         <Form.Control.Feedback type="invalid" className="h6">
-                          Please select Category
+                          Please fill category
                         </Form.Control.Feedback>
                       </Form.Group>
-
-                      {subCategory === "" ||
-                        subCategory === null ||
-                        subCategory === undefined ? null : (
-                        <Form.Group
-                          className=" aos_input"
-                          controlId="formBasicParentCategory"
+                    )}
+                    {childCategory[0] == "" ||
+                    childCategory[0] === null ||
+                    childCategory[0] === undefined ? null : (
+                      <Form.Group
+                        className=" aos_input"
+                        controlId="formBasicParentCategory"
+                      >
+                        <Form.Label>
+                          Child Category <span className="text-danger">* </span>
+                        </Form.Label>
+                        <Form.Select
+                          aria-label="Search by status"
+                          className="adminselectbox"
+                          onChange={(e, id) => categoryFormChange(e, id)}
+                          name={"childcategory"}
+                          required
                         >
-                          <Form.Label>
-                            Sub Category <span className="text-danger">* </span>
-                          </Form.Label>
-                          <Form.Select
-                            aria-label="Search by status"
-                            className="adminselectbox"
-                            onChange={(e, id) => categoryFormChange(e, id)}
-                            name={"sub_category"}
-                            required
-                          >
-                            <option value={""}>Select Category </option>
-                            {subCategory.map((cdata, i) => {
-                              return (
-                                <option
-                                  value={cdata.id}
-                                  key={i}
-                                  selected={
-                                    categoryeditparent === cdata.category_name
-                                      ? true
-                                      : false
-                                  }
-                                >
-                                  {cdata.category_name}{" "}
-                                </option>
-                              );
-                            })}
-                          </Form.Select>
-                          <Form.Control.Feedback type="invalid" className="h6">
-                            Please fill category
-                          </Form.Control.Feedback>
-                        </Form.Group>
-                      )}
-                      {childCategory[0] === "" ||
-                        childCategory[0] === null ||
-                        childCategory[0] === undefined ? null : (
-                        <Form.Group
-                          className=" aos_input"
-                          controlId="formBasicParentCategory"
-                        >
-                          <Form.Label>
-                            Child Category{" "}
-                            <span className="text-danger">* </span>
-                          </Form.Label>{" "}
-                          {/* {categoryeditchildparent} */}
-                          {/* {childCategory} */}
-                          <Form.Select
-                            aria-label="Search by status"
-                            className="adminselectbox"
-                            onChange={(e, id) => categoryFormChange(e, id)}
-                            name={"childcategory"}
-                            required
-                          >
-                            <option value={""}>Select Category </option>
-                            {childCategory.map((cdata, i) => {
-                              return (
-                                <option
-                                  value={cdata.id}
-                                  key={i}
-                                  selected={
-                                    categoryeditchildparent ===
-                                      cdata.category_name
-                                      ? true
-                                      : false
-                                  }
-                                >
-                                  {cdata.category_name}{" "}
-                                </option>
-                              );
-                            })}
-                          </Form.Select>
-                          <Form.Control.Feedback type="invalid" className="h6">
-                            Please fill category
-                          </Form.Control.Feedback>
-                        </Form.Group>
-                      )}
+                          <option value={""}>Select Category </option>
+                          {childCategory.map((cdata, i) => {
+                            return (
+                              <option
+                                value={cdata.id}
+                                key={i}
+                                selected={
+                                  categoryeditsubparent === cdata.category_name
+                                    ? true
+                                    : false
+                                }
+                              >
+                                {cdata.category_name}{" "}
+                              </option>
+                            );
+                          })}
+                        </Form.Select>
+                        <Form.Control.Feedback type="invalid" className="h6">
+                          Please fill category
+                        </Form.Control.Feedback>
+                      </Form.Group>
+                    )}
 
-                      {/* {grandcCategory[0] === "" ||
+
+                   
+
+                    {/* {grandcCategory[0] === "" ||
                     grandcCategory[0] === null ||
                     grandcCategory[0] === undefined ? null : (
                       <Form.Group
@@ -2542,9 +2711,9 @@ console.log("8888---"+dataURL)
                       </Form.Group>
                     )} */}
 
-                      {/* end category select */}
-                    </div>
+                    {/* end category select */}
                   </div>
+                </div>
                   {/* Taxes */}
                   <div className="my-3 inputsection_box">
                     <h5 className="m-0">Taxes</h5>
