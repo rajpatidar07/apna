@@ -11,7 +11,6 @@ import Iconbutton from "../common/iconbutton";
 import axios from "axios";
 import FileInput from "./FileInput";
 import ImageCropper from "./ImageCropper";
-import CnameJson from "../json/Cnamejson";
 
 function Banner() {
   let encoded;
@@ -378,7 +377,6 @@ if (response.data.code === "ER_DUP_ENTRY") {
   return (
     <div>
       <h2>Banner Manager</h2>
-       <CnameJson/>
       {/* search bar */}
       <div className="card p-3">
         <div className="product_page_uploadbox my-4">
