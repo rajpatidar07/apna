@@ -89,9 +89,8 @@ function Product() {
     childcategory: "",
     gcategory: "",
   });
-  let cat_catname=categoryname[0]
-  // console.log("SHOE NAME_---"+(cat_catname))
-  console.log(cat_catname)
+
+  // console.log(cat_catname)
 
   const [categoryeditparent, setCategoryEditparent] = useState("");
   const [categoryeditsubparent, setCategoryEditSubparent] = useState("");
@@ -327,8 +326,11 @@ function Product() {
         }
       )
       .then((response) => {
-        setpdata(response.data);
-        setCategoryName(categoryname)
+        setpdata(response.data)
+        // setCategoryName(response.data.category_name)
+        // setpdata({...pdata, pdata:response.data,
+        // cat_name:response.data.category_name});
+        // console.log()
         // console.log("&&^%$#@#@#@#@#@#@"+JSON.stringify(categoryname))
         setLoading(false);
         setapicall(false);
@@ -337,7 +339,7 @@ function Product() {
         console.log(error);
       });
   };
-  console.log("PDATAAAA"+JSON.stringify(pdata))
+  console.log("PDATAAA---"+JSON.stringify(pdata))
 
   useEffect(() => {
     // const first = "";
@@ -427,6 +429,8 @@ function Product() {
     }
   }, [scategory, indVal]);
   //category name api for filter
+  let cat_catname=categoryname[0]
+  // console.log(cat_catname)
   const getCategoryNameData = () => {
       try {
         axios
@@ -439,7 +443,7 @@ function Product() {
           )
           .then((response) => {
             let cgory = response.data;
-            console.log("CGORY-"+JSON.stringify(cgory))
+            // console.log("CGORY-"+JSON.stringify(cgory))
             const result01 = cgory.filter(
               (thing, index, self) =>
                 index === self.findIndex((t) => t.category_name === thing.category_name)
@@ -1519,6 +1523,7 @@ console.log("8888---"+dataURL)
 
   // UPDATE PRODUCT COMMON DATA
   const handleUpdateProduct = (e) => {
+    console.log("e"+e)
     productdataa.push(productdata);
     // console.log("------====="+productdata.category_name)
     // console.log("CHECKK--" + productdataa);
@@ -1658,7 +1663,7 @@ console.log("8888---"+dataURL)
     });
   };
   //-----------------------Download excel sheet code End  here---------------------------------------------------
-  console.log(cat_catname+"pppppppppppppppppppppppppppppppppppppppppppppppp")
+  // console.log(cat_catname+"pppppppppppppppppppppppppppppppppppppppppppppppp")
 
   // DATATABLE COLUMN PRODUCT LIST
   const columns = [
@@ -1717,15 +1722,19 @@ console.log("8888---"+dataURL)
     },
     {
       name: "Category",
-      selector: (row) =>{
-   return(
-    <>
-    {row.cat_catname === undefined ? "null":  cat_catname[row.category]}
-    </>
-   )
+  //     selector: (row) =>{
+  //       console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+  //       // console.log(row.cat_catname)
+  //       // console.log(row.category)
+  //       console.log(cat_catname[row.category])
+  //  return(
+  //   <>
+  //   {row.cat_catname === undefined ? "null":  cat_catname[row.category]}
+  //   </>
+  //  )
       
-      },
-      // selector:(row)=>row.category,
+  //     },
+      selector:(row)=>row.category,
       sortable: true,
       width: "90px",
     },

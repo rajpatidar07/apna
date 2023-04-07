@@ -135,11 +135,15 @@ const Featuredproduct = () => {
         .post(
           `${process.env.REACT_APP_BASEURL_0}/fetured_product_search`,
           {
+            product_id: "",
             fetured_type: "featured_offer",
-            product_title_name: [`${searchdata.product_title_name}`],
-            vendor_id: [`${searchdata.vendor}`],
-            status: searchdata.status,
+            start_date: /*`${searchdata.start_date}`*/ "",
+            end_date: /*`${searchdata.end_date}`*/ "",
             category: [`${searchdata.category}`],
+            brand: [`${searchdata.brand}`],
+            shop: [`${searchdata.vendor}`],
+            product_title_name: [`${searchdata.product_title_name}`],
+            status: [`${searchdata.status}`],
           },
           {
             headers: { admin_token: `${token}` },
@@ -156,7 +160,6 @@ const Featuredproduct = () => {
     getCategorydatafilter();
     getVendorData();
   }, [apicall]);
-  console.log("setFeatureProductData"+JSON.stringify(featuredProductData))
 
   /*<---Table data ---->*/
   const columns = [
