@@ -11,9 +11,11 @@ import BrandJson from "./../json/BrandJson";
 import Loader from "../common/loader";
 
 const Featuredproduct = () => {
+  let productid = localStorage.getItem("productid");
   const currentdate = moment().format("");
   const formRef = useRef();
   const [featuredProductData, setFeatureProductData] = useState([]);
+  // console.log("featuredProductData"+JSON.stringify(featuredProductData))
   const [UpdateAlert, setUpdateAlert] = useState(false);
   const [Alert, setAlert] = useState(false);
   const [apicall, setapicall] = useState(false);
@@ -92,13 +94,13 @@ const Featuredproduct = () => {
     }
   };
   /*<----Function to get the data---->*/
-  const handleShow = (id) => {
+  const handleShow = (product_id) => {
     try {
       axios
         .post(
           `${process.env.REACT_APP_BASEURL_0}/fetured_product_search`,
           {
-            id: id,
+            id: product_id,
             fetured_type: "featured_offer",
             start_date: "",
             end_date: "",
@@ -150,7 +152,15 @@ const Featuredproduct = () => {
           }
         )
         .then((response) => {
+        //   let v=response.data;
+        //   v.forEach(function (item,index){
+        //       // console.log(item.category)
+        // // console.log(response.data.category_name[item.category])
+        // let catname=response.data.category_name[item.category]
+        //   })
           setFeatureProductData(response.data);
+          console.log(response.data)
+          
           setapicall(false);
           setloading(false);
         });
@@ -233,16 +243,16 @@ const Featuredproduct = () => {
       sortable: true,
       width: "100px",
     },
-    // {
-    //   name: "Product ID",
-    //   selector: (row) => row.product_id,
-    //   sortable: true,
-    //   width: "130px",
-    //   center: true,
-    //   style: {
-    //     paddingLeft: 0,
-    //   },
-    // },
+    {
+      name: "Product ID",
+      selector: (row) => row.product_id,
+      sortable: true,
+      width: "130px",
+      center: true,
+      style: {
+        paddingLeft: 0,
+      },
+    },
     {
       name: "Fetured_type",
       selector: (row) => row.fetured_type,
@@ -316,7 +326,7 @@ const Featuredproduct = () => {
         <div className={"actioncolimn"}>
           <BiEdit
             className=" p-0 m-0  editiconn text-secondary"
-            onClick={handleShow.bind(this, row.id)}
+            onClick={handleShow.bind(this, row.product_id)}
           />
         </div>
       ),
@@ -330,12 +340,13 @@ const Featuredproduct = () => {
 
   /*<----Function to update feature product---->*/
   const UpdateFeaturedProduct = (e) => {
+    // console.log("##################"+e,product_id)
     e.preventDefault();
     axios
       .put(
         `${process.env.REACT_APP_BASEURL_0}/update_fetured_product`,
         {
-          id: id,
+          id: productid,
           start_date: featuredData.start_date,
           end_date: featuredData.end_date,
         },
@@ -555,7 +566,7 @@ const Featuredproduct = () => {
               </button>
               <button
                 className="button main_outline_button"
-                onClick={UpdateFeaturedProduct}
+                onClick={(id)=>UpdateFeaturedProduct(id)}
               >
                 Update
               </button>

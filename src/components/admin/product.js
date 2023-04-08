@@ -15,6 +15,8 @@ import VariationJson from "./json/variation";
 import CategoryJson from "./json/categorytype";
 import Table from "react-bootstrap/Table";
 import FileInput from "./setting/FileInput";
+import { GiCancel } from "react-icons/gi";
+
 import ImageCropper from "./setting/ImageCropper";
 import {
   AiOutlinePlus,
@@ -205,6 +207,8 @@ function Product() {
   });
   const [productID, setproductID] = useState("");
   const [bulkProductError, setBulkProductError] = useState("");
+  const [AddtagError, setAddTagError] = useState("");
+  const [Docnamearray, setDocnameArray] = useState([]);
 
   // OFFER ADD MODAL
   const [featureshow, setfeatureShow] = useState(false);
@@ -214,6 +218,25 @@ function Product() {
     product_id: "",
     fetured_type: "",
   });
+  //ADD SEO TAG
+  const onDocuAddclick = (e) => {
+    if (addtag === "") {
+      setAddTagError("addTagErorrr");
+    } else {
+      setDocnameArray((Docnamearray) => [...Docnamearray, addtag]);
+      setaddtag("");
+      setAddTagError("");
+    }
+  };
+
+  const onDocumentNamechange = (e) => {
+    setaddtag(e.target.value);
+  };
+
+  const DocuRemoveClick = (e) => {
+    setDocnameArray(Docnamearray.filter((item) => item !== e));
+  };
+
   const [productname, setproductname] = useState("");
 
   const OnOfferProductAdd = (e) => {
@@ -227,6 +250,7 @@ function Product() {
         }
       )
       .then((response) => {
+     
         if (response.data.message === "Already_Exist") {
           setError(false);
         } else {
@@ -295,6 +319,7 @@ function Product() {
 
   // MAIN PRODUCT LIST API
   const fetchdata = () => {
+    let productArry=[];
     setLoading(true);
     axios
       .post(
@@ -326,8 +351,29 @@ function Product() {
         }
       )
       .then((response) => {
-        setpdata(response.data)
-        // setCategoryName(response.data.category_name)
+       let v=response.data.results;
+       v.forEach(function (item,index){
+        
+        // console.log(item.category)
+        // console.log(response.data.category_name[item.category])
+        let catname=response.data.category_name[item.category]
+        // console.log(catname)
+        // console.log(item)
+
+        item.category=catname;
+        // console.log("item"+JSON.stringify(item))
+        
+        productArry.push(item)
+       } 
+       );
+       let response_data={};    
+       response_data["results"]=productArry;
+      //  console.log("response_data")
+      //  console.log(response_data)
+       setpdata(response_data)
+       // setCategoryName(response.data.category_name)
+        // console.log("&&^%$#@#@#@#@#@#@"+JSON.stringify(response.data.category_name))
+
         // setpdata({...pdata, pdata:response.data,
         // cat_name:response.data.category_name});
         // console.log()
@@ -339,7 +385,6 @@ function Product() {
         console.log(error);
       });
   };
-  console.log("PDATAAA---"+JSON.stringify(pdata))
 
   useEffect(() => {
     // const first = "";
@@ -1505,6 +1550,8 @@ console.log("8888---"+dataURL)
           }
         )
         .then((response) => {
+          localStorage.setItem("productid",productid)
+          console.log("productid"+productid)
           if (response.data.response === "please fill all input") {
             setcustomValidated("plesefillall");
           } else {
@@ -3795,7 +3842,7 @@ console.log("8888---"+dataURL)
                         className="mx-3"
                         controlId="validationCustomSeo"
                       >
-                        <div className=" d-flex align-items-center my-2">
+                        {/* <div className=" d-flex align-items-center my-2">
                           <InputGroup className="" size="sm">
                             <Form.Control
                               sm="9"
@@ -3816,9 +3863,71 @@ console.log("8888---"+dataURL)
                               +
                             </Button>
                           </InputGroup>
-                        </div>
+                        </div> */}
+                        {/* <div className="col-md-6"> */}
+                    {/* <Form.Group className="mb-3 aos_input"> */}
+                     
+                      <InputGroup className="" size="sm">
+                        <Form.Control
+                        sm="10"
+                          onChange={(e) => onDocumentNamechange(e)}
+                          value={addtag}
+                          placeholder="seo tag"
+                         
+                          onClick={(event) => {
+                            if (event.key === "Enter") {
+                              onDocuAddclick();
+                            }
+                          }}
+                        />{" "}
+                        <Button
+                          variant="outline-success"
+                          className="addcategoryicon"
+                          onClick={() => onDocuAddclick()}
+                          size="sm"
+                        >
+                          +
+                        </Button>
+                        {AddtagError === "addTagErorrr" ? (
+                          <span className="text-danger">
+                            Please Add Document first...!!!
+                          </span>
+                        ) : null}
+                      </InputGroup>
 
+                      {Docnamearray === undefined ||
+                        Docnamearray === null ||
+                        Docnamearray === "" ||
+                        Docnamearray.length === 0 ? null : (
                         <div className="d-flex align-items-center tagselectbox mt-2">
+                          {Docnamearray.map((seotags, i) => {
+                            return (
+                              <>
+                                {seotags === '""' ? null : (
+                                  <Badge
+                                    className="tagselecttitle mb-0"
+                                    bg="success"
+                                  >
+                                    {seotags === null ||
+                                      seotags === undefined ||
+                                      seotags === '""'
+                                      ? null
+                                      : seotags}
+
+                                    <GiCancel
+                                      className=" mx-0 ms-1 btncancel"
+                                      onClick={() => DocuRemoveClick(seotags)}
+                                    />
+                                  </Badge>
+                                )}
+                              </>
+                            );
+                          })}
+                        </div>
+                      )}
+                    {/* </Form.Group>
+                  </div> */}
+                        {/* <div className="d-flex align-items-center tagselectbox mt-2">
                           {productdata.seo_tag === "" && addtag === "" ? (
                             ""
                           ) : productdata.seo_tag ? (
@@ -3840,8 +3949,8 @@ console.log("8888---"+dataURL)
 
                           {/* )
 
-                        })} */}
-                        </div>
+                        })} 
+                        </div> */}
                       </Form.Group>
                     </div>
                   </div>
@@ -3875,6 +3984,7 @@ console.log("8888---"+dataURL)
                             <td className="text-center col-4">
                               <InputGroup className="">
                                 <Form.Control
+                                required
                                   value={headerval}
                                   type="text"
                                   sm="9"

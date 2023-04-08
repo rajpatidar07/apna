@@ -22,6 +22,8 @@ const Promotionproduct = () => {
   const [apicall, setapicall] = useState(false);
   const [show, setShow] = useState(false);
   const [featuredData, setFeaturetData] = useState([]);
+  console.log("featuredData"+featuredData)
+
   const [id, setId] = useState("");
   const [UpdateAlert, setUpdateAlert] = useState(false);
   const [loading, setloading] = useState(false);

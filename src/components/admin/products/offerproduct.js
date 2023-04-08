@@ -13,6 +13,8 @@ import Loader from "../common/loader";
 
 const Offerproduct = () => {
   const formRef = useRef();
+  let productid = localStorage.getItem("productid");
+
   // let userid = localStorage.getItem("userid");
   const [offerProductData, setOfferProductData] = useState([]);
   const [featuredData, setFeaturetData] = useState([]);
@@ -358,7 +360,7 @@ const Offerproduct = () => {
       .put(
         `${process.env.REACT_APP_BASEURL_0}/update_fetured_product`,
         {
-          id: id,
+          id: productid,
           start_date: featuredData.start_date,
           end_date: featuredData.end_date,
         },

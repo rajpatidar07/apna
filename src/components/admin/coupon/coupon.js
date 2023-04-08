@@ -17,6 +17,7 @@ const Coupon = () => {
   const [validated, setValidated] = useState(false);
   const [searcherror, setsearcherror] = useState(false);
   const [coupondata, setcoupondata] = useState([]);
+
   const [addcoupondata, setaddcoupondata] = useState({
     campaign_name: "",
     code: "",
@@ -111,7 +112,7 @@ const Coupon = () => {
             },
           })
           .then((response) => {
-            let data = response.data.filter((item) => item.is_active === 1);
+            let data = response.data.filter((item) => item.is_active === 0);
             setcoupondata(data);
             setaddcoupondata(data);
             setsearchCoupon(data);
