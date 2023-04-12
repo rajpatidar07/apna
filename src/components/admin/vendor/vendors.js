@@ -338,7 +338,7 @@ const VendorsList = () => {
       document_name: Docnamearray,
     });
   }, [Docnamearray]);
-
+console.log("SHOWWW+"+Docnamearray)
   const handleFormChange = (e) => {
     setCustomValidation(false);
     setaddvendordata({
@@ -393,7 +393,7 @@ const VendorsList = () => {
 
           setcustomarray(response.data[0].social_media_links);
           let strCopy = response.data[0].document_name.split(",");
-
+          console.log(""+strCopy)
           setDocnameArray(strCopy);
           setapicall(false);
         })

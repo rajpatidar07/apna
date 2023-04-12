@@ -119,6 +119,8 @@ const Deletedproduct = () => {
     setsearcherror(false);
   };
   useEffect(() => {
+    let productArry=[];
+
     setloading(true);
     axios
       .post(`${process.env.REACT_APP_BASEURL_0}/home?page=0&per_page=400`, {
@@ -139,7 +141,16 @@ const Deletedproduct = () => {
         },
       })
       .then((response) => {
-        setdeletedata(response.data);
+        let v=response.data.results;
+        v.forEach(function (item,index){
+          let catname=response.data.category_name[item.category]
+          item.category=catname;
+        productArry.push(item)
+
+        })
+        let response_data={};    
+        response_data["results"]=productArry;
+        setdeletedata(response_data);
         setapicall(false);
         setsearcherror(false);
         setloading(false);

@@ -510,7 +510,11 @@ const Productdetail = () => {
         is_delete: "0",
       })
       .then((response) => {
+        let data=response.data
+        if (data !== undefined || data !== "" || data !== null){
         setvariantapicall(true);
+          navigate("/product");
+        }
         // setloading(false)
       })
       .catch(function (error) {

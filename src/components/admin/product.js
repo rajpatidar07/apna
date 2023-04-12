@@ -77,7 +77,6 @@ function Product() {
   const [checkProductType, setCheckProductType] = useState(false);
   const [error, setError] = useState(true);
   const [vendorid, setVendorId] = useState([]);
-  const[categoryname,setCategoryName]=useState([])
   
   const [filtervategory, setfiltercategory] = useState([]);
   const [category, setCategory] = useState([]);
@@ -173,7 +172,7 @@ function Product() {
     manufacturers_sales_tax: "0",
     manufacturing_date: "",
     expire_date: "",
-    seo_tag: "",
+    seo_tag: [],
     variety: "",
     product_description: "",
     other_introduction: "",
@@ -219,11 +218,18 @@ function Product() {
     fetured_type: "",
   });
   //ADD SEO TAG
-  const onDocuAddclick = (e) => {
+  const onDocuAddclick = () => {
+
     if (addtag === "") {
       setAddTagError("addTagErorrr");
-    } else {
+    } 
+    else {
+//     setaddtag(e.target.value);
+// console.log("e.target.value")
+
+// console.log(e.target.value)
       setDocnameArray((Docnamearray) => [...Docnamearray, addtag]);
+      console.log(Docnamearray)
       setaddtag("");
       setAddTagError("");
     }
@@ -231,8 +237,10 @@ function Product() {
 
   const onDocumentNamechange = (e) => {
     setaddtag(e.target.value);
+// console.log("e.target.value")
+// console.log(e.target.value)
   };
-
+ 
   const DocuRemoveClick = (e) => {
     setDocnameArray(Docnamearray.filter((item) => item !== e));
   };
@@ -240,6 +248,7 @@ function Product() {
   const [productname, setproductname] = useState("");
 
   const OnOfferProductAdd = (e) => {
+    setValidated(true)
     e.preventDefault();
     axios
       .post(
@@ -371,13 +380,6 @@ function Product() {
       //  console.log("response_data")
       //  console.log(response_data)
        setpdata(response_data)
-       // setCategoryName(response.data.category_name)
-        // console.log("&&^%$#@#@#@#@#@#@"+JSON.stringify(response.data.category_name))
-
-        // setpdata({...pdata, pdata:response.data,
-        // cat_name:response.data.category_name});
-        // console.log()
-        // console.log("&&^%$#@#@#@#@#@#@"+JSON.stringify(categoryname))
         setLoading(false);
         setapicall(false);
       })
@@ -390,7 +392,6 @@ function Product() {
     // const first = "";
     fetchdata();
     getVendorData();
-    getCategoryNameData();
     getCategorydatafilter();
   }, [apicall, Alert]);
 
@@ -444,8 +445,7 @@ function Product() {
               });
             } else if (indVal === scategory.sub_category) {
               setchildCategory(cgory);
-              console.log("@@@@@----"+JSON.stringify(cgory))
-              console.log("========="+indVal)
+              
               setproductdata({
                 ...productdata,
                 parent_category: cgory[0].all_parent_id,
@@ -474,39 +474,8 @@ function Product() {
     }
   }, [scategory, indVal]);
   //category name api for filter
-  let cat_catname=categoryname[0]
-  // console.log(cat_catname)
-  const getCategoryNameData = () => {
-      try {
-        axios
-          .get(
-            `${process.env.REACT_APP_BASEURL_0}/category_name`,
-            // { vendor_id: "all" },
-            {
-              headers: { admin_token: `${token}` },
-            }
-          )
-          .then((response) => {
-            let cgory = response.data;
-            // console.log("CGORY-"+JSON.stringify(cgory))
-            const result01 = cgory.filter(
-              (thing, index, self) =>
-                index === self.findIndex((t) => t.category_name === thing.category_name)
-            );
-            // const result02 = result01.filter(
-            //   (item) => item.status === "approved" || item.status === "active"
-            // );
-            setCategoryName(result01);
-            
-            // setVid("")
-          });
-      } catch (err) { 
-        console.log(err)
-      }
-  
-   
-  };
-// console.log("NAMEEEEEEEEEEEEEEE"+JSON.stringify(categoryname))
+ 
+ 
   // vendor api for filter
   const getVendorData = () => {
     try {
@@ -552,11 +521,9 @@ function Product() {
   let token = localStorage.getItem("token");
   // ADD AND EDIT PRODUCT MODAL
   const handleShow = (e) => {
-    console.log("ID--"+e)
     setproductdata(data);
     // vendor
     getVendorData();
-    getCategoryNameData();
     // end vendor api
 
     // category data
@@ -889,7 +856,7 @@ console.log("8888---"+dataURL)
 
   // ADD AND EDIT  VARIETY SECTION
   const onVariantChange = (e) => {
-    setValidated(true);
+    // setValidated(true);
     setcustomValidated(false);
     setVarietyUnitvalidation("");
     setvarietyValidated(false);
@@ -898,6 +865,7 @@ console.log("8888---"+dataURL)
       [e.target.name]: e.target.value,
     });
   };
+
   let discountt = (variantarray.mrp * variantarray.discount) / 100;
   let saleprice = variantarray.mrp - discountt;
   let totaltaxpercent =
@@ -1018,6 +986,7 @@ console.log("8888---"+dataURL)
     setvarietyShow(false);
   };
   const onVariantaddclick = (id) => {
+    console.log("-------------")
     if (id === undefined || id === null || unitValidated === "false") {
       if (
         variantarray.unit === "" ||
@@ -1203,12 +1172,17 @@ console.log("8888---"+dataURL)
     }
   };
   // addproduct variant
-  const VariantAddProduct = (e) => {
+  const VariantAddProduct = () => {
+    
+    // console.log("&&&&&"+e)
     setproductdata({
       ...productdata,
       variety: true,
     });
-    if (productdata.product_type === "") {
+    console.log("********"+productdata)
+    if (productdata.product_type == "") {
+    console.log("&&&2222222222&&"+productdata.product_type)
+
       setCheckProductType(true);
     } else {
       if (
@@ -1438,13 +1412,17 @@ console.log("8888---"+dataURL)
     });
   }, [customarray]);
   // END ADD CUSTOM INPUT
+useEffect(()=>{
+setproductdata({...productdata,seo_tag:Docnamearray,})
+},[Docnamearray])
 
   // CKEDITOR TEXT BOX
   const handledescription = (event, editor) => {
     setdata1(editor.getData());
+    // console.log({ event, editor, data1 });
 
     let productdesc;
-    if (editor.getData() !== undefined) {
+    if (editor.getData() != undefined) {
       productdesc = editor.getData().replaceAll(/"/g, "'");
     }
     setproductdata({
@@ -1452,11 +1430,25 @@ console.log("8888---"+dataURL)
       product_description: productdesc,
     });
   };
+  // const handledescription = (event, editor) => {
+  //   console.log("00000")
+  //   setdata1(editor.getData());
 
+  //   let productdesc;
+  //   if (editor.getData() !== undefined) {
+  //     productdesc = editor.getData().replaceAll(/"/g, "'");
+  //   }
+  //   setproductdata({
+  //     ...productdata,
+  //     product_description: productdesc,
+  //   });
+
+  // };
   const OtherDescription = (event, editor) => {
     setotherintro(editor.getData());
+    // console.log({ event, editor, otherintro });
     let otherinstrction;
-    if (editor.getData() !== undefined) {
+    if (editor.getData() != undefined) {
       otherinstrction = editor.getData().replaceAll(/"/g, "'");
     }
     setproductdata({
@@ -1464,6 +1456,17 @@ console.log("8888---"+dataURL)
       other_introduction: otherinstrction,
     });
   };
+  // const OtherDescription = (event, editor) => {
+  //   setotherintro(editor.getData());
+  //   let otherinstrction;
+  //   if (editor.getData() !== undefined) {
+  //     otherinstrction = editor.getData().replaceAll(/"/g, "'");
+  //   }
+  //   setproductdata({
+  //     ...productdata,
+  //     other_introduction: otherinstrction,
+  //   });
+  // };
   // END CKEDITOR BOX
 
   let productdataa = [];
@@ -1536,6 +1539,7 @@ console.log("8888---"+dataURL)
     ) {
       e.stopPropagation();
       e.preventDefault();
+
       setValidated(true);
       setcustomValidated(false);
       setvarietyValidated("varietyadd");
@@ -1551,9 +1555,12 @@ console.log("8888---"+dataURL)
         )
         .then((response) => {
           localStorage.setItem("productid",productid)
-          console.log("productid"+productid)
           if (response.data.response === "please fill all input") {
             setcustomValidated("plesefillall");
+            setValidated(false);
+            setcustomValidated(false);
+            setvarietyValidated(false);
+           
           } else {
             setapicall(true);
           }
@@ -1570,11 +1577,8 @@ console.log("8888---"+dataURL)
 
   // UPDATE PRODUCT COMMON DATA
   const handleUpdateProduct = (e) => {
-    console.log("e"+e)
     productdataa.push(productdata);
-    // console.log("------====="+productdata.category_name)
-    // console.log("CHECKK--" + productdataa);
-    // // scategory.push()
+
     const form = e.currentTarget;
     if (form.checkValidity() === false || variantmainarray.length !== 0) {
       e.stopPropagation();
@@ -1597,6 +1601,8 @@ console.log("8888---"+dataURL)
       setcustomValidated(true);
       setProductAlert(true);
       handleClose();
+    formRef.current.reset();
+
     }
   };
   // END UPDATE PRODUCT COMMON DATA
@@ -1705,9 +1711,7 @@ console.log("8888---"+dataURL)
           setBulkProductError("Error in adding BulkProducts");
         }
       });
-    console.log("----" + formData).catch(function (error) {
-      console.log(error);
-    });
+      
   };
   //-----------------------Download excel sheet code End  here---------------------------------------------------
   // console.log(cat_catname+"pppppppppppppppppppppppppppppppppppppppppppppppp")
@@ -1770,7 +1774,6 @@ console.log("8888---"+dataURL)
     {
       name: "Category",
   //     selector: (row) =>{
-  //       console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++")
   //       // console.log(row.cat_catname)
   //       // console.log(row.category)
   //       console.log(cat_catname[row.category])
@@ -2420,12 +2423,31 @@ console.log("8888---"+dataURL)
                         </Col> */}
                         </Form.Group>
                       </div>
-                      <div className="col-md-8">
+                      {/* <div className="col-md-8">
                         <Form.Group
                           className="mx-3"
                           controlId="validationCustom04"
                         >
                         
+                          <Form.Label className="inputlabelheading" sm="12">
+                            Product Description
+                          </Form.Label>
+                          <Col sm="12">
+
+                            <CKEditor
+                              editor={ClassicEditor}
+                              data={productdata.product_description}
+                              onChange={handledescription}
+                              name={"product_description"}
+                            />
+                          </Col>
+                        </Form.Group>
+                      </div> */}
+                      <div className="col-md-8">
+                        <Form.Group
+                          className="mx-3"
+                          controlId="validationCustom04"
+                        >
                           <Form.Label className="inputlabelheading" sm="12">
                             Product Description
                           </Form.Label>
@@ -2439,24 +2461,6 @@ console.log("8888---"+dataURL)
                           </Col>
                         </Form.Group>
                       </div>
-                      {/* <div className="col-md-8">
-                        <Form.Group
-                          className="mx-3"
-                          controlId="validationCustom04"
-                        >
-                          <Form.Label className="inputlabelheading" sm="12">
-                            Product Description
-                          </Form.Label>
-                          <Col sm="12">
-                            <CKEditor
-                              editor={ClassicEditor}
-                              data={productdata.product_description}
-                              onChange={handledescription}
-                              name={"product_description"}
-                            />
-                          </Col>
-                        </Form.Group>
-                      </div> */}
                     </div>
                   </div>
                   {/* category */}
@@ -3610,6 +3614,7 @@ console.log("8888---"+dataURL)
                                                 size="sm"
                                               >
                                                 <Form.Control
+                                                  required
                                                   type="number"
                                                   sm="9"
                                                   value={variantarray.quantity}
@@ -3622,7 +3627,6 @@ console.log("8888---"+dataURL)
                                                       onVariantaddclick();
                                                     }
                                                   }}
-                                                  required
                                                 />
                                               </InputGroup>
                                             </div>
@@ -3663,7 +3667,7 @@ console.log("8888---"+dataURL)
                                               type="invalid"
                                             >
                                               Please Expire date should be
-                                              greater than Manufacturing date
+                                              greater and equal  than Manufacturing date
                                             </p>
                                           </tr>
                                         ) : null}
@@ -3888,11 +3892,11 @@ console.log("8888---"+dataURL)
                         >
                           +
                         </Button>
-                        {AddtagError === "addTagErorrr" ? (
+                        {/* {AddtagError === "addTagErorrr" ? (
                           <span className="text-danger">
                             Please Add Document first...!!!
                           </span>
-                        ) : null}
+                        ) : null} */}
                       </InputGroup>
 
                       {Docnamearray === undefined ||
@@ -3956,6 +3960,28 @@ console.log("8888---"+dataURL)
                   </div>
 
                   {/* other info */}
+                  <div className="col-md-8">
+                        <Form.Group
+                          className="mx-3"
+                          controlId="validationCustom04"
+                        >
+                          {console.log(
+                          "product description-------" +
+                            productdata.product_description
+                        )}
+                          <Form.Label className="inputlabelheading" sm="12">
+                            Product Description
+                          </Form.Label>
+                          <Col sm="12">
+                            <CKEditor
+                              editor={ClassicEditor}
+                              data={productdata.product_description}
+                              onChange={handledescription}
+                              name={"product_description"}
+                            />
+                          </Col>
+                        </Form.Group>
+                      </div>
                   <div className="my-3 inputsection_box">
                     <h5 className="m-0">Other Instruction</h5>
                     <Col sm="12" className="mt-3">
@@ -3984,7 +4010,6 @@ console.log("8888---"+dataURL)
                             <td className="text-center col-4">
                               <InputGroup className="">
                                 <Form.Control
-                                required
                                   value={headerval}
                                   type="text"
                                   sm="9"
@@ -4680,7 +4705,7 @@ console.log("8888---"+dataURL)
                         {varietyUnitvalidation === "ExpireDateValidation" ? (
                           <tr>
                             <p className="mt-1 ms-2 text-danger" type="invalid">
-                              Please Expire date should be greater than
+                              Please Expire date should be greater or equal than
                               Manufacturing date
                             </p>
                           </tr>
@@ -4967,9 +4992,6 @@ console.log("8888---"+dataURL)
                                               ) : null;
                                             })}
                                             <div className="imgprivew_box">
-                                           
-                                            
-                                            
                                                 {currentPage === "choose-img" ? (
                                                   <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />
                                                 ) : currentPage === "crop-img" ? (
@@ -4991,7 +5013,7 @@ console.log("8888---"+dataURL)
                                                     <div>
                                                       <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />
                                                     </div>
-                                                    {<FileInput /> === <ImageCropper /> ? (
+                                                    {<FileInput/> === <ImageCropper /> ? (
                                                       <>
                                                         <button
                                                           onClick={() => {
@@ -5149,7 +5171,7 @@ console.log("8888---"+dataURL)
           {/* feature product modal */}
 
           <Modal show={featureshow} onHide={featureModalClose}>
-            <Form className="" novalidate validated={validated} ref={formRef}>
+            <Form className="" novalidate validated={validated} ref={formRef} onSubmit={OnOfferProductAdd}>
               <Modal.Header closeButton>
                 <Modal.Title>Add Offer Product</Modal.Title>
               </Modal.Header>
@@ -5176,11 +5198,12 @@ console.log("8888---"+dataURL)
                               Product Name
                             </Form.Label>
                             <Form.Control
+                            required
                               type="text"
                               placeholder="Name"
                               value={productname}
                               name={"productname"}
-                              required
+                              
                             />
                           </Form.Group>
                         </div>
@@ -5284,7 +5307,7 @@ console.log("8888---"+dataURL)
                   btnclass={"button main_outline_button "}
                 />
                 <Iconbutton
-                  onClick={OnOfferProductAdd}
+                  // onClick={OnOfferProductAdd}
                   btntext={"Added"}
                   btnclass={"button main_button "}
                 />

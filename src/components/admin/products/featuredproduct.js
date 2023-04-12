@@ -15,7 +15,6 @@ const Featuredproduct = () => {
   const currentdate = moment().format("");
   const formRef = useRef();
   const [featuredProductData, setFeatureProductData] = useState([]);
-  // console.log("featuredProductData"+JSON.stringify(featuredProductData))
   const [UpdateAlert, setUpdateAlert] = useState(false);
   const [Alert, setAlert] = useState(false);
   const [apicall, setapicall] = useState(false);
@@ -25,6 +24,9 @@ const Featuredproduct = () => {
   const [id, setId] = useState("");
   const [filtervategory, setfiltercategory] = useState([]);
   const [vendorid, setVendorId] = useState([]);
+  const [varietyUnitvalidation, setVarietyUnitvalidation] = useState("");
+
+  const[categoryname,setCategoryName]=useState([])
   const [searchdata, setsearchData] = useState({
     product_title_name: "",
     status: "",
@@ -95,6 +97,8 @@ const Featuredproduct = () => {
   };
   /*<----Function to get the data---->*/
   const handleShow = (product_id) => {
+    getCategoryNameData();
+
     try {
       axios
         .post(
@@ -129,8 +133,38 @@ const Featuredproduct = () => {
     }
     setShow(true);
   };
+  let cat_name_data="";
+  const getCategoryNameData = () => {
+    try {
+      axios
+        .get(
+          `${process.env.REACT_APP_BASEURL_0}/category_name`,
+          // { vendor_id: "all" },
+          {
+            headers: { admin_token: `${token}` },
+          }
+        )
+        .then((response) => {
+      
+          cat_name_data=response.data[0];       
+          // setVid("")
+        });
+    } catch (err) { 
+      console.log(err)
+    }
+
+
+};
+useEffect(()=>{
+  getCategoryNameData();
+
+ },[apicall])
+// console.log(categoryname)
+
   /*<---Render feature data function--->*/
   useEffect(() => {
+    let productArry=[];
+
     setloading(true);
     try {
       axios
@@ -152,15 +186,23 @@ const Featuredproduct = () => {
           }
         )
         .then((response) => {
-        //   let v=response.data;
-        //   v.forEach(function (item,index){
-        //       // console.log(item.category)
-        // // console.log(response.data.category_name[item.category])
-        // let catname=response.data.category_name[item.category]
-        //   })
-          setFeatureProductData(response.data);
-          console.log(response.data)
-          
+          // setFeatureProductData(response.data);
+          let v=response.data;
+        
+          v.forEach(function (item,index){
+          console.log("item")
+          console.log(item.category)
+          let catname=cat_name_data[item.category];
+          if(catname!=undefined || catname!=null||catname!=""){
+            item.category=catname;
+          }
+          productArry.push(item)
+          }
+          )
+         
+        
+          setFeatureProductData(productArry);
+
           setapicall(false);
           setloading(false);
         });
@@ -170,7 +212,7 @@ const Featuredproduct = () => {
     getCategorydatafilter();
     getVendorData();
   }, [apicall]);
-
+ 
   /*<---Table data ---->*/
   const columns = [
     {
@@ -340,8 +382,13 @@ const Featuredproduct = () => {
 
   /*<----Function to update feature product---->*/
   const UpdateFeaturedProduct = (e) => {
-    // console.log("##################"+e,product_id)
+    setValidated(true);
     e.preventDefault();
+    if(featuredData.manufacturing_date > featuredData.expire_date)
+  {
+    setVarietyUnitvalidation("ExpireDateValidation");
+
+  }
     axios
       .put(
         `${process.env.REACT_APP_BASEURL_0}/update_fetured_product`,
@@ -426,24 +473,24 @@ const Featuredproduct = () => {
   value={searchdata.status} placeholder={"Search by status"} className={'adminsideinput'}/>
 </div> */}
             <div className="col-md-3 col-sm-6 aos_input mb-2">
-              <Form.Select
-                aria-label="Search by status"
-                className="adminselectbox"
-                placeholder="Search by category"
-                onChange={OnSearchChange}
-                name="category"
-                value={String(searchdata.category)}
-              >
-                <option value={""}>Select Category</option>
-                {(filtervategory || []).map((data, i) => {
-                  return (
-                    <option value={data.id} key={i}>
-                      {" "}
-                      {data.category_name}
-                    </option>
-                  );
-                })}
-              </Form.Select>
+            <Form.Select
+                  aria-label="Search by status"
+                  className="adminselectbox"
+                  placeholder="Search by category"
+                  onChange={OnSearchChange}
+                  name="category"
+                  value={String(searchdata.category)}
+                >
+                  <option value={""}>Select Category</option>
+                  {(filtervategory || []).map((data, i) => {
+                    return (
+                      <option value={data.id} key={i}>
+                        {" "}
+                        {data.category_name}
+                      </option>
+                    );
+                  })}
+                </Form.Select>
             </div>
             <div className="col-md-3 col-sm-6 aos_input mb-2">
               <Form.Select

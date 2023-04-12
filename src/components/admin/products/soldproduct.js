@@ -122,9 +122,11 @@ const Soldproduct = () => {
   };
   /* Render function to get data of the product */
   useEffect(() => {
+    let productArry=[];
+
     setloading(true);
     axios
-      .post(`${process.env.REACT_APP_BASEURL}/home?page=0&per_page=400`, {
+      .post(`${process.env.REACT_APP_BASEURL_0}/home?page=0&per_page=400`, {
         product_search: {
           search: [`${searchdata.product_title_name}`],
           price_from: "",
@@ -139,11 +141,26 @@ const Soldproduct = () => {
           quantity: ["0"],
           is_delete: ["1"],
         },
+      }, {
+        headers: { admin_token: `${token}` },
       })
       .then((response) => {
+        let v=response.data.results;
+        console.log(v)
+        v.forEach(function (item,index){
+           console.log(item.category)
+        console.log(response.data.category_name[item.category])
+        let catname=response.data.category_name[item.category]
+        item.category=catname;
+        // console.log("item"+JSON.stringify(item))
+        productArry.push(item)
+        })
         setsearcherror(false);
-        let data = response.data;
-        if ((data.length = 0)) {
+        // let data = response.data;
+        let response_data={};    
+        response_data["results"]=productArry;
+
+        if ((response_data.length = 0)) {
           setsolddata([0]);
         } else {
           setsolddata(response.data);

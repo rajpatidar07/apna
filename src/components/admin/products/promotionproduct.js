@@ -294,9 +294,36 @@ const Promotionproduct = () => {
     } catch (err) { }
     setShow(true);
   };
+  let cat_name_data="";
+  const getCategoryNameData = () => {
+    try {
+      axios
+        .get(
+          `${process.env.REACT_APP_BASEURL_0}/category_name`,
+          // { vendor_id: "all" },
+          {
+            headers: { admin_token: `${token}` },
+          }
+        )
+        .then((response) => {
+      
+          cat_name_data=response.data[0];       
+          // setVid("")
+        });
+    } catch (err) { 
+      console.log(err)
+    }
 
+
+};
+useEffect(()=>{
+  getCategoryNameData();
+
+ },[apicall])
   /*<---Function to Search--->*/
   useEffect(() => {
+    let productArry=[];
+
     setloading(true);
     try {
       axios
@@ -304,7 +331,7 @@ const Promotionproduct = () => {
           `${process.env.REACT_APP_BASEURL_0}/fetured_product_search`,
           {
             product_id: "",
-            fetured_type: "promotional",
+            fetured_type: "promotional_offer",
             start_date: /*`${searchdata.start_date}`*/ "",
             end_date: /*`${searchdata.end_date}`*/ "",
             category: [`${searchdata.category}`],
@@ -317,7 +344,21 @@ const Promotionproduct = () => {
           }
         )
         .then((response) => {
-          setpromotionProductData(response.data);
+          let v=response.data;
+        
+          v.forEach(function (item,index){
+          console.log("item")
+          console.log(item.category)
+          let catname=cat_name_data[item.category];
+          if(catname!=undefined || catname!=null||catname!=""){
+            item.category=catname;
+          }
+          productArry.push(item)
+          }
+          )
+         
+        
+          setpromotionProductData(productArry);
           setapicall(false);
           setloading(false);
         });

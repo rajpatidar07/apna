@@ -344,7 +344,9 @@ const Coupon = () => {
       formData.append("status", addcoupondata.status);
       formData.append("image", file);
       axios
-        .post(`${process.env.REACT_APP_BASEURL}/coupons_add`, formData)
+        .post(`${process.env.REACT_APP_BASEURL_0}/coupons_add`, formData, {
+          headers: { admin_token: `${token}` }
+        })
         .then((response) => {
           setapicall(true);
           setShow(false);
@@ -381,11 +383,14 @@ const Coupon = () => {
     formData.append("image", file);
 
     axios
-      .put(`${process.env.REACT_APP_BASEURL}/coupon_update`, formData)
+      .put(`${process.env.REACT_APP_BASEURL_0}/coupon_update`, formData, {
+        headers: { admin_token: `${token}` }
+      })
       .then((response) => {
         setapicall(true);
         setUpdateAlert(true);
-      })
+      },
+     )
       .catch(function (error) {
         console.log(error);
       });

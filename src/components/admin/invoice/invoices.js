@@ -82,7 +82,7 @@ const InvoiceList = () => {
         .post(
           `${process.env.REACT_APP_BASEURL_0}/invoice_search`,
           {
-            search: `${SearchInvo.search}`,
+            search: "",
             from_date: `${SearchInvo.from_date}`,
             to_date: `${SearchInvo.to_date}`,
           },

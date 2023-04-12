@@ -3,6 +3,7 @@ import Cropper from "react-easy-crop";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import FileInput from "./FileInput";
 function ImageCropper({ image, onCropDone, onCropCancel }) {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -51,23 +52,24 @@ function ImageCropper({ image, onCropDone, onCropCancel }) {
             }}
           />
         </div>
-
-
       </div>
      
      <div className="action-btns" >
+      {window.location.pathname==="/product"?
         <div className="aspect-ratios" style={{ marginLeft:"30%" ,marginTop:"30px"}} onChange={onAspectRatioChange}>
         <Form.Check inline type="radio"  value={1 / 1} name="ratio" label="1:1" />
-        <Form.Check inline type="radio"  value={1 / 2} name="ratio" label="1:2" />
-        <Form.Check inline type="radio" value={1 / 3} name="ratio" label="1:3" />
-        <Form.Check inline type="radio" value={1 / 4} name="ratio" label="1:4" />
-
-          {/* <input type="radio" value={1 / 1} name="ratio" /> 1:1 */}
-          {/* <input type="radio" value={1 / 2} name="ratio" /> 1:2
-          <input type="radio" value={1 / 3} name="ratio" /> 1:3
-          <input type="radio" value={1 / 4} name="ratio" /> 1:4 */}
-        </div>
-
+        <Form.Check inline type="radio"  value={3 / 2} name="ratio" label="3:2" />
+        </div> 
+       :
+       <div className="aspect-ratios" style={{ marginLeft:"30%" ,marginTop:"30px"}} onChange={onAspectRatioChange}>
+         <Form.Check inline type="radio"  value={1 / 1} name="ratio" label="1:1" />
+       <Form.Check inline type="radio"  value={1 / 2} name="ratio" label="1:2" />
+       <Form.Check inline type="radio" value={1 / 3} name="ratio" label="1:3" />
+       <Form.Check inline type="radio" value={1 / 4} name="ratio" label="1:4" />
+       </div>
+     
+          }
+       
         {/* <button className="btn btn-outline" onClick={onCropCancel}>
           Cancel
         </button>

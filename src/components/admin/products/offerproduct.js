@@ -39,7 +39,32 @@ const Offerproduct = () => {
   const [loading, setloading] = useState(false);
 
   let token = localStorage.getItem("token");
+  let cat_name_data="";
+  const getCategoryNameData = () => {
+    try {
+      axios
+        .get(
+          `${process.env.REACT_APP_BASEURL_0}/category_name`,
+          // { vendor_id: "all" },
+          {
+            headers: { admin_token: `${token}` },
+          }
+        )
+        .then((response) => {
+      
+          cat_name_data=response.data[0];       
+          // setVid("")
+        });
+    } catch (err) { 
+      console.log(err)
+    }
 
+
+};
+useEffect(()=>{
+  getCategoryNameData();
+
+ },[apicall])
   /*<---Category list api---> */
   const getCategorydatafilter = () => {
     try {
@@ -128,6 +153,8 @@ const Offerproduct = () => {
   };
 
   useEffect(() => {
+    let productArry=[];
+
     setloading(true);
     try {
       axios
@@ -142,14 +169,28 @@ const Offerproduct = () => {
             brand: [`${searchdata.brand}`],
             shop: [`${searchdata.vendor}`],
             product_title_name: [`${searchdata.product_title_name}`],
-            status: [`${searchdata.status}`],
+            status: `${searchdata.status}`,
           },
           {
             headers: { admin_token: `${token}` },
           }
         )
         .then((response) => {
-          setOfferProductData(response.data);
+          let v=response.data;
+        
+          v.forEach(function (item,index){
+          console.log("item")
+          console.log(item.category)
+          let catname=cat_name_data[item.category];
+          if(catname!=undefined || catname!=null||catname!=""){
+            item.category=catname;
+          }
+          productArry.push(item)
+          }
+          )
+         
+         
+          setOfferProductData(productArry);
           setapicall(false);
           setloading(false);
         });
