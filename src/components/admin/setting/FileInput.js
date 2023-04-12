@@ -28,7 +28,7 @@ function FileInput({ onImageSelected }) {
         placeholder="Shop_logo"
         name={"img_64"}
         ref={inputRef}
-        accept="image/png,image/jpeg,image/jpg,document/pdf"
+        accept="image/png,image/jpeg,image/jpg,image"
       />
       <div className="imgprivew_box">
         {window.location.pathname==="/product"?

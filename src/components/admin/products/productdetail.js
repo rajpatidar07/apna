@@ -836,7 +836,7 @@ const Productdetail = () => {
                                             : true
                                       }
                                     >
-                                      <option value={""}>{"Select"}</option>
+                                      <option value={""}>{variantarray.unit}</option>
 
                                       {(varietyy.variety || []).map(
                                         (vari, i) => {
@@ -926,6 +926,14 @@ const Productdetail = () => {
                                       name="colors"
                                       value={variantarray.colors}
                                       onChange={(e) => onVariantChange(e)}
+                                      disabled={
+                                        variantarray.unit !== "pcs" &&
+                                          variantarray.unit !== ""
+                                          ? true
+                                          : variantarray.unit === ""
+                                            ? false
+                                            : false
+                                      }
                                       required
                                     >
                                       {" "}

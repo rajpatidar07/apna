@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 
 import Col from "react-bootstrap/Col";
+
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { Badge } from "react-bootstrap";
@@ -811,6 +812,8 @@ console.log("8888---"+dataURL)
       })
       .then((response) => {
         onImgView(product_verient_id, product_id);
+        setapicall(true);
+        
       })
       .catch(function (error) {
         console.log(error);
@@ -2423,26 +2426,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                         </Col> */}
                         </Form.Group>
                       </div>
-                      {/* <div className="col-md-8">
-                        <Form.Group
-                          className="mx-3"
-                          controlId="validationCustom04"
-                        >
-                        
-                          <Form.Label className="inputlabelheading" sm="12">
-                            Product Description
-                          </Form.Label>
-                          <Col sm="12">
-
-                            <CKEditor
-                              editor={ClassicEditor}
-                              data={productdata.product_description}
-                              onChange={handledescription}
-                              name={"product_description"}
-                            />
-                          </Col>
-                        </Form.Group>
-                      </div> */}
+                     
                       <div className="col-md-8">
                         <Form.Group
                           className="mx-3"
@@ -4190,7 +4174,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                         : true
                                   }
                                 >
-                                  <option value={""}>{"Select"}</option>
+                                  <option value={""}>{variantarray.unit}</option>
 
                                   {(varietyy.variety || []).map((vari, i) => {
                                     return vdata.length === 0 ? null : vdata[0]
@@ -4974,7 +4958,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                                   >
                                                     Set Cover
                                                   </span>
-                                                  <span
+                                                  <button
                                                     className="cross_icon"
                                                     onClick={() =>
                                                       onImgRemove(
@@ -4987,7 +4971,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                                     }
                                                   >
                                                     &times;
-                                                  </span>
+                                                  </button>
                                                 </div>
                                               ) : null;
                                             })}
