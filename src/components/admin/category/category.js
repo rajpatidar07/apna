@@ -126,6 +126,7 @@ const CategoryList = () => {
           .then((response) => {
             let data = response.data[0];
             setCategoryEditData(data);
+            
             setCateName(false);
             setCateType(false);
             setImagePath(response.data[0].image);
@@ -254,11 +255,14 @@ const CategoryList = () => {
           .get(`${process.env.REACT_APP_BASEURL_0}/category?category=${indVal}`)
           .then((response) => {
             let cgory = response.data;
-            let specificValues = cgory.filter(
-              (obj) =>
-                obj.all_parent_id.substring(0, obj.all_parent_id.length - 2) ===
-                scategory.category_name
-            );
+            console.log("cgory"+cgory)
+            // let specificValues = cgory.filter(
+            //   (obj) =>
+            //     obj.all_parent_id.substring(0, obj.all_parent_id.length - 2) ===
+            //     scategory.category_name
+            // );
+            // console.log(specificValues);
+
             if (indVal === 0) {
               setCategory(cgory);
               setlevel(0);

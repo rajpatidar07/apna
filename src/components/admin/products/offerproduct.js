@@ -10,6 +10,7 @@ import SAlert from "../common/salert";
 import BrandJson from "./../json/BrandJson";
 import MainButton from "../common/button";
 import Loader from "../common/loader";
+import { Badge } from "react-bootstrap";
 
 const Offerproduct = () => {
   const formRef = useRef();
@@ -17,6 +18,8 @@ const Offerproduct = () => {
 
   // let userid = localStorage.getItem("userid");
   const [offerProductData, setOfferProductData] = useState([]);
+  const [validated, setValidated] = useState(false);
+
   const [featuredData, setFeaturetData] = useState([]);
   const [id, setId] = useState("");
   const [UpdateAlert, setUpdateAlert] = useState(false);
@@ -177,10 +180,9 @@ useEffect(()=>{
         )
         .then((response) => {
           let v=response.data;
+          // console.log("daytaaa--"+JSON.stringify(response.data[0].fetured_product_table_id))
         
           v.forEach(function (item,index){
-          console.log("item")
-          console.log(item.category)
           let catname=cat_name_data[item.category];
           if(catname!=undefined || catname!=null||catname!=""){
             item.category=catname;
@@ -293,33 +295,54 @@ useEffect(()=>{
         paddingLeft: "0px",
       },
     },
+    // {
+    //   name: "Status",
+    //   selector: (row) => (
+    //     <span
+    //       className={
+    //         (currentdate > row.start_date || currentdate === row.start_date) &&
+    //           currentdate < row.end_date
+    //           ? "badge bg-success"
+    //           : currentdate > row.end_date || currentdate === row.end_date
+    //             ? "badge bg-danger"
+    //             : currentdate < row.start_date
+    //               ? "badge bg-info"
+    //               : null
+    //       }
+    //     >
+    //       {(currentdate > row.start_date || currentdate === row.start_date) &&
+    //         currentdate < row.end_date
+    //         ? "Active"
+    //         : currentdate > row.end_date || currentdate === row.end_date
+    //           ? "Expired"
+    //           : currentdate < row.start_date
+    //             ? "In Active"
+    //             : null}
+    //     </span>
+    //   ),
+    //   sortable: true,
+    //   width: "200px",
+    // },
     {
       name: "Status",
       selector: (row) => (
-        <span
-          className={
-            (currentdate > row.start_date || currentdate === row.start_date) &&
-              currentdate < row.end_date
-              ? "badge bg-success"
-              : currentdate > row.end_date || currentdate === row.end_date
+        <Badge
+          bg={
+            row.status === "pending"
+              ? "badge bg-info"
+              : row.status === "expired"
                 ? "badge bg-danger"
-                : currentdate < row.start_date
-                  ? "badge bg-info"
+                : row.status === "publish"
+                  ? "badge bg-success"
                   : null
           }
         >
-          {(currentdate > row.start_date || currentdate === row.start_date) &&
-            currentdate < row.end_date
-            ? "Active"
-            : currentdate > row.end_date || currentdate === row.end_date
-              ? "Expired"
-              : currentdate < row.start_date
-                ? "In Active"
-                : null}
-        </span>
+          {row.status}
+        </Badge>
       ),
       sortable: true,
-      width: "200px",
+      width: "100px",
+      // center: true,
     },
     {
       name: "Start Date",
@@ -395,29 +418,68 @@ useEffect(()=>{
     setShow(true);
   };
 
+
   const UpdateOfferProduct = (e) => {
-    e.preventDefault();
-    axios
+    const form = e.currentTarget;
+
+    if (form.checkValidity() === false||featuredData.start_date===""||featuredData.end_date===""
+    ||featuredData.start_date>featuredData.end_date)
+    {
+      e.preventDefault();
+      setValidated(true);
+    }
+    
+    else{
+      axios
       .put(
         `${process.env.REACT_APP_BASEURL_0}/update_fetured_product`,
         {
-          id: productid,
-          start_date: featuredData.start_date,
-          end_date: featuredData.end_date,
-        },
+                  id: offerProductData[0].fetured_product_table_id,
+                  start_date: featuredData.start_date,
+                  end_date: featuredData.end_date,
+                },
         {
           headers: { admin_token: `${token}` },
         }
       )
       .then((response) => {
-        let data = response.data;
-        setapicall(true);
-        setShow(false);
-        setUpdateAlert(true);
+        setValidated(true)
+              setapicall(true);
+              setShow(false);
+              setUpdateAlert(true);
+       
       });
-    formRef.current.reset();
-  };
+      e.preventDefault();
+      setValidated(false);
+     formRef.current.reset();
+    // setValidated(false);
+    }
 
+    
+  };
+  // const UpdateOfferProduct = (e) => {
+  //   // let v=offerProductData;
+  //   e.preventDefault();
+  //   axios
+  //     .put(
+  //       `${process.env.REACT_APP_BASEURL_0}/update_fetured_product`,
+  //       {
+  //         id: offerProductData[0].fetured_product_table_id,
+  //         start_date: featuredData.start_date,
+  //         end_date: featuredData.end_date,
+  //       },
+  //       {
+  //         headers: { admin_token: `${token}` },
+  //       }
+  //     )
+  //     .then((response) => {
+  //       let data = response.data;
+  //       setapicall(true);
+  //       setShow(false);
+  //       setUpdateAlert(true);
+  //     });
+  //   formRef.current.reset();
+  // };
   // const submitHandler = () => {
   //   setapicall(true);
   // };
@@ -557,9 +619,9 @@ useEffect(()=>{
                   value={String(searchdata.status)}
                 >
                   <option value="">status</option>
-                  <option value="Active">Active</option>
-                  <option value="expired">Expired</option>
-                  <option value="inactive">In active</option>
+                  <option value="publish">Publish</option>
+                <option value="expired">Expired</option>
+                <option value="pending">Pending</option>
                 </Form.Select>
               </div>
               <div className="col-md-3 col-sm-6 aos_input mb-2">
@@ -583,7 +645,8 @@ useEffect(()=>{
           {/* upload */}
 
           <Modal size="lg" show={show} onHide={() => setShow(false)}>
-            <Form className="" ref={formRef}>
+            <Form className=""   noValidate
+              validated={validated} ref={formRef}>
               <Modal.Header closeButton>
                 <Modal.Title></Modal.Title>
               </Modal.Header>
@@ -596,13 +659,22 @@ useEffect(()=>{
                     >
                       <Form.Label>Start Date</Form.Label>
                       <Form.Control
-                        name="start_date"
-                        value={featuredData.start_date}
-                        onChange={(e) => handleFormChange(e)}
-                        type="date"
-                        placeholder="Coupon Start Date"
-                        min={currentDate}
-                      />
+                                                  type="date"
+                                                  sm="9"
+                                                  required
+                                                 placeholder="Coupon Start Date"
+                                                  min={moment().format(
+                                                    "YYYY-MM-DD"
+                                                  )}
+                                                 
+                                                  onChange={(e) =>
+                                                    handleFormChange(e)
+                                                  }
+                                                  name={"start_date"}
+                                                  value={
+                                                    featuredData.start_date
+                                                  }
+                                                />
                     </Form.Group>
                   </div>
                   <div className="col-md-6">
@@ -612,13 +684,27 @@ useEffect(()=>{
                     >
                       <Form.Label>End Date</Form.Label>
                       <Form.Control
-                        name="end_date"
-                        value={featuredData.end_date}
-                        onChange={(e) => handleFormChange(e)}
-                        type="date"
-                        placeholder="Coupon Start Date"
-                        min={featuredData.start_date}
-                      />
+                                                  type="date"
+                                                  sm="9"
+                                                  required
+                                                  disabled={
+                                                    featuredData.start_date
+                                                      ? false
+                                                      : true
+                                                  }
+                                                  min={moment(
+                                                    featuredData.start_date
+                                                  )
+                                                    .add(1, "day")
+                                                    .format("YYYY-MM-DD")}
+                                                  onChange={(e) =>
+                                                    handleFormChange(e)
+                                                  }
+                                                  name={"end_date"}
+                                                  value={
+                                                    featuredData.end_date
+                                                  }
+                                                />
                     </Form.Group>
                   </div>
                 </div>

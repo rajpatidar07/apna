@@ -9,6 +9,7 @@ import SAlert from "../common/salert";
 import MainButton from "../common/button";
 import BrandJson from "./../json/BrandJson";
 import Loader from "../common/loader";
+import { Badge } from "react-bootstrap";
 
 const Featuredproduct = () => {
   let productid = localStorage.getItem("productid");
@@ -42,8 +43,9 @@ const Featuredproduct = () => {
   const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
 
-  const handleClose = () => {
+  const handleClose = (e) => {
     // formRef.current.reset();
+    e.preventDefault();
     setValidated(false);
     setShow(false);
     setapicall(true);
@@ -96,43 +98,7 @@ const Featuredproduct = () => {
     }
   };
   /*<----Function to get the data---->*/
-  const handleShow = (product_id) => {
-    getCategoryNameData();
-
-    try {
-      axios
-        .post(
-          `${process.env.REACT_APP_BASEURL_0}/fetured_product_search`,
-          {
-            id: product_id,
-            fetured_type: "featured_offer",
-            start_date: "",
-            end_date: "",
-          },
-          {
-            headers: { admin_token: `${token}` },
-          }
-        )
-        .then((response) => {
-          setId(response.data[0].id);
-          for (let i = 0; i < response.data.length; i++) {
-            if (response.data[i].id === id) {
-              return response.data[i];
-            }
-          }
-          setFeaturetData({
-            ...featuredData,
-            start_date: response.data[0].start_date,
-
-            end_date: response.data[0].end_date,
-          });
-          setapicall(false);
-        });
-    } catch (err) {
-      console.log(err);
-    }
-    setShow(true);
-  };
+ 
   let cat_name_data="";
   const getCategoryNameData = () => {
     try {
@@ -171,7 +137,7 @@ useEffect(()=>{
         .post(
           `${process.env.REACT_APP_BASEURL_0}/fetured_product_search`,
           {
-            product_id: "",
+            vendor_id: "",
             fetured_type: "featured_offer",
             start_date: /*`${searchdata.start_date}`*/ "",
             end_date: /*`${searchdata.end_date}`*/ "",
@@ -190,8 +156,7 @@ useEffect(()=>{
           let v=response.data;
         
           v.forEach(function (item,index){
-          console.log("item")
-          console.log(item.category)
+         
           let catname=cat_name_data[item.category];
           if(catname!=undefined || catname!=null||catname!=""){
             item.category=catname;
@@ -286,8 +251,8 @@ useEffect(()=>{
       width: "100px",
     },
     {
-      name: "Product ID",
-      selector: (row) => row.product_id,
+      name: "vendor_id",
+      selector: (row) => row.vendor_id,
       sortable: true,
       width: "130px",
       center: true,
@@ -309,31 +274,54 @@ useEffect(()=>{
     {
       name: "Status",
       selector: (row) => (
-        <span
-          className={
-            (currentdate > row.start_date || currentdate === row.start_date) &&
-              currentdate < row.end_date
-              ? "badge bg-success"
-              : currentdate > row.end_date || currentdate === row.end_date
+        <Badge
+          bg={
+            row.status === "pending"
+              ? "badge bg-info"
+              : row.status === "expired"
                 ? "badge bg-danger"
-                : currentdate < row.start_date
-                  ? "badge bg-info"
+                : row.status === "publish"
+                  ? "badge bg-success"
                   : null
           }
         >
-          {(currentdate > row.start_date || currentdate === row.start_date) &&
-            currentdate < row.end_date
-            ? "Active"
-            : currentdate > row.end_date || currentdate === row.end_date
-              ? "Expired"
-              : currentdate < row.start_date
-                ? "In Active"
-                : null}
-        </span>
+          {row.status}
+        </Badge>
       ),
       sortable: true,
-      width: "200px",
+      width: "100px",
+      // center: true,
     },
+    // {
+    //   name: "Status",
+    //   selector: (row) => (
+    //     <span
+    //       className={
+    //         (currentdate > row.start_date || currentdate === row.start_date) &&
+    //           currentdate < row.end_date
+    //           ? "badge bg-success"
+    //           : currentdate > row.end_date || currentdate === row.end_date
+    //             ? "badge bg-danger"
+    //             : currentdate < row.start_date
+    //               ? "badge bg-info"
+    //               : null
+    //       }
+    //     >
+    //       {
+    //       ( row.start_date || currentdate === row.start_date) &&
+    //         currentdate < row.end_date
+    //         ? "Active"
+    //         : currentdate > row.end_date || currentdate === row.end_date
+    //           ? "Expired"
+    //           : currentdate < row.start_date
+    //             ? "In Active"
+    //             : null
+    //             }
+    //     </span>
+    //   ),
+    //   sortable: true,
+    //   width: "200px",
+    // },
     {
       name: "Start Date",
       selector: (row) => moment(row.start_date).format("DD-MM-YYYY"),
@@ -368,13 +356,50 @@ useEffect(()=>{
         <div className={"actioncolimn"}>
           <BiEdit
             className=" p-0 m-0  editiconn text-secondary"
-            onClick={handleShow.bind(this, row.product_id)}
+            onClick={handleShow.bind(this, row.vendor_id)}
           />
         </div>
       ),
     },
   ];
+  const handleShow = (vendor_id) => {
+    console.log(vendor_id)
+    getCategoryNameData();
 
+    try {
+      axios
+        .post(
+          `${process.env.REACT_APP_BASEURL_0}/fetured_product_search`,
+          {
+            vendor_id: vendor_id,
+            fetured_type: "featured_offer",
+            start_date:  featuredData.start_date,
+            end_date:featuredData.end_date,
+          },
+          {
+            headers: { admin_token: `${token}` },
+          }
+        )
+        .then((response) => {
+          setId(response.data[0].id);
+          for (let i = 0; i < response.data.length; i++) {
+            if (response.data[i].id === id) {
+              return response.data[i];
+            }
+          }
+          setFeaturetData({
+            ...featuredData,
+            start_date: response.data[0].start_date,
+
+            end_date: response.data[0].end_date,
+          });
+          setapicall(false);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+    setShow(true);
+  };
   /*<----Onchange function of Feature---->*/
   const handleFormChange = (e) => {
     setFeaturetData({ ...featuredData, [e.target.name]: e.target.value });
@@ -382,18 +407,21 @@ useEffect(()=>{
 
   /*<----Function to update feature product---->*/
   const UpdateFeaturedProduct = (e) => {
-    setValidated(true);
-    e.preventDefault();
-    if(featuredData.manufacturing_date > featuredData.expire_date)
-  {
-    setVarietyUnitvalidation("ExpireDateValidation");
+    const form = e.currentTarget;
 
-  }
-    axios
+    if (form.checkValidity() === false||featuredData.start_date===""||featuredData.end_date===""
+    ||featuredData.start_date>featuredData.end_date)
+    {
+      e.preventDefault();
+      setValidated(true);
+    }
+    
+    else{
+      axios
       .put(
         `${process.env.REACT_APP_BASEURL_0}/update_fetured_product`,
         {
-          id: productid,
+          id: featuredProductData[0].fetured_product_table_id,
           start_date: featuredData.start_date,
           end_date: featuredData.end_date,
         },
@@ -403,12 +431,19 @@ useEffect(()=>{
       )
       .then((response) => {
         let data = response.data;
+        setValidated(true);
+
         setapicall(true);
         setShow(false);
         setUpdateAlert(true);
       });
-    formRef.current.reset();
+      e.preventDefault();
+      setValidated(false);
+     formRef.current.reset();
     // setValidated(false);
+    }
+
+    
   };
 
   const OnDateChange = (e) => { };
@@ -541,9 +576,9 @@ useEffect(()=>{
                 value={String(searchdata.status)}
               >
                 <option value="">status</option>
-                <option value="Active">Active</option>
+                <option value="publish">Publish</option>
                 <option value="expired">Expired</option>
-                <option value="inactive">In active</option>
+                <option value="pending">Pending</option>
               </Form.Select>
             </div>
 
@@ -565,8 +600,9 @@ useEffect(()=>{
           </div>
         </div>
 
-        <Modal size="lg" show={show} onHide={() => setShow(false)}>
-          <Form className="" ref={formRef}>
+        <Modal size="lg" show={show}  onHide={() => setShow(false)}>
+          <Form className="" noValidate
+              validated={validated} ref={formRef}>
             <Modal.Header closeButton>
               <Modal.Title></Modal.Title>
             </Modal.Header>
@@ -579,12 +615,29 @@ useEffect(()=>{
                   >
                     <Form.Label>Start Date</Form.Label>
                     <Form.Control
+                                                  type="date"
+                                                  sm="9"
+                                                  required
+                                                 placeholder="Coupon Start Date"
+                                                  min={moment().format(
+                                                    "YYYY-MM-DD"
+                                                  )}
+                                                 
+                                                  onChange={(e) =>
+                                                    handleFormChange(e)
+                                                  }
+                                                  name={"start_date"}
+                                                  value={
+                                                    featuredData.start_date
+                                                  }
+                                                />
+                    {/* <Form.Control
                       name="start_date"
                       value={featuredData.start_date}
                       onChange={(e) => handleFormChange(e)}
                       type="date"
                       placeholder="Coupon Start Date"
-                    />
+                    /> */}
                   </Form.Group>
                 </div>
                 <div className="col-md-6">
@@ -594,12 +647,35 @@ useEffect(()=>{
                   >
                     <Form.Label>End Date</Form.Label>
                     <Form.Control
+                                                  type="date"
+                                                  sm="9"
+                                                  required
+                                                  disabled={
+                                                    featuredData.start_date
+                                                      ? false
+                                                      : true
+                                                  }
+                                                  min={moment(
+                                                    featuredData.start_date
+                                                  )
+                                                    .add(1, "day")
+                                                    .format("YYYY-MM-DD")}
+                                                  onChange={(e) =>
+                                                    handleFormChange(e)
+                                                  }
+                                                  name={"end_date"}
+                                                  value={
+                                                    featuredData.end_date
+                                                  }
+                                                />
+                    {/* <Form.Control
+                    required
                       name="end_date"
                       value={featuredData.end_date}
                       onChange={(e) => handleFormChange(e)}
                       type="date"
                       placeholder="Coupon Start Date"
-                    />
+                    /> */}
                   </Form.Group>
                 </div>
               </div>
@@ -613,7 +689,7 @@ useEffect(()=>{
               </button>
               <button
                 className="button main_outline_button"
-                onClick={(id)=>UpdateFeaturedProduct(id)}
+                onClick={UpdateFeaturedProduct}
               >
                 Update
               </button>

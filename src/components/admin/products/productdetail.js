@@ -1261,6 +1261,39 @@ const Productdetail = () => {
                             </div>
                           </div>
                           <div className="col-md-3 col-sm-4 p-2">
+                          <div className="manufacture_date addvariety_inputbox">
+                          <Form.Group
+                            className="mx-3"
+                            controlId="validationCustom01"
+                          >
+                            <Form.Label
+                              className="text-start inputlabelheading"
+                              sm="12"
+                            >
+                              Quantity
+                              <span className="text-danger">*</span>
+                            </Form.Label>
+                            <Col sm="12">
+                              <InputGroup className="">
+                                <Form.Control
+                                  name={"quantity"}
+                                  type="number"
+                                  value={variantarray.quantity}
+                                  sm="9"
+                                  min={"1"}
+                                  onChange={(e) => onVariantChange(e)}
+                                  onKeyUp={(event) => {
+                                    if (event.key === "Enter") {
+                                      onVariantaddclick();
+                                    }
+                                  }}
+                                />
+                              </InputGroup>
+                            </Col>
+                          </Form.Group>
+                        </div>
+                        </div>
+                          {/* <div className="col-md-3 col-sm-4 p-2">
                             <div className="manufacture_date addvariety_inputbox">
                               <Form.Group
                                 className="mx-3"
@@ -1303,11 +1336,11 @@ const Productdetail = () => {
                                         }
                                       }}
                                     />
-                                  </InputGroup> */}
+                                  </InputGroup> 
                                 </Col>
                               </Form.Group>
                             </div>
-                          </div>
+                          </div> */}
                           <div className="col-md-3 col-sm-4 p-2 text-center">
                             <div className="manufacture_date addvariety_inputbox">
                               <Button
@@ -1592,7 +1625,7 @@ const Productdetail = () => {
                                                   className=""
                                                   colSpan={"12"}
                                                 >
-                                                  <div className="image_box">
+                                                  <div className="image_box roesnap">
                                                     {newImageUrls.map(
                                                       (imgg, i) => {
                                                         return `${variantdata.id}` ===

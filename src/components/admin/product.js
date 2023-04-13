@@ -4620,7 +4620,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                         </div>
                       </div>
                       <div className="col-md-3 col-sm-4 p-2">
-                        <div className="manufacture_date addvariety_inputbox">
+                      <div className="manufacture_date addvariety_inputbox">
                           <Form.Group
                             className="mx-3"
                             controlId="validationCustom01"
@@ -4633,40 +4633,26 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                               <span className="text-danger">*</span>
                             </Form.Label>
                             <Col sm="12">
-                              <InputGroup className="" size="sm">
+                              <InputGroup className="">
                                 <Form.Control
-                                  type="number"
-                                  sm="9"
-                                  value={variantarray.quantity}
-                                  onChange={(e) => onVariantChange(e)}
                                   name={"quantity"}
-                                  onKeyPress={(event) => {
+                                  type="number"
+                                  value={variantarray.quantity}
+                                  sm="9"
+                                  min={"1"}
+                                  onChange={(e) => onVariantChange(e)}
+                                  onKeyUp={(event) => {
                                     if (event.key === "Enter") {
                                       onVariantaddclick();
                                     }
                                   }}
-                                  required
                                 />
                               </InputGroup>
-                              {/* <InputGroup className="">
-                                    <Form.Control
-                                      name={"quantity"}
-                                      type="number"
-                                      value={variantarray.quantity}
-                                      sm="9"
-                                      min={"1"}
-                                      onChange={(e) => onVariantChange(e)}
-                                      onKeyUp={(event) => {
-                                        if (event.key === "Enter") {
-                                          onVariantaddclick();
-                                        }
-                                      }}
-                                    />
-                                  </InputGroup>  */}
                             </Col>
                           </Form.Group>
                         </div>
-                      </div>
+                        </div>
+                   
 
                       <div className="col-md-3 col-sm-4 p-2 text-center">
                         <div className="manufacture_date addvariety_inputbox">

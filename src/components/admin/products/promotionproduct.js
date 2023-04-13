@@ -13,6 +13,7 @@ import moment from "moment";
 import SAlert from "../common/salert";
 import Loader from "../common/loader";
 import BrandJson from "./../json/BrandJson";
+import { Badge } from "react-bootstrap";
 
 const Promotionproduct = () => {
   const formRef = useRef();
@@ -196,31 +197,52 @@ const Promotionproduct = () => {
     {
       name: "Status",
       selector: (row) => (
-        <span
-          className={
-            (currentdate > row.start_date || currentdate === row.start_date) &&
-              currentdate < row.end_date
-              ? "badge bg-success"
-              : currentdate > row.end_date || currentdate === row.end_date
+        <Badge
+          bg={
+            row.status === "pending"
+              ? "badge bg-info"
+              : row.status === "expired"
                 ? "badge bg-danger"
-                : currentdate < row.start_date
-                  ? "badge bg-info"
+                : row.status === "publish"
+                  ? "badge bg-success"
                   : null
           }
         >
-          {(currentdate > row.start_date || currentdate === row.start_date) &&
-            currentdate < row.end_date
-            ? "Active"
-            : currentdate > row.end_date || currentdate === row.end_date
-              ? "Expired"
-              : currentdate < row.start_date
-                ? "In Active"
-                : null}
-        </span>
+          {row.status}
+        </Badge>
       ),
       sortable: true,
-      width: "200px",
+      width: "100px",
+      // center: true,
     },
+    // {
+    //   name: "Status",
+    //   selector: (row) => (
+    //     <span
+    //       className={
+    //         (currentdate > row.start_date || currentdate === row.start_date) &&
+    //           currentdate < row.end_date
+    //           ? "badge bg-success"
+    //           : currentdate > row.end_date || currentdate === row.end_date
+    //             ? "badge bg-danger"
+    //             : currentdate < row.start_date
+    //               ? "badge bg-info"
+    //               : null
+    //       }
+    //     >
+    //       {(currentdate > row.start_date || currentdate === row.start_date) &&
+    //         currentdate < row.end_date
+    //         ? "Active"
+    //         : currentdate > row.end_date || currentdate === row.end_date
+    //           ? "Expired"
+    //           : currentdate < row.start_date
+    //             ? "In Active"
+    //             : null}
+    //     </span>
+    //   ),
+    //   sortable: true,
+    //   width: "200px",
+    // },
     {
       name: "Start Date",
       selector: (row) => moment(row.start_date).format("DD-MM-YYYY"),
@@ -562,9 +584,9 @@ useEffect(()=>{
                   value={String(searchdata.status)}
                 >
                   <option value="">status</option>
-                  <option value="Active">Active</option>
-                  <option value="expired">Expired</option>
-                  <option value="inactive">In active</option>
+                  <option value="publish">Publish</option>
+                <option value="expired">Expired</option>
+                <option value="pending">Pending</option>
                 </Form.Select>
               </div>
               <div className="col-md-3 col-sm-6 aos_input mb-2 ">
