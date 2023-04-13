@@ -4,15 +4,20 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import FileInput from "./FileInput";
+let old_number=1;
 function ImageCropper({ image, onCropDone, onCropCancel }) {
+  console.log("image")
+  console.log(image)
+  
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedArea, setCroppedArea] = useState(null);
   const [aspectRatio, setAspectRatio] = useState(4 / 3);
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
 
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  // const handleShow = () => setShow(true);
+
 
   const onCropComplete = (croppedAreaPercentage, croppedAreaPixels) => {
     setCroppedArea(croppedAreaPixels);
@@ -22,6 +27,13 @@ function ImageCropper({ image, onCropDone, onCropCancel }) {
     setAspectRatio(event.target.value);
   };
 
+  if(image!="" && old_number==1){
+   
+    setShow(true);
+    console.log("show")
+    console.log(show)
+    old_number++
+  }
   return (
       <>
       
@@ -87,7 +99,8 @@ function ImageCropper({ image, onCropDone, onCropCancel }) {
       
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+      
+          <Button variant="secondary"  onClick={handleClose}>
             Close
           </Button>
           <Button variant="primary"  onClick={() => {
@@ -97,11 +110,11 @@ function ImageCropper({ image, onCropDone, onCropCancel }) {
           </Button>
         </Modal.Footer>
       </Modal> 
-      <div style={{marginTop:"30px"}}>
+      {/* <div style={{marginTop:"30px"}}>
       <Button variant="primary"  onClick={handleShow}>
         Crop Image
       </Button>
-      </div>
+      </div> */}
       
     </>
   );

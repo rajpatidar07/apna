@@ -381,18 +381,30 @@ useEffect(()=>{
           }
         )
         .then((response) => {
-          setId(response.data[0].id);
-          for (let i = 0; i < response.data.length; i++) {
-            if (response.data[i].id === id) {
-              return response.data[i];
-            }
-          }
-          setFeaturetData({
-            ...featuredData,
-            start_date: response.data[0].start_date,
 
-            end_date: response.data[0].end_date,
-          });
+          let data=response.data
+          console.log("-uuuuuuuuu----"+JSON.stringify(response.data[0].start_date))
+          // if(data.start_date==undefined||data.start_date=="null"||data.start_date==""||data.end_date==undefined||data.end_date=="null"||
+          // data.end_date==""){
+          // console.log("++==="+JSON.stringify(data.start_date+"--------"+data.end_date))
+               
+          // }
+
+          // setId(response.data[0].fetured_product_table_id);
+          // for (let i = 0; i < response.data.length; i++) {
+          //   if (response.data[i].fetured_product_table_id === id) {
+          //     return response.data[i];
+          //   }
+          // }
+          // setFeaturetData({
+            
+          //   ...featuredData,
+          //   start_date:response.data[0].start_date,
+
+          //   end_date:response.data.end_date,
+          // });
+          // console.log("featuredData"+response.data[0].start_date)
+
           setapicall(false);
         });
     } catch (err) {
