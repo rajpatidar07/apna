@@ -6,9 +6,10 @@ import Form from 'react-bootstrap/Form';
 import FileInput from "./FileInput";
 let old_number=1;
 function ImageCropper({ image, onCropDone, onCropCancel }) {
-  console.log("image")
-  console.log(image)
-  
+
+  const [currentPage, setCurrentPage] = useState("choose-img");
+  // const [image, setImage] = useState("");
+  const [imageName, setimageName] = useState("");
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedArea, setCroppedArea] = useState(null);
@@ -17,7 +18,20 @@ function ImageCropper({ image, onCropDone, onCropCancel }) {
 
   const handleClose = () => setShow(false);
   // const handleShow = () => setShow(true);
-
+  const onImageSelected = (selectedImg) => {
+    if(image!="" ){
+   
+      setShow(true);
+      // console.log("show")
+      // console.log(show)
+      // old_number++
+    }
+    // setImage(selectedImg.dataurl);
+    setimageName(selectedImg.imageName)
+    console.log(imageName)
+    setCurrentPage("crop-img");
+   
+  };
 
   const onCropComplete = (croppedAreaPercentage, croppedAreaPixels) => {
     setCroppedArea(croppedAreaPixels);
@@ -27,17 +41,11 @@ function ImageCropper({ image, onCropDone, onCropCancel }) {
     setAspectRatio(event.target.value);
   };
 
-  if(image!="" && old_number==1){
-   
-    setShow(true);
-    console.log("show")
-    console.log(show)
-    old_number++
-  }
+ 
   return (
       <>
       
-      <Modal show={show} onHide={handleClose} size="md" className="h-100"  aria-labelledby="contained-modal-title-vcenter"
+      <Modal show={show} onHide={handleClose} size="lg" className="h-100"  aria-labelledby="contained-modal-title-vcenter"
       centered>
         <Modal.Header closeButton>
           <Modal.Title>Crop Image</Modal.Title>
@@ -47,6 +55,7 @@ function ImageCropper({ image, onCropDone, onCropCancel }) {
         <div className="container">
           <Cropper
             image={image}
+            imageNamee={imageName}
             aspect={aspectRatio}
             crop={crop}
             zoom={zoom}
@@ -58,7 +67,7 @@ function ImageCropper({ image, onCropDone, onCropCancel }) {
                 width: "40%",
                 height: "70%",
                 marginTop:"10px",
-                marginLeft:"160px",
+                marginLeft:"180px",
                 backgroundColor: "#fff",
               },
             }}
@@ -99,7 +108,7 @@ function ImageCropper({ image, onCropDone, onCropCancel }) {
       
         </Modal.Body>
         <Modal.Footer>
-      
+          
           <Button variant="secondary"  onClick={handleClose}>
             Close
           </Button>
@@ -110,6 +119,24 @@ function ImageCropper({ image, onCropDone, onCropCancel }) {
           </Button>
         </Modal.Footer>
       </Modal> 
+       <div className="imgprivew_box">
+        {window.location.pathname==="/product"?
+        <>
+         <img
+      src={
+             "https://i2.wp.com/asvs.in/wp-content/uploads/2017/08/dummy.png?fit=399%2C275&ssl=1"
+          }
+      alt="apna_organic"
+       width={100}
+       height={"100%"}
+       /> 
+  
+      <span className="plus_icon">  <FileInput setImage={image}    onImageSelected={onImageSelected} setimageName={setimageName}/> </span>
+     
+        </>
+     :null}
+      </div>
+     
       {/* <div style={{marginTop:"30px"}}>
       <Button variant="primary"  onClick={handleShow}>
         Crop Image

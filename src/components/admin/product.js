@@ -749,7 +749,6 @@ function Product() {
   };
 
   const imguploadchange = async (dataURL, product_id, id, vendor_id) => {
-console.log("8888---"+dataURL)
     setcustomValidated("");
     onImgView(product_id, id);
     let i
@@ -4896,6 +4895,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                               variantdata.product_id
                                             )
                                           }
+                                          
                                         />
                                       </td>
                                     </tr>
