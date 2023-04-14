@@ -396,13 +396,14 @@ useEffect(()=>{
           //     return response.data[i];
           //   }
           // }
-          // setFeaturetData({
+         
+          setFeaturetData({
             
-          //   ...featuredData,
-          //   start_date:response.data[0].start_date,
+            ...featuredData,
+            start_date:response.data[0].start_date,
 
-          //   end_date:response.data.end_date,
-          // });
+            end_date:response.data.end_date,
+          });
           // console.log("featuredData"+response.data[0].start_date)
 
           setapicall(false);
@@ -412,6 +413,7 @@ useEffect(()=>{
     }
     setShow(true);
   };
+  
   /*<----Onchange function of Feature---->*/
   const handleFormChange = (e) => {
     setFeaturetData({ ...featuredData, [e.target.name]: e.target.value });

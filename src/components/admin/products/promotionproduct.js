@@ -19,11 +19,14 @@ const Promotionproduct = () => {
   const formRef = useRef();
   let userid = localStorage.getItem("userid");
   const [promotionProductData, setpromotionProductData] = useState([]);
+  console.log("--")
+  console.log(promotionProductData)
+
   const [Alert, setAlert] = useState(false);
   const [apicall, setapicall] = useState(false);
   const [show, setShow] = useState(false);
   const [featuredData, setFeaturetData] = useState([]);
-  console.log("featuredData"+featuredData)
+  const [validated, setValidated] = useState(false);
 
   const [id, setId] = useState("");
   const [UpdateAlert, setUpdateAlert] = useState(false);
@@ -277,7 +280,7 @@ const Promotionproduct = () => {
         <div className={"actioncolimn"}>
           <BiEdit
             className=" p-0 m-0  editiconn text-secondary"
-            onClick={handleShow.bind(this, row.product_id)}
+            onClick={handleShow.bind(this, row.vendor_id)}
           />
         </div>
       ),
@@ -287,14 +290,14 @@ const Promotionproduct = () => {
     setFeaturetData({ ...featuredData, [e.target.name]: e.target.value });
   };
   /*<---Function to get data--->*/
-  const handleShow = (product_id) => {
+  const handleShow = (vendor_id) => {
     try {
       axios
         .post(
           `${process.env.REACT_APP_BASEURL_0}/fetured_product_search`,
           {
-            product_id: product_id,
-            fetured_type: "promotional",
+            vendor_id: vendor_id,
+            fetured_type: "promotional_offer",
             start_date: "",
             end_date: "",
           },
@@ -352,7 +355,7 @@ useEffect(()=>{
         .post(
           `${process.env.REACT_APP_BASEURL_0}/fetured_product_search`,
           {
-            product_id: "",
+            vendor_id: "",
             fetured_type: "promotional_offer",
             start_date: /*`${searchdata.start_date}`*/ "",
             end_date: /*`${searchdata.end_date}`*/ "",
@@ -393,21 +396,61 @@ useEffect(()=>{
 
   /*<---Function to Update promotion product--->*/
   const UpdatePromotionProduct = (e) => {
-    e.preventDefault();
-    axios
-      .put(`${process.env.REACT_APP_BASEURL}/update_fetured_product`, {
-        id: id,
-        start_date: featuredData.start_date,
-        end_date: featuredData.end_date,
-      })
+    const form = e.currentTarget;
+
+    if (form.checkValidity() === false||featuredData.start_date===""||featuredData.end_date===""
+    ||featuredData.start_date>featuredData.end_date)
+    {
+      e.preventDefault();
+      setValidated(true);
+    }
+    
+    else{
+      axios
+      .put(
+        `${process.env.REACT_APP_BASEURL_0}/update_fetured_product`,
+        {
+          id: promotionProductData[0].fetured_product_table_id,
+          start_date: featuredData.start_date,
+          end_date: featuredData.end_date,
+        },
+        {
+          headers: { admin_token: `${token}` },
+        }
+      )
       .then((response) => {
         let data = response.data;
+        setValidated(true);
+
         setapicall(true);
         setShow(false);
         setUpdateAlert(true);
       });
-    formRef.current.reset();
+      e.preventDefault();
+      setValidated(false);
+     formRef.current.reset();
+    // setValidated(false);
+    }
+
+    
   };
+
+  // const UpdatePromotionProduct = (e) => {
+  //   e.preventDefault();
+  //   axios
+  //     .put(`${process.env.REACT_APP_BASEURL}/update_fetured_product`, {
+  //       id: id,
+  //       start_date: featuredData.start_date,
+  //       end_date: featuredData.end_date,
+  //     })
+  //     .then((response) => {
+  //       let data = response.data;
+  //       setapicall(true);
+  //       setShow(false);
+  //       setUpdateAlert(true);
+  //     });
+  //   formRef.current.reset();
+  // };
 
   // const submitHandler = () => {
   //   setapicall(true);

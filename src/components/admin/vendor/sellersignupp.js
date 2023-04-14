@@ -92,7 +92,8 @@ const SellerSignupp = () => {
       .catch((error) => { });
   };
   return (
-    <Fragment>
+    // <Fragment>
+      <>
       <div className="for_scrol">
         <div className="container">
           <div className="row mt-5">
@@ -292,9 +293,10 @@ const SellerSignupp = () => {
           </div>
         </div>
       </div>
+      </>
+     
 
 
-    </Fragment>
   );
 };
 export default SellerSignupp;

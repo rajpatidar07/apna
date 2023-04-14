@@ -39,6 +39,7 @@ import Loader from "./common/loader";
 let encoded;
 let ImgObj = [];
 function Product() {
+  const [CategoryEditdata, setCategoryEditData] = useState([]);
 
   const [currentPage, setCurrentPage] = useState("choose-img");
   const [imgAfterCrop, setImgAfterCrop] = useState("");
@@ -569,6 +570,7 @@ function Product() {
                 )
                 .then((response) => {
                   let data = response.data[0];
+                  setCategoryEditData(data);
 
                   if (i === 0) {
                     axios
@@ -613,6 +615,7 @@ function Product() {
                   } else if (i === 3) {
                     setCategoryEditChildparent(data.category_name);
                   }
+                  setCategoryEditData(data)
                 });
             }
             // end category edit api
@@ -654,6 +657,7 @@ function Product() {
   };
   const handleClose = () => {
     setIndVal(0);
+    setCategoryEditData("");
     setproductdata(data);
     setcustomarray([]);
     setvariantarray(veriantData);
@@ -810,8 +814,8 @@ function Product() {
         vendor_id: `${vendor_id}`,
       })
       .then((response) => {
-        onImgView(product_verient_id, product_id);
         setapicall(true);
+        onImgView(product_verient_id, product_id);
         
       })
       .catch(function (error) {
@@ -2503,45 +2507,23 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                           {category.map((cdata, i) => {
                             return (
                               <option
-                                value={cdata.id}
-                                name="parent_category"
-                                key={i}
-                                selected={
-                                  editparentCategory === cdata.category_name
-                                    ? true
-                                    : false
-                                }
-                              >
-                                {cdata.category_name} {""}
-                              </option>
-                            );
+                              value={cdata.id}
+                              name="parent_category"
+                              key={i}
+                              selected={
+                                editparentCategory === cdata.category_name
+                                  ? true
+                                  : false
+                              }
+                            >
+                              {cdata.category_name} {""}
+                            </option>
+                            )
+                             
+                            
                           })}
                           </Form.Select>
-                        {/* <Form.Select
-                          onChange={(e, id) => categoryFormChange(e, id)}
-                          name={"parent_category"}
-                          aria-label="Parent Category"
-                          className="adminselectbox"
-                          required
-                        >
-                          <option value={""}>Select Parent Category </option>
-                          {category.map((cdata, i) => {
-                            return (
-                              <option
-                                value={cdata.id}
-                                name="parent_category"
-                                key={i}
-                                selected={
-                                  editparentCategory === cdata.category_name
-                                    ? true
-                                    : false
-                                }
-                              >
-                                {cdata.category_name} {""}
-                              </option>
-                            );
-                          })}
-                        </Form.Select> */}
+                       
                         <Form.Control.Feedback type="invalid" className="h6">
                           Please select Category
                         </Form.Control.Feedback>
@@ -2568,17 +2550,18 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                             {subCategory.map((cdata, i) => {
                               return (
                                 <option
-                                  value={cdata.id}
-                                  key={i}
-                                  selected={
-                                    categoryeditparent === cdata.category_name
-                                      ? true
-                                      : false
-                                  }
-                                >
-                                  {cdata.category_name}{" "}
-                                </option>
-                              );
+                                value={cdata.id}
+                                key={i}
+                                selected={
+                                  categoryeditparent == cdata.category_name
+                                    ? true
+                                    : false
+                                }
+                              >
+                                {cdata.category_name}{" "}
+                              </option>
+                              )
+                              
                             })}
                           </Form.Select>
                           <Form.Control.Feedback type="invalid" className="h6">
@@ -2609,18 +2592,21 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                             {childCategory.map((cdata, i) => {
                               return (
                                 <option
-                                  value={cdata.id}
-                                  key={i}
-                                  selected={
-                                    categoryeditchildparent
-                                      
-                                      ? true
-                                      : false
-                                  }
-                                >
-                                  {cdata.category_name}{" "}
-                                </option>
-                              );
+                                value={cdata.id}
+                                key={i}
+                                selected={
+                                  categoryeditchildparent
+                                   
+                                    ? true
+                                    : false
+                                }
+                              >
+                                {cdata.category_name}{" "}
+                              </option>
+                           
+                              )
+                              
+                              
                             })}
                           </Form.Select>
                           <Form.Control.Feedback type="invalid" className="h6">
@@ -4895,7 +4881,6 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                               variantdata.product_id
                                             )
                                           }
-                                          
                                         />
                                       </td>
                                     </tr>
