@@ -5,10 +5,28 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import FileInput from "./FileInput";
 let old_number=1;
-function ImageCropper({ image, onCropDone, onCropCancel }) {
+function ImageCropper({image, onCropDone, onCropCancel }) {
+
+console.log("++++")
+console.log(image)
+
+  const [imagee, setImagee] = useState("");
+  // console.log("0000")
+  //  console.log(Img)
+  const onImageSelected = (selectedImg) => {
+    let IMG=selectedImg.dataurl
+    if(IMG!="" &&  old_number==1){
+      setShow(true);
+      old_number++;
+    }
+    setImagee(IMG)
+
+    setimageName(selectedImg.imageName)
+    setCurrentPage("crop-img");
+  };
+ 
 
   const [currentPage, setCurrentPage] = useState("choose-img");
-  // const [image, setImage] = useState("");
   const [imageName, setimageName] = useState("");
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(false);
@@ -17,10 +35,8 @@ function ImageCropper({ image, onCropDone, onCropCancel }) {
   const [show, setShow] = useState(true);
   let [count, setCount] = useState(1);
   function incrementCount() {
-    console.log("++")
     if (zoom === count) {
       setZoom(true);
-    console.log("++"+zoom)
 
     } else {
       count = count + 1;
@@ -35,22 +51,20 @@ function ImageCropper({ image, onCropDone, onCropCancel }) {
       setZoom(false);
     }
   };
-  const handleClose = () => setShow(false);
-  // const handleShow = () => setShow(true);
-  const onImageSelected = (selectedImg) => {
-    if(image!="" ){
-   
-      setShow(true);
-      // console.log("show")
-      // console.log(show)
-      // old_number++
-    }
-    // setImage(selectedImg.dataurl);
-    setimageName(selectedImg.imageName)
-    console.log(imageName)
-    setCurrentPage("crop-img");
-   
+  const handleClose = () => {
+    setShow(false)
+    old_number=1;
+    // image="";
+    setImagee("")
+    setimageName("")
+    // console.log("image")
+    // console.log(image)
   };
+
+  // const handleShow = () => setShow(true);
+ 
+ 
+
 
   const onCropComplete = (croppedAreaPercentage, croppedAreaPixels) => {
     setCroppedArea(croppedAreaPixels);
@@ -155,15 +169,16 @@ function ImageCropper({ image, onCropDone, onCropCancel }) {
        height={"100%"}
        /> 
   
-      <span className="plus_icon"><FileInput setImage={image}  onImageSelected={onImageSelected} setimageName={setimageName}/> </span>
+      <span className="plus_icon"><FileInput setImagee={imagee}  onImageSelected={onImageSelected} setimageName={setimageName}/> </span>
      
         </>
-     :<FileInput setImage={image}  onImageSelected={onImageSelected} setimageName={setimageName}/>}
+     :<FileInput setImagee={imagee} onImageSelected={onImageSelected}   setimageName={setimageName}/>}
       </div>
      
       {/* <div style={{marginTop:"30px"}}>
       <Button variant="primary"  onClick={handleShow}>
         Crop Image
+        
       </Button>
       </div> */}
       
