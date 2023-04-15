@@ -11,11 +11,30 @@ function ImageCropper({ image, onCropDone, onCropCancel }) {
   // const [image, setImage] = useState("");
   const [imageName, setimageName] = useState("");
   const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
+  const [zoom, setZoom] = useState(false);
   const [croppedArea, setCroppedArea] = useState(null);
   const [aspectRatio, setAspectRatio] = useState(4 / 3);
   const [show, setShow] = useState(true);
+  let [count, setCount] = useState(1);
+  function incrementCount() {
+    console.log("++")
+    if (zoom === count) {
+      setZoom(true);
+    console.log("++"+zoom)
 
+    } else {
+      count = count + 1;
+      setCount(count);
+      setZoom(false);
+    }
+  }
+  /*<-----Decrement Functionality----> */
+  const decrementCount = () => {
+    if (count > 1) {
+      setCount((count) => count - 1);
+      setZoom(false);
+    }
+  };
   const handleClose = () => setShow(false);
   // const handleShow = () => setShow(true);
   const onImageSelected = (selectedImg) => {
@@ -45,8 +64,7 @@ function ImageCropper({ image, onCropDone, onCropCancel }) {
   return (
       <>
       
-      <Modal show={show} onHide={handleClose} size="lg" className="h-100"  aria-labelledby="contained-modal-title-vcenter"
-      centered>
+      <Modal show={show} onHide={handleClose} size="lg" className="h-100"  >
         <Modal.Header closeButton>
           <Modal.Title>Crop Image</Modal.Title>
         </Modal.Header>
@@ -58,20 +76,22 @@ function ImageCropper({ image, onCropDone, onCropCancel }) {
             imageNamee={imageName}
             aspect={aspectRatio}
             crop={crop}
-            zoom={zoom}
+            zoom={count}
             onCropChange={setCrop}
-            onZoomChange={setZoom}
+            onClick={setZoom}
             onCropComplete={onCropComplete}
             style={{
               containerStyle: {
                 width: "40%",
                 height: "70%",
                 marginTop:"10px",
-                marginLeft:"180px",
+                marginLeft:"190px",
                 backgroundColor: "#fff",
               },
             }}
           />
+         
+
         </div>
       </div>
      
@@ -80,6 +100,8 @@ function ImageCropper({ image, onCropDone, onCropCancel }) {
         <div className="aspect-ratios" style={{ marginLeft:"30%" ,marginTop:"30px"}} onChange={onAspectRatioChange}>
         <Form.Check inline type="radio"  value={1 / 1} name="ratio" label="1:1" />
         <Form.Check inline type="radio"  value={3 / 2} name="ratio" label="3:2" />
+          <Button variant="info" onClick={incrementCount} > +</Button>&nbsp;
+          <Button variant="info" onClick={decrementCount} > -</Button>
         </div> 
        :
        <div className="aspect-ratios" style={{ marginLeft:"30%" ,marginTop:"30px"}} onChange={onAspectRatioChange}>
@@ -87,6 +109,8 @@ function ImageCropper({ image, onCropDone, onCropCancel }) {
        <Form.Check inline type="radio"  value={1 / 2} name="ratio" label="1:2" />
        <Form.Check inline type="radio" value={1 / 3} name="ratio" label="1:3" />
        <Form.Check inline type="radio" value={1 / 4} name="ratio" label="1:4" />
+       <Button variant="info" onClick={incrementCount} > +</Button>
+          <Button variant="info" onClick={decrementCount} > -</Button>
        </div>
      
           }
@@ -105,7 +129,7 @@ function ImageCropper({ image, onCropDone, onCropCancel }) {
         </button> */}
       </div> 
     
-      
+         
         </Modal.Body>
         <Modal.Footer>
           
@@ -131,10 +155,10 @@ function ImageCropper({ image, onCropDone, onCropCancel }) {
        height={"100%"}
        /> 
   
-      <span className="plus_icon">  <FileInput setImage={image}    onImageSelected={onImageSelected} setimageName={setimageName}/> </span>
+      <span className="plus_icon"><FileInput setImage={image}  onImageSelected={onImageSelected} setimageName={setimageName}/> </span>
      
         </>
-     :null}
+     :<FileInput setImage={image}  onImageSelected={onImageSelected} setimageName={setimageName}/>}
       </div>
      
       {/* <div style={{marginTop:"30px"}}>

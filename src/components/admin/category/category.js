@@ -600,6 +600,7 @@ const CategoryList = () => {
 
   /*<---Function to close the modal--->*/
   const handleClose = () => {
+    formRef.current.reset();
     setnewName("");
     setType("");
     setCategoryEditData("");

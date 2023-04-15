@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useRef} from "react";
 import Input from "../common/input";
 import ListGroup from "react-bootstrap/ListGroup";
 import Iconbutton from "../common/iconbutton";
@@ -24,9 +24,12 @@ import { TbShip } from "react-icons/tb";
 import { CgTrack } from "react-icons/cg";
 
 const Delivery = () => {
+  const formRef = useRef();
+
   const [show, setShow] = useState(false);
   const [showtrack, setShowtrack] = useState(false);
   const handleClose = () => {
+     formRef.current.reset();
     setShow(false);
     setShowtrack(false);
   };

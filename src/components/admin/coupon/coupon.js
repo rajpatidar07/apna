@@ -81,6 +81,7 @@ const Coupon = () => {
   };
   const handleClose = () => {
     formRef.current.reset();
+    // coupondata("")
     setValidated(false);
     setShow(false);
   };

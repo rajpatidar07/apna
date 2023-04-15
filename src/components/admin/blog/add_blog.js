@@ -107,8 +107,9 @@ const BlogList = () => {
     setaddBlog({ ...addblog, [e.target.name]: e.target.value });
   };
 
-  const handleClose = () => {
+  const handleClose = (e) => {
     formRef.current.reset();
+    setaddBlog("")
     setValidated(false);
     setShow(false);
   };
@@ -116,6 +117,7 @@ const BlogList = () => {
   const handleShow = (e, id) => {
     if (e === "add") {
       setShow(e);
+
     } else {
       function getBlog() {
         try {
@@ -200,6 +202,8 @@ const BlogList = () => {
           setShow(false);
           setapicall(true);
           setAddAlert(true);
+    formRef.current.reset();
+
         })
         .catch(function (error) {
           console.log(error);
@@ -208,9 +212,10 @@ const BlogList = () => {
       setValidated(false);
     }
   };
-  const UpdateBlog = (show) => {
+  const UpdateBlog = (e,show) => {
     const adminid = localStorage.getItem("encryptadminid");
     const formData = new FormData();
+    e.preventDefault();
 
     formData.append("image", file);
     formData.append("filename", fileName);

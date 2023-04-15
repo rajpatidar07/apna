@@ -273,6 +273,7 @@ function Banner() {
 
   const handleClose = () => {
     formRef.current.reset();
+    setAddBanner("")
     setValidated(false);
     setShow(false);
   };

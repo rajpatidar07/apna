@@ -129,6 +129,7 @@ function AdminHeader() {
   };
 
   const handleClose = () => {
+    
     setShow(false);
     seterrornewpassword("");
     seterroroldpassword("");

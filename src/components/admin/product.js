@@ -656,6 +656,8 @@ function Product() {
     });
   };
   const handleClose = () => {
+    setValidated(false);
+    
     setIndVal(0);
     setCategoryEditData("");
     setproductdata(data);
@@ -663,7 +665,6 @@ function Product() {
     setvariantarray(veriantData);
     setvariantmainarray([]);
     setcustomValidated(false);
-    setValidated(false);
     setmodalshow(false);
     setVarietyUnitvalidation("");
     setvarietyValidated(false);

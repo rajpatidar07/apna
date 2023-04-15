@@ -383,7 +383,7 @@ useEffect(()=>{
         .then((response) => {
 
           let data=response.data
-          console.log("-uuuuuuuuu----"+JSON.stringify(response.data[0].start_date))
+          // console.log("-uuuuuuuuu----"+JSON.stringify(response.data[0].start_date))
           // if(data.start_date==undefined||data.start_date=="null"||data.start_date==""||data.end_date==undefined||data.end_date=="null"||
           // data.end_date==""){
           // console.log("++==="+JSON.stringify(data.start_date+"--------"+data.end_date))
@@ -402,7 +402,7 @@ useEffect(()=>{
             ...featuredData,
             start_date:response.data[0].start_date,
 
-            end_date:response.data.end_date,
+            end_date:response.data[0].end_date,
           });
           // console.log("featuredData"+response.data[0].start_date)
 

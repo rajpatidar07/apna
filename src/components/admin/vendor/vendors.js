@@ -17,6 +17,7 @@ import status from "../json/Status";
 import Loader from "../common/loader";
 
 const VendorsList = () => {
+
   const token = localStorage.getItem("token");
   const [AddtagError, setAddTagError] = useState("");
   const [SocialLink, setSocialLink] = useState(false);
@@ -346,7 +347,10 @@ console.log("SHOWWW+"+Docnamearray)
       [e.target.name]: e.target.value,
     });
   };
-  const handleClose = () => {
+  const handleClose = (e) => {
+    // formRef.current.reset();
+    // e.preventDefault();
+
     // setLoading(false);
     setCustomValidation(false);
     setSocialLink(false);
