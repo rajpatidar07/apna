@@ -5,7 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import FileInput from "./FileInput";
 let old_number=1;
-function ImageCropper({image, onCropDone, onCropCancel }) {
+function ImageCropper({image, onCropDone, onCropCancel,handleClose }) {
 
 console.log("++++")
 console.log(image)
@@ -14,27 +14,25 @@ console.log(image)
   // console.log("0000")
   //  console.log(Img)
   const onImageSelected = (selectedImg) => {
-    let IMG=selectedImg.dataurl
-    if(IMG!="" &&  old_number==1){
-      setShow(true);
+    // let IMG=selectedImg.dataurl
+    if(image!="" &&  old_number==1){
       old_number++;
     }
-    setImagee(IMG)
+    setImagee(selectedImg.dataurl)
+    setShow(true);
 
     setimageName(selectedImg.imageName)
     setCurrentPage("crop-img");
   };
  
-const handleClose=()=>{
 
-}
   const [currentPage, setCurrentPage] = useState("choose-img");
   const [imageName, setimageName] = useState("");
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(false);
   const [croppedArea, setCroppedArea] = useState(null);
   const [aspectRatio, setAspectRatio] = useState(4 / 3);
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
   let [count, setCount] = useState(1);
   function incrementCount() {
     if (zoom === count) {
@@ -65,7 +63,12 @@ const handleClose=()=>{
 
   // const handleShow = () => setShow(true);
  
- 
+  const modalClose=()=>{
+    const show=setShow(false)
+    handleClose({"show":show})
+      
+     
+  }
 
 
   const onCropComplete = (croppedAreaPercentage, croppedAreaPixels) => {
@@ -88,7 +91,7 @@ const handleClose=()=>{
         <div className="cropper ">
         <div className="container">
           <Cropper
-            image={image}
+            image={imagee}
             imageNamee={imageName}
             aspect={aspectRatio}
             crop={crop}
@@ -149,7 +152,7 @@ const handleClose=()=>{
         </Modal.Body>
         <Modal.Footer>
           
-          <Button variant="secondary"  onClick={()=>{handleClose()}}>
+          <Button variant="secondary"  onClick={()=>{modalClose()}}>
             Close
           </Button>
           <Button variant="primary"  onClick={() => {
@@ -166,15 +169,15 @@ const handleClose=()=>{
       src={
              "https://i2.wp.com/asvs.in/wp-content/uploads/2017/08/dummy.png?fit=399%2C275&ssl=1"
           }
-       alt="apna_organic"
+      alt="apna_organic"
        width={100}
        height={"100%"}
        /> 
   
-      <span className="plus_icon"><FileInput setImagee={imagee}  onImageSelected={onImageSelected} setimageName={setimageName}/> </span>
+      <span className="plus_icon"><FileInput  onImageSelected={onImageSelected} /></span>
      
         </>
-     :<FileInput setImagee={imagee} onImageSelected={onImageSelected}   setimageName={setimageName}/>}
+     :<FileInput onImageSelected={onImageSelected}  />}
       </div>
      
       {/* <div style={{marginTop:"30px"}}>

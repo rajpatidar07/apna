@@ -223,18 +223,22 @@ function Product() {
   //ADD SEO TAG
   const onDocuAddclick = () => {
 
-    if (addtag === "") {
-      setAddTagError("addTagErorrr");
-    } 
-    else {
-//     setaddtag(e.target.value);
-// console.log("e.target.value")
-
-// console.log(e.target.value)
+    if (addtag !== "") {
       setDocnameArray((Docnamearray) => [...Docnamearray, addtag]);
       console.log(Docnamearray)
       setaddtag("");
       setAddTagError("");
+      setcustomValidated(false);
+     
+    } 
+    else {
+      setcustomValidated(true);
+
+//     setaddtag(e.target.value);
+// console.log("e.target.value")
+
+// console.log(e.target.value)
+    
     }
   };
 
@@ -523,7 +527,9 @@ function Product() {
   const [editparentCategory, seteditparentCategory] = useState("");
   let token = localStorage.getItem("token");
   // ADD AND EDIT PRODUCT MODAL
+  
   const handleShow = (e) => {
+   
     setproductdata(data);
     // vendor
     getVendorData();
@@ -656,13 +662,26 @@ function Product() {
       shop: arr[1],
     });
   };
-  const handleClose = (modalClose) => {
-    setmodalshow(false);
-
-    // setShow()
+  const handleShoww=(modalShow)=>{
+    setmodalshow(modalShow.show);
+    console.log("")
+    console.log(modalShow.show)
+    
+    setShow(true)
+    
+  
+  }
+  const handleClose = (e,modalClose) => {
+    // formRef.current.reset();
+    // e.preventDefault();
+   
+    setShow(false)
+    // setImage("")
+    // setimageName("")
     // console.log("")
-    // console.log(show)
+    // console.log(modalClose.show)
     setValidated(false);
+    setmodalshow(false);
     
     setIndVal(0);
     setCategoryEditData("");
@@ -1618,7 +1637,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
       setcustomValidated(true);
       setProductAlert(true);
       handleClose();
-    formRef.current.reset();
+    // formRef.current.reset();
 
     }
   };
@@ -1786,7 +1805,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
         </div>
       ),
       sortable: true,
-      width: "200px",
+      width: "250px",
     },
     {
       name: "Category",
@@ -1803,7 +1822,13 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
   //     },
       selector:(row)=>row.category,
       sortable: true,
-      width: "90px",
+      width: "150px",
+    },
+    {
+      name: "Category Id",
+      selector:(row)=>row.id,
+      sortable: true,
+      width: "150px",
     },
     {
       name: "Vendor",
@@ -3858,13 +3883,14 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                           value={addtag}
                           placeholder="seo tag"
                          
-                          onClick={(event) => {
+                          onKeyPress={(event) => {
                             if (event.key === "Enter") {
                               onDocuAddclick();
                             }
                           }}
                         />{" "}
                         <Button
+
                           variant="outline-success"
                           className="addcategoryicon"
                           onClick={() => onDocuAddclick()}
@@ -3945,10 +3971,10 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                           className="mx-3"
                           controlId="validationCustom04"
                         >
-                          {console.log(
+                          {/* {console.log(
                           "product description-------" +
                             productdata.product_description
-                        )}
+                        )} */}
                           <Form.Label className="inputlabelheading" sm="12">
                             Product Description
                           </Form.Label>
@@ -4959,11 +4985,12 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                             })}
                                             <div className="imgprivew_box">
                                                 {currentPage === "choose-img" ? (
-                                                  <FileInput setImage={setImage}  onImageSelected={onImageSelected} setimageName={setimageName} />
+                                                  
+                                                  <FileInput setImage={setImage} handleShoww={handleShoww}   onImageSelected={onImageSelected} setimageName={setimageName} />
                                                 ) : currentPage === "crop-img" ? (
                                                   <ImageCropper
                                                   handleClose={handleClose}
-                                                    show={show}
+                                                    // show={show}
                                                     image={image}
                                                     imageNamee={imageName}
                                                     onCropDone={(imgCroppedArea) => onCropDone(

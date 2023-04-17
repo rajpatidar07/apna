@@ -1,6 +1,8 @@
 import React, { useRef } from "react";
+import { useState } from "react";
 import { Form } from "react-bootstrap";
 function FileInput({ onImageSelected }) {
+  const[show,setShow]=useState(false)
   const inputRef = useRef();
   const handleOnChange = (event) => {
     if (event.target.files[0].name && event.target.files.length > 0) {
