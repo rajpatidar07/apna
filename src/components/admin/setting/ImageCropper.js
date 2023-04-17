@@ -25,14 +25,16 @@ console.log(image)
     setCurrentPage("crop-img");
   };
  
+const handleClose=()=>{
 
+}
   const [currentPage, setCurrentPage] = useState("choose-img");
   const [imageName, setimageName] = useState("");
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(false);
   const [croppedArea, setCroppedArea] = useState(null);
   const [aspectRatio, setAspectRatio] = useState(4 / 3);
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
   let [count, setCount] = useState(1);
   function incrementCount() {
     if (zoom === count) {
@@ -51,15 +53,15 @@ console.log(image)
       setZoom(false);
     }
   };
-  const handleClose = () => {
-    setShow(false)
-    old_number=1;
-    // image="";
-    setImagee("")
-    setimageName("")
-    // console.log("image")
-    // console.log(image)
-  };
+  // const handleClose = () => {
+  //   setShow(false)
+  //   old_number=1;
+  //   // image="";
+  //   setImagee("")
+  //   setimageName("")
+  //   // console.log("image")
+  //   // console.log(image)
+  // };
 
   // const handleShow = () => setShow(true);
  
@@ -147,7 +149,7 @@ console.log(image)
         </Modal.Body>
         <Modal.Footer>
           
-          <Button variant="secondary"  onClick={handleClose}>
+          <Button variant="secondary"  onClick={()=>{handleClose()}}>
             Close
           </Button>
           <Button variant="primary"  onClick={() => {
@@ -164,7 +166,7 @@ console.log(image)
       src={
              "https://i2.wp.com/asvs.in/wp-content/uploads/2017/08/dummy.png?fit=399%2C275&ssl=1"
           }
-      alt="apna_organic"
+       alt="apna_organic"
        width={100}
        height={"100%"}
        /> 

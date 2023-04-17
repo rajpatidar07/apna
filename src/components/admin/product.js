@@ -40,6 +40,7 @@ let encoded;
 let ImgObj = [];
 function Product() {
   const [CategoryEditdata, setCategoryEditData] = useState([]);
+  const [show, setShow] = useState(false);
 
   const [currentPage, setCurrentPage] = useState("choose-img");
   const [imgAfterCrop, setImgAfterCrop] = useState("");
@@ -655,7 +656,12 @@ function Product() {
       shop: arr[1],
     });
   };
-  const handleClose = () => {
+  const handleClose = (modalClose) => {
+    setmodalshow(false);
+
+    // setShow()
+    // console.log("")
+    // console.log(show)
     setValidated(false);
     
     setIndVal(0);
@@ -665,7 +671,6 @@ function Product() {
     setvariantarray(veriantData);
     setvariantmainarray([]);
     setcustomValidated(false);
-    setmodalshow(false);
     setVarietyUnitvalidation("");
     setvarietyValidated(false);
   };
@@ -718,7 +723,12 @@ function Product() {
   };
 
 
+// const handleClose=(mclose)=>{
+//    setShow(mclose.false)
+//    console.log("")
+//    console.log(mclose.false)
 
+// };
   const onCropDone = (imgCroppedArea, product_id, id, vendor_id) => {
 
     const canvasEle = document.createElement("canvas");
@@ -4949,9 +4959,11 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                             })}
                                             <div className="imgprivew_box">
                                                 {currentPage === "choose-img" ? (
-                                                  <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />
+                                                  <FileInput setImage={setImage}  onImageSelected={onImageSelected} setimageName={setimageName} />
                                                 ) : currentPage === "crop-img" ? (
                                                   <ImageCropper
+                                                  handleClose={handleClose}
+                                                    show={show}
                                                     image={image}
                                                     imageNamee={imageName}
                                                     onCropDone={(imgCroppedArea) => onCropDone(
