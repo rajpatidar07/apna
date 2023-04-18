@@ -7,6 +7,8 @@ import axios from "axios";
 import { useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Table from "react-bootstrap/Table";
+import FileInput from "../setting/FileInput";
+
 import VariationJson from "../json/variation";
 // import { MdOutlineEdit } from "react-icons/md";
 import { Button } from "react-bootstrap";
@@ -19,6 +21,7 @@ import Loader from "../common/loader";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import { RiImageAddLine } from "react-icons/ri";
+import ImageCropper from "../setting/ImageCropper";
 let encoded;
 let ImgObj = [];
 
@@ -69,6 +72,11 @@ const Productdetail = () => {
   const [variantdetail, setVariantdetail] = useState([]);
   const [editbutton, setEditButton] = useState(false);
   const [changeUnitproperty, setChangeUnitProperty] = useState(false);
+  const [image, setImage] = useState("");
+  const [imageName, setimageName] = useState("");
+  const [currentPage, setCurrentPage] = useState("choose-img");
+  const [show, setShow] = useState(false);
+
   var varietyy = VariationJson;
   // PRODUCT DETAIL API
   useEffect(() => {
@@ -90,7 +98,7 @@ const Productdetail = () => {
               onImgView(vid, pid);
               setvariantarray({
                 ...variantarray,
-                unit: response.data.product_verient[0].unit,
+                unit: response.data.product_verient.unit,
                 product_id: pid,
               });
               // setloading(false);
@@ -135,56 +143,165 @@ const Productdetail = () => {
   // End of api call for category details
 
   // IMAGE SECTION END
-  const convertToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      const { name } = file;
-      fileReader.addEventListener("load", () => {
-        resolve({ name: name, base64: fileReader.result });
-      });
-      fileReader.readAsDataURL(file);
-      fileReader.onerror = (error) => {
-        reject(error);
+  // const convertToBase64 = (file) => {
+  //   return new Promise((resolve, reject) => {
+  //     const fileReader = new FileReader();
+  //     const { name } = file;
+  //     fileReader.addEventListener("load", () => {
+  //       resolve({ name: name, base64: fileReader.result });
+  //     });
+  //     fileReader.readAsDataURL(file);
+  //     fileReader.onerror = (error) => {
+  //       reject(error);
+  //     };
+  //   });
+  // };
+  const onImageSelected = (event) => {
+    if (event.target.files[0].name && event.target.files.length > 0) {
+      const reader = new FileReader();
+      const image_name = event.target.files[0].name;
+      reader.readAsDataURL(event.target.files[0]);
+      
+      reader.onload = function () {
+        console.log("stage1 ")
+        setImage(reader.result);
+        setimageName(image_name)
+        // onImageSelected({ "dataurl": reader.result, "imageName": image_name });
       };
-    });
+    
+    
+    setCurrentPage("crop-img");
+    // setShow(true)
+    console.log("stage2 ---------"+reader.result+"image_name=========="+image_name)
+    }
   };
+  const onCropDone = (imgCroppedArea, product_id, id, vendor_id) => {
 
-  const imguploadchange = async (e, product_id, id, vendor_id) => {
+    const canvasEle = document.createElement("canvas");
+    canvasEle.width = imgCroppedArea.width;
+
+    canvasEle.height = imgCroppedArea.height;
+    const context = canvasEle.getContext("2d");
+    let imageObj1 = new Image();
+    imageObj1.src = image;
+    imageObj1.onload = function () {
+      context.drawImage(
+        imageObj1,
+        imgCroppedArea.x,
+        imgCroppedArea.y,
+        imgCroppedArea.width,
+        imgCroppedArea.height,
+        0,
+        0,
+        imgCroppedArea.width,
+        imgCroppedArea.height
+      );
+
+      const dataURL = canvasEle.toDataURL("image/jpeg");
+      imguploadchange(dataURL, product_id, id, vendor_id)
+      onImgView(product_id, id)
+      setCurrentPage("img-cropped");
+    };
+  };
+  const onCropCancel = () => {
+    setCurrentPage("choose-img");
+    setImage("");
+  };
+  const handleClose = () => {
+
+    setShow(false)
+    setCurrentPage("choose-img");
+
+  };
+  const imguploadchange = async (dataURL, product_id, id, vendor_id) => {
     setcustomValidated("");
-    for (let i = 0; i < e.target.files.length; i++) {
-      let coverimg;
-      if (newImageUrls.length === 0 && i === 0) {
+    onImgView(product_id, id);
+    let i
+    let coverimg;
+
+    for (i = 0; i < imageName.length; i++) {
+
+      if ((newImageUrls.length === 0 || newImageUrls.length === 1) && i === 0) {
         coverimg = "cover";
       } else {
         coverimg = `cover${i}`;
+
       }
-      encoded = await convertToBase64(e.target.files[i]);
-      const [first, ...rest] = encoded.base64.split(",");
+    }
+    //   encoded = await convertToBase64(e.target.files[i]);
+    encoded = dataURL;
+    const [first, ...rest] = encoded.split(",");
+    let imgvalidation = first.split("/").pop();
+    if (
+      imgvalidation === "jpeg;base64" ||
+      imgvalidation === "jpg;base64" ||
+      imgvalidation === "png;base64"
+    ) {
       const productimg = rest.join("-");
       let imar = {
         product_id: `${product_id}`,
         product_verient_id: `${id}`,
         vendor_id: `${vendor_id}`,
-        product_image_name: `${encoded.name}${i}${id}`,
-        image_position: coverimg,
+        product_image_name: `${imageName}${i}${id}`,
+        image_position: `${coverimg}`,
         img_64: productimg,
       };
       ImgObj.push(imar);
-    }
-    // image
-    // setloading(true)
-    axios
-      .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
-      .then((response) => {
-        onImgView(id, product_id);
+      axios
+        .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
+        .then((response) => {
 
-        // setloading(false)
-      })
-      .catch(function (error) {
-        console.log(error);
-        // setloading(false)
-      });
+          ImgObj = [];
+          onImgView(id, product_id);
+          setcustomValidated("");
+
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
+      setcustomValidated("imgformat");
+
+    }
+    setProductAlert(true);
+
   };
+  // const imguploadchange = async (e, product_id, id, vendor_id) => {
+  //   setcustomValidated("");
+  //   for (let i = 0; i < e.target.files.length; i++) {
+  //     let coverimg;
+  //     if (newImageUrls.length === 0 && i === 0) {
+  //       coverimg = "cover";
+  //     } else {
+  //       coverimg = `cover${i}`;
+  //     }
+  //     encoded = await convertToBase64(e.target.files[i]);
+  //     const [first, ...rest] = encoded.base64.split(",");
+  //     const productimg = rest.join("-");
+  //     let imar = {
+  //       product_id: `${product_id}`,
+  //       product_verient_id: `${id}`,
+  //       vendor_id: `${vendor_id}`,
+  //       product_image_name: `${encoded.name}${i}${id}`,
+  //       image_position: coverimg,
+  //       img_64: productimg,
+  //     };
+  //     ImgObj.push(imar);
+  //   }
+  //   // image
+  //   // setloading(true)
+  //   axios
+  //     .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
+  //     .then((response) => {
+  //       onImgView(id, product_id);
+
+  //       // setloading(false)
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //       // setloading(false)
+  //     });
+  // };
 
   const onImgRemove = (id, name, vendor_id, product_id, product_verient_id) => {
     // setloading(true)
@@ -1609,109 +1726,144 @@ const Productdetail = () => {
                                               </td>
                                             </tr>
                                             {newImageUrls ? (
-                                              <tr
-                                                className={
-                                                  variantdata.id ===
-                                                    imageboxid
-                                                    ? "img_preview_boxx show"
-                                                    : "img_preview_boxx hide"
-                                                }
-                                                id={
-                                                  "variantimgbox" +
-                                                  variantdata.id
-                                                }
-                                              >
-                                                <td
-                                                  className=""
-                                                  colSpan={"12"}
+                                      <tr
+                                        className={
+                                          variantdata.id === imageboxid
+                                            ? "img_preview_boxx show"
+                                            : "img_preview_boxx hide"
+                                        }
+                                        id={"variantimgbox" + variantdata.id}
+                                      >
+                                        <td colSpan="13">
+                                          <div className="image_box">
+                                            {newImageUrls.map((imgg, i) => {
+                                              return `${variantdata.id}` ===
+                                                imgg.product_verient_id ? (
+                                                <div
+                                                  className="imgprivew_box"
+                                                  key={i}
                                                 >
-                                                  <div className="image_box roesnap">
-                                                    {newImageUrls.map(
-                                                      (imgg, i) => {
-                                                        return `${variantdata.id}` ===
-                                                          imgg.product_verient_id ? (
-                                                          <div
-                                                            className="imgprivew_box"
-                                                            key={i}
-                                                          >
-                                                            {imgg.image_position ===
-                                                              "cover" ? (
-                                                              <span className="cover_img">
-                                                                Cover
-                                                              </span>
-                                                            ) : null}
-                                                            <img
-                                                              src={
-                                                                imgg.product_image_path
-                                                              }
-                                                              key={i}
-                                                              alt="apna_organic"
-                                                              height={120}
-                                                            />
-                                                            <span
-                                                              className="cover_icon"
-                                                              onClick={(id) =>
-                                                                onImgCoverEditClick(
-                                                                  imgg.product_image_id,
-                                                                  imgg.product_id,
-                                                                  imgg.product_verient_id
-                                                                )
-                                                              }
-                                                            >
-                                                              Set Cover
-                                                            </span>
-                                                            <span
-                                                              className="cross_icon"
-                                                              onClick={() =>
-                                                                onImgRemove(
-                                                                  imgg.product_image_id,
-                                                                  imgg.product_image_name,
-                                                                  imgg.vendor_id,
-                                                                  imgg.product_id,
-                                                                  imgg.product_verient_id
-                                                                )
-                                                              }
-                                                            >
-                                                              &times;
-                                                            </span>
-                                                          </div>
-                                                        ) : null;
-                                                      }
-                                                    )}
-                                                    <div className="imgprivew_box">
-                                                      <img
-                                                        src={
-                                                          "https://i2.wp.com/asvs.in/wp-content/uploads/2017/08/dummy.png?fit=399%2C275&ssl=1"
-                                                        }
-                                                        key={i}
-                                                        alt="apna_organic"
-                                                        height={120}
-                                                      />
-                                                      <Form.Control
-                                                        multiple
-                                                        type="file"
-                                                        sm="9"
-                                                        className={
-                                                          "img_add_button"
-                                                        }
-                                                        onChange={(e) =>
-                                                          imguploadchange(
-                                                            e,
-                                                            variantdata.product_id,
-                                                            variantdata.id,
-                                                            variantdata.vendor_id
-                                                          )
-                                                        }
-                                                        name={"img_64"}
-                                                      />
-                                                      <span className="plus_icon">
-                                                        +
-                                                      </span>
+                                                  {imgg.image_position ===
+                                                    "cover" ? (
+                                                    <span className="cover_img">
+                                                      Cover
+                                                    </span>
+                                                  ) : null}
+                                                  <img
+                                                    src={
+                                                      imgg.product_image_path
+                                                    }
+                                                    key={i}
+                                                    alt="apna_organic"
+                                                    height={120}
+                                                  />
+                                                  <span
+                                                    className="cover_icon"
+                                                    onClick={(id) =>
+                                                      onImgCoverEditClick(
+                                                        imgg.product_image_id,
+                                                        imgg.product_id,
+                                                        imgg.product_verient_id
+                                                      )
+                                                    }
+                                                  >
+                                                    Set Cover
+                                                  </span>
+                                                  <button
+                                                    className="cross_icon"
+                                                    onClick={() =>
+                                                      onImgRemove(
+                                                        imgg.product_image_id,
+                                                        imgg.product_image_name,
+                                                        imgg.vendor_id,
+                                                        imgg.product_id,
+                                                        imgg.product_verient_id
+                                                      )
+                                                    }
+                                                  >
+                                                    &times;
+                                                  </button>
+                                                </div>
+                                              ) : null;
+                                            })}
+                                            <div className="imgprivew_box">
+                                                {currentPage === "choose-img" ? (
+                                                  
+                                                  <FileInput setImage={setImage}  onImageSelected={onImageSelected} setimageName={setimageName} />
+                                                ) : currentPage === "crop-img" ? (
+                                                  <ImageCropper
+                                                  handleClose={handleClose}
+                                                    // show={show}
+                                                    image={image}
+                                                    imageNamee={imageName}
+                                                    modalShow={true}
+                                                    onCropDone={(imgCroppedArea) => onCropDone(
+                                                      imgCroppedArea,
+                                                      variantdata.product_id,
+                                                      variantdata.id,
+                                                      variantdata.vendor_id,
+
+                                                    )
+                                                    }
+                                                    onCropCancel={onCropCancel}
+                                                  />
+                                                ) : (
+                                                  <div>
+                                                    <div>
+                                                      <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />
                                                     </div>
+                                                    {/* {<FileInput/> === <ImageCropper /> ? (
+                                                      <>
+                                                        <button
+                                                          onClick={() => {
+                                                            setCurrentPage("crop-img");
+                                                          }}
+                                                          className="btn"
+                                                        >
+                                                          Crop
+                                                        </button>
+
+                                                        <button
+                                                          onClick={() => {
+                                                            setCurrentPage("choose-img");
+                                                            setImage("");
+                                                          }}
+                                                          className="btn"
+                                                        >
+                                                          New Image
+                                                        </button>
+                                                      </>
+                                                    ) : ""} */}
                                                   </div>
-                                                </td>
-                                              </tr>
-                                            ) : null}
+                                                )}
+                                                
+                                           
+
+
+
+                                              {/* <Form.Control
+                                                  multiple
+                                                  type="file"
+                                                  sm="9"
+                                                  className={"img_add_button"}
+                                                  onChange={(e) =>
+                                                    imguploadchange(
+                                                      e,
+                                                      variantdata.product_id,
+                                                      variantdata.id,
+                                                      variantdata.vendor_id
+                                                    )
+                                                  }
+                                                  name={"img_64"}
+                                                /> */}
+                                              {/* <span className="plus_icon">
+                                                  +
+                                                </span> */}
+                                            </div>
+                                          </div>
+                                        </td>
+                                      </tr>
+                                    ) : null}
                                           </>
                                         );
                                       }

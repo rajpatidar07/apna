@@ -287,7 +287,7 @@
 }
 
 .img_preview_boxx.show {
-  display: block;
+  display: table-row;
   transition: all .3s;
 }
 

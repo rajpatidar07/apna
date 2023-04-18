@@ -433,7 +433,7 @@ const OrderReport = () => {
   const columns = [
     {
       name: "Date",
-      selector: (row) => row.created_on,
+      selector: (row) => moment(row.uniquedates).format("YYYY-MM-DD"),
       sortable: true,
       width: "170px",
       center: true,

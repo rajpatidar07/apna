@@ -662,27 +662,14 @@ function Product() {
       shop: arr[1],
     });
   };
-  const handleShoww=(modalShow)=>{
-    setmodalshow(modalShow.show);
-    console.log("")
-    console.log(modalShow.show)
-    
-    setShow(true)
-    
-  
-  }
-  const handleClose = (e,modalClose) => {
-    // formRef.current.reset();
-    // e.preventDefault();
-   
+ 
+  const handleClose = () => {
+
     setShow(false)
-    // setImage("")
-    // setimageName("")
-    // console.log("")
-    // console.log(modalClose.show)
+  
     setValidated(false);
     setmodalshow(false);
-    
+    setCurrentPage("choose-img");
     setIndVal(0);
     setCategoryEditData("");
     setproductdata(data);
@@ -734,11 +721,24 @@ function Product() {
   //     };
   //   });
   // };
-  const onImageSelected = (selectedImg) => {
-    setImage(selectedImg.dataurl);
-    setimageName(selectedImg.imageName)
+  const onImageSelected = (event) => {
+    if (event.target.files[0].name && event.target.files.length > 0) {
+      const reader = new FileReader();
+      const image_name = event.target.files[0].name;
+      reader.readAsDataURL(event.target.files[0]);
+      
+      reader.onload = function () {
+        console.log("stage1 ")
+        setImage(reader.result);
+        setimageName(image_name)
+        // onImageSelected({ "dataurl": reader.result, "imageName": image_name });
+      };
+    
+    
     setCurrentPage("crop-img");
-
+    // setShow(true)
+    console.log("stage2 ---------"+reader.result+"image_name=========="+image_name)
+    }
   };
 
 
@@ -2632,9 +2632,9 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                 key={i}
                                 selected={
                                   categoryeditchildparent
+                                  ? true
+                                  : false
                                    
-                                    ? true
-                                    : false
                                 }
                               >
                                 {cdata.category_name}{" "}
@@ -4931,7 +4931,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                         }
                                         id={"variantimgbox" + variantdata.id}
                                       >
-                                        <td className="" colSpan={"12"}>
+                                        <td colSpan="13">
                                           <div className="image_box">
                                             {newImageUrls.map((imgg, i) => {
                                               return `${variantdata.id}` ===
@@ -4986,13 +4986,14 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                             <div className="imgprivew_box">
                                                 {currentPage === "choose-img" ? (
                                                   
-                                                  <FileInput setImage={setImage} handleShoww={handleShoww}   onImageSelected={onImageSelected} setimageName={setimageName} />
+                                                  <FileInput setImage={setImage}  onImageSelected={onImageSelected} setimageName={setimageName} />
                                                 ) : currentPage === "crop-img" ? (
                                                   <ImageCropper
                                                   handleClose={handleClose}
                                                     // show={show}
                                                     image={image}
                                                     imageNamee={imageName}
+                                                    modalShow={true}
                                                     onCropDone={(imgCroppedArea) => onCropDone(
                                                       imgCroppedArea,
                                                       variantdata.product_id,
@@ -5008,7 +5009,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                                     <div>
                                                       <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />
                                                     </div>
-                                                    {<FileInput/> === <ImageCropper /> ? (
+                                                    {/* {<FileInput/> === <ImageCropper /> ? (
                                                       <>
                                                         <button
                                                           onClick={() => {
@@ -5029,7 +5030,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                                           New Image
                                                         </button>
                                                       </>
-                                                    ) : ""}
+                                                    ) : ""} */}
                                                   </div>
                                                 )}
                                                 

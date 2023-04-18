@@ -12,6 +12,9 @@ function Transactions() {
   const token = localStorage.getItem("token");
   const [apicall, setapicall] = useState(false);
   const [transectiondata, setTransectionData] = useState([]);
+  console.log("TRANSECTION")
+  console.log(transectiondata)
+
   const [SearchTransection, setSearchTransection] = useState({
     order_id: "",
     method: "",

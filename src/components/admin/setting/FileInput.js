@@ -1,31 +1,18 @@
 import React, { useRef } from "react";
-import { useState } from "react";
 import { Form } from "react-bootstrap";
 function FileInput({ onImageSelected }) {
-  const[show,setShow]=useState(false)
   const inputRef = useRef();
-  const handleOnChange = (event) => {
-    if (event.target.files[0].name && event.target.files.length > 0) {
-      const reader = new FileReader();
-      const image_name = event.target.files[0].name;
-      reader.readAsDataURL(event.target.files[0]);
-      reader.onload = function () {
-        onImageSelected({ "dataurl": reader.result, "imageName": image_name });
-      };
-    }
-  };
-
 
   return (
     <div className="mt-100">
         <div>
-          {window.location.pathname==="/product"?"":
+          {window.location.pathname==="/product"||window.location.pathname==="/productdetail"?"":
           <Form.Label>Image</Form.Label>}
         
       <Form.Control
         multiple
         className="img_add_button"
-        onChange={handleOnChange}
+        onChange={onImageSelected}
         type="file"
         placeholder="Shop_logo"
         name={"img_64"}
@@ -33,7 +20,7 @@ function FileInput({ onImageSelected }) {
         accept="image/png,image/jpeg,image/jpg,image"
       />
       <div className="imgprivew_box">
-        {window.location.pathname==="/product"?
+        {window.location.pathname==="/product" ||window.location.pathname==="/productdetail"?
         <>
          <img
       src={

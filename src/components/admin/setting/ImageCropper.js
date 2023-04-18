@@ -4,70 +4,35 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import FileInput from "./FileInput";
-let old_number=1;
-function ImageCropper({image, onCropDone, onCropCancel,handleClose }) {
+function ImageCropper({image,imageName,modalShow, onCropDone, onCropCancel,handleClose }) {
 
-console.log("++++")
-console.log(image)
-
-  const [imagee, setImagee] = useState("");
-  // console.log("0000")
-  //  console.log(Img)
-  const onImageSelected = (selectedImg) => {
-    // let IMG=selectedImg.dataurl
-    if(image!="" &&  old_number==1){
-      old_number++;
-    }
-    setImagee(selectedImg.dataurl)
-    setShow(true);
-
-    setimageName(selectedImg.imageName)
-    setCurrentPage("crop-img");
-  };
- 
-
-  const [currentPage, setCurrentPage] = useState("choose-img");
-  const [imageName, setimageName] = useState("");
   const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(false);
+  const [zoom, setZoom] = useState(12);
   const [croppedArea, setCroppedArea] = useState(null);
-  const [aspectRatio, setAspectRatio] = useState(4 / 3);
-  const [show, setShow] = useState(true);
+  const [aspectRatio, setAspectRatio] = useState(2 / 3);
+  const [show, setShow] = useState(modalShow );
   let [count, setCount] = useState(1);
   function incrementCount() {
     if (zoom === count) {
-      setZoom(true);
+      setZoom(12);
 
     } else {
       count = count + 1;
       setCount(count);
-      setZoom(false);
+      setZoom(12);
     }
   }
   /*<-----Decrement Functionality----> */
   const decrementCount = () => {
     if (count > 1) {
       setCount((count) => count - 1);
-      setZoom(false);
+      setZoom(12);
     }
   };
-  // const handleClose = () => {
-  //   setShow(false)
-  //   old_number=1;
-  //   // image="";
-  //   setImagee("")
-  //   setimageName("")
-  //   // console.log("image")
-  //   // console.log(image)
-  // };
 
-  // const handleShow = () => setShow(true);
- 
   const modalClose=()=>{
     const show=setShow(false)
-    handleClose({"show":show})
-      
-     
+    handleClose({"show":show})     
   }
 
 
@@ -91,7 +56,7 @@ console.log(image)
         <div className="cropper ">
         <div className="container">
           <Cropper
-            image={imagee}
+            image={image}
             imageNamee={imageName}
             aspect={aspectRatio}
             crop={crop}
@@ -101,10 +66,10 @@ console.log(image)
             onCropComplete={onCropComplete}
             style={{
               containerStyle: {
-                width: "40%",
-                height: "70%",
+                width: "100%",
+                height: "100%",
                 marginTop:"10px",
-                marginLeft:"190px",
+                // marginLeft:"190px",
                 backgroundColor: "#fff",
               },
             }}
@@ -113,45 +78,24 @@ console.log(image)
 
         </div>
       </div>
-     
-     <div className="action-btns" >
-      {window.location.pathname==="/product"?
-        <div className="aspect-ratios" style={{ marginLeft:"30%" ,marginTop:"30px"}} onChange={onAspectRatioChange}>
-        <Form.Check inline type="radio"  value={1 / 1} name="ratio" label="1:1" />
-        <Form.Check inline type="radio"  value={3 / 2} name="ratio" label="3:2" />
-          <Button variant="info" onClick={incrementCount} > +</Button>&nbsp;
-          <Button variant="info" onClick={decrementCount} > -</Button>
-        </div> 
-       :
-       <div className="aspect-ratios" style={{ marginLeft:"30%" ,marginTop:"30px"}} onChange={onAspectRatioChange}>
-         <Form.Check inline type="radio"  value={1 / 1} name="ratio" label="1:1" />
-       <Form.Check inline type="radio"  value={1 / 2} name="ratio" label="1:2" />
-       <Form.Check inline type="radio" value={1 / 3} name="ratio" label="1:3" />
-       <Form.Check inline type="radio" value={1 / 4} name="ratio" label="1:4" />
-       <Button variant="info" onClick={incrementCount} > +</Button>
-          <Button variant="info" onClick={decrementCount} > -</Button>
-       </div>
-     
-          }
-       
-        {/* <button className="btn btn-outline" onClick={onCropCancel}>
-          Cancel
-        </button>
-
-        <button
-          className="btn"
-          onClick={() => {
-            onCropDone(croppedArea);
-          }}
-        >
-          Done
-        </button> */}
-      </div> 
     
          
         </Modal.Body>
         <Modal.Footer>
-          
+          {window.location.pathname=="/product"?""
+       :<>
+       <div className="action-btns" >
+
+           <div className="aspect-ratios"  onChange={onAspectRatioChange}>
+           <Form.Check inline type="radio"  value={1 / 1} name="ratio" label="1:1" />
+        <Form.Check inline type="radio"  value={1 / 2} name="ratio" label="1:2" />
+        <Form.Check inline type="radio" value={1 / 3} name="ratio" label="1:3" />
+        <Form.Check inline type="radio" value={1 / 4} name="ratio" label="1:4" />
+          </div>
+           </div>
+       </> }
+        <Button variant="info" onClick={incrementCount} >+</Button>&nbsp;
+          <Button variant="info" onClick={decrementCount} >-</Button>
           <Button variant="secondary"  onClick={()=>{modalClose()}}>
             Close
           </Button>
@@ -174,10 +118,10 @@ console.log(image)
        height={"100%"}
        /> 
   
-      <span className="plus_icon"><FileInput  onImageSelected={onImageSelected} /></span>
+      <span className="plus_icon"><FileInput /></span>
      
         </>
-     :<FileInput onImageSelected={onImageSelected}  />}
+     :<FileInput/>}
       </div>
      
       {/* <div style={{marginTop:"30px"}}>

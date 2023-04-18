@@ -19,8 +19,8 @@ const Promotionproduct = () => {
   const formRef = useRef();
   let userid = localStorage.getItem("userid");
   const [promotionProductData, setpromotionProductData] = useState([]);
-  console.log("--")
-  console.log(promotionProductData)
+  // console.log("--")
+  // console.log(promotionProductData)
 
   const [Alert, setAlert] = useState(false);
   const [apicall, setapicall] = useState(false);
@@ -297,7 +297,7 @@ const Promotionproduct = () => {
           `${process.env.REACT_APP_BASEURL_0}/fetured_product_search`,
           {
             vendor_id: vendor_id,
-            fetured_type: "promotional_offer",
+            fetured_type: "promotional",
             start_date: "",
             end_date: "",
           },
@@ -306,7 +306,7 @@ const Promotionproduct = () => {
           }
         )
         .then((response) => {
-          setId(response.data[0].id);
+          // setId(response.data[0].id);
           setFeaturetData({
             ...featuredData,
             start_date: response.data[0].start_date,
@@ -345,6 +345,62 @@ useEffect(()=>{
   getCategoryNameData();
 
  },[apicall])
+useEffect(() => {
+  let productArry=[];
+
+  setloading(true);
+  try {
+    axios
+      .post(
+        `${process.env.REACT_APP_BASEURL_0}/fetured_product_search`,
+        {
+          vendor_id: "",
+          fetured_type: "promotional",
+          start_date: /*`${searchdata.start_date}`*/ "",
+          end_date: /*`${searchdata.end_date}`*/ "",
+          category: [`${searchdata.category}`],
+          brand: [`${searchdata.brand}`],
+          shop: [`${searchdata.vendor}`],
+          product_title_name: [`${searchdata.product_title_name}`],
+          status: [`${searchdata.status}`],
+        },
+        {
+          headers: { admin_token: `${token}` },
+        }
+      )
+      .then((response) => {
+        setpromotionProductData(response.data);
+        console.log("promotional")
+        console.log(response.data)
+
+        let v=response.data;
+      
+        v.forEach(function (item,index){
+       
+        let catname=cat_name_data[item.category];
+        if(catname!=undefined || catname!=null||catname!=""){
+          item.category=catname;
+        }
+        productArry.push(item)
+        }
+        )
+       
+      
+        setpromotionProductData(productArry);
+
+        setapicall(false);
+        setloading(false);
+      });
+  } catch (err) {
+    console.log(err);
+  }
+  getCategorydatafilter();
+  getVendorData();
+}, [apicall]);
+// useEffect(()=>{
+//   getCategoryNameData();
+
+//  },[apicall])
   /*<---Function to Search--->*/
   useEffect(() => {
     let productArry=[];
@@ -356,7 +412,7 @@ useEffect(()=>{
           `${process.env.REACT_APP_BASEURL_0}/fetured_product_search`,
           {
             vendor_id: "",
-            fetured_type: "promotional_offer",
+            fetured_type: "promotional",
             start_date: /*`${searchdata.start_date}`*/ "",
             end_date: /*`${searchdata.end_date}`*/ "",
             category: [`${searchdata.category}`],
@@ -665,6 +721,7 @@ useEffect(()=>{
                       controlId="formBasicStartDate"
                     >
                       <Form.Label>Start Date</Form.Label>
+                      {console.log(featuredData.start_date)}
                       <Form.Control
                         name="start_date"
                         value={featuredData.start_date}
@@ -681,6 +738,8 @@ useEffect(()=>{
                       controlId="formBasicStartDate"
                     >
                       <Form.Label>End Date</Form.Label>
+                      {console.log(featuredData.start_date)}
+
                       <Form.Control
                         name="end_date"
                         value={featuredData.end_date}

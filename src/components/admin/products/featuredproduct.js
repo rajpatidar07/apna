@@ -381,30 +381,13 @@ useEffect(()=>{
           }
         )
         .then((response) => {
-
-          let data=response.data
-          // console.log("-uuuuuuuuu----"+JSON.stringify(response.data[0].start_date))
-          // if(data.start_date==undefined||data.start_date=="null"||data.start_date==""||data.end_date==undefined||data.end_date=="null"||
-          // data.end_date==""){
-          // console.log("++==="+JSON.stringify(data.start_date+"--------"+data.end_date))
-               
-          // }
-
-          // setId(response.data[0].fetured_product_table_id);
-          // for (let i = 0; i < response.data.length; i++) {
-          //   if (response.data[i].fetured_product_table_id === id) {
-          //     return response.data[i];
-          //   }
-          // }
-         
           setFeaturetData({
-            
             ...featuredData,
-            start_date:response.data[0].start_date,
+            start_date: response.data[0].start_date,
 
-            end_date:response.data[0].end_date,
+            end_date: response.data[0].end_date,
           });
-          // console.log("featuredData"+response.data[0].start_date)
+
 
           setapicall(false);
         });
@@ -496,7 +479,8 @@ useEffect(()=>{
       setapicall(true);
     }
   };
-
+  let date = moment();
+  let currentDate = date.format("YYYY-MM-DD");
   return (
     <>
       {loading === true ? <Loader /> : null}
@@ -628,7 +612,16 @@ useEffect(()=>{
                     controlId="formBasicStartDate"
                   >
                     <Form.Label>Start Date</Form.Label>
+                    {console.log(featuredData.start_date)}
                     <Form.Control
+                        name="start_date"
+                        value={featuredData.start_date}
+                        onChange={(e) => handleFormChange(e)}
+                        type="date"
+                        placeholder="Coupon Start Date"
+                        min={currentDate}
+                      />
+                    {/* <Form.Control
                                                   type="date"
                                                   sm="9"
                                                   required
@@ -644,7 +637,7 @@ useEffect(()=>{
                                                   value={
                                                     featuredData.start_date
                                                   }
-                                                />
+                                                /> */}
                     {/* <Form.Control
                       name="start_date"
                       value={featuredData.start_date}
@@ -661,6 +654,14 @@ useEffect(()=>{
                   >
                     <Form.Label>End Date</Form.Label>
                     <Form.Control
+                        name="end_date"
+                        value={featuredData.end_date}
+                        onChange={(e) => handleFormChange(e)}
+                        type="date"
+                        placeholder="Coupon Start Date"
+                        min={featuredData.start_date}
+                      />
+                    {/* <Form.Control
                                                   type="date"
                                                   sm="9"
                                                   required
@@ -681,7 +682,7 @@ useEffect(()=>{
                                                   value={
                                                     featuredData.end_date
                                                   }
-                                                />
+                                                /> */}
                     {/* <Form.Control
                     required
                       name="end_date"

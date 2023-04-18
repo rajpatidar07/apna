@@ -18,8 +18,9 @@ function Banner() {
   let token = localStorage.getItem("token");
   const formRef = useRef();
   const [error, setError] = useState(true);
+  const [show, setShow] = useState(false);
 
-  const [show, setShow] = useState("");
+  const [bannershow, setBannerShow] = useState("");
   const [Alert, setAlert] = useState(false);
   const [validated, setValidated] = useState(false);
   const [banner, setBanner] = useState([]);
@@ -167,7 +168,7 @@ function Banner() {
 
   const handleShow = (e, banner_id) => {
     if (e === "add") {
-      setShow(e);
+      setBannerShow(e);
     } else {
       function getBanner() {
         try {
@@ -189,7 +190,7 @@ function Banner() {
         } catch (err) {}
       }
       getBanner();
-      setShow(true);
+      setBannerShow(true);
     }
   };
   useEffect(() => {
@@ -211,12 +212,35 @@ function Banner() {
   const [imgAfterCrop, setImgAfterCrop] = useState("");
   const [image, setImage] = useState("");
   const [imageName, setimageName] = useState("");
-  const onImageSelected = (selectedImg) => {
-    setImage(selectedImg.dataurl);
-    setimageName(selectedImg.imageName)
-    setCurrentPage("crop-img");
+  const onImageSelected = (event) => {
+    if (event.target.files[0].name && event.target.files.length > 0) {
+      const reader = new FileReader();
+      const image_name = event.target.files[0].name;
+      reader.readAsDataURL(event.target.files[0]);
+      
+      reader.onload = function () {
+        console.log("stage1 ")
+        setImage(reader.result);
+        setimageName(image_name)
+        console.log(reader.result)
+        console.log(image_name)
 
+        // onImageSelected({ "dataurl": reader.result, "imageName": image_name });
+      };
+    
+    
+    setCurrentPage("crop-img");
+    // setShow(true)
+    console.log("stage2 ---------"+reader.result+"image_name=========="+image_name)
+
+    }
   };
+  // const onImageSelected = (selectedImg) => {
+  //   setImage(selectedImg.dataurl);
+  //   setimageName(selectedImg.imageName)
+  //   setCurrentPage("crop-img");
+
+  // };
   // console.log("IMAGW"+image)
   // console.log("setFileName---"+imageName)
 
@@ -270,12 +294,19 @@ function Banner() {
   // const handleBannerChange = (e) => {
   //   setImageBanner({ ...imageBanner, [e.target.name]: e.target.value });
   // };
+const modalClose=()=>{
+  setBannerShow(false);
+  setValidated(false);
 
+}
   const handleClose = () => {
-    formRef.current.reset();
+    setShow(false)
+    // formRef.current.reset();
     setAddBanner("")
     setValidated(false);
-    setShow(false);
+    setBannerShow(true);
+    setCurrentPage("choose-img");
+
   };
   
   const AddBanner = (e) => {
@@ -315,7 +346,7 @@ function Banner() {
 if (response.data.code === "ER_DUP_ENTRY") {
   setError(false);
 } else {
-  setShow(false);
+  setBannerShow(false);
   setapicall(true);
   setAddAlert(true);
 }
@@ -365,7 +396,7 @@ if (response.data.code === "ER_DUP_ENTRY") {
             })
             .then((response) => {
               // let data = response.data;
-              setShow(false);
+              setBannerShow(false);
               setapicall(true);
               setUpdateAlert(true);
             });
@@ -405,19 +436,19 @@ if (response.data.code === "ER_DUP_ENTRY") {
           onCancel={CancelAlert}
         />
       </div>
-      <Modal size="lg" show={show} onHide={() => handleClose()}>
+      <Modal size="lg" show={bannershow} onHide={() => modalClose()}>
         <Form
           className=""
           noValidate
           validated={validated}
           ref={formRef}
           onSubmit={
-            show === "add" ? (e) => AddBanner(e) : (e) => UpdateBanner(e)
+            bannershow === "add" ? (e) => AddBanner(e) : (e) => UpdateBanner(e)
           }
         >
           <Modal.Header closeButton>
             <Modal.Title>
-              {show === "add" ? "Add New Banner " : " Update Banner "}
+              {bannershow === "add" ? "Add New Banner " : " Update Banner "}
             </Modal.Title>
           </Modal.Header>
           {error === false ? (
@@ -489,7 +520,7 @@ if (response.data.code === "ER_DUP_ENTRY") {
               </div>
               <div className="col-md-4">
                 <Form.Label>Banner_location</Form.Label>
-                {show === "add" ? (
+                {bannershow === "add" ? (
                   <>
                     <Form.Select
                       aria-label="Search by location"
@@ -520,7 +551,7 @@ if (response.data.code === "ER_DUP_ENTRY") {
                         className="mt-2 ms-2 text-danger text-center fs-6"
                         type="invalid"
                       >
-                        Select Image This (height-738px * width-738px)
+                        Select Image This (2/3)
                       </p>
                     ) : addBanner.banner_location ===
                       "home_page_left_side(1)" ? (
@@ -528,7 +559,7 @@ if (response.data.code === "ER_DUP_ENTRY") {
                         className="mt-2 ms-2 text-danger text-center fs-6"
                         type="invalid"
                       >
-                        Select Image This (height-356px * width-738px)
+                        Select Image This (1/2)
                       </p>
                     ) : addBanner.banner_location ===
                       "home_page_right_side(1)" ? (
@@ -536,7 +567,7 @@ if (response.data.code === "ER_DUP_ENTRY") {
                         className="mt-2 ms-2 text-danger text-center fs-6"
                         type="invalid"
                       >
-                        Select Image This (height-356px * width-356px)
+                        Select Image This (1/1)
                       </p>
                     ) : addBanner.banner_location ===
                       "home_page_right_side(2)" ? (
@@ -544,7 +575,7 @@ if (response.data.code === "ER_DUP_ENTRY") {
                         className="mt-2 ms-2 text-danger text-center fs-6"
                         type="invalid"
                       >
-                        Select Image This(height-356px * width-356px)
+                        Select Image This(1/1)
                       </p>
                     ) : null}
                   </>
@@ -600,14 +631,22 @@ if (response.data.code === "ER_DUP_ENTRY") {
       ) : currentPage === "crop-img" ? (
         <div className="container-fluid">
            <ImageCropper
+           handleClose={handleClose}
            image={image}
            imageNamee={imageName}
+           modalShow={true}
           onCropDone={(imgCroppedArea) => onCropDone(imgCroppedArea )}onCropCancel={onCropCancel}
             />
             
         </div>
        
       ) : (
+      //   <div>
+      //      <div>
+      //   <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />
+      // </div>
+      //   </div>
+       
         <div>
         <div>
         <div>
@@ -620,8 +659,8 @@ if (response.data.code === "ER_DUP_ENTRY") {
                />
           </div>  
         </div>
-        { <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />  === <ImageCropper/>  ? (
-            <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />):
+         {/* { <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />  === <ImageCropper/>  ? (
+           <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />): */}
           <>
             <button
               onClick={() => {
@@ -643,7 +682,7 @@ if (response.data.code === "ER_DUP_ENTRY") {
             </button>
           </>
        
-      }
+      {/* } */}
       </div>
 
       )}
@@ -697,13 +736,13 @@ if (response.data.code === "ER_DUP_ENTRY") {
             <button
               type="button"
               className="button main_outline_button"
-              onClick={() => handleClose()}
+              onClick={() => modalClose()}
             >
               Cancel
             </button>
             <Iconbutton
               type={"submit"}
-              btntext={show === "add" ? "Add Banner" : "Update Banner"}
+              btntext={bannershow === "add" ? "Add Banner" : "Update Banner"}
               btnclass={"button main_button "}
             />
           </Modal.Footer>
