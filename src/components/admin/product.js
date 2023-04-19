@@ -1215,9 +1215,7 @@ function Product() {
       ...productdata,
       variety: true,
     });
-    console.log("********"+productdata)
     if (productdata.product_type == "") {
-    console.log("&&&2222222222&&"+productdata.product_type)
 
       setCheckProductType(true);
     } else {
@@ -4986,7 +4984,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                             <div className="imgprivew_box">
                                                 {currentPage === "choose-img" ? (
                                                   
-                                                  <FileInput setImage={setImage}  onImageSelected={onImageSelected} setimageName={setimageName} />
+                                                  <FileInput setImage={setImage}  onImageSelected={onImageSelected} setimageName={setimageName}/>
                                                 ) : currentPage === "crop-img" ? (
                                                   <ImageCropper
                                                   handleClose={handleClose}
