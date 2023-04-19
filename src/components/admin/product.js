@@ -142,6 +142,8 @@ function Product() {
   
   const [totaltax, settotaltax] = useState("");
   const [variantarray, setvariantarray] = useState(veriantData);
+  
+
   const [variantmainarray, setvariantmainarray] = useState([]);
   // const [productvariantarray, setproductvariantarray] = useState(veriantData);
   const [data1, setdata1] = useState("");
@@ -772,7 +774,7 @@ function Product() {
 
       const dataURL = canvasEle.toDataURL("image/jpeg");
       imguploadchange(dataURL, product_id, id, vendor_id)
-      onImgView(product_id, id)
+      // onImgView(product_id, id)
       setCurrentPage("img-cropped");
     };
   };
@@ -784,13 +786,13 @@ function Product() {
 
   const imguploadchange = async (dataURL, product_id, id, vendor_id) => {
     setcustomValidated("");
-    onImgView(product_id, id);
+    // onImgView(product_id, id);
     let i
     let coverimg;
 
     for (i = 0; i < imageName.length; i++) {
 
-      if ((newImageUrls.length === 0 || newImageUrls.length === 1) && i === 0) {
+      if ((newImageUrls.length == 0 || newImageUrls.length == 1) && i == 0) {
         coverimg = "cover";
       } else {
         coverimg = `cover${i}`;
@@ -836,26 +838,14 @@ function Product() {
 
   };
 
-  const onImgRemove = (id, name, vendor_id, product_id, product_verient_id) => {
-    axios
-      .put(`${process.env.REACT_APP_BASEURL}/product_image_delete`, {
-        product_image_id: `${id}`,
-        product_image_name: `${name}`,
-        vendor_id: `${vendor_id}`,
-      })
-      .then((response) => {
-        setapicall(true);
-        onImgView(product_verient_id, product_id);
-        
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
+
   const [imageboxid, setimageboxid] = useState(0);
+
+
   const onImgView = (id, productid) => {
     setEditButton(false);
     setimageboxid(id);
+ 
 
     axios
       .get(
@@ -863,10 +853,10 @@ function Product() {
       )
       .then((response) => {
         setnewImageUrls(response.data)
-        setImgAfterCrop("")
-
         setapicall(true);
         setmodalshow(false);
+        setImgAfterCrop("")
+
       })
       .catch(function (error) {
         console.log(error);
@@ -875,6 +865,7 @@ function Product() {
   
 
   const onImgCoverEditClick = (imgid, productid, productvariantid) => {
+  
     axios
       .put(`${process.env.REACT_APP_BASEURL}/change_porduct_cover_image`, {
         product_image_id: `${imgid}`,
@@ -888,8 +879,23 @@ function Product() {
         console.log(error);
       });
   };
-  // END IMAGE UPLOAD SECTION
-
+  const onImgRemove = (id, name, vendor_id, product_id, product_verient_id) => {
+    axios
+      .put(`${process.env.REACT_APP_BASEURL}/product_image_delete`, {
+        product_image_id: `${id}`,
+        product_image_name: `${name}`,
+        vendor_id: `${vendor_id}`,
+      })
+      .then((response) => {
+        setapicall(true);
+        
+        onImgView(product_verient_id, product_id);
+        
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
   // ADD AND EDIT  VARIETY SECTION
   const onVariantChange = (e) => {
     // setValidated(true);
@@ -987,6 +993,9 @@ function Product() {
 
   // ADD VARIETY MODAL
   const handlevarietyShow = (id, variantid) => {
+    console.log("----")
+    console.log(variantid)
+
     // START GET THE SELECTED VARIENT DATA------------------------------------------------------
     axios
       .get(
@@ -1022,7 +1031,6 @@ function Product() {
     setvarietyShow(false);
   };
   const onVariantaddclick = (id) => {
-    console.log("-------------")
     if (id === undefined || id === null || unitValidated === "false") {
       if (
         variantarray.unit === "" ||
@@ -4923,22 +4931,23 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                     {newImageUrls ? (
                                       <tr
                                         className={
-                                          variantdata.id === imageboxid
+                                          variantdata.id == imageboxid
                                             ? "img_preview_boxx show"
                                             : "img_preview_boxx hide"
                                         }
                                         id={"variantimgbox" + variantdata.id}
+                                        
                                       >
                                         <td colSpan="13">
                                           <div className="image_box">
                                             {newImageUrls.map((imgg, i) => {
-                                              return `${variantdata.id}` ===
+                                              return `${variantdata.id}` ==
                                                 imgg.product_verient_id ? (
                                                 <div
                                                   className="imgprivew_box"
                                                   key={i}
                                                 >
-                                                  {imgg.image_position ===
+                                                  {imgg.image_position ==
                                                     "cover" ? (
                                                     <span className="cover_img">
                                                       Cover
@@ -4982,7 +4991,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                               ) : null;
                                             })}
                                             <div className="imgprivew_box">
-                                                {currentPage === "choose-img" ? (
+                                                {currentPage == "choose-img" ? (
                                                   
                                                   <FileInput setImage={setImage}  onImageSelected={onImageSelected} setimageName={setimageName}/>
                                                 ) : currentPage === "crop-img" ? (
@@ -5036,24 +5045,6 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
 
 
 
-                                              {/* <Form.Control
-                                                  multiple
-                                                  type="file"
-                                                  sm="9"
-                                                  className={"img_add_button"}
-                                                  onChange={(e) =>
-                                                    imguploadchange(
-                                                      e,
-                                                      variantdata.product_id,
-                                                      variantdata.id,
-                                                      variantdata.vendor_id
-                                                    )
-                                                  }
-                                                  name={"img_64"}
-                                                /> */}
-                                              {/* <span className="plus_icon">
-                                                  +
-                                                </span> */}
                                             </div>
                                           </div>
                                         </td>
