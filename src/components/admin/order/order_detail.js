@@ -403,7 +403,7 @@ const OrderDetail = () => {
             </div>
             <div className="col-lg-4">
               <div className="right_side">
-                {user.map((userdata) => {
+                {(user||[]).map((userdata) => {
                   return (
                     <div
                       className="customer_name_address"

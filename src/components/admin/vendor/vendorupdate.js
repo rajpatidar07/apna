@@ -901,7 +901,7 @@ const VendorUpdate = () => {
               <tbody className="vendordoc_image_table_body">
                 {newImageUrls ? (
                   <tr className="d-flex flex-wrap">
-                    {newImageUrls.map((imgg, i) => {
+                    {(newImageUrls||[]).map((imgg, i) => {
                       return (
                         <td className="imgprivew_box">
                           <img

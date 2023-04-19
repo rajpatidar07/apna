@@ -86,7 +86,7 @@ const RevenueReport = () => {
       ],
     ];
 
-    const data = tabledate.map((elt) => [
+    const data = (tabledate||[]).map((elt) => [
       elt.uniquedates,
       elt.gross_amount,
       elt.total_gst,
@@ -820,7 +820,7 @@ const RevenueReport = () => {
     setapicall(true);
   };
 
-  tabledate.map((item) => {
+  (tabledate||[]).map((item) => {
     GrossAmmount.push(item.gross_amount);
     totalSales.push(item.total_sales);
     totalGSt.push(item.total_gst);
@@ -830,7 +830,7 @@ const RevenueReport = () => {
   });
 
   const options1 = [
-    brand.map((item) => ({ value: `${item.brand}`, label: `${item.brand}` })),
+    (brand||[]).map((item) => ({ value: `${item.brand}`, label: `${item.brand}` })),
   ];
 
   let arrr = [];
@@ -844,7 +844,7 @@ const RevenueReport = () => {
   };
 
   const options2 = [
-    venderList.map((item) => ({
+    (venderList||[]).map((item) => ({
       value: `${item.id}`,
       label: `${item.shop_name}`,
     })),
@@ -861,7 +861,7 @@ const RevenueReport = () => {
   };
 
   const options3 = [
-    category.map((item) => ({
+    (category||[]).map((item) => ({
       value: `${item.id}`,
       label: `${item.category_name}`,
     })),

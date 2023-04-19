@@ -1736,7 +1736,7 @@ const Productdetail = () => {
                                       >
                                         <td colSpan="13">
                                           <div className="image_box">
-                                            {newImageUrls.map((imgg, i) => {
+                                            {(newImageUrls||[]).map((imgg, i) => {
                                               return `${variantdata.id}` ===
                                                 imgg.product_verient_id ? (
                                                 <div

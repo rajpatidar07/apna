@@ -250,7 +250,7 @@ function Admin() {
       setaddadmindata("");
       setShow("");
       setapicall(true);
-      show.preventDefault();
+      // show.preventDefault();
     }
   };
 

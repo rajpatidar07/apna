@@ -348,7 +348,7 @@ const CouponReport = () => {
       ],
     ];
 
-    const data = tabledate.map((elt) => [
+    const data =( tabledate||[]).map((elt) => [
       elt.discount_coupon,
       elt.amount_discounted,
       elt.order_count,
@@ -422,7 +422,7 @@ const CouponReport = () => {
   ];
 
   const options1 = [
-    brand.map((item) => ({ value: `${item.brand}`, label: `${item.brand}` })),
+    (brand||[]).map((item) => ({ value: `${item.brand}`, label: `${item.brand}` })),
   ];
 
   let arrr = [];
@@ -436,7 +436,7 @@ const CouponReport = () => {
   };
 
   const options2 = [
-    venderList.map((item) => ({
+    (venderList||[]).map((item) => ({
       value: `${item.id}`,
       label: `${item.shop_name}`,
     })),
@@ -452,7 +452,7 @@ const CouponReport = () => {
     setVendorId(vendorArray);
   };
   const options3 = [
-    category.map((item) => ({
+    (category||[]).map((item) => ({
       value: `${item.id}`,
       label: `${item.category_name}`,
     })),

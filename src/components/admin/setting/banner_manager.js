@@ -144,9 +144,9 @@ function Banner() {
     setUpdateAlert(false);
   };
 
-  let logo = `${process.env.REACT_APP_BASEURL}/${addBanner.image}`;
-  let docsdata = `${process.env.REACT_APP_BASEURL}/${Imgarray}`;
-  var Newlogo = logo.replace("/public", "");
+  // let logo = `${process.env.REACT_APP_BASEURL}/${addBanner.image}`;
+  // let docsdata = `${process.env.REACT_APP_BASEURL}/${Imgarray}`;
+  // var Newlogo = logo.replace("/public", "");
   const handleAlert = (banner_id) => {
     setBannerId(banner_id);
     setAlert(true);
@@ -155,12 +155,16 @@ function Banner() {
   const handleClick = () => {};
 
   const hideAlert = () => {
-    axios.put(`${process.env.REACT_APP_BASEURL}/banner_delete`, {
+    axios.put(`${process.env.REACT_APP_BASEURL_0}/banner_delete`, {
       banner_id: `${bannerId}`,
       is_deleted: 0,
+    },{
+      headers: { admin_token: `${token}` },
+    }).then((response) => {
+    setAlert(false);
     });
     setapicall(true);
-    setAlert(false);
+   
   };
   const CancelAlert = () => {
     setAlert(false);
@@ -231,7 +235,6 @@ function Banner() {
     
     setCurrentPage("crop-img");
     // setShow(true)
-    console.log("stage2 ---------"+reader.result+"image_name=========="+image_name)
 
     }
   };

@@ -17,6 +17,7 @@ const NotificationType = {
     "cart",
     "wishlisted",
     "regestion",
+    "order_return"
   ],
 };
 export default NotificationType;

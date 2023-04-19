@@ -294,7 +294,7 @@ const TaxesReport = () => {
   };
 
   const options1 = [
-    brand.map((item) => ({ value: `${item.brand}`, label: `${item.brand}` })),
+    (brand||[]).map((item) => ({ value: `${item.brand}`, label: `${item.brand}` })),
   ];
 
   let arrr = [];
@@ -308,7 +308,7 @@ const TaxesReport = () => {
   };
 
   const options2 = [
-    venderList.map((item) => ({
+    (venderList||[]).map((item) => ({
       value: `${item.id}`,
       label: `${item.shop_name}`,
     })),
@@ -325,7 +325,7 @@ const TaxesReport = () => {
   };
 
   const options3 = [
-    category.map((item) => ({
+    (category||[]).map((item) => ({
       value: `${item.id}`,
       label: `${item.category_name}`,
     })),

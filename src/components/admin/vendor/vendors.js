@@ -1255,7 +1255,7 @@ console.log("SHOWWW+"+Docnamearray)
                         Docnamearray === "" ||
                         Docnamearray.length === 0 ? null : (
                         <div className="d-flex align-items-center tagselectbox mt-2">
-                          {Docnamearray.map((seotags, i) => {
+                          {(Docnamearray||[]).map((seotags, i) => {
                             return (
                               <>
                                 {seotags === '""' ? null : (

@@ -739,7 +739,6 @@ function Product() {
     
     setCurrentPage("crop-img");
     // setShow(true)
-    console.log("stage2 ---------"+reader.result+"image_name=========="+image_name)
     }
   };
 
@@ -786,7 +785,7 @@ function Product() {
 
   const imguploadchange = async (dataURL, product_id, id, vendor_id) => {
     setcustomValidated("");
-    // onImgView(product_id, id);
+    onImgView(product_id, id);
     let i
     let coverimg;
 
@@ -2408,7 +2407,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                               }
                             >
                               <option value={""}>Select Brand</option>
-                              {BrandJson.BrandJson.map((item,i) => {
+                              {(BrandJson.BrandJson||[]).map((item,i) => {
                                 return <option value={item} key={i}>{item}</option>;
                               })}
                             </Form.Select>
@@ -2444,7 +2443,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                           >
                             {" "}
                             <option value={""}> Select Store Name</option>
-                            {vendorid.map((cdata, i) => {
+                            {(vendorid||[]).map((cdata, i) => {
                               return (
                                 <option
                                   value={[cdata.id, cdata.shop_name]}
@@ -2519,7 +2518,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                           >
                             <option value={""}>Select Product Type</option>
 
-                            {categorytype.categorytype.map((data,i) => {
+                            {(categorytype.categorytype||[]).map((data,i) => {
                               return <option value={data}key={i}>{data}</option>;
                             })}
                           </Form.Select>
@@ -2546,7 +2545,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                             onChange={(e, id) => categoryFormChange(e, id)}
                           >
                            <option value={""}>Select Parent Category </option>
-                          {category.map((cdata, i) => {
+                          {(category||[]).map((cdata, i) => {
                             return (
                               <option
                               value={cdata.id}
@@ -2589,7 +2588,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                             required
                           >
                             <option value={""}>Select Category </option>
-                            {subCategory.map((cdata, i) => {
+                            {(subCategory||[]).map((cdata, i) => {
                               return (
                                 <option
                                 value={cdata.id}
@@ -2631,7 +2630,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                             required
                           >
                             <option value={""}>Select Category </option>
-                            {childCategory.map((cdata, i) => {
+                            {(childCategory||[]).map((cdata, i) => {
                               return (
                                 <option
                                 value={cdata.id}
@@ -3916,7 +3915,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                         Docnamearray === "" ||
                         Docnamearray.length === 0 ? null : (
                         <div className="d-flex align-items-center tagselectbox mt-2">
-                          {Docnamearray.map((seotags, i) => {
+                          {(Docnamearray||[]).map((seotags, i) => {
                             return (
                               <>
                                 {seotags === '""' ? null : (
@@ -4940,7 +4939,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                       >
                                         <td colSpan="13">
                                           <div className="image_box">
-                                            {newImageUrls.map((imgg, i) => {
+                                            {(newImageUrls||[]).map((imgg, i) => {
                                               return `${variantdata.id}` ==
                                                 imgg.product_verient_id ? (
                                                 <div

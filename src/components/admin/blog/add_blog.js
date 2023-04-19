@@ -588,7 +588,7 @@ const BlogList = () => {
                     name={"category"}
                   >
                     <option>Select Category</option>
-                    {CategoryJson.categorytype.map((blogcat) => {
+                    {(CategoryJson.categorytype||[]).map((blogcat) => {
                       return <option value={blogcat}>{blogcat}</option>;
                     })}
 

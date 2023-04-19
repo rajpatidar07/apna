@@ -38,7 +38,7 @@ const CustomerReport = () => {
       ],
     ];
 
-    const data = tableCoustomer.map((elt) => [
+    const data = (tableCoustomer||[]).map((elt) => [
       elt.first_name,
       elt.last_name,
       elt.user_id,

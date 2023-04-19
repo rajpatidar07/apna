@@ -404,7 +404,7 @@ const Notification = () => {
             >
               {" "}
               <option value={""}>Notification Type</option>
-              {NotificationType.NotificationType.map((item) => {
+              {(NotificationType.NotificationType||[]).map((item) => {
                 return <option value={item}>{item}</option>;
               })}
             </Form.Select>
@@ -436,7 +436,7 @@ const Notification = () => {
               }}
             >
               <option value={""}>Status</option>
-              {NotificationStatus.NotificationStatus.map((item) => {
+              {(NotificationStatus.NotificationStatus||[]).map((item) => {
                 return <option value={item}>{item}</option>;
               })}
             </Form.Select>
@@ -513,7 +513,7 @@ const Notification = () => {
                     required
                   >
                     <option value={""}>Notification Type</option>
-                    {NotificationType.NotificationType.map((item) => {
+                    {(NotificationType.NotificationType||[]).map((item) => {
                       return <option value={item}>{item}</option>;
                     })}
                   </Form.Select>

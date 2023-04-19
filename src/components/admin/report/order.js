@@ -384,7 +384,7 @@ const OrderReport = () => {
       ],
     ];
 
-    const data = orderTable.map((elt) => [
+    const data = (orderTable||[]).map((elt) => [
       elt.created_on,
       elt.order_id,
       elt.status,
@@ -491,7 +491,7 @@ const OrderReport = () => {
 
 
   const options1 = [
-    brand.map((item) => ({ value: `${item.brand}`, label: `${item.brand}` })),
+    (brand||[]).map((item) => ({ value: `${item.brand}`, label: `${item.brand}` })),
   ];
 
   let arrr = [];
@@ -506,7 +506,7 @@ const OrderReport = () => {
 
   
   const options2 = [
-    venderList.map((item) => ({
+    (venderList||[]).map((item) => ({
       value: `${item.id}`,
       label: `${item.shop_name}`,
     })),
@@ -525,7 +525,7 @@ const OrderReport = () => {
  
 
   const options3 = [
-    category.map((item) => ({
+    (category||[]).map((item) => ({
       value: `${item.id}`,
       label: `${item.category_name}`,
     })),

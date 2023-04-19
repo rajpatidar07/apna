@@ -26,7 +26,7 @@ const StockReport = () => {
     const title = "Stock Report";
     const headers = [["Product Name", "Status", "Stock"]];
 
-    const data = getTableStock.map((elt) => [
+    const data = (getTableStock||[]).map((elt) => [
       elt.product_title_name,
       elt.product_status,
       elt.quantity,

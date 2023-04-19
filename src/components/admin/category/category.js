@@ -652,7 +652,7 @@ const CategoryList = () => {
                 value={SearchCat.category_type}
               >
                 <option value={""}>Search by category</option>
-                {result1.map((lvl, i) => {
+                {(result1||[]).map((lvl, i) => {
                   return (
                     <option value={lvl.category_type} key={i}>
                       {lvl.category_type}
@@ -671,7 +671,7 @@ const CategoryList = () => {
                 value={SearchCat.level}
               >
                 <option value={""}>Search by level</option>
-                {result2.map((lvl, i) => {
+                {(result2||[]).map((lvl, i) => {
                   return (
                     <option value={lvl.level} key={i}>
                       {lvl.level}
@@ -813,7 +813,7 @@ const CategoryList = () => {
                       // value={indVal}
                       >
                         <option value={"0"}>Select Parent Category</option>
-                        {category.map((cdata, i) => {
+                        {(category||[]).map((cdata, i) => {
                           return cdata.id === CategoryEditdata.id &&
                             cdata.category_name ===
                             CategoryEditdata.category_name ? null : (
@@ -854,7 +854,7 @@ const CategoryList = () => {
                         // value={CategoryEditdata.category_name}
                         >
                           <option value="1">Select Sub category</option>
-                          {subCategory.map((cdata, i) => {
+                          {(subCategory||[]).map((cdata, i) => {
                            
 
                             return cdata.id === CategoryEditdata.id &&
@@ -901,7 +901,7 @@ const CategoryList = () => {
                         >
                           {" "}
                           <option value="">Select Child category</option>
-                          {childCategory.map((cdata, i) => {
+                          {(childCategory||[]).map((cdata, i) => {
                             return cdata.id === CategoryEditdata.id &&
                               cdata.category_name ===
                               CategoryEditdata.category_name ? null : (
