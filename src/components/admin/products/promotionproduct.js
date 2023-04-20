@@ -362,7 +362,7 @@ useEffect(() => {
           brand: [`${searchdata.brand}`],
           shop: [`${searchdata.vendor}`],
           product_title_name: [`${searchdata.product_title_name}`],
-          status: [`${searchdata.status}`],
+          status: `${searchdata.status}`,
         },
         {
           headers: { admin_token: `${token}` },
@@ -419,6 +419,9 @@ useEffect(() => {
             brand: [`${searchdata.brand}`],
             shop: [`${searchdata.vendor}`],
             product_title_name: [`${searchdata.product_title_name}`],
+            status: `${searchdata.status}`,
+
+
           },
           {
             headers: { admin_token: `${token}` },
@@ -537,6 +540,7 @@ useEffect(() => {
   /*<---Onlick Function to Search--->*/
   const Search = () => {
     if (
+      searchdata.status ===""&&
       searchdata.product_title_name === "" &&
       searchdata.vendor === "" &&
       searchdata.brand === "" &&
@@ -609,9 +613,9 @@ useEffect(() => {
                   value={searchdata.product_title_name}
                   className={"form-control"}
                 />{" "}
-                {searcherror === true ? (
+                {/* {searcherror === true ? (
                   <small className="text-danger">please fill the feild</small>
-                ) : null}
+                ) : null} */}
               </div>
 
               <div className="col-md-3 col-sm-6 aos_input mb-2">
@@ -682,8 +686,8 @@ useEffect(() => {
                   name="status"
                   value={String(searchdata.status)}
                 >
-                  <option value="">status</option>
-                  <option value="publish">Publish</option>
+                <option value="">status</option>
+                <option value="publish">Publish</option>
                 <option value="expired">Expired</option>
                 <option value="pending">Pending</option>
                 </Form.Select>

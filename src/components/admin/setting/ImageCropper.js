@@ -4,31 +4,37 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import FileInput from "./FileInput";
+import RangeSlider from "react-bootstrap-range-slider"
 function ImageCropper({image,imageName,modalShow, onCropDone, onCropCancel,handleClose }) {
 
   const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(12);
+  const [zoom, setZoom] = useState(30);
   const [croppedArea, setCroppedArea] = useState(null);
   const [aspectRatio, setAspectRatio] = useState(2 / 3);
   const [show, setShow] = useState(modalShow );
   let [count, setCount] = useState(1);
   function incrementCount() {
     if (zoom === count) {
-      setZoom(12);
+      setZoom(20);
 
     } else {
       count = count + 1;
       setCount(count);
-      setZoom(12);
+      setZoom(20);
     }
   }
   /*<-----Decrement Functionality----> */
   const decrementCount = () => {
     if (count > 1) {
       setCount((count) => count - 1);
-      setZoom(12);
+      setZoom(20);
     }
   };
+ 
+
+    // const [ value, setValue ] = React.useState(50);
+  
+  
 
   const modalClose=()=>{
     const show=setShow(false)
@@ -60,7 +66,7 @@ function ImageCropper({image,imageName,modalShow, onCropDone, onCropCancel,handl
             imageNamee={imageName}
             aspect={aspectRatio}
             crop={crop}
-            zoom={count}
+            zoom={zoom}
             onCropChange={setCrop}
             onClick={setZoom}
             onCropComplete={onCropComplete}
@@ -94,7 +100,11 @@ function ImageCropper({image,imageName,modalShow, onCropDone, onCropCancel,handl
           </div>
            </div>
        </> }
-        <Button variant="info" onClick={incrementCount} >+</Button>&nbsp;
+       <RangeSlider
+        value={zoom}
+        onChange={e => setZoom(e.target.value)}
+      />
+        <Button variant="info" type="range" onClick={incrementCount} >+</Button>&nbsp;
           <Button variant="info" onClick={decrementCount} >-</Button>
           <Button variant="secondary"  onClick={()=>{modalClose()}}>
             Close

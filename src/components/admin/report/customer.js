@@ -9,6 +9,7 @@ import axios from "axios";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { downloadExcel } from "react-export-table-to-excel";
+import moment from "moment";
 
 const CustomerReport = () => {
   //----------------------------------------------------------------- pdf----------------------------------------------------->
@@ -123,7 +124,7 @@ const CustomerReport = () => {
     },
     {
       name: "Created On",
-      selector: (row) => row.created_on,
+      selector: (row) => moment(row.created_on).format("YYYY-MM-DD"),
       sortable: true,
       width: "150px",
     },

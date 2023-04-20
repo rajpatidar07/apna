@@ -12,7 +12,7 @@ const Login = () => {
   const [adminid, setadminId] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [apicall,setapicall]=useState([])
   const [Emailerror, setEmailError] = useState(true);
   const [Passworderror, setPasswordError] = useState(true);
   const onValueChange = (e, id) => {
@@ -23,7 +23,18 @@ const Login = () => {
     setPassword(e.target.value);
     setPasswordError(true);
   };
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_BASEURL_0}/admin?id=1`)
+      .then((response) => {
+        let data = response.data;
 
+        setadminId(data.id);
+        console.log("adminid")
+        console.log(data.id)
+        setAdminData(data);
+      });
+  }, [apicall]);
   const handleSubmit = (e) => {
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
@@ -33,11 +44,14 @@ const Login = () => {
       setPasswordError(false);
     } else {
       axios
-        .post(`${process.env.REACT_APP_BASEURL}/admin_login`, {
+        .post(`${process.env.REACT_APP_BASEURL_0}/admin_login`, {
           admin_email: email,
           admin_password: password,
         })
         .then((response) => {
+          console.log("77")
+          console.log(response)
+
           if (response.data === "email not found") {
             setEmailError(false);
           } else if (response.data === "password not matched") {
@@ -46,6 +60,8 @@ const Login = () => {
             localStorage.setItem("encryptloginid", email);
             localStorage.setItem("encryptpassword", password);
             localStorage.setItem("encryptadminid", adminid);
+           
+
             localStorage.setItem("token", response.data[1].token);
 
             navigate("/");
@@ -54,16 +70,9 @@ const Login = () => {
     }
     e.preventDefault();
   };
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_BASEURL}/admin?id=1`)
-      .then((response) => {
-        let data = response.data;
+ 
 
-        setadminId(data.id);
-        setAdminData(data);
-      });
-  }, []);
+
   return (
     <Fragment>
       <div className="for_scrol">

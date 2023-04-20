@@ -136,7 +136,7 @@ const InvoiceList = () => {
     },
     {
       name: "Invoice Date",
-      selector: (row) => moment(row.invoice_date).format("YYYY-MM-DD"),
+      selector: (row) => moment(row._date).format("YYYY-MM-DD"),
       sortable: true,
       width: "150px",
       center: true,

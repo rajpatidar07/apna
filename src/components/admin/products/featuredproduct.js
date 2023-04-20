@@ -49,6 +49,8 @@ const Featuredproduct = () => {
     setValidated(false);
     setShow(false);
     setapicall(true);
+    setFeaturetData("")
+
   };
 
   let closeUpdateAlert = () => {
@@ -497,9 +499,9 @@ useEffect(()=>{
                 value={searchdata.product_title_name}
                 className={"form-control"}
               />{" "}
-              {searcherror === true ? (
+              {/* {searcherror === true ? (
                 <small className="text-danger">please fill the feild</small>
-              ) : null}
+              ) : null} */}
             </div>
             {/* <div className="col-md-3 col-sm-6 aos_input mb-2">
   <input type={"text"}  onChange={OnSearchChange} name='product_title_name'

@@ -253,7 +253,15 @@ function Admin() {
       // show.preventDefault();
     }
   };
-
+  const OnReset = () => {
+    setSearchAd({
+      admin_name: "",
+      admin_type: "",
+     
+    });
+    setapicall(true);
+    // setsearcherror(false);
+  };
   return (
     <div className="App productlist_maindiv">
       <></>
@@ -292,6 +300,14 @@ function Admin() {
             onClick={SearchAdmin}
           />
         </div>
+        <div className="col-md-3 col-sm-6 aos_input mb-2 ">
+              <MainButton
+                btntext={"Reset"}
+                btnclass={"button main_button w-100"}
+                type="reset"
+                onClick={OnReset}
+              />
+            </div>
       </div>
       {/* upload */}
 

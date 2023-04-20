@@ -156,13 +156,13 @@ const BlogList = () => {
           })
           .then((response) => {
             let data = response.data[0];
-            if (data.message !== "No blogs Data") {
+            // if (data.message !== "No blogs Data") {
 
-              setBlog(data);
-              setapicall(false);
-            }
+            //   setBlog(data);
+            //   setapicall(false);
+            // }
 
-            setBlog(response.data);
+            setBlog(data);
             setaddBlog(response.data);
             setsearchData(data);
             setCondition(false);
