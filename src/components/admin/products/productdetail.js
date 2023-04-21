@@ -63,6 +63,8 @@ const Productdetail = () => {
     expire_date: "",
     quantity: "",
   };
+  const [variantmainarray, setvariantmainarray] = useState([]);
+
   const [variantarray, setvariantarray] = useState(veriantData);
   const [customvalidated, setcustomValidated] = useState(false);
   const [unitValidated, setunitValidated] = useState(false);
@@ -91,19 +93,19 @@ const Productdetail = () => {
             if (data === "error") {
               navigate("/product");
             }
-            if (data !== undefined || data !== "" || data !== null) {
+            if (data === undefined || data === "" || data === null) {}else{
               setProductData(data);
               settaxdata(data);
               setVariantdetail(data.product_verient);
               onImgView(vid, pid);
-             
-             
-              setvariantarray({
-                ...variantarray,
-                unit: response.data.product_verient.unit,
-                product_id: pid,
-              });
-            
+              // setvariantarray({
+              //   ...variantarray,
+              //   unit: data.product_verient[0].unit,
+              //   product_id: pid,
+              // });
+            console.log("-----")
+            console.log(data)
+
               // setloading(false);
             }
 
@@ -463,7 +465,8 @@ console.log(variantarray)
         Number(variantarray.mrp) <= 0
       ) {
         setVarietyUnitvalidation("mrpmore");
-      } else {
+      }
+      else {
         axios
           .post(
             `${process.env.REACT_APP_BASEURL}/products_varient_add`,
@@ -473,7 +476,9 @@ console.log(variantarray)
             if ((response.affectedRows = "1")) {
               setProductAlert(true);
               setValidated(false);
-
+              setvariantmainarray((variantmainarray) => [
+                ...variantmainarray,
+                variantarray,]);
               setvariantarray({
                 product_status: "",
                 // unit: "",
@@ -606,8 +611,9 @@ console.log(variantarray)
   // END VARIETY
 
   // REMOVE VARIETY
-  const VariantRemoveClick = (id, productid) => {
+  const VariantRemoveClick = (e,id, productid) => {
     setVerityAlert(true);
+    setvariantmainarray(variantmainarray.filter((item) => item !== e));
     setVariantRemove((variantremove) => {
       return { ...variantremove, id: id, productid: productid };
     });
@@ -663,7 +669,11 @@ console.log(variantarray)
         `${process.env.REACT_APP_BASEURL}/products_pricing?id=${id}&product_id=${productid}&user_id`
       )
       .then((response) => {
-        setvariantarray(response.data[0]);
+        setvariantarray({
+          ...variantarray,
+          unit: response.data[0].unit,
+          product_id: id,
+        })
         // setloading(false)
       })
       .catch(function (error) {
@@ -946,86 +956,93 @@ console.log(variantarray)
                                 </Form.Label>
                                 <Col sm="12">
                                   <InputGroup className="">
-                                    <Form.Select
-                                      required
-                                      aria-label="Default select example"
-                                      name="unit"
-                                      onChange={(e) => onVariantChange(e)}
-                                      value={variantarray.unit}
-                                      disabled={
-                                        variantarray.unit &&
-                                          changeUnitproperty === false
-                                          ? true
-                                          : variantarray.unit ||
-                                            changeUnitproperty === true
-                                            ? false
-                                            : true
-                                      }
-                                    >
-                                      <option value={""}>{variantarray.unit}</option>
-
-                                      {(varietyy.variety || []).map(
-                                        (vari, i) => {
-                                          return vdata.length ===
-                                            0 ? null : vdata[0].product_type ===
-                                              "" ? (
-                                            <option
-                                              value={
-                                                vari === "color"
-                                                  ? "pcs"
-                                                  : vari === "weight"
-                                                    ? "gms"
-                                                    : vari === "volume"
-                                                      ? "ml"
-                                                      : vari === "piece"
-                                                        ? "piece"
-                                                        : ""
-                                              }
-                                              key={i}
-                                            >
-                                              {vari}
-                                            </option>
-                                          ) : vdata.length ===
-                                            0 ? null : vdata[0].product_type ===
-                                              "Cloths" ||
-                                              vdata.length === 0 ? null : vdata[0]
-                                                .product_type === "Fashion" ? (
-                                            vari === "weight" ||
-                                              vari === "volume" ? null : (
-                                              <option
-                                                value={
-                                                  vari === "piece"
-                                                    ? "piece"
-                                                    : vari === "color"
-                                                      ? "pcs"
-                                                      : ""
-                                                }
-                                                key={i}
-                                              >
-                                                {vari}
-                                              </option>
-                                            )
-                                          ) : vari === "color" ? null : (
-                                            <option
-                                              value={
-                                                vari === "weight"
-                                                  ? "gms"
-                                                  : vari === "volume"
-                                                    ? "ml"
-                                                    : vari === "piece"
-                                                      ? "piece"
-                                                      : vari === "color"
-                                                        ? "pcs"
-                                                        : ""
-                                              }
-                                              key={i}
-                                            >
-                                              {vari}
-                                            </option>
-                                          );
-                                        }
-                                      )}
-                                    </Form.Select>
+                                  <Form.Select
+                                                  aria-label="Default select example"
+                                                  name="unit"
+                                                  required
+                                                  value={variantarray.unit}
+                                                  onChange={(e) =>
+                                                    onVariantChange(e)
+                                                  }
+                                                  disabled={
+                                                    variantmainarray.length ===
+                                                      0
+                                                      ? false
+                                                      : true
+                                                  }
+                                                // className={
+                                                //   customvalidated === true
+                                                //     ? "border-danger"
+                                                //     : null
+                                                // }
+                                                >
+                                                  <option value={""}>
+                                                    Select
+                                                  </option>
+                                                  {(varietyy.variety || []).map(
+                                                    (vari, i) => {
+                                                      return changeUnitproperty ===
+                                                        true ? (
+                                                        <option
+                                                          value={
+                                                            vari === "color"
+                                                              ? "pcs"
+                                                              : vari ===
+                                                                "weight"
+                                                                ? "gms"
+                                                                : vari ===
+                                                                  "volume"
+                                                                  ? "ml"
+                                                                  : vari === "piece"
+                                                                    ? "piece"
+                                                                    : ""
+                                                          }
+                                                          key={i}
+                                                        >
+                                                          {vari}
+                                                        </option>
+                                                      ) : productdata.product_type ===
+                                                        "Cloths" ||
+                                                        productdata.product_type ===
+                                                        "Fashion" ? (
+                                                        vari === "weight" ||
+                                                          vari ===
+                                                          "volume" ? null : (
+                                                          <option
+                                                            value={
+                                                              vari === "piece"
+                                                                ? "piece"
+                                                                : vari ===
+                                                                  "color"
+                                                                  ? "pcs"
+                                                                  : ""
+                                                            }
+                                                            key={i}
+                                                          >
+                                                            {vari}
+                                                          </option>
+                                                        )
+                                                      ) : vari ===
+                                                        "color" ? null : (
+                                                        <option
+                                                          value={
+                                                            vari === "weight"
+                                                              ? "gms"
+                                                              : vari ===
+                                                                "volume"
+                                                                ? "ml"
+                                                                : vari === "piece"
+                                                                  ? "piece"
+                                                                  : ""
+                                                          }
+                                                          key={i}
+                                                        >
+                                                          {vari}
+                                                        </option>
+                                                      );
+                                                    }
+                                                  )}
+                                                </Form.Select>
                                   </InputGroup>
                                 </Col>
                               </Form.Group>
@@ -1727,8 +1744,8 @@ console.log(variantarray)
                                                 />
                                                 <BsTrash
                                                   className="variety_edit_action_btn text-danger"
-                                                  onClick={(id) =>
-                                                    VariantRemoveClick(
+                                                  onClick={(id,e) =>
+                                                    VariantRemoveClick(e,
                                                       variantdata.id,
                                                       variantdata.product_id
                                                     )

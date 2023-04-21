@@ -8,7 +8,7 @@ import RangeSlider from "react-bootstrap-range-slider"
 function ImageCropper({image,imageName,modalShow, onCropDone, onCropCancel,handleClose }) {
 
   const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(30);
+  const [zoom, setZoom] = useState(1);
   const [croppedArea, setCroppedArea] = useState(null);
   const [aspectRatio, setAspectRatio] = useState(2 / 3);
   const [show, setShow] = useState(modalShow );
@@ -100,8 +100,10 @@ function ImageCropper({image,imageName,modalShow, onCropDone, onCropCancel,handl
           </div>
            </div>
        </> }
+       
        <RangeSlider
         value={zoom}
+        
         onChange={e => setZoom(e.target.value)}
       />
         <Button variant="info" type="range" onClick={incrementCount} >+</Button>&nbsp;
