@@ -37,26 +37,27 @@ const Complaint = () => {
     setUpdateAlert(false);
   };
 
-  const handleShow = (e) => {
-    axios
-      .get(`${process.env.REACT_APP_BASEURL}/complaint_details?id=${e}`)
-      .then((response) => {
-        seteditcomplaintdata({
-          ...editcomplaintdata,
-          id: response.data[0].id,
-          assigned_to: response.data[0].assigned_to,
-          resolve_date: response.data[0].resolve_date,
-          status_: response.data[0].status_,
-          resolve_description: response.data[0].resolve_description,
-        });
-        setcomplaintdatadetail(response.data[0]);
-        setapicall(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-    setShow(e);
-  };
+  // const handleShow = (e) => {
+  //   axios
+  //     .get(`${process.env.REACT_APP_BASEURL}/complaint_details?id=${e}`)
+  //     .then((response) => {
+  //       let data=response.data[0]
+  //       seteditcomplaintdata({
+  //         ...editcomplaintdata,
+  //         id: data.id,
+  //         assigned_to: data.assigned_to,
+  //         resolve_date: data.resolve_date,
+  //         status_: data.status_,
+  //         resolve_description: data.resolve_description,
+  //       });
+  //       setcomplaintdatadetail(data);
+  //       setapicall(false);
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //     });
+  //   setShow(e);
+  // };
   const [searchdata, setSearchData] = useState({
     id: "",
     status_: "",
@@ -240,7 +241,7 @@ const Complaint = () => {
         <div className={"actioncolimn"}>
           <BiEdit
             className=" p-0 m-0  editiconn text-secondary"
-            onClick={handleShow.bind(this, row.id)}
+            // onClick={handleShow.bind(this, row.id)}
           />
         </div>
       ),
@@ -256,37 +257,38 @@ const Complaint = () => {
   };
 
   /*Onclik Functoion to update complaint */
-  const UpdateCategoryClick = (e) => {
-    const form = e.currentTarget;
-    if (form.checkValidity() === false) {
-      e.preventDefault();
-      e.stopPropagation();
-      setValidated(true);
-    } else {
-      e.preventDefault();
-      axios
-        .put(
-          `${process.env.REACT_APP_BASEURL}/complaint_update`,
-          editcomplaintdata,
-          {
-            headers: {
-              admin_token: token,
-            },
-          }
-        )
-        .then((response) => {
-          setShow(false);
-          setapicall(true);
-          setUpdateAlert(true);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-      setValidated(false);
-    }
-  };
+  // const UpdateCategoryClick = (e) => {
+  //   const form = e.currentTarget;
+  //   if (form.checkValidity() === false) {
+  //     e.preventDefault();
+  //     e.stopPropagation();
+  //     setValidated(true);
+  //   } else {
+  //     e.preventDefault();
+  //     axios
+  //       .put(
+  //         `${process.env.REACT_APP_BASEURL}/complaint_update`,
+  //         editcomplaintdata,
+  //         {
+  //           headers: {
+  //             admin_token: token,
+  //           },
+  //         }
+  //       )
+  //       .then((response) => {
+  //         setShow(false);
+  //         setapicall(true);
+  //         setUpdateAlert(true);
+  //       })
+  //       .catch(function (error) {
+  //         console.log(error);
+  //       });
+  //     setValidated(false);
+  //   }
+  // };
 
   return (
+    // <p>heloooooo</p>
     <div className="App productlist_maindiv">
       <h2>Complaint/Support</h2>
 
@@ -365,7 +367,7 @@ const Complaint = () => {
             className=""
             validated={validated}
             ref={formRef}
-            onSubmit={(e) => UpdateCategoryClick(e)}
+            // onSubmit={(e) => UpdateCategoryClick(e)}
           >
             <Modal.Header closeButton>
               <Modal.Title>Update Complaint Info</Modal.Title>
