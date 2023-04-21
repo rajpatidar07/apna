@@ -41,7 +41,7 @@ let ImgObj = [];
 function Product() {
   const [CategoryEditdata, setCategoryEditData] = useState([]);
   const [show, setShow] = useState(false);
-
+  const [cover,setCover]=useState("cover")
   const [currentPage, setCurrentPage] = useState("choose-img");
   const [imgAfterCrop, setImgAfterCrop] = useState("");
   const [newImageUrls, setnewImageUrls] = useState([]);
@@ -786,12 +786,13 @@ function Product() {
   const imguploadchange = async (dataURL, product_id, id, vendor_id) => {
     setcustomValidated("");
     onImgView(product_id, id);
-    let i
-    let coverimg;
+    // let i
 
-    for (i = 0; i < imageName.length; i++) {
+    for (var i = 0; i < imageName.length; i++) {
+    var coverimg;
 
-      if ((newImageUrls.length == 0 || newImageUrls.length == 1) && i == 0) {
+console.log("ggggggggg"+coverimg)
+      if (newImageUrls.length === 0  && i === 0) {
         coverimg = "cover";
       } else {
         coverimg = `cover${i}`;
@@ -813,7 +814,7 @@ function Product() {
         product_verient_id: `${id}`,
         vendor_id: `${vendor_id}`,
         product_image_name: `${imageName}${i}${id}`,
-        image_position: `${coverimg}`,
+        image_position: coverimg,
         img_64: productimg,
       };
       ImgObj.push(imar);
@@ -839,7 +840,6 @@ function Product() {
 
 
   const [imageboxid, setimageboxid] = useState(0);
-
 
   const onImgView = (id, productid) => {
     setEditButton(false);
@@ -1606,6 +1606,8 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
             setValidated(false);
             setcustomValidated(false);
             setvarietyValidated(false);
+            setapicall(true);
+
            
           } else {
             setapicall(true);
@@ -2062,8 +2064,10 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
       center: true,
       selector: (row) => (
         <div className={"actioncolimn"}>
-          <div className="feature_product_dropdown_box">
-            <DropdownButton id="dropdown-basic-button" title="">
+                            
+          <div className="feature_product_dropdown_box adminselectbox ">
+            
+            <DropdownButton  id="dropdown-basic-button" title="">
               <Dropdown.Item value="">Select</Dropdown.Item>
               <Dropdown.Item
                 value="special_offer"
@@ -4951,7 +4955,8 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                                   className="imgprivew_box"
                                                   key={i}
                                                 >
-                                                  {imgg.image_position ==
+                                                  {console.log("imgg.image_position"+imgg.image_position)}
+                                                  {imgg.image_position ===
                                                     "cover" ? (
                                                     <span className="cover_img">
                                                       Cover
