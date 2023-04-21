@@ -18,6 +18,7 @@ const Coupon = () => {
   const [searcherror, setsearcherror] = useState(false);
   const [coupondata, setcoupondata] = useState([]);
 
+
   const [addcoupondata, setaddcoupondata] = useState({
     campaign_name: "",
     code: "",
@@ -29,6 +30,7 @@ const Coupon = () => {
     status: "",
     image: "",
   });
+
   const [file, setFile] = useState();
   const [fileName, setFileName] = useState("");
   const [Alert, setAlert] = useState(false);
@@ -113,8 +115,9 @@ const Coupon = () => {
             },
           })
           .then((response) => {
-            let data = response.data.filter((item) => item.is_active === 0);
+            let data = response.data.filter((item) => item.is_active === 1);
             setcoupondata(data);
+            
             setaddcoupondata(data);
             setsearchCoupon(data);
             setapicall(false);

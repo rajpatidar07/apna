@@ -44,12 +44,14 @@ const Featuredproduct = () => {
   const hideAlert = () => setAlert(false);
 
   const handleClose = (e) => {
+    setFeaturetData("")
+    setFeatureProductData("")
+    setVendorId("")
     // formRef.current.reset();
     e.preventDefault();
     setValidated(false);
     setShow(false);
     setapicall(true);
-    setFeaturetData("")
 
   };
 
@@ -366,6 +368,7 @@ useEffect(()=>{
   ];
   const handleShow = (vendor_id) => {
     console.log(vendor_id)
+    console.log("vendorid")
     getCategoryNameData();
 
     try {
@@ -615,14 +618,16 @@ useEffect(()=>{
                   >
                     <Form.Label>Start Date</Form.Label>
                     {console.log(featuredData.start_date)}
-                    <Form.Control
+                    {console.log(featuredData.end_date)}
+
+                    {/* <Form.Control
                         name="start_date"
                         value={featuredData.start_date}
                         onChange={(e) => handleFormChange(e)}
                         type="date"
                         placeholder="Coupon Start Date"
                         min={currentDate}
-                      />
+                      /> */}
                     {/* <Form.Control
                                                   type="date"
                                                   sm="9"
@@ -640,13 +645,13 @@ useEffect(()=>{
                                                     featuredData.start_date
                                                   }
                                                 /> */}
-                    {/* <Form.Control
+                    <Form.Control
                       name="start_date"
                       value={featuredData.start_date}
                       onChange={(e) => handleFormChange(e)}
                       type="date"
                       placeholder="Coupon Start Date"
-                    /> */}
+                    />
                   </Form.Group>
                 </div>
                 <div className="col-md-6">
@@ -655,14 +660,14 @@ useEffect(()=>{
                     controlId="formBasicStartDate"
                   >
                     <Form.Label>End Date</Form.Label>
-                    <Form.Control
+                    {/* <Form.Control
                         name="end_date"
                         value={featuredData.end_date}
                         onChange={(e) => handleFormChange(e)}
                         type="date"
                         placeholder="Coupon Start Date"
                         min={featuredData.start_date}
-                      />
+                      /> */}
                     {/* <Form.Control
                                                   type="date"
                                                   sm="9"
@@ -685,14 +690,14 @@ useEffect(()=>{
                                                     featuredData.end_date
                                                   }
                                                 /> */}
-                    {/* <Form.Control
+                    <Form.Control
                     required
                       name="end_date"
                       value={featuredData.end_date}
                       onChange={(e) => handleFormChange(e)}
                       type="date"
                       placeholder="Coupon Start Date"
-                    /> */}
+                    />
                   </Form.Group>
                 </div>
               </div>

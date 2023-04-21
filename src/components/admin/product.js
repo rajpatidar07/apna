@@ -905,7 +905,11 @@ function Product() {
       ...variantarray,
       [e.target.name]: e.target.value,
     });
+
+
   };
+  console.log("")
+console.log(variantarray.unit)
 
   let discountt = (variantarray.mrp * variantarray.discount) / 100;
   let saleprice = variantarray.mrp - discountt;
@@ -1228,6 +1232,7 @@ function Product() {
     } else {
       if (
         variantarray.unit === "" ||
+        variantarray.unit === undefined ||
         variantarray.unit === null ||
         variantarray.unit === "Select" ||
         variantarray.product_price === "" ||

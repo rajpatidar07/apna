@@ -96,11 +96,14 @@ const Productdetail = () => {
               settaxdata(data);
               setVariantdetail(data.product_verient);
               onImgView(vid, pid);
+             
+             
               setvariantarray({
                 ...variantarray,
                 unit: response.data.product_verient.unit,
                 product_id: pid,
               });
+            
               // setloading(false);
             }
 
@@ -114,6 +117,8 @@ const Productdetail = () => {
 
     getProductDetails();
   }, [variantapicall]);
+console.log("variantarray")
+console.log(variantarray)
 
   useEffect(() => {
     // setloading(true)
@@ -412,6 +417,7 @@ const Productdetail = () => {
     if (id === "" || id === null || id === undefined) {
       if (
         variantarray.unit === "" ||
+        variantarray.unit===undefined||
         variantarray.unit === null ||
         variantarray.unit === "Select" ||
         variantarray.product_price === "" ||
@@ -503,6 +509,7 @@ const Productdetail = () => {
       if (id) {
         if (
           variantarray.unit === "" ||
+          variantarray.unit===undefined||
           variantarray.unit === null ||
           variantarray.unit === "Select" ||
           variantarray.product_price === "" ||
@@ -536,7 +543,8 @@ const Productdetail = () => {
           variantarray.unit !== "pcs" &&
           (variantarray.unit_quantity === "" ||
             variantarray.unit_quantity === "null" ||
-            variantarray.unit_quantity === null)
+            variantarray.unit_quantity === null||
+            variantarray.unit_quantity===undefined)
         ) {
           setunitValidated(true);
           setVarietyUnitvalidation("unitQwanity&size&color");
@@ -628,10 +636,11 @@ const Productdetail = () => {
       })
       .then((response) => {
         let data=response.data
-        if (data !== undefined || data !== "" || data !== null){
-        setvariantapicall(true);
-          navigate("/product");
-        }
+        setvariantapicall(true)
+        // if (data !== undefined || data !== "" || data !== null){
+        // setvariantapicall(true);
+        //   navigate("/product");
+        // }
         // setloading(false)
       })
       .catch(function (error) {
@@ -697,7 +706,7 @@ const Productdetail = () => {
                     >
                       {newImageUrls
                         ? (newImageUrls || []).map((data, i) => {
-                          return data.product_verient_id === vid &&
+                          return data.product_verient_id == vid &&
                             data.product_id === pid ? (
                             <div className="w-100 h-50" key={i}>
                               <img
@@ -1356,6 +1365,8 @@ const Productdetail = () => {
                                 <Col sm="12">
                                   <InputGroup className="">
                                     <Form.Control
+                                      required
+
                                       type="date"
                                       sm="9"
                                       min={moment(
