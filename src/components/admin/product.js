@@ -774,8 +774,8 @@ function Product() {
 
       const dataURL = canvasEle.toDataURL("image/jpeg");
       imguploadchange(dataURL, product_id, id, vendor_id)
-      console.log("VARIENT IDDD+"+id)
-      // onImgView(product_id, id)
+      // console.log("VARIENT IDDD+"+id)
+      onImgView(id,product_id)
       setCurrentPage("img-cropped");
     };
   };
@@ -787,7 +787,7 @@ function Product() {
 
   const imguploadchange = async (dataURL, product_id, id, vendor_id) => {
     setcustomValidated("");
-    onImgView(product_id, id);
+    onImgView(id,product_id);
     // let i
 
     for (var i = 0; i < imageName.length; i++) {
@@ -828,7 +828,7 @@ function Product() {
         .then((response) => {
 
           ImgObj = [];
-          onImgView(product_id,id);
+          onImgView(id,product_id);
           setcustomValidated("");
 
         })
@@ -4911,7 +4911,8 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                             onImgView(
                                               variantdata.id,
                                               variantdata.product_id,
-                                           console.log("idsssss"+ variantdata.id+variantdata.product_id)
+                                              console.log("variantdata.iddddddddddd"+variantdata.id)
+
 
                                             )
                                           }
@@ -5024,6 +5025,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                                       variantdata.id,
                                                       variantdata.vendor_id,
                                                       console.log("variantdata.id"+variantdata.id)
+
 
                                                     )
                                                     }
