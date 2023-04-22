@@ -792,7 +792,7 @@ function Product() {
   const imguploadchange = async (dataURL, product_id, id, vendor_id) => {
     setcustomValidated("");
     onImgView(id,product_id);
-    setimageboxid(imageboxid);
+    setimageboxid(id);
     console.log("IMAGEBOXXXIDDD"+imageboxid)
 
     // let i
@@ -856,8 +856,13 @@ function Product() {
   const [imageboxid, setimageboxid] = useState(0);
 
   const onImgView = (id, productid) => {
+    console.log("iddd------------------------"+id)
     setEditButton(false);
     setimageboxid(id);
+    console.log("setimageboxid------------------------"+id)
+    console.log("imageboxid------------------------"+imageboxid)
+
+
  
 
     axios
@@ -4955,19 +4960,19 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                     </tr>
                                     {/* <Accordion.Body eventKey={i}> */}
                                     {newImageUrls ? (
-                                        console.log("viewwwww"+variantdata.id),
-                                        console.log("imageboxid"+imageboxid),
+                                        console.log("viewwwww-----==========-------"+variantdata.id),
+                                        console.log("imageboxid-----++++++----------------------------------------------"+imageboxid),
 
                                       <tr
                                     
                                         className={
-                                          variantdata.id === imageboxid
+                                          variantdata.id == imageboxid
                                         
                                             ? "img_preview_boxx show"
                                             : "img_preview_boxx hide"
                                         }
                                         
-                                        id={"variantimgbox" + variantdata.id}
+                                        id={"variantimgbox" + imageboxid}
                                       >
                                         <td colSpan="13">
                                           <div className="image_box">
