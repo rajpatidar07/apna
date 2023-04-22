@@ -750,8 +750,7 @@ function Product() {
 
 // };
   const onCropDone = (imgCroppedArea, product_id, id, vendor_id) => {
- 
-
+      
     const canvasEle = document.createElement("canvas");
     canvasEle.width = imgCroppedArea.width;
 
@@ -773,11 +772,16 @@ function Product() {
       );
 
       const dataURL = canvasEle.toDataURL("image/jpeg");
-      imguploadchange(dataURL, product_id, id, vendor_id)
+   
+    imguploadchange(dataURL, product_id, id, vendor_id)
+    onImgView(id,product_id)
+
       // console.log("VARIENT IDDD+"+id)
-      onImgView(id,product_id)
-      setCurrentPage("img-cropped");
+    setimageboxid(imageboxid);
+    setCurrentPage("img-cropped");
     };
+    setapicall(true)
+    
   };
 
   const onCropCancel = () => {
@@ -788,6 +792,9 @@ function Product() {
   const imguploadchange = async (dataURL, product_id, id, vendor_id) => {
     setcustomValidated("");
     onImgView(id,product_id);
+    setimageboxid(imageboxid);
+    console.log("IMAGEBOXXXIDDD"+imageboxid)
+
     // let i
 
     for (var i = 0; i < imageName.length; i++) {
@@ -813,14 +820,13 @@ function Product() {
       const productimg = rest.join("-");
       let imar = {
         product_id: `${product_id}`,
-        product_verient_id: `${id}`,
+        product_verient_id: `${imageboxid}`,
         vendor_id: `${vendor_id}`,
-        product_image_name: `${imageName}${i}${id}`,
+        product_image_name: `${imageName}${i}${imageboxid}`,
         image_position: coverimg,
         img_64: productimg,
       };
-      console.log("ID"+id)
-      console.log("product_image_name"+id)
+    
 
       ImgObj.push(imar);
       axios
@@ -828,8 +834,11 @@ function Product() {
         .then((response) => {
 
           ImgObj = [];
-          onImgView(id,product_id);
           setcustomValidated("");
+          setimageboxid("");
+
+          setapicall(true)
+          onImgView(id,product_id);
 
         })
         .catch(function (error) {
@@ -837,7 +846,7 @@ function Product() {
         });
     } else {
       setcustomValidated("imgformat");
-
+     
     }
     setProductAlert(true);
 
@@ -4923,7 +4932,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                           }
                                           aria-expanded={open}
                                         />
-
+                                         
                                         <BiEdit
                                           className="variety_edit_action_btn text-primary mx-2"
                                           onClick={(id) =>
@@ -4946,13 +4955,18 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                     </tr>
                                     {/* <Accordion.Body eventKey={i}> */}
                                     {newImageUrls ? (
+                                        console.log("viewwwww"+variantdata.id),
+                                        console.log("imageboxid"+imageboxid),
+
                                       <tr
                                     
                                         className={
-                                          variantdata.id == imageboxid
+                                          variantdata.id === imageboxid
+                                        
                                             ? "img_preview_boxx show"
                                             : "img_preview_boxx hide"
                                         }
+                                        
                                         id={"variantimgbox" + variantdata.id}
                                       >
                                         <td colSpan="13">
@@ -5024,7 +5038,8 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                                       variantdata.product_id,
                                                       variantdata.id,
                                                       variantdata.vendor_id,
-                                                      console.log("variantdata.id"+variantdata.id)
+                                                      console.log("variantdata.id ----onmageupdaload"+variantdata.id)
+
 
 
                                                     )
