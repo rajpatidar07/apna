@@ -2,7 +2,6 @@ import React from "react";
 import AdminLayout from "./components/admin/layout";
 import ReactDOM from "react-dom";
 import Error from "./components/admin/error_404/error";
-import Loader from "./components/admin/common/loader";
 
 const Portal = () => {
   const modalRoot = document.getElementById("error");

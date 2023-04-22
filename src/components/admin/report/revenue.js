@@ -720,7 +720,7 @@ const RevenueReport = () => {
       .then((response) => {
      
 
-        if (response.data.message == "no_data") {
+        if (response.data.message === "no_data") {
           setRevenueError(response.data.message);
 
           setGetRevenue([0]);
@@ -900,7 +900,7 @@ const RevenueReport = () => {
     ((getgrossAmmount - getPreviousGrossAmmount) / getPreviousGrossAmmount) *
     100
   ).toFixed(2);
-  resultAmmount != "Infinity" ? console.log() : (resultAmmount = 0);
+  resultAmmount !== "Infinity" ? console.log() : (resultAmmount = 0);
   //-----------------------return total comparission--------------------------------------------------------
   var Getreturntotal = Number(getRevenue.return_total);
   var getPreviousreturnTotal = Number(getRevenue.prev_return_total);
@@ -908,7 +908,7 @@ const RevenueReport = () => {
     ((Getreturntotal - getPreviousreturnTotal) / getPreviousreturnTotal) *
     100
   ).toFixed(2);
-  resultReturn != "Infinity" ? console.log() : (resultReturn = 0);
+  resultReturn !== "Infinity" ? console.log() : (resultReturn = 0);
   //--------------------total gst------------------------------------------
 
   var GetTotalGST = Number(getRevenue.total_gst);
@@ -917,7 +917,7 @@ const RevenueReport = () => {
     ((GetTotalGST - getPreviousTotalGST) / getPreviousTotalGST) *
     100
   ).toFixed(2);
-  resultGST != "Infinity" ? console.log() : (resultGST = 0);
+  resultGST !== "Infinity" ? console.log() : (resultGST = 0);
   //--------------------total shipping------------------------------------------
 
   var GetTotalSHipping = Number(getRevenue.total_shipping_charges);
@@ -926,7 +926,7 @@ const RevenueReport = () => {
     ((GetTotalSHipping - getPreviousTotalShipping) / getPreviousTotalShipping) *
     100
   ).toFixed(2);
-  resultShipping != "Infinity" ? console.log() : (resultShipping = 0);
+  resultShipping !== "Infinity" ? console.log() : (resultShipping = 0);
   return (
     <div>
       <h2>Revenue Report</h2>
@@ -1091,10 +1091,10 @@ const RevenueReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                      {RevenueError == "no_data" ||
-                        getRevenue.gross_total_amount == null ||
-                        getRevenue.gross_total_amount == undefined ||
-                        getRevenue.gross_total_amount == "" ? (
+                      {RevenueError === "no_data" ||
+                        getRevenue.gross_total_amount === null ||
+                        getRevenue.gross_total_amount === undefined ||
+                        getRevenue.gross_total_amount === "" ? (
                         <h3>₹0</h3>
                       ) : (
                         <h3>
@@ -1114,12 +1114,12 @@ const RevenueReport = () => {
                             {" "}
                             {resultAmmount}%
                           </p>
-                        ) : resultAmmount == 0 ? (
+                        ) : resultAmmount === 0 ? (
                           <p className="mb-0 h5" style={{ color: "blue" }}>
                             {" "}
                             {resultAmmount}%
                           </p>
-                        ) : resultAmmount == "NaN" ? (
+                        ) : resultAmmount === "NaN" ? (
                           <p className="mb-0 h5" style={{ color: "grey" }}>
                             {" "}
                             0%
@@ -1133,28 +1133,28 @@ const RevenueReport = () => {
                       </div>
                     </div>
                     <div>
-                      {previousStateChange == 1 ? (
+                      {previousStateChange === 1 ? (
                         <h5>Today :</h5>
-                      ) : previousStateChange == 2 ? (
+                      ) : previousStateChange === 2 ? (
                         <h5>Previous Yesterday :</h5>
-                      ) : previousStateChange == 3 ? (
+                      ) : previousStateChange === 3 ? (
                         <h5>Previous Last week :</h5>
-                      ) : previousStateChange == 4 ? (
+                      ) : previousStateChange === 4 ? (
                         <h5>Previous Last Month :</h5>
-                      ) : previousStateChange == 5 ? (
+                      ) : previousStateChange === 5 ? (
                         <h5>Previous Last 6 Months:</h5>
-                      ) : previousStateChange == 8 ? (
+                      ) : previousStateChange === 8 ? (
                         <h5>Previous week :</h5>
-                      ) : previousStateChange == 9 ? (
+                      ) : previousStateChange === 9 ? (
                         <h5>Previous Month :</h5>
                       ) : (
                         <h5>Today :</h5>
                       )}
 
-                      {RevenueError == "no_data" ||
-                        getRevenue.prev_gross_total_amount == null ||
-                        getRevenue.prev_gross_total_amount == undefined ||
-                        getRevenue.prev_gross_total_amount == "" ? (
+                      {RevenueError === "no_data" ||
+                        getRevenue.prev_gross_total_amount === null ||
+                        getRevenue.prev_gross_total_amount === undefined ||
+                        getRevenue.prev_gross_total_amount === "" ? (
                         <p className="h5"> ₹0</p>
                       ) : (
                         <p className="h5">
@@ -1207,10 +1207,10 @@ const RevenueReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                      {RevenueError == "no_data" ||
-                        getRevenue.return_total == null ||
-                        getRevenue.return_total == undefined ||
-                        getRevenue.return_total == "" ? (
+                      {RevenueError === "no_data" ||
+                        getRevenue.return_total === null ||
+                        getRevenue.return_total === undefined ||
+                        getRevenue.return_total === "" ? (
                         <h3>₹0</h3>
                       ) : (
                         <h3>₹{Number(getRevenue.return_total).toFixed(2)}</h3>
@@ -1228,12 +1228,12 @@ const RevenueReport = () => {
                             {" "}
                             {resultReturn}%
                           </p>
-                        ) : resultReturn == 0 ? (
+                        ) : resultReturn === 0 ? (
                           <p className="mb-0 h5" style={{ color: "blue" }}>
                             {" "}
                             {resultReturn}%
                           </p>
-                        ) : resultReturn == "NaN" ? (
+                        ) : resultReturn === "NaN" ? (
                           <p className="mb-0 h5" style={{ color: "grey" }}>
                             {" "}
                             0%
@@ -1247,27 +1247,27 @@ const RevenueReport = () => {
                       </div>
                     </div>
                     <div>
-                      {previousStateChange == 1 ? (
+                      {previousStateChange === 1 ? (
                         <h5>Today :</h5>
-                      ) : previousStateChange == 2 ? (
+                      ) : previousStateChange === 2 ? (
                         <h5>Previous Yesterday :</h5>
-                      ) : previousStateChange == 3 ? (
+                      ) : previousStateChange === 3 ? (
                         <h5>Previous Last week :</h5>
-                      ) : previousStateChange == 4 ? (
+                      ) : previousStateChange === 4 ? (
                         <h5>Previous Last Month :</h5>
-                      ) : previousStateChange == 5 ? (
+                      ) : previousStateChange === 5 ? (
                         <h5>Previous Last 6 Months:</h5>
-                      ) : previousStateChange == 8 ? (
+                      ) : previousStateChange === 8 ? (
                         <h5>Previous week :</h5>
-                      ) : previousStateChange == 9 ? (
+                      ) : previousStateChange === 9 ? (
                         <h5>Previous Month :</h5>
                       ) : (
                         <h5>Today :</h5>
                       )}
-                      {RevenueError == "no_data" ||
-                        getRevenue.prev_return_total == null ||
-                        getRevenue.prev_return_total == undefined ||
-                        getRevenue.prev_return_total == "" ? (
+                      {RevenueError === "no_data" ||
+                        getRevenue.prev_return_total === null ||
+                        getRevenue.prev_return_total === undefined ||
+                        getRevenue.prev_return_total === "" ? (
                         <p className="h5"> ₹0</p>
                       ) : (
                         <p className="h5">
@@ -1290,10 +1290,10 @@ const RevenueReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                      {RevenueError == "no_data" ||
-                        getRevenue.total_gst == null ||
-                        getRevenue.total_gst == undefined ||
-                        getRevenue.total_gst == "" ? (
+                      {RevenueError === "no_data" ||
+                        getRevenue.total_gst === null ||
+                        getRevenue.total_gst === undefined ||
+                        getRevenue.total_gst === "" ? (
                         <h3>₹0</h3>
                       ) : (
                         <h3>₹{Number(getRevenue.total_gst).toFixed(2)}</h3>
@@ -1311,12 +1311,12 @@ const RevenueReport = () => {
                             {" "}
                             {resultGST}%
                           </p>
-                        ) : resultGST == 0 ? (
+                        ) : resultGST === 0 ? (
                           <p className="mb-0 h5" style={{ color: "blue" }}>
                             {" "}
                             {resultGST}%
                           </p>
-                        ) : resultGST == "NaN" ? (
+                        ) : resultGST === "NaN" ? (
                           <p className="mb-0 h5" style={{ color: "grey" }}>
                             {" "}
                             0%
@@ -1330,27 +1330,27 @@ const RevenueReport = () => {
                       </div>
                     </div>
                     <div>
-                      {previousStateChange == 1 ? (
+                      {previousStateChange === 1 ? (
                         <h5>Today :</h5>
-                      ) : previousStateChange == 2 ? (
+                      ) : previousStateChange === 2 ? (
                         <h5>Previous Yesterday :</h5>
-                      ) : previousStateChange == 3 ? (
+                      ) : previousStateChange === 3 ? (
                         <h5>Previous Last week :</h5>
-                      ) : previousStateChange == 4 ? (
+                      ) : previousStateChange === 4 ? (
                         <h5>Previous Last Month :</h5>
-                      ) : previousStateChange == 5 ? (
+                      ) : previousStateChange === 5 ? (
                         <h5>Previous Last 6 Months:</h5>
-                      ) : previousStateChange == 8 ? (
+                      ) : previousStateChange === 8 ? (
                         <h5>Previous week :</h5>
-                      ) : previousStateChange == 9 ? (
+                      ) : previousStateChange === 9 ? (
                         <h5>Previous Month :</h5>
                       ) : (
                         <h5>Today :</h5>
                       )}
-                      {RevenueError == "no_data" ||
-                        getRevenue.prev_total_gst == null ||
-                        getRevenue.prev_total_gst == undefined ||
-                        getRevenue.prev_total_gst == "" ? (
+                      {RevenueError === "no_data" ||
+                        getRevenue.prev_total_gst === null ||
+                        getRevenue.prev_total_gst === undefined ||
+                        getRevenue.prev_total_gst === "" ? (
                         <p className="h5"> ₹0</p>
                       ) : (
                         <p className="h5">
@@ -1373,10 +1373,10 @@ const RevenueReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                      {RevenueError == "no_data" ||
-                        getRevenue.total_shipping_charges == null ||
-                        getRevenue.total_shipping_charges == undefined ||
-                        getRevenue.total_shipping_charges == "" ? (
+                      {RevenueError === "no_data" ||
+                        getRevenue.total_shipping_charges === null ||
+                        getRevenue.total_shipping_charges === undefined ||
+                        getRevenue.total_shipping_charges === "" ? (
                         <h3>₹0</h3>
                       ) : (
                         <h3>
@@ -1396,12 +1396,12 @@ const RevenueReport = () => {
                             {" "}
                             {resultShipping}%
                           </p>
-                        ) : resultShipping == 0 ? (
+                        ) : resultShipping === 0 ? (
                           <p className="mb-0 h5" style={{ color: "blue" }}>
                             {" "}
                             {resultShipping}%
                           </p>
-                        ) : resultShipping == "NaN" ? (
+                        ) : resultShipping === "NaN" ? (
                           <p className="mb-0 h5" style={{ color: "grey" }}>
                             {" "}
                             0%
@@ -1415,27 +1415,27 @@ const RevenueReport = () => {
                       </div>
                     </div>
                     <div>
-                      {previousStateChange == 1 ? (
+                      {previousStateChange === 1 ? (
                         <h5>Today :</h5>
-                      ) : previousStateChange == 2 ? (
+                      ) : previousStateChange === 2 ? (
                         <h5>Previous Yesterday :</h5>
-                      ) : previousStateChange == 3 ? (
+                      ) : previousStateChange === 3 ? (
                         <h5>Previous Last week :</h5>
-                      ) : previousStateChange == 4 ? (
+                      ) : previousStateChange === 4 ? (
                         <h5>Previous Last Month :</h5>
-                      ) : previousStateChange == 5 ? (
+                      ) : previousStateChange === 5 ? (
                         <h5>Previous Last 6 Months:</h5>
-                      ) : previousStateChange == 8 ? (
+                      ) : previousStateChange === 8 ? (
                         <h5>Previous week :</h5>
-                      ) : previousStateChange == 9 ? (
+                      ) : previousStateChange === 9 ? (
                         <h5>Previous Month :</h5>
                       ) : (
                         <h5>Today :</h5>
                       )}
-                      {RevenueError == "no_data" ||
-                        getRevenue.prev_total_shipping_charges == null ||
-                        getRevenue.prev_total_shipping_charges == undefined ||
-                        getRevenue.prev_total_shipping_charges == "" ? (
+                      {RevenueError === "no_data" ||
+                        getRevenue.prev_total_shipping_charges === null ||
+                        getRevenue.prev_total_shipping_charges === undefined ||
+                        getRevenue.prev_total_shipping_charges === "" ? (
                         <p className="h5"> ₹0</p>
                       ) : (
                         <p className="h5">

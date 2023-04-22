@@ -7,7 +7,6 @@ import Iconbutton from "../common/iconbutton";
 import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
 import axios from "axios";
-import moment from "moment";
 import BrandJson from "./../json/BrandJson";
 import Loader from "../common/loader";
 
@@ -20,7 +19,6 @@ const Deletedproduct = () => {
   const [vendorid, setVendorId] = useState([]);
   const [loading, setloading] = useState(false);
   const [apicall, setapicall] = useState(false);
-  const [pdata, setpdata] = useState([]);
 
   const [deletedata, setdeletedata] = useState([]);
   const [searchdata, setsearchData] = useState({

@@ -191,7 +191,7 @@ const ProductReport = () => {
       );
       setpreviousStateChange(8);
     }
-    if (value === 9) {
+    if (value ===9) {
       let ThisMonth = moment()
         .startOf("month")
         .format("YYYY-MM-DD");
@@ -234,7 +234,7 @@ const ProductReport = () => {
         }
       )
       .then((response) => {
-        if (response.data.message == "No_Data") {
+        if (response.data.message === "No_Data") {
           setProductError(response.data.message);
           setGetProduct([0]);
           setGetTableProduct([0]);
@@ -490,7 +490,8 @@ const ProductReport = () => {
   const brandHandler = (e) => {
     arrr = [];
     e.map((item) => {
-      arrr.push(item.value);
+      return( arrr.push(item.value))
+     
     });
     setBrandName(arrr);
   };
@@ -507,7 +508,10 @@ const ProductReport = () => {
   const VendorHandler = (e) => {
     vendorArray = [];
     e.map((item) => {
-      vendorArray.push(item.value);
+      return(
+        vendorArray.push(item.value)
+
+      )
     });
     setVendorId(vendorArray);
   };
@@ -524,7 +528,10 @@ const ProductReport = () => {
   const categoryHandler = (e) => {
     CategoryArray = [];
     e.map((item) => {
-      CategoryArray.push(item.value);
+      return(
+        CategoryArray.push(item.value)
+
+      )
     });
     setCategoryId(CategoryArray);
   };
@@ -540,7 +547,10 @@ const ProductReport = () => {
   const SearchHandler = (e) => {
     SearchArray = [];
     e.map((item) => {
-      SearchArray.push(item.value);
+      return(
+        SearchArray.push(item.value)
+
+      )
     });
     setLocation(SearchArray);
   };
@@ -555,7 +565,7 @@ const ProductReport = () => {
     100
   ).toFixed(2);
 
-  resultCount != "Infinity" ? console.log() : (resultCount = 0);
+  resultCount !== "Infinity" ? console.log() : (resultCount = 0);
 
   // // //-----------------------Net sales--------------------------------------------------------
   var getNetSold = Number(getProduct.net_sales);
@@ -567,7 +577,7 @@ const ProductReport = () => {
     100
   ).toFixed(2);
 
-  resultNetSold != "Infinity" ? console.log() : (resultNetSold = 0);
+  resultNetSold !== "Infinity" ? console.log() : (resultNetSold = 0);
 
   // // //-----------------------order count---------------------------------------
   var getorderCount = Number(getProduct.order_count);
@@ -579,7 +589,7 @@ const ProductReport = () => {
     100
   ).toFixed(2);
 
-  resultOrderCount != "Infinity" ? console.log() : (resultOrderCount = 0);
+  resultOrderCount !== "Infinity" ? console.log() : (resultOrderCount = 0);
 
   return (
     <div>
@@ -736,10 +746,10 @@ const ProductReport = () => {
                     <div className="d-flex align-items-baseline justify-content-between">
                       <h3>
                        
-                        {ProductError == "No_Data" ||
+                        {ProductError === "No_Data" ||
                           getProduct.product_count == null ||
-                          getProduct.product_count == undefined ||
-                          getProduct.product_count == "" ? (
+                          getProduct.product_count === undefined ||
+                          getProduct.product_count === "" ? (
                           <h3> 0</h3>
                         ) : (
                           <h3>{getProduct.product_count}</h3>
@@ -758,12 +768,12 @@ const ProductReport = () => {
                             {" "}
                             {resultCount}%
                           </p>
-                        ) : resultCount == 0 ? (
+                        ) : resultCount === 0 ? (
                           <p className="mb-0 h5" style={{ color: "blue" }}>
                             {" "}
                             {resultCount}%
                           </p>
-                        ) : resultCount == "NaN" ? (
+                        ) : resultCount === "NaN" ? (
                           <p className="mb-0 h5" style={{ color: "grey" }}>
                             {" "}
                             0%
@@ -777,28 +787,28 @@ const ProductReport = () => {
                       </div>
                     </div>
                     <div>
-                      {previousStateChange == 1 ? (
+                      {previousStateChange === 1 ? (
                         <h5>Today :</h5>
-                      ) : previousStateChange == 2 ? (
+                      ) : previousStateChange === 2 ? (
                         <h5>Previous Yesterday :</h5>
-                      ) : previousStateChange == 3 ? (
+                      ) : previousStateChange === 3 ? (
                         <h5>Previous Last week :</h5>
-                      ) : previousStateChange == 4 ? (
+                      ) : previousStateChange === 4 ? (
                         <h5>Previous Last Month :</h5>
-                      ) : previousStateChange == 5 ? (
+                      ) : previousStateChange === 5 ? (
                         <h5>Previous Last 6 Months:</h5>
-                      ) : previousStateChange == 8 ? (
+                      ) : previousStateChange === 8 ? (
                         <h5>Previous week :</h5>
-                      ) : previousStateChange == 9 ? (
+                      ) : previousStateChange === 9 ? (
                         <h5>Previous Month :</h5>
                       ) : (
                         <h5>Today :</h5>
                       )}
 
-                      {ProductError == "no_data" ||
+                      {ProductError === "no_data" ||
                         PrevProductreport.prev_product_count == null ||
-                        PrevProductreport.prev_product_count == undefined ||
-                        PrevProductreport.prev_product_count == "" ? (
+                        PrevProductreport.prev_product_count === undefined ||
+                        PrevProductreport.prev_product_count === "" ? (
                         <p className="h5"> 0</p>
                       ) : (
                         <p className="h5">
@@ -821,10 +831,10 @@ const ProductReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                      {ProductError == "No_Data" ||
+                      {ProductError === "No_Data" ||
                         getProduct.net_sales == null ||
-                        getProduct.net_sales == undefined ||
-                        getProduct.net_sales == "" ? (
+                        getProduct.net_sales === undefined ||
+                        getProduct.net_sales === "" ? (
                         <h3>₹0</h3>
                       ) : (
                         <h3>₹{getProduct.net_sales.toFixed(2)}</h3>
@@ -843,12 +853,12 @@ const ProductReport = () => {
                             {" "}
                             {resultNetSold}%
                           </p>
-                        ) : resultNetSold == 0 ? (
+                        ) : resultNetSold === 0 ? (
                           <p className="mb-0 h5" style={{ color: "blue" }}>
                             {" "}
                             {resultNetSold}%
                           </p>
-                        ) : resultNetSold == "NaN" ? (
+                        ) : resultNetSold === "NaN" ? (
                           <p className="mb-0 h5" style={{ color: "grey" }}>
                             {" "}
                             0%
@@ -862,28 +872,28 @@ const ProductReport = () => {
                       </div>
                     </div>
                     <div>
-                      {previousStateChange == 1 ? (
+                      {previousStateChange === 1 ? (
                         <h5>Today :</h5>
-                      ) : previousStateChange == 2 ? (
+                      ) : previousStateChange === 2 ? (
                         <h5>Previous Yesterday :</h5>
-                      ) : previousStateChange == 3 ? (
+                      ) : previousStateChange === 3 ? (
                         <h5>Previous Last week :</h5>
-                      ) : previousStateChange == 4 ? (
+                      ) : previousStateChange === 4 ? (
                         <h5>Previous Last Month :</h5>
-                      ) : previousStateChange == 5 ? (
+                      ) : previousStateChange === 5 ? (
                         <h5>Previous Last 6 Months:</h5>
-                      ) : previousStateChange == 8 ? (
+                      ) : previousStateChange ===8 ? (
                         <h5>Previous week :</h5>
-                      ) : previousStateChange == 9 ? (
+                      ) : previousStateChange === 9 ? (
                         <h5>Previous Month :</h5>
                       ) : (
                         <h5>Today :</h5>
                       )}
 
-                      {ProductError == "no_data" ||
-                        PrevProductreport.prev_net_sales == null ||
-                        PrevProductreport.prev_net_sales == undefined ||
-                        PrevProductreport.prev_net_sales == "" ? (
+                      {ProductError === "no_data" ||
+                        PrevProductreport.prev_net_sales === null ||
+                        PrevProductreport.prev_net_sales === undefined ||
+                        PrevProductreport.prev_net_sales === "" ? (
                         <p className="h5"> ₹0</p>
                       ) : (
                         <p className="h5">
@@ -906,10 +916,10 @@ const ProductReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                      {ProductError == "No_Data" ||
+                      {ProductError === "No_Data" ||
                         getProduct.order_count == null ||
-                        getProduct.order_count == undefined ||
-                        getProduct.order_count == "" ? (
+                        getProduct.order_count === undefined ||
+                        getProduct.order_count === "" ? (
                         <h3>0</h3>
                       ) : (
                         <h3>{getProduct.order_count}</h3>
@@ -927,12 +937,12 @@ const ProductReport = () => {
                             {" "}
                             {resultOrderCount}%
                           </p>
-                        ) : resultOrderCount == 0 ? (
+                        ) : resultOrderCount === 0 ? (
                           <p className="mb-0 h5" style={{ color: "blue" }}>
                             {" "}
                             {resultOrderCount}%
                           </p>
-                        ) : resultOrderCount == "NaN" ? (
+                        ) : resultOrderCount === "NaN" ? (
                           <p className="mb-0 h5" style={{ color: "grey" }}>
                             {" "}
                             0%
@@ -946,28 +956,28 @@ const ProductReport = () => {
                       </div>
                     </div>
                     <div>
-                      {previousStateChange == 1 ? (
+                      {previousStateChange === 1 ? (
                         <h5>Today :</h5>
-                      ) : previousStateChange == 2 ? (
+                      ) : previousStateChange === 2 ? (
                         <h5>Previous Yesterday :</h5>
-                      ) : previousStateChange == 3 ? (
+                      ) : previousStateChange === 3 ? (
                         <h5>Previous Last week :</h5>
-                      ) : previousStateChange == 4 ? (
+                      ) : previousStateChange === 4 ? (
                         <h5>Previous Last Month :</h5>
-                      ) : previousStateChange == 5 ? (
+                      ) : previousStateChange === 5 ? (
                         <h5>Previous Last 6 Months:</h5>
-                      ) : previousStateChange == 8 ? (
+                      ) : previousStateChange === 8 ? (
                         <h5>Previous week :</h5>
-                      ) : previousStateChange == 9 ? (
+                      ) : previousStateChange === 9 ? (
                         <h5>Previous Month :</h5>
                       ) : (
                         <h5>Today :</h5>
                       )}
 
-                      {ProductError == "no_data" ||
+                      {ProductError === "no_data" ||
                         PrevProductreport.prev_order_count == null ||
-                        PrevProductreport.prev_order_count == undefined ||
-                        PrevProductreport.prev_order_count == "" ? (
+                        PrevProductreport.prev_order_count === undefined ||
+                        PrevProductreport.prev_order_count === "" ? (
                         <p className="h5"> 0</p>
                       ) : (
                         <p className="h5">

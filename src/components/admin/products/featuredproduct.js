@@ -12,8 +12,8 @@ import Loader from "../common/loader";
 import { Badge } from "react-bootstrap";
 
 const Featuredproduct = () => {
-  let productid = localStorage.getItem("productid");
-  const currentdate = moment().format("");
+  // let productid = localStorage.getItem("productid");
+  // const currentdate = moment().format("");
   const formRef = useRef();
   const [featuredProductData, setFeatureProductData] = useState([]);
   const [UpdateAlert, setUpdateAlert] = useState(false);
@@ -22,12 +22,12 @@ const Featuredproduct = () => {
   const [featuredData, setFeaturetData] = useState([]);
   const [show, setShow] = useState("");
   const [validated, setValidated] = useState(false);
-  const [id, setId] = useState("");
+  // const [id, setId] = useState("");
   const [filtervategory, setfiltercategory] = useState([]);
   const [vendorid, setVendorId] = useState([]);
-  const [varietyUnitvalidation, setVarietyUnitvalidation] = useState("");
+  // const [varietyUnitvalidation, setVarietyUnitvalidation] = useState("");
 
-  const[categoryname,setCategoryName]=useState([])
+  // const[categoryname,setCategoryName]=useState([])
   const [searchdata, setsearchData] = useState({
     product_title_name: "",
     status: "",
@@ -36,11 +36,12 @@ const Featuredproduct = () => {
     brand: "",
   });
   const [searcherror, setsearcherror] = useState("");
+  console.log(searcherror)
   let [loading, setloading] = useState(false);
 
   let token = localStorage.getItem("token");
 
-  const handleAlert = () => setAlert(true);
+  // const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
 
   const handleClose = (e) => {
@@ -90,7 +91,7 @@ const Featuredproduct = () => {
 
           const result = cgory.filter(
             (thing, index, self) =>
-              index === self.findIndex((t) => t.shop_name == thing.shop_name)
+              index === self.findIndex((t) => t.shop_name === thing.shop_name)
           );
           const result1 = result.filter(
             (item) => item.status === "approved" || item.status === "active"
@@ -162,7 +163,7 @@ useEffect(()=>{
           v.forEach(function (item,index){
          
           let catname=cat_name_data[item.category];
-          if(catname!=undefined || catname!=null||catname!=""){
+          if(catname!==undefined || catname!==null||catname!==""){
             item.category=catname;
           }
           productArry.push(item)
@@ -432,7 +433,7 @@ useEffect(()=>{
         }
       )
       .then((response) => {
-        let data = response.data;
+        // let data = response.data;
         setValidated(true);
 
         setapicall(true);
@@ -448,10 +449,10 @@ useEffect(()=>{
     
   };
 
-  const OnDateChange = (e) => { };
-  const submitHandler = () => {
-    setapicall(true);
-  };
+  // const OnDateChange = (e) => { };
+  // const submitHandler = () => {
+  //   setapicall(true);
+  // };
   /*<---Onchange function of search --->*/
   const OnSearchChange = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
@@ -484,8 +485,8 @@ useEffect(()=>{
       setapicall(true);
     }
   };
-  let date = moment();
-  let currentDate = date.format("YYYY-MM-DD");
+  // let date = moment();
+  // let currentDate = date.format("YYYY-MM-DD");
   return (
     <>
       {loading === true ? <Loader /> : null}

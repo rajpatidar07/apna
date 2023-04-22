@@ -1,21 +1,21 @@
 import React, { useState, useMemo, useEffect } from "react";
-import Input from "../common/input";
-import { BsTrash } from "react-icons/bs";
-import { BiEdit } from "react-icons/bi";
+// import Input from "../common/input";
+// import { BsTrash } from "react-icons/bs";
+// import { BiEdit } from "react-icons/bi";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
-import SweetAlert from "sweetalert-react";
+// import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
 import FilterComponent from "../common/FilterComponent";
 import axios from "axios";
 import moment from "moment";
-import { Navigate, useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 
 const InvoiceList = () => {
   const navigate = useNavigate();
-  const handleAlert = () => setAlert(true);
-  const hideAlert = () => setAlert(false);
-  const [Alert, setAlert] = useState(false);
+  // const handleAlert = () => setAlert(true);
+  // const hideAlert = () => setAlert(false);
+  // const [Alert, setAlert] = useState(false);
   const [invoice, setInvoice] = useState([]);
   let [searcherror, setsearcherror] = useState(false);
   let [apicall, setapicall] = useState(false);
@@ -29,7 +29,7 @@ const InvoiceList = () => {
   const InvoiceCheck = (id) => {
     localStorage.setItem("invoiceid", id[1]);
     localStorage.setItem("invoice_no", id[0]);
-    if (id[0] == undefined || id[0] == "" || id[0] == null) {
+    if (id[0] === undefined || id[0] === "" || id[0] === null) {
     } else {
       navigate("/invoice_detail");
     }

@@ -3,8 +3,8 @@ import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
-import { BsBagPlus, BsBagDash } from "react-icons/bs";
-import { RiShip2Line } from "react-icons/ri";
+import { BsBagPlus} from "react-icons/bs";
+// import { RiShip2Line } from "react-icons/ri";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import { GiPayMoney } from "react-icons/gi";
 import Highcharts from "highcharts";
@@ -73,7 +73,7 @@ const TaxesReport = () => {
         }
       )
       .then((response) => {
-        if (response.data.message == "No_Data") {
+        if (response.data.message === "No_Data") {
           setTaxesError(response.data.message);
           setTaxesreport([0]);
           setTaxesTable([0]);
@@ -135,7 +135,7 @@ const TaxesReport = () => {
   const TimeChange = (e) => {
     setFilterchange(e.target.value);
     let value = Number(e.target.value);
-    if (value === 1) {
+    if (value == 1) {
       let frommDate = moment().format("YYYY-MM-DD");
       setFromDate(frommDate);
       setToDate(moment().format("YYYY-MM-DD"));
@@ -149,7 +149,7 @@ const TaxesReport = () => {
       setpreviousStateChange(1);
     }
     //yesterday------------------------------------------------------------------------
-    if (value === 2) {
+    if (value == 2) {
       let yesterday = moment()
         .subtract(1, "days")
         .startOf("days")
@@ -172,7 +172,7 @@ const TaxesReport = () => {
       setpreviousStateChange(2);
     }
     //last week---------------------------------------------------------------
-    if (value === 3) {
+    if (value == 3) {
       let lastweek = moment()
         .subtract(1, "weeks")
         .startOf("weeks")
@@ -199,7 +199,7 @@ const TaxesReport = () => {
       setpreviousStateChange(3);
     }
     //last month---------------------------------------------------------------
-    if (value === 4) {
+    if (value == 4) {
       let month = moment()
         .subtract(1, "month")
         .startOf("month")
@@ -224,7 +224,7 @@ const TaxesReport = () => {
       setpreviousStateChange(4);
     }
     //  last six month---------------------------------------------------------
-    if (value === 5) {
+    if (value == 5) {
       let sixMonth = moment()
         .subtract(6, "month")
         .startOf("month")
@@ -246,7 +246,7 @@ const TaxesReport = () => {
     }
 
     //this week-----------------------------------------------------------------------
-    if (value === 8) {
+    if (value == 8) {
       let ThisWeek = moment()
         .startOf("weeks")
         .format("YYYY-MM-DD");
@@ -265,7 +265,7 @@ const TaxesReport = () => {
       );
       setpreviousStateChange(8);
     }
-    if (value === 9) {
+    if (value == 9) {
       let ThisMonth = moment()
         .startOf("month")
         .format("YYYY-MM-DD");

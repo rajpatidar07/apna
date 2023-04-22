@@ -75,6 +75,8 @@ const VendorUpdate = () => {
   // for close the reqest apporove model
   const handleClose1 = () => {
     setShow(false);
+    setemailVal("")
+
   };
 
   const OnVendorDetail = () => {

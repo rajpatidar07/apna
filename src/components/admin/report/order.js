@@ -499,7 +499,10 @@ const OrderReport = () => {
   const brandHandler = (e) => {
     arrr = [];
     e.map((item) => {
-      arrr.push(item.value);
+      return(
+        arrr.push(item.value)
+
+      )
     });
     setBrandName(arrr);
   };
@@ -517,7 +520,10 @@ const OrderReport = () => {
   const VendorHandler = (e) => {
     vendorArray = [];
     e.map((item) => {
-      vendorArray.push(item.value);
+      return(
+        vendorArray.push(item.value)
+
+      )
     });
     setVendorId(vendorArray);
   };
@@ -536,7 +542,10 @@ const OrderReport = () => {
   const categoryHandler = (e) => {
     CategoryArray = [];
     e.map((item) => {
-      CategoryArray.push(item.value);
+      return(
+        CategoryArray.push(item.value)
+
+      )
     });
     setCategoryId(CategoryArray);
   };
@@ -552,7 +561,10 @@ const OrderReport = () => {
   const SearchHandler = (e) => {
     SearchArray = [];
     e.map((item) => {
-      SearchArray.push(item.value);
+      return(
+        SearchArray.push(item.value)
+
+      )
     });
     setLocation(SearchArray);
   };
@@ -758,9 +770,9 @@ const OrderReport = () => {
                     <div className="d-flex align-items-baseline justify-content-between">
                      
                       {OrderError === "No_Data" ||
-                        ordersreport.order_count == null ||
-                        ordersreport.order_count == undefined ||
-                        ordersreport.order_count == "" ? (
+                        ordersreport.order_count === null ||
+                        ordersreport.order_count === undefined ||
+                        ordersreport.order_count === "" ? (
                         <h3>0</h3>
                       ) : (
                         <h3>{ordersreport.order_count}</h3>
@@ -779,12 +791,12 @@ const OrderReport = () => {
                             {" "}
                             {resultCount}%
                           </p>
-                        ) : resultCount == 0 ? (
+                        ) : resultCount === 0 ? (
                           <p className="mb-0 h5" style={{ color: "blue" }}>
                             {" "}
                             {resultCount}%
                           </p>
-                        ) : resultCount == "NaN" ? (
+                        ) : resultCount === "NaN" ? (
                           <p className="mb-0 h5" style={{ color: "grey" }}>
                             {" "}
                             0%
@@ -798,28 +810,28 @@ const OrderReport = () => {
                       </div>
                     </div>
                     <div>
-                      {previousStateChange == 1 ? (
+                      {previousStateChange === 1 ? (
                         <h5>Today :</h5>
-                      ) : previousStateChange == 2 ? (
+                      ) : previousStateChange === 2 ? (
                         <h5>Previous Yesterday :</h5>
-                      ) : previousStateChange == 3 ? (
+                      ) : previousStateChange === 3 ? (
                         <h5>Previous Last week :</h5>
-                      ) : previousStateChange == 4 ? (
+                      ) : previousStateChange === 4 ? (
                         <h5>Previous Last Month :</h5>
-                      ) : previousStateChange == 5 ? (
+                      ) : previousStateChange === 5 ? (
                         <h5>Previous Last 6 Months:</h5>
-                      ) : previousStateChange == 8 ? (
+                      ) : previousStateChange === 8 ? (
                         <h5>Previous week :</h5>
-                      ) : previousStateChange == 9 ? (
+                      ) : previousStateChange === 9 ? (
                         <h5>Previous Month :</h5>
                       ) : (
                         <h5>Today :</h5>
                       )}
 
-                      {OrderError == "no_data" ||
-                        Prevordersreport.prev_order_count == null ||
-                        Prevordersreport.prev_order_count == undefined ||
-                        Prevordersreport.prev_order_count == "" ? (
+                      {OrderError === "no_data" ||
+                        Prevordersreport.prev_order_count === null ||
+                        Prevordersreport.prev_order_count === undefined ||
+                        Prevordersreport.prev_order_count === "" ? (
                         <p className="h5"> 0</p>
                       ) : (
                         <p className="h5">
@@ -842,10 +854,10 @@ const OrderReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                      {OrderError == "No_Data" ||
-                        ordersreport.avg_order_value == null ||
-                        ordersreport.avg_order_value == undefined ||
-                        ordersreport.avg_order_value == "" ? (
+                      {OrderError === "No_Data" ||
+                        ordersreport.avg_order_value === null ||
+                        ordersreport.avg_order_value === undefined ||
+                        ordersreport.avg_order_value === "" ? (
                         <h3>0</h3>
                       ) : (
                         <h3>₹{ordersreport.avg_order_value.toFixed(2)}</h3>
@@ -864,12 +876,12 @@ const OrderReport = () => {
                             {" "}
                             {resultAVG}%
                           </p>
-                        ) : resultAVG == 0 ? (
+                        ) : resultAVG === 0 ? (
                           <p className="mb-0 h5" style={{ color: "blue" }}>
                             {" "}
                             {resultAVG}%
                           </p>
-                        ) : resultAVG == "NaN" ? (
+                        ) : resultAVG === "NaN" ? (
                           <p className="mb-0 h5" style={{ color: "grey" }}>
                             {" "}
                             0%
@@ -883,28 +895,28 @@ const OrderReport = () => {
                       </div>
                     </div>
                     <div>
-                      {previousStateChange == 1 ? (
+                      {previousStateChange === 1 ? (
                         <h5>Today :</h5>
-                      ) : previousStateChange == 2 ? (
+                      ) : previousStateChange === 2 ? (
                         <h5>Previous Yesterday :</h5>
-                      ) : previousStateChange == 3 ? (
+                      ) : previousStateChange === 3 ? (
                         <h5>Previous Last week :</h5>
-                      ) : previousStateChange == 4 ? (
+                      ) : previousStateChange === 4 ? (
                         <h5>Previous Last Month :</h5>
-                      ) : previousStateChange == 5 ? (
+                      ) : previousStateChange === 5 ? (
                         <h5>Previous Last 6 Months:</h5>
-                      ) : previousStateChange == 8 ? (
+                      ) : previousStateChange === 8 ? (
                         <h5>Previous week :</h5>
-                      ) : previousStateChange == 9 ? (
+                      ) : previousStateChange === 9 ? (
                         <h5>Previous Month :</h5>
                       ) : (
                         <h5>Today :</h5>
                       )}
 
-                      {OrderError == "no_data" ||
-                        Prevordersreport.prev_avg_order_value == null ||
-                        Prevordersreport.prev_avg_order_value == undefined ||
-                        Prevordersreport.prev_avg_order_value == "" ? (
+                      {OrderError === "no_data" ||
+                        Prevordersreport.prev_avg_order_value === null ||
+                        Prevordersreport.prev_avg_order_value === undefined ||
+                        Prevordersreport.prev_avg_order_value === "" ? (
                         <p className="h5"> ₹0</p>
                       ) : (
                         <p className="h5">
@@ -927,10 +939,10 @@ const OrderReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                      {OrderError == "No_Data" ||
-                        ordersreport.avg_item_per_order == null ||
-                        ordersreport.avg_item_per_order == undefined ||
-                        ordersreport.avg_item_per_order == "" ? (
+                      {OrderError === "No_Data" ||
+                        ordersreport.avg_item_per_order === null ||
+                        ordersreport.avg_item_per_order === undefined ||
+                        ordersreport.avg_item_per_order === "" ? (
                         <h3>0</h3>
                       ) : (
                         <h3>{ordersreport.avg_item_per_order.toFixed(2)}</h3>
@@ -949,12 +961,12 @@ const OrderReport = () => {
                             {" "}
                             {resultAVGITEM}%
                           </p>
-                        ) : resultAVG == 0 ? (
+                        ) : resultAVG === 0 ? (
                           <p className="mb-0 h5" style={{ color: "blue" }}>
                             {" "}
                             {resultAVGITEM}%
                           </p>
-                        ) : resultAVGITEM == "NaN" ? (
+                        ) : resultAVGITEM === "NaN" ? (
                           <p className="mb-0 h5" style={{ color: "grey" }}>
                             {" "}
                             0%
@@ -968,28 +980,28 @@ const OrderReport = () => {
                       </div>
                     </div>
                     <div>
-                      {previousStateChange == 1 ? (
+                      {previousStateChange === 1 ? (
                         <h5>Today :</h5>
-                      ) : previousStateChange == 2 ? (
+                      ) : previousStateChange === 2 ? (
                         <h5>Previous Yesterday :</h5>
-                      ) : previousStateChange == 3 ? (
+                      ) : previousStateChange === 3 ? (
                         <h5>Previous Last week :</h5>
-                      ) : previousStateChange == 4 ? (
+                      ) : previousStateChange === 4 ? (
                         <h5>Previous Last Month :</h5>
-                      ) : previousStateChange == 5 ? (
+                      ) : previousStateChange === 5 ? (
                         <h5>Previous Last 6 Months:</h5>
-                      ) : previousStateChange == 8 ? (
+                      ) : previousStateChange === 8 ? (
                         <h5>Previous week :</h5>
-                      ) : previousStateChange == 9 ? (
+                      ) : previousStateChange === 9 ? (
                         <h5>Previous Month :</h5>
                       ) : (
                         <h5>Today :</h5>
                       )}
 
-                      {OrderError == "no_data" ||
-                        Prevordersreport.prev_avg_item_per_order == null ||
-                        Prevordersreport.prev_avg_item_per_order == undefined ||
-                        Prevordersreport.prev_avg_item_per_order == "" ? (
+                      {OrderError === "no_data" ||
+                        Prevordersreport.prev_avg_item_per_order === null ||
+                        Prevordersreport.prev_avg_item_per_order === undefined ||
+                        Prevordersreport.prev_avg_item_per_order === "" ? (
                         <p className="h5"> 0</p>
                       ) : (
                         <p className="h5">
@@ -1015,10 +1027,10 @@ const OrderReport = () => {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
                      
-                      {OrderError == "No_Data" ||
-                        ordersreport.net_sales == null ||
-                        ordersreport.net_sales == undefined ||
-                        ordersreport.net_sales == "" ? (
+                      {OrderError === "No_Data" ||
+                        ordersreport.net_sales === null ||
+                        ordersreport.net_sales === undefined ||
+                        ordersreport.net_sales === "" ? (
                         <h3>₹0</h3>
                       ) : (
                         <h3>₹{ordersreport.net_sales.toFixed(2)}</h3>
@@ -1037,12 +1049,12 @@ const OrderReport = () => {
                             {" "}
                             {resultNetSales}%
                           </p>
-                        ) : resultAVG == 0 ? (
+                        ) : resultAVG === 0 ? (
                           <p className="mb-0 h5" style={{ color: "blue" }}>
                             {" "}
                             {resultNetSales}%
                           </p>
-                        ) : resultNetSales == "NaN" ? (
+                        ) : resultNetSales === "NaN" ? (
                           <p className="mb-0 h5" style={{ color: "grey" }}>
                             {" "}
                             0%
@@ -1056,28 +1068,28 @@ const OrderReport = () => {
                       </div>
                     </div>
                     <div>
-                      {previousStateChange == 1 ? (
+                      {previousStateChange === 1 ? (
                         <h5>Today :</h5>
-                      ) : previousStateChange == 2 ? (
+                      ) : previousStateChange === 2 ? (
                         <h5>Previous Yesterday :</h5>
-                      ) : previousStateChange == 3 ? (
+                      ) : previousStateChange === 3 ? (
                         <h5>Previous Last week :</h5>
-                      ) : previousStateChange == 4 ? (
+                      ) : previousStateChange === 4 ? (
                         <h5>Previous Last Month :</h5>
-                      ) : previousStateChange == 5 ? (
+                      ) : previousStateChange === 5 ? (
                         <h5>Previous Last 6 Months:</h5>
-                      ) : previousStateChange == 8 ? (
+                      ) : previousStateChange === 8 ? (
                         <h5>Previous week :</h5>
-                      ) : previousStateChange == 9 ? (
+                      ) : previousStateChange === 9 ? (
                         <h5>Previous Month :</h5>
                       ) : (
                         <h5>Today :</h5>
                       )}
 
-                      {OrderError == "no_data" ||
-                        Prevordersreport.prev_net_sales == null ||
-                        Prevordersreport.prev_net_sales == undefined ||
-                        Prevordersreport.prev_net_sales == "" ? (
+                      {OrderError === "no_data" ||
+                        Prevordersreport.prev_net_sales === null ||
+                        Prevordersreport.prev_net_sales === undefined ||
+                        Prevordersreport.prev_net_sales === "" ? (
                         <p className="h5"> ₹0</p>
                       ) : (
                         <p className="h5">

@@ -41,6 +41,7 @@ const Coupon = () => {
   const [AddAlert, setAddAlert] = useState(false);
   const [UpdateAlert, setUpdateAlert] = useState(false);
   const [searchcoupon, setsearchCoupon] = useState([]);
+  console.log(searchcoupon)
   const [SearchCoup, setSearchCoup] = useState({
     campaign_name: "",
     code: "",
@@ -53,6 +54,7 @@ const Coupon = () => {
   };
   const closeAddAlert = () => {
     setAddAlert(false);
+    setDltapicall(false)
   };
 
   const closeUpdateAlert = () => {
@@ -681,7 +683,7 @@ const Coupon = () => {
                       name="image"
                     />
                     {addcoupondata.image ? (
-                      <img src={addcoupondata.image} width={"90px"} />
+                      <img src={addcoupondata.image} alt="" width={"90px"} />
                     ) : null}
                   </Form.Group>
                 </div>

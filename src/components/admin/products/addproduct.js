@@ -29,7 +29,7 @@ const Addproduct = (props) => {
   const [customarray, setcustomarray] = useState([]);
   const [data1, setdata1] = useState([]);
   const [vdata, setvdata] = useState([]);
-  const [varietyshow, setvarietyShow] = useState(false);
+  // const [varietyshow, setvarietyShow] = useState(false);
   const formRef = useRef();
   const mainformRef = useRef();
 
@@ -210,11 +210,11 @@ const Addproduct = (props) => {
   }
 
   useEffect(() => {
-    if (props.show === 1) {
+    if (props.show == 1) {
       setpdata('')
       setmodalshow(true)
     }
-    if (props.show === 2) {
+    if (props.show == 2) {
       setmodalshow(true)
       setpdata(productjson)
       setseoArray(productjson.seo_tag)
@@ -1251,8 +1251,8 @@ const Addproduct = (props) => {
           <MainButton btntext={"Save as Draft"} onClick={() => handleSaveDraft()} />
           <Iconbutton
             type={'submit'}
-            btntext={(props.show === 2 ? "Update Product" : "Add Product")}
-            onClick={(props.show === 2 ? handleUpdateProduct : handleAddProduct)}
+            btntext={(props.show == 2 ? "Update Product" : "Add Product")}
+            onClick={(props.show == 2 ? handleUpdateProduct : handleAddProduct)}
             btnclass={"button main_button "}
           />
         </Modal.Footer>

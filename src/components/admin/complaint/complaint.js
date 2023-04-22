@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { BsTrash } from "react-icons/bs";
+// import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";

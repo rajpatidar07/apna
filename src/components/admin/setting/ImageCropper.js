@@ -88,7 +88,7 @@ function ImageCropper({image,imageName,modalShow, onCropDone, onCropCancel,handl
          
         </Modal.Body>
         <Modal.Footer>
-          {window.location.pathname=="/product"?""
+          {window.location.pathname==="/product"?""
        :<>
        <div className="action-btns" >
 

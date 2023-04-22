@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./order_detail.css";
 import Profile from "../../../images/user.jpg";
-import { AiOutlineFileText } from "react-icons/ai";
+// import { AiOutlineFileText } from "react-icons/ai";
 import { BsTelephoneFill, BsFillEnvelopeFill } from "react-icons/bs";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
@@ -9,26 +9,26 @@ import moment from "moment";
 import Loader from "../common/loader";
 
 const OrderDetail = () => {
-  let totalorder = 0;
+  // let totalorder = 0;
   let orderid = localStorage.getItem("orderid");
   let userid = localStorage.getItem("userid");
   const token = localStorage.getItem("token");
 
   const [order, setOrder] = useState([]);
   const [productorder, setproductOrder] = useState([]);
-  const [amt, setAmt] = useState("");
+  // const [amt, setAmt] = useState("");
   const [user, setUser] = useState([]);
   let [loading, setloading] = useState(false);
   let [apicall, setApicall] = useState(false);
 
-  const [searchdataa, setsearchDataa] = useState({
-    status: "",
-    created_on: "",
-  });
+  // const [searchdataa, setsearchDataa] = useState({
+  //   status: "",
+  //   created_on: "",
+  // });
 
-  const OnSearchChangee = (e) => {
-    setsearchDataa({ ...searchdataa, [e.target.name]: e.target.value });
-  };
+  // const OnSearchChangee = (e) => {
+  //   setsearchDataa({ ...searchdataa, [e.target.name]: e.target.value });
+  // };
 
   // Function to change the status:-
   const onStatusChangee = (e) => {

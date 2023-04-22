@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import Input from "../common/input";
+// import Input from "../common/input";
 import { AiOutlinePlus } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { BsTrash } from "react-icons/bs";
@@ -8,12 +8,12 @@ import DataTable from "react-data-table-component";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import Iconbutton from "../common/iconbutton";
-import { Badge } from "react-bootstrap";
+// import { Badge } from "react-bootstrap";
 import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
 import axios from "axios";
 import categorytype from "../../admin/json/categorytype";
-import Loader from "../common/loader";
+// import Loader from "../common/loader";
 var newImg = "";
 
 const CategoryList = () => {
@@ -33,6 +33,7 @@ const CategoryList = () => {
   const [subCategory, setSubCategory] = useState([]);
   const [childCategory, setchildCategory] = useState([]);
   const [grandcCategory, setgrandcCategory] = useState([]);
+  console.log(grandcCategory)
   const [scategory, setScategory] = useState({
     category_name: "0",
     sub_category: "",
@@ -43,10 +44,14 @@ const CategoryList = () => {
   const [imgerror, setimgerror] = useState("");
   const [numrror, setnumrror] = useState("");
   const [cid, setCid] = useState();
+  console.log(cid)
+
   const [parentid, setParentid] = useState("");
   const [file, setFile] = useState();
   const [fileName, setFileName] = useState("");
   const [allparentid, setAllparentid] = useState([]);
+  console.log(allparentid)
+
   const [apicall, setapicall] = useState(false);
   const [searchdata, setsearchData] = useState([]);
   const [CategoryEditparent, setCategoryEditparent] = useState("");
@@ -131,7 +136,7 @@ const CategoryList = () => {
             setCateType(false);
             setImagePath(response.data[0].image);
             const arr = data.all_parent_id.split(",");
-            if (arr[0] === "0" && arr.length === 1) {
+            if (arr[0] === "0" && arr.length == 1) {
             } else {
               for (let i = 0; i < arr.length; i++) {
                 axios
@@ -140,7 +145,7 @@ const CategoryList = () => {
                   )
                   .then((response) => {
                     let data = response.data[0];
-                    if (i === 0) {
+                    if (i == 0) {
                       axios
                         .get(
                           `${process.env.REACT_APP_BASEURL_0}/category?category=${arr[i]}`
@@ -155,7 +160,7 @@ const CategoryList = () => {
                           console.log(error);
                         });
                       setCategoryEditparent(data.category_name);
-                    } else if (i === 1) {
+                    } else if (i == 1) {
                       axios
                         .get(
                           `${process.env.REACT_APP_BASEURL_0}/category?category=${arr[i]}`
@@ -170,7 +175,7 @@ const CategoryList = () => {
                           console.log(error);
                         });
                       setCategoryEditSubparent(data.category_name);
-                    } else if (i === 2) {
+                    } else if (i == 2) {
                       setCategoryEditChildparent(data.category_name);
                       setCateName(false);
                       setCateType(false);
@@ -263,7 +268,7 @@ const CategoryList = () => {
             // );
             // console.log(specificValues);
 
-            if (indVal === 0) {
+            if (indVal ==0) {
               setCategory(cgory);
               setlevel(0);
             }

@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import Input from "../common/input";
+// import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
-import SweetAlert from "sweetalert-react";
+// import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
-import { BsTrash } from "react-icons/bs";
+// import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import Modal from "react-bootstrap/Modal";
 import axios from "axios";
@@ -17,7 +17,7 @@ import { Badge } from "react-bootstrap";
 
 const Promotionproduct = () => {
   const formRef = useRef();
-  let userid = localStorage.getItem("userid");
+  // let userid = localStorage.getItem("userid");
   const [promotionProductData, setpromotionProductData] = useState([]);
   // console.log("--")
   // console.log(promotionProductData)
@@ -27,11 +27,11 @@ const Promotionproduct = () => {
   const [show, setShow] = useState(false);
   const [featuredData, setFeaturetData] = useState([]);
   const [validated, setValidated] = useState(false);
-
-  const [id, setId] = useState("");
+console.log(validated)
+  // const [id, setId] = useState("");
   const [UpdateAlert, setUpdateAlert] = useState(false);
   const [loading, setloading] = useState(false);
-  const currentdate = moment().format("");
+  // const currentdate = moment().format("");
   const [searchdata, setsearchData] = useState({
     start_date: "",
     end_date: "",
@@ -44,10 +44,11 @@ const Promotionproduct = () => {
   const [filtervategory, setfiltercategory] = useState([]);
   const [vendorid, setVendorId] = useState([]);
   const [searcherror, setsearcherror] = useState("");
+  console.log(searcherror)
 
   let token = localStorage.getItem("token");
 
-  const handleAlert = () => setAlert(true);
+  // const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
   /*<---Category list api---> */
   const getCategorydatafilter = () => {
@@ -76,7 +77,7 @@ const Promotionproduct = () => {
 
           const result = cgory.filter(
             (thing, index, self) =>
-              index === self.findIndex((t) => t.shop_name == thing.shop_name)
+              index === self.findIndex((t) => t.shop_name === thing.shop_name)
           );
           const result1 = result.filter(
             (item) => item.status === "approved" || item.status === "active"
@@ -90,17 +91,17 @@ const Promotionproduct = () => {
   /*<---Function to close sweet alter of update--->*/
   const hideUpdateAlert = () => setUpdateAlert(false);
 
-  const OnDateChange = (e) => {
-    let mdate = moment(e.target.value).format("YYYY-MM-DD");
-    setsearchData({ ...searchdata, [e.target.name]: mdate });
-  };
+  // const OnDateChange = (e) => {
+  //   let mdate = moment(e.target.value).format("YYYY-MM-DD");
+  //   setsearchData({ ...searchdata, [e.target.name]: mdate });
+  // };
   /*<---Function to close the modal--->*/
   const handleClose = (e) => {
     e.preventDefault();
     setShow(false);
   };
 
-  const handleClick = () => { };
+  // const handleClick = () => { };
 
   /*<----Table data---->*/
   const columns = [
@@ -136,12 +137,12 @@ const Promotionproduct = () => {
             </b>
             {/* Product ID: {row.product_id} <br /> */}
             <span className="d-flex flex-column ">
-              {row.is_featured === 1 ? (
+              {row.is_featured ===1 ? (
                 <span className={"badge bg-warning mt-1"}>
                   {"featured product"}
                 </span>
               ) : null}
-              {row.is_special_offer === 1 ? (
+              {row.is_special_offer ===1 ? (
                 <span className={"badge bg-info mt-1"}>{"special offer"}</span>
               ) : null}
             </span>
@@ -378,7 +379,7 @@ useEffect(() => {
         v.forEach(function (item,index){
        
         let catname=cat_name_data[item.category];
-        if(catname!=undefined || catname!=null||catname!=""){
+        if(catname!==undefined || catname!==null||catname!==""){
           item.category=catname;
         }
         productArry.push(item)
@@ -434,7 +435,7 @@ useEffect(() => {
           console.log("item")
           console.log(item.category)
           let catname=cat_name_data[item.category];
-          if(catname!=undefined || catname!=null||catname!=""){
+          if(catname!==undefined || catname!==null||catname!==""){
             item.category=catname;
           }
           productArry.push(item)
@@ -478,7 +479,7 @@ useEffect(() => {
         }
       )
       .then((response) => {
-        let data = response.data;
+        // let data = response.data;
         setValidated(true);
 
         setapicall(true);

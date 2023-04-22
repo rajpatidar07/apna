@@ -1,11 +1,11 @@
 import React, { useState, useRef } from "react";
-import Input from "../common/input";
+// import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import SAlert from "../common/salert";
-import logo from "../../../images/logo.png";
-import { BsTrash } from "react-icons/bs";
+// import logo from "../../../images/logo.png";
+// import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import { useEffect } from "react";
 import Iconbutton from "../common/iconbutton";
@@ -30,9 +30,10 @@ const VendorsList = () => {
   const [loading, setLoading] = useState(false);
   const [vendordata, setvendordata] = useState([]);
   const [file, setFile] = useState();
-  const [fileDoc, setFileDoc] = useState();
-  const [fileDocName, setFileDocName] = useState("");
+  // const [fileDoc, setFileDoc] = useState();
+  // const [fileDocName, setFileDocName] = useState("");
   const [call, setCall] = useState(false);
+  console.log(call)
   const [scall, setsCall] = useState(false);
   const [AddAlert, setAddAlert] = useState(false);
   const [ErrorAddAlert, setErrorAddAlert] = useState(false);
@@ -51,7 +52,6 @@ const VendorsList = () => {
     store_type: "",
     image: "",
     status: "active",
-    image: "",
     document_name: [],
     availability: "",
     social_media_links: [],
@@ -59,6 +59,7 @@ const VendorsList = () => {
   const [vendorID, setVendorId] = useState("");
   const [addvendordata, setaddvendordata] = useState(vendorObject);
   const [changstatus, setchangstatus] = useState("");
+  console.log(changstatus)
   const [apicall, setapicall] = useState(false);
   const [addtag, setaddtag] = useState();
   const [Docnamearray, setDocnameArray] = useState([]);
@@ -74,7 +75,7 @@ const VendorsList = () => {
   });
   let encoded;
   let ImgObj = [];
-  let docuarr;
+  // let docuarr;
   var imgvalidate;
 
   let admintoken = localStorage.getItem("token");
@@ -427,7 +428,7 @@ console.log("SHOWWW+"+Docnamearray)
   const DocuRemoveClick = (e) => {
     setDocnameArray(Docnamearray.filter((item) => item !== e));
   };
-  const handleAlert = () => setAlert(true);
+  // const handleAlert = () => setAlert(true);
   const hideAlert = () => setAlert(false);
 
   const handleStatusChnage = (e, id) => {
@@ -578,7 +579,7 @@ console.log("SHOWWW+"+Docnamearray)
 
   //img code end-------------------------------------------------------------------------------------------------
 
-  let returnarr = [];
+  // let returnarr = [];
   // social media link
   const oncustomheadChange = (e) => {
     setSocialLink(false);
@@ -627,7 +628,7 @@ console.log("SHOWWW+"+Docnamearray)
 
   // end social media link
 
-  let shoplogo = `${process.env.REACT_APP_BASEURL}/${addvendordata.shop_logo}`;
+  // let shoplogo = `${process.env.REACT_APP_BASEURL}/${addvendordata.shop_logo}`;
   const handleClick = () => { };
 
   const AddVendorClick = (e) => {

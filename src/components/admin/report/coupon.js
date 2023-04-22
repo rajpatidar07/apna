@@ -57,7 +57,7 @@ const CouponReport = () => {
     setFilterchange(e.target.value);
 
     let value = Number(e.target.value);
-    if (value === 1) {
+    if (value ===1) {
       let frommDate = moment().format("YYYY-MM-DD");
       setFromDate(frommDate);
       setToDate(moment().format("YYYY-MM-DD"));
@@ -229,7 +229,7 @@ const CouponReport = () => {
         }
       )
       .then((response) => {
-        if (response.data.message == "no_data") {
+        if (response.data.message === "no_data") {
           setCouponError(response.data.message);
 
           setGetCoupon([0]);
@@ -372,7 +372,6 @@ const CouponReport = () => {
   //----------------------------------------------------+++=++++++ excel--------------------------------------------------->
   const header = [
     " Discount Coupon",
-    ,
     "Orders",
     "Coupon Code",
     "Amount Discounted",
@@ -430,7 +429,8 @@ const CouponReport = () => {
   const brandHandler = (e) => {
     arrr = [];
     e.map((item) => {
-      arrr.push(item.value);
+      return( arrr.push(item.value))
+     
     });
     setBrandName(arrr);
   };
@@ -447,7 +447,10 @@ const CouponReport = () => {
   const VendorHandler = (e) => {
     vendorArray = [];
     e.map((item) => {
-      vendorArray.push(item.value);
+      return(
+        vendorArray.push(item.value)
+      )
+      
     });
     setVendorId(vendorArray);
   };
@@ -463,7 +466,10 @@ const CouponReport = () => {
   const categoryHandler = (e) => {
     CategoryArray = [];
     e.map((item) => {
-      CategoryArray.push(item.value);
+      return(
+        CategoryArray.push(item.value)
+
+      )
     });
     setCategoryId(CategoryArray);
   };
@@ -479,7 +485,10 @@ const CouponReport = () => {
   const SearchHandler = (e) => {
     SearchArray = [];
     e.map((item) => {
-      SearchArray.push(item.value);
+      return(
+        SearchArray.push(item.value)
+
+      )
     });
     setLocation(SearchArray);
   };
@@ -497,7 +506,7 @@ const CouponReport = () => {
     100
   ).toFixed(2);
 
-  resultAmmount != "Infinity" ? console.log() : (resultAmmount = 0);
+  resultAmmount !== "Infinity" ? console.log() : (resultAmmount = 0);
 
   // // // //----------------------Discount Order--------------------------------------------------------
   var getDiscountOrder = Number(getCoupon.orders_count);
@@ -509,7 +518,7 @@ const CouponReport = () => {
     100
   ).toFixed(2);
 
-  resultOrder != "Infinity" ? console.log() : (resultOrder = 0);
+  resultOrder !== "Infinity" ? console.log() : (resultOrder = 0);
 
   return (
     <div>
@@ -663,9 +672,9 @@ const CouponReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                      {couponError == "no_data" ||
+                      {couponError === "no_data" ||
                         getCoupon.orders_count == null ||
-                        getCoupon.orders_count == undefined ? (
+                        getCoupon.orders_count === undefined ? (
                         <h3>0</h3>
                       ) : (
                         <h3>{getCoupon.orders_count}</h3>
@@ -684,12 +693,12 @@ const CouponReport = () => {
                             {" "}
                             {resultOrder}%
                           </p>
-                        ) : resultOrder == 0 ? (
+                        ) : resultOrder === 0 ? (
                           <p className="mb-0 h5" style={{ color: "blue" }}>
                             {" "}
                             {resultOrder}%
                           </p>
-                        ) : resultOrder == "NaN" ? (
+                        ) : resultOrder === "NaN" ? (
                           <p className="mb-0 h5" style={{ color: "grey" }}>
                             {" "}
                             0%
@@ -703,28 +712,28 @@ const CouponReport = () => {
                       </div>
                     </div>
                     <div>
-                      {previousStateChange == 1 ? (
+                      {previousStateChange === 1 ? (
                         <h5>Today :</h5>
-                      ) : previousStateChange == 2 ? (
+                      ) : previousStateChange === 2 ? (
                         <h5>Previous Yesterday :</h5>
-                      ) : previousStateChange == 3 ? (
+                      ) : previousStateChange === 3 ? (
                         <h5>Previous Last week :</h5>
-                      ) : previousStateChange == 4 ? (
+                      ) : previousStateChange === 4 ? (
                         <h5>Previous Last Month :</h5>
-                      ) : previousStateChange == 5 ? (
+                      ) : previousStateChange === 5 ? (
                         <h5>Previous Last 6 Months:</h5>
-                      ) : previousStateChange == 8 ? (
+                      ) : previousStateChange === 8 ? (
                         <h5>Previous week :</h5>
-                      ) : previousStateChange == 9 ? (
+                      ) : previousStateChange === 9 ? (
                         <h5>Previous Month :</h5>
                       ) : (
                         <h5>Today :</h5>
                       )}
 
-                      {couponError == "no_data" ||
-                        PrevCouponreport.prev_orders_count == null ||
-                        PrevCouponreport.prev_orders_count == undefined ||
-                        PrevCouponreport.prev_orders_count == "" ? (
+                      {couponError === "no_data" ||
+                        PrevCouponreport.prev_orders_count === null ||
+                        PrevCouponreport.prev_orders_count === undefined ||
+                        PrevCouponreport.prev_orders_count === "" ? (
                         <p className="h5"> 0</p>
                       ) : (
                         <p className="h5">
@@ -747,10 +756,10 @@ const CouponReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                      {couponError == "no_data" ||
-                        getCoupon.discount_amount == null ||
-                        getCoupon.discount_amount == undefined ||
-                        getCoupon.discount_amount == "" ? (
+                      {couponError === "no_data" ||
+                        getCoupon.discount_amount === null ||
+                        getCoupon.discount_amount === undefined ||
+                        getCoupon.discount_amount === "" ? (
                         <h3>₹0</h3>
                       ) : (
                         <h3>{getCoupon.discount_amount.toFixed(2)}</h3>
@@ -768,12 +777,12 @@ const CouponReport = () => {
                             {" "}
                             {resultAmmount}%
                           </p>
-                        ) : resultAmmount == 0 ? (
+                        ) : resultAmmount === 0 ? (
                           <p className="mb-0 h5" style={{ color: "blue" }}>
                             {" "}
                             {resultAmmount}%
                           </p>
-                        ) : resultAmmount == "NaN" ? (
+                        ) : resultAmmount === "NaN" ? (
                           <p className="mb-0 h5" style={{ color: "grey" }}>
                             {" "}
                             0%
@@ -787,28 +796,28 @@ const CouponReport = () => {
                       </div>
                     </div>
                     <div>
-                      {previousStateChange == 1 ? (
+                      {previousStateChange === 1 ? (
                         <h5>Today :</h5>
-                      ) : previousStateChange == 2 ? (
+                      ) : previousStateChange === 2 ? (
                         <h5>Previous Yesterday :</h5>
-                      ) : previousStateChange == 3 ? (
+                      ) : previousStateChange === 3 ? (
                         <h5>Previous Last week :</h5>
-                      ) : previousStateChange == 4 ? (
+                      ) : previousStateChange === 4 ? (
                         <h5>Previous Last Month :</h5>
-                      ) : previousStateChange == 5 ? (
+                      ) : previousStateChange === 5 ? (
                         <h5>Previous Last 6 Months:</h5>
-                      ) : previousStateChange == 8 ? (
+                      ) : previousStateChange === 8 ? (
                         <h5>Previous week :</h5>
-                      ) : previousStateChange == 9 ? (
+                      ) : previousStateChange === 9 ? (
                         <h5>Previous Month :</h5>
                       ) : (
                         <h5>Today :</h5>
                       )}
 
-                      {couponError == "no_data" ||
-                        PrevCouponreport.prev_discount_amount == null ||
-                        PrevCouponreport.prev_discount_amount == undefined ||
-                        PrevCouponreport.prev_discount_amount == "" ? (
+                      {couponError === "no_data" ||
+                        PrevCouponreport.prev_discount_amount === null ||
+                        PrevCouponreport.prev_discount_amount === undefined ||
+                        PrevCouponreport.prev_discount_amount === "" ? (
                         <p className="h5"> ₹0</p>
                       ) : (
                         <p className="h5">
@@ -827,8 +836,8 @@ const CouponReport = () => {
 
         {/* graph */}
 
-        {getCoupon.discount_amount != undefined ||
-          getCoupon.orders_count != undefined ? (
+        {getCoupon.discount_amount !== undefined ||
+          getCoupon.orders_count !== undefined ? (
           <HighchartsReact highcharts={Highcharts} options={options} />
         ) : null}
 

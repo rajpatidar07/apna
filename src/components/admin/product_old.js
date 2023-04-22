@@ -239,16 +239,16 @@ function Product_Old() {
       selector: (row) => (
         <span
           className={
-            row.status === 1
+            row.status == 1
               ? "badge bg-success"
-              : row.status === 2
+              : row.status == 2
                 ? "badge bg-danger"
                 : "badge bg-secondary"
           }
         >
-          {row.status === 1
+          {row.status == 1
             ? "Pending"
-            : row.status === 2
+            : row.status == 2
               ? "Inactive"
               : "Draft"}
         </span>

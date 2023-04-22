@@ -14,7 +14,7 @@ import { Badge } from "react-bootstrap";
 
 const Offerproduct = () => {
   const formRef = useRef();
-  let productid = localStorage.getItem("productid");
+  // let productid = localStorage.getItem("productid");
 
   // let userid = localStorage.getItem("userid");
   const [offerProductData, setOfferProductData] = useState([]);
@@ -22,8 +22,9 @@ const Offerproduct = () => {
 
   const [featuredData, setFeaturetData] = useState([]);
   const [id, setId] = useState("");
+  console.log(id)
   const [UpdateAlert, setUpdateAlert] = useState(false);
-  const currentdate = moment().format("");
+  // const currentdate = moment().format("");
   const [searchdata, setsearchData] = useState({
     end_date: "",
     start_date: "",
@@ -36,6 +37,7 @@ const Offerproduct = () => {
   const [filtervategory, setfiltercategory] = useState([]);
   const [vendorid, setVendorId] = useState([]);
   const [searcherror, setsearcherror] = useState("");
+  console.log(searcherror)
   const [Alert, setAlert] = useState(false);
   const [apicall, setapicall] = useState(false);
   const [show, setShow] = useState(false);
@@ -184,7 +186,7 @@ useEffect(()=>{
         
           v.forEach(function (item,index){
           let catname=cat_name_data[item.category];
-          if(catname!=undefined || catname!=null||catname!=""){
+          if(catname!==undefined || catname!==null||catname!==""){
             item.category=catname;
           }
           productArry.push(item)
@@ -484,8 +486,8 @@ useEffect(()=>{
   //   setapicall(true);
   // };
   /*Calculation for today's date */
-  let date = moment();
-  let currentDate = date.format("YYYY-MM-DD");
+  // let date = moment();
+  // let currentDate = date.format("YYYY-MM-DD");
   return (
     <>
       {loading === true ? <Loader /> : null}

@@ -46,6 +46,7 @@ const Productdetail = () => {
   const [ProductAlert, setProductAlert] = useState(false);
   const [UpdatetAlert, setUpdatetAlert] = useState(false);
   const [viewImage, setViewImage] = useState("view");
+  console.log(viewImage)
   const veriantData = {
     product_status: "1",
     product_id: pid,
@@ -68,11 +69,14 @@ const Productdetail = () => {
   const [variantarray, setvariantarray] = useState(veriantData);
   const [customvalidated, setcustomValidated] = useState(false);
   const [unitValidated, setunitValidated] = useState(false);
+  console.log(unitValidated)
   const [varietyUnitvalidation, setVarietyUnitvalidation] = useState("");
   const formRef = useRef();
   const [newImageUrls, setnewImageUrls] = useState([]);
   const [variantdetail, setVariantdetail] = useState([]);
   const [editbutton, setEditButton] = useState(false);
+  console.log(editbutton)
+
   const [changeUnitproperty, setChangeUnitProperty] = useState(false);
   const [image, setImage] = useState("");
   const [imageName, setimageName] = useState("");
@@ -641,7 +645,7 @@ console.log(variantarray)
         is_delete: "0",
       })
       .then((response) => {
-        let data=response.data
+        // let data=response.data
         setvariantapicall(true)
         // if (data !== undefined || data !== "" || data !== null){
         // setvariantapicall(true);
@@ -965,10 +969,13 @@ console.log(variantarray)
                                                     onVariantChange(e)
                                                   }
                                                   disabled={
-                                                    variantmainarray.length ===
-                                                      0
-                                                      ? false
-                                                      : true
+                                                    variantarray.unit &&
+                                                      changeUnitproperty === false
+                                                      ? true
+                                                      : variantarray.unit ||
+                                                        changeUnitproperty === true
+                                                        ? false
+                                                        : true
                                                   }
                                                 // className={
                                                 //   customvalidated === true
@@ -976,11 +983,12 @@ console.log(variantarray)
                                                 //     : null
                                                 // }
                                                 >
-                                                  <option value={""}>
+                                                  <option >
                                                     Select
                                                   </option>
                                                   {(varietyy.variety || []).map(
                                                     (vari, i) => {
+                                                      console.log("unittttttt======="+vari)
                                                       return changeUnitproperty ===
                                                         true ? (
                                                         <option
@@ -1042,7 +1050,7 @@ console.log(variantarray)
                                                       );
                                                     }
                                                   )}
-                                                </Form.Select>
+                                   </Form.Select>
                                   </InputGroup>
                                 </Col>
                               </Form.Group>

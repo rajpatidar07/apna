@@ -1,6 +1,6 @@
-import React, { Fragment, useState} from "react";
+import React, { useState} from "react";
 
-import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 
 import MainButton from "../common/button";
@@ -31,9 +31,9 @@ const SellerSignupp = () => {
   const [passval, setpassval] = useState("");
 
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const { state } = useLocation();
+  // const { state } = useLocation();
 
   const [emailvaluebyforget, setEmailvaluebyforget] = useState()
 
@@ -108,7 +108,7 @@ const SellerSignupp = () => {
               </div>
 
               {/* vendor sign up[  start] */}
-              {sellersignupshow == true ? <div className="admin_login_form">
+              {sellersignupshow === true ? <div className="admin_login_form">
                 <div className="log-in-box">
                   <div className="log-in-title">
                     <h4>Sign Up In Your Account</h4>

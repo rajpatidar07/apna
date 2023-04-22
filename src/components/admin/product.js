@@ -40,10 +40,13 @@ let encoded;
 let ImgObj = [];
 function Product() {
   const [CategoryEditdata, setCategoryEditData] = useState([]);
+  console.log(CategoryEditdata)
   const [show, setShow] = useState(false);
-  const [cover,setCover]=useState("cover")
+  // const [cover,setCover]=useState("cover")
   const [currentPage, setCurrentPage] = useState("choose-img");
   const [imgAfterCrop, setImgAfterCrop] = useState("");
+  console.log(imgAfterCrop)
+
   const [newImageUrls, setnewImageUrls] = useState([]);
 
   const [image, setImage] = useState("");
@@ -87,6 +90,7 @@ function Product() {
   const [subCategory, setSubCategory] = useState([]);
   const [childCategory, setchildCategory] = useState([]);
   const [grandcCategory, setgrandcCategory] = useState([]);
+  console.log(grandcCategory);
   const [scategory, setScategory] = useState({
     parent_category: "",
     sub_category: "",
@@ -98,14 +102,19 @@ function Product() {
 
   const [categoryeditparent, setCategoryEditparent] = useState("");
   const [categoryeditsubparent, setCategoryEditSubparent] = useState("");
+  console.log(categoryeditsubparent);
 
   const [categoryeditchildparent, setCategoryEditChildparent] = useState("");
 
   const [level, setlevel] = useState("");
+  console.log(level);
+
   const [pdata, setpdata] = useState([]);
   // console.log("PDAYTAA>NAME"+JSON.stringify(pdata.category_name))
 
   const [variantid, setvariantid] = useState("");
+  console.log(variantid);
+
   const [productid, setproductid] = useState("");
   const [Alert, setAlert] = useState(false);
   const [VerityAlert, setVerityAlert] = useState(false);
@@ -147,7 +156,10 @@ function Product() {
   const [variantmainarray, setvariantmainarray] = useState([]);
   // const [productvariantarray, setproductvariantarray] = useState(veriantData);
   const [data1, setdata1] = useState("");
+  console.log(data1);
   const [otherintro, setotherintro] = useState("");
+  console.log(otherintro);
+
   const [headerval, setheaderval] = useState("");
   const [descval, setdescval] = useState("");
   const [customarray, setcustomarray] = useState([]);
@@ -157,9 +169,9 @@ function Product() {
   });
   const [vdata, setvdata] = useState([]);
   // let [condition, setCondition] = useState(false);
-  var category_name={
+  // var category_name={
     
-  }
+  // }
   var data = {
     add_custom_input: [],
     product_title_name: "",
@@ -200,6 +212,7 @@ function Product() {
 
   const [variantremove, setVariantRemove] = useState([]);
   const [editbutton, setEditButton] = useState(false);
+  console.log(editbutton)
   const [taxdata, settaxdata] = useState({
     wholesale_sales_tax: "0",
     gst: "0",
@@ -212,6 +225,8 @@ function Product() {
   const [productID, setproductID] = useState("");
   const [bulkProductError, setBulkProductError] = useState("");
   const [AddtagError, setAddTagError] = useState("");
+  console.log(AddtagError)
+
   const [Docnamearray, setDocnameArray] = useState([]);
 
   // OFFER ADD MODAL
@@ -231,6 +246,7 @@ function Product() {
       setaddtag("");
       setAddTagError("");
       setcustomValidated(false);
+      setOpen(false)
      
     } 
     else {
@@ -402,7 +418,7 @@ function Product() {
     fetchdata();
     getVendorData();
     getCategorydatafilter();
-  }, [apicall, Alert]);
+  }, [apicall,variantapicall, Alert]);
 
   //MAIN PRODUCT LIST API END
 
@@ -686,27 +702,27 @@ function Product() {
 
   // seotag
   let tagname;
-  const ontagchange = (e) => {
-    tagname = e.target.value;
-    setaddtag(tagname);
-  };
+  // const ontagchange = (e) => {
+  //   tagname = e.target.value;
+  //   setaddtag(tagname);
+  // };
 
-  const tagRemoveClick = (e) => {
-    setproductdata({ ...productdata, seo_tag: "" });
-    // setseoArray(seoarray.filter((item) => item !== e));
-  };
-  const ontagaddclick = (e) => {
-    if (addtag === "") {
-      setunitValidated("seotagclick");
-    } else {
-      setunitValidated("");
-      setproductdata({
-        ...productdata,
-        seo_tag: addtag,
-      });
-    }
-    setaddtag("");
-  };
+  // const tagRemoveClick = (e) => {
+  //   setproductdata({ ...productdata, seo_tag: "" });
+  //   // setseoArray(seoarray.filter((item) => item !== e));
+  // };
+  // const ontagaddclick = (e) => {
+  //   if (addtag === "") {
+  //     setunitValidated("seotagclick");
+  //   } else {
+  //     setunitValidated("");
+  //     setproductdata({
+  //       ...productdata,
+  //       seo_tag: addtag,
+  //     });
+  //   }
+  //   setaddtag("");
+  // };
   // END SEO TAG ADD
   // IMAGE UPLOAD SECTION
   // const convertToBase64 = (file) => {
@@ -800,7 +816,7 @@ function Product() {
     for (var i = 0; i < imageName.length; i++) {
     var coverimg;
 
-// console.log("ggggggggg"+coverimg)
+console.log("ggggggggg"+coverimg)
       if (newImageUrls.length === 0  && i === 0) {
         coverimg = "cover";
       } else {
@@ -856,15 +872,9 @@ function Product() {
   const [imageboxid, setimageboxid] = useState(0);
 
   const onImgView = (id, productid) => {
-    console.log("iddd------------------------"+id)
     setEditButton(false);
     setimageboxid(id);
-    console.log("setimageboxid------------------------"+id)
-    console.log("imageboxid------------------------"+imageboxid)
-
-
- 
-
+   
     axios
       .get(
         `${process.env.REACT_APP_BASEURL}/product_images_get_singal_veriant?product_id=${productid}&product_verient_id=${id}`
@@ -1132,7 +1142,7 @@ function Product() {
                 quantity: "",
                 product_id: productID,
               });
-            } else if (response.errno === 1064) {
+            } else if (response.errno ===1064) {
               alert("Error in add product");
               setProductAlert(false);
             } else {
@@ -1244,7 +1254,7 @@ function Product() {
       ...productdata,
       variety: true,
     });
-    if (productdata.product_type == "") {
+    if (productdata.product_type === "") {
 
       setCheckProductType(true);
     } else {
@@ -1486,7 +1496,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
     // console.log({ event, editor, data1 });
 
     let productdesc;
-    if (editor.getData() != undefined) {
+    if (editor.getData() !== undefined) {
       productdesc = editor.getData().replaceAll(/"/g, "'");
     }
     setproductdata({
@@ -1512,7 +1522,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
     setotherintro(editor.getData());
     // console.log({ event, editor, otherintro });
     let otherinstrction;
-    if (editor.getData() != undefined) {
+    if (editor.getData() !== undefined) {
       otherinstrction = editor.getData().replaceAll(/"/g, "'");
     }
     setproductdata({
@@ -2621,7 +2631,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                 value={cdata.id}
                                 key={i}
                                 selected={
-                                  categoryeditparent == cdata.category_name
+                                  categoryeditparent === cdata.category_name
                                     ? true
                                     : false
                                 }
@@ -4228,8 +4238,8 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                         : true
                                   }
                                 >
-                                  <option value={""}>{variantarray.unit}</option>
-
+                                  <option >{variantarray.unit}</option>
+                                   {console.log("variantarray.unituuuuuuuuuuuuu"+variantarray.unit)}
                                   {(varietyy.variety || []).map((vari, i) => {
                                     return vdata.length === 0 ? null : vdata[0]
                                       .product_type === "" ? (
@@ -4961,18 +4971,18 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                     {/* <Accordion.Body eventKey={i}> */}
                                     {newImageUrls ? (
                                         console.log("viewwwww-----==========-------"+variantdata.id),
-                                        console.log("imageboxid-----++++++----------------------------------------------"+imageboxid),
+                                        console.log("imageboxid-----++++++--------------------"+imageboxid),
 
                                       <tr
                                     
                                         className={
-                                          variantdata.id == imageboxid
+                                          variantdata.id === imageboxid
                                         
                                             ? "img_preview_boxx show"
                                             : "img_preview_boxx hide"
                                         }
                                         
-                                        id={"variantimgbox" + imageboxid}
+                                        id={"variantimgbox" +  variantdata.id}
                                       >
                                         <td colSpan="13">
                                           <div className="image_box">
@@ -5028,7 +5038,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                               ) : null;
                                             })}
                                             <div className="imgprivew_box">
-                                                {currentPage == "choose-img" ? (
+                                                {currentPage=== "choose-img" ? (
                                                   
                                                   <FileInput setImage={setImage}  onImageSelected={onImageSelected} setimageName={setimageName}/>
                                                 ) : currentPage === "crop-img" ? (

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import Input from "../common/input";
+// import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
@@ -9,23 +9,25 @@ import { BiEdit } from "react-icons/bi";
 import { useEffect } from "react";
 import Iconbutton from "../common/iconbutton";
 import axios from "axios";
-import { Badge, Button, InputGroup } from "react-bootstrap";
+import { Badge} from "react-bootstrap";
 import moment from "moment";
 let categoryArray = [];
 
 const BlogList = () => {
   const formRef = useRef();
   const [changstatus, setchangstatus] = useState("");
+  console.log(changstatus)
   const [apicall, setapicall] = useState(false);
   const [validated, setValidated] = useState(false);
   const [show, setShow] = useState("");
   const [Alert, setAlert] = useState(false);
   const [file, setFile] = useState();
   const [fileName, setFileName] = useState("");
-  const [image, setImage] = useState();
-  const [DocuImgarray, setDocuImgArray] = useState([]);
+  // const [image, setImage] = useState();
+  // const [DocuImgarray, setDocuImgArray] = useState([]);
   const [id, setId] = useState("");
   const [status, setStatus] = useState("");
+  console.log(status)
   const [AddAlert, setAddAlert] = useState(false);
   const [UpdateAlert, setUpdateAlert] = useState(false);
   let [condition, setCondition] = useState(false);
@@ -40,6 +42,8 @@ const BlogList = () => {
     publish_date: "",
   });
   const [searchdata, setsearchData] = useState([]);
+  console.log(searchdata)
+
   const [recent, setRecent] = useState("");
   const [categorySearch, setCategorySearch] = useState("");
   const [productTagSearch, setProductTagSearch] = useState("");
@@ -48,6 +52,7 @@ const BlogList = () => {
   // Function of cancel add success alert:-
   const closeAddAlert = () => {
     setAddAlert(false);
+    setProductTagSearch("")
   };
   //Blog Categoty Json//
   const CategoryJson = {
@@ -71,9 +76,9 @@ const BlogList = () => {
     setUpdateAlert(false);
   };
 
-  const OnCtegorySearch = (e) => {
-    setCategorySearch(e.target.value);
-  };
+  // const OnCtegorySearch = (e) => {
+  //   setCategorySearch(e.target.value);
+  // };
   const onRecentSearch = (e) => {
     setRecent(e.target.value);
     if (recent) {

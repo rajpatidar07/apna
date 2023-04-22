@@ -3,12 +3,12 @@ import React, { Fragment } from "react";
 
 
 import axios from "axios";
-import Form from "react-bootstrap/Form";
+// import Form from "react-bootstrap/Form";
 // import "../../style/style.css";
-import { useState, useEffect, useRef } from "react";
-import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
-import { Badge, Button, InputGroup, Table } from "react-bootstrap";
-import { GiCancel } from "react-icons/gi";
+import { useState} from "react";
+import {useNavigate } from "react-router-dom";
+import { Button } from "react-bootstrap";
+// import { GiCancel } from "react-icons/gi";
 import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
 // import storetype from "../pages/json/storetype";
@@ -35,14 +35,15 @@ const SellerSignUp = () => {
   const [forgotpassval, setforgotpassval] = useState("");
   const navigate = useNavigate();
   const [error, setError] = useState(true);
+  console.log(error)
   const [loginemailerror, setLoginemailerror] = useState(true);
   const [vendorstatus, setvendorstatus] = useState(false);
-  const { state } = useLocation();
+  // const { state } = useLocation();
 
   //for close the   vendor request model
   const handleClose = () => {
     setShow(false);
-
+    setSignup(false)
     navigate("/");
   };
   // for close the reqest apporove model
@@ -99,7 +100,7 @@ const SellerSignUp = () => {
   // click the otp verification ------
   const VerifyOTP = (e) => {
     e.preventDefault();
-    if (otp === "null" || otp === null || otp === undefined || otp === "") {
+    if (otp === "null" || otp == null || otp === undefined || otp === "") {
       setOtperror("otpblank");
     } else {
       // if (e.target.otpinput.value == otp) {
@@ -227,9 +228,9 @@ const SellerSignUp = () => {
 
 
   // FORGOT PASSWORD
-  const OnForgotPassword = () => {
-    setforgotpage(true);
-  };
+  // const OnForgotPassword = () => {
+  //   setforgotpage(true);
+  // };
 
   const handlefORGOTFormChange = (e) => {
     setemailerror("")
@@ -248,7 +249,7 @@ const SellerSignUp = () => {
 
     var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z]{2,4})+$/;
     var rst = regex.test(forgotemail);
-    if (rst == false) {
+    if (rst === false) {
 
       setemailerror("ForgetEmailEmpty")
     }
@@ -285,13 +286,13 @@ const SellerSignUp = () => {
   const VerifyfORGOTOTP = (e) => {
 
 
-    if (forgototp == 0 || forgototp == "") {
+    if (forgototp === 0 || forgototp === "") {
       setOtperror("OtpisEmpty")
 
     } else {
       setOtperror("")
     }
-    if (forgotpassval == "") {
+    if (forgotpassval === "") {
 
       setemailerror("forgetPasswordEmpty")
     } else {
@@ -551,7 +552,7 @@ const SellerSignUp = () => {
                                 onChange={(e) => handlefORGOTFormChange(e)}
                                 value={forgotemail}
                                 name={"email"}
-                                disabled={emailerror == "otpsend" ? true : false}
+                                disabled={emailerror === "otpsend" ? true : false}
                               />
                               <label htmlFor="email">Email Address</label>
                             </div>
@@ -580,7 +581,7 @@ const SellerSignUp = () => {
                                 className="btn btn-animation w-100"
                                 type="button"
                                 onClick={forgotPassword}
-                                disabled={emailerror == "otpsend" ? true : false}
+                                disabled={emailerror === "otpsend" ? true : false}
                               >
                                 Forgot Password
                               </button>)}
@@ -594,7 +595,7 @@ const SellerSignUp = () => {
                           <div className="log-in-title">
                             <h4>Enter one time otp below</h4>
                             <h5 className="text-content">
-                              {emailerror == "otpsend" ? "A code has been sent to your email.." : "  A code will be  sent to your email.."}
+                              {emailerror === "otpsend" ? "A code has been sent to your email.." : "  A code will be  sent to your email.."}
 
                             </h5>
                           </div>

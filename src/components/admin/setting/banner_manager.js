@@ -14,24 +14,24 @@ import ImageCropper from "./ImageCropper";
 
 function Banner() {
   let encoded;
-  let ImgObj = [];
   let token = localStorage.getItem("token");
   const formRef = useRef();
   const [error, setError] = useState(true);
   const [show, setShow] = useState(false);
-
+  
   const [bannershow, setBannerShow] = useState("");
   const [Alert, setAlert] = useState(false);
   const [validated, setValidated] = useState(false);
   const [banner, setBanner] = useState([]);
-  const [imageBanner, setImageBanner] = useState([]);
+  // const [imageBanner, setImageBanner] = useState([]);
   const [apicall, setapicall] = useState([]);
   const [bannerId, setBannerId] = useState("");
   const [Imgarray, setImgArray] = useState([]);
-  const [file, setFile] = useState();
+  console.log(Imgarray)
+  // const [file, setFile] = useState();
   const [AddAlert, setAddAlert] = useState(false);
   const [UpdateAlert, setUpdateAlert] = useState(false);
-  const [fileName, setFileName] = useState("");
+  // const [fileName, setFileName] = useState("");
   const [addBanner, setAddBanner] = useState({
     imgBase64: "",
     title: "",
@@ -152,7 +152,7 @@ function Banner() {
     setAlert(true);
   };
 
-  const handleClick = () => {};
+  // const handleClick = () => {};
 
   const hideAlert = () => {
     axios.put(`${process.env.REACT_APP_BASEURL_0}/banner_delete`, {
@@ -654,10 +654,10 @@ if (response.data.code === "ER_DUP_ENTRY") {
         <div>
         <div>
               <img className="cropped-img w-50 h-50"
-                  src={imgAfterCrop}
+                  src={imgAfterCrop }
 
                 // key={i}
-                // alt="apna_organic"
+                alt=""
                 // height={120}
                />
           </div>  

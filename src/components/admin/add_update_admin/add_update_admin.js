@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { AiFillEdit, AiOutlinePlus } from "react-icons/ai";
+import { AiOutlinePlus } from "react-icons/ai";
 import DataTable from "react-data-table-component";
 import Modal from "react-bootstrap/Modal";
 import Iconbutton from "../common/iconbutton";
@@ -16,9 +16,12 @@ function Admin() {
   const [show, setShow] = useState("");
   const [validated, setValidated] = useState(false);
   const [searchvalidated, setsearchValidated] = useState(false);
+  console.log(searchvalidated)
   const [addadmindata, setaddadmindata] = useState([]);
   const [admindata, setadmindata] = useState([]);
   const [searchAdmin, setSearchAdmin] = useState([]);
+  console.log(searchAdmin)
+
   const [AddAlert, setAddAlert] = useState(false);
   const [UpdateAlert, setUpdateAlert] = useState(false);
   const [Searchad, setSearchAd] = useState({

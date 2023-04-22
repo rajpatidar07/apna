@@ -137,7 +137,7 @@ const CategoryReport = () => {
   const TimeChange = (e) => {
     setFilterchange(e.target.value);
     let value = Number(e.target.value);
-    if (value === 1) {
+    if (value == 1) {
       let frommDate = moment().format("YYYY-MM-DD");
       setFromDate(frommDate);
       setToDate(moment().format("YYYY-MM-DD"));
@@ -150,7 +150,7 @@ const CategoryReport = () => {
       setpreviousStateChange(1);
     }
     //yesterday------------------------------------------------------------------------
-    if (value === 2) {
+    if (value == 2) {
       let yesterday = moment()
         .subtract(1, "days")
         .startOf("days")
@@ -173,7 +173,7 @@ const CategoryReport = () => {
       setpreviousStateChange(2);
     }
     //last week---------------------------------------------------------------
-    if (value === 3) {
+    if (value == 3) {
       let lastweek = moment()
         .subtract(1, "weeks")
         .startOf("weeks")
@@ -200,7 +200,7 @@ const CategoryReport = () => {
       setpreviousStateChange(3);
     }
     //last month---------------------------------------------------------------
-    if (value === 4) {
+    if (value == 4) {
       let month = moment()
         .subtract(1, "month")
         .startOf("month")
@@ -225,7 +225,7 @@ const CategoryReport = () => {
       setpreviousStateChange(4);
     }
     //  last six month---------------------------------------------------------
-    if (value === 5) {
+    if (value == 5) {
       let sixMonth = moment()
         .subtract(6, "month")
         .startOf("month")
@@ -247,7 +247,7 @@ const CategoryReport = () => {
     }
 
     //this week-----------------------------------------------------------------------
-    if (value === 8) {
+    if (value == 8) {
       let ThisWeek = moment()
         .startOf("weeks")
         .format("YYYY-MM-DD");
@@ -266,7 +266,7 @@ const CategoryReport = () => {
       );
       setpreviousStateChange(8);
     }
-    if (value === 9) {
+    if (value == 9) {
       let ThisMonth = moment()
         .startOf("month")
         .format("YYYY-MM-DD");

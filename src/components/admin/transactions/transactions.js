@@ -1,5 +1,5 @@
 import React from "react";
-import Input from "../common/input";
+// import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";

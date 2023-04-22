@@ -9,7 +9,6 @@ import { Badge } from "react-bootstrap";
 import axios from "axios";
 import moment from "moment";
 import SAlert from "../common/salert";
-import { AiOutlineStar } from "react-icons/ai";
 
 const Review = () => {
   const formRef = useRef();
