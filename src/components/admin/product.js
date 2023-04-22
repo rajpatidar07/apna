@@ -750,6 +750,7 @@ function Product() {
 
 // };
   const onCropDone = (imgCroppedArea, product_id, id, vendor_id) => {
+ 
 
     const canvasEle = document.createElement("canvas");
     canvasEle.width = imgCroppedArea.width;
@@ -773,6 +774,7 @@ function Product() {
 
       const dataURL = canvasEle.toDataURL("image/jpeg");
       imguploadchange(dataURL, product_id, id, vendor_id)
+      console.log("VARIENT IDDD+"+id)
       // onImgView(product_id, id)
       setCurrentPage("img-cropped");
     };
@@ -791,7 +793,7 @@ function Product() {
     for (var i = 0; i < imageName.length; i++) {
     var coverimg;
 
-console.log("ggggggggg"+coverimg)
+// console.log("ggggggggg"+coverimg)
       if (newImageUrls.length === 0  && i === 0) {
         coverimg = "cover";
       } else {
@@ -817,13 +819,16 @@ console.log("ggggggggg"+coverimg)
         image_position: coverimg,
         img_64: productimg,
       };
+      console.log("ID"+id)
+      console.log("product_image_name"+id)
+
       ImgObj.push(imar);
       axios
         .post(`${process.env.REACT_APP_BASEURL}/product_images`, ImgObj)
         .then((response) => {
 
           ImgObj = [];
-          onImgView(id, product_id);
+          onImgView(product_id,id);
           setcustomValidated("");
 
         })
@@ -908,8 +913,7 @@ console.log("ggggggggg"+coverimg)
 
 
   };
-  console.log("")
-console.log(variantarray.unit)
+
 
   let discountt = (variantarray.mrp * variantarray.discount) / 100;
   let saleprice = variantarray.mrp - discountt;
@@ -4906,11 +4910,15 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                           onClick={(_id) =>
                                             onImgView(
                                               variantdata.id,
-                                              variantdata.product_id
+                                              variantdata.product_id,
+                                           console.log("idsssss"+ variantdata.id+variantdata.product_id)
+
                                             )
                                           }
+
                                           aria-controls={
                                             "variantimgbox" + variantdata.id
+                                            
                                           }
                                           aria-expanded={open}
                                         />
@@ -4938,13 +4946,13 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                     {/* <Accordion.Body eventKey={i}> */}
                                     {newImageUrls ? (
                                       <tr
+                                    
                                         className={
                                           variantdata.id == imageboxid
                                             ? "img_preview_boxx show"
                                             : "img_preview_boxx hide"
                                         }
                                         id={"variantimgbox" + variantdata.id}
-                                        
                                       >
                                         <td colSpan="13">
                                           <div className="image_box">
@@ -4955,7 +4963,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                                   className="imgprivew_box"
                                                   key={i}
                                                 >
-                                                  {console.log("imgg.image_position"+imgg.image_position)}
+                                                  {/* {console.log("imgg.image_position"+imgg.image_position)} */}
                                                   {imgg.image_position ===
                                                     "cover" ? (
                                                     <span className="cover_img">
@@ -5015,6 +5023,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                                       variantdata.product_id,
                                                       variantdata.id,
                                                       variantdata.vendor_id,
+                                                      console.log("variantdata.id"+variantdata.id)
 
                                                     )
                                                     }
