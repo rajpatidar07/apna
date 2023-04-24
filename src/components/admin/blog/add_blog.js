@@ -11,9 +11,9 @@ import Iconbutton from "../common/iconbutton";
 import axios from "axios";
 import { Badge} from "react-bootstrap";
 import moment from "moment";
-let categoryArray = [];
 
 const BlogList = () => {
+
   const formRef = useRef();
   const [changstatus, setchangstatus] = useState("");
   console.log(changstatus)
@@ -86,6 +86,8 @@ const BlogList = () => {
     }
   };
   const onSearchClick = () => {
+// let categoryArray = [];
+
     axios
       .post(`${process.env.REACT_APP_BASEURL}/blogs`, {
         id: "",
@@ -95,11 +97,11 @@ const BlogList = () => {
         product_tag: productTagSearch,
       })
       .then((response) => {
-        let data = response.data;
+        // let data = response.data;
         setBlog(response.data);
         setCondition(false);
         // setsearchBlog('')
-        categoryArray = [];
+      //  let categoryArray = [];
         setapicall(false);
       });
   };
@@ -117,6 +119,8 @@ const BlogList = () => {
     setaddBlog("")
     setValidated(false);
     setShow(false);
+    setCategorySearch("")
+
   };
 
   const handleShow = (e, id) => {
@@ -203,7 +207,7 @@ const BlogList = () => {
       axios
         .post(`${process.env.REACT_APP_BASEURL}/add_blog`, formData)
         .then((response) => {
-          let data = response.data;
+          // let data = response.data;
           setShow(false);
           setapicall(true);
           setAddAlert(true);
@@ -234,7 +238,7 @@ const BlogList = () => {
     axios
       .put(`${process.env.REACT_APP_BASEURL}/update_blog`, formData)
       .then((response) => {
-        let data = response.data;
+        // let data = response.data;
         setapicall(true);
         setShow(false);
         setUpdateAlert(true);
@@ -426,7 +430,7 @@ const BlogList = () => {
   //   (thing, index, self) =>
   //     index === self.findIndex((t) => t.product_tag == thing.product_tag)
   // );
-  const handleClick = () => { };
+  // const handleClick = () => { };
   const onStatusChange = (e, id) => {
     setchangstatus(e.target.value);
     setCondition(true);

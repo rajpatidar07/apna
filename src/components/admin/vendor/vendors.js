@@ -504,6 +504,7 @@ console.log("SHOWWW+"+Docnamearray)
 
         const [first, ...rest] = encoded.base64.split(",");
         const [nameimg, ext] = encoded.name.split(".");
+        console.log(first,nameimg)
         const vendorimg = rest.join("-");
         let imar = {
           vendor_id: `${vendorID}`,
@@ -646,8 +647,8 @@ console.log("SHOWWW+"+Docnamearray)
     ) {
       setCustomValidation("10number");
     } else if (addvendordata.email === "") {
-      var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z]{2,4})+$/;
-      var rst = regex.test(addvendordata.email);
+      // var regex = /^([a-zA-Z0-9_.+-])+(([a-zA-Z0-9-])+\.)+([a-zA-Z]{2,4})+$/;
+      var rst = /\S+@\S+\.\S+/.test(addvendordata.email);
       if (rst !== true) {
         setCustomValidation("EmailEmpty");
       }
@@ -746,8 +747,11 @@ console.log("SHOWWW+"+Docnamearray)
     ) {
       setCustomValidation("10number");
     } else if (addvendordata.email === "" || addvendordata.email === null) {
-      var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z]{2,4})+$/;
-      var rst = regex.test(addvendordata.email);
+      // var regex = /^([a-zA-Z0-9_.+-])+(([a-zA-Z0-9-])+\.)+([a-zA-Z]{2,4})+$/;
+      // /\S+@\S+\.\S+/.test(value)
+
+
+      var rst =  /\S+@\S+\.\S+/.test(addvendordata.email);
       if (rst !== true) {
         setCustomValidation("EmailEmpty");
       }

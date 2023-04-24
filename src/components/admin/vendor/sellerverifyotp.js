@@ -43,7 +43,7 @@ const Sellerverifyotp = (props) => {
           if (response.data.message === "otp not matched") {
             setOtperror("invalid otp");
           } else {
-            var { response, vendor_token } = response.data;
+            var { vendor_token } = response.data;
             navigate("/vendorUpdate")
 
 

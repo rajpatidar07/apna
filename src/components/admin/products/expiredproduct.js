@@ -120,8 +120,9 @@ const Expiredproduct = () => {
         } else {
           let data_Array = v.filter((arr) => {
             if (arr.expire_date < currentdate) {
-              return arr;
             }
+            return arr;
+
           });
           setexpiredata(data_Array);
           setapicall(false);

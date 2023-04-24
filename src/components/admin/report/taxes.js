@@ -135,7 +135,7 @@ const TaxesReport = () => {
   const TimeChange = (e) => {
     setFilterchange(e.target.value);
     let value = Number(e.target.value);
-    if (value == 1) {
+    if (value === 1) {
       let frommDate = moment().format("YYYY-MM-DD");
       setFromDate(frommDate);
       setToDate(moment().format("YYYY-MM-DD"));
@@ -149,7 +149,7 @@ const TaxesReport = () => {
       setpreviousStateChange(1);
     }
     //yesterday------------------------------------------------------------------------
-    if (value == 2) {
+    if (value === 2) {
       let yesterday = moment()
         .subtract(1, "days")
         .startOf("days")
@@ -172,7 +172,7 @@ const TaxesReport = () => {
       setpreviousStateChange(2);
     }
     //last week---------------------------------------------------------------
-    if (value == 3) {
+    if (value === 3) {
       let lastweek = moment()
         .subtract(1, "weeks")
         .startOf("weeks")
@@ -199,7 +199,7 @@ const TaxesReport = () => {
       setpreviousStateChange(3);
     }
     //last month---------------------------------------------------------------
-    if (value == 4) {
+    if (value === 4) {
       let month = moment()
         .subtract(1, "month")
         .startOf("month")
@@ -224,7 +224,7 @@ const TaxesReport = () => {
       setpreviousStateChange(4);
     }
     //  last six month---------------------------------------------------------
-    if (value == 5) {
+    if (value === 5) {
       let sixMonth = moment()
         .subtract(6, "month")
         .startOf("month")
@@ -246,7 +246,7 @@ const TaxesReport = () => {
     }
 
     //this week-----------------------------------------------------------------------
-    if (value == 8) {
+    if (value === 8) {
       let ThisWeek = moment()
         .startOf("weeks")
         .format("YYYY-MM-DD");
@@ -265,7 +265,7 @@ const TaxesReport = () => {
       );
       setpreviousStateChange(8);
     }
-    if (value == 9) {
+    if (value === 9) {
       let ThisMonth = moment()
         .startOf("month")
         .format("YYYY-MM-DD");
@@ -302,7 +302,10 @@ const TaxesReport = () => {
   const brandHandler = (e) => {
     arrr = [];
     e.map((item) => {
-      arrr.push(item.value);
+      return(
+        arrr.push(item.value)
+
+      )
     });
     setBrandName(arrr);
   };
@@ -319,7 +322,10 @@ const TaxesReport = () => {
   const VendorHandler = (e) => {
     vendorArray = [];
     e.map((item) => {
-      vendorArray.push(item.value);
+      return(
+        vendorArray.push(item.value)
+
+      )
     });
     setVendorId(vendorArray);
   };
@@ -336,7 +342,10 @@ const TaxesReport = () => {
   const categoryHandler = (e) => {
     CategoryArray = [];
     e.map((item) => {
-      CategoryArray.push(item.value);
+      return(
+        CategoryArray.push(item.value)
+
+      )
     });
     setCategoryId(CategoryArray);
   };
@@ -352,7 +361,10 @@ const TaxesReport = () => {
   const SearchHandler = (e) => {
     SearchArray = [];
     e.map((item) => {
-      SearchArray.push(item.value);
+      return(
+        SearchArray.push(item.value)
+
+      )
     });
     setLocation(SearchArray);
   };
@@ -455,7 +467,7 @@ const TaxesReport = () => {
   //----------------------------------------------------+++=++++++ excel--------------------------------------------------->
 
   const columns = [
-    ,
+    
     {
       name: "Order Date ",
       selector: (row) => moment(row.order_date).format("YYYY-MM-DD"),
@@ -493,7 +505,7 @@ const TaxesReport = () => {
     100
   ).toFixed(2);
 
-  resultOrderTax != "Infinity" ? console.log() : (resultOrderTax = 0);
+  resultOrderTax !== "Infinity" ? console.log() : (resultOrderTax = 0);
 
   // // //-------------Order count---------------------------
   var getOrderCount = Number(Taxesreport.order_count);
@@ -505,7 +517,7 @@ const TaxesReport = () => {
     100
   ).toFixed(2);
 
-  resultOrderCount != "Infinity" ? console.log() : (resultOrderCount = 0);
+  resultOrderCount !== "Infinity" ? console.log() : (resultOrderCount = 0);
   return (
     <div>
       <h2>Taxes Report</h2>
@@ -661,10 +673,10 @@ const TaxesReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                      {TaxesError == "No_Data" ||
-                        Taxesreport.order_tax == null ||
-                        Taxesreport.order_tax == undefined ||
-                        Taxesreport.order_tax == "" ? (
+                      {TaxesError === "No_Data" ||
+                        Taxesreport.order_tax === null ||
+                        Taxesreport.order_tax === undefined ||
+                        Taxesreport.order_tax === "" ? (
                         <h3>₹0</h3>
                       ) : (
                         <h3>₹{Taxesreport.order_tax.toFixed(2)}</h3>
@@ -682,12 +694,12 @@ const TaxesReport = () => {
                             {" "}
                             {resultOrderTax}%
                           </p>
-                        ) : resultOrderTax == 0 ? (
+                        ) : resultOrderTax === 0 ? (
                           <p className="mb-0 h5" style={{ color: "blue" }}>
                             {" "}
                             {resultOrderTax}%
                           </p>
-                        ) : resultOrderTax == "NaN" ? (
+                        ) : resultOrderTax === "NaN" ? (
                           <p className="mb-0 h5" style={{ color: "grey" }}>
                             {" "}
                             0%
@@ -701,28 +713,28 @@ const TaxesReport = () => {
                       </div>
                     </div>
                     <div>
-                      {previousStateChange == 1 ? (
+                      {previousStateChange === 1 ? (
                         <h5>Today :</h5>
-                      ) : previousStateChange == 2 ? (
+                      ) : previousStateChange === 2 ? (
                         <h5>Previous Yesterday :</h5>
-                      ) : previousStateChange == 3 ? (
+                      ) : previousStateChange === 3 ? (
                         <h5>Previous Last week :</h5>
-                      ) : previousStateChange == 4 ? (
+                      ) : previousStateChange === 4 ? (
                         <h5>Previous Last Month :</h5>
-                      ) : previousStateChange == 5 ? (
+                      ) : previousStateChange === 5 ? (
                         <h5>Previous Last 6 Months:</h5>
-                      ) : previousStateChange == 8 ? (
+                      ) : previousStateChange === 8 ? (
                         <h5>Previous week :</h5>
-                      ) : previousStateChange == 9 ? (
+                      ) : previousStateChange === 9 ? (
                         <h5>Previous Month :</h5>
                       ) : (
                         <h5>Today :</h5>
                       )}
 
-                      {TaxesError == "no_data" ||
-                        PrevTaxesreport.prev_order_tax == null ||
-                        PrevTaxesreport.prev_order_tax == undefined ||
-                        PrevTaxesreport.prev_order_tax == "" ? (
+                      {TaxesError === "no_data" ||
+                        PrevTaxesreport.prev_order_tax === null ||
+                        PrevTaxesreport.prev_order_tax === undefined ||
+                        PrevTaxesreport.prev_order_tax === "" ? (
                         <p className="h5">₹0</p>
                       ) : (
                         <p className="h5">
@@ -751,10 +763,10 @@ const TaxesReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                      {TaxesError == "No_Data" ||
-                        Taxesreport.order_count == null ||
-                        Taxesreport.order_count == undefined ||
-                        Taxesreport.order_count == "" ? (
+                      {TaxesError === "No_Data" ||
+                        Taxesreport.order_count === null ||
+                        Taxesreport.order_count === undefined ||
+                        Taxesreport.order_count === "" ? (
                         <h3>0</h3>
                       ) : (
                         <h3>{Taxesreport.order_count}</h3>
@@ -773,12 +785,12 @@ const TaxesReport = () => {
                             {" "}
                             {resultOrderCount}%
                           </p>
-                        ) : resultOrderCount == 0 ? (
+                        ) : resultOrderCount === 0 ? (
                           <p className="mb-0 h5" style={{ color: "blue" }}>
                             {" "}
                             {resultOrderCount}%
                           </p>
-                        ) : resultOrderCount == "NaN" ? (
+                        ) : resultOrderCount === "NaN" ? (
                           <p className="mb-0 h5" style={{ color: "grey" }}>
                             {" "}
                             0%
@@ -792,28 +804,28 @@ const TaxesReport = () => {
                       </div>
                     </div>
                     <div>
-                      {previousStateChange == 1 ? (
+                      {previousStateChange === 1 ? (
                         <h5>Today :</h5>
-                      ) : previousStateChange == 2 ? (
+                      ) : previousStateChange === 2 ? (
                         <h5>Previous Yesterday :</h5>
-                      ) : previousStateChange == 3 ? (
+                      ) : previousStateChange === 3 ? (
                         <h5>Previous Last week :</h5>
-                      ) : previousStateChange == 4 ? (
+                      ) : previousStateChange === 4 ? (
                         <h5>Previous Last Month :</h5>
-                      ) : previousStateChange == 5 ? (
+                      ) : previousStateChange === 5 ? (
                         <h5>Previous Last 6 Months:</h5>
-                      ) : previousStateChange == 8 ? (
+                      ) : previousStateChange === 8 ? (
                         <h5>Previous week :</h5>
-                      ) : previousStateChange == 9 ? (
+                      ) : previousStateChange === 9 ? (
                         <h5>Previous Month :</h5>
                       ) : (
                         <h5>Today :</h5>
                       )}
 
-                      {TaxesError == "no_data" ||
-                        PrevTaxesreport.prev_order_count == null ||
-                        PrevTaxesreport.prev_order_count == undefined ||
-                        PrevTaxesreport.prev_order_count == "" ? (
+                      {TaxesError === "no_data" ||
+                        PrevTaxesreport.prev_order_count === null ||
+                        PrevTaxesreport.prev_order_count === undefined ||
+                        PrevTaxesreport.prev_order_count === "" ? (
                         <p className="h5"> 0</p>
                       ) : (
                         <p className="h5">

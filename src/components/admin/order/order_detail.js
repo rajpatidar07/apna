@@ -113,12 +113,14 @@ const OrderDetail = () => {
   var sub_total = 0;
   var total_tax = 0;
   let qty = 0;
-
   let total_tax_with_qty = 0;
   let total_priceWithout_tax = 0;
+console.log(total,total_tax)
+
   return (
     <>
-      {loading == true ? <Loader /> : null}
+      {loading === true ? <Loader /> : null}
+      
       <div className="order_detail_page">
         <div className="order_detail">
           <h2>Orders Detail</h2>
@@ -150,7 +152,7 @@ const OrderDetail = () => {
                       <option>Select Order Status</option>
                       <option
                         value="placed"
-                      // selected={order.status === "placed" ? true : false}
+                      // selected={order.status ==== "placed" ? true : false}
                       >
                         Placed
                       </option>
@@ -216,24 +218,24 @@ const OrderDetail = () => {
                 <div className="product_image_price"></div>
 
                 {(productorder || []).map((orderdata) => {
-                  orderdata.gst == "null" ||
-                    orderdata.gst == "undefined" ||
-                    orderdata.gst == ""
+                  orderdata.gst === "null" ||
+                    orderdata.gst === "undefined" ||
+                    orderdata.gst === ""
                     ? (orderdata.gst = "0")
                     : Number(orderdata.gst);
-                  orderdata.sgst == "null" ||
-                    orderdata.sgst == "undefined" ||
-                    orderdata.sgst == ""
+                  orderdata.sgst === "null" ||
+                    orderdata.sgst === "undefined" ||
+                    orderdata.sgst === ""
                     ? (orderdata.sgst = "0")
                     : Number(orderdata.sgst);
-                  orderdata.cgst == "null" ||
-                    orderdata.cgst == "undefined" ||
-                    orderdata.cgst == ""
+                  orderdata.cgst === "null" ||
+                    orderdata.cgst === "undefined" ||
+                    orderdata.cgst === ""
                     ? (orderdata.cgst = "0")
                     : Number(orderdata.cgst);
-                  orderdata.mrp == "undefined" ||
-                    orderdata.mrp == "null" ||
-                    orderdata.mrp == ""
+                  orderdata.mrp === "undefined" ||
+                    orderdata.mrp === "null" ||
+                    orderdata.mrp === ""
                     ? (orderdata.mrp = "0")
                     : Number(orderdata.mrp);
                   let countAllText =

@@ -82,7 +82,7 @@ const Productdetail = () => {
   const [imageName, setimageName] = useState("");
   const [currentPage, setCurrentPage] = useState("choose-img");
   const [show, setShow] = useState(false);
-
+console.log(show);
   var varietyy = VariationJson;
   // PRODUCT DETAIL API
   useEffect(() => {
@@ -720,7 +720,7 @@ console.log(variantarray)
                     >
                       {newImageUrls
                         ? (newImageUrls || []).map((data, i) => {
-                          return data.product_verient_id == vid &&
+                          return data.product_verient_id === vid &&
                             data.product_id === pid ? (
                             <div className="w-100 h-50" key={i}>
                               <img

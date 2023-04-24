@@ -211,12 +211,12 @@ const Soldproduct = () => {
             </b>
             {/* Product ID: {row.product_id} <br /> */}
             <span className="d-flex flex-column ">
-              {row.is_featured == 1 ? (
+              {row.is_featured === 1 ? (
                 <span className={"badge bg-warning mt-1"}>
                   {"featured product"}
                 </span>
               ) : null}
-              {row.is_special_offer == 1 ? (
+              {row.is_special_offer === 1 ? (
                 <span className={"badge bg-info mt-1"}>{"special offer"}</span>
               ) : null}
             </span>

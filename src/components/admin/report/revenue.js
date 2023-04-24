@@ -821,12 +821,15 @@ const RevenueReport = () => {
   };
 
   (tabledate||[]).map((item) => {
-    GrossAmmount.push(item.gross_amount);
-    totalSales.push(item.total_sales);
-    totalGSt.push(item.total_gst);
-    TotalShipping.push(item.total_shipping_charges);
-    NetSales.push(item.net_sales);
-    Discount.push(item.discount);
+    return(
+      GrossAmmount.push(item.gross_amount),
+    totalSales.push(item.total_sales),
+    totalGSt.push(item.total_gst),
+    TotalShipping.push(item.total_shipping_charges),
+    NetSales.push(item.net_sales),
+    Discount.push(item.discount)
+    )
+    
   });
 
   const options1 = [
@@ -838,7 +841,10 @@ const RevenueReport = () => {
   const brandHandler = (e) => {
     arrr = [];
     e.map((item) => {
-      arrr.push(item.value);
+      return(
+      arrr.push(item.value)
+
+      )
     });
     setBrandName(arrr);
   };
@@ -855,7 +861,10 @@ const RevenueReport = () => {
   const VendorHandler = (e) => {
     vendorArray = [];
     e.map((item) => {
-      vendorArray.push(item.value);
+      return(
+        vendorArray.push(item.value)
+
+      )
     });
     setVendorId(vendorArray);
   };
@@ -872,7 +881,10 @@ const RevenueReport = () => {
   const categoryHandler = (e) => {
     CategoryArray = [];
     e.map((item) => {
-      CategoryArray.push(item.value);
+      return(
+        CategoryArray.push(item.value)
+
+      )
     });
     setCategoryId(CategoryArray);
   };
@@ -888,7 +900,10 @@ const RevenueReport = () => {
   const SearchHandler = (e) => {
     SearchArray = [];
     e.map((item) => {
-      SearchArray.push(item.value);
+      return(
+      SearchArray.push(item.value)
+
+      )
     });
     setLocation(SearchArray);
   };

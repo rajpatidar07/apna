@@ -62,6 +62,7 @@ const VendorEmailLogin = () => {
   //     setpassval(e.target.value);
   //   };
 
+  setSpinner(false)
 
   //   const SignUpUser = (e) => {
 

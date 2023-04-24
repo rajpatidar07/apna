@@ -55,7 +55,7 @@ const ChangePassword = () => {
         setPasswordError("");
       }
     if (passval.length >= 8) {
-      {
+      
         axios
           .put(`${process.env.REACT_APP_BASEURL}/update_password`, {
             admin_email: password.email,
@@ -76,7 +76,7 @@ const ChangePassword = () => {
               navigate("/login");
             }
           });
-      }
+      
     }
     e.preventDefault();
   };

@@ -45,7 +45,7 @@ const Deletedproduct = () => {
         }
       )
       .then((response) => {
-        let data = response.data;
+        // let data = response.data;
         setapicall(true);
         setRestoreAlert(false);
       });
@@ -78,7 +78,7 @@ const Deletedproduct = () => {
 
           const result = cgory.filter(
             (thing, index, self) =>
-              index === self.findIndex((t) => t.shop_name == thing.shop_name)
+              index === self.findIndex((t) => t.shop_name === thing.shop_name)
           );
           const result1 = result.filter(
             (item) => item.status === "approved" || item.status === "active"

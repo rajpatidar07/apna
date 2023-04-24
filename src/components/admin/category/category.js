@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 // import Input from "../common/input";
 import { AiOutlinePlus } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
 import DataTable from "react-data-table-component";
@@ -136,7 +136,7 @@ const CategoryList = () => {
             setCateType(false);
             setImagePath(response.data[0].image);
             const arr = data.all_parent_id.split(",");
-            if (arr[0] === "0" && arr.length == 1) {
+            if (arr[0] === "0" && arr.length === 1) {
             } else {
               for (let i = 0; i < arr.length; i++) {
                 axios
@@ -145,7 +145,7 @@ const CategoryList = () => {
                   )
                   .then((response) => {
                     let data = response.data[0];
-                    if (i == 0) {
+                    if (i === 0) {
                       axios
                         .get(
                           `${process.env.REACT_APP_BASEURL_0}/category?category=${arr[i]}`
@@ -160,7 +160,7 @@ const CategoryList = () => {
                           console.log(error);
                         });
                       setCategoryEditparent(data.category_name);
-                    } else if (i == 1) {
+                    } else if (i === 1) {
                       axios
                         .get(
                           `${process.env.REACT_APP_BASEURL_0}/category?category=${arr[i]}`
@@ -175,7 +175,7 @@ const CategoryList = () => {
                           console.log(error);
                         });
                       setCategoryEditSubparent(data.category_name);
-                    } else if (i == 2) {
+                    } else if (i === 2) {
                       setCategoryEditChildparent(data.category_name);
                       setCateName(false);
                       setCateType(false);
@@ -268,7 +268,7 @@ const CategoryList = () => {
             // );
             // console.log(specificValues);
 
-            if (indVal ==0) {
+            if (indVal ===0) {
               setCategory(cgory);
               setlevel(0);
             }
@@ -592,15 +592,15 @@ const CategoryList = () => {
     setapicall(true);
   };
   const handleClick = () => { };
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const result1 = searchdata.filter(
     (thing, index, self) =>
-      index === self.findIndex((t) => t.category_type == thing.category_type)
+      index === self.findIndex((t) => t.category_type === thing.category_type)
   );
   const result2 = searchdata.filter(
     (thing, index, self) =>
-      index === self.findIndex((t) => t.level == thing.level)
+      index === self.findIndex((t) => t.level === thing.level)
   );
 
   /*<---Function to close the modal--->*/

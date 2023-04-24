@@ -170,7 +170,7 @@ function Admin() {
       });
   };
   const AddAdminClick = (e) => {
-    const form = e.currentTarget;
+    // const form = e.currentTarget;
     e.preventDefault();
     e.stopPropagation();
     // if (form.checkValidity() === false) {

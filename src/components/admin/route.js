@@ -7,7 +7,7 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import Dashboard from './dashboard';
 import Product from './product';
-import Orders from './orders';
+// import Orders from './orders';
 
 function AdminRoute() {
   return (

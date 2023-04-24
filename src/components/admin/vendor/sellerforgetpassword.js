@@ -21,9 +21,9 @@ const SellerForgertPassword = (props) => {
   };
 
   const forgotPassword = (e) => {
-    var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z]{2,4})+$/;
-    var rst = regex.test(forgotemail);
-    if (rst == false) {
+    // var regex = /^([a-zA-Z0-9_.+-])+(([a-zA-Z0-9-])+\.)+([a-zA-Z]{2,4})+$/;
+    var rst = /\S+@\S+\.\S+/.test(forgotemail);
+    if (rst === false) {
       setemailerror("ForgetEmailEmpty");
     } else {
       setSpinner("spinner");

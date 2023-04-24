@@ -18,7 +18,7 @@ function Banner() {
   const formRef = useRef();
   const [error, setError] = useState(true);
   const [show, setShow] = useState(false);
-  
+  console.log(show)
   const [bannershow, setBannerShow] = useState("");
   const [Alert, setAlert] = useState(false);
   const [validated, setValidated] = useState(false);

@@ -1,6 +1,6 @@
 import React, { useState} from "react";
 
-import { useNavigate, useLocation } from "react-router-dom";
+// import { useNavigate, useLocation } from "react-router-dom";
 
 
 import MainButton from "../common/button";
@@ -77,7 +77,8 @@ const SellerSignupp = () => {
         setSpinner(false);
         if (response.data.response === false) {
           setemailerror("Already Exist. Please Login");
-          emailVal = "";
+          setemailVal("")
+          // emailVal = "";
         } else if (response.data.message === "invalid address") {
           setemailerror("invalid address");
           setSpinner(false);
@@ -269,7 +270,7 @@ const SellerSignupp = () => {
 
 
               {/* seller Login start here */}
-              {sellerLoginshow === true ? <SellerLogin forgetpassword={setSellerForgetpasswordshow} showsellerlogin={setSellerLoginShow} sellersign={setSellerSignUpShow} sellerChangePsword={setSellerChangepasswordshow} vendorResetPsword={setVendorResetpasswordshow} /> : sellerLoginshow == false ? null : null}
+              {sellerLoginshow === true ? <SellerLogin forgetpassword={setSellerForgetpasswordshow} showsellerlogin={setSellerLoginShow} sellersign={setSellerSignUpShow} sellerChangePsword={setSellerChangepasswordshow} vendorResetPsword={setVendorResetpasswordshow} /> : sellerLoginshow === false ? null : null}
 
               {/* seller login end here */}
 

@@ -59,7 +59,7 @@ const VendorResetPassword = (props) => {
         setPasswordError("");
       }
     if (passval.length >= 8) {
-      {
+      
         axios
           .put(`${process.env.REACT_APP_BASEURL}/update_password`, {
             admin_email: password.email,
@@ -80,7 +80,7 @@ const VendorResetPassword = (props) => {
               navigate("/login");
             }
           });
-      }
+      
     }
     e.preventDefault();
   };

@@ -71,7 +71,8 @@ const SellerSignUp = () => {
         setSpinner(false);
         if (response.data.response === false) {
           setemailerror("Already Exist. Please Login");
-          emailVal = "";
+          setemailVal("")
+          // emailVal = "";
         } else if (response.data.message === "invalid address") {
           setemailerror("invalid address");
           setSpinner(false);
@@ -119,7 +120,7 @@ const SellerSignUp = () => {
           if (response.data.message === "otp not matched") {
             setOtperror("invalid otp");
           } else {
-            var { response, vendor_token } = response.data;
+            var { vendor_token } = response.data;
             navigate("/vendorUpdate")
             // setHide(true);
             setformShow(false);
@@ -247,8 +248,8 @@ const SellerSignUp = () => {
   };
   const forgotPassword = () => {
 
-    var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z]{2,4})+$/;
-    var rst = regex.test(forgotemail);
+    // var regex = /^([a-zA-Z0-9_.+-])+(([a-zA-Z0-9-])+\.)+([a-zA-Z]{2,4})+$/;
+    var rst = /\S+@\S+\.\S+/.test(forgotemail);
     if (rst === false) {
 
       setemailerror("ForgetEmailEmpty")

@@ -1,5 +1,5 @@
 // import React, { useState } from "react";
-import React from "react";
+// import React from "react";
 import { useState } from "react";
 const useHook = (callback) => {
   // initial state
@@ -64,8 +64,9 @@ const useHook = (callback) => {
     switch (field) {
       case "admin_email":
         let passregex =
-          /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z]{2,4})+$/;
+          /^([a-zA-Z0-9_.+-])+(([a-zA-Z0-9-])+\.)+([a-zA-Z]{2,4})+$/;
         let checkpass = passregex.test(value);
+        console.log(checkpass)
         if (value === "") {
           setLoginerror({
             ...loginerror,

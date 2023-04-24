@@ -18,8 +18,8 @@ import "jspdf-autotable";
 import { downloadExcel } from "react-export-table-to-excel";
 
 const ProductReport = () => {
-  var NetSales = [];
-  var Order = [];
+  // var NetSales = [];
+  // var Order = [];
 
   const token = localStorage.getItem("token");
 

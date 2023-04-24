@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
-import Input from "./common/input";
-import { FaFileInvoiceDollar } from "react-icons/fa";
+// import Input from "./common/input";
+// import { FaFileInvoiceDollar } from "react-icons/fa";
 import DataTable from "react-data-table-component";
 import MainButton from "./common/button";
 import Form from "react-bootstrap/Form";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../../style/order.css";
-import OrderJson from "./json/orders";
+// import OrderJson from "./json/orders";
 import axios from "axios";
 import moment from "moment";
-import Status from "./json/Status";
+// import Status from "./json/Status";
 import Loader from "./common/loader";
 
 function Orders() {

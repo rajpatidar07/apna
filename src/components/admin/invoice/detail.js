@@ -273,7 +273,7 @@ const Invoice = () => {
 
                       let total_price = orderdata.sale_price * qty;
 
-                      let Total_taxMultiply_qty = tax * qty;
+                      // let Total_taxMultiply_qty = tax * qty;
                       total_Product_price += Number(orderdata.product_price);
                       total_sale_price += Number(orderdata.sale_price);
                       let price_without_tax =

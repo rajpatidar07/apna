@@ -42,6 +42,7 @@ function Product() {
   const [CategoryEditdata, setCategoryEditData] = useState([]);
   console.log(CategoryEditdata)
   const [show, setShow] = useState(false);
+  console.log(show)
   // const [cover,setCover]=useState("cover")
   const [currentPage, setCurrentPage] = useState("choose-img");
   const [imgAfterCrop, setImgAfterCrop] = useState("");
@@ -701,7 +702,7 @@ function Product() {
   // END ADD AND EDIT PRODUCT MODAL
 
   // seotag
-  let tagname;
+  // let tagname;
   // const ontagchange = (e) => {
   //   tagname = e.target.value;
   //   setaddtag(tagname);
@@ -4987,7 +4988,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                         <td colSpan="13">
                                           <div className="image_box">
                                             {(newImageUrls||[]).map((imgg, i) => {
-                                              return `${variantdata.id}` ==
+                                              return `${variantdata.id}` ===
                                                 imgg.product_verient_id ? (
                                                 <div
                                                   className="imgprivew_box"

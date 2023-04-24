@@ -31,7 +31,6 @@ const VendorUpdate = () => {
     store_type: "",
     image: "",
     status: "",
-    image: "",
     document_name: [],
     availability: "",
     social_media_links: [],
@@ -177,6 +176,7 @@ const VendorUpdate = () => {
       encoded = await convertToBase64(e.target.files[i]);
       const [first, ...rest] = encoded.base64.split(",");
       const [nameimg, ext] = encoded.name.split(".");
+      console.log(first,nameimg)
       const vendorimg = rest.join("-");
       let imar = {
         vendor_id: `${vendorid}`,
@@ -309,8 +309,8 @@ const VendorUpdate = () => {
     ) {
       setCustomValidation("10number");
     } else if (addvendordata.email === "" || addvendordata.email === null) {
-      var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z]{2,4})+$/;
-      var rst = regex.test(addvendordata.email);
+      // var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z]{2,4})+$/;
+      var rst = /\S+@\S+\.\S+/.test(addvendordata.email);
       if (rst !== true) {
         setCustomValidation("EmailEmpty");
       }

@@ -210,11 +210,11 @@ const Addproduct = (props) => {
   }
 
   useEffect(() => {
-    if (props.show == 1) {
+    if (props.show === 1) {
       setpdata('')
       setmodalshow(true)
     }
-    if (props.show == 2) {
+    if (props.show === 2) {
       setmodalshow(true)
       setpdata(productjson)
       setseoArray(productjson.seo_tag)
@@ -442,6 +442,7 @@ const Addproduct = (props) => {
                       }}
                       onChange={(event, editor) => {
                         const data = editor.getData();
+                        console.log(data)
                       }}
                       onBlur={(event, editor) => {
                       }}
@@ -1121,6 +1122,7 @@ const Addproduct = (props) => {
                     }}
                     onChange={(event, editor) => {
                       const data = editor.getData();
+                      console.log(data)
                     }}
                     onBlur={(event, editor) => {
                     }}
@@ -1251,8 +1253,8 @@ const Addproduct = (props) => {
           <MainButton btntext={"Save as Draft"} onClick={() => handleSaveDraft()} />
           <Iconbutton
             type={'submit'}
-            btntext={(props.show == 2 ? "Update Product" : "Add Product")}
-            onClick={(props.show == 2 ? handleUpdateProduct : handleAddProduct)}
+            btntext={(props.show === 2 ? "Update Product" : "Add Product")}
+            onClick={(props.show === 2 ? handleUpdateProduct : handleAddProduct)}
             btnclass={"button main_button "}
           />
         </Modal.Footer>
