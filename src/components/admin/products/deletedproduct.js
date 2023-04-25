@@ -119,7 +119,7 @@ const Deletedproduct = () => {
     setsearcherror(false);
   };
   useEffect(() => {
-    let productArry=[];
+    let productArry = [];
 
     setloading(true);
     axios
@@ -141,15 +141,15 @@ const Deletedproduct = () => {
         },
       })
       .then((response) => {
-        let v=response.data.results;
-        v.forEach(function (item,index){
-          let catname=response.data.category_name[item.category]
-          item.category=catname;
-        productArry.push(item)
+        let v = response.data.results;
+        v.forEach(function (item, index) {
+          let catname = response.data.category_name[item.category]
+          item.category = catname;
+          productArry.push(item)
 
         })
-        let response_data={};    
-        response_data["results"]=productArry;
+        let response_data = {};
+        response_data["results"] = productArry;
         setdeletedata(response_data);
         setapicall(false);
         setsearcherror(false);
@@ -163,55 +163,55 @@ const Deletedproduct = () => {
   }, [apicall]);
   const columns = [
     {
-          name: "#",
-          width: "150px",
-          center: true,
-          cell: (row) => (
-            <img
-              height="90px"
-              width="70px"
-              alt={row.product_title_name}
-              src={
-                row.all_images
-                  ? row.all_images
-                  : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
-              }
-              style={{
-                borderRadius: 10,
-                paddingTop: 10,
-                paddingBottom: 10,
-                textAlign: "right",
-              }}
-              onClick={handleClick}
-            />
-          ),
-        },
-        {
-          name: "Product Name",
-          selector: (row) => row.product_title_name,
-          sortable: true,
-          width: "200px",
-        },
+      name: "#",
+      width: "150px",
+      center: true,
+      cell: (row) => (
+        <img
+          height="90px"
+          width="70px"
+          alt={row.product_title_name}
+          src={
+            row.all_images
+              ? row.all_images
+              : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"
+          }
+          style={{
+            borderRadius: 10,
+            paddingTop: 10,
+            paddingBottom: 10,
+            textAlign: "right",
+          }}
+          onClick={handleClick}
+        />
+      ),
+    },
+    {
+      name: "Product Name",
+      selector: (row) => row.product_title_name,
+      sortable: true,
+      width: "200px",
+    },
     {
       name: "Category",
-  //     selector: (row) =>{
-  //       // console.log(row.cat_catname)
-  //       // console.log(row.category)
-  //       console.log(cat_catname[row.category])
-  //  return(
-  //   <>
-  //   {row.cat_catname === undefined ? "null":  cat_catname[row.category]}
-  //   </>
-  //  )
-      
-  //     },
-      selector:(row)=>row.category,
+      //     selector: (row) =>{
+      //       // console.log(row.cat_catname)
+      //       // console.log(row.category)
+      //       console.log(cat_catname[row.category])
+      //  return(
+      //   <>
+      //   {row.cat_catname === undefined ? "null":  cat_catname[row.category]}
+      //   </>
+      //  )
+
+      //     },
+      selector: (row) => row.category,
       sortable: true,
       width: "150px",
     },
     {
       name: "Category Id",
-      selector:(row)=>row.id,
+      selector: (row) => row.id,
       sortable: true,
       width: "150px",
     },
@@ -403,7 +403,7 @@ const Deletedproduct = () => {
     //     >
     //       {/* <option value={""}>Status</option> */}
     //       {(productstatus.productstatus || []).map((data, i) => {
-            
+
     //         return (
     //           <option value={data} key={i}>
     //             {" "}
@@ -415,23 +415,23 @@ const Deletedproduct = () => {
     //   ),
     //   sortable: true,
     // },
-  
+
     {
-          name: "Action",
-          width: "120px",
-          style: {
-            paddingRight: "12px",
-            paddingLeft: "0px",
-          },
-          selector: (row) => (
-            <Iconbutton
-              onClick={(e) => OnProductRestore(e, row.id, row.product_id)}
-              btntext={"Restore"}
-              btnclass={"button bg-warning"}
-              Iconname={<MdOutlineRestore className="mx-1" />}
-            />
-          ),
-        },
+      name: "Action",
+      width: "120px",
+      style: {
+        paddingRight: "12px",
+        paddingLeft: "0px",
+      },
+      selector: (row) => (
+        <Iconbutton
+          onClick={(e) => OnProductRestore(e, row.id, row.product_id)}
+          btntext={"Restore"}
+          btnclass={"button bg-warning"}
+          Iconname={<MdOutlineRestore className="mx-1" />}
+        />
+      ),
+    },
   ];
   // const columns = [
   //   {

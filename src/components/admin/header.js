@@ -31,7 +31,7 @@ function AdminHeader() {
   let vendorToken = localStorage.getItem("vendor_token");
   let token = localStorage.getItem("token");
 
- 
+
   const onPasswordChange = (e) => {
     setPassword(e.target.value);
   };
@@ -129,7 +129,7 @@ function AdminHeader() {
   };
 
   const handleClose = () => {
-    
+
     setShow(false);
     seterrornewpassword("");
     seterroroldpassword("");

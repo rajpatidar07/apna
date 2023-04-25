@@ -77,7 +77,7 @@ const Pendingproduct = () => {
   };
 
   useEffect(() => {
-    let productArry=[];
+    let productArry = [];
 
     setloading(true);
     axios
@@ -99,24 +99,24 @@ const Pendingproduct = () => {
         },
       })
       .then((response) => {
-        let v=response.data.results;
-        v.forEach(function (item,index){
-        
+        let v = response.data.results;
+        v.forEach(function (item, index) {
+
           // console.log(item.category)
           // console.log(response.data.category_name[item.category])
-          let catname=response.data.category_name[item.category]
+          let catname = response.data.category_name[item.category]
           // console.log(catname)
           // console.log(item)
-  
-          item.category=catname;
+
+          item.category = catname;
           // console.log("item"+JSON.stringify(item))
-          
+
           productArry.push(item)
-         } 
-         );
-         let response_data={};    
-         response_data["results"]=productArry;
-        setpendingdata( response_data);
+        }
+        );
+        let response_data = {};
+        response_data["results"] = productArry;
+        setpendingdata(response_data);
         setapicall(false);
         setsearcherror(false);
         setloading(false);

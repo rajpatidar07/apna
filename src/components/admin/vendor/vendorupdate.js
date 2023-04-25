@@ -176,7 +176,7 @@ const VendorUpdate = () => {
       encoded = await convertToBase64(e.target.files[i]);
       const [first, ...rest] = encoded.base64.split(",");
       const [nameimg, ext] = encoded.name.split(".");
-      console.log(first,nameimg)
+      console.log(first, nameimg)
       const vendorimg = rest.join("-");
       let imar = {
         vendor_id: `${vendorid}`,
@@ -903,7 +903,7 @@ const VendorUpdate = () => {
               <tbody className="vendordoc_image_table_body">
                 {newImageUrls ? (
                   <tr className="d-flex flex-wrap">
-                    {(newImageUrls||[]).map((imgg, i) => {
+                    {(newImageUrls || []).map((imgg, i) => {
                       return (
                         <td className="imgprivew_box">
                           <img

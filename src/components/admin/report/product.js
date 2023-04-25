@@ -191,7 +191,7 @@ const ProductReport = () => {
       );
       setpreviousStateChange(8);
     }
-    if (value ===9) {
+    if (value === 9) {
       let ThisMonth = moment()
         .startOf("month")
         .format("YYYY-MM-DD");
@@ -372,7 +372,7 @@ const ProductReport = () => {
       ],
     ];
 
-    const data =( tableProduct||[]).map((elt) => [
+    const data = (tableProduct || []).map((elt) => [
       elt.product_id,
       elt.product_name,
       elt.category_name,
@@ -482,7 +482,7 @@ const ProductReport = () => {
   ];
 
   const options1 = [
-    (brand||[]).map((item) => ({ value: `${item.brand}`, label: `${item.brand}` })),
+    (brand || []).map((item) => ({ value: `${item.brand}`, label: `${item.brand}` })),
   ];
 
   let arrr = [];
@@ -490,14 +490,14 @@ const ProductReport = () => {
   const brandHandler = (e) => {
     arrr = [];
     e.map((item) => {
-      return( arrr.push(item.value))
-     
+      return (arrr.push(item.value))
+
     });
     setBrandName(arrr);
   };
 
   const options2 = [
-    (venderList||[]).map((item) => ({
+    (venderList || []).map((item) => ({
       value: `${item.id}`,
       label: `${item.shop_name}`,
     })),
@@ -508,7 +508,7 @@ const ProductReport = () => {
   const VendorHandler = (e) => {
     vendorArray = [];
     e.map((item) => {
-      return(
+      return (
         vendorArray.push(item.value)
 
       )
@@ -517,7 +517,7 @@ const ProductReport = () => {
   };
 
   const options3 = [
-    (category||[]).map((item) => ({
+    (category || []).map((item) => ({
       value: `${item.id}`,
       label: `${item.category_name}`,
     })),
@@ -528,7 +528,7 @@ const ProductReport = () => {
   const categoryHandler = (e) => {
     CategoryArray = [];
     e.map((item) => {
-      return(
+      return (
         CategoryArray.push(item.value)
 
       )
@@ -547,7 +547,7 @@ const ProductReport = () => {
   const SearchHandler = (e) => {
     SearchArray = [];
     e.map((item) => {
-      return(
+      return (
         SearchArray.push(item.value)
 
       )
@@ -745,7 +745,7 @@ const ProductReport = () => {
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
                       <h3>
-                       
+
                         {ProductError === "No_Data" ||
                           getProduct.product_count == null ||
                           getProduct.product_count === undefined ||
@@ -882,7 +882,7 @@ const ProductReport = () => {
                         <h5>Previous Last Month :</h5>
                       ) : previousStateChange === 5 ? (
                         <h5>Previous Last 6 Months:</h5>
-                      ) : previousStateChange ===8 ? (
+                      ) : previousStateChange === 8 ? (
                         <h5>Previous week :</h5>
                       ) : previousStateChange === 9 ? (
                         <h5>Previous Month :</h5>

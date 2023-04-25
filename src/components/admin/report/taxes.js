@@ -3,7 +3,7 @@ import Input from "../common/input";
 import DataTable from "react-data-table-component";
 import MainButton from "../common/button";
 import Form from "react-bootstrap/Form";
-import { BsBagPlus} from "react-icons/bs";
+import { BsBagPlus } from "react-icons/bs";
 // import { RiShip2Line } from "react-icons/ri";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import { GiPayMoney } from "react-icons/gi";
@@ -52,7 +52,7 @@ const TaxesReport = () => {
   const [location, setLocation] = useState([]);
 
   const fetchData = () => {
-   
+
     axios
       .post(
         `${process.env.REACT_APP_BASEURL}/taxes_report`,
@@ -294,7 +294,7 @@ const TaxesReport = () => {
   };
 
   const options1 = [
-    (brand||[]).map((item) => ({ value: `${item.brand}`, label: `${item.brand}` })),
+    (brand || []).map((item) => ({ value: `${item.brand}`, label: `${item.brand}` })),
   ];
 
   let arrr = [];
@@ -302,7 +302,7 @@ const TaxesReport = () => {
   const brandHandler = (e) => {
     arrr = [];
     e.map((item) => {
-      return(
+      return (
         arrr.push(item.value)
 
       )
@@ -311,7 +311,7 @@ const TaxesReport = () => {
   };
 
   const options2 = [
-    (venderList||[]).map((item) => ({
+    (venderList || []).map((item) => ({
       value: `${item.id}`,
       label: `${item.shop_name}`,
     })),
@@ -322,7 +322,7 @@ const TaxesReport = () => {
   const VendorHandler = (e) => {
     vendorArray = [];
     e.map((item) => {
-      return(
+      return (
         vendorArray.push(item.value)
 
       )
@@ -331,7 +331,7 @@ const TaxesReport = () => {
   };
 
   const options3 = [
-    (category||[]).map((item) => ({
+    (category || []).map((item) => ({
       value: `${item.id}`,
       label: `${item.category_name}`,
     })),
@@ -342,7 +342,7 @@ const TaxesReport = () => {
   const categoryHandler = (e) => {
     CategoryArray = [];
     e.map((item) => {
-      return(
+      return (
         CategoryArray.push(item.value)
 
       )
@@ -361,7 +361,7 @@ const TaxesReport = () => {
   const SearchHandler = (e) => {
     SearchArray = [];
     e.map((item) => {
-      return(
+      return (
         SearchArray.push(item.value)
 
       )
@@ -467,7 +467,7 @@ const TaxesReport = () => {
   //----------------------------------------------------+++=++++++ excel--------------------------------------------------->
 
   const columns = [
-    
+
     {
       name: "Order Date ",
       selector: (row) => moment(row.order_date).format("YYYY-MM-DD"),

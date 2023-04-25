@@ -340,7 +340,7 @@ const VendorsList = () => {
       document_name: Docnamearray,
     });
   }, [Docnamearray]);
-console.log("SHOWWW+"+Docnamearray)
+  console.log("SHOWWW+" + Docnamearray)
   const handleFormChange = (e) => {
     setCustomValidation(false);
     setaddvendordata({
@@ -398,7 +398,7 @@ console.log("SHOWWW+"+Docnamearray)
 
           setcustomarray(response.data[0].social_media_links);
           let strCopy = response.data[0].document_name.split(",");
-          console.log(""+strCopy)
+          console.log("" + strCopy)
           setDocnameArray(strCopy);
           setapicall(false);
         })
@@ -504,7 +504,7 @@ console.log("SHOWWW+"+Docnamearray)
 
         const [first, ...rest] = encoded.base64.split(",");
         const [nameimg, ext] = encoded.name.split(".");
-        console.log(first,nameimg)
+        console.log(first, nameimg)
         const vendorimg = rest.join("-");
         let imar = {
           vendor_id: `${vendorID}`,
@@ -531,8 +531,8 @@ console.log("SHOWWW+"+Docnamearray)
           .post(
             `${process.env.REACT_APP_BASEURL_0}/vendor_documents_upload`,
             ImgObj, {
-              headers: { admin_token: `${token}` },
-            } 
+            headers: { admin_token: `${token}` },
+          }
           )
           .then((response) => {
             onImgView(vendorID);
@@ -567,8 +567,8 @@ console.log("SHOWWW+"+Docnamearray)
     axios
       .get(
         `${process.env.REACT_APP_BASEURL_0}/vendor_documents_get?vendor_id=${vendorID}`, {
-          headers: { admin_token: `${token}` },
-        } 
+        headers: { admin_token: `${token}` },
+      }
       )
       .then((response) => {
         setnewImageUrls(response.data);
@@ -751,7 +751,7 @@ console.log("SHOWWW+"+Docnamearray)
       // /\S+@\S+\.\S+/.test(value)
 
 
-      var rst =  /\S+@\S+\.\S+/.test(addvendordata.email);
+      var rst = /\S+@\S+\.\S+/.test(addvendordata.email);
       if (rst !== true) {
         setCustomValidation("EmailEmpty");
       }
@@ -1260,7 +1260,7 @@ console.log("SHOWWW+"+Docnamearray)
                         Docnamearray === "" ||
                         Docnamearray.length === 0 ? null : (
                         <div className="d-flex align-items-center tagselectbox mt-2">
-                          {(Docnamearray||[]).map((seotags, i) => {
+                          {(Docnamearray || []).map((seotags, i) => {
                             return (
                               <>
                                 {seotags === '""' ? null : (

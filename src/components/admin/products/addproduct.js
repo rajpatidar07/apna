@@ -36,7 +36,7 @@ const Addproduct = (props) => {
   var varietyy = VariationJson;
 
   // api
-  
+
   // api end
   //  json
   const productjson = {

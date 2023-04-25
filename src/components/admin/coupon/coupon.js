@@ -119,7 +119,7 @@ const Coupon = () => {
           .then((response) => {
             let data = response.data.filter((item) => item.is_active === 1);
             setcoupondata(data);
-            
+
             setaddcoupondata(data);
             setsearchCoupon(data);
             setapicall(false);
@@ -396,7 +396,7 @@ const Coupon = () => {
         setapicall(true);
         setUpdateAlert(true);
       },
-     )
+      )
       .catch(function (error) {
         console.log(error);
       });

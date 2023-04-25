@@ -236,7 +236,7 @@ const Invoice = () => {
                   </thead>
 
                   <tbody>
-                    {(productorder||[]).map((orderdata) => {
+                    {(productorder || []).map((orderdata) => {
                       orderdata.gst === "null" ||
                         orderdata.gst === "undefined" ||
                         orderdata.gst === ""

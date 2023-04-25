@@ -39,7 +39,7 @@ const CustomerReport = () => {
       ],
     ];
 
-    const data = (tableCoustomer||[]).map((elt) => [
+    const data = (tableCoustomer || []).map((elt) => [
       elt.first_name,
       elt.last_name,
       elt.user_id,
@@ -156,7 +156,7 @@ const CustomerReport = () => {
   const [user, setUser] = useState([]);
   const [apicall, setapicall] = useState(false);
   const [CustomerError, setCustomerError] = useState("");
-console.log("---"+CustomerError)
+  console.log("---" + CustomerError)
   const TimeChange = (e) => {
     setFilterchange(e.target.value);
     setUser(e.target.value);

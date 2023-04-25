@@ -15,7 +15,7 @@ function AdminRoute() {
       <ul className="nav-news-feed">
         <li>
           <Link to="/dashboard" className="nav-link">Dashboard</Link>
-        </li> 
+        </li>
         <li>
           <Link to="/product" className="nav-link">product</Link>
         </li>

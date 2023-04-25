@@ -12,7 +12,7 @@ const Login = () => {
   const [adminid, setadminId] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [apicall,setapicall]=useState(false)
+  const [apicall, setapicall] = useState(false)
   const [Emailerror, setEmailError] = useState(true);
   const [Passworderror, setPasswordError] = useState(true);
   const onValueChange = (e, id) => {
@@ -52,7 +52,7 @@ const Login = () => {
         .then((response) => {
           console.log("77")
           console.log(response)
-         
+
           if (response.data === "email not found") {
             setEmailError(false);
           } else if (response.data === "password not matched") {
@@ -61,7 +61,7 @@ const Login = () => {
             localStorage.setItem("encryptloginid", email);
             localStorage.setItem("encryptpassword", password);
             localStorage.setItem("encryptadminid", adminid);
-           
+
 
             localStorage.setItem("token", response.data[1].token);
 
@@ -72,7 +72,7 @@ const Login = () => {
     }
     e.preventDefault();
   };
- 
+
 
 
   return (

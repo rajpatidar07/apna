@@ -19,8 +19,8 @@ const Input = styled.input.attrs(props => ({
 
 const FilterComponent = ({ filterText, onFilter }) => (
   <>
-   <Input type={"text"} plchldr={"Search by Id"} id="search"  value={filterText}
-      onChange={onFilter}/>
+    <Input type={"text"} plchldr={"Search by Id"} id="search" value={filterText}
+      onChange={onFilter} />
     {/* <Input
       id="search"
       type="text"

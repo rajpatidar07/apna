@@ -27,7 +27,7 @@ const Promotionproduct = () => {
   const [show, setShow] = useState(false);
   const [featuredData, setFeaturetData] = useState([]);
   const [validated, setValidated] = useState(false);
-console.log(validated)
+  console.log(validated)
   // const [id, setId] = useState("");
   const [UpdateAlert, setUpdateAlert] = useState(false);
   const [loading, setloading] = useState(false);
@@ -137,12 +137,12 @@ console.log(validated)
             </b>
             {/* Product ID: {row.product_id} <br /> */}
             <span className="d-flex flex-column ">
-              {row.is_featured ===1 ? (
+              {row.is_featured === 1 ? (
                 <span className={"badge bg-warning mt-1"}>
                   {"featured product"}
                 </span>
               ) : null}
-              {row.is_special_offer ===1 ? (
+              {row.is_special_offer === 1 ? (
                 <span className={"badge bg-info mt-1"}>{"special offer"}</span>
               ) : null}
             </span>
@@ -320,7 +320,7 @@ console.log(validated)
     } catch (err) { }
     setShow(true);
   };
-  let cat_name_data="";
+  let cat_name_data = "";
   const getCategoryNameData = () => {
     try {
       axios
@@ -332,79 +332,79 @@ console.log(validated)
           }
         )
         .then((response) => {
-      
-          cat_name_data=response.data[0];       
+
+          cat_name_data = response.data[0];
           // setVid("")
         });
-    } catch (err) { 
+    } catch (err) {
       console.log(err)
     }
 
 
-};
-useEffect(()=>{
-  getCategoryNameData();
+  };
+  useEffect(() => {
+    getCategoryNameData();
 
- },[apicall])
-useEffect(() => {
-  let productArry=[];
+  }, [apicall])
+  useEffect(() => {
+    let productArry = [];
 
-  setloading(true);
-  try {
-    axios
-      .post(
-        `${process.env.REACT_APP_BASEURL_0}/fetured_product_search`,
-        {
-          vendor_id: "",
-          fetured_type: "promotional",
-          start_date: /*`${searchdata.start_date}`*/ "",
-          end_date: /*`${searchdata.end_date}`*/ "",
-          category: [`${searchdata.category}`],
-          brand: [`${searchdata.brand}`],
-          shop: [`${searchdata.vendor}`],
-          product_title_name: [`${searchdata.product_title_name}`],
-          status: `${searchdata.status}`,
-        },
-        {
-          headers: { admin_token: `${token}` },
-        }
-      )
-      .then((response) => {
-        setpromotionProductData(response.data);
-        console.log("promotional")
-        console.log(response.data)
-
-        let v=response.data;
-      
-        v.forEach(function (item,index){
-       
-        let catname=cat_name_data[item.category];
-        if(catname!==undefined || catname!==null||catname!==""){
-          item.category=catname;
-        }
-        productArry.push(item)
-        }
+    setloading(true);
+    try {
+      axios
+        .post(
+          `${process.env.REACT_APP_BASEURL_0}/fetured_product_search`,
+          {
+            vendor_id: "",
+            fetured_type: "promotional",
+            start_date: /*`${searchdata.start_date}`*/ "",
+            end_date: /*`${searchdata.end_date}`*/ "",
+            category: [`${searchdata.category}`],
+            brand: [`${searchdata.brand}`],
+            shop: [`${searchdata.vendor}`],
+            product_title_name: [`${searchdata.product_title_name}`],
+            status: `${searchdata.status}`,
+          },
+          {
+            headers: { admin_token: `${token}` },
+          }
         )
-       
-      
-        setpromotionProductData(productArry);
+        .then((response) => {
+          setpromotionProductData(response.data);
+          console.log("promotional")
+          console.log(response.data)
 
-        setapicall(false);
-        setloading(false);
-      });
-  } catch (err) {
-    console.log(err);
-  }
-  getCategorydatafilter();
-  getVendorData();
-}, [apicall]);
-// useEffect(()=>{
-//   getCategoryNameData();
+          let v = response.data;
 
-//  },[apicall])
+          v.forEach(function (item, index) {
+
+            let catname = cat_name_data[item.category];
+            if (catname !== undefined || catname !== null || catname !== "") {
+              item.category = catname;
+            }
+            productArry.push(item)
+          }
+          )
+
+
+          setpromotionProductData(productArry);
+
+          setapicall(false);
+          setloading(false);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+    getCategorydatafilter();
+    getVendorData();
+  }, [apicall]);
+  // useEffect(()=>{
+  //   getCategoryNameData();
+
+  //  },[apicall])
   /*<---Function to Search--->*/
   useEffect(() => {
-    let productArry=[];
+    let productArry = [];
 
     setloading(true);
     try {
@@ -429,20 +429,20 @@ useEffect(() => {
           }
         )
         .then((response) => {
-          let v=response.data;
-        
-          v.forEach(function (item,index){
-          console.log("item")
-          console.log(item.category)
-          let catname=cat_name_data[item.category];
-          if(catname!==undefined || catname!==null||catname!==""){
-            item.category=catname;
-          }
-          productArry.push(item)
+          let v = response.data;
+
+          v.forEach(function (item, index) {
+            console.log("item")
+            console.log(item.category)
+            let catname = cat_name_data[item.category];
+            if (catname !== undefined || catname !== null || catname !== "") {
+              item.category = catname;
+            }
+            productArry.push(item)
           }
           )
-         
-        
+
+
           setpromotionProductData(productArry);
           setapicall(false);
           setloading(false);
@@ -458,41 +458,40 @@ useEffect(() => {
   const UpdatePromotionProduct = (e) => {
     const form = e.currentTarget;
 
-    if (form.checkValidity() === false||featuredData.start_date===""||featuredData.end_date===""
-    ||featuredData.start_date>featuredData.end_date)
-    {
+    if (form.checkValidity() === false || featuredData.start_date === "" || featuredData.end_date === ""
+      || featuredData.start_date > featuredData.end_date) {
       e.preventDefault();
       setValidated(true);
     }
-    
-    else{
-      axios
-      .put(
-        `${process.env.REACT_APP_BASEURL_0}/update_fetured_product`,
-        {
-          id: promotionProductData[0].fetured_product_table_id,
-          start_date: featuredData.start_date,
-          end_date: featuredData.end_date,
-        },
-        {
-          headers: { admin_token: `${token}` },
-        }
-      )
-      .then((response) => {
-        // let data = response.data;
-        setValidated(true);
 
-        setapicall(true);
-        setShow(false);
-        setUpdateAlert(true);
-      });
+    else {
+      axios
+        .put(
+          `${process.env.REACT_APP_BASEURL_0}/update_fetured_product`,
+          {
+            id: promotionProductData[0].fetured_product_table_id,
+            start_date: featuredData.start_date,
+            end_date: featuredData.end_date,
+          },
+          {
+            headers: { admin_token: `${token}` },
+          }
+        )
+        .then((response) => {
+          // let data = response.data;
+          setValidated(true);
+
+          setapicall(true);
+          setShow(false);
+          setUpdateAlert(true);
+        });
       e.preventDefault();
       setValidated(false);
-     formRef.current.reset();
-    // setValidated(false);
+      formRef.current.reset();
+      // setValidated(false);
     }
 
-    
+
   };
 
   // const UpdatePromotionProduct = (e) => {
@@ -541,7 +540,7 @@ useEffect(() => {
   /*<---Onlick Function to Search--->*/
   const Search = () => {
     if (
-      searchdata.status ===""&&
+      searchdata.status === "" &&
       searchdata.product_title_name === "" &&
       searchdata.vendor === "" &&
       searchdata.brand === "" &&
@@ -687,10 +686,10 @@ useEffect(() => {
                   name="status"
                   value={String(searchdata.status)}
                 >
-                <option value="">status</option>
-                <option value="publish">Publish</option>
-                <option value="expired">Expired</option>
-                <option value="pending">Pending</option>
+                  <option value="">status</option>
+                  <option value="publish">Publish</option>
+                  <option value="expired">Expired</option>
+                  <option value="pending">Pending</option>
                 </Form.Select>
               </div>
               <div className="col-md-3 col-sm-6 aos_input mb-2 ">

@@ -10,7 +10,7 @@ import SAlert from "../common/salert";
 import Loader from "../common/loader";
 
 const Soldproduct = () => {
- 
+
   const handleClick = () => { };
   let token = localStorage.getItem("token");
   const [show, setShow] = useState(false);
@@ -31,7 +31,7 @@ const Soldproduct = () => {
     brand: "",
   });
   const [customvalidation, setCustomvalidation] = useState(false);
-  
+
   const closeUpdateAlert = () => {
     setUpdateAlert(false);
   };
@@ -123,7 +123,7 @@ const Soldproduct = () => {
   };
   /* Render function to get data of the product */
   useEffect(() => {
-    let productArry=[];
+    let productArry = [];
 
     setloading(true);
     axios
@@ -146,20 +146,20 @@ const Soldproduct = () => {
         headers: { admin_token: `${token}` },
       })
       .then((response) => {
-        let v=response.data.results;
+        let v = response.data.results;
         console.log(v)
-        v.forEach(function (item,index){
-           console.log(item.category)
-        console.log(response.data.category_name[item.category])
-        let catname=response.data.category_name[item.category]
-        item.category=catname;
-        // console.log("item"+JSON.stringify(item))
-        productArry.push(item)
+        v.forEach(function (item, index) {
+          console.log(item.category)
+          console.log(response.data.category_name[item.category])
+          let catname = response.data.category_name[item.category]
+          item.category = catname;
+          // console.log("item"+JSON.stringify(item))
+          productArry.push(item)
         })
         setsearcherror(false);
         // let data = response.data;
-        let response_data={};    
-        response_data["results"]=productArry;
+        let response_data = {};
+        response_data["results"] = productArry;
 
         if ((response_data.length = 0)) {
           setsolddata([0]);
@@ -350,7 +350,7 @@ const Soldproduct = () => {
   };
 
   const OnProductQutUpdate = (e) => {
-    
+
     if (
       Number(productData.quantity) > 10000 ||
       Number(productData.quantity) <= 0

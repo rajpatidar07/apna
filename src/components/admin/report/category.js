@@ -200,7 +200,7 @@ const CategoryReport = () => {
       setpreviousStateChange(3);
     }
     //last month---------------------------------------------------------------
-    if (value ===4) {
+    if (value === 4) {
       let month = moment()
         .subtract(1, "month")
         .startOf("month")
@@ -294,7 +294,7 @@ const CategoryReport = () => {
     fetchData();
   };
   const options1 = [
-    (brand||[]).map((item) => ({ value: `${item.brand}`, label: `${item.brand}` })),
+    (brand || []).map((item) => ({ value: `${item.brand}`, label: `${item.brand}` })),
   ];
 
   let arrr = [];
@@ -302,7 +302,7 @@ const CategoryReport = () => {
   const brandHandler = (e) => {
     arrr = [];
     e.map((item) => {
-      return(
+      return (
         arrr.push(item.value)
 
       )
@@ -310,7 +310,7 @@ const CategoryReport = () => {
     setBrandName(arrr);
   };
   const options2 = [
-    (venderList||[]).map((item) => ({
+    (venderList || []).map((item) => ({
       value: `${item.id}`,
       label: `${item.shop_name}`,
     })),
@@ -321,7 +321,7 @@ const CategoryReport = () => {
   const VendorHandler = (e) => {
     vendorArray = [];
     e.map((item) => {
-      return(
+      return (
         vendorArray.push(item.value)
 
       )
@@ -329,7 +329,7 @@ const CategoryReport = () => {
     setVendorId(vendorArray);
   };
   const options3 = [
-    (category||[]).map((item) => ({
+    (category || []).map((item) => ({
       value: `${item.id}`,
       label: `${item.category_name}`,
     })),
@@ -340,7 +340,7 @@ const CategoryReport = () => {
   const categoryHandler = (e) => {
     CategoryArray = [];
     e.map((item) => {
-      return(
+      return (
         CategoryArray.push(item.value)
 
       )
@@ -359,7 +359,7 @@ const CategoryReport = () => {
   const SearchHandler = (e) => {
     SearchArray = [];
     e.map((item) => {
-      return(
+      return (
         SearchArray.push(item.value)
 
       )

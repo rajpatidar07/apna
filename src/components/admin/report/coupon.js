@@ -57,7 +57,7 @@ const CouponReport = () => {
     setFilterchange(e.target.value);
 
     let value = Number(e.target.value);
-    if (value ===1) {
+    if (value === 1) {
       let frommDate = moment().format("YYYY-MM-DD");
       setFromDate(frommDate);
       setToDate(moment().format("YYYY-MM-DD"));
@@ -348,7 +348,7 @@ const CouponReport = () => {
       ],
     ];
 
-    const data =( tabledate||[]).map((elt) => [
+    const data = (tabledate || []).map((elt) => [
       elt.discount_coupon,
       elt.amount_discounted,
       elt.order_count,
@@ -421,7 +421,7 @@ const CouponReport = () => {
   ];
 
   const options1 = [
-    (brand||[]).map((item) => ({ value: `${item.brand}`, label: `${item.brand}` })),
+    (brand || []).map((item) => ({ value: `${item.brand}`, label: `${item.brand}` })),
   ];
 
   let arrr = [];
@@ -429,14 +429,14 @@ const CouponReport = () => {
   const brandHandler = (e) => {
     arrr = [];
     e.map((item) => {
-      return( arrr.push(item.value))
-     
+      return (arrr.push(item.value))
+
     });
     setBrandName(arrr);
   };
 
   const options2 = [
-    (venderList||[]).map((item) => ({
+    (venderList || []).map((item) => ({
       value: `${item.id}`,
       label: `${item.shop_name}`,
     })),
@@ -447,15 +447,15 @@ const CouponReport = () => {
   const VendorHandler = (e) => {
     vendorArray = [];
     e.map((item) => {
-      return(
+      return (
         vendorArray.push(item.value)
       )
-      
+
     });
     setVendorId(vendorArray);
   };
   const options3 = [
-    (category||[]).map((item) => ({
+    (category || []).map((item) => ({
       value: `${item.id}`,
       label: `${item.category_name}`,
     })),
@@ -466,7 +466,7 @@ const CouponReport = () => {
   const categoryHandler = (e) => {
     CategoryArray = [];
     e.map((item) => {
-      return(
+      return (
         CategoryArray.push(item.value)
 
       )
@@ -485,7 +485,7 @@ const CouponReport = () => {
   const SearchHandler = (e) => {
     SearchArray = [];
     e.map((item) => {
-      return(
+      return (
         SearchArray.push(item.value)
 
       )

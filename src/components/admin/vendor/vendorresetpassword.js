@@ -59,28 +59,28 @@ const VendorResetPassword = (props) => {
         setPasswordError("");
       }
     if (passval.length >= 8) {
-      
-        axios
-          .put(`${process.env.REACT_APP_BASEURL}/update_password`, {
-            admin_email: password.email,
-            admin_password: password.current_password,
-            new_admin_password: password.confirm_password,
-          })
-          .then((response) => {
-            if (response.data.response === "please fill all input") {
-              setValidation("please fill all input");
-            } else if (response.data.response === "email not matched") {
-              setValidation("email not matched");
-            } else if (response.data.response === "password not matched") {
-              setValidation("password not matched");
-            } else if (
-              passval.new_password === password.confirm_password &&
-              response.data.response === "password_updated"
-            ) {
-              navigate("/login");
-            }
-          });
-      
+
+      axios
+        .put(`${process.env.REACT_APP_BASEURL}/update_password`, {
+          admin_email: password.email,
+          admin_password: password.current_password,
+          new_admin_password: password.confirm_password,
+        })
+        .then((response) => {
+          if (response.data.response === "please fill all input") {
+            setValidation("please fill all input");
+          } else if (response.data.response === "email not matched") {
+            setValidation("email not matched");
+          } else if (response.data.response === "password not matched") {
+            setValidation("password not matched");
+          } else if (
+            passval.new_password === password.confirm_password &&
+            response.data.response === "password_updated"
+          ) {
+            navigate("/login");
+          }
+        });
+
     }
     e.preventDefault();
   };

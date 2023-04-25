@@ -84,7 +84,7 @@ function Product() {
   const [checkProductType, setCheckProductType] = useState(false);
   const [error, setError] = useState(true);
   const [vendorid, setVendorId] = useState([]);
-  
+
   const [filtervategory, setfiltercategory] = useState([]);
   const [category, setCategory] = useState([]);
   const [indVal, setIndVal] = useState(0);
@@ -149,10 +149,10 @@ function Product() {
     expire_date: "",
     quantity: "",
   };
-  
+
   const [totaltax, settotaltax] = useState("");
   const [variantarray, setvariantarray] = useState(veriantData);
-  
+
 
   const [variantmainarray, setvariantmainarray] = useState([]);
   // const [productvariantarray, setproductvariantarray] = useState(veriantData);
@@ -171,7 +171,7 @@ function Product() {
   const [vdata, setvdata] = useState([]);
   // let [condition, setCondition] = useState(false);
   // var category_name={
-    
+
   // }
   var data = {
     add_custom_input: [],
@@ -248,25 +248,25 @@ function Product() {
       setAddTagError("");
       setcustomValidated(false);
       setOpen(false)
-     
-    } 
+
+    }
     else {
       setcustomValidated(true);
 
-//     setaddtag(e.target.value);
-// console.log("e.target.value")
+      //     setaddtag(e.target.value);
+      // console.log("e.target.value")
 
-// console.log(e.target.value)
-    
+      // console.log(e.target.value)
+
     }
   };
 
   const onDocumentNamechange = (e) => {
     setaddtag(e.target.value);
-// console.log("e.target.value")
-// console.log(e.target.value)
+    // console.log("e.target.value")
+    // console.log(e.target.value)
   };
- 
+
   const DocuRemoveClick = (e) => {
     setDocnameArray(Docnamearray.filter((item) => item !== e));
   };
@@ -285,7 +285,7 @@ function Product() {
         }
       )
       .then((response) => {
-     
+
         if (response.data.message === "Already_Exist") {
           setError(false);
         } else {
@@ -354,7 +354,7 @@ function Product() {
 
   // MAIN PRODUCT LIST API
   const fetchdata = () => {
-    let productArry=[];
+    let productArry = [];
     setLoading(true);
     axios
       .post(
@@ -373,7 +373,7 @@ function Product() {
             is_delete: ["1"],
             colors: [],
             size: [],
-            seo_tag:[`${searchdata.tag}`],
+            seo_tag: [`${searchdata.tag}`],
             parent_category: [],
             product_type: [],
             // product_title_name: [],
@@ -386,26 +386,26 @@ function Product() {
         }
       )
       .then((response) => {
-       let v=response.data.results;
-       v.forEach(function (item,index){
-        
-        // console.log(item.category)
-        // console.log(response.data.category_name[item.category])
-        let catname=response.data.category_name[item.category]
-        // console.log(catname)
-        // console.log(item)
+        let v = response.data.results;
+        v.forEach(function (item, index) {
 
-        item.category=catname;
-        // console.log("item"+JSON.stringify(item))
-        
-        productArry.push(item)
-       } 
-       );
-       let response_data={};    
-       response_data["results"]=productArry;
-      //  console.log("response_data")
-      //  console.log(response_data)
-       setpdata(response_data)
+          // console.log(item.category)
+          // console.log(response.data.category_name[item.category])
+          let catname = response.data.category_name[item.category]
+          // console.log(catname)
+          // console.log(item)
+
+          item.category = catname;
+          // console.log("item"+JSON.stringify(item))
+
+          productArry.push(item)
+        }
+        );
+        let response_data = {};
+        response_data["results"] = productArry;
+        //  console.log("response_data")
+        //  console.log(response_data)
+        setpdata(response_data)
         setLoading(false);
         setapicall(false);
       })
@@ -419,7 +419,7 @@ function Product() {
     fetchdata();
     getVendorData();
     getCategorydatafilter();
-  }, [apicall,variantapicall, Alert]);
+  }, [apicall, variantapicall, Alert]);
 
   //MAIN PRODUCT LIST API END
 
@@ -471,7 +471,7 @@ function Product() {
               });
             } else if (indVal === scategory.sub_category) {
               setchildCategory(cgory);
-              
+
               setproductdata({
                 ...productdata,
                 parent_category: cgory[0].all_parent_id,
@@ -500,8 +500,8 @@ function Product() {
     }
   }, [scategory, indVal]);
   //category name api for filter
- 
- 
+
+
   // vendor api for filter
   const getVendorData = () => {
     try {
@@ -546,9 +546,9 @@ function Product() {
   const [editparentCategory, seteditparentCategory] = useState("");
   let token = localStorage.getItem("token");
   // ADD AND EDIT PRODUCT MODAL
-  
+
   const handleShow = (e) => {
-   
+
     setproductdata(data);
     // vendor
     getVendorData();
@@ -583,12 +583,12 @@ function Product() {
           let data = response.data;
           if (data !== undefined || data !== "" || data !== null) {
             setproductdata(data);
-            console.log("BHAVNAA"+JSON.stringify(data))
+            console.log("BHAVNAA" + JSON.stringify(data))
             // categoryedit
 
             const arr = data.parent_category.split(",");
             for (let i = 0; i < arr.length; i++) {
-            console.log("&&&&&&&&&&"+arr)
+              console.log("&&&&&&&&&&" + arr)
 
               axios
                 .get(
@@ -609,9 +609,9 @@ function Product() {
                         setSubCategory(response.data);
                       });
                     seteditparentCategory(data.category_name);
-                    console.log("PPPPPPP-000"+editparentCategory)
+                    console.log("PPPPPPP-000" + editparentCategory)
                     setCategoryEditparent(data.category_name);
-                    console.log("88uuuuuuuuuHHHHH"+categoryeditparent)
+                    console.log("88uuuuuuuuuHHHHH" + categoryeditparent)
 
 
                   } else if (i === 1) {
@@ -633,7 +633,7 @@ function Product() {
                         `${process.env.REACT_APP_BASEURL_0}/category?category=${arr[i]}`
                       )
                       .then((response) => {
-                       
+
                         setgrandcCategory(response.data);
                       });
                     setCategoryEditSubparent(data.category_name);
@@ -681,11 +681,11 @@ function Product() {
       shop: arr[1],
     });
   };
- 
+
   const handleClose = () => {
 
     setShow(false)
-  
+
     setValidated(false);
     setmodalshow(false);
     setCurrentPage("choose-img");
@@ -745,29 +745,29 @@ function Product() {
       const reader = new FileReader();
       const image_name = event.target.files[0].name;
       reader.readAsDataURL(event.target.files[0]);
-      
+
       reader.onload = function () {
         console.log("stage1 ")
         setImage(reader.result);
         setimageName(image_name)
         // onImageSelected({ "dataurl": reader.result, "imageName": image_name });
       };
-    
-    
-    setCurrentPage("crop-img");
-    // setShow(true)
+
+
+      setCurrentPage("crop-img");
+      // setShow(true)
     }
   };
 
 
-// const handleClose=(mclose)=>{
-//    setShow(mclose.false)
-//    console.log("")
-//    console.log(mclose.false)
+  // const handleClose=(mclose)=>{
+  //    setShow(mclose.false)
+  //    console.log("")
+  //    console.log(mclose.false)
 
-// };
+  // };
   const onCropDone = (imgCroppedArea, product_id, id, vendor_id) => {
-      
+
     const canvasEle = document.createElement("canvas");
     canvasEle.width = imgCroppedArea.width;
 
@@ -789,16 +789,16 @@ function Product() {
       );
 
       const dataURL = canvasEle.toDataURL("image/jpeg");
-   
-    imguploadchange(dataURL, product_id, id, vendor_id)
-    onImgView(id,product_id)
+
+      imguploadchange(dataURL, product_id, id, vendor_id)
+      onImgView(id, product_id)
 
       // console.log("VARIENT IDDD+"+id)
-    setimageboxid(imageboxid);
-    setCurrentPage("img-cropped");
+      setimageboxid(imageboxid);
+      setCurrentPage("img-cropped");
     };
     setapicall(true)
-    
+
   };
 
   const onCropCancel = () => {
@@ -808,17 +808,17 @@ function Product() {
 
   const imguploadchange = async (dataURL, product_id, id, vendor_id) => {
     setcustomValidated("");
-    onImgView(id,product_id);
+    onImgView(id, product_id);
     setimageboxid(id);
-    console.log("IMAGEBOXXXIDDD"+imageboxid)
+    console.log("IMAGEBOXXXIDDD" + imageboxid)
 
     // let i
 
     for (var i = 0; i < imageName.length; i++) {
-    var coverimg;
+      var coverimg;
 
-console.log("ggggggggg"+coverimg)
-      if (newImageUrls.length === 0  && i === 0) {
+      console.log("ggggggggg" + coverimg)
+      if (newImageUrls.length === 0 && i === 0) {
         coverimg = "cover";
       } else {
         coverimg = `cover${i}`;
@@ -843,7 +843,7 @@ console.log("ggggggggg"+coverimg)
         image_position: coverimg,
         img_64: productimg,
       };
-    
+
 
       ImgObj.push(imar);
       axios
@@ -855,7 +855,7 @@ console.log("ggggggggg"+coverimg)
           setimageboxid("");
 
           setapicall(true)
-          onImgView(id,product_id);
+          onImgView(id, product_id);
 
         })
         .catch(function (error) {
@@ -863,7 +863,7 @@ console.log("ggggggggg"+coverimg)
         });
     } else {
       setcustomValidated("imgformat");
-     
+
     }
     setProductAlert(true);
 
@@ -875,7 +875,7 @@ console.log("ggggggggg"+coverimg)
   const onImgView = (id, productid) => {
     setEditButton(false);
     setimageboxid(id);
-   
+
     axios
       .get(
         `${process.env.REACT_APP_BASEURL}/product_images_get_singal_veriant?product_id=${productid}&product_verient_id=${id}`
@@ -891,10 +891,10 @@ console.log("ggggggggg"+coverimg)
         console.log(error);
       });
   };
-  
+
 
   const onImgCoverEditClick = (imgid, productid, productvariantid) => {
-  
+
     axios
       .put(`${process.env.REACT_APP_BASEURL}/change_porduct_cover_image`, {
         product_image_id: `${imgid}`,
@@ -917,9 +917,9 @@ console.log("ggggggggg"+coverimg)
       })
       .then((response) => {
         setapicall(true);
-        
+
         onImgView(product_verient_id, product_id);
-        
+
       })
       .catch(function (error) {
         console.log(error);
@@ -1143,7 +1143,7 @@ console.log("ggggggggg"+coverimg)
                 quantity: "",
                 product_id: productID,
               });
-            } else if (response.errno ===1064) {
+            } else if (response.errno === 1064) {
               alert("Error in add product");
               setProductAlert(false);
             } else {
@@ -1249,7 +1249,7 @@ console.log("ggggggggg"+coverimg)
   };
   // addproduct variant
   const VariantAddProduct = () => {
-    
+
     // console.log("&&&&&"+e)
     setproductdata({
       ...productdata,
@@ -1487,9 +1487,9 @@ console.log("ggggggggg"+coverimg)
     });
   }, [customarray]);
   // END ADD CUSTOM INPUT
-useEffect(()=>{
-setproductdata({...productdata,seo_tag:Docnamearray,})
-},[Docnamearray])
+  useEffect(() => {
+    setproductdata({ ...productdata, seo_tag: Docnamearray, })
+  }, [Docnamearray])
 
   // CKEDITOR TEXT BOX
   const handledescription = (event, editor) => {
@@ -1629,7 +1629,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
           }
         )
         .then((response) => {
-          localStorage.setItem("productid",productid)
+          localStorage.setItem("productid", productid)
           if (response.data.response === "please fill all input") {
             setcustomValidated("plesefillall");
             setValidated(false);
@@ -1637,7 +1637,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
             setvarietyValidated(false);
             setapicall(true);
 
-           
+
           } else {
             setapicall(true);
           }
@@ -1678,7 +1678,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
       setcustomValidated(true);
       setProductAlert(true);
       handleClose();
-    // formRef.current.reset();
+      // formRef.current.reset();
 
     }
   };
@@ -1788,7 +1788,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
           setBulkProductError("Error in adding BulkProducts");
         }
       });
-      
+
   };
   //-----------------------Download excel sheet code End  here---------------------------------------------------
   // console.log(cat_catname+"pppppppppppppppppppppppppppppppppppppppppppppppp")
@@ -1850,24 +1850,24 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
     },
     {
       name: "Category",
-  //     selector: (row) =>{
-  //       // console.log(row.cat_catname)
-  //       // console.log(row.category)
-  //       console.log(cat_catname[row.category])
-  //  return(
-  //   <>
-  //   {row.cat_catname === undefined ? "null":  cat_catname[row.category]}
-  //   </>
-  //  )
-      
-  //     },
-      selector:(row)=>row.category,
+      //     selector: (row) =>{
+      //       // console.log(row.cat_catname)
+      //       // console.log(row.category)
+      //       console.log(cat_catname[row.category])
+      //  return(
+      //   <>
+      //   {row.cat_catname === undefined ? "null":  cat_catname[row.category]}
+      //   </>
+      //  )
+
+      //     },
+      selector: (row) => row.category,
       sortable: true,
       width: "150px",
     },
     {
       name: "Category Id",
-      selector:(row)=>row.id,
+      selector: (row) => row.id,
       sortable: true,
       width: "150px",
     },
@@ -2059,7 +2059,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
         >
           {/* <option value={""}>Status</option> */}
           {(productstatus.productstatus || []).map((data, i) => {
-            
+
             return (
               <option value={data} key={i}>
                 {" "}
@@ -2093,10 +2093,10 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
       center: true,
       selector: (row) => (
         <div className={"actioncolimn"}>
-                            
+
           <div className="feature_product_dropdown_box adminselectbox ">
-            
-            <DropdownButton  id="dropdown-basic-button" title="">
+
+            <DropdownButton id="dropdown-basic-button" title="">
               <Dropdown.Item value="">Select</Dropdown.Item>
               <Dropdown.Item
                 value="special_offer"
@@ -2185,7 +2185,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                 value={searchdata.tag}
                 className={"form-control"}
               />
-             
+
             </div>
             <div className="col-md-2 col-sm-6 aos_input">
               <Form.Select
@@ -2247,7 +2247,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                 })}
               </Form.Select>
             </div>
-           
+
             <div className="col-md-2 col-sm-6 aos_input">
               <Form.Select
                 aria-label="Search by status"
@@ -2445,7 +2445,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                               }
                             >
                               <option value={""}>Select Brand</option>
-                              {(BrandJson.BrandJson||[]).map((item,i) => {
+                              {(BrandJson.BrandJson || []).map((item, i) => {
                                 return <option value={item} key={i}>{item}</option>;
                               })}
                             </Form.Select>
@@ -2481,7 +2481,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                           >
                             {" "}
                             <option value={""}> Select Store Name</option>
-                            {(vendorid||[]).map((cdata, i) => {
+                            {(vendorid || []).map((cdata, i) => {
                               return (
                                 <option
                                   value={[cdata.id, cdata.shop_name]}
@@ -2508,7 +2508,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                         </Col> */}
                         </Form.Group>
                       </div>
-                     
+
                       <div className="col-md-8">
                         <Form.Group
                           className="mx-3"
@@ -2556,8 +2556,8 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                           >
                             <option value={""}>Select Product Type</option>
 
-                            {(categorytype.categorytype||[]).map((data,i) => {
-                              return <option value={data}key={i}>{data}</option>;
+                            {(categorytype.categorytype || []).map((data, i) => {
+                              return <option value={data} key={i}>{data}</option>;
                             })}
                           </Form.Select>
                           <Form.Control.Feedback type="invalid" className="h6">
@@ -2576,33 +2576,33 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                           <span className="text-danger">* </span>
                         </Form.Label>
                         <Form.Select
-                             name={"parent_category"}
-                             aria-label="Parent Category"
-                             className="adminselectbox"
-                             required
-                            onChange={(e, id) => categoryFormChange(e, id)}
-                          >
-                           <option value={""}>Select Parent Category </option>
-                          {(category||[]).map((cdata, i) => {
+                          name={"parent_category"}
+                          aria-label="Parent Category"
+                          className="adminselectbox"
+                          required
+                          onChange={(e, id) => categoryFormChange(e, id)}
+                        >
+                          <option value={""}>Select Parent Category </option>
+                          {(category || []).map((cdata, i) => {
                             return (
                               <option
-                              value={cdata.id}
-                              name="parent_category"
-                              key={i}
-                              selected={
-                                editparentCategory === cdata.category_name
-                                  ? true
-                                  : false
-                              }
-                            >
-                              {cdata.category_name} {""}
-                            </option>
+                                value={cdata.id}
+                                name="parent_category"
+                                key={i}
+                                selected={
+                                  editparentCategory === cdata.category_name
+                                    ? true
+                                    : false
+                                }
+                              >
+                                {cdata.category_name} {""}
+                              </option>
                             )
-                             
-                            
+
+
                           })}
-                          </Form.Select>
-                       
+                        </Form.Select>
+
                         <Form.Control.Feedback type="invalid" className="h6">
                           Please select Category
                         </Form.Control.Feedback>
@@ -2626,21 +2626,21 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                             required
                           >
                             <option value={""}>Select Category </option>
-                            {(subCategory||[]).map((cdata, i) => {
+                            {(subCategory || []).map((cdata, i) => {
                               return (
                                 <option
-                                value={cdata.id}
-                                key={i}
-                                selected={
-                                  categoryeditparent === cdata.category_name
-                                    ? true
-                                    : false
-                                }
-                              >
-                                {cdata.category_name}{" "}
-                              </option>
+                                  value={cdata.id}
+                                  key={i}
+                                  selected={
+                                    categoryeditparent === cdata.category_name
+                                      ? true
+                                      : false
+                                  }
+                                >
+                                  {cdata.category_name}{" "}
+                                </option>
                               )
-                              
+
                             })}
                           </Form.Select>
                           <Form.Control.Feedback type="invalid" className="h6">
@@ -2668,24 +2668,24 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                             required
                           >
                             <option value={""}>Select Category </option>
-                            {(childCategory||[]).map((cdata, i) => {
+                            {(childCategory || []).map((cdata, i) => {
                               return (
                                 <option
-                                value={cdata.id}
-                                key={i}
-                                selected={
-                                  categoryeditchildparent
-                                  ? true
-                                  : false
-                                   
-                                }
-                              >
-                                {cdata.category_name}{" "}
-                              </option>
-                           
+                                  value={cdata.id}
+                                  key={i}
+                                  selected={
+                                    categoryeditchildparent
+                                      ? true
+                                      : false
+
+                                  }
+                                >
+                                  {cdata.category_name}{" "}
+                                </option>
+
                               )
-                              
-                              
+
+
                             })}
                           </Form.Select>
                           <Form.Control.Feedback type="invalid" className="h6">
@@ -3917,68 +3917,68 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                           </InputGroup>
                         </div> */}
                         {/* <div className="col-md-6"> */}
-                    {/* <Form.Group className="mb-3 aos_input"> */}
-                     
-                      <InputGroup className="" size="sm">
-                        <Form.Control
-                        sm="10"
-                          onChange={(e) => onDocumentNamechange(e)}
-                          value={addtag}
-                          placeholder="seo tag"
-                         
-                          onKeyPress={(event) => {
-                            if (event.key === "Enter") {
-                              onDocuAddclick();
-                            }
-                          }}
-                        />{" "}
-                        <Button
+                        {/* <Form.Group className="mb-3 aos_input"> */}
 
-                          variant="outline-success"
-                          className="addcategoryicon"
-                          onClick={() => onDocuAddclick()}
-                          size="sm"
-                        >
-                          +
-                        </Button>
-                        {/* {AddtagError === "addTagErorrr" ? (
+                        <InputGroup className="" size="sm">
+                          <Form.Control
+                            sm="10"
+                            onChange={(e) => onDocumentNamechange(e)}
+                            value={addtag}
+                            placeholder="seo tag"
+
+                            onKeyPress={(event) => {
+                              if (event.key === "Enter") {
+                                onDocuAddclick();
+                              }
+                            }}
+                          />{" "}
+                          <Button
+
+                            variant="outline-success"
+                            className="addcategoryicon"
+                            onClick={() => onDocuAddclick()}
+                            size="sm"
+                          >
+                            +
+                          </Button>
+                          {/* {AddtagError === "addTagErorrr" ? (
                           <span className="text-danger">
                             Please Add Document first...!!!
                           </span>
                         ) : null} */}
-                      </InputGroup>
+                        </InputGroup>
 
-                      {Docnamearray === undefined ||
-                        Docnamearray === null ||
-                        Docnamearray === "" ||
-                        Docnamearray.length === 0 ? null : (
-                        <div className="d-flex align-items-center tagselectbox mt-2">
-                          {(Docnamearray||[]).map((seotags, i) => {
-                            return (
-                              <>
-                                {seotags === '""' ? null : (
-                                  <Badge
-                                    className="tagselecttitle mb-0"
-                                    bg="success"
-                                  >
-                                    {seotags === null ||
-                                      seotags === undefined ||
-                                      seotags === '""'
-                                      ? null
-                                      : seotags}
+                        {Docnamearray === undefined ||
+                          Docnamearray === null ||
+                          Docnamearray === "" ||
+                          Docnamearray.length === 0 ? null : (
+                          <div className="d-flex align-items-center tagselectbox mt-2">
+                            {(Docnamearray || []).map((seotags, i) => {
+                              return (
+                                <>
+                                  {seotags === '""' ? null : (
+                                    <Badge
+                                      className="tagselecttitle mb-0"
+                                      bg="success"
+                                    >
+                                      {seotags === null ||
+                                        seotags === undefined ||
+                                        seotags === '""'
+                                        ? null
+                                        : seotags}
 
-                                    <GiCancel
-                                      className=" mx-0 ms-1 btncancel"
-                                      onClick={() => DocuRemoveClick(seotags)}
-                                    />
-                                  </Badge>
-                                )}
-                              </>
-                            );
-                          })}
-                        </div>
-                      )}
-                    {/* </Form.Group>
+                                      <GiCancel
+                                        className=" mx-0 ms-1 btncancel"
+                                        onClick={() => DocuRemoveClick(seotags)}
+                                      />
+                                    </Badge>
+                                  )}
+                                </>
+                              );
+                            })}
+                          </div>
+                        )}
+                        {/* </Form.Group>
                   </div> */}
                         {/* <div className="d-flex align-items-center tagselectbox mt-2">
                           {productdata.seo_tag === "" && addtag === "" ? (
@@ -4010,27 +4010,27 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
 
                   {/* other info */}
                   <div className="col-md-8">
-                        <Form.Group
-                          className="mx-3"
-                          controlId="validationCustom04"
-                        >
-                          {/* {console.log(
+                    <Form.Group
+                      className="mx-3"
+                      controlId="validationCustom04"
+                    >
+                      {/* {console.log(
                           "product description-------" +
                             productdata.product_description
                         )} */}
-                          <Form.Label className="inputlabelheading" sm="12">
-                            Product Description
-                          </Form.Label>
-                          <Col sm="12">
-                            <CKEditor
-                              editor={ClassicEditor}
-                              data={productdata.product_description}
-                              onChange={handledescription}
-                              name={"product_description"}
-                            />
-                          </Col>
-                        </Form.Group>
-                      </div>
+                      <Form.Label className="inputlabelheading" sm="12">
+                        Product Description
+                      </Form.Label>
+                      <Col sm="12">
+                        <CKEditor
+                          editor={ClassicEditor}
+                          data={productdata.product_description}
+                          onChange={handledescription}
+                          name={"product_description"}
+                        />
+                      </Col>
+                    </Form.Group>
+                  </div>
                   <div className="my-3 inputsection_box">
                     <h5 className="m-0">Other Instruction</h5>
                     <Col sm="12" className="mt-3">
@@ -4240,7 +4240,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                   }
                                 >
                                   <option >{variantarray.unit}</option>
-                                   {console.log("variantarray.unituuuuuuuuuuuuu"+variantarray.unit)}
+                                  {console.log("variantarray.unituuuuuuuuuuuuu" + variantarray.unit)}
                                   {(varietyy.variety || []).map((vari, i) => {
                                     return vdata.length === 0 ? null : vdata[0]
                                       .product_type === "" ? (
@@ -4685,7 +4685,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                         </div>
                       </div>
                       <div className="col-md-3 col-sm-4 p-2">
-                      <div className="manufacture_date addvariety_inputbox">
+                        <div className="manufacture_date addvariety_inputbox">
                           <Form.Group
                             className="mx-3"
                             controlId="validationCustom01"
@@ -4716,8 +4716,8 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                             </Col>
                           </Form.Group>
                         </div>
-                        </div>
-                   
+                      </div>
+
 
                       <div className="col-md-3 col-sm-4 p-2 text-center">
                         <div className="manufacture_date addvariety_inputbox">
@@ -4936,7 +4936,7 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                             onImgView(
                                               variantdata.id,
                                               variantdata.product_id,
-                                              console.log("variantdata.iddddddddddd"+variantdata.id)
+                                              console.log("variantdata.iddddddddddd" + variantdata.id)
 
 
                                             )
@@ -4944,11 +4944,11 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
 
                                           aria-controls={
                                             "variantimgbox" + variantdata.id
-                                            
+
                                           }
                                           aria-expanded={open}
                                         />
-                                         
+
                                         <BiEdit
                                           className="variety_edit_action_btn text-primary mx-2"
                                           onClick={(id) =>
@@ -4971,23 +4971,23 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                     </tr>
                                     {/* <Accordion.Body eventKey={i}> */}
                                     {newImageUrls ? (
-                                        console.log("viewwwww-----==========-------"+variantdata.id),
-                                        console.log("imageboxid-----++++++--------------------"+imageboxid),
+                                      console.log("viewwwww-----==========-------" + variantdata.id),
+                                      console.log("imageboxid-----++++++--------------------" + imageboxid),
 
                                       <tr
-                                    
+
                                         className={
                                           variantdata.id === imageboxid
-                                        
+
                                             ? "img_preview_boxx show"
                                             : "img_preview_boxx hide"
                                         }
-                                        
-                                        id={"variantimgbox" +  variantdata.id}
+
+                                        id={"variantimgbox" + variantdata.id}
                                       >
                                         <td colSpan="13">
                                           <div className="image_box">
-                                            {(newImageUrls||[]).map((imgg, i) => {
+                                            {(newImageUrls || []).map((imgg, i) => {
                                               return `${variantdata.id}` ===
                                                 imgg.product_verient_id ? (
                                                 <div
@@ -5039,35 +5039,35 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                               ) : null;
                                             })}
                                             <div className="imgprivew_box">
-                                                {currentPage=== "choose-img" ? (
-                                                  
-                                                  <FileInput setImage={setImage}  onImageSelected={onImageSelected} setimageName={setimageName}/>
-                                                ) : currentPage === "crop-img" ? (
-                                                  <ImageCropper
+                                              {currentPage === "choose-img" ? (
+
+                                                <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />
+                                              ) : currentPage === "crop-img" ? (
+                                                <ImageCropper
                                                   handleClose={handleClose}
-                                                    // show={show}
-                                                    image={image}
-                                                    imageNamee={imageName}
-                                                    modalShow={true}
-                                                    onCropDone={(imgCroppedArea) => onCropDone(
-                                                      imgCroppedArea,
-                                                      variantdata.product_id,
-                                                      variantdata.id,
-                                                      variantdata.vendor_id,
-                                                      console.log("variantdata.id ----onmageupdaload"+variantdata.id)
+                                                  // show={show}
+                                                  image={image}
+                                                  imageNamee={imageName}
+                                                  modalShow={true}
+                                                  onCropDone={(imgCroppedArea) => onCropDone(
+                                                    imgCroppedArea,
+                                                    variantdata.product_id,
+                                                    variantdata.id,
+                                                    variantdata.vendor_id,
+                                                    console.log("variantdata.id ----onmageupdaload" + variantdata.id)
 
 
 
-                                                    )
-                                                    }
-                                                    onCropCancel={onCropCancel}
-                                                  />
-                                                ) : (
+                                                  )
+                                                  }
+                                                  onCropCancel={onCropCancel}
+                                                />
+                                              ) : (
+                                                <div>
                                                   <div>
-                                                    <div>
-                                                      <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />
-                                                    </div>
-                                                    {/* {<FileInput/> === <ImageCropper /> ? (
+                                                    <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />
+                                                  </div>
+                                                  {/* {<FileInput/> === <ImageCropper /> ? (
                                                       <>
                                                         <button
                                                           onClick={() => {
@@ -5089,10 +5089,10 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                                                         </button>
                                                       </>
                                                     ) : ""} */}
-                                                  </div>
-                                                )}
-                                                
-                                           
+                                                </div>
+                                              )}
+
+
 
 
 
@@ -5234,12 +5234,12 @@ setproductdata({...productdata,seo_tag:Docnamearray,})
                               Product Name
                             </Form.Label>
                             <Form.Control
-                            required
+                              required
                               type="text"
                               placeholder="Name"
                               value={productname}
                               name={"productname"}
-                              
+
                             />
                           </Form.Group>
                         </div>

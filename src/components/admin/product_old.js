@@ -463,7 +463,7 @@ function Product_Old() {
         .then((response) => {
           setvariantarray(response.data);
           setvariantapicall(true);
-         
+
         })
         .catch(function (error) {
           console.log(error);
@@ -471,7 +471,7 @@ function Product_Old() {
     }
   };
   const VariantAddProduct = () => {
-  
+
     setvariantmainarray((variantmainarray) => [
       ...variantmainarray,
       variantarray,
@@ -507,7 +507,7 @@ function Product_Old() {
       .catch(function (error) {
         console.log(error);
       });
-  
+
   };
   useEffect(() => {
     setproductdata({
@@ -515,7 +515,7 @@ function Product_Old() {
       price: variantmainarray,
     });
   }, [variantmainarray]);
- 
+
   let customvalue;
   const oncustomheadChange = (e) => {
     setheaderval(e.target.value);
@@ -563,7 +563,7 @@ function Product_Old() {
 
   const OtherDescription = (event, editor) => {
     setotherintro(editor.getData());
-  
+
     setproductdata({
       ...productdata,
       other_introduction: otherintro,
@@ -1514,9 +1514,7 @@ function Product_Old() {
                                           </Button>
                                         </div>
                                       </td>
-                                    </tr>
-
-                                    {(variantmainarray || []).map(
+                                    </tr> {(variantmainarray || []).map(
                                       (variantdata, i) => {
                                         return (
                                           <tr>
@@ -1749,8 +1747,7 @@ function Product_Old() {
                               +
                             </Button>
                           </td>
-                        </tr>
-                        {productdata.add_custom_input === null ||
+                        </tr>{productdata.add_custom_input === null ||
                           productdata.add_custom_input === undefined
                           ? ""
                           : (productdata.add_custom_input || []).map(
@@ -2165,9 +2162,7 @@ function Product_Old() {
                                   </Button>
                                 </div>
                               </td>
-                            </tr>
-
-                            {vdata === "" ||
+                            </tr>{vdata === "" ||
                               vdata === null ||
                               vdata === undefined
                               ? null

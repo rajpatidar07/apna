@@ -82,7 +82,7 @@ const Productdetail = () => {
   const [imageName, setimageName] = useState("");
   const [currentPage, setCurrentPage] = useState("choose-img");
   const [show, setShow] = useState(false);
-console.log(show);
+  console.log(show);
   var varietyy = VariationJson;
   // PRODUCT DETAIL API
   useEffect(() => {
@@ -97,7 +97,7 @@ console.log(show);
             if (data === "error") {
               navigate("/product");
             }
-            if (data === undefined || data === "" || data === null) {}else{
+            if (data === undefined || data === "" || data === null) { } else {
               setProductData(data);
               settaxdata(data);
               setVariantdetail(data.product_verient);
@@ -107,8 +107,8 @@ console.log(show);
               //   unit: data.product_verient[0].unit,
               //   product_id: pid,
               // });
-            console.log("-----")
-            console.log(data)
+              console.log("-----")
+              console.log(data)
 
               // setloading(false);
             }
@@ -123,8 +123,8 @@ console.log(show);
 
     getProductDetails();
   }, [variantapicall]);
-console.log("variantarray")
-console.log(variantarray)
+  console.log("variantarray")
+  console.log(variantarray)
 
   useEffect(() => {
     // setloading(true)
@@ -172,18 +172,18 @@ console.log(variantarray)
       const reader = new FileReader();
       const image_name = event.target.files[0].name;
       reader.readAsDataURL(event.target.files[0]);
-      
+
       reader.onload = function () {
         console.log("stage1 ")
         setImage(reader.result);
         setimageName(image_name)
         // onImageSelected({ "dataurl": reader.result, "imageName": image_name });
       };
-    
-    
-    setCurrentPage("crop-img");
-    // setShow(true)
-    console.log("stage2 ---------"+reader.result+"image_name=========="+image_name)
+
+
+      setCurrentPage("crop-img");
+      // setShow(true)
+      console.log("stage2 ---------" + reader.result + "image_name==========" + image_name)
     }
   };
   const onCropDone = (imgCroppedArea, product_id, id, vendor_id) => {
@@ -423,7 +423,7 @@ console.log(variantarray)
     if (id === "" || id === null || id === undefined) {
       if (
         variantarray.unit === "" ||
-        variantarray.unit===undefined||
+        variantarray.unit === undefined ||
         variantarray.unit === null ||
         variantarray.unit === "Select" ||
         variantarray.product_price === "" ||
@@ -518,7 +518,7 @@ console.log(variantarray)
       if (id) {
         if (
           variantarray.unit === "" ||
-          variantarray.unit===undefined||
+          variantarray.unit === undefined ||
           variantarray.unit === null ||
           variantarray.unit === "Select" ||
           variantarray.product_price === "" ||
@@ -552,8 +552,8 @@ console.log(variantarray)
           variantarray.unit !== "pcs" &&
           (variantarray.unit_quantity === "" ||
             variantarray.unit_quantity === "null" ||
-            variantarray.unit_quantity === null||
-            variantarray.unit_quantity===undefined)
+            variantarray.unit_quantity === null ||
+            variantarray.unit_quantity === undefined)
         ) {
           setunitValidated(true);
           setVarietyUnitvalidation("unitQwanity&size&color");
@@ -615,7 +615,7 @@ console.log(variantarray)
   // END VARIETY
 
   // REMOVE VARIETY
-  const VariantRemoveClick = (e,id, productid) => {
+  const VariantRemoveClick = (e, id, productid) => {
     setVerityAlert(true);
     setvariantmainarray(variantmainarray.filter((item) => item !== e));
     setVariantRemove((variantremove) => {
@@ -704,7 +704,7 @@ console.log(variantarray)
                 <div className="productimg_box col-8">
                   {newImageUrls.length === 0 ? (
                     <img
-                    alt=""
+                      alt=""
                       src="https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
                       className="w-100 h-50"
                     />
@@ -960,97 +960,97 @@ console.log(variantarray)
                                 </Form.Label>
                                 <Col sm="12">
                                   <InputGroup className="">
-                                  <Form.Select
-                                                  aria-label="Default select example"
-                                                  name="unit"
-                                                  required
-                                                  value={variantarray.unit}
-                                                  onChange={(e) =>
-                                                    onVariantChange(e)
-                                                  }
-                                                  disabled={
-                                                    variantarray.unit &&
-                                                      changeUnitproperty === false
-                                                      ? true
-                                                      : variantarray.unit ||
-                                                        changeUnitproperty === true
-                                                        ? false
-                                                        : true
-                                                  }
-                                                // className={
-                                                //   customvalidated === true
-                                                //     ? "border-danger"
-                                                //     : null
-                                                // }
-                                                >
-                                                  <option >
-                                                    Select
-                                                  </option>
-                                                  {(varietyy.variety || []).map(
-                                                    (vari, i) => {
-                                                      console.log("unittttttt======="+vari)
-                                                      return changeUnitproperty ===
-                                                        true ? (
-                                                        <option
-                                                          value={
-                                                            vari === "color"
-                                                              ? "pcs"
-                                                              : vari ===
-                                                                "weight"
-                                                                ? "gms"
-                                                                : vari ===
-                                                                  "volume"
-                                                                  ? "ml"
-                                                                  : vari === "piece"
-                                                                    ? "piece"
-                                                                    : ""
-                                                          }
-                                                          key={i}
-                                                        >
-                                                          {vari}
-                                                        </option>
-                                                      ) : productdata.product_type ===
-                                                        "Cloths" ||
-                                                        productdata.product_type ===
-                                                        "Fashion" ? (
-                                                        vari === "weight" ||
-                                                          vari ===
-                                                          "volume" ? null : (
-                                                          <option
-                                                            value={
-                                                              vari === "piece"
-                                                                ? "piece"
-                                                                : vari ===
-                                                                  "color"
-                                                                  ? "pcs"
-                                                                  : ""
-                                                            }
-                                                            key={i}
-                                                          >
-                                                            {vari}
-                                                          </option>
-                                                        )
-                                                      ) : vari ===
-                                                        "color" ? null : (
-                                                        <option
-                                                          value={
-                                                            vari === "weight"
-                                                              ? "gms"
-                                                              : vari ===
-                                                                "volume"
-                                                                ? "ml"
-                                                                : vari === "piece"
-                                                                  ? "piece"
-                                                                  : ""
-                                                          }
-                                                          key={i}
-                                                        >
-                                                          {vari}
-                                                        </option>
-                                                      );
-                                                    }
-                                                  )}
-                                   </Form.Select>
+                                    <Form.Select
+                                      aria-label="Default select example"
+                                      name="unit"
+                                      required
+                                      value={variantarray.unit}
+                                      onChange={(e) =>
+                                        onVariantChange(e)
+                                      }
+                                      disabled={
+                                        variantarray.unit &&
+                                          changeUnitproperty === false
+                                          ? true
+                                          : variantarray.unit ||
+                                            changeUnitproperty === true
+                                            ? false
+                                            : true
+                                      }
+                                    // className={
+                                    //   customvalidated === true
+                                    //     ? "border-danger"
+                                    //     : null
+                                    // }
+                                    >
+                                      <option >
+                                        Select
+                                      </option>
+                                      {(varietyy.variety || []).map(
+                                        (vari, i) => {
+                                          console.log("unittttttt=======" + vari)
+                                          return changeUnitproperty ===
+                                            true ? (
+                                            <option
+                                              value={
+                                                vari === "color"
+                                                  ? "pcs"
+                                                  : vari ===
+                                                    "weight"
+                                                    ? "gms"
+                                                    : vari ===
+                                                      "volume"
+                                                      ? "ml"
+                                                      : vari === "piece"
+                                                        ? "piece"
+                                                        : ""
+                                              }
+                                              key={i}
+                                            >
+                                              {vari}
+                                            </option>
+                                          ) : productdata.product_type ===
+                                            "Cloths" ||
+                                            productdata.product_type ===
+                                            "Fashion" ? (
+                                            vari === "weight" ||
+                                              vari ===
+                                              "volume" ? null : (
+                                              <option
+                                                value={
+                                                  vari === "piece"
+                                                    ? "piece"
+                                                    : vari ===
+                                                      "color"
+                                                      ? "pcs"
+                                                      : ""
+                                                }
+                                                key={i}
+                                              >
+                                                {vari}
+                                              </option>
+                                            )
+                                          ) : vari ===
+                                            "color" ? null : (
+                                            <option
+                                              value={
+                                                vari === "weight"
+                                                  ? "gms"
+                                                  : vari ===
+                                                    "volume"
+                                                    ? "ml"
+                                                    : vari === "piece"
+                                                      ? "piece"
+                                                      : ""
+                                              }
+                                              key={i}
+                                            >
+                                              {vari}
+                                            </option>
+                                          );
+                                        }
+                                      )}
+                                    </Form.Select>
                                   </InputGroup>
                                 </Col>
                               </Form.Group>
@@ -1414,38 +1414,38 @@ console.log(variantarray)
                             </div>
                           </div>
                           <div className="col-md-3 col-sm-4 p-2">
-                          <div className="manufacture_date addvariety_inputbox">
-                          <Form.Group
-                            className="mx-3"
-                            controlId="validationCustom01"
-                          >
-                            <Form.Label
-                              className="text-start inputlabelheading"
-                              sm="12"
-                            >
-                              Quantity
-                              <span className="text-danger">*</span>
-                            </Form.Label>
-                            <Col sm="12">
-                              <InputGroup className="">
-                                <Form.Control
-                                  name={"quantity"}
-                                  type="number"
-                                  value={variantarray.quantity}
-                                  sm="9"
-                                  min={"1"}
-                                  onChange={(e) => onVariantChange(e)}
-                                  onKeyUp={(event) => {
-                                    if (event.key === "Enter") {
-                                      onVariantaddclick();
-                                    }
-                                  }}
-                                />
-                              </InputGroup>
-                            </Col>
-                          </Form.Group>
-                        </div>
-                        </div>
+                            <div className="manufacture_date addvariety_inputbox">
+                              <Form.Group
+                                className="mx-3"
+                                controlId="validationCustom01"
+                              >
+                                <Form.Label
+                                  className="text-start inputlabelheading"
+                                  sm="12"
+                                >
+                                  Quantity
+                                  <span className="text-danger">*</span>
+                                </Form.Label>
+                                <Col sm="12">
+                                  <InputGroup className="">
+                                    <Form.Control
+                                      name={"quantity"}
+                                      type="number"
+                                      value={variantarray.quantity}
+                                      sm="9"
+                                      min={"1"}
+                                      onChange={(e) => onVariantChange(e)}
+                                      onKeyUp={(event) => {
+                                        if (event.key === "Enter") {
+                                          onVariantaddclick();
+                                        }
+                                      }}
+                                    />
+                                  </InputGroup>
+                                </Col>
+                              </Form.Group>
+                            </div>
+                          </div>
                           {/* <div className="col-md-3 col-sm-4 p-2">
                             <div className="manufacture_date addvariety_inputbox">
                               <Form.Group
@@ -1752,7 +1752,7 @@ console.log(variantarray)
                                                 />
                                                 <BsTrash
                                                   className="variety_edit_action_btn text-danger"
-                                                  onClick={(id,e) =>
+                                                  onClick={(id, e) =>
                                                     VariantRemoveClick(e,
                                                       variantdata.id,
                                                       variantdata.product_id
@@ -1762,93 +1762,93 @@ console.log(variantarray)
                                               </td>
                                             </tr>
                                             {newImageUrls ? (
-                                      <tr
-                                        className={
-                                          variantdata.id === imageboxid
-                                            ? "img_preview_boxx show"
-                                            : "img_preview_boxx hide"
-                                        }
-                                        id={"variantimgbox" + variantdata.id}
-                                      >
-                                        <td colSpan="13">
-                                          <div className="image_box">
-                                            {(newImageUrls||[]).map((imgg, i) => {
-                                              return `${variantdata.id}` ===
-                                                imgg.product_verient_id ? (
-                                                <div
-                                                  className="imgprivew_box"
-                                                  key={i}
-                                                >
-                                                  {imgg.image_position ===
-                                                    "cover" ? (
-                                                    <span className="cover_img">
-                                                      Cover
-                                                    </span>
-                                                  ) : null}
-                                                  <img
-                                                    src={
-                                                      imgg.product_image_path
-                                                    }
-                                                    key={i}
-                                                    alt="apna_organic"
-                                                    height={120}
-                                                  />
-                                                  <span
-                                                    className="cover_icon"
-                                                    onClick={(id) =>
-                                                      onImgCoverEditClick(
-                                                        imgg.product_image_id,
-                                                        imgg.product_id,
-                                                        imgg.product_verient_id
-                                                      )
-                                                    }
-                                                  >
-                                                    Set Cover
-                                                  </span>
-                                                  <button
-                                                    className="cross_icon"
-                                                    onClick={() =>
-                                                      onImgRemove(
-                                                        imgg.product_image_id,
-                                                        imgg.product_image_name,
-                                                        imgg.vendor_id,
-                                                        imgg.product_id,
-                                                        imgg.product_verient_id
-                                                      )
-                                                    }
-                                                  >
-                                                    &times;
-                                                  </button>
-                                                </div>
-                                              ) : null;
-                                            })}
-                                            <div className="imgprivew_box">
-                                                {currentPage === "choose-img" ? (
-                                                  
-                                                  <FileInput setImage={setImage}  onImageSelected={onImageSelected} setimageName={setimageName} />
-                                                ) : currentPage === "crop-img" ? (
-                                                  <ImageCropper
-                                                  handleClose={handleClose}
-                                                    // show={show}
-                                                    image={image}
-                                                    imageNamee={imageName}
-                                                    modalShow={true}
-                                                    onCropDone={(imgCroppedArea) => onCropDone(
-                                                      imgCroppedArea,
-                                                      variantdata.product_id,
-                                                      variantdata.id,
-                                                      variantdata.vendor_id,
+                                              <tr
+                                                className={
+                                                  variantdata.id === imageboxid
+                                                    ? "img_preview_boxx show"
+                                                    : "img_preview_boxx hide"
+                                                }
+                                                id={"variantimgbox" + variantdata.id}
+                                              >
+                                                <td colSpan="13">
+                                                  <div className="image_box">
+                                                    {(newImageUrls || []).map((imgg, i) => {
+                                                      return `${variantdata.id}` ===
+                                                        imgg.product_verient_id ? (
+                                                        <div
+                                                          className="imgprivew_box"
+                                                          key={i}
+                                                        >
+                                                          {imgg.image_position ===
+                                                            "cover" ? (
+                                                            <span className="cover_img">
+                                                              Cover
+                                                            </span>
+                                                          ) : null}
+                                                          <img
+                                                            src={
+                                                              imgg.product_image_path
+                                                            }
+                                                            key={i}
+                                                            alt="apna_organic"
+                                                            height={120}
+                                                          />
+                                                          <span
+                                                            className="cover_icon"
+                                                            onClick={(id) =>
+                                                              onImgCoverEditClick(
+                                                                imgg.product_image_id,
+                                                                imgg.product_id,
+                                                                imgg.product_verient_id
+                                                              )
+                                                            }
+                                                          >
+                                                            Set Cover
+                                                          </span>
+                                                          <button
+                                                            className="cross_icon"
+                                                            onClick={() =>
+                                                              onImgRemove(
+                                                                imgg.product_image_id,
+                                                                imgg.product_image_name,
+                                                                imgg.vendor_id,
+                                                                imgg.product_id,
+                                                                imgg.product_verient_id
+                                                              )
+                                                            }
+                                                          >
+                                                            &times;
+                                                          </button>
+                                                        </div>
+                                                      ) : null;
+                                                    })}
+                                                    <div className="imgprivew_box">
+                                                      {currentPage === "choose-img" ? (
 
-                                                    )
-                                                    }
-                                                    onCropCancel={onCropCancel}
-                                                  />
-                                                ) : (
-                                                  <div>
-                                                    <div>
-                                                      <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />
-                                                    </div>
-                                                    {/* {<FileInput/> === <ImageCropper /> ? (
+                                                        <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />
+                                                      ) : currentPage === "crop-img" ? (
+                                                        <ImageCropper
+                                                          handleClose={handleClose}
+                                                          // show={show}
+                                                          image={image}
+                                                          imageNamee={imageName}
+                                                          modalShow={true}
+                                                          onCropDone={(imgCroppedArea) => onCropDone(
+                                                            imgCroppedArea,
+                                                            variantdata.product_id,
+                                                            variantdata.id,
+                                                            variantdata.vendor_id,
+
+                                                          )
+                                                          }
+                                                          onCropCancel={onCropCancel}
+                                                        />
+                                                      ) : (
+                                                        <div>
+                                                          <div>
+                                                            <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />
+                                                          </div>
+                                                          {/* {<FileInput/> === <ImageCropper /> ? (
                                                       <>
                                                         <button
                                                           onClick={() => {
@@ -1870,14 +1870,14 @@ console.log(variantarray)
                                                         </button>
                                                       </>
                                                     ) : ""} */}
-                                                  </div>
-                                                )}
-                                                
-                                           
+                                                        </div>
+                                                      )}
 
 
 
-                                              {/* <Form.Control
+
+
+                                                      {/* <Form.Control
                                                   multiple
                                                   type="file"
                                                   sm="9"
@@ -1892,14 +1892,14 @@ console.log(variantarray)
                                                   }
                                                   name={"img_64"}
                                                 /> */}
-                                              {/* <span className="plus_icon">
+                                                      {/* <span className="plus_icon">
                                                   +
                                                 </span> */}
-                                            </div>
-                                          </div>
-                                        </td>
-                                      </tr>
-                                    ) : null}
+                                                    </div>
+                                                  </div>
+                                                </td>
+                                              </tr>
+                                            ) : null}
                                           </>
                                         );
                                       }

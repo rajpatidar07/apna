@@ -44,7 +44,7 @@ const Offerproduct = () => {
   const [loading, setloading] = useState(false);
 
   let token = localStorage.getItem("token");
-  let cat_name_data="";
+  let cat_name_data = "";
   const getCategoryNameData = () => {
     try {
       axios
@@ -56,20 +56,20 @@ const Offerproduct = () => {
           }
         )
         .then((response) => {
-      
-          cat_name_data=response.data[0];       
+
+          cat_name_data = response.data[0];
           // setVid("")
         });
-    } catch (err) { 
+    } catch (err) {
       console.log(err)
     }
 
 
-};
-useEffect(()=>{
-  getCategoryNameData();
+  };
+  useEffect(() => {
+    getCategoryNameData();
 
- },[apicall])
+  }, [apicall])
   /*<---Category list api---> */
   const getCategorydatafilter = () => {
     try {
@@ -158,7 +158,7 @@ useEffect(()=>{
   };
 
   useEffect(() => {
-    let productArry=[];
+    let productArry = [];
 
     setloading(true);
     try {
@@ -181,19 +181,19 @@ useEffect(()=>{
           }
         )
         .then((response) => {
-          let v=response.data;
+          let v = response.data;
           // console.log("daytaaa--"+JSON.stringify(response.data[0].fetured_product_table_id))
-        
-          v.forEach(function (item,index){
-          let catname=cat_name_data[item.category];
-          if(catname!==undefined || catname!==null||catname!==""){
-            item.category=catname;
-          }
-          productArry.push(item)
+
+          v.forEach(function (item, index) {
+            let catname = cat_name_data[item.category];
+            if (catname !== undefined || catname !== null || catname !== "") {
+              item.category = catname;
+            }
+            productArry.push(item)
           }
           )
-         
-         
+
+
           setOfferProductData(productArry);
           setapicall(false);
           setloading(false);
@@ -424,40 +424,39 @@ useEffect(()=>{
   const UpdateOfferProduct = (e) => {
     const form = e.currentTarget;
 
-    if (form.checkValidity() === false||featuredData.start_date===""||featuredData.end_date===""
-    ||featuredData.start_date>featuredData.end_date)
-    {
+    if (form.checkValidity() === false || featuredData.start_date === "" || featuredData.end_date === ""
+      || featuredData.start_date > featuredData.end_date) {
       e.preventDefault();
       setValidated(true);
     }
-    
-    else{
+
+    else {
       axios
-      .put(
-        `${process.env.REACT_APP_BASEURL_0}/update_fetured_product`,
-        {
-                  id: offerProductData[0].fetured_product_table_id,
-                  start_date: featuredData.start_date,
-                  end_date: featuredData.end_date,
-                },
-        {
-          headers: { admin_token: `${token}` },
-        }
-      )
-      .then((response) => {
-        setValidated(true)
-              setapicall(true);
-              setShow(false);
-              setUpdateAlert(true);
-       
-      });
+        .put(
+          `${process.env.REACT_APP_BASEURL_0}/update_fetured_product`,
+          {
+            id: offerProductData[0].fetured_product_table_id,
+            start_date: featuredData.start_date,
+            end_date: featuredData.end_date,
+          },
+          {
+            headers: { admin_token: `${token}` },
+          }
+        )
+        .then((response) => {
+          setValidated(true)
+          setapicall(true);
+          setShow(false);
+          setUpdateAlert(true);
+
+        });
       e.preventDefault();
       setValidated(false);
-     formRef.current.reset();
-    // setValidated(false);
+      formRef.current.reset();
+      // setValidated(false);
     }
 
-    
+
   };
   // const UpdateOfferProduct = (e) => {
   //   // let v=offerProductData;
@@ -622,8 +621,8 @@ useEffect(()=>{
                 >
                   <option value="">status</option>
                   <option value="publish">Publish</option>
-                <option value="expired">Expired</option>
-                <option value="pending">Pending</option>
+                  <option value="expired">Expired</option>
+                  <option value="pending">Pending</option>
                 </Form.Select>
               </div>
               <div className="col-md-3 col-sm-6 aos_input mb-2">
@@ -647,7 +646,7 @@ useEffect(()=>{
           {/* upload */}
 
           <Modal size="lg" show={show} onHide={() => setShow(false)}>
-            <Form className=""   noValidate
+            <Form className="" noValidate
               validated={validated} ref={formRef}>
               <Modal.Header closeButton>
                 <Modal.Title></Modal.Title>
@@ -661,22 +660,22 @@ useEffect(()=>{
                     >
                       <Form.Label>Start Date</Form.Label>
                       <Form.Control
-                                                  type="date"
-                                                  sm="9"
-                                                  required
-                                                 placeholder="Coupon Start Date"
-                                                  min={moment().format(
-                                                    "YYYY-MM-DD"
-                                                  )}
-                                                 
-                                                  onChange={(e) =>
-                                                    handleFormChange(e)
-                                                  }
-                                                  name={"start_date"}
-                                                  value={
-                                                    featuredData.start_date
-                                                  }
-                                                />
+                        type="date"
+                        sm="9"
+                        required
+                        placeholder="Coupon Start Date"
+                        min={moment().format(
+                          "YYYY-MM-DD"
+                        )}
+
+                        onChange={(e) =>
+                          handleFormChange(e)
+                        }
+                        name={"start_date"}
+                        value={
+                          featuredData.start_date
+                        }
+                      />
                     </Form.Group>
                   </div>
                   <div className="col-md-6">
@@ -686,27 +685,27 @@ useEffect(()=>{
                     >
                       <Form.Label>End Date</Form.Label>
                       <Form.Control
-                                                  type="date"
-                                                  sm="9"
-                                                  required
-                                                  disabled={
-                                                    featuredData.start_date
-                                                      ? false
-                                                      : true
-                                                  }
-                                                  min={moment(
-                                                    featuredData.start_date
-                                                  )
-                                                    .add(1, "day")
-                                                    .format("YYYY-MM-DD")}
-                                                  onChange={(e) =>
-                                                    handleFormChange(e)
-                                                  }
-                                                  name={"end_date"}
-                                                  value={
-                                                    featuredData.end_date
-                                                  }
-                                                />
+                        type="date"
+                        sm="9"
+                        required
+                        disabled={
+                          featuredData.start_date
+                            ? false
+                            : true
+                        }
+                        min={moment(
+                          featuredData.start_date
+                        )
+                          .add(1, "day")
+                          .format("YYYY-MM-DD")}
+                        onChange={(e) =>
+                          handleFormChange(e)
+                        }
+                        name={"end_date"}
+                        value={
+                          featuredData.end_date
+                        }
+                      />
                     </Form.Group>
                   </div>
                 </div>

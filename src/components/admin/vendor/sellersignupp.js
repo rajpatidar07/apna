@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 
 // import { useNavigate, useLocation } from "react-router-dom";
 
@@ -49,7 +49,7 @@ const SellerSignupp = () => {
     setSellerSignUpShow(false)
   }
 
- 
+
 
   const onEmailChange = (e) => {
     setemailVal(e.target.value);
@@ -94,7 +94,7 @@ const SellerSignupp = () => {
   };
   return (
     // <Fragment>
-      <>
+    <>
       <div className="for_scrol">
         <div className="container">
           <div className="row mt-5">
@@ -294,8 +294,8 @@ const SellerSignupp = () => {
           </div>
         </div>
       </div>
-      </>
-     
+    </>
+
 
 
   );

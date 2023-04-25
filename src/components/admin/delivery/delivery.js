@@ -1,4 +1,4 @@
-import React, { useState,useRef} from "react";
+import React, { useState, useRef } from "react";
 import Input from "../common/input";
 import ListGroup from "react-bootstrap/ListGroup";
 import Iconbutton from "../common/iconbutton";
@@ -29,7 +29,7 @@ const Delivery = () => {
   const [show, setShow] = useState(false);
   const [showtrack, setShowtrack] = useState(false);
   const handleClose = () => {
-     formRef.current.reset();
+    formRef.current.reset();
     setShow(false);
     setShowtrack(false);
   };

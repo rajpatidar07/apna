@@ -80,7 +80,7 @@ const Expiredproduct = () => {
   //   setsearchData({ ...searchdata, manufacturing_date: mdate });
   // };
   useEffect(() => {
-    let productArry=[];
+    let productArry = [];
     setloading(true);
     axios
       .post(`${process.env.REACT_APP_BASEURL_0}/home?page=0&per_page=400`, {
@@ -102,20 +102,20 @@ const Expiredproduct = () => {
       })
       .then((response) => {
         // let data = response.data.results;
-        let v=response.data.results;
-        v.forEach(function (item,index){
-           // console.log(item.category)
-        // console.log(response.data.category_name[item.category])
-        let catname=response.data.category_name[item.category]
-        // console.log(catname)
-        // console.log(item)
-        item.category=catname;
-        // console.log("item"+JSON.stringify(item))
-        
-        productArry.push(item)
+        let v = response.data.results;
+        v.forEach(function (item, index) {
+          // console.log(item.category)
+          // console.log(response.data.category_name[item.category])
+          let catname = response.data.category_name[item.category]
+          // console.log(catname)
+          // console.log(item)
+          item.category = catname;
+          // console.log("item"+JSON.stringify(item))
+
+          productArry.push(item)
         })
-        let response_data={};    
-        response_data["results"]=productArry;
+        let response_data = {};
+        response_data["results"] = productArry;
         if (v === "" || v === null || v === undefined) {
         } else {
           let data_Array = v.filter((arr) => {
@@ -352,7 +352,7 @@ const Expiredproduct = () => {
         <div className="card mt-3 p-3 ">
           <div className="row pb-3">
             <div className="col-md-3 col-sm-6 aos_input">
-            <input
+              <input
                 type={"text"}
                 placeholder={"Search by product name"}
                 onChange={OnSearchChange}

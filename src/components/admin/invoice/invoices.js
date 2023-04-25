@@ -9,7 +9,7 @@ import "sweetalert/dist/sweetalert.css";
 import FilterComponent from "../common/FilterComponent";
 import axios from "axios";
 import moment from "moment";
-import {useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const InvoiceList = () => {
   const navigate = useNavigate();

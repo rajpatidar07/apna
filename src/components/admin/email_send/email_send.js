@@ -383,7 +383,7 @@ const EmailSend = () => {
             >
               {" "}
               <option value={""}>Email Type</option>
-              {(EmailType.EmailType||[]).map((item) => {
+              {(EmailType.EmailType || []).map((item) => {
                 return <option value={item}>{item}</option>;
               })}
             </Form.Select>
@@ -415,7 +415,7 @@ const EmailSend = () => {
               }}
             >
               <option value={""}>Status</option>
-              {(EmailStatus.EmailStatus||[]).map((item) => {
+              {(EmailStatus.EmailStatus || []).map((item) => {
                 return <option value={item}>{item}</option>;
               })}
             </Form.Select>
@@ -485,7 +485,7 @@ const EmailSend = () => {
                     required
                   >
                     <option value={""}>Email Type</option>
-                    {(EmailType.EmailType||[]).map((item) => {
+                    {(EmailType.EmailType || []).map((item) => {
                       return <option value={item}>{item}</option>;
                     })}
                   </Form.Select>
@@ -537,7 +537,7 @@ const EmailSend = () => {
                     required
                   >
                     <option value={""}>Status</option>
-                    {(EmailStatus.EmailStatus||[]).map((item) => {
+                    {(EmailStatus.EmailStatus || []).map((item) => {
                       return <option value={item}>{item}</option>;
                     })}
                   </Form.Select>

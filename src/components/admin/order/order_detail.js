@@ -32,7 +32,7 @@ const OrderDetail = () => {
 
   // Function to change the status:-
   const onStatusChangee = (e) => {
-   
+
     // setloading(true);
 
     axios
@@ -115,12 +115,12 @@ const OrderDetail = () => {
   let qty = 0;
   let total_tax_with_qty = 0;
   let total_priceWithout_tax = 0;
-console.log(total,total_tax)
+  console.log(total, total_tax)
 
   return (
     <>
       {loading === true ? <Loader /> : null}
-      
+
       <div className="order_detail_page">
         <div className="order_detail">
           <h2>Orders Detail</h2>
@@ -405,7 +405,7 @@ console.log(total,total_tax)
             </div>
             <div className="col-lg-4">
               <div className="right_side">
-                {(user||[]).map((userdata) => {
+                {(user || []).map((userdata) => {
                   return (
                     <div
                       className="customer_name_address"

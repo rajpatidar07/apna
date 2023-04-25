@@ -15,7 +15,7 @@ const SellerLogin = (props) => {
   const [loginemailerror, setLoginemailerror] = useState(true);
   const [vendorstatus, setvendorstatus] = useState(false);
   // const { state } = useLocation();
-console.log(error)
+  console.log(error)
   const sellersignupshowFunction = () => {
     props.forgetpassword(false)
     props.showsellerlogin(false)

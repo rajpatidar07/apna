@@ -86,7 +86,7 @@ const RevenueReport = () => {
       ],
     ];
 
-    const data = (tabledate||[]).map((elt) => [
+    const data = (tabledate || []).map((elt) => [
       elt.uniquedates,
       elt.gross_amount,
       elt.total_gst,
@@ -296,7 +296,7 @@ const RevenueReport = () => {
   //   }
   // })
 
-  
+
 
   const options = {
     chart: {
@@ -540,7 +540,7 @@ const RevenueReport = () => {
     if (value === 1) {
       let frommDate = moment().format("YYYY-MM-DD");
       setFromDate(frommDate);
-     
+
       setToDate(moment().format("YYYY-MM-DD"));
       let previousTodate = moment(frommDate)
         .subtract(1, "days")
@@ -548,7 +548,7 @@ const RevenueReport = () => {
         .format("YYYY-MM-DD");
       setprevTodate(previousTodate);
       setprevFromdate(previousTodate);
-    
+
       setpreviousStateChange(1);
     }
     //yesterday------------------------------------------------------------------------
@@ -625,7 +625,7 @@ const RevenueReport = () => {
           .format("YYYY-MM-DD")
       );
       // setPrevDate(moment(month).subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
-     
+
       setpreviousStateChange(4);
     }
     //  last six month---------------------------------------------------------
@@ -648,7 +648,7 @@ const RevenueReport = () => {
           .format("YYYY-MM-DD")
       );
       // setPrevDate(moment(sixMonth).subtract(6, 'month').startOf('month').format('YYYY-MM-DD'))
-    
+
       setpreviousStateChange(5);
     }
 
@@ -658,7 +658,7 @@ const RevenueReport = () => {
         .startOf("weeks")
         .format("YYYY-MM-DD");
       setFromDate(ThisWeek);
-     
+
       setToDate(moment().format("YYYY-MM-DD"));
       let previousthisweek = moment(ThisWeek)
         .subtract(1, "days")
@@ -697,7 +697,7 @@ const RevenueReport = () => {
     fetchData();
   };
   const fetchData = () => {
-   
+
     axios
       .post(
         `${process.env.REACT_APP_BASEURL}/revenue`,
@@ -718,7 +718,7 @@ const RevenueReport = () => {
         }
       )
       .then((response) => {
-     
+
 
         if (response.data.message === "no_data") {
           setRevenueError(response.data.message);
@@ -768,7 +768,7 @@ const RevenueReport = () => {
     let result = await axios.get(
       `${process.env.REACT_APP_BASEURL}/category?category=all`
     );
-   
+
     if (result.data) {
       setCategory(result.data);
     }
@@ -777,7 +777,7 @@ const RevenueReport = () => {
   const BrandData = async () => {
     let result = await axios.get(`${process.env.REACT_APP_BASEURL}/brand_list`);
 
-    
+
     if (result.data) {
       setBrand(result.data);
     }
@@ -820,20 +820,20 @@ const RevenueReport = () => {
     setapicall(true);
   };
 
-  (tabledate||[]).map((item) => {
-    return(
+  (tabledate || []).map((item) => {
+    return (
       GrossAmmount.push(item.gross_amount),
-    totalSales.push(item.total_sales),
-    totalGSt.push(item.total_gst),
-    TotalShipping.push(item.total_shipping_charges),
-    NetSales.push(item.net_sales),
-    Discount.push(item.discount)
+      totalSales.push(item.total_sales),
+      totalGSt.push(item.total_gst),
+      TotalShipping.push(item.total_shipping_charges),
+      NetSales.push(item.net_sales),
+      Discount.push(item.discount)
     )
-    
+
   });
 
   const options1 = [
-    (brand||[]).map((item) => ({ value: `${item.brand}`, label: `${item.brand}` })),
+    (brand || []).map((item) => ({ value: `${item.brand}`, label: `${item.brand}` })),
   ];
 
   let arrr = [];
@@ -841,8 +841,8 @@ const RevenueReport = () => {
   const brandHandler = (e) => {
     arrr = [];
     e.map((item) => {
-      return(
-      arrr.push(item.value)
+      return (
+        arrr.push(item.value)
 
       )
     });
@@ -850,7 +850,7 @@ const RevenueReport = () => {
   };
 
   const options2 = [
-    (venderList||[]).map((item) => ({
+    (venderList || []).map((item) => ({
       value: `${item.id}`,
       label: `${item.shop_name}`,
     })),
@@ -861,7 +861,7 @@ const RevenueReport = () => {
   const VendorHandler = (e) => {
     vendorArray = [];
     e.map((item) => {
-      return(
+      return (
         vendorArray.push(item.value)
 
       )
@@ -870,7 +870,7 @@ const RevenueReport = () => {
   };
 
   const options3 = [
-    (category||[]).map((item) => ({
+    (category || []).map((item) => ({
       value: `${item.id}`,
       label: `${item.category_name}`,
     })),
@@ -881,7 +881,7 @@ const RevenueReport = () => {
   const categoryHandler = (e) => {
     CategoryArray = [];
     e.map((item) => {
-      return(
+      return (
         CategoryArray.push(item.value)
 
       )
@@ -900,8 +900,8 @@ const RevenueReport = () => {
   const SearchHandler = (e) => {
     SearchArray = [];
     e.map((item) => {
-      return(
-      SearchArray.push(item.value)
+      return (
+        SearchArray.push(item.value)
 
       )
     });

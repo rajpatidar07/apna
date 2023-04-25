@@ -9,7 +9,7 @@ import { BiEdit } from "react-icons/bi";
 import { useEffect } from "react";
 import Iconbutton from "../common/iconbutton";
 import axios from "axios";
-import { Badge} from "react-bootstrap";
+import { Badge } from "react-bootstrap";
 import moment from "moment";
 
 const BlogList = () => {
@@ -86,7 +86,7 @@ const BlogList = () => {
     }
   };
   const onSearchClick = () => {
-// let categoryArray = [];
+    // let categoryArray = [];
 
     axios
       .post(`${process.env.REACT_APP_BASEURL}/blogs`, {
@@ -101,7 +101,7 @@ const BlogList = () => {
         setBlog(response.data);
         setCondition(false);
         // setsearchBlog('')
-      //  let categoryArray = [];
+        //  let categoryArray = [];
         setapicall(false);
       });
   };
@@ -211,7 +211,7 @@ const BlogList = () => {
           setShow(false);
           setapicall(true);
           setAddAlert(true);
-    formRef.current.reset();
+          formRef.current.reset();
 
         })
         .catch(function (error) {
@@ -221,7 +221,7 @@ const BlogList = () => {
       setValidated(false);
     }
   };
-  const UpdateBlog = (e,show) => {
+  const UpdateBlog = (e, show) => {
     const adminid = localStorage.getItem("encryptadminid");
     const formData = new FormData();
     e.preventDefault();
@@ -597,7 +597,7 @@ const BlogList = () => {
                     name={"category"}
                   >
                     <option>Select Category</option>
-                    {(CategoryJson.categorytype||[]).map((blogcat) => {
+                    {(CategoryJson.categorytype || []).map((blogcat) => {
                       return <option value={blogcat}>{blogcat}</option>;
                     })}
 

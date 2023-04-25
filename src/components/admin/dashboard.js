@@ -855,8 +855,27 @@ function Dashboard() {
                   <td>
                     <h6>10000</h6>
                   </td>
-                </tr>
-                <tr>
+                </tr><tr>
+                  <td>
+                    <h6>Andhra Pradesh</h6>
+                  </td>
+                  <td>
+                    <h6>14100</h6>
+                  </td>
+                  <td>
+                    <h6>10000</h6>
+                  </td>
+                </tr><tr>
+                  <td>
+                    <h6>Andhra Pradesh</h6>
+                  </td>
+                  <td>
+                    <h6>14100</h6>
+                  </td>
+                  <td>
+                    <h6>10000</h6>
+                  </td>
+                </tr><tr>
                   <td>
                     <h6>Andhra Pradesh</h6>
                   </td>
@@ -876,8 +895,17 @@ function Dashboard() {
                   <td>
                     <h6>10000</h6>
                   </td>
-                </tr>
-                <tr>
+                </tr><tr>
+                  <td>
+                    <h6>Andhra Pradesh</h6>
+                  </td>
+                  <td>
+                    <h6>14100</h6>
+                  </td>
+                  <td>
+                    <h6>10000</h6>
+                  </td>
+                </tr><tr>
                   <td>
                     <h6>Andhra Pradesh</h6>
                   </td>
@@ -888,39 +916,6 @@ function Dashboard() {
                     <h6>10000</h6>
                   </td>
                 </tr> <tr>
-                  <td>
-                    <h6>Andhra Pradesh</h6>
-                  </td>
-                  <td>
-                    <h6>14100</h6>
-                  </td>
-                  <td>
-                    <h6>10000</h6>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <h6>Andhra Pradesh</h6>
-                  </td>
-                  <td>
-                    <h6>14100</h6>
-                  </td>
-                  <td>
-                    <h6>10000</h6>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <h6>Andhra Pradesh</h6>
-                  </td>
-                  <td>
-                    <h6>14100</h6>
-                  </td>
-                  <td>
-                    <h6>10000</h6>
-                  </td>
-                </tr>
-                <tr>
                   <td>
                     <h6>Goa</h6>
                   </td>
@@ -982,8 +977,7 @@ function Dashboard() {
                   <td className="py-3">Kitchen Storage</td>
                   <td className="text-success py-3">$109.00</td>
                   <td className="py-3">Zoetic Fashion</td>
-                </tr>
-                <tr>
+                </tr><tr>
                   <td className="text-primary py-3" onClick={() => { navigate('/order_detail') }}>#VZ2112</td>
                   <td className="py-3">Alex Smith</td>
                   <td className="py-3">Kitchen Storage</td>
@@ -1108,9 +1102,7 @@ function Dashboard() {
                     <h6>262</h6>
                     <p className="text-secondary mb-0">Stock</p>
                   </td>
-                </tr>
-
-                <tr>
+                </tr><tr>
                   <td>
                     <img alt="apnaorganic" src={demo} className="mainn_img" />
                   </td>
@@ -1130,8 +1122,7 @@ function Dashboard() {
                     <h6>262</h6>
                     <p className="text-secondary mb-0">Stock</p>
                   </td>
-                </tr>
-                <tr>
+                </tr><tr>
                   <td>
                     <img alt="apnaorganic" src={demo} className="mainn_img" />
                   </td>
@@ -1206,9 +1197,7 @@ function Dashboard() {
                     <h6>262</h6>
                     <p className="text-secondary mb-0">Stock</p>
                   </td>
-                </tr>
-
-                <tr>
+                </tr><tr>
                   <td className="w-0">
                     <img alt="apnaorganic" src={demo} className="mainn_img" />
                   </td>
@@ -1228,8 +1217,7 @@ function Dashboard() {
                     <Badge bg="danger">out of stock</Badge>
                     <p className="text-secondary mb-0">Stock</p>
                   </td>
-                </tr>
-                <tr>
+                </tr><tr>
                   <td className="w-0">
                     <img alt="apnaorganic" src={demo} className="mainn_img" />
                   </td>

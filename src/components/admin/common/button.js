@@ -1,7 +1,7 @@
 import React from "react";
 
 const MainButton = (props) => {
- return (
+  return (
     <div>
       <button
         type={props.type}

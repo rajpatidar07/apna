@@ -51,7 +51,7 @@ const OrderReport = () => {
   const [brandName, setBrandName] = useState([]);
   const [location, setLocation] = useState([]);
   const fetchData = () => {
-   
+
     axios
       .post(
         `${process.env.REACT_APP_BASEURL}/orders_report`,
@@ -72,7 +72,7 @@ const OrderReport = () => {
         }
       )
       .then((response) => {
-      
+
         if (response.data.message === "No_Data") {
           setOrderError(response.data.message);
           setordersreport([0]);
@@ -104,7 +104,7 @@ const OrderReport = () => {
         },
       }
     );
-    
+
     if (result.data) {
       setVenderList(result.data);
     }
@@ -137,12 +137,12 @@ const OrderReport = () => {
   const TimeChange = (e) => {
     setFilterchange(e.target.value);
     let value = Number(e.target.value);
-   
+
     //today---------------------------------------------------------------------------
     if (value === 1) {
       let frommDate = moment().format("YYYY-MM-DD");
       setFromDate(frommDate);
-      
+
       setToDate(moment().format("YYYY-MM-DD"));
       let previousTodate = moment(frommDate)
         .subtract(1, "days")
@@ -150,7 +150,7 @@ const OrderReport = () => {
         .format("YYYY-MM-DD");
       setprevTodate(previousTodate);
       setprevFromdate(previousTodate);
-      
+
       setpreviousStateChange(1);
     }
     //yesterday------------------------------------------------------------------------
@@ -227,7 +227,7 @@ const OrderReport = () => {
           .format("YYYY-MM-DD")
       );
       // setPrevDate(moment(month).subtract(1, 'month').startOf('month').format('YYYY-MM-DD'))
-     
+
       setpreviousStateChange(4);
     }
     //  last six month---------------------------------------------------------
@@ -250,7 +250,7 @@ const OrderReport = () => {
           .format("YYYY-MM-DD")
       );
       // setPrevDate(moment(sixMonth).subtract(6, 'month').startOf('month').format('YYYY-MM-DD'))
-      
+
       setpreviousStateChange(5);
     }
 
@@ -260,7 +260,7 @@ const OrderReport = () => {
         .startOf("weeks")
         .format("YYYY-MM-DD");
       setFromDate(ThisWeek);
-     
+
       setToDate(moment().format("YYYY-MM-DD"));
       let previousthisweek = moment(ThisWeek)
         .subtract(1, "days")
@@ -281,7 +281,7 @@ const OrderReport = () => {
         .startOf("month")
         .format("YYYY-MM-DD");
       setFromDate(ThisMonth);
-     
+
       setToDate(moment().format("YYYY-MM-DD"));
       let previousthismont = moment(ThisMonth)
         .subtract(1, "days")
@@ -384,7 +384,7 @@ const OrderReport = () => {
       ],
     ];
 
-    const data = (orderTable||[]).map((elt) => [
+    const data = (orderTable || []).map((elt) => [
       elt.created_on,
       elt.order_id,
       elt.status,
@@ -491,7 +491,7 @@ const OrderReport = () => {
 
 
   const options1 = [
-    (brand||[]).map((item) => ({ value: `${item.brand}`, label: `${item.brand}` })),
+    (brand || []).map((item) => ({ value: `${item.brand}`, label: `${item.brand}` })),
   ];
 
   let arrr = [];
@@ -499,7 +499,7 @@ const OrderReport = () => {
   const brandHandler = (e) => {
     arrr = [];
     e.map((item) => {
-      return(
+      return (
         arrr.push(item.value)
 
       )
@@ -507,9 +507,9 @@ const OrderReport = () => {
     setBrandName(arrr);
   };
 
-  
+
   const options2 = [
-    (venderList||[]).map((item) => ({
+    (venderList || []).map((item) => ({
       value: `${item.id}`,
       label: `${item.shop_name}`,
     })),
@@ -520,7 +520,7 @@ const OrderReport = () => {
   const VendorHandler = (e) => {
     vendorArray = [];
     e.map((item) => {
-      return(
+      return (
         vendorArray.push(item.value)
 
       )
@@ -528,10 +528,10 @@ const OrderReport = () => {
     setVendorId(vendorArray);
   };
 
- 
+
 
   const options3 = [
-    (category||[]).map((item) => ({
+    (category || []).map((item) => ({
       value: `${item.id}`,
       label: `${item.category_name}`,
     })),
@@ -542,7 +542,7 @@ const OrderReport = () => {
   const categoryHandler = (e) => {
     CategoryArray = [];
     e.map((item) => {
-      return(
+      return (
         CategoryArray.push(item.value)
 
       )
@@ -561,7 +561,7 @@ const OrderReport = () => {
   const SearchHandler = (e) => {
     SearchArray = [];
     e.map((item) => {
-      return(
+      return (
         SearchArray.push(item.value)
 
       )
@@ -576,7 +576,7 @@ const OrderReport = () => {
     ((getorderCount - getPreviousorderCount) / getPreviousorderCount) *
     100
   ).toFixed(2);
-  
+
   resultCount !== "Infinity" ? console.log() : (resultCount = 0);
 
   // //-----------------------Avg order --------------------------------------------------------
@@ -599,7 +599,7 @@ const OrderReport = () => {
     ((getorderAvgItem - getPreviousorderAvgItem) / getPreviousorderAvgItem) *
     100
   ).toFixed(2);
-  
+
   resultAVGITEM !== "Infinity" ? console.log() : (resultAVGITEM = 0);
 
   //  //--------------------Nets sales------------------------------------------
@@ -610,7 +610,7 @@ const OrderReport = () => {
     ((getNetSales - getPreviouNetSales) / getPreviouNetSales) *
     100
   ).toFixed(2);
- 
+
   resultNetSales !== "Infinity" ? console.log() : (resultNetSales = 0);
 
   return (
@@ -768,7 +768,7 @@ const OrderReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                     
+
                       {OrderError === "No_Data" ||
                         ordersreport.order_count === null ||
                         ordersreport.order_count === undefined ||
@@ -1026,7 +1026,7 @@ const OrderReport = () => {
                 <div className="col-12">
                   <div className="row  d-flex flex-column align-items-center">
                     <div className="d-flex align-items-baseline justify-content-between">
-                     
+
                       {OrderError === "No_Data" ||
                         ordersreport.net_sales === null ||
                         ordersreport.net_sales === undefined ||

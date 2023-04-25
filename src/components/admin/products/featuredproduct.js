@@ -103,8 +103,8 @@ const Featuredproduct = () => {
     }
   };
   /*<----Function to get the data---->*/
- 
-  let cat_name_data="";
+
+  let cat_name_data = "";
   const getCategoryNameData = () => {
     try {
       axios
@@ -116,25 +116,25 @@ const Featuredproduct = () => {
           }
         )
         .then((response) => {
-      
-          cat_name_data=response.data[0];       
+
+          cat_name_data = response.data[0];
           // setVid("")
         });
-    } catch (err) { 
+    } catch (err) {
       console.log(err)
     }
 
 
-};
-useEffect(()=>{
-  getCategoryNameData();
+  };
+  useEffect(() => {
+    getCategoryNameData();
 
- },[apicall])
-// console.log(categoryname)
+  }, [apicall])
+  // console.log(categoryname)
 
   /*<---Render feature data function--->*/
   useEffect(() => {
-    let productArry=[];
+    let productArry = [];
 
     setloading(true);
     try {
@@ -158,19 +158,19 @@ useEffect(()=>{
         )
         .then((response) => {
           // setFeatureProductData(response.data);
-          let v=response.data;
-        
-          v.forEach(function (item,index){
-         
-          let catname=cat_name_data[item.category];
-          if(catname!==undefined || catname!==null||catname!==""){
-            item.category=catname;
-          }
-          productArry.push(item)
+          let v = response.data;
+
+          v.forEach(function (item, index) {
+
+            let catname = cat_name_data[item.category];
+            if (catname !== undefined || catname !== null || catname !== "") {
+              item.category = catname;
+            }
+            productArry.push(item)
           }
           )
-         
-        
+
+
           setFeatureProductData(productArry);
 
           setapicall(false);
@@ -182,7 +182,7 @@ useEffect(()=>{
     getCategorydatafilter();
     getVendorData();
   }, [apicall]);
- 
+
   /*<---Table data ---->*/
   const columns = [
     {
@@ -379,8 +379,8 @@ useEffect(()=>{
           {
             vendor_id: vendor_id,
             fetured_type: "featured_offer",
-            start_date:  featuredData.start_date,
-            end_date:featuredData.end_date,
+            start_date: featuredData.start_date,
+            end_date: featuredData.end_date,
           },
           {
             headers: { admin_token: `${token}` },
@@ -402,7 +402,7 @@ useEffect(()=>{
     }
     setShow(true);
   };
-  
+
   /*<----Onchange function of Feature---->*/
   const handleFormChange = (e) => {
     setFeaturetData({ ...featuredData, [e.target.name]: e.target.value });
@@ -412,41 +412,40 @@ useEffect(()=>{
   const UpdateFeaturedProduct = (e) => {
     const form = e.currentTarget;
 
-    if (form.checkValidity() === false||featuredData.start_date===""||featuredData.end_date===""
-    ||featuredData.start_date>featuredData.end_date)
-    {
+    if (form.checkValidity() === false || featuredData.start_date === "" || featuredData.end_date === ""
+      || featuredData.start_date > featuredData.end_date) {
       e.preventDefault();
       setValidated(true);
     }
-    
-    else{
-      axios
-      .put(
-        `${process.env.REACT_APP_BASEURL_0}/update_fetured_product`,
-        {
-          id: featuredProductData[0].fetured_product_table_id,
-          start_date: featuredData.start_date,
-          end_date: featuredData.end_date,
-        },
-        {
-          headers: { admin_token: `${token}` },
-        }
-      )
-      .then((response) => {
-        // let data = response.data;
-        setValidated(true);
 
-        setapicall(true);
-        setShow(false);
-        setUpdateAlert(true);
-      });
+    else {
+      axios
+        .put(
+          `${process.env.REACT_APP_BASEURL_0}/update_fetured_product`,
+          {
+            id: featuredProductData[0].fetured_product_table_id,
+            start_date: featuredData.start_date,
+            end_date: featuredData.end_date,
+          },
+          {
+            headers: { admin_token: `${token}` },
+          }
+        )
+        .then((response) => {
+          // let data = response.data;
+          setValidated(true);
+
+          setapicall(true);
+          setShow(false);
+          setUpdateAlert(true);
+        });
       e.preventDefault();
       setValidated(false);
-     formRef.current.reset();
-    // setValidated(false);
+      formRef.current.reset();
+      // setValidated(false);
     }
 
-    
+
   };
 
   // const OnDateChange = (e) => { };
@@ -512,24 +511,24 @@ useEffect(()=>{
   value={searchdata.status} placeholder={"Search by status"} className={'adminsideinput'}/>
 </div> */}
             <div className="col-md-3 col-sm-6 aos_input mb-2">
-            <Form.Select
-                  aria-label="Search by status"
-                  className="adminselectbox"
-                  placeholder="Search by category"
-                  onChange={OnSearchChange}
-                  name="category"
-                  value={String(searchdata.category)}
-                >
-                  <option value={""}>Select Category</option>
-                  {(filtervategory || []).map((data, i) => {
-                    return (
-                      <option value={data.id} key={i}>
-                        {" "}
-                        {data.category_name}
-                      </option>
-                    );
-                  })}
-                </Form.Select>
+              <Form.Select
+                aria-label="Search by status"
+                className="adminselectbox"
+                placeholder="Search by category"
+                onChange={OnSearchChange}
+                name="category"
+                value={String(searchdata.category)}
+              >
+                <option value={""}>Select Category</option>
+                {(filtervategory || []).map((data, i) => {
+                  return (
+                    <option value={data.id} key={i}>
+                      {" "}
+                      {data.category_name}
+                    </option>
+                  );
+                })}
+              </Form.Select>
             </div>
             <div className="col-md-3 col-sm-6 aos_input mb-2">
               <Form.Select
@@ -604,9 +603,9 @@ useEffect(()=>{
           </div>
         </div>
 
-        <Modal size="lg" show={show}  onHide={() => setShow(false)}>
+        <Modal size="lg" show={show} onHide={() => setShow(false)}>
           <Form className="" noValidate
-              validated={validated} ref={formRef}>
+            validated={validated} ref={formRef}>
             <Modal.Header closeButton>
               <Modal.Title></Modal.Title>
             </Modal.Header>
@@ -692,7 +691,7 @@ useEffect(()=>{
                                                   }
                                                 /> */}
                     <Form.Control
-                    required
+                      required
                       name="end_date"
                       value={featuredData.end_date}
                       onChange={(e) => handleFormChange(e)}

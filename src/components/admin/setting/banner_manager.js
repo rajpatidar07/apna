@@ -53,20 +53,20 @@ function Banner() {
       center: true,
       cell: (row) => (
         <>
-         <img
-          alt={"apna_organic"}
-          src={
-            row.image
-              ? row.image
-              : "https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
-          }
-          style={{
-            padding: 10,
-            textAlign: "right",
-            maxHeight: "100px",
-            maxWidth: "100px",
-          }}
-        />
+          <img
+            alt={"apna_organic"}
+            src={
+              row.image
+                ? row.image
+                : "https://t3.ftcdn.net/jpg/05/37/73/58/360_F_537735846_kufBp10E8L4iV7OLw1Kn3LpeNnOIWbvf.jpg"
+            }
+            style={{
+              padding: 10,
+              textAlign: "right",
+              maxHeight: "100px",
+              maxWidth: "100px",
+            }}
+          />
           {/* <img
             height="90px"
             width="75px"
@@ -158,13 +158,13 @@ function Banner() {
     axios.put(`${process.env.REACT_APP_BASEURL_0}/banner_delete`, {
       banner_id: `${bannerId}`,
       is_deleted: 0,
-    },{
+    }, {
       headers: { admin_token: `${token}` },
     }).then((response) => {
-    setAlert(false);
+      setAlert(false);
     });
     setapicall(true);
-   
+
   };
   const CancelAlert = () => {
     setAlert(false);
@@ -183,7 +183,7 @@ function Banner() {
               banner_location: "",
             }, {
               headers: { admin_token: `${token}` },
-            } )
+            })
             .then((response) => {
               let data = response.data;
               setBanner(data);
@@ -191,7 +191,7 @@ function Banner() {
               setBannerId(banner_id);
               setImgArray(response.data[0].image);
             });
-        } catch (err) {}
+        } catch (err) { }
       }
       getBanner();
       setBannerShow(true);
@@ -205,7 +205,7 @@ function Banner() {
         banner_location: "",
       }, {
         headers: { admin_token: `${token}` },
-      } )
+      })
       .then((response) => {
         // let data = response.data;
         setBanner(response.data);
@@ -221,7 +221,7 @@ function Banner() {
       const reader = new FileReader();
       const image_name = event.target.files[0].name;
       reader.readAsDataURL(event.target.files[0]);
-      
+
       reader.onload = function () {
         console.log("stage1 ")
         setImage(reader.result);
@@ -231,10 +231,10 @@ function Banner() {
 
         // onImageSelected({ "dataurl": reader.result, "imageName": image_name });
       };
-    
-    
-    setCurrentPage("crop-img");
-    // setShow(true)
+
+
+      setCurrentPage("crop-img");
+      // setShow(true)
 
     }
   };
@@ -253,7 +253,7 @@ function Banner() {
 
     canvasEle.height = imgCroppedArea.height;
     const context = canvasEle.getContext("2d");
-    console.log("context"+context)
+    console.log("context" + context)
 
     let imageObj1 = new Image();
     imageObj1.src = image;
@@ -273,8 +273,8 @@ function Banner() {
 
       const dataURL = canvasEle.toDataURL("image/jpeg");
       // console.log("DATAURL"+dataURL)
-    //  setAddBanner(dataURL)
-    //  console.log("CHECK---"+dataURL+"----ee---------"+addBanner)
+      //  setAddBanner(dataURL)
+      //  console.log("CHECK---"+dataURL+"----ee---------"+addBanner)
 
       // console.log("dataURL----------------------"+dataURL)
       setImgAfterCrop(dataURL)
@@ -297,11 +297,11 @@ function Banner() {
   // const handleBannerChange = (e) => {
   //   setImageBanner({ ...imageBanner, [e.target.name]: e.target.value });
   // };
-const modalClose=()=>{
-  setBannerShow(false);
-  setValidated(false);
+  const modalClose = () => {
+    setBannerShow(false);
+    setValidated(false);
 
-}
+  }
   const handleClose = () => {
     setShow(false)
     // formRef.current.reset();
@@ -311,7 +311,7 @@ const modalClose=()=>{
     setCurrentPage("choose-img");
 
   };
-  
+
   const AddBanner = (e) => {
 
     const form = e.currentTarget;
@@ -322,44 +322,43 @@ const modalClose=()=>{
     }
     if (form.checkValidity() === true) {
       e.preventDefault();
-      encoded=imgAfterCrop
-      const [first, ...rest] = encoded.split(","); 
+      encoded = imgAfterCrop
+      const [first, ...rest] = encoded.split(",");
 
       let imgvalidation = first.split("/").pop();
       if (
         imgvalidation === "jpeg;base64" ||
         imgvalidation === "jpg;base64" ||
         imgvalidation === "png;base64"
-      )
-      {
+      ) {
         const productimg = rest.join("-");
         let imar = {
-              title:addBanner.title,
-              banner_url:addBanner.banner_url,
-              description:addBanner.description,
-              size:addBanner.size,
-              banner_location:addBanner.banner_location,
-              imgBase64: productimg,
-            };
+          title: addBanner.title,
+          banner_url: addBanner.banner_url,
+          description: addBanner.description,
+          size: addBanner.size,
+          banner_location: addBanner.banner_location,
+          imgBase64: productimg,
+        };
         axios
-        .post(`${process.env.REACT_APP_BASEURL_0}/add_banner`, imar, {
-          headers: { admin_token: `${token}` },
-        } )
-.then((response) => {
-if (response.data.code === "ER_DUP_ENTRY") {
-  setError(false);
-} else {
-  setBannerShow(false);
-  setapicall(true);
-  setAddAlert(true);
-}
-// let data = response.data;
-})
+          .post(`${process.env.REACT_APP_BASEURL_0}/add_banner`, imar, {
+            headers: { admin_token: `${token}` },
+          })
+          .then((response) => {
+            if (response.data.code === "ER_DUP_ENTRY") {
+              setError(false);
+            } else {
+              setBannerShow(false);
+              setapicall(true);
+              setAddAlert(true);
+            }
+            // let data = response.data;
+          })
           .catch(function (error) {
             console.log(error);
           });
       }
-      else{
+      else {
         setValidated(false);
       }
     }
@@ -373,41 +372,40 @@ if (response.data.code === "ER_DUP_ENTRY") {
     }
     if (form.checkValidity() === true) {
       e.preventDefault();
-      encoded=imgAfterCrop
-      const [first, ...rest] = encoded.split(","); 
+      encoded = imgAfterCrop
+      const [first, ...rest] = encoded.split(",");
 
       let imgvalidation = first.split("/").pop();
       if (
         imgvalidation === "jpeg;base64" ||
         imgvalidation === "jpg;base64" ||
         imgvalidation === "png;base64"
-      )
-      {
+      ) {
         const productimg = rest.join("-");
         let imar = {
-          title:addBanner.title,
-            banner_url:addBanner.banner_url,
-            description:addBanner.description,
-            size:addBanner.size,
-            banner_location:addBanner.banner_location,
-            imgBase64: productimg,
-            banner_id:addBanner.banner_id
-            };
-            axios
-            .put(`${process.env.REACT_APP_BASEURL_0}/update_banner`, imar, {
-              headers: { admin_token: `${token}` },
-            })
-            .then((response) => {
-              // let data = response.data;
-              setBannerShow(false);
-              setapicall(true);
-              setUpdateAlert(true);
-            });
-          formRef.current.reset();
-          setValidated(false);
+          title: addBanner.title,
+          banner_url: addBanner.banner_url,
+          description: addBanner.description,
+          size: addBanner.size,
+          banner_location: addBanner.banner_location,
+          imgBase64: productimg,
+          banner_id: addBanner.banner_id
         };
-      }
+        axios
+          .put(`${process.env.REACT_APP_BASEURL_0}/update_banner`, imar, {
+            headers: { admin_token: `${token}` },
+          })
+          .then((response) => {
+            // let data = response.data;
+            setBannerShow(false);
+            setapicall(true);
+            setUpdateAlert(true);
+          });
+        formRef.current.reset();
+        setValidated(false);
+      };
     }
+  }
 
   return (
     <div>
@@ -608,7 +606,7 @@ if (response.data.code === "ER_DUP_ENTRY") {
                 )}
               </div>
 
-{/* <Form.Group
+              {/* <Form.Group
                   className="mb-3 aos_input"
                   controlId="validationCustom08"
                 >
@@ -627,68 +625,68 @@ if (response.data.code === "ER_DUP_ENTRY") {
                   </Form.Control.Feedback>
                 </Form.Group> */}
               <div className="col-md-4">
-                
-      {currentPage === "choose-img" ? (
-        
-        <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName}/>
-      ) : currentPage === "crop-img" ? (
-        <div className="container-fluid">
-           <ImageCropper
-           handleClose={handleClose}
-           image={image}
-           imageNamee={imageName}
-           modalShow={true}
-          onCropDone={(imgCroppedArea) => onCropDone(imgCroppedArea )}onCropCancel={onCropCancel}
-            />
-            
-        </div>
-       
-      ) : (
-      //   <div>
-      //      <div>
-      //   <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />
-      // </div>
-      //   </div>
-       
-        <div>
-        <div>
-        <div>
-              <img className="cropped-img w-50 h-50"
-                  src={imgAfterCrop }
 
-                // key={i}
-                alt=""
-                // height={120}
-               />
-          </div>  
-        </div>
-         {/* { <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />  === <ImageCropper/>  ? (
+                {currentPage === "choose-img" ? (
+
+                  <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />
+                ) : currentPage === "crop-img" ? (
+                  <div className="container-fluid">
+                    <ImageCropper
+                      handleClose={handleClose}
+                      image={image}
+                      imageNamee={imageName}
+                      modalShow={true}
+                      onCropDone={(imgCroppedArea) => onCropDone(imgCroppedArea)} onCropCancel={onCropCancel}
+                    />
+
+                  </div>
+
+                ) : (
+                  //   <div>
+                  //      <div>
+                  //   <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />
+                  // </div>
+                  //   </div>
+
+                  <div>
+                    <div>
+                      <div>
+                        <img className="cropped-img w-50 h-50"
+                          src={imgAfterCrop}
+
+                          // key={i}
+                          alt=""
+                        // height={120}
+                        />
+                      </div>
+                    </div>
+                    {/* { <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />  === <ImageCropper/>  ? (
            <FileInput setImage={setImage} onImageSelected={onImageSelected} setimageName={setimageName} />): */}
-          <>
-            <button
-              onClick={() => {
-                setCurrentPage("crop-img");
-              }}
-              className="btn"
-            >
-              Crop
-            </button>
+                    <>
+                      <button
+                        onClick={() => {
+                          setCurrentPage("crop-img");
+                        }}
+                        className="btn"
+                      >
+                        Crop
+                      </button>
 
-            <button
-              onClick={() => {
-                setCurrentPage("choose-img");
-                setImage("");
-              }}
-              className="btn"
-            >
-              New Image
-            </button>
-          </>
-       
-      {/* } */}
-      </div>
+                      <button
+                        onClick={() => {
+                          setCurrentPage("choose-img");
+                          setImage("");
+                        }}
+                        className="btn"
+                      >
+                        New Image
+                      </button>
+                    </>
 
-      )}
+                    {/* } */}
+                  </div>
+
+                )}
               </div>
               {/* <div className="col-md-4">
                 <Form.Group

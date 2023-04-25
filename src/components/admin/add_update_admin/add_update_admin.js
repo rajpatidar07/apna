@@ -260,7 +260,7 @@ function Admin() {
     setSearchAd({
       admin_name: "",
       admin_type: "",
-     
+
     });
     setapicall(true);
     // setsearcherror(false);
@@ -304,13 +304,13 @@ function Admin() {
           />
         </div>
         <div className="col-md-3 col-sm-6 aos_input mb-2 ">
-              <MainButton
-                btntext={"Reset"}
-                btnclass={"button main_button w-100"}
-                type="reset"
-                onClick={OnReset}
-              />
-            </div>
+          <MainButton
+            btntext={"Reset"}
+            btnclass={"button main_button w-100"}
+            type="reset"
+            onClick={OnReset}
+          />
+        </div>
       </div>
       {/* upload */}
 
