@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 
 import Col from "react-bootstrap/Col";
 
+// import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { Badge } from "react-bootstrap";
